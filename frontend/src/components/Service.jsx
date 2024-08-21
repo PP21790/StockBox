@@ -6,7 +6,7 @@ const Service = () => {
       <div className="page-content">
         {/*breadcrumb*/}
         <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-          <div className="breadcrumb-title pe-3">Clients</div>
+          <div className="breadcrumb-title pe-3">Service</div>
           <div className="ps-3">
             <nav aria-label="breadcrumb">
               <ol className="breadcrumb mb-0 p-0">
@@ -19,41 +19,7 @@ const Service = () => {
               </ol>
             </nav>
           </div>
-          <div className="ms-auto">
-            <div className="btn-group">
-              <button type="button" className="btn btn-primary">
-                Settings
-              </button>
-              <button
-                type="button"
-                className="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                {" "}
-                <span className="visually-hidden">Toggle Dropdown</span>
-              </button>
-              <div
-                className="dropdown-menu dropdown-menu-right dropdown-menu-lg-end"
-                style={{}}
-              >
-                {" "}
-                <a className="dropdown-item" href="javascript:;">
-                  Action
-                </a>
-                <a className="dropdown-item" href="javascript:;">
-                  Another action
-                </a>
-                <a className="dropdown-item" href="javascript:;">
-                  Something else here
-                </a>
-                <div className="dropdown-divider" />{" "}
-                <a className="dropdown-item" href="javascript:;">
-                  Separated link
-                </a>
-              </div>
-            </div>
-          </div>
+
         </div>
         {/*end breadcrumb*/}
         <div className="card">
@@ -77,7 +43,7 @@ const Service = () => {
                   data-bs-target="#exampleModal"
                 >
                   <i className="bx bxs-plus-square" />
-                  Add New Client
+                  Add services
                 </button>
                 {/* Modal start */}
                 <div

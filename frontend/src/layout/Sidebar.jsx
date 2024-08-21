@@ -59,12 +59,12 @@ const Sidebar = ({ onToggleClick }) => {
 
 
                     <li>
-                      <a href="form-froala-editor.html">
+                      <Link to="/admin/service">
                         <div className="parent-icon">
                           <i className="bx bx-cog" />
                         </div>
                         <div className="menu-title">Services</div>
-                      </a>
+                      </Link>
                     </li>
 
                     <li>
