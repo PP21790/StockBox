@@ -218,7 +218,7 @@ const Profile = () => {
 
                                     </div>
                                 </div>
-                                <div className="row">
+                                {/* <div className="row">
                                     <div className="col-sm-12">
                                         <div className="card">
                                             <div className="card-body">
@@ -283,7 +283,7 @@ const Profile = () => {
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     </div>
