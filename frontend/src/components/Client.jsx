@@ -21,41 +21,7 @@ const Client = () => {
               </ol>
             </nav>
           </div>
-          <div className="ms-auto">
-            <div className="btn-group">
-              <button type="button" className="btn btn-primary">
-                Settings
-              </button>
-              <button
-                type="button"
-                className="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                {" "}
-                <span className="visually-hidden">Toggle Dropdown</span>
-              </button>
-              <div
-                className="dropdown-menu dropdown-menu-right dropdown-menu-lg-end"
-                style={{}}
-              >
-                {" "}
-                <a className="dropdown-item" href="javascript:;">
-                  Action
-                </a>
-                <a className="dropdown-item" href="javascript:;">
-                  Another action
-                </a>
-                <a className="dropdown-item" href="javascript:;">
-                  Something else here
-                </a>
-                <div className="dropdown-divider" />{" "}
-                <a className="dropdown-item" href="javascript:;">
-                  Separated link
-                </a>
-              </div>
-            </div>
-          </div>
+              
         </div>
         {/*end breadcrumb*/}
         <div className="card">
