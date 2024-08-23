@@ -13,12 +13,13 @@ const PlanSchema = new Schema({
         required: true,
         trim: true
     },
-    price_per_month: {
+    price: {
         type: Number,
         required: true,
         min: 0
     },
-    total_month_service: {
+    // Rename total_month_service to totaldays
+    totaldays: {
         type: Number,
         required: true,
         min: 0
@@ -32,6 +33,12 @@ const PlanSchema = new Schema({
         type: String,
         enum: ['active', 'inactive'], // Example statuses
         default: 'active'
+    },
+    add_by: {
+        type: String,
+        required: true,
+        trim: true,
+        default: null
     },
     del: {
         type: Boolean,

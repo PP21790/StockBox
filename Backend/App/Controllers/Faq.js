@@ -1,32 +1,33 @@
 const db = require("../Models");
-const Service_Modal = db.Service;
+const Faq_Modal = db.Faq;
 
 
-class Service {
+class Faq {
 
-    async AddService(req, res) {
+    async AddFaq(req, res) {
         try {
-            const { title,add_by } = req.body;
+            const { title,description,add_by } = req.body;
     
             console.log("Request Body:", req.body);
     
-            const result = new Service_Modal({
+            const result = new Faq_Modal({
                 title,
+                description,
                 add_by,
             });
     
             await result.save();
     
-            console.log("Service successfully added:", result);
+            console.log("Faq successfully added:", result);
             return res.json({
                 status: true,
-                message: "Service added successfully",
+                message: "Faq added successfully",
                 data: result,
             });
     
         } catch (error) {
             // Enhanced error logging
-            console.error("Error adding Service:", error);
+            console.error("Error adding Faq:", error);
     
             return res.status(500).json({
                 status: false,
@@ -37,15 +38,14 @@ class Service {
     }
     
 
-  async getService(req, res) {
+  async getFaq(req, res) {
     try {
 
-     
-     
+
       const { } = req.body;
 
-    //  const result = await Service_Modal.find()
-      const result = await Service_Modal.find({ del: false });
+    //  const result = await Faq_Modal.find()
+      const result = await Faq_Modal.find({ del: false });
 
 
       return res.json({
@@ -59,7 +59,7 @@ class Service {
     }
   }
 
-  async detailService(req, res) {
+  async detailFaq(req, res) {
     try {
         // Extract ID from request parameters
         const { id } = req.params;
@@ -68,27 +68,27 @@ class Service {
         if (!id) {
             return res.status(400).json({
                 status: false,
-                message: "Service ID is required"
+                message: "Faq ID is required"
             });
         }
 
-        const Service = await Service_Modal.findById(id);
+        const Faq = await Faq_Modal.findById(id);
 
-        if (!Service) {
+        if (!Faq) {
             return res.status(404).json({
                 status: false,
-                message: "Service not found"
+                message: "Faq not found"
             });
         }
 
         return res.json({
             status: true,
-            message: "Service details fetched successfully",
-            data: Service
+            message: "Faq details fetched successfully",
+            data: Faq
         });
 
     } catch (error) {
-        console.error("Error fetching Service details:", error);
+        console.error("Error fetching Faq details:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",
@@ -98,41 +98,42 @@ class Service {
 }
 
 
-  async updateService(req, res) {
+  async updateFaq(req, res) {
     try {
-      const { id, title } = req.body;
+      const { id, title,description } = req.body;
   
       if (!id) {
         return res.status(400).json({
           status: false,
-          message: "Service ID is required",
+          message: "Faq ID is required",
         });
       }
   
-      const updatedService = await Service_Modal.findByIdAndUpdate(
+      const updatedFaq = await Faq_Modal.findByIdAndUpdate(
         id,
         {
           title,
+          description,
         },
-        { service: true, runValidators: true } // Options: return the updated document and run validators
+        { faq: true, runValidators: true } // Options: return the updated document and run validators
       );
   
-      if (!updatedService) {
+      if (!updatedFaq) {
         return res.status(404).json({
           status: false,
-          message: "Service not found",
+          message: "Faq not found",
         });
       }
   
-      console.log("Updated Service:", updatedService);
+      console.log("Updated Faq:", updatedFaq);
       return res.json({
         status: true,
-        message: "Service updated successfully",
-        data: updatedService,
+        message: "Faq updated successfully",
+        data: updatedFaq,
       });
   
     } catch (error) {
-      console.error("Error updating Service:", error);
+      console.error("Error updating Faq:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -142,41 +143,41 @@ class Service {
   }
   
   
-  async deleteService(req, res) {
+  async deleteFaq(req, res) {
     try {
       const { id } = req.params; // Extract ID from URL params
 
       if (!id) {
         return res.status(400).json({
           status: false,
-          message: "Service ID is required",
+          message: "Faq ID is required",
         });
       }
 
-     // const deletedService = await Service_Modal.findByIdAndDelete(id);
+     // const deletedFaq = await Faq_Modal.findByIdAndDelete(id);
 
-      const deletedService = await Service_Modal.findByIdAndUpdate(
+      const deletedFaq = await Faq_Modal.findByIdAndUpdate(
         id, 
         { del: true }, // Set del to true
         { new: true }  // Return the updated document
       );
 
 
-      if (!deletedService) {
+      if (!deletedFaq) {
         return res.status(404).json({
           status: false,
-          message: "Service not found",
+          message: "Faq not found",
         });
       }
 
-      console.log("Deleted Service:", deletedService);
+      console.log("Deleted Faq:", deletedFaq);
       return res.json({
         status: true,
-        message: "Service deleted successfully",
-        data: deletedService,
+        message: "Faq deleted successfully",
+        data: deletedFaq,
       });
     } catch (error) {
-      console.error("Error deleting Service:", error);
+      console.error("Error deleting Faq:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -199,7 +200,7 @@ class Service {
         }
   
         // Find and update the plan
-        const result = await Service_Modal.findByIdAndUpdate(
+        const result = await Faq_Modal.findByIdAndUpdate(
             id,
             { status: status },
             { new: true } // Return the updated document
@@ -208,7 +209,7 @@ class Service {
         if (!result) {
             return res.status(404).json({
                 status: false,
-                message: "Service not found"
+                message: "Faq not found"
             });
         }
   
@@ -229,6 +230,5 @@ class Service {
   }
   
 
-
 }
-module.exports = new Service();
+module.exports = new Faq();

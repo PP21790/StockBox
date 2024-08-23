@@ -6,7 +6,7 @@ class Coupon {
 
     async AddCoupon(req, res) {
         try {
-            const { name, code, type, value, startdate, enddate } = req.body;
+            const { name, code, type, value, startdate, enddate,add_by } = req.body;
     
             // Debugging: Log the incoming request body to ensure the data is correct
             console.log("Request Body:", req.body);
@@ -18,6 +18,7 @@ class Coupon {
                 value,
                 startdate,
                 enddate,
+                add_by,
             });
     
             await result.save();
@@ -44,6 +45,7 @@ class Coupon {
 
   async getCoupon(req, res) {
     try {
+
       const { } = req.body;
 
       //const result = await Coupon_Modal.find()
@@ -189,5 +191,48 @@ class Coupon {
       });
     }
   }
+  async  statusChange(req, res) {
+    try {
+        const { id, status } = req.body;
+  
+        // Validate status
+        const validStatuses = ['true', 'false'];
+        if (!validStatuses.includes(status)) {
+            return res.status(400).json({
+                status: false,
+                message: "Invalid status value"
+            });
+        }
+  
+        // Find and update the plan
+        const result = await Coupon_Modal.findByIdAndUpdate(
+            id,
+            { status: status },
+            { new: true } // Return the updated document
+        );
+  
+        if (!result) {
+            return res.status(404).json({
+                status: false,
+                message: "Coupon not found"
+            });
+        }
+  
+        return res.json({
+            status: true,
+            message: "Status updated successfully",
+            data: result
+        });
+  
+    } catch (error) {
+        console.error("Error updating status:", error);
+        return res.status(500).json({
+            status: false,
+            message: "Server error",
+            data: []
+        });
+    }
+  }
+  
 }
 module.exports = new Coupon();

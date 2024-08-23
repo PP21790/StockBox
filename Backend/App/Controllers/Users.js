@@ -8,40 +8,44 @@ class Users {
 
   async AddUser(req, res) {
     try {
-      const { FullName, UserName, Email, PhoneNo, password, Role, token } = req.body;
+      const { FullName, UserName, Email, PhoneNo, password,add_by } = req.body;
+
+      console.log("Password before hashing:", password);
+
       const hashedPassword = await bcrypt.hash(password, 10);
+      console.log("result", hashedPassword);
       const result = new Users_Modal({
-      FullName: FullName,
-      UserName: UserName,
-      Role: Role,
-      Email: Email,
-      PhoneNo: PhoneNo,
-      password: hashedPassword,
-      token: token
-      })
-
+        FullName: FullName,
+        UserName: UserName,
+        Email: Email,
+        PhoneNo: PhoneNo,
+        password: hashedPassword,
+        add_by: add_by
+      });
+  
       await result.save();
-
-      console.log("result", result)
+  
+      console.log("result", result);
       return res.json({
         status: true,
-        message: "add",
+        message: "User added successfully",
       });
-
+  
     } catch (error) {
-      return res.json({ status: false, message: "Server error", data: [] });
+      console.error("Error adding user:", error); // Log the full error
+      return res.status(500).json({ status: false, message: "Server error", error: error.message });
     }
   }
-
+  
   async getUser(req, res) {
-
-    
+  
     try {
+   
       const { } = req.body;
 
       //const result = await Users_Modal.find()
 
-      const result = await Users_Modal.find({ del: 0 });
+      const result = await Users_Modal.find({ del: 0,Role: 2 });
 
       return res.json({
         status: true,
@@ -56,6 +60,7 @@ class Users {
 
   async detailUser(req, res) {
     try {
+   
         // Extract ID from request parameters
         const { id } = req.params;
 
@@ -96,7 +101,7 @@ class Users {
 
   async updateUser(req, res) {
     try {
-      const { id, FullName, Email, PhoneNo, password, Role, token } = req.body;
+      const { id, FullName, Email, PhoneNo, password } = req.body;
   
       if (!id) {
         return res.status(400).json({
@@ -113,8 +118,6 @@ class Users {
           Email,
           PhoneNo,
           password,
-          token,
-          Role,
         },
         { updateSearchIndexser: true, runValidators: true } // Options: return the updated document and run validators
       );
@@ -189,16 +192,17 @@ class Users {
 
   async loginUser(req, res) {
     try {
-      const { identifier, password } = req.body;
+      const { UserName, password } = req.body;  // Extract password here
 
       const user = await Users_Modal.findOne({
-        $or: [{ Email: identifier }, { PhoneNo: identifier }],
+        UserName: UserName,
+        ActiveStatus: '1'  // Make sure ActiveStatus is compared as a string
       });
 
       if (!user) {
         return res.status(404).json({
           status: false,
-          message: "User not found",
+          message: "User not found or account is inactive",
         });
       }
 
@@ -218,6 +222,7 @@ class Users {
           Email: user.Email,
           PhoneNo: user.PhoneNo,
           Role: user.Role,
+          id: user.id,
         },
       });
     } catch (error) {
@@ -227,7 +232,99 @@ class Users {
         error: error.message,
       });
     }
+}
+
+
+  async  statusChange(req, res) {
+    try {
+        const { id, status } = req.body;
+  
+        // Validate status
+        const validStatuses = ['1', '0'];
+        if (!validStatuses.includes(status)) {
+            return res.status(400).json({
+                status: false,
+                message: "Invalid status value"
+            });
+        }
+  
+        // Find and update the plan
+        const result = await Users_Modal.findByIdAndUpdate(
+            id,
+            { ActiveStatus: status },
+            { new: true } // Return the updated document
+        );
+  
+        if (!result) {
+            return res.status(404).json({
+                status: false,
+                message: "User not found"
+            });
+        }
+  
+        return res.json({
+            status: true,
+            message: "Status updated successfully",
+            data: result
+        });
+  
+    } catch (error) {
+        console.error("Error updating status:", error);
+        return res.status(500).json({
+            status: false,
+            message: "Server error",
+            data: []
+        });
+    }
   }
+
+  async updateUserPermissions(req, res) {
+    try {
+      const { id, permissions } = req.body;
+  
+      if (!id) {
+        return res.status(400).json({
+          status: false,
+          message: "User ID is required",
+        });
+      }
+  
+      // Ensure permissions is an array
+      const permissionsArray = Array.isArray(permissions) ? permissions : [permissions];
+  
+      // Retrieve the user's current permissions from the database
+      const user = await Users_Modal.findById(id);
+      if (!user) {
+        return res.status(404).json({
+          status: false,
+          message: "User not found",
+        });
+      }
+  
+      // Update permissions directly with the provided array
+      user.permissions = permissionsArray;
+  
+      // Save the updated user
+      const updatedUser = await user.save();
+  
+      return res.json({
+        status: true,
+        message: "User permissions updated successfully",
+        data: updatedUser,
+      });
+  
+    } catch (error) {
+      console.error("Error updating User permissions:", error);
+      return res.status(500).json({
+        status: false,
+        message: "Server error",
+        error: error.message,
+      });
+    }
+  }
+  
+  
+  
 
 
 }

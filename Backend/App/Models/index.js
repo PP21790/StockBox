@@ -13,6 +13,8 @@ module.exports = {
     Role: require("./Role"),
     Service: require("./Service"),
     Users: require("./Users"),
+    Faq: require("./Faq"),
+
 
 
 

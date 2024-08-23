@@ -37,6 +37,12 @@ const clientsModel = Schema({
         unique: true,
         default: null
     },
+    add_by: {
+        type: String,
+        required: true,
+        trim: true,
+        default: null
+    },
     del: {
         type: String,
         enum: ['1', '0'],

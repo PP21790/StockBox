@@ -2,7 +2,7 @@
 
 const { Schema, model } = require('mongoose');
 
-const BlogsSchema = new Schema({
+const FaqSchema = new Schema({
     title: {
         type: String,
         required: true,
@@ -12,11 +12,6 @@ const BlogsSchema = new Schema({
         type: String,
         required: true,
         trim: true
-    },
-    image: {
-        type: String,
-        trim: true,
-        default: null
     },
     status: {
         type: Boolean,
@@ -30,13 +25,13 @@ const BlogsSchema = new Schema({
     },
     del: {
         type: Boolean,
-        default: false // assuming false means not deleted
+        default: false // Indicates whether the coupon is deleted
     }
 }, {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
 });
 
 // Define the model
-const Blogs = model('Blogs', BlogsSchema);
+const Faq = model('Faq', FaqSchema);
 
-module.exports = Blogs;
+module.exports = Faq;

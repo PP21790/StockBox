@@ -17,7 +17,7 @@ class BlogController {
             });
     
             // After the upload is successful, proceed with the rest of the logic
-            const { title, description } = req.body;
+            const { title, description,add_by } = req.body;
             const image = req.files['image'] ? req.files['image'][0].filename : null;
     
             // Create a new News record
@@ -25,6 +25,7 @@ class BlogController {
                 title: title,
                 description: description,
                 image: image,
+                add_by:add_by,
             });
             
             // Save the result to the database
@@ -45,6 +46,7 @@ class BlogController {
     // Get all blog posts
     async getBlogs(req, res) {
         try {
+
             const blogs = await Blogs_Modal.find({ del: false });
 
             return res.status(200).json({
@@ -193,6 +195,49 @@ class BlogController {
             });
         }
     }
+    async  statusChange(req, res) {
+        try {
+            const { id, status } = req.body;
+      
+            // Validate status
+            const validStatuses = ['true', 'false'];
+            if (!validStatuses.includes(status)) {
+                return res.status(400).json({
+                    status: false,
+                    message: "Invalid status value"
+                });
+            }
+      
+            // Find and update the plan
+            const result = await Blogs_Modal.findByIdAndUpdate(
+                id,
+                { status: status },
+                { new: true } // Return the updated document
+            );
+      
+            if (!result) {
+                return res.status(404).json({
+                    status: false,
+                    message: "Blogs not found"
+                });
+            }
+      
+            return res.json({
+                status: true,
+                message: "Status updated successfully",
+                data: result
+            });
+      
+        } catch (error) {
+            console.error("Error updating status:", error);
+            return res.status(500).json({
+                status: false,
+                message: "Server error",
+                data: []
+            });
+        }
+      }
+      
 }
 
 module.exports = new BlogController();
