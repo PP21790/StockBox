@@ -1,5 +1,5 @@
 "use strict"
-
+const crypto = require('crypto');
 const { Schema, model } = require('mongoose');
 
 const clientsModel = Schema({
@@ -57,7 +57,14 @@ const clientsModel = Schema({
         type: Date,
         default: Date.now
     },
-   
+    refer_token: {
+        type: String,
+        unique: true,
+        default: function () {
+            // Generate a random token using crypto module
+            return crypto.randomBytes(16).toString('hex');
+        }
+    }
     
 },
     {
@@ -65,6 +72,8 @@ const clientsModel = Schema({
     },
 
 )
+
+
 const Clients_model = model('CLIENTS', clientsModel);
 
 

@@ -1,7 +1,8 @@
 const db = require("../Models");
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const Users_Modal = db.Users;
-
+const { sendEmail } = require('../Utils/emailService');
 
 class Users {
 
@@ -323,8 +324,107 @@ class Users {
     }
   }
   
-  
-  
+  async forgotPassword(req, res) {
+
+    try {
+      const { Email } = req.body;
+
+      // Find the user by email
+      const user = await Users_Modal.findOne({ Email });
+
+      if (!user) {
+        return res.status(404).json({
+          status: false,
+          message: "User with this email does not exist",
+        });
+      }
+
+      // Generate a reset token
+      const resetToken = crypto.randomBytes(20).toString('hex');
+
+      // Set the token and expiry on the user
+      user.forgotPasswordToken = resetToken;
+      user.forgotPasswordTokenExpiry = Date.now() + 3600000; // 1 hour from now
+
+      await user.save();
+
+      // Email options
+      const mailOptions = {
+        to: user.Email,
+        from: 'info@pnpuniverse.com',
+        subject: 'Password Reset',
+        text: `You are receiving this because you (or someone else) have requested to reset the password for your account.\n\n
+               Please click on the following link, or paste it into your browser to complete the process:\n\n
+               http://${req.headers.host}/reset-password/${resetToken}\n\n
+               If you did not request this, please ignore this email and your password will remain unchanged.\n`,
+      };
+
+      // Send email
+      await sendEmail(mailOptions);
+
+      return res.json({
+        status: true,
+        message: 'Reset token sent to email',
+      });
+
+    } catch (error) {
+      console.error("Error in forgotPassword:", error);
+      return res.status(500).json({
+        status: false,
+        message: "Server error",
+        error: error.message,
+      });
+    }
+  }
+  async resetPassword(req, res) {
+    try {
+      const { resetToken, newPassword } = req.body;
+
+      if (!resetToken || !newPassword) {
+        return res.status(400).json({
+          status: false,
+          message: "Reset token and new password are required",
+        });
+      }
+
+      // Find the user by reset token and check if the token is valid
+      const user = await Users_Modal.findOne({
+        forgotPasswordToken: resetToken,
+        forgotPasswordTokenExpiry: { $gt: Date.now() } // Token should not be expired
+      });
+
+      if (!user) {
+        return res.status(400).json({
+          status: false,
+          message: "Invalid or expired reset token",
+        });
+      }
+
+      // Hash the new password
+      
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      // Update the user's password and clear the reset token
+      user.password = hashedPassword;
+      user.forgotPasswordToken = undefined; // Clear the token
+      user.forgotPasswordTokenExpiry = undefined; // Clear the expiry
+
+      await user.save();
+
+      return res.json({
+        status: true,
+        message: "Password has been reset successfully",
+      });
+
+    } catch (error) {
+      console.error("Error in resetPassword:", error);
+      return res.status(500).json({
+        status: false,
+        message: "Server error",
+        error: error.message,
+      });
+    }
+  }
 
 
 }

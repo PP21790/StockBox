@@ -3,6 +3,7 @@ const Users_Modal = db.Users;
 
 const hasPermission = async (userId, permissionName) => {
   try {
+    
     const user = await Users_Modal.findById(userId);
     
     if (!user) {

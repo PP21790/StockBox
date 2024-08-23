@@ -17,7 +17,7 @@ const checkPermission = (permissionName) => {
       }
     } catch (error) {
       console.error("Error checking permission:", error);
-      res.status(500).send('Server error');
+     return res.status(500).send('Server error');
     }
   };
 };

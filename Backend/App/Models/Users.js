@@ -62,8 +62,15 @@ const userModel = Schema({
     createdAt: {
         type: Date,
         default: Date.now
+    },
+    forgotPasswordToken: {
+        type: String,
+        default: null,
+    },
+    forgotPasswordTokenExpiry: {
+        type: Date,
+        default: null,
     }
-   
     
 },
     {
