@@ -9,6 +9,8 @@ import Client from './components/Client';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Profile from './components/Profile';
 import Service from './components/Service';
+import Kyc from './components/Kyc';
+import Signal from './components/Signal';
 
 
 function MainApp() {
@@ -60,6 +62,8 @@ function MainApp() {
                     <Route path="/client" element={<Client />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/service" element={<Service />} />
+                    <Route path="/kyc" element={<Kyc />} />
+                    <Route path="/signal" element={<Signal />} />
                 </Routes>
             </div>
             <Footer />

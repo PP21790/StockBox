@@ -3,7 +3,7 @@ import { Formik } from 'formik';
 import { useEffect } from 'react';
 
 const Client = () => {
-    return (
+  return (
     <div>
       <div className="page-content">
         {/*breadcrumb*/}
@@ -21,7 +21,7 @@ const Client = () => {
               </ol>
             </nav>
           </div>
-              
+
         </div>
         {/*end breadcrumb*/}
         <div className="card">
@@ -72,7 +72,7 @@ const Client = () => {
                         <form action="">
                           <div className="row">
                             <div className="col-md-6">
-                              <label htmlFor="">Name</label>
+                              <label htmlFor="">Full Name</label>
                               <input className="form-control mb-2" type="text" placeholder='enter your name' />
                             </div>
                             <div className="col-md-6">
@@ -80,12 +80,26 @@ const Client = () => {
                               <input className="form-control" type="email" placeholder='enter your mail' />
                             </div>
                             <div className="col-md-6">
-                              <label htmlFor="">Phone</label>
+                              <label htmlFor="">Phone No</label>
                               <input className="form-control" type="number" placeholder='enter your Phone no ' />
                             </div>
                             <div className="col-md-6">
-                              <label htmlFor="">Broker</label>
-                              <input className="form-control" type="text" placeholder='enter broker' />
+                              <label htmlFor="">Selelct Service</label>
+                              <select className="form-select mb-3" aria-label="Default select example">
+                                <option selected="">Selelct Service</option>
+                                <option value={1}>One</option>
+                                <option value={2}>Two</option>
+                                <option value={3}>Three</option>
+                              </select>
+
+                            </div>
+                            <div className="col-md-6">
+                              <label htmlFor=""> City/State</label>
+                              <input className="form-control" type="text" placeholder='enter your City/State' />
+                            </div>
+                            <div className="col-md-6">
+                              <label htmlFor="">Password</label>
+                              <input className="form-control" type="password" placeholder='enter your password' />
                             </div>
 
                           </div>

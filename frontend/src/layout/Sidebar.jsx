@@ -15,7 +15,7 @@ const Sidebar = ({ onToggleClick }) => {
             <div className="simplebar-offset" style={{ right: 0, bottom: 0 }}>
               <div
                 className="simplebar-content-wrapper"
-                style={{ height: "100%", overflow: "hidden scroll" }}
+
               >
                 <div className="simplebar-content mm-active" style={{ padding: 0 }}>
                   <div className="sidebar-header">
@@ -86,23 +86,23 @@ const Sidebar = ({ onToggleClick }) => {
                     </li>
 
                     <li>
-                      <a href="form-froala-editor.html">
+                      <Link to="/admin/kyc">
                         <div className="parent-icon">
                           <i className="bx bx-edit-alt" />
                         </div>
                         <div className="menu-title">Kyc & Agreement
                         </div>
-                      </a>
+                      </Link>
                     </li>
 
                     <li>
-                      <a href="form-froala-editor.html">
+                      <Link to="/admin/signal">
                         <div className="parent-icon">
                           <i className="bx bx-wifi-2" />
                         </div>
                         <div className="menu-title">Signal History
                         </div>
-                      </a>
+                      </Link>
                     </li>
 
                     <li>
