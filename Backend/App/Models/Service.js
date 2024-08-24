@@ -8,6 +8,16 @@ const ServiceSchema = new Schema({
         required: true,
         trim: true
     },
+    add_by: {
+        type: String,
+        required: true,
+        trim: true,
+        default: null
+    },
+    status: {
+        type: Boolean,
+        default: true // assuming true means active and false means inactive
+    },
     del: {
         type: Boolean,
         default: false

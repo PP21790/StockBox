@@ -40,8 +40,15 @@ const userModel = Schema({
     },
     Role: {
         type: String,
-        required: true
+        default: 2
     },  
+    add_by: {
+        type: String,
+        required: true,
+        trim: true,
+        default: null
+    },
+    permissions: [{ type: String }],
     del: {
         type: String,
         enum: ['1', '0'],
@@ -55,8 +62,15 @@ const userModel = Schema({
     createdAt: {
         type: Date,
         default: Date.now
+    },
+    forgotPasswordToken: {
+        type: String,
+        default: null,
+    },
+    forgotPasswordTokenExpiry: {
+        type: Date,
+        default: null,
     }
-   
     
 },
     {

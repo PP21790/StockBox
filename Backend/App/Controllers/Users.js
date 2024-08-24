@@ -1,47 +1,52 @@
 const db = require("../Models");
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const Users_Modal = db.Users;
-
+const { sendEmail } = require('../Utils/emailService');
 
 class Users {
 
 
   async AddUser(req, res) {
     try {
-      const { FullName, UserName, Email, PhoneNo, password, Role, token } = req.body;
+      const { FullName, UserName, Email, PhoneNo, password,add_by } = req.body;
+
+      console.log("Password before hashing:", password);
+
       const hashedPassword = await bcrypt.hash(password, 10);
+      console.log("result", hashedPassword);
       const result = new Users_Modal({
-      FullName: FullName,
-      UserName: UserName,
-      Role: Role,
-      Email: Email,
-      PhoneNo: PhoneNo,
-      password: hashedPassword,
-      token: token
-      })
-
+        FullName: FullName,
+        UserName: UserName,
+        Email: Email,
+        PhoneNo: PhoneNo,
+        password: hashedPassword,
+        add_by: add_by
+      });
+  
       await result.save();
-
-      console.log("result", result)
+  
+      console.log("result", result);
       return res.json({
         status: true,
-        message: "add",
+        message: "User added successfully",
       });
-
+  
     } catch (error) {
-      return res.json({ status: false, message: "Server error", data: [] });
+      console.error("Error adding user:", error); // Log the full error
+      return res.status(500).json({ status: false, message: "Server error", error: error.message });
     }
   }
-
+  
   async getUser(req, res) {
-
-    
+  
     try {
+   
       const { } = req.body;
 
       //const result = await Users_Modal.find()
 
-      const result = await Users_Modal.find({ del: 0 });
+      const result = await Users_Modal.find({ del: 0,Role: 2 });
 
       return res.json({
         status: true,
@@ -56,6 +61,7 @@ class Users {
 
   async detailUser(req, res) {
     try {
+   
         // Extract ID from request parameters
         const { id } = req.params;
 
@@ -96,7 +102,7 @@ class Users {
 
   async updateUser(req, res) {
     try {
-      const { id, FullName, Email, PhoneNo, password, Role, token } = req.body;
+      const { id, FullName, Email, PhoneNo, password } = req.body;
   
       if (!id) {
         return res.status(400).json({
@@ -113,8 +119,6 @@ class Users {
           Email,
           PhoneNo,
           password,
-          token,
-          Role,
         },
         { updateSearchIndexser: true, runValidators: true } // Options: return the updated document and run validators
       );
@@ -189,16 +193,17 @@ class Users {
 
   async loginUser(req, res) {
     try {
-      const { identifier, password } = req.body;
+      const { UserName, password } = req.body;  // Extract password here
 
       const user = await Users_Modal.findOne({
-        $or: [{ Email: identifier }, { PhoneNo: identifier }],
+        UserName: UserName,
+        ActiveStatus: '1'  // Make sure ActiveStatus is compared as a string
       });
 
       if (!user) {
         return res.status(404).json({
           status: false,
-          message: "User not found",
+          message: "User not found or account is inactive",
         });
       }
 
@@ -218,9 +223,201 @@ class Users {
           Email: user.Email,
           PhoneNo: user.PhoneNo,
           Role: user.Role,
+          id: user.id,
         },
       });
     } catch (error) {
+      return res.status(500).json({
+        status: false,
+        message: "Server error",
+        error: error.message,
+      });
+    }
+}
+
+
+  async  statusChange(req, res) {
+    try {
+        const { id, status } = req.body;
+  
+        // Validate status
+        const validStatuses = ['1', '0'];
+        if (!validStatuses.includes(status)) {
+            return res.status(400).json({
+                status: false,
+                message: "Invalid status value"
+            });
+        }
+  
+        // Find and update the plan
+        const result = await Users_Modal.findByIdAndUpdate(
+            id,
+            { ActiveStatus: status },
+            { new: true } // Return the updated document
+        );
+  
+        if (!result) {
+            return res.status(404).json({
+                status: false,
+                message: "User not found"
+            });
+        }
+  
+        return res.json({
+            status: true,
+            message: "Status updated successfully",
+            data: result
+        });
+  
+    } catch (error) {
+        console.error("Error updating status:", error);
+        return res.status(500).json({
+            status: false,
+            message: "Server error",
+            data: []
+        });
+    }
+  }
+
+  async updateUserPermissions(req, res) {
+    try {
+      const { id, permissions } = req.body;
+  
+      if (!id) {
+        return res.status(400).json({
+          status: false,
+          message: "User ID is required",
+        });
+      }
+  
+      // Ensure permissions is an array
+      const permissionsArray = Array.isArray(permissions) ? permissions : [permissions];
+  
+      // Retrieve the user's current permissions from the database
+      const user = await Users_Modal.findById(id);
+      if (!user) {
+        return res.status(404).json({
+          status: false,
+          message: "User not found",
+        });
+      }
+  
+      // Update permissions directly with the provided array
+      user.permissions = permissionsArray;
+  
+      // Save the updated user
+      const updatedUser = await user.save();
+  
+      return res.json({
+        status: true,
+        message: "User permissions updated successfully",
+        data: updatedUser,
+      });
+  
+    } catch (error) {
+      console.error("Error updating User permissions:", error);
+      return res.status(500).json({
+        status: false,
+        message: "Server error",
+        error: error.message,
+      });
+    }
+  }
+  
+  async forgotPassword(req, res) {
+
+    try {
+      const { Email } = req.body;
+
+      // Find the user by email
+      const user = await Users_Modal.findOne({ Email });
+
+      if (!user) {
+        return res.status(404).json({
+          status: false,
+          message: "User with this email does not exist",
+        });
+      }
+
+      // Generate a reset token
+      const resetToken = crypto.randomBytes(20).toString('hex');
+
+      // Set the token and expiry on the user
+      user.forgotPasswordToken = resetToken;
+      user.forgotPasswordTokenExpiry = Date.now() + 3600000; // 1 hour from now
+
+      await user.save();
+
+      // Email options
+      const mailOptions = {
+        to: user.Email,
+        from: 'info@pnpuniverse.com',
+        subject: 'Password Reset',
+        text: `You are receiving this because you (or someone else) have requested to reset the password for your account.\n\n
+               Please click on the following link, or paste it into your browser to complete the process:\n\n
+               http://${req.headers.host}/reset-password/${resetToken}\n\n
+               If you did not request this, please ignore this email and your password will remain unchanged.\n`,
+      };
+
+      // Send email
+      await sendEmail(mailOptions);
+
+      return res.json({
+        status: true,
+        message: 'Reset token sent to email',
+      });
+
+    } catch (error) {
+      console.error("Error in forgotPassword:", error);
+      return res.status(500).json({
+        status: false,
+        message: "Server error",
+        error: error.message,
+      });
+    }
+  }
+  async resetPassword(req, res) {
+    try {
+      const { resetToken, newPassword } = req.body;
+
+      if (!resetToken || !newPassword) {
+        return res.status(400).json({
+          status: false,
+          message: "Reset token and new password are required",
+        });
+      }
+
+      // Find the user by reset token and check if the token is valid
+      const user = await Users_Modal.findOne({
+        forgotPasswordToken: resetToken,
+        forgotPasswordTokenExpiry: { $gt: Date.now() } // Token should not be expired
+      });
+
+      if (!user) {
+        return res.status(400).json({
+          status: false,
+          message: "Invalid or expired reset token",
+        });
+      }
+
+      // Hash the new password
+      
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      // Update the user's password and clear the reset token
+      user.password = hashedPassword;
+      user.forgotPasswordToken = undefined; // Clear the token
+      user.forgotPasswordTokenExpiry = undefined; // Clear the expiry
+
+      await user.save();
+
+      return res.json({
+        status: true,
+        message: "Password has been reset successfully",
+      });
+
+    } catch (error) {
+      console.error("Error in resetPassword:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",

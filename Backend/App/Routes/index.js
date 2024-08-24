@@ -7,5 +7,9 @@ module.exports = function (app) {
     app.use(require("./Role"))
     app.use(require("./Service"))
     app.use(require("./Users"))
+    app.use(require("./Faq"))
+    app.use(require("./Dashboard"))
+    app.use(require("./Plan"))
+
 
 }

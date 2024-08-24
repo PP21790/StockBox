@@ -22,6 +22,12 @@ const NewsSchema = new Schema({
         type: Boolean,
         default: true // assuming true means active and false means inactive
     },
+    add_by: {
+        type: String,
+        required: true,
+        trim: true,
+        default: null
+    },
     del: {
         type: Boolean,
         default: false // assuming false means not deleted

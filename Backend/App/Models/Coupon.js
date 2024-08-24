@@ -33,6 +33,16 @@ const CouponSchema = new Schema({
         type: Date,
         required: true
     },
+    status: {
+        type: Boolean,
+        default: true // assuming true means active and false means inactive
+    },
+    add_by: {
+        type: String,
+        required: true,
+        trim: true,
+        default: null
+    },
     del: {
         type: Boolean,
         default: false // Indicates whether the coupon is deleted

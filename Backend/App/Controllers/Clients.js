@@ -8,14 +8,15 @@ class Clients {
 
   async AddClient(req, res) {
     try {
-      const { FullName, Email, PhoneNo, password, token } = req.body;
+      const { FullName, Email, PhoneNo, password, token,add_by } = req.body;
       const hashedPassword = await bcrypt.hash(password, 10);
       const result = new Clients_Modal({
       FullName: FullName,
       Email: Email,
       PhoneNo: PhoneNo,
       password: hashedPassword,
-      token: token
+      token: token,
+      add_by: add_by
       })
 
       await result.save();
@@ -33,6 +34,8 @@ class Clients {
 
   async getClient(req, res) {
     try {
+
+      
       const { } = req.body;
 
     //  const result = await Clients_Modal.find()
@@ -179,5 +182,48 @@ class Clients {
       });
     }
   }
+  async  statusChange(req, res) {
+    try {
+        const { id, status } = req.body;
+  
+        // Validate status
+        const validStatuses = ['1', '0'];
+        if (!validStatuses.includes(status)) {
+            return res.status(400).json({
+                status: false,
+                message: "Invalid status value"
+            });
+        }
+  
+        // Find and update the plan
+        const result = await Clients_Modal.findByIdAndUpdate(
+            id,
+            { ActiveStatus: status },
+            { new: true } // Return the updated document
+        );
+  
+        if (!result) {
+            return res.status(404).json({
+                status: false,
+                message: "Client not found"
+            });
+        }
+  
+        return res.json({
+            status: true,
+            message: "Status updated successfully",
+            data: result
+        });
+  
+    } catch (error) {
+        console.error("Error updating status:", error);
+        return res.status(500).json({
+            status: false,
+            message: "Server error",
+            data: []
+        });
+    }
+  }
+  
 }
 module.exports = new Clients();

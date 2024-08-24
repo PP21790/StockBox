@@ -18,8 +18,8 @@ const Coupon_Modal = db.Coupon;
 const Role_Modal = db.Role;
 const Service_Modal = db.Service;
 const Users_Modal = db.Users;
-
-
+const Faq_Modal = db.Faq;
+const Plan_Modal = db.Plan;
 
 
 // Setting up CORS options
@@ -34,21 +34,14 @@ const corsOpts = {
 
 app.use(cors(corsOpts));
 
-
 // Body-parser middleware setup
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(bodyparser.json({ limit: '10mb', extended: true }));
 
 const server = http.createServer(app);
 
-
 // Importing routes
 require('./App/Routes/index')(app)
-
-
-
-
-
 
 // httpsserver.listen(1001)
 server.listen(process.env.PORT, () => {
