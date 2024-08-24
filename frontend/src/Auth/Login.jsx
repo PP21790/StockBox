@@ -1,14 +1,32 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Login = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
 
-    const loginpageOpen = (e) => {
-        localStorage.setItem("token", "1e1e616fytfxff")
-        navigate("/admin/dashboard");
+    const loginpageOpen = async (e) => {
+        e.preventDefault(); // Prevent the default form submission
 
+        try {
+            const response = await axios.post('http://localhost:5001/user/loginbody', {
+                UserName: username,
+                password: password,
+            });
+
+            // Assuming the API response contains a token
+            if (response.data.token) {
+                localStorage.setItem("token", response.data.token);
+                navigate("/admin/dashboard");
+            } else {
+                setError('Invalid login credentials');
+            }
+        } catch (error) {
+            setError('An error occurred while logging in');
+        }
     }
 
     return (
@@ -25,19 +43,20 @@ const Login = () => {
                                         </div>
                                         <div className="text-center mb-4">
                                             <h5 className="">Rukada Admin</h5>
-                                            {/* <p className="mb-0">Please log in to your account</p> */}
                                         </div>
                                         <div className="form-body">
-                                            <form className="row g-3">
+                                            <form className="row g-3" onSubmit={loginpageOpen}>
                                                 <div className="col-12">
                                                     <label htmlFor="inputEmailAddress" className="form-label">
-                                                        Email
+                                                        Username
                                                     </label>
                                                     <input
-                                                        type="email"
+                                                        type="text"
                                                         className="form-control"
                                                         id="inputEmailAddress"
-                                                        placeholder="jhon@example.com"
+                                                        placeholder="Enter Your Username"
+                                                        value={username}
+                                                        onChange={(e) => setUsername(e.target.value)}
                                                     />
                                                 </div>
                                                 <div className="col-12">
@@ -49,9 +68,10 @@ const Login = () => {
                                                             type="password"
                                                             className="form-control border-end-0"
                                                             id="inputChoosePassword"
-                                                            defaultValue={12345678}
+                                                            value={password}
+                                                            onChange={(e) => setPassword(e.target.value)}
                                                             placeholder="Enter Password"
-                                                        />{" "}
+                                                        />
                                                         <a
                                                             href="javascript:;"
                                                             className="input-group-text bg-transparent"
@@ -82,7 +102,7 @@ const Login = () => {
                                                 </div>
                                                 <div className="col-12">
                                                     <div className="d-grid">
-                                                        <button type="submit" className="btn btn-primary" onClick={(e) => loginpageOpen(e)}>
+                                                        <button type="submit" className="btn btn-primary">
                                                             Sign in
                                                         </button>
                                                     </div>
@@ -96,13 +116,13 @@ const Login = () => {
                                                     </div>
                                                 </div>
                                             </form>
+                                            {error && <div className="alert alert-danger mt-3">{error}</div>}
                                         </div>
                                         <div className="login-separater text-center mb-5">
-                                            {" "}
                                             <span>OR SIGN IN WITH</span>
                                             <hr />
                                         </div>
-                                        <div className="list-inline contacts-social text-center">
+                                        {/* <div className="list-inline contacts-social text-center">
                                             <a
                                                 href="javascript:;"
                                                 className="list-inline-item bg-facebook text-white border-0 rounded-3"
@@ -127,7 +147,7 @@ const Login = () => {
                                             >
                                                 <i className="bx bxl-linkedin" />
                                             </a>
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </div>
                             </div>
@@ -136,10 +156,8 @@ const Login = () => {
                     {/*end row*/}
                 </div>
             </div>
-
         </div>
     );
 }
 
 export default Login;
-<>Hey! Loginers</>
