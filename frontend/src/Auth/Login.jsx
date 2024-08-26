@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { login_Api } from "../Services/Apis"
+
 
 const Login = () => {
     const navigate = useNavigate();
@@ -9,24 +10,20 @@ const Login = () => {
     const [error, setError] = useState('');
 
     const loginpageOpen = async (e) => {
-        e.preventDefault(); // Prevent the default form submission
-
-        try {
-            const response = await axios.post('http://localhost:5001/user/loginbody', {
-                UserName: username,
-                password: password,
-            });
-
-            // Assuming the API response contains a token
-            if (response.data.token) {
-                localStorage.setItem("token", response.data.token);
-                navigate("/admin/dashboard");
-            } else {
-                setError('Invalid login credentials');
-            }
-        } catch (error) {
-            setError('An error occurred while logging in');
+        e.preventDefault();
+        let req = {
+            UserName: username,
+            password: password,
         }
+        var login_data = await login_Api(req)
+
+        if (login_data.data.status) {
+            localStorage.setItem("token", "dummmmmmmmy");
+            navigate("/admin/dashboard");
+        } else {
+            setError('Invalid login credentials');
+        }
+
     }
 
     return (
