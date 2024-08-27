@@ -10,6 +10,12 @@ module.exports = function (app) {
     app.use(require("./Faq"))
     app.use(require("./Dashboard"))
     app.use(require("./Plan"))
+    app.use(require("./Stock"))
+    app.use(require("./Basket"))
+    app.use(require("./Script"))
+    app.use(require("./Signal"))
+
+
 
 
 }

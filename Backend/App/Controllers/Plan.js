@@ -8,7 +8,7 @@ class Plan {
 
     async AddPlan(req, res) {
         try {
-            const { title, description, price, totaldays, service_id, add_by } = req.body;
+            const { title, description, price, validity, service_id, add_by,accuracy } = req.body;
     
             // Debugging: Log the incoming request body to ensure the data is correct
             console.log("Request Body:", req.body);
@@ -17,9 +17,10 @@ class Plan {
                 title,
                 description,
                 price,
-                totaldays,
+                validity,
                 service_id,
                 add_by,
+                accuracy,
             });
     
             await result.save();
@@ -83,6 +84,48 @@ class Plan {
         }
     }
    
+
+    async activePlan(req, res) {
+      try {
+
+         
+          const plans = await Plan_Modal.aggregate([
+              {
+                  $match: { del: false,status:"active" } // Match plans where 'del' is false
+              },
+              {
+                  $lookup: {
+                      from: 'services', // The name of the collection to join with
+                      localField: 'service_id', // The field from the Plan_Modal
+                      foreignField: '_id', // The field from the Service_Modal
+                      as: 'service' // The name of the new array field to add to the output documents
+                  }
+              },
+              {
+                  $unwind: {
+                      path: '$service',
+                      preserveNullAndEmptyArrays: true // If a plan does not have a matching service, it will still appear in the result
+                  }
+              }
+          ]);
+  
+          return res.json({
+              status: true,
+              message: "Plans fetched successfully",
+              data: plans
+          });
+  
+      } catch (error) {
+          return res.json({ 
+              status: false, 
+              message: "Server error", 
+              data: [] 
+          });
+      }
+  }
+ 
+
+
     async detailPlan(req, res) {
         try {
             // Extract ID from request parameters
@@ -143,7 +186,7 @@ class Plan {
 
   async updatePlan(req, res) {
     try {
-        const { id, title, description, price, totaldays, service_id } = req.body;
+        const { id, title, description, price, validity, service_id,accuracy } = req.body;
   
       if (!id) {
         return res.status(400).json({
@@ -158,8 +201,9 @@ class Plan {
             title,
             description,
             price,
-            totaldays,
+            validity,
             service_id,
+            accuracy,
         },
         { plan: true, runValidators: true } // Options: return the updated document and run validators
       );

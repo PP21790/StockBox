@@ -14,6 +14,11 @@ module.exports = {
     Service: require("./Service"),
     Users: require("./Users"),
     Faq: require("./Faq"),
+    Stock: require("./Stock"),
+    Basket: require("./Basket"),
+    Script: require("./Script"),
+    Signal: require("./Signal"),
+
 
 
 

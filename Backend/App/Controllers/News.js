@@ -67,6 +67,30 @@ class NewsController {
         }
     }
 
+    async activeNews(req, res) {
+        try {
+
+
+        
+           // const news = await News_Modal.find();
+            const news = await News_Modal.find({ del: false,status: true });
+
+            return res.status(200).json({
+                status: true,
+                message: "News retrieved successfully",
+                data: news
+            });
+        } catch (error) {
+            console.error("Error retrieving news:", error);
+            return res.status(500).json({
+                status: false,
+                message: "Server error",
+                error: error.message
+            });
+        }
+    }
+
+
     // Get a single blog post by ID
     async detailNews(req, res) {
         try {

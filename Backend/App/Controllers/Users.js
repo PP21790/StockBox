@@ -11,10 +11,10 @@ class Users {
     try {
       const { FullName, UserName, Email, PhoneNo, password,add_by } = req.body;
 
-      console.log("Password before hashing:", password);
+      // console.log("Password before hashing:", password);
 
       const hashedPassword = await bcrypt.hash(password, 10);
-      console.log("result", hashedPassword);
+    //  console.log("result", hashedPassword);
       const result = new Users_Modal({
         FullName: FullName,
         UserName: UserName,
@@ -47,6 +47,27 @@ class Users {
       //const result = await Users_Modal.find()
 
       const result = await Users_Modal.find({ del: 0,Role: 2 });
+
+      return res.json({
+        status: true,
+        message: "get",
+        data:result
+      });
+
+    } catch (error) {
+      return res.json({ status: false, message: "Server error", data: [] });
+    }
+  }
+
+  async activeUser(req, res) {
+  
+    try {
+   
+      const { } = req.body;
+
+      //const result = await Users_Modal.find()
+
+      const result = await Users_Modal.find({ del: 0,Role: 2,ActiveStatus: 1 });
 
       return res.json({
         status: true,
@@ -197,7 +218,8 @@ class Users {
 
       const user = await Users_Modal.findOne({
         UserName: UserName,
-        ActiveStatus: '1'  // Make sure ActiveStatus is compared as a string
+        ActiveStatus: '1',
+        del: '0'   // Make sure ActiveStatus is compared as a string
       });
 
       if (!user) {
@@ -215,6 +237,10 @@ class Users {
         });
       }
 
+      const token = crypto.randomBytes(10).toString('hex'); // 10 bytes = 20 hex characters
+      user.token = token;
+      await user.save();
+
       return res.json({
         status: true,
         message: "Login successful",
@@ -224,6 +250,7 @@ class Users {
           PhoneNo: user.PhoneNo,
           Role: user.Role,
           id: user.id,
+          token: token,
         },
       });
     } catch (error) {
@@ -426,6 +453,110 @@ class Users {
     }
   }
 
-
+ 
+    async changePassword(req, res) {
+      try {
+        const { id, currentPassword, newPassword } = req.body;
+  
+        if (!id || !currentPassword || !newPassword) {
+          return res.status(400).json({
+            status: false,
+            message: "User ID, current password, and new password are required",
+          });
+        }
+  
+        // Find the user by ID
+        const user = await Users_Modal.findById(id);
+  
+        if (!user) {
+          return res.status(404).json({
+            status: false,
+            message: "User not found",
+          });
+        }
+  
+        // Check if the current password is correct
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+  
+        if (!isMatch) {
+          return res.status(401).json({
+            status: false,
+            message: "Current password is incorrect",
+          });
+        }
+  
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+  
+        // Update the user's password
+        user.password = hashedPassword;
+        await user.save();
+  
+        return res.json({
+          status: true,
+          message: "Password changed successfully",
+        });
+  
+      } catch (error) {
+        console.error("Error in changePassword:", error);
+        return res.status(500).json({
+          status: false,
+          message: "Server error",
+          error: error.message,
+        });
+      }
+    }
+    
+    async updateProfile(req, res) {
+      try {
+          const { id, FullName, Email, PhoneNo } = req.body;
+  
+          // Ensure the user ID is provided
+          if (!id) {
+              return res.status(400).json({
+                  status: false,
+                  message: "User ID is required",
+              });
+          }
+  
+          // Find the user by ID
+          const user = await Users_Modal.findById(id);
+          if (!user) {
+              return res.status(404).json({
+                  status: false,
+                  message: "User not found",
+              });
+          }
+  
+          // Update the user's profile information
+          if (FullName) user.FullName = FullName;
+          if (Email) user.Email = Email;
+          if (PhoneNo) user.PhoneNo = PhoneNo;
+  
+          // Save the updated user profile
+          await user.save();
+  
+          return res.json({
+              status: true,
+              message: "Profile updated successfully",
+              data: {
+                  id: user.id,
+                  FullName: user.FullName,
+                  Email: user.Email,
+                  PhoneNo: user.PhoneNo,
+              }
+          });
+  
+      } catch (error) {
+          console.error("Error in updateProfile:", error);
+          return res.status(500).json({
+              status: false,
+              message: "Server error",
+              error: error.message,
+          });
+      }
+  }
+  
+  
 }
 module.exports = new Users();

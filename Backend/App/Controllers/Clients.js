@@ -52,6 +52,26 @@ class Clients {
     }
   }
 
+  async activeClient(req, res) {
+    try {
+
+      
+      const { } = req.body;
+
+    //  const result = await Clients_Modal.find()
+    const result = await Clients_Modal.find({ del: 0,ActiveStatus:1 });
+
+      return res.json({
+        status: true,
+        message: "get",
+        data:result
+      });
+
+    } catch (error) {
+      return res.json({ status: false, message: "Server error", data: [] });
+    }
+  }
+
   async detailClient(req, res) {
     try {
         // Extract ID from request parameters

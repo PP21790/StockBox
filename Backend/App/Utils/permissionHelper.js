@@ -3,13 +3,12 @@ const Users_Modal = db.Users;
 
 const hasPermission = async (userId, permissionName) => {
   try {
-    
-    const user = await Users_Modal.findById(userId);
-    
+    console.log('token-',userId);
+    const user = await Users_Modal.findOne({ token: userId });    
     if (!user) {
       throw new Error('User not found');
     }
-  
+
     if (user.Role === '1') {
       return true;
     } else if (user.Role === '2') {

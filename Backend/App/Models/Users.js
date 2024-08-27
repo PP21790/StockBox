@@ -44,7 +44,6 @@ const userModel = Schema({
     },  
     add_by: {
         type: String,
-        required: true,
         trim: true,
         default: null
     },
@@ -67,10 +66,15 @@ const userModel = Schema({
         type: String,
         default: null,
     },
+    token: {
+        type: String,
+        default: null // Token field to store the random 20-character token
+      },
     forgotPasswordTokenExpiry: {
         type: Date,
         default: null,
     }
+    
     
 },
     {

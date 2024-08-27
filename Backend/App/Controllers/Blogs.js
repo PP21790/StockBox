@@ -64,6 +64,27 @@ class BlogController {
         }
     }
 
+    async activeBlogs(req, res) {
+        try {
+
+            const blogs = await Blogs_Modal.find({ del: false,status: true });
+
+            return res.status(200).json({
+                status: true,
+                message: "Blogs retrieved successfully",
+                data: blogs
+            });
+        } catch (error) {
+            console.error("Error retrieving blogs:", error);
+            return res.status(500).json({
+                status: false,
+                message: "Server error",
+                error: error.message
+            });
+        }
+    }
+
+
     // Get a single blog post by ID
     async detailBlogs(req, res) {
         try {

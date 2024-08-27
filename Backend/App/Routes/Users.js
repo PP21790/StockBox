@@ -1,7 +1,7 @@
 const router = require("express").Router()
 const { checkPermission } = require('../Middleware/permissionMiddleware'); // Path to your middleware
 
-const {AddUser,getUser,updateUser,deleteUser,detailUser,loginUser,statusChange,updateUserPermissions,forgotPassword,resetPassword} = require('../Controllers/Users')
+const {AddUser,getUser,updateUser,deleteUser,detailUser,loginUser,statusChange,updateUserPermissions,forgotPassword,resetPassword,changePassword,updateProfile,activeUser} = require('../Controllers/Users')
 
 
 const PERMISSIONS = {
@@ -10,7 +10,7 @@ const PERMISSIONS = {
     ALL_VIEW: 'allviewuser',
     UPDATE: 'edituser',
     DELETE: 'deleteuser',
-    CHANGE_STATUS: 'changestatus',
+    CHANGE_STATUS: 'userchangestatus',
     UPDATE_PERMISSIONS: 'updatepermissions'
   };
 
@@ -26,7 +26,10 @@ const PERMISSIONS = {
   router.post('/user/update-permissions', checkPermission(PERMISSIONS.UPDATE_PERMISSIONS), updateUserPermissions);
   router.post('/user/forgot-password', forgotPassword);
   router.post('/user/reset-password', resetPassword);
+  router.post('/user/change-password', changePassword);
+  router.post('/user/update-profile', updateProfile);
+  router.get('/user/activeUser',   activeUser);
 
-
+  
   
   module.exports = router;
