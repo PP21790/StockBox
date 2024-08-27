@@ -62,6 +62,26 @@ class Coupon {
       return res.json({ status: false, message: "Server error", data: [] });
     }
   }
+  async activeCoupon(req, res) {
+    try {
+
+      const { } = req.body;
+
+      //const result = await Coupon_Modal.find()
+
+      const result = await Coupon_Modal.find({ del: false,status: true });
+
+      return res.json({
+        status: true,
+        message: "get",
+        data:result
+      });
+
+    } catch (error) {
+      return res.json({ status: false, message: "Server error", data: [] });
+    }
+  }
+
 
   async detailCoupon(req, res) {
     try {

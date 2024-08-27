@@ -2,7 +2,7 @@
 
 const { Schema, model } = require('mongoose');
 
-const PlanSchema = new Schema({
+const BasketSchema = new Schema({
     title: {
         type: String,
         required: true,
@@ -29,11 +29,6 @@ const PlanSchema = new Schema({
         required: true,
         min: 0
     },
-    service_id: {
-        type: Schema.Types.ObjectId,
-        ref: 'Service', // Assuming there's a 'Service' model to reference
-        required: true
-    },
     status: {
         type: String,
         enum: ['active', 'inactive'], // Example statuses
@@ -47,13 +42,13 @@ const PlanSchema = new Schema({
     },
     del: {
         type: Boolean,
-        default: false // Indicates whether the plan is marked as deleted
+        default: false // Indicates whether the Basket is marked as deleted
     }
 }, {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
 });
 
 // Define the model
-const Plan = model('Plan', PlanSchema);
+const Basket = model('Basket', BasketSchema);
 
-module.exports = Plan;
+module.exports = Basket;

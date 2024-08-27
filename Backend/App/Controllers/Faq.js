@@ -59,6 +59,29 @@ class Faq {
     }
   }
 
+  async activeFaq(req, res) {
+    try {
+
+
+      const { } = req.body;
+
+    //  const result = await Faq_Modal.find()
+      const result = await Faq_Modal.find({ del: false,status: true });
+
+
+      return res.json({
+        status: true,
+        message: "get",
+        data:result
+      });
+
+    } catch (error) {
+      return res.json({ status: false, message: "Server error", data: [] });
+    }
+  }
+
+
+
   async detailFaq(req, res) {
     try {
         // Extract ID from request parameters

@@ -5,7 +5,7 @@ const checkPermission = (permissionName) => {
 
   return async (req, res, next) => {
     const userId = req.headers['authorization']; // Get userId from headers
- 
+
     try {
       const permissionGranted = await hasPermission(userId, permissionName);
     

@@ -20,15 +20,20 @@ const Service_Modal = db.Service;
 const Users_Modal = db.Users;
 const Faq_Modal = db.Faq;
 const Plan_Modal = db.Plan;
+const Stock_Modal = db.Stock;
+const Basket_Modal = db.Basket;
+const Script_Modal = db.Script;
+const Signal_Modal = db.Signal;
 
 
-// Setting up CORS options
+
+
+
 const corsOpts = {
-  origin: '*',
+  origin: '*', // Adjust this as needed for your security requirements
   methods: ['GET', 'POST'],
   allowedHeaders: [
-    "Access-Control-Allow-Headers",
-    "x-access-token, Origin, Content-Type, Accept", "authorization",
+    "x-access-token", "Origin", "Content-Type", "Accept", "authorization",
   ],
 };
 
@@ -37,6 +42,7 @@ app.use(cors(corsOpts));
 // Body-parser middleware setup
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(bodyparser.json({ limit: '10mb', extended: true }));
+
 
 const server = http.createServer(app);
 
