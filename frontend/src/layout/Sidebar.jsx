@@ -134,6 +134,15 @@ const Sidebar = ({ onToggleClick }) => {
                         </div>
                       </a>
                     </li>
+                    <li>
+                      <Link to="/admin/permision">
+                        <div className="parent-icon">
+                          <i className="bx bxs-coupon" />
+                        </div>
+                        <div className="menu-title">Permision
+                        </div>
+                      </Link>
+                    </li>
 
 
                   </ul>

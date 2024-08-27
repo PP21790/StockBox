@@ -1,8 +1,31 @@
-import React from 'react'
-import { Formik } from 'formik';
-import { useEffect } from 'react';
+import React from 'react';
+import axios from 'axios';
+import { Formik, Form, Field } from 'formik';
+import { useState } from 'react';
 
 const Client = () => {
+  const [successMessage, setSuccessMessage] = useState('');
+
+  const handleSubmit = (values, { resetForm }) => {
+    const requestData = {
+      FullName: values.FullName,
+      Email: values.Email,
+      PhoneNo: values.PhoneNo,
+      Password: values.Password,
+      UserName: values.UserName,
+      add_by: "66bc8b0c3fb6f1724c02bfec", // Replace this with the actual user ID from your login
+    };
+
+    axios.post('http://localhost:5001/user/add', requestData)
+      .then(response => {
+        setSuccessMessage('Client added successfully!');
+        resetForm();
+      })
+      .catch(error => {
+        console.error('There was an error adding the client!', error);
+      });
+  };
+
   return (
     <div>
       <div className="page-content">
@@ -17,11 +40,9 @@ const Client = () => {
                     <i className="bx bx-home-alt" />
                   </a>
                 </li>
-
               </ol>
             </nav>
           </div>
-
         </div>
         {/*end breadcrumb*/}
         <div className="card">
@@ -69,58 +90,65 @@ const Client = () => {
                         />
                       </div>
                       <div className="modal-body">
-                        <form action="">
-                          <div className="row">
-                            <div className="col-md-6">
-                              <label htmlFor="">Full Name</label>
-                              <input className="form-control mb-2" type="text" placeholder='enter your name' />
-                            </div>
-                            <div className="col-md-6">
-                              <label htmlFor="">Email</label>
-                              <input className="form-control" type="email" placeholder='enter your mail' />
-                            </div>
-                            <div className="col-md-6">
-                              <label htmlFor="">Phone No</label>
-                              <input className="form-control" type="number" placeholder='enter your Phone no ' />
-                            </div>
-                            <div className="col-md-6">
-                              <label htmlFor="">Selelct Service</label>
-                              <select className="form-select mb-3" aria-label="Default select example">
-                                <option selected="">Selelct Service</option>
-                                <option value={1}>One</option>
-                                <option value={2}>Two</option>
-                                <option value={3}>Three</option>
-                              </select>
-
-                            </div>
-                            <div className="col-md-6">
-                              <label htmlFor=""> City/State</label>
-                              <input className="form-control" type="text" placeholder='enter your City/State' />
-                            </div>
-                            <div className="col-md-6">
-                              <label htmlFor="">Password</label>
-                              <input className="form-control" type="password" placeholder='enter your password' />
-                            </div>
-
-                          </div>
-                        </form>
-                      </div>
-                      <div className="modal-footer">
-                        <button
-                          type="button"
-                          className="btn btn-secondary"
-                          data-bs-dismiss="modal"
+                        {successMessage && <div className="alert alert-success">{successMessage}</div>}
+                        <Formik
+                          initialValues={{
+                            FullName: '',
+                            Email: '',
+                            PhoneNo: '',
+                            Password: '',
+                            UserName: '',
+                          }}
+                          onSubmit={handleSubmit}
                         >
-                          Close
-                        </button>
-                        <button type="button" className="btn btn-primary">
-                          Add
-                        </button>
+                          {({ isSubmitting }) => (
+                            <Form>
+                              <div className="row">
+                                <div className="col-md-6">
+                                  <label htmlFor="FullName">Full Name</label>
+                                  <Field className="form-control mb-2" name="FullName" placeholder="Enter your name" />
+                                </div>
+                                <div className="col-md-6">
+                                  <label htmlFor="Email">Email</label>
+                                  <Field className="form-control" type="email" name="Email" placeholder="Enter your email" />
+                                </div>
+                                <div className="col-md-6">
+                                  <label htmlFor="PhoneNo">Phone No</label>
+                                  <Field className="form-control" name="PhoneNo" placeholder="Enter your phone no" />
+                                </div>
+                                <div className="col-md-6">
+                                  <label htmlFor="Password">Password</label>
+                                  <Field className="form-control" type="password" name="Password" placeholder="Enter your password" />
+                                </div>
+                                <div className="col-md-6">
+                                  <label htmlFor="UserName">Username</label>
+                                  <Field className="form-control" name="UserName" placeholder="Enter your username" />
+                                </div>
+                              </div>
+                              <div className="modal-footer">
+                                <button
+                                  type="button"
+                                  className="btn btn-secondary"
+                                  data-bs-dismiss="modal"
+                                >
+                                  Close
+                                </button>
+                                <button
+                                  type="submit"
+                                  className="btn btn-primary"
+                                  disabled={isSubmitting}
+                                >
+                                  {isSubmitting ? 'Adding...' : 'Add'}
+                                </button>
+                              </div>
+                            </Form>
+                          )}
+                        </Formik>
                       </div>
                     </div>
                   </div>
                 </div>
-                {/* Modal end*/}
+                {/* Modal end */}
               </div>
             </div>
             <div className="table-responsive">
@@ -138,178 +166,16 @@ const Client = () => {
                 </thead>
                 <tbody>
                   <tr>
-                    <td>
-                      1
-                    </td>
+                    <td>1</td>
                     <td>Gaspur Antunes</td>
                     <td>
                       <div className="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3">
                         <i className="bx bxs-circle me-1" />
-                        FulFilled
+                        Fulfilled
                       </div>
                     </td>
                     <td>$485.20</td>
                     <td>June 10, 2020</td>
-                    <td>
-                      <button
-                        type="button"
-                        className="btn btn-primary btn-sm radius-10 px-4"
-                      >
-                        View Details
-                      </button>
-                    </td>
-                    <td>
-                      <div className="d-flex order-actions">
-                        <a href="javascript:;" className="">
-                          <i className="bx bxs-edit" />
-                        </a>
-                        <a href="javascript:;" className="ms-3">
-                          <i className="bx bxs-trash" />
-                        </a>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      2
-                    </td>
-                    <td>Gaspur Antunes</td>
-                    <td>
-                      <div className="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3">
-                        <i className="bx bxs-circle me-1" />
-                        FulFilled
-                      </div>
-                    </td>
-                    <td>$650.30</td>
-                    <td>June 12, 2020</td>
-                    <td>
-                      <button
-                        type="button"
-                        className="btn btn-primary btn-sm radius-10 px-4"
-                      >
-                        View Details
-                      </button>
-                    </td>
-                    <td>
-                      <div className="d-flex order-actions">
-                        <a href="javascript:;" className="">
-                          <i className="bx bxs-edit" />
-                        </a>
-                        <a href="javascript:;" className="ms-3">
-                          <i className="bx bxs-trash" />
-                        </a>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      3
-                    </td>
-                    <td>Gaspur Antunes</td>
-                    <td>
-                      <div className="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3">
-                        <i className="bx bxs-circle me-1" />
-                        FulFilled
-                      </div>
-                    </td>
-                    <td>$159.45</td>
-                    <td>June 14, 2020</td>
-                    <td>
-                      <button
-                        type="button"
-                        className="btn btn-primary btn-sm radius-10 px-4"
-                      >
-                        View Details
-                      </button>
-                    </td>
-                    <td>
-                      <div className="d-flex order-actions">
-                        <a href="javascript:;" className="">
-                          <i className="bx bxs-edit" />
-                        </a>
-                        <a href="javascript:;" className="ms-3">
-                          <i className="bx bxs-trash" />
-                        </a>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      4
-                    </td>
-                    <td>Gaspur Antunes</td>
-                    <td>
-                      <div className="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3">
-                        <i className="bx bxs-circle align-middle me-1" />
-                        FulFilled
-                      </div>
-                    </td>
-                    <td>$968.40</td>
-                    <td>June 16, 2020</td>
-                    <td>
-                      <button
-                        type="button"
-                        className="btn btn-primary btn-sm radius-10 px-4"
-                      >
-                        View Details
-                      </button>
-                    </td>
-                    <td>
-                      <div className="d-flex order-actions">
-                        <a href="javascript:;" className="">
-                          <i className="bx bxs-edit" />
-                        </a>
-                        <a href="javascript:;" className="ms-3">
-                          <i className="bx bxs-trash" />
-                        </a>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      5
-                    </td>
-                    <td>Gaspur Antunes</td>
-                    <td>
-                      <div className="badge rounded-pill text-info bg-light-info p-2 text-uppercase px-3">
-                        <i className="bx bxs-circle align-middle me-1" />
-                        Confirmed
-                      </div>
-                    </td>
-                    <td>$689.50</td>
-                    <td>June 18, 2020</td>
-                    <td>
-                      <button
-                        type="button"
-                        className="btn btn-primary btn-sm radius-10 px-4"
-                      >
-                        View Details
-                      </button>
-                    </td>
-                    <td>
-                      <div className="d-flex order-actions">
-                        <a href="javascript:;" className="">
-                          <i className="bx bxs-edit" />
-                        </a>
-                        <a href="javascript:;" className="ms-3">
-                          <i className="bx bxs-trash" />
-                        </a>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      6
-                    </td>
-                    <td>Gaspur Antunes</td>
-                    <td>
-                      <div className="badge rounded-pill text-info bg-light-info p-2 text-uppercase px-3">
-                        <i className="bx bxs-circle align-middle me-1" />
-                        Confirmed
-                      </div>
-                    </td>
-                    <td>$478.60</td>
-                    <td>June 20, 2020</td>
                     <td>
                       <button
                         type="button"
@@ -335,9 +201,8 @@ const Client = () => {
           </div>
         </div>
       </div>
-
     </div>
-  )
+  );
 }
 
-export default Client
+export default Client;

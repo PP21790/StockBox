@@ -11,6 +11,7 @@ import Profile from './components/Profile';
 import Service from './components/Service';
 import Kyc from './components/Kyc';
 import Signal from './components/Signal';
+import Permision from './components/Permision';
 
 
 function MainApp() {
@@ -64,6 +65,7 @@ function MainApp() {
                     <Route path="/service" element={<Service />} />
                     <Route path="/kyc" element={<Kyc />} />
                     <Route path="/signal" element={<Signal />} />
+                    <Route path="/permision" element={<Permision />} />
                 </Routes>
             </div>
             <Footer />

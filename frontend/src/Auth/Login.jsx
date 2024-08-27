@@ -18,7 +18,7 @@ const Login = () => {
         var login_data = await login_Api(req)
 
         if (login_data.data.status) {
-            localStorage.setItem("token", "dummmmmmmmy");
+            localStorage.setItem("token", "66bc8b0c3fb6f1724c02bfec");
             navigate("/admin/dashboard");
         } else {
             setError('Invalid login credentials');
