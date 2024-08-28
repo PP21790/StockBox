@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Formik, Form, Field } from 'formik';
-import { useState } from 'react';
+import { Spinner } from 'react-bootstrap';
+
 
 const Client = () => {
   const [successMessage, setSuccessMessage] = useState('');
@@ -11,7 +12,7 @@ const Client = () => {
       FullName: values.FullName,
       Email: values.Email,
       PhoneNo: values.PhoneNo,
-      Password: values.Password,
+      password: values.password,
       UserName: values.UserName,
       add_by: "66bc8b0c3fb6f1724c02bfec", // Replace this with the actual user ID from your login
     };
@@ -20,11 +21,56 @@ const Client = () => {
       .then(response => {
         setSuccessMessage('Client added successfully!');
         resetForm();
+
+        // Close the modal after success
+        const modalElement = document.getElementById('exampleModal');
+        const modalInstance = window.bootstrap.Modal.getInstance(modalElement);
+        modalInstance.hide();
+
+        // Hide the success message after 5 seconds
+        setTimeout(() => {
+          setSuccessMessage('');
+        }, 10000);
       })
       .catch(error => {
         console.error('There was an error adding the client!', error);
       });
   };
+  const [data, setData] = useState([]);
+  console.log(data)
+  const [loading, setLoading] = useState(true);
+  // const res = await axios.get(`${Config.base_url}Last_Pattern`,
+  //   {
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       'Authorization': `Bearer ${token}`
+  //     }
+  //   }
+  // )
+
+  const fetchData = async () => {
+    const token = localStorage.getItem("token")
+    try {
+      const response = await axios.get('http://localhost:5001/user/list',
+        {
+          headers: {
+            '': ', ',
+            'Authorization': '2a05cfe1cbb974533e35'
+          },
+          }
+
+      )
+      setData(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div>
@@ -66,7 +112,7 @@ const Client = () => {
                   data-bs-target="#exampleModal"
                 >
                   <i className="bx bxs-plus-square" />
-                  Add New Client
+                  Add client
                 </button>
                 {/* Modal start */}
                 <div
@@ -80,7 +126,7 @@ const Client = () => {
                     <div className="modal-content">
                       <div className="modal-header">
                         <h5 className="modal-title" id="exampleModalLabel">
-                          Add Client
+                          Add User
                         </h5>
                         <button
                           type="button"
@@ -114,15 +160,15 @@ const Client = () => {
                                 </div>
                                 <div className="col-md-6">
                                   <label htmlFor="PhoneNo">Phone No</label>
-                                  <Field className="form-control" name="PhoneNo" placeholder="Enter your phone no" />
+                                  <Field className="form-control mb-2" name="PhoneNo" placeholder="Enter your phone no" />
                                 </div>
                                 <div className="col-md-6">
                                   <label htmlFor="Password">Password</label>
-                                  <Field className="form-control" type="password" name="Password" placeholder="Enter your password" />
+                                  <Field className="form-control" type="password" name="password" placeholder="Enter your password" />
                                 </div>
                                 <div className="col-md-6">
                                   <label htmlFor="UserName">Username</label>
-                                  <Field className="form-control" name="UserName" placeholder="Enter your username" />
+                                  <Field className="form-control mb-2" name="UserName" placeholder="Enter your username" />
                                 </div>
                               </div>
                               <div className="modal-footer">
@@ -152,51 +198,45 @@ const Client = () => {
               </div>
             </div>
             <div className="table-responsive">
-              <table className="table mb-0">
-                <thead className="table-light">
-                  <tr>
-                    <th>S.No</th>
-                    <th>Name</th>
-                    <th>Status</th>
-                    <th>Total</th>
-                    <th>Date</th>
-                    <th>View Details</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>Gaspur Antunes</td>
-                    <td>
-                      <div className="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3">
-                        <i className="bx bxs-circle me-1" />
-                        Fulfilled
-                      </div>
-                    </td>
-                    <td>$485.20</td>
-                    <td>June 10, 2020</td>
-                    <td>
-                      <button
-                        type="button"
-                        className="btn btn-primary btn-sm radius-10 px-4"
-                      >
-                        View Details
-                      </button>
-                    </td>
-                    <td>
-                      <div className="d-flex order-actions">
-                        <a href="javascript:;" className="">
-                          <i className="bx bxs-edit" />
-                        </a>
-                        <a href="javascript:;" className="ms-3">
-                          <i className="bx bxs-trash" />
-                        </a>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              {loading ? (
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                  <Spinner animation="border" />
+                </div>
+              ) : (
+                <table className="table mb-0">
+                  <thead className="table-light">
+                    <tr>
+                      <th>S.No</th>
+                      <th>Full Name</th>
+                      <th>Email</th>
+                      <th>Phone No</th>
+                      <th>Username</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.map((item, index) => (
+                      <tr key={item.id}>
+                        <td>{index + 1}</td>
+                        <td>{item.FullName}</td>
+                        <td>{item.Email}</td>
+                        <td>{item.PhoneNo}</td>
+                        <td>{item.UserName}</td>
+                        <td>
+                          <div className="d-flex order-actions">
+                            <a href="javascript:;" className="me-3">
+                              <i className="bx bxs-edit" />
+                            </a>
+                            <a href="javascript:;" className="text-danger">
+                              <i className="bx bxs-trash" />
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
             </div>
           </div>
         </div>

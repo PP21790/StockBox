@@ -56,6 +56,14 @@ const Sidebar = ({ onToggleClick }) => {
                         <div className="menu-title">Client </div>
                       </Link>
                     </li>
+                    <li>
+                      <Link to={'/admin/user'}>
+                        <div className="parent-icon">
+                          <i className="bx bx-user" />
+                        </div>
+                        <div className="menu-title">User</div>
+                      </Link>
+                    </li>
 
 
                     <li>

@@ -175,6 +175,8 @@ const Signal = () => {
                                     highlightOnHover
                                     responsive
                                     striped
+                                    fixedHeader
+                                    fixedHeaderScrollHeight="500px"
                                 />
                             )}
                         </div>

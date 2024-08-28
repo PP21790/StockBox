@@ -37,7 +37,7 @@ const corsOpts = {
   ],
 };
 
-app.use(cors(corsOpts));
+app.use(cors());
 
 // Body-parser middleware setup
 app.use(bodyparser.urlencoded({ extended: true }));
