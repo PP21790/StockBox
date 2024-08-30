@@ -18,6 +18,20 @@ class NewsController {
     
             // After the upload is successful, proceed with the rest of the logic
             const { title, description,add_by } = req.body;
+
+
+            if (!title) {
+                return res.status(400).json({ status: false, message: "title is required" });
+              }
+              if (!description) {
+                return res.status(400).json({ status: false, message: "description is required" });
+              }
+          
+              if (!add_by) {
+                return res.status(400).json({ status: false, message: "add_by is required" });
+              }
+
+
             const image = req.files['image'] ? req.files['image'][0].filename : null;
     
             // Create a new News record
@@ -124,6 +138,16 @@ class NewsController {
     async updateNews(req, res) {
         try {
             const { id, title, description } = req.body;
+
+
+            if (!title) {
+                return res.status(400).json({ status: false, message: "title is required" });
+              }
+              if (!description) {
+                return res.status(400).json({ status: false, message: "description is required" });
+              }
+          
+            
           
             if (!id) {
                 return res.status(400).json({

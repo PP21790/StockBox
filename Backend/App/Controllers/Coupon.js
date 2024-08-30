@@ -8,8 +8,31 @@ class Coupon {
         try {
             const { name, code, type, value, startdate, enddate,add_by } = req.body;
     
-            // Debugging: Log the incoming request body to ensure the data is correct
-            console.log("Request Body:", req.body);
+            if (!name) {
+              return res.status(400).json({ status: false, message: "coupon name is required" });
+            }
+            if (!code) {
+              return res.status(400).json({ status: false, message: "coupon code is required" });
+            }
+
+            if (!type) {
+              return res.status(400).json({ status: false, message: "coupon type is required" });
+            }
+            if (!value) {
+              return res.status(400).json({ status: false, message: "coupon value is required" });
+            }
+
+            if (!startdate) {
+              return res.status(400).json({ status: false, message: "coupon startdate is required" });
+            }
+            if (!enddate) {
+              return res.status(400).json({ status: false, message: "coupon enddate is required" });
+            }
+
+        
+            if (!add_by) {
+              return res.status(400).json({ status: false, message: "add_by is required" });
+            }
     
             const result = new Coupon_Modal({
                 name,
@@ -126,6 +149,30 @@ class Coupon {
     try {
       const { id, name, code, type, value, startdate, enddate } = req.body;
   
+
+      if (!name) {
+        return res.status(400).json({ status: false, message: "coupon name is required" });
+      }
+      if (!code) {
+        return res.status(400).json({ status: false, message: "coupon code is required" });
+      }
+
+      if (!type) {
+        return res.status(400).json({ status: false, message: "coupon type is required" });
+      }
+      if (!value) {
+        return res.status(400).json({ status: false, message: "coupon value is required" });
+      }
+
+      if (!startdate) {
+        return res.status(400).json({ status: false, message: "coupon startdate is required" });
+      }
+      if (!enddate) {
+        return res.status(400).json({ status: false, message: "coupon enddate is required" });
+      }
+
+  
+
       if (!id) {
         return res.status(400).json({
           status: false,

@@ -8,14 +8,46 @@ class Clients {
 
   async AddClient(req, res) {
     try {
-      const { FullName, Email, PhoneNo, password, token,add_by } = req.body;
+      const { FullName, Email, PhoneNo, password,add_by } = req.body;
+
+      if (!FullName) {
+        return res.status(400).json({ status: false, message: "fullname is required" });
+      }
+     
+      if (!Email) {
+        return res.status(400).json({ status: false, message: "email is required" });
+      } else if (!/^\S+@\S+\.\S+$/.test(Email)) {
+        return res.status(400).json({ status: false, message: "Invalid email format" });
+      }
+      
+      if (!PhoneNo) {
+        return res.status(400).json({ status: false, message: "phone number is required" });
+      } else if (!/^\d{10}$/.test(PhoneNo)) {
+        return res.status(400).json({ status: false, message: "Invalid phone number format" });
+      }
+      if (!password || password.length < 8 || 
+          !/[A-Z]/.test(password) || 
+          !/[a-z]/.test(password) || 
+          !/\d/.test(password) || 
+          !/[@$!%*?&#]/.test(password)) {
+        return res.status(400).json({ 
+          status: false, 
+          message: "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&#)" 
+        });
+      }
+      if (!add_by) {
+        return res.status(400).json({ status: false, message: "Added by field is required" });
+      }
+
+
+
+
       const hashedPassword = await bcrypt.hash(password, 10);
       const result = new Clients_Modal({
       FullName: FullName,
       Email: Email,
       PhoneNo: PhoneNo,
       password: hashedPassword,
-      token: token,
       add_by: add_by
       })
 
@@ -115,7 +147,38 @@ class Clients {
 
   async updateClient(req, res) {
     try {
-      const { id, FullName, Email, PhoneNo, password, token } = req.body;
+      const { id, FullName, Email, PhoneNo, password } = req.body;
+
+
+      if (!FullName) {
+        return res.status(400).json({ status: false, message: "fullname is required" });
+      }
+     
+      if (!Email) {
+        return res.status(400).json({ status: false, message: "email is required" });
+      } else if (!/^\S+@\S+\.\S+$/.test(Email)) {
+        return res.status(400).json({ status: false, message: "Invalid email format" });
+      }
+      
+      if (!PhoneNo) {
+        return res.status(400).json({ status: false, message: "phone number is required" });
+      } else if (!/^\d{10}$/.test(PhoneNo)) {
+        return res.status(400).json({ status: false, message: "Invalid phone number format" });
+      }
+      if (!password || password.length < 8 || 
+          !/[A-Z]/.test(password) || 
+          !/[a-z]/.test(password) || 
+          !/\d/.test(password) || 
+          !/[@$!%*?&#]/.test(password)) {
+        return res.status(400).json({ 
+          status: false, 
+          message: "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&#)" 
+        });
+      }
+     
+
+
+
   
       if (!id) {
         return res.status(400).json({
@@ -132,7 +195,7 @@ class Clients {
           Email,
           PhoneNo,
           password,
-          token,
+         
         },
         { new: true, runValidators: true } // Options: return the updated document and run validators
       );

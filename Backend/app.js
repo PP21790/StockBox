@@ -48,8 +48,10 @@ const server = http.createServer(app);
 
 // Importing routes
 require('./App/Routes/index')(app)
+require('./App/api/Routes/index')(app)
+//require('./App/api/Routes/index')(app)
 
 // httpsserver.listen(1001)
-server.listen(process.env.PORT, () => {
+server.listen(process.env.PORT, "192.168.0.11", () => {
   console.log(`Server is running on http://0.0.0.0:${process.env.PORT}`);
 });

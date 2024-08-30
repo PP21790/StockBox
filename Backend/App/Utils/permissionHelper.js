@@ -6,9 +6,11 @@ const hasPermission = async (userId, permissionName) => {
     console.log('token-',userId);
     const user = await Users_Modal.findOne({ token: userId });    
     if (!user) {
-      throw new Error('User not found');
+      if (!user) {
+        console.log('Token not valid');
+        return false;
+      }
     }
-
     if (user.Role === '1') {
       return true;
     } else if (user.Role === '2') {

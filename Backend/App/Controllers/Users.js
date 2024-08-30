@@ -2,6 +2,7 @@ const db = require("../Models");
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const Users_Modal = db.Users;
+const BasicSetting_Modal = db.BasicSetting;
 const { sendEmail } = require('../Utils/emailService');
 
 class Users {
@@ -11,7 +12,36 @@ class Users {
     try {
       const { FullName, UserName, Email, PhoneNo, password,add_by } = req.body;
 
-      // console.log("Password before hashing:", password);
+      if (!FullName) {
+        return res.status(400).json({ status: false, message: "fullname is required" });
+      }
+      if (!UserName || UserName.length < 3) {
+        return res.status(400).json({ status: false, message: "username must be at least 3 characters long" });
+      }
+      if (!Email) {
+        return res.status(400).json({ status: false, message: "email is required" });
+      } else if (!/^\S+@\S+\.\S+$/.test(Email)) {
+        return res.status(400).json({ status: false, message: "Invalid email format" });
+      }
+      
+      if (!PhoneNo) {
+        return res.status(400).json({ status: false, message: "phone number is required" });
+      } else if (!/^\d{10}$/.test(PhoneNo)) {
+        return res.status(400).json({ status: false, message: "Invalid phone number format" });
+      }
+      if (!password || password.length < 8 || 
+          !/[A-Z]/.test(password) || 
+          !/[a-z]/.test(password) || 
+          !/\d/.test(password) || 
+          !/[@$!%*?&#]/.test(password)) {
+        return res.status(400).json({ 
+          status: false, 
+          message: "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&#)" 
+        });
+      }
+      if (!add_by) {
+        return res.status(400).json({ status: false, message: "Added by field is required" });
+      }
 
       const hashedPassword = await bcrypt.hash(password, 10);
     //  console.log("result", hashedPassword);
@@ -26,7 +56,7 @@ class Users {
   
       await result.save();
   
-      console.log("result", result);
+     // console.log("result", result);
       return res.json({
         status: true,
         message: "User added successfully",
@@ -125,6 +155,34 @@ class Users {
     try {
       const { id, FullName, Email, PhoneNo, password } = req.body;
   
+
+      if (!FullName) {
+        return res.status(400).json({ status: false, message: "fullName is required" });
+      }
+     
+      if (!Email) {
+        return res.status(400).json({ status: false, message: "email is required" });
+      } else if (!/^\S+@\S+\.\S+$/.test(Email)) {
+        return res.status(400).json({ status: false, message: "Invalid email format" });
+      }
+      
+      if (!PhoneNo) {
+        return res.status(400).json({ status: false, message: "Phone number is required" });
+      } else if (!/^\d{10}$/.test(PhoneNo)) {
+        return res.status(400).json({ status: false, message: "Invalid phone number format" });
+      }
+      if (!password || password.length < 8 || 
+        !/[A-Z]/.test(password) || 
+        !/[a-z]/.test(password) || 
+        !/\d/.test(password) || 
+        !/[@$!%*?&#]/.test(password)) {
+      return res.status(400).json({ 
+        status: false, 
+        message: "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&#)" 
+      });
+    }
+
+
       if (!id) {
         return res.status(400).json({
           status: false,
@@ -216,6 +274,14 @@ class Users {
     try {
       const { UserName, password } = req.body;  // Extract password here
 
+
+      if (!UserName) {
+        return res.status(400).json({ status: false, message: "username is required" });
+      }
+      if (!password) {
+        return res.status(400).json({ status: false, message: "password is required" });
+      }
+
       const user = await Users_Modal.findOne({
         UserName: UserName,
         ActiveStatus: '1',
@@ -228,6 +294,8 @@ class Users {
           message: "User not found or account is inactive",
         });
       }
+
+
 
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
@@ -356,6 +424,11 @@ class Users {
     try {
       const { Email } = req.body;
 
+      if (!Email) {
+        return res.status(400).json({ status: false, message: "email is required" });
+      } else if (!/^\S+@\S+\.\S+$/.test(Email)) {
+        return res.status(400).json({ status: false, message: "Invalid email format" });
+      }
       // Find the user by email
       const user = await Users_Modal.findOne({ Email });
 
@@ -375,10 +448,14 @@ class Users {
 
       await user.save();
 
+      const settings = await BasicSetting_Modal.findOne();
+    if (!settings || !settings.smtp_status) {
+      throw new Error('SMTP settings are not configured or are disabled');
+    }
       // Email options
       const mailOptions = {
         to: user.Email,
-        from: 'info@pnpuniverse.com',
+        from: `${settings.from_name} <${settings.from_mail}>`, // Include business name
         subject: 'Password Reset',
         text: `You are receiving this because you (or someone else) have requested to reset the password for your account.\n\n
                Please click on the following link, or paste it into your browser to complete the process:\n\n
@@ -511,6 +588,21 @@ class Users {
       try {
           const { id, FullName, Email, PhoneNo } = req.body;
   
+          if (!FullName) {
+            return res.status(400).json({ status: false, message: "fullname is required" });
+          }
+          if (!Email) {
+            return res.status(400).json({ status: false, message: "email is required" });
+          } else if (!/^\S+@\S+\.\S+$/.test(Email)) {
+            return res.status(400).json({ status: false, message: "Invalid email format" });
+          }
+          
+          if (!PhoneNo) {
+            return res.status(400).json({ status: false, message: "phone number is required" });
+          } else if (!/^\d{10}$/.test(PhoneNo)) {
+            return res.status(400).json({ status: false, message: "Invalid phone number format" });
+          }
+
           // Ensure the user ID is provided
           if (!id) {
               return res.status(400).json({

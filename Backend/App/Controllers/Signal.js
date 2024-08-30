@@ -7,9 +7,7 @@ class Signal {
     async AddSignal(req, res) {
         try {
             const { price,service,calltype,stock,tag1,tag2,tag3,stoploss,description,add_by } = req.body;
-    
-            console.log("Request Body:", req.body);
-    
+        
             const result = new Signal_Modal({
                 price,
                 service,
