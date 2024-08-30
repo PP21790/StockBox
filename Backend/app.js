@@ -7,6 +7,7 @@ const app = express();
 const http = require('http');
 const https = require('https');
 const fs = require('fs');
+const path = require('path');
 const cors = require('cors');
 const bodyparser = require('body-parser');
 const db = require("./App/Models");
@@ -24,6 +25,7 @@ const Stock_Modal = db.Stock;
 const Basket_Modal = db.Basket;
 const Script_Modal = db.Script;
 const Signal_Modal = db.Signal;
+const Banner_Modal = db.Banner;
 
 
 
@@ -43,6 +45,8 @@ app.use(cors(corsOpts));
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(bodyparser.json({ limit: '10mb', extended: true }));
 
+
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 const server = http.createServer(app);
 

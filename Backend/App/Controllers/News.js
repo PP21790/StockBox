@@ -12,6 +12,10 @@ class NewsController {
                         console.error('File upload error:', err);
                         return reject(err);
                     }
+                    if (!req.files || !req.files['image']) {
+                       
+                        return res.status(400).json({ status: false, message: "No file uploaded." });
+                      }
                     resolve();
                 });
             });
@@ -137,8 +141,23 @@ class NewsController {
    
     async updateNews(req, res) {
         try {
-            const { id, title, description } = req.body;
 
+            await new Promise((resolve, reject) => {
+                upload('news').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
+                    if (err) {
+                        console.error('File upload error:', err);
+                        return reject(err);
+                    }
+                    if (!req.files || !req.files['image']) {
+                       
+                        return res.status(400).json({ status: false, message: "No file uploaded." });
+                      }
+
+                    resolve();
+                });
+            });
+
+            const { id, title, description } = req.body;
 
             if (!title) {
                 return res.status(400).json({ status: false, message: "title is required" });
@@ -157,15 +176,7 @@ class NewsController {
             }
     
             // Handle the image upload
-            await new Promise((resolve, reject) => {
-                upload('news').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
-                    if (err) {
-                        console.error('File upload error:', err);
-                        return reject(err);
-                    }
-                    resolve();
-                });
-            });
+           
     
             // Get the updated image filename if a new image was uploaded
             const image = req.files && req.files['image'] ? req.files['image'][0].filename : null;

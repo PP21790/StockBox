@@ -1,15 +1,16 @@
 const db = require("../Models");
 const upload = require('../Utils/multerHelper'); 
-const Blogs_Modal = db.Blogs;
 
-class BlogController {
-    // Create a new blog post
-    async AddBlogs(req, res) {
+const Banner_Modal = db.Banner;
+class BannerController {
+    // Create a new Banner post
+    async AddBanner(req, res) {
+
         try {
-            
-            // Handle the image upload
+
+
             await new Promise((resolve, reject) => {
-                upload('blogs').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
+                upload('banner').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
                     if (err) {
                         console.error('File upload error:', err);
                         return reject(err);
@@ -26,15 +27,9 @@ class BlogController {
             });
     
             // After the upload is successful, proceed with the rest of the logic
-            const { title, description,add_by } = req.body;
+            const { add_by } = req.body;
 
-            if (!title) {
-                return res.status(400).json({ status: false, message: "title is required" });
-              }
-              if (!description) {
-                return res.status(400).json({ status: false, message: "description is required" });
-              }
-          
+           
               if (!add_by) {
                 return res.status(400).json({ status: false, message: "add_by is required" });
               }
@@ -43,9 +38,7 @@ class BlogController {
             const image = req.files['image'] ? req.files['image'][0].filename : null;
     
             // Create a new News record
-            const result = new Blogs_Modal({
-                title: title,
-                description: description,
+            const result = new Banner_Modal({
                 image: image,
                 add_by:add_by,
             });
@@ -53,10 +46,10 @@ class BlogController {
             // Save the result to the database
             await result.save();
     
-            console.log("result", result);
+         
             return res.json({
                 status: true,
-                message: "Blogs added successfully",
+                message: "Banner added successfully",
             });
     
         } catch (error) {
@@ -65,19 +58,19 @@ class BlogController {
         }
     }
 
-    // Get all blog posts
-    async getBlogs(req, res) {
+    // Get all Banner posts
+    async getBanner(req, res) {
         try {
 
-            const blogs = await Blogs_Modal.find({ del: false });
+            const Banner = await Banner_Modal.find({ del: false });
 
             return res.status(200).json({
                 status: true,
-                message: "Blogs retrieved successfully",
-                data: blogs
+                message: "Banner retrieved successfully",
+                data: Banner
             });
         } catch (error) {
-            console.error("Error retrieving blogs:", error);
+            console.error("Error retrieving Banner:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -86,18 +79,18 @@ class BlogController {
         }
     }
 
-    async activeBlogs(req, res) {
+    async activeBanner(req, res) {
         try {
 
-            const blogs = await Blogs_Modal.find({ del: false,status: true });
+            const banner = await Banner_Modal.find({ del: false,status: true });
 
             return res.status(200).json({
                 status: true,
-                message: "Blogs retrieved successfully",
-                data: blogs
+                message: "Banner retrieved successfully",
+                data: banner
             });
         } catch (error) {
-            console.error("Error retrieving blogs:", error);
+            console.error("Error retrieving Banner:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -107,27 +100,27 @@ class BlogController {
     }
 
 
-    // Get a single blog post by ID
-    async detailBlogs(req, res) {
+    // Get a single Banner post by ID
+    async detailBanner(req, res) {
         try {
             const { id } = req.params;
 
-            const blog = await Blogs_Modal.findById(id);
+            const banner = await Banner_Modal.findById(id);
 
-            if (!blog) {
+            if (!banner) {
                 return res.status(404).json({
                     status: false,
-                    message: "Blog not found"
+                    message: "Banner not found"
                 });
             }
 
             return res.status(200).json({
                 status: true,
-                message: "Blog retrieved successfully",
-                data: blog
+                message: "Banner retrieved successfully",
+                data: banner
             });
         } catch (error) {
-            console.error("Error retrieving blog:", error);
+            console.error("Error retrieving Banner:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -137,80 +130,72 @@ class BlogController {
     }
 
 
-    async  updateBlogs(req, res) {
+    async updateBanner(req, res) {
         try {
-            // Log incoming data for debugging
-         //   console.log('Request Body:', req.body);
-    
-            // Handle the image upload
+
+
             await new Promise((resolve, reject) => {
-                upload('blogs').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
+                upload('Banner').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
                     if (err) {
                         console.error('File upload error:', err);
                         return reject(err);
                     }
 
                     if (!req.files || !req.files['image']) {
-                       
-                        return res.status(400).json({ status: false, message: "No file uploaded." });
+                        return reject(new Error('No file uploaded.'));
                       }
+
                     resolve();
                 });
             });
     
-            // Extracting fields from the request body
-            const { id, title, description } = req.body;
-    
-            // Validating required fields
+
+            const { id } = req.body;
+          
+
             if (!id) {
                 return res.status(400).json({
                     status: false,
-                    message: "Blog ID is required",
+                    message: "Banner ID is required",
                 });
             }
-            if (!title) {
-                return res.status(400).json({ status: false, message: "Title is required" });
-            }
-            if (!description) {
-                return res.status(400).json({ status: false, message: "Description is required" });
-            }
     
-            // Get the uploaded image file name if present
+            // Handle the image upload
+       
+            // Get the updated image filename if a new image was uploaded
             const image = req.files && req.files['image'] ? req.files['image'][0].filename : null;
+            console.log(image);
+            // Prepare the update object
+            
+             
+            
     
-            // Prepare the update object with the fields to update
-            const updateFields = { title, description };
-            if (image) {
-                updateFields.image = image;
-            }
-    
-            // Find and update the blog post by ID
-            const updatedBlogs = await Blogs_Modal.findByIdAndUpdate(
+            // Find the news by ID and update the fields
+            const updatedbanner = await Banner_Modal.findByIdAndUpdate(
                 id,
-                updateFields,
-                { new: true, runValidators: true } // Options to return the updated document and run validators
+                {
+                    image,
+                },
+                { new: true, runValidators: true } // Options: return the updated document and run validators
             );
     
-            // If the blog post is not found
-            if (!updatedBlogs) {
+            // If the news item is not found
+            if (!updatedbanner) {
                 return res.status(404).json({
                     status: false,
-                    message: "Blog not found",
+                    message: "Banner not found",
                 });
             }
     
-            // Log the updated blog post for debugging
-            console.log("Updated Blog:", updatedBlogs);
-    
-            // Send the success response
+            console.log("Updated Banner:", updatedbanner);
             return res.json({
                 status: true,
-                message: "Blog updated successfully",
-                data: updatedBlogs,
+                message: "Banner updated successfully",
+                data: updatedbanner,
             });
     
         } catch (error) {
-            console.error("Error updating Blog:", error);
+            console.error("Error updating Banner:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -219,32 +204,33 @@ class BlogController {
         }
     }
     
+   
   
-    // Delete a blog post by ID
-    async deleteBlogs(req, res) {
+    // Delete a Banner post by ID
+    async deleteBanner(req, res) {
         try {
             const { id } = req.params;
 
-            // const deletedBlog = await Blogs_Modal.findByIdAndDelete(id);
-            const deletedBlog = await Blogs_Modal.findByIdAndUpdate(
+            // const deletedBanner = await Banner_Modal.findByIdAndDelete(id);
+            const deletedbanner = await Banner_Modal.findByIdAndUpdate(
                 id, 
                 { del: true }, // Set del to true
                 { new: true }  // Return the updated document
               );
 
-            if (!deletedBlog) {
+            if (!deletedbanner) {
                 return res.status(404).json({
                     status: false,
-                    message: "Blog not found"
+                    message: "Banner not found"
                 });
             }
 
             return res.status(200).json({
                 status: true,
-                message: "Blog deleted successfully"
+                message: "Banner deleted successfully"
             });
         } catch (error) {
-            console.error("Error deleting blog:", error);
+            console.error("Error deleting Banner:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -266,7 +252,7 @@ class BlogController {
             }
       
             // Find and update the plan
-            const result = await Blogs_Modal.findByIdAndUpdate(
+            const result = await Banner_Modal.findByIdAndUpdate(
                 id,
                 { status: status },
                 { new: true } // Return the updated document
@@ -275,7 +261,7 @@ class BlogController {
             if (!result) {
                 return res.status(404).json({
                     status: false,
-                    message: "Blogs not found"
+                    message: "Banner not found"
                 });
             }
       
@@ -297,4 +283,4 @@ class BlogController {
       
 }
 
-module.exports = new BlogController();
+module.exports = new BannerController();

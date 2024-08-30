@@ -14,6 +14,7 @@ module.exports = function (app) {
     app.use(require("./Basket"))
     app.use(require("./Script"))
     app.use(require("./Signal"))
+    app.use(require("./Banner"))
 
 
 
