@@ -19,6 +19,7 @@ module.exports = {
     Script: require("./Script"),
     Signal: require("./Signal"),
     Banner: require("./Banner"),
+    Plancategory: require("./Plancategory"),
 
 
 

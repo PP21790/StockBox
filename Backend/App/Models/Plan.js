@@ -15,7 +15,7 @@ const PlanSchema = new Schema({
     },
     accuracy: {
         type: String,
-        required: true,
+      //  required: true,
         trim: true
     },
     price: {
@@ -25,13 +25,13 @@ const PlanSchema = new Schema({
     },
     // Rename total_month_service to totaldays
     validity: {
-        type: Number,
+        type: String,
         required: true,
-        min: 0
+        default: null
     },
-    service_id: {
+    category: {
         type: Schema.Types.ObjectId,
-        ref: 'Service', // Assuming there's a 'Service' model to reference
+        ref: 'Plancategoty', // Assuming there's a 'Service' model to reference
         required: true
     },
     status: {

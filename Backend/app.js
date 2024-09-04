@@ -26,6 +26,8 @@ const Basket_Modal = db.Basket;
 const Script_Modal = db.Script;
 const Signal_Modal = db.Signal;
 const Banner_Modal = db.Banner;
+const Plancategory_Modal = db.Plancategory;
+const PlanSubscription_Modal = db.PlanSubscription;
 
 
 

@@ -43,6 +43,20 @@ const CouponSchema = new Schema({
         trim: true,
         default: null
     },
+    minpurchasevalue: {
+        type: Number,
+        required: true
+    },
+    mincouponvalue: {
+        type: Number,
+        required: true
+    },
+    image: {
+        type: String,
+    },
+    description: {
+        type: String,
+    },
     del: {
         type: Boolean,
         default: false // Indicates whether the coupon is deleted

@@ -1,4 +1,6 @@
 const db = require("../Models");
+const upload = require('../Utils/multerHelper'); 
+
 const Signal_Modal = db.Signal;
 
 
@@ -6,20 +8,39 @@ class Signal {
 
     async AddSignal(req, res) {
         try {
-            const { price,service,calltype,stock,tag1,tag2,tag3,stoploss,description,add_by } = req.body;
-        
-            const result = new Signal_Modal({
-                price,
-                service,
-                calltype,
-                stock,
-                tag1,
-                tag2,
-                tag3,
-                stoploss,
-                description,
-                add_by,
+
+          await new Promise((resolve, reject) => {
+            upload('report').fields([{ name: 'report', maxCount: 1 }])(req, res, (err) => {
+                if (err) {
+                    console.error('File upload error:', err);
+                    return reject(err);
+                }
+
+                resolve();
             });
+        });
+
+
+            const { price,service,calltype,stock,tag1,tag2,tag3,stoploss,description,callduration,add_by } = req.body;
+        
+            const report = req.files['report'] ? req.files['report'][0].filename : null;
+
+
+         
+            const result = new Signal_Modal({
+              price: price,
+              service: service,
+              calltype: calltype,
+              callduration:callduration,
+              stock: stock,
+              tag1: tag1,
+              tag2: tag2,
+              tag3:tag3,
+              stoploss: stoploss,
+              description: description,
+              report: report,
+              add_by:add_by,
+          });
     
             await result.save();
     
@@ -153,7 +174,7 @@ class Signal {
   
   async closeSignal(req, res) {
     try {
-      const { id, closeprice, close_status, close_description } = req.body;
+      const { id, closeprice, close_status, close_description,closedate } = req.body;
   
       if (!id) {
         return res.status(400).json({
@@ -168,6 +189,7 @@ class Signal {
             closeprice,
             close_status,
             close_description,
+            closedate,
         },
         { signal: true, runValidators: true } // Options: return the updated document and run validators
       );
@@ -196,6 +218,50 @@ class Signal {
     }
   }
   
+
+  async targethitSignal(req, res) {
+    try {
+      const { id, targethit, targetprice } = req.body;
+  
+      if (!id) {
+        return res.status(400).json({
+          status: false,
+          message: "Signal ID is required",
+        });
+      }
+  
+      const updatedSignal = await Signal_Modal.findByIdAndUpdate(
+        id,
+        {
+          targethit,
+          targetprice,
+        },
+        { signal: true, runValidators: true } // Options: return the updated document and run validators
+      );
+  
+      if (!updatedSignal) {
+        return res.status(404).json({
+          status: false,
+          message: "Signal not found",
+        });
+      }
+  
+      console.log("Close Signal:", updatedSignal);
+      return res.json({
+        status: true,
+        message: "Signal Target Hit successfully",
+        data: updatedSignal,
+      });
+  
+    } catch (error) {
+      console.error("Error updating Signal:", error);
+      return res.status(500).json({
+        status: false,
+        message: "Server error",
+        error: error.message,
+      });
+    }
+  }
 
 
 }

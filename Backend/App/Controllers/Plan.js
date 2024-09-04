@@ -8,7 +8,7 @@ class Plan {
 
     async AddPlan(req, res) {
         try {
-            const { title, description, price, validity, service_id, add_by,accuracy } = req.body;
+            const { title, description, price, validity, category, add_by } = req.body;
     
             // Debugging: Log the incoming request body to ensure the data is correct
             console.log("Request Body:", req.body);
@@ -18,9 +18,8 @@ class Plan {
                 description,
                 price,
                 validity,
-                service_id,
+                category,
                 add_by,
-                accuracy,
             });
     
             await result.save();
@@ -95,16 +94,16 @@ class Plan {
               },
               {
                   $lookup: {
-                      from: 'services', // The name of the collection to join with
-                      localField: 'service_id', // The field from the Plan_Modal
-                      foreignField: '_id', // The field from the Service_Modal
-                      as: 'service' // The name of the new array field to add to the output documents
+                      from: 'plancategories', // The name of the collection to join with
+                      localField: 'category', // The field from the Plan_Modal
+                      foreignField: '_id', // The field from the category
+                      as: 'category' // The name of the new array field to add to the output documents
                   }
               },
               {
                   $unwind: {
-                      path: '$service',
-                      preserveNullAndEmptyArrays: true // If a plan does not have a matching service, it will still appear in the result
+                      path: '$category',
+                      preserveNullAndEmptyArrays: true // If a plan does not have a matching category, it will still appear in the result
                   }
               }
           ]);
@@ -146,16 +145,16 @@ class Plan {
                 },
                 {
                     $lookup: {
-                        from: 'services', // The name of the collection to join with
-                        localField: 'service_id', // The field from the Plan_Modal
-                        foreignField: '_id', // The field from the Service_Modal
-                        as: 'service' // The name of the new array field to add to the output documents
+                        from: 'plancategories', // The name of the collection to join with
+                        localField: 'category', // The field from the Plan_Modal
+                        foreignField: '_id', // The field from the category
+                        as: 'category' // The name of the new array field to add to the output documents
                     }
                 },
                 {
                     $unwind: {
-                        path: '$service',
-                        preserveNullAndEmptyArrays: true // If a plan does not have a matching service, it will still appear in the result
+                        path: '$category',
+                        preserveNullAndEmptyArrays: true // If a plan does not have a matching category, it will still appear in the result
                     }
                 }
             ]);
@@ -186,7 +185,7 @@ class Plan {
 
   async updatePlan(req, res) {
     try {
-        const { id, title, description, price, validity, service_id,accuracy } = req.body;
+        const { id, title, description, price, validity, category,accuracy } = req.body;
   
       if (!id) {
         return res.status(400).json({
@@ -202,7 +201,7 @@ class Plan {
             description,
             price,
             validity,
-            service_id,
+            category,
             accuracy,
         },
         { plan: true, runValidators: true } // Options: return the updated document and run validators
@@ -318,8 +317,5 @@ async  statusChange(req, res) {
 }
 
 
-
-
-  
 }
 module.exports = new Plan();
