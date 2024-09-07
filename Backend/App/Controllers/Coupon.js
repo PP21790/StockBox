@@ -1,16 +1,69 @@
 const db = require("../Models");
 const Coupon_Modal = db.Coupon;
+const upload = require('../Utils/multerHelper'); 
 
 
 class Coupon {
 
     async AddCoupon(req, res) {
         try {
-            const { name, code, type, value, startdate, enddate,add_by } = req.body;
+
+
+          await new Promise((resolve, reject) => {
+            upload('coupon').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
+                if (err) {
+                    console.error('File upload error:', err);
+                    return reject(err);
+                }
+
+                if (!req.files || !req.files['image']) {
+                   
+                    return res.status(400).json({ status: false, message: "No file uploaded." });
+                  }
+
+
+                resolve();
+            });
+        });
+
+
+            const { name, code, type, value, startdate, enddate,add_by,minpurchasevalue,mincouponvalue,description } = req.body;
     
-            // Debugging: Log the incoming request body to ensure the data is correct
-            console.log("Request Body:", req.body);
-    
+
+            if (!name) {
+              return res.status(400).json({ status: false, message: "coupon name is required" });
+            }
+            if (!code) {
+              return res.status(400).json({ status: false, message: "coupon code is required" });
+            }
+
+            if (!type) {
+              return res.status(400).json({ status: false, message: "coupon type is required" });
+            }
+            if (!value) {
+              return res.status(400).json({ status: false, message: "coupon value is required" });
+            }
+
+            if (!startdate) {
+              return res.status(400).json({ status: false, message: "coupon startdate is required" });
+            }
+            if (!enddate) {
+              return res.status(400).json({ status: false, message: "coupon enddate is required" });
+            }
+            if (!minpurchasevalue) {
+              return res.status(400).json({ status: false, message: "min purchase value  is required" });
+            }
+
+            if (!mincouponvalue) {
+              return res.status(400).json({ status: false, message: "min coupon value is required" });
+            }
+
+        
+            if (!add_by) {
+              return res.status(400).json({ status: false, message: "add_by is required" });
+            }
+            const image = req.files['image'] ? req.files['image'][0].filename : null;
+
             const result = new Coupon_Modal({
                 name,
                 code,
@@ -19,6 +72,10 @@ class Coupon {
                 startdate,
                 enddate,
                 add_by,
+                minpurchasevalue,
+                mincouponvalue,
+                image,
+                description,
             });
     
             await result.save();
@@ -124,8 +181,56 @@ class Coupon {
 
   async updateCoupon(req, res) {
     try {
-      const { id, name, code, type, value, startdate, enddate } = req.body;
+
+
+      await new Promise((resolve, reject) => {
+        upload('coupon').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
+            if (err) {
+                console.error('File upload error:', err);
+                return reject(err);
+            }
+
+            if (!req.files || !req.files['image']) {
+               
+                return res.status(400).json({ status: false, message: "No file uploaded." });
+              }
+            resolve();
+        });
+    });
+
+      const { id, name, code, type, value, startdate, enddate,minpurchasevalue,mincouponvalue,description } = req.body;
   
+
+      if (!name) {
+        return res.status(400).json({ status: false, message: "coupon name is required" });
+      }
+      if (!code) {
+        return res.status(400).json({ status: false, message: "coupon code is required" });
+      }
+
+      if (!type) {
+        return res.status(400).json({ status: false, message: "coupon type is required" });
+      }
+      if (!value) {
+        return res.status(400).json({ status: false, message: "coupon value is required" });
+      }
+
+      if (!startdate) {
+        return res.status(400).json({ status: false, message: "coupon startdate is required" });
+      }
+      if (!enddate) {
+        return res.status(400).json({ status: false, message: "coupon enddate is required" });
+      }
+      if (!minpurchasevalue) {
+        return res.status(400).json({ status: false, message: "min purchase value  is required" });
+      }
+
+      if (!mincouponvalue) {
+        return res.status(400).json({ status: false, message: "min coupon value is required" });
+      }
+
+  
+
       if (!id) {
         return res.status(400).json({
           status: false,
@@ -133,16 +238,30 @@ class Coupon {
         });
       }
   
+      const image = req.files && req.files['image'] ? req.files['image'][0].filename : null;
+    
+      // Prepare the update object with the fields to update
+      const updateFields = {
+        name,
+        code,
+        type,
+        value,
+        startdate,
+        enddate,
+        minpurchasevalue,
+        mincouponvalue,
+        description,
+      };
+
+
+
+      if (image) {
+          updateFields.image = image;
+      }
+
       const updatedCoupon = await Coupon_Modal.findByIdAndUpdate(
         id,
-        {
-          name,
-          code,
-          type,
-          value,
-          startdate,
-          enddate,
-        },
+        updateFields,
         { new: true, runValidators: true } // Options: return the updated document and run validators
       );
   

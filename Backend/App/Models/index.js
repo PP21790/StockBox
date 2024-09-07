@@ -18,6 +18,8 @@ module.exports = {
     Basket: require("./Basket"),
     Script: require("./Script"),
     Signal: require("./Signal"),
+    Banner: require("./Banner"),
+    Plancategory: require("./Plancategory"),
 
 
 

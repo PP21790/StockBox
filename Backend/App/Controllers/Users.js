@@ -2,6 +2,7 @@ const db = require("../Models");
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const Users_Modal = db.Users;
+const BasicSetting_Modal = db.BasicSetting;
 const { sendEmail } = require('../Utils/emailService');
 
 class Users {
@@ -10,11 +11,38 @@ class Users {
   async AddUser(req, res) {
     try {
       const { FullName, UserName, Email, PhoneNo, password, add_by } = req.body;
-      console.log('body---', req.body);
-      // console.log("Password before hashing:", password);
-      // const salt = await bcrypt.genSalt(10);
-      // Hash the password with the salt
-      // const hashedPassword = await bcrypt.hash(password, salt);
+
+      if (!FullName) {
+        return res.status(400).json({ status: false, message: "fullname is required" });
+      }
+      if (!UserName || UserName.length < 3) {
+        return res.status(400).json({ status: false, message: "username must be at least 3 characters long" });
+      }
+      if (!Email) {
+        return res.status(400).json({ status: false, message: "email is required" });
+      } else if (!/^\S+@\S+\.\S+$/.test(Email)) {
+        return res.status(400).json({ status: false, message: "Invalid email format" });
+      }
+
+      if (!PhoneNo) {
+        return res.status(400).json({ status: false, message: "phone number is required" });
+      } else if (!/^\d{10}$/.test(PhoneNo)) {
+        return res.status(400).json({ status: false, message: "Invalid phone number format" });
+      }
+      if (!password || password.length < 8 ||
+        !/[A-Z]/.test(password) ||
+        !/[a-z]/.test(password) ||
+        !/\d/.test(password) ||
+        !/[@$!%*?&#]/.test(password)) {
+        return res.status(400).json({
+          status: false,
+          message: "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&#)"
+        });
+      }
+      if (!add_by) {
+        return res.status(400).json({ status: false, message: "Added by field is required" });
+      }
+
       const hashedPassword = await bcrypt.hash(password, 10);
       //  console.log("result", hashedPassword);
       const result = new Users_Modal({
@@ -28,7 +56,7 @@ class Users {
 
       await result.save();
 
-      console.log("result", result);
+     // console.log("result", result);
       return res.json({
         status: true,
         message: "User added successfully",
@@ -39,6 +67,8 @@ class Users {
       return res.status(500).json({ status: false, message: "Server error", error: error.message });
     }
   }
+
+
 
   async getUser(req, res) {
 
@@ -61,6 +91,8 @@ class Users {
     }
   }
 
+
+  
   async activeUser(req, res) {
 
     try {
@@ -126,6 +158,34 @@ class Users {
   async updateUser(req, res) {
     try {
       const { id, FullName, Email, PhoneNo, password } = req.body;
+
+
+      if (!FullName) {
+        return res.status(400).json({ status: false, message: "fullName is required" });
+      }
+
+      if (!Email) {
+        return res.status(400).json({ status: false, message: "email is required" });
+      } else if (!/^\S+@\S+\.\S+$/.test(Email)) {
+        return res.status(400).json({ status: false, message: "Invalid email format" });
+      }
+
+      if (!PhoneNo) {
+        return res.status(400).json({ status: false, message: "Phone number is required" });
+      } else if (!/^\d{10}$/.test(PhoneNo)) {
+        return res.status(400).json({ status: false, message: "Invalid phone number format" });
+      }
+      if (!password || password.length < 8 ||
+        !/[A-Z]/.test(password) ||
+        !/[a-z]/.test(password) ||
+        !/\d/.test(password) ||
+        !/[@$!%*?&#]/.test(password)) {
+        return res.status(400).json({
+          status: false,
+          message: "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&#)"
+        });
+      }
+
 
       if (!id) {
         return res.status(400).json({
@@ -218,6 +278,14 @@ class Users {
     try {
       const { UserName, password } = req.body;  // Extract password here
 
+
+      if (!UserName) {
+        return res.status(400).json({ status: false, message: "username is required" });
+      }
+      if (!password) {
+        return res.status(400).json({ status: false, message: "password is required" });
+      }
+
       const user = await Users_Modal.findOne({
         UserName: UserName,
         ActiveStatus: '1',
@@ -230,6 +298,8 @@ class Users {
           message: "User not found or account is inactive",
         });
       }
+
+
 
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
@@ -358,6 +428,11 @@ class Users {
     try {
       const { Email } = req.body;
 
+      if (!Email) {
+        return res.status(400).json({ status: false, message: "email is required" });
+      } else if (!/^\S+@\S+\.\S+$/.test(Email)) {
+        return res.status(400).json({ status: false, message: "Invalid email format" });
+      }
       // Find the user by email
       const user = await Users_Modal.findOne({ Email });
 
@@ -377,10 +452,14 @@ class Users {
 
       await user.save();
 
+      const settings = await BasicSetting_Modal.findOne();
+      if (!settings || !settings.smtp_status) {
+        throw new Error('SMTP settings are not configured or are disabled');
+      }
       // Email options
       const mailOptions = {
         to: user.Email,
-        from: 'info@pnpuniverse.com',
+        from: `${settings.from_name} <${settings.from_mail}>`, // Include business name
         subject: 'Password Reset',
         text: `You are receiving this because you (or someone else) have requested to reset the password for your account.\n\n
                Please click on the following link, or paste it into your browser to complete the process:\n\n
@@ -467,15 +546,6 @@ class Users {
         });
       }
 
-      // Find the user by ID
-      const user = await Users_Modal.findById(id);
-
-      if (!user) {
-        return res.status(404).json({
-          status: false,
-          message: "User not found",
-        });
-      }
 
       // Check if the current password is correct
       const isMatch = await bcrypt.compare(currentPassword, user.password);
@@ -499,6 +569,9 @@ class Users {
         message: "Password changed successfully",
       });
 
+
+
+
     } catch (error) {
       console.error("Error in changePassword:", error);
       return res.status(500).json({
@@ -508,6 +581,75 @@ class Users {
       });
     }
   }
+
+
+  async updateProfile(req, res) {
+    try {
+      const { id, FullName, Email, PhoneNo } = req.body;
+
+      if (!FullName) {
+        return res.status(400).json({ status: false, message: "fullname is required" });
+      }
+      if (!Email) {
+        return res.status(400).json({ status: false, message: "email is required" });
+      } else if (!/^\S+@\S+\.\S+$/.test(Email)) {
+        return res.status(400).json({ status: false, message: "Invalid email format" });
+      }
+
+      if (!PhoneNo) {
+        return res.status(400).json({ status: false, message: "phone number is required" });
+      } else if (!/^\d{10}$/.test(PhoneNo)) {
+        return res.status(400).json({ status: false, message: "Invalid phone number format" });
+      }
+
+      // Ensure the user ID is provided
+      if (!id) {
+        return res.status(400).json({
+          status: false,
+          message: "User ID is required",
+        });
+      }
+
+      // Find the user by ID
+      const user = await Users_Modal.findById(id);
+      if (!user) {
+        return res.status(404).json({
+          status: false,
+          message: "User not found",
+        });
+      }
+
+      // Update the user's profile information
+      if (FullName) user.FullName = FullName;
+      if (Email) user.Email = Email;
+      if (PhoneNo) user.PhoneNo = PhoneNo;
+
+      // Save the updated user profile
+      await user.save();
+
+      return res.json({
+        status: true,
+        message: "Profile updated successfully",
+        data: {
+          id: user.id,
+          FullName: user.FullName,
+          Email: user.Email,
+          PhoneNo: user.PhoneNo,
+        }
+      });
+
+    } catch (error) {
+      console.error("Error in updateProfile:", error);
+      return res.status(500).json({
+        status: false,
+        message: "Server error",
+        error: error.message,
+      });
+    }
+
+  }
+
+
 
   async updateProfile(req, res) {
     try {
@@ -561,4 +703,7 @@ class Users {
 
 
 }
+
+
+
 module.exports = new Users();

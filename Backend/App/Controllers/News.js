@@ -12,12 +12,30 @@ class NewsController {
                         console.error('File upload error:', err);
                         return reject(err);
                     }
+                    if (!req.files || !req.files['image']) {
+                       
+                        return res.status(400).json({ status: false, message: "No file uploaded." });
+                      }
                     resolve();
                 });
             });
     
             // After the upload is successful, proceed with the rest of the logic
             const { title, description,add_by } = req.body;
+
+
+            if (!title) {
+                return res.status(400).json({ status: false, message: "title is required" });
+              }
+              if (!description) {
+                return res.status(400).json({ status: false, message: "description is required" });
+              }
+          
+              if (!add_by) {
+                return res.status(400).json({ status: false, message: "add_by is required" });
+              }
+
+
             const image = req.files['image'] ? req.files['image'][0].filename : null;
     
             // Create a new News record
@@ -123,7 +141,32 @@ class NewsController {
    
     async updateNews(req, res) {
         try {
+
+            await new Promise((resolve, reject) => {
+                upload('news').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
+                    if (err) {
+                        console.error('File upload error:', err);
+                        return reject(err);
+                    }
+                    if (!req.files || !req.files['image']) {
+                       
+                        return res.status(400).json({ status: false, message: "No file uploaded." });
+                      }
+
+                    resolve();
+                });
+            });
+
             const { id, title, description } = req.body;
+
+            if (!title) {
+                return res.status(400).json({ status: false, message: "title is required" });
+              }
+              if (!description) {
+                return res.status(400).json({ status: false, message: "description is required" });
+              }
+          
+            
           
             if (!id) {
                 return res.status(400).json({
@@ -133,15 +176,7 @@ class NewsController {
             }
     
             // Handle the image upload
-            await new Promise((resolve, reject) => {
-                upload('news').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
-                    if (err) {
-                        console.error('File upload error:', err);
-                        return reject(err);
-                    }
-                    resolve();
-                });
-            });
+           
     
             // Get the updated image filename if a new image was uploaded
             const image = req.files && req.files['image'] ? req.files['image'][0].filename : null;
