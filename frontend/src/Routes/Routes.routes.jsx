@@ -21,9 +21,6 @@ const Routing = () => {
     const token = localStorage.getItem("token");
     const id = localStorage.getItem("id");
 
-console.log("roles",roles)
-console.log("token",token)
-
 
     useEffect(() => {
         
