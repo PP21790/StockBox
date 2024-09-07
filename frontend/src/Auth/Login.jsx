@@ -33,7 +33,8 @@ const Login = () => {
                 }).then(() => {
                     localStorage.setItem("token", login_data.data.data.token);
                     localStorage.setItem("id", login_data.data.data.id);
-
+                    localStorage.setItem("Role", login_data.data.data.Role);
+                    localStorage.setItem("FullName", login_data.data.data.FullName);
                     navigate("/admin/dashboard");
                 });
             } else {
