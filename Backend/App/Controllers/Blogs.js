@@ -1,10 +1,12 @@
 const db = require("../Models");
 const upload = require('../Utils/multerHelper'); 
 const Blogs_Modal = db.Blogs;
+
 class BlogController {
     // Create a new blog post
     async AddBlogs(req, res) {
         try {
+            
             // Handle the image upload
             await new Promise((resolve, reject) => {
                 upload('blogs').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
@@ -12,12 +14,32 @@ class BlogController {
                         console.error('File upload error:', err);
                         return reject(err);
                     }
+
+                    if (!req.files || !req.files['image']) {
+                       
+                        return res.status(400).json({ status: false, message: "No file uploaded." });
+                      }
+
+
                     resolve();
                 });
             });
     
             // After the upload is successful, proceed with the rest of the logic
             const { title, description,add_by } = req.body;
+
+            if (!title) {
+                return res.status(400).json({ status: false, message: "title is required" });
+              }
+              if (!description) {
+                return res.status(400).json({ status: false, message: "description is required" });
+              }
+          
+              if (!add_by) {
+                return res.status(400).json({ status: false, message: "add_by is required" });
+              }
+
+
             const image = req.files['image'] ? req.files['image'][0].filename : null;
     
             // Create a new News record
@@ -115,16 +137,10 @@ class BlogController {
     }
 
 
-    async updateBlogs(req, res) {
+    async  updateBlogs(req, res) {
         try {
-            const { id, title, description } = req.body;
-          
-            if (!id) {
-                return res.status(400).json({
-                    status: false,
-                    message: "Blogs ID is required",
-                });
-            }
+            // Log incoming data for debugging
+         //   console.log('Request Body:', req.body);
     
             // Handle the image upload
             await new Promise((resolve, reject) => {
@@ -133,31 +149,49 @@ class BlogController {
                         console.error('File upload error:', err);
                         return reject(err);
                     }
+
+                    if (!req.files || !req.files['image']) {
+                       
+                        return res.status(400).json({ status: false, message: "No file uploaded." });
+                      }
                     resolve();
                 });
             });
     
-            // Get the updated image filename if a new image was uploaded
+            // Extracting fields from the request body
+            const { id, title, description } = req.body;
+    
+            // Validating required fields
+            if (!id) {
+                return res.status(400).json({
+                    status: false,
+                    message: "Blog ID is required",
+                });
+            }
+            if (!title) {
+                return res.status(400).json({ status: false, message: "Title is required" });
+            }
+            if (!description) {
+                return res.status(400).json({ status: false, message: "Description is required" });
+            }
+    
+            // Get the uploaded image file name if present
             const image = req.files && req.files['image'] ? req.files['image'][0].filename : null;
     
-            // Prepare the update object
-            const updateFields = {
-                title,
-                description,
-            };
-    
+            // Prepare the update object with the fields to update
+            const updateFields = { title, description };
             if (image) {
                 updateFields.image = image;
             }
     
-            // Find the news by ID and update the fields
+            // Find and update the blog post by ID
             const updatedBlogs = await Blogs_Modal.findByIdAndUpdate(
                 id,
                 updateFields,
-                { new: true, runValidators: true } // Options: return the updated document and run validators
+                { new: true, runValidators: true } // Options to return the updated document and run validators
             );
     
-            // If the news item is not found
+            // If the blog post is not found
             if (!updatedBlogs) {
                 return res.status(404).json({
                     status: false,
@@ -165,7 +199,10 @@ class BlogController {
                 });
             }
     
+            // Log the updated blog post for debugging
             console.log("Updated Blog:", updatedBlogs);
+    
+            // Send the success response
             return res.json({
                 status: true,
                 message: "Blog updated successfully",
@@ -182,7 +219,6 @@ class BlogController {
         }
     }
     
-   
   
     // Delete a blog post by ID
     async deleteBlogs(req, res) {

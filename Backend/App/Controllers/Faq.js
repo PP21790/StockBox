@@ -7,6 +7,17 @@ class Faq {
     async AddFaq(req, res) {
         try {
             const { title,description,add_by } = req.body;
+
+            if (!title) {
+              return res.status(400).json({ status: false, message: "title is required" });
+            }
+            if (!description) {
+              return res.status(400).json({ status: false, message: "description is required" });
+            }
+        
+            if (!add_by) {
+              return res.status(400).json({ status: false, message: "add_by is required" });
+            }
     
             console.log("Request Body:", req.body);
     
@@ -124,6 +135,15 @@ class Faq {
   async updateFaq(req, res) {
     try {
       const { id, title,description } = req.body;
+
+      if (!title) {
+        return res.status(400).json({ status: false, message: "title is required" });
+      }
+      if (!description) {
+        return res.status(400).json({ status: false, message: "description is required" });
+      }
+  
+     
   
       if (!id) {
         return res.status(400).json({

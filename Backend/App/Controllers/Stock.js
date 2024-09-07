@@ -15,6 +15,16 @@ class Stock {
         try {
             const { title,add_by,symbol } = req.body;
     
+            if (!title) {
+              return res.status(400).json({ status: false, message: "title is required" });
+            }
+            if (!symbol) {
+              return res.status(400).json({ status: false, message: "symbol is required" });
+            }
+        
+            if (!add_by) {
+              return res.status(400).json({ status: false, message: "add_by is required" });
+            }
            // console.log("Request Body:", req.body);
     
             const result = new Stock_Modal({
@@ -129,6 +139,14 @@ class Stock {
   async updateStock(req, res) {
     try {
       const { id, title, symbol } = req.body;
+
+      if (!title) {
+        return res.status(400).json({ status: false, message: "title is required" });
+      }
+      if (!symbol) {
+        return res.status(400).json({ status: false, message: "symbol is required" });
+      }
+  
   
       if (!id) {
         return res.status(400).json({
@@ -331,21 +349,6 @@ class Stock {
     }
 }
 
-// Helper function to process CSV from buffer
-async processCSV(buffer) {
-    return new Promise((resolve, reject) => {
-        const stocks = [];
-        require('stream').Readable.from(buffer)
-            .pipe(csv())
-            .on('data', (row) => {
-                stocks.push(row);
-            })
-            .on('end', () => {
-                resolve(stocks);
-            })
-            .on('error', reject);
-    });
-}
 
 // Helper function to process Excel from buffer
 

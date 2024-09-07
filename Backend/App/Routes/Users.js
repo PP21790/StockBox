@@ -28,7 +28,7 @@ const PERMISSIONS = {
   router.post('/user/reset-password', resetPassword);
   router.post('/user/change-password', changePassword);
   router.post('/user/update-profile', updateProfile);
-  router.get('/user/activeUser',   activeUser);
+  router.get('/user/activeUser',checkPermission(PERMISSIONS.ALL_VIEW),   activeUser);
 
   
   

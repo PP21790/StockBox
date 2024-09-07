@@ -7,6 +7,14 @@ class Service {
     async AddService(req, res) {
         try {
             const { title,add_by } = req.body;
+
+            if (!title) {
+              return res.status(400).json({ status: false, message: "title is required" });
+            }
+        
+            if (!add_by) {
+              return res.status(400).json({ status: false, message: "add_by is required" });
+            }
     
             console.log("Request Body:", req.body);
     
@@ -126,6 +134,11 @@ class Service {
   async updateService(req, res) {
     try {
       const { id, title } = req.body;
+
+      if (!title) {
+        return res.status(400).json({ status: false, message: "title is required" });
+      }
+    
   
       if (!id) {
         return res.status(400).json({

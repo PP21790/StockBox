@@ -1,45 +1,51 @@
 
 import './App.css';
-import Forgetpass from './Auth/Forgetpass';
-import Resetpass from './Auth/Resetpass';
-import Login from './Auth/Login';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import React, { useEffect } from 'react';
-import Adminroutes from './Adminroutes'
-import Register from './Auth/Register';
-function App() {
-  const navigate = useNavigate()
-  const location = useLocation();
-  const token = localStorage.getItem('token')
+// import Forgetpass from './Auth/Forgetpass';
+// import Resetpass from './Auth/Resetpass';
+// import Login from './Auth/Login';
+import React, { useState, useEffect, useRef } from 'react';
+import Routing from './Routes/Routes.routes';
+import Loader from './Utils/Loader';
+import AOS from "aos";
+import "aos/dist/aos.css";
 
+
+
+function App() {
+
+
+  const [loading, setLoading] = useState(true);
+  const pageRef = useRef(null);
 
   useEffect(() => {
-    if (!token) {
+    AOS.init({
+      disable: "phone",
+      duration: 700,
+      easing: "ease-out-cubic",
+    });
 
-      if (location.pathname.includes("forgetpass")) {
-        navigate('/forgetpass')
-      } else if (location.pathname.includes("resetpass")) {
-        navigate('/resetpass')
-      } else if (location.pathname.includes("register")) {
-        navigate('/register')
-      } else {
-        navigate('/login')
-      }
+    const loadData = () => {
+      setTimeout(() => {
+        setLoading(false); 
+      }, 1200); 
+    };
 
-    }
-
-
-  }, [navigate, location.pathname, token]);
+    loadData();
+  }, []);
+   
 
   return (
     <>
-      <Routes>
-        <Route path="/admin/*" element={(token) ? <Adminroutes /> : <Login />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/resetpass" element={<Resetpass />} />
-        <Route path="/forgetpass" element={<Forgetpass />} />
-        <Route path="/register" element={<Register />} />
-      </Routes>
+      
+      <div id="App">
+      {loading ? (
+        <Loader /> 
+      ) : (
+        <div ref={pageRef}>
+          <Routing />
+        </div>
+      )}
+    </div>
     </>
   );
 }

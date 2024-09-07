@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
-import Sidebar from './components/Sidebar/Sidebar';
-import Dashboard from './components/Dashbord';  // Corrected component name
-import Header from './components/Header/Header';
-import Footer from './components/Footer/Footer';
+import Sidebar from './layout/Sidebar';
+import Dashboard from './components/Dashbord';
+import Header from './layout/Header';
+import Footer from './layout/Footer';
 import Client from './components/Client';
 
 // import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
@@ -62,13 +62,14 @@ function MainApp() {
             <Header />
             <div className="page-wrapper">
                 <Routes>
-                    <Route path="/dashboard" element={<Dashboard />} />
+                    {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+                    <Route path="/client" element={<Dashboard />} />
                     <Route path="/client" element={<Client />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/service" element={<Service />} />
-                    <Route path="/kyc" element={<Kyc />} />
+                    <Route path="/kyc" element={<Kyc/>} />
                     <Route path="/signal" element={<Signal />} />
-                    <Route path="/permision" element={<Permision />} />
+                    <Route path="/permision" element={<Permis />} />
                     <Route path="/user" element={<User />} />
                     <Route path="/basket" element={<Basket />} />
                     <Route path="/faq" element={<Faq />} />

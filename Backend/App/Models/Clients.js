@@ -39,7 +39,6 @@ const clientsModel = Schema({
     },
     add_by: {
         type: String,
-        required: true,
         trim: true,
         default: null
     },
@@ -64,6 +63,14 @@ const clientsModel = Schema({
             // Generate a random token using crypto module
             return crypto.randomBytes(16).toString('hex');
         }
+    },
+    forgotPasswordToken: {
+        type: String,
+        default: null,
+    },
+    forgotPasswordTokenExpiry: {
+        type: Date,
+        default: null,
     }
     
 },
