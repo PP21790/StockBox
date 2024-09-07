@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login_Api } from "../Services/Apis"
+import { Link } from 'react-router-dom';
+import swal from 'sweetalert';
 
 
 const Login = () => {
@@ -9,22 +11,53 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
+
     const loginpageOpen = async (e) => {
         e.preventDefault();
+
         let req = {
             UserName: username,
             password: password,
-        }
-        var login_data = await login_Api(req)
-        console.log("login_data", login_data.data.data.token)
-        if (login_data.data.status) {
-            localStorage.setItem("token", login_data.data.data.token);
-            navigate("/admin/dashboard");
-        } else {
-            setError('Invalid login credentials');
-        }
+        };
 
-    }
+        try {
+            var login_data = await login_Api(req);
+
+            if (login_data.data.status) {
+                // Success - Show SweetAlert and navigate to the dashboard
+                swal({
+                    title: "Login Successful!",
+                    text: "You will be redirected to the dashboard.",
+                    icon: "success",
+                    button: "OK",
+                }).then(() => {
+                    localStorage.setItem("token", login_data.data.data.token);
+                    localStorage.setItem("id", login_data.data.data.id);
+
+                    navigate("/admin/dashboard");
+                });
+            } else {
+                // Error - Show SweetAlert with the error message
+                swal({
+                    title: "Login Failed",
+                    text: login_data.data.message || "Invalid username or password.",
+                    icon: "error",
+                    button: "Try Again",
+                });
+            }
+        } catch (error) {
+            console.error('There was an error logging in!', error);
+
+            // General error handling with SweetAlert
+            swal({
+                title: "Error!",
+                text: "Something went wrong during login. Please try again later.",
+                icon: "error",
+                button: "OK",
+            });
+        }
+    };
+
 
     return (
         <div className='bg-login'>
@@ -39,7 +72,7 @@ const Login = () => {
                                             <img src="/assets/images/logo-icon.png" width={60} alt="" />
                                         </div>
                                         <div className="text-center mb-4">
-                                            <h5 className="">Rukada Admin</h5>
+                                            <h5 className="">StockBox</h5>
                                         </div>
                                         <div className="form-body">
                                             <form className="row g-3" onSubmit={loginpageOpen}>
@@ -93,10 +126,11 @@ const Login = () => {
                                                     </div>
                                                 </div>
                                                 <div className="col-md-6 text-end">
-                                                    <a href="auth-basic-forgot-password.html">
-                                                        Forgot Password ?
-                                                    </a>
+                                                    <p onClick={() => navigate("/forgetpass")}>
+                                                        Forgot Password?
+                                                    </p>
                                                 </div>
+
                                                 <div className="col-12">
                                                     <div className="d-grid">
                                                         <button type="submit" className="btn btn-primary">
@@ -108,7 +142,7 @@ const Login = () => {
                                                     <div className="text-center ">
                                                         <p className="mb-0">
                                                             Don't have an account yet?{" "}
-                                                            <a href="auth-basic-signup.html">Sign up here</a>
+                                                            <Link to="./register">Sign up here</Link>
                                                         </p>
                                                     </div>
                                                 </div>

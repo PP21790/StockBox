@@ -1,6 +1,50 @@
-import React from 'react';
+import React, { useState } from 'react';
+import swal from 'sweetalert';
+import axios from 'axios';
 
 const Forgetpass = () => {
+    const [email, setEmail] = useState('');
+
+    const handleForgotPassword = async () => {
+        if (!email) {
+            swal({
+                title: "Error!",
+                text: "Please enter your email address.",
+                icon: "error",
+                button: "OK",
+            });
+            return;
+        }
+
+        try {
+            const response = await axios.post('http://localhost:5001/user/forgot-password', { Email:email });
+            
+            if (response.data.status) {
+                swal({
+                    title: "Success!",
+                    text: "Password reset link has been sent to your email.",
+                    icon: "success",
+                    button: "OK",
+                });
+            } else {
+                swal({
+                    title: "Failed!",
+                    text: response.data.message || "Unable to send reset link. Please try again.",
+                    icon: "error",
+                    button: "OK",
+                });
+            }
+        } catch (error) {
+            swal({
+                title: "Error!",
+                text: "There was an error processing your request. Please try again later.",
+                icon: "error",
+                button: "OK",
+            });
+            console.error('There was an error sending the forgot password email:', error);
+        }
+    };
+
     return (
         <div>
             <div className="section-authentication-cover">
@@ -36,16 +80,18 @@ const Forgetpass = () => {
                                         <div className="my-4">
                                             <label className="form-label">Email id</label>
                                             <input
-                                                type="text"
+                                                type="email"
                                                 className="form-control"
                                                 placeholder="example@user.com"
+                                                value={email}
+                                                onChange={(e) => setEmail(e.target.value)}
                                             />
                                         </div>
                                         <div className="d-grid gap-2">
-                                            <button type="button" className="btn btn-primary">
+                                            <button type="button" className="btn btn-primary" onClick={handleForgotPassword}>
                                                 Send
                                             </button>
-                                            <a href="auth-cover-signin.html" className="btn btn-light">
+                                            <a href="/login">
                                                 <i className="bx bx-arrow-back me-1" />
                                                 Back to Login
                                             </a>
@@ -55,7 +101,7 @@ const Forgetpass = () => {
                             </div>
                         </div>
                     </div>
-                    {/*end row*/}
+             
                 </div>
             </div>
 

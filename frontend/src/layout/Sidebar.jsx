@@ -27,7 +27,7 @@ const Sidebar = ({ onToggleClick }) => {
                       />
                     </div>
                     <div>
-                      <h4 className="logo-text">Rukada</h4>
+                      <h4 className="logo-text">STOCK BOX</h4>
                     </div>
                     <div className="toggle-icon ms-auto" onClick={onToggleClick}>
                       <i className="bx bx-arrow-back" />
@@ -35,7 +35,7 @@ const Sidebar = ({ onToggleClick }) => {
                   </div>
                   {/*navigation*/}
                   <ul className="metismenu mm-show" id="menu">
-                    <li className="mm-active">
+                    <li>
                       <Link
                         to={'/admin/dashboard'}
                       >
@@ -59,9 +59,9 @@ const Sidebar = ({ onToggleClick }) => {
                     <li>
                       <Link to={'/admin/user'}>
                         <div className="parent-icon">
-                          <i className="bx bx-user" />
+                          <i className="bx bx-user-plus" />
                         </div>
-                        <div className="menu-title">User</div>
+                        <div className="menu-title">Staff</div>
                       </Link>
                     </li>
 
@@ -76,12 +76,12 @@ const Sidebar = ({ onToggleClick }) => {
                     </li>
 
                     <li>
-                      <a href="form-froala-editor.html">
+                      <Link to="/admin/basket">
                         <div className="parent-icon">
                           <i className="bx bx-basket" />
                         </div>
                         <div className="menu-title">Basket</div>
-                      </a>
+                      </Link>
                     </li>
 
                     <li>
@@ -124,13 +124,13 @@ const Sidebar = ({ onToggleClick }) => {
                     </li>
 
                     <li>
-                      <a href="form-froala-editor.html">
+                      <Link to="/admin/faq">
                         <div className="parent-icon">
                           <i className="bx bxs-chevron-right" />
                         </div>
                         <div className="menu-title">FAQ
                         </div>
-                      </a>
+                      </Link>
                     </li>
 
                     <li>

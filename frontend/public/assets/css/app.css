@@ -1,5 +1,3 @@
-
-
 /*
 
 Template Name: Rukada Admin
@@ -27,7 +25,6 @@ body {
 	overflow-x: hidden;
 
 	font-family: Roboto, sans-serif
-
 }
 
 
@@ -35,7 +32,6 @@ body {
 a {
 
 	text-decoration: none
-
 }
 
 
@@ -45,7 +41,6 @@ a {
 	width: 100%;
 
 	position: relative
-
 }
 
 
@@ -70,10 +65,9 @@ a {
 
 	z-index: 11;
 
-	box-shadow: 0 0 2rem 0 rgba(136,152,170,.15);
+	box-shadow: 0 0 2rem 0 rgba(136, 152, 170, .15);
 
 	transition: all .2s ease-out
-
 }
 
 
@@ -103,7 +97,6 @@ a {
 	background-clip: padding-box;
 
 	border-bottom: 1px solid #e4e4e4
-
 }
 
 
@@ -111,7 +104,6 @@ a {
 .logo-icon {
 
 	width: 30px
-
 }
 
 
@@ -139,7 +131,6 @@ a {
 	cursor: pointer;
 
 	color: #5e72e4
-
 }
 
 
@@ -162,9 +153,9 @@ a {
 
 	z-index: 10;
 
-	-webkit-box-shadow: 0 0 2rem 0 rgba(136,152,170,.15);
+	-webkit-box-shadow: 0 0 2rem 0 rgba(136, 152, 170, .15);
 
-    box-shadow: 0 0 2rem 0 rgba(136,152,170,.15);
+	box-shadow: 0 0 2rem 0 rgba(136, 152, 170, .15);
 
 }
 
@@ -178,7 +169,7 @@ a {
 
 	padding-left: 1.5rem;
 
-    padding-right: 1.5rem;
+	padding-right: 1.5rem;
 
 }
 
@@ -193,7 +184,6 @@ a {
 	margin-bottom: 30px;
 
 	margin-left: 250px
-
 }
 
 
@@ -201,7 +191,6 @@ a {
 .page-content {
 
 	padding: 1.5rem 1.5rem 0.7rem 1.5rem
-
 }
 
 
@@ -227,7 +216,6 @@ a {
 	border-top: 1px solid #e4e4e4;
 
 	z-index: 3
-
 }
 
 
@@ -235,7 +223,6 @@ a {
 .wrapper.toggled .topbar {
 
 	left: 70px
-
 }
 
 
@@ -243,7 +230,6 @@ a {
 .wrapper.toggled .page-wrapper {
 
 	margin-left: 70px
-
 }
 
 
@@ -251,7 +237,6 @@ a {
 .wrapper.toggled .page-footer {
 
 	left: 70px
-
 }
 
 
@@ -265,7 +250,6 @@ a {
 	list-style: none;
 
 	background: 0 0
-
 }
 
 
@@ -291,7 +275,6 @@ a {
 	-ms-flex-direction: column;
 
 	flex-direction: column
-
 }
 
 
@@ -299,7 +282,6 @@ a {
 .sidebar-wrapper .metismenu li+li {
 
 	margin-top: 5px
-
 }
 
 
@@ -307,7 +289,6 @@ a {
 .sidebar-wrapper .metismenu li:first-child {
 
 	margin-top: 5px
-
 }
 
 
@@ -315,7 +296,6 @@ a {
 .sidebar-wrapper .metismenu li:last-child {
 
 	margin-bottom: 5px
-
 }
 
 
@@ -337,7 +317,6 @@ a {
 	flex-direction: column;
 
 	position: relative
-
 }
 
 
@@ -369,7 +348,6 @@ a {
 	border-radius: 30px;
 
 	transition: all .3s ease-out
-
 }
 
 
@@ -379,7 +357,6 @@ a {
 	font-size: 24px;
 
 	line-height: 1
-
 }
 
 
@@ -387,7 +364,6 @@ a {
 .sidebar-wrapper .metismenu a .menu-title {
 
 	margin-left: 10px
-
 }
 
 
@@ -399,7 +375,6 @@ a {
 	font-size: 15px;
 
 	border: 0
-
 }
 
 
@@ -415,7 +390,6 @@ a {
 .sidebar-wrapper .metismenu ul {
 
 	background: #fff
-
 }
 
 
@@ -423,7 +397,6 @@ a {
 .sidebar-wrapper .metismenu ul ul a {
 
 	padding: 8px 15px 8px 30px
-
 }
 
 
@@ -431,7 +404,6 @@ a {
 .sidebar-wrapper .metismenu ul ul ul a {
 
 	padding: 8px 15px 8px 45px
-
 }
 
 
@@ -446,9 +418,9 @@ a {
 
 	color: #5e72e4;
 
-    text-decoration: none;
+	text-decoration: none;
 
-    background-color: rgb(94 114 228 / 10%);
+	background-color: rgb(94 114 228 / 10%);
 
 }
 
@@ -465,7 +437,6 @@ a {
 	font-size: 12px;
 
 	letter-spacing: .5px
-
 }
 
 
@@ -495,7 +466,6 @@ a {
 	top: 50%;
 
 	transition: all .3s ease-out
-
 }
 
 
@@ -505,79 +475,66 @@ a {
 	.wrapper.toggled:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header .logo-text {
 
 		display: none
-
 	}
 
 	.wrapper.toggled:not(.sidebar-hovered) .sidebar-wrapper {
 
 		width: 70px
-
 	}
 
 	.wrapper.toggled:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header {
 
 		width: 70px
-
 	}
 
 	.wrapper.toggled:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header .toggle-icon {
 
 		display: none
-
 	}
 
 	.wrapper.toggled:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header {
 
 		justify-content: center
-
 	}
 
 	.wrapper.toggled:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header {
 
 		width: 70px
-
 	}
 
 	.wrapper.toggled:not(.sidebar-hovered) .sidebar-wrapper .metismenu a {
 
 		justify-content: center
-
 	}
 
 	.wrapper.toggled:not(.sidebar-hovered) .sidebar-wrapper .metismenu .menu-title {
 
 		display: none
-
 	}
 
 	.wrapper.toggled:not(.sidebar-hovered) .sidebar-wrapper .metismenu li ul {
 
 		display: none
-
 	}
 
 	.wrapper.toggled:not(.sidebar-hovered) .sidebar-wrapper .metismenu li.menu-label {
 
 		display: none
-
 	}
 
 	.wrapper.toggled:not(.sidebar-hovered) .sidebar-wrapper .metismenu .has-arrow:after {
 
 		display: none
-
 	}
 
 	.email-toggle-btn {
 
-		display: none!important
-
+		display: none !important
 	}
 
 	.chat-toggle-btn {
 
-		display: none!important
-
+		display: none !important
 	}
 
 }
@@ -589,7 +546,6 @@ a {
 	font-size: 18px;
 
 	left: 15px
-
 }
 
 
@@ -613,7 +569,6 @@ a {
 	justify-content: center;
 
 	border-radius: 50%
-
 }
 
 
@@ -629,7 +584,6 @@ a {
 	border-radius: 50%;
 
 	cursor: pointer
-
 }
 
 
@@ -641,7 +595,6 @@ a {
 	-o-transition: all .2s;
 
 	transition: all .2s
-
 }
 
 
@@ -657,7 +610,6 @@ a {
 		-webkit-box-shadow: 0 .5rem 1rem 0 rgba(0, 0, 0, .3);
 
 		box-shadow: 0 .5rem 1rem 0 rgba(0, 0, 0, .3)
-
 	}
 
 }
@@ -691,7 +643,6 @@ a {
 	background-color: #5e72e4;
 
 	z-index: 5
-
 }
 
 
@@ -703,7 +654,6 @@ a {
 	background-color: #000;
 
 	transition: all .5s
-
 }
 
 
@@ -713,7 +663,6 @@ a {
 	font-size: 20px;
 
 	border-right: 1.5px solid #aaa4a4
-
 }
 
 
@@ -721,7 +670,6 @@ a {
 .page-breadcrumb .breadcrumb li.breadcrumb-item {
 
 	font-size: 16px
-
 }
 
 
@@ -757,7 +705,6 @@ a {
 	justify-content: center;
 
 	border-radius: 50%
-
 }
 
 
@@ -779,7 +726,6 @@ a {
 	font-size: 26px;
 
 	border-radius: 10px
-
 }
 
 
@@ -801,7 +747,6 @@ a {
 	font-size: 27px;
 
 	border-radius: 10px
-
 }
 
 
@@ -822,18 +767,17 @@ a {
 	font-size: 24px;
 
 	border-radius: 10px
-
 }
 
 .widgets-icons-small {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #ededed;
-    font-size: 26px;
-    border-radius: 10px;
+	width: 40px;
+	height: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: #ededed;
+	font-size: 26px;
+	border-radius: 10px;
 }
 
 #geographic-map {
@@ -841,7 +785,6 @@ a {
 	width: 100%;
 
 	height: 440px
-
 }
 
 
@@ -855,9 +798,6 @@ a {
 
 
 	height: 300px
-
-
-
 }
 
 
@@ -871,9 +811,6 @@ a {
 
 
 	height: 350px
-
-
-
 }
 
 
@@ -895,7 +832,6 @@ a {
 	border-radius: 10px;
 
 	border: 1px solid #e6e6e6
-
 }
 
 
@@ -907,7 +843,6 @@ a {
 	height: 60px;
 
 	padding: 6px
-
 }
 
 
@@ -929,7 +864,6 @@ a {
 	border-radius: 10px;
 
 	border: 1px solid #e6e6e6
-
 }
 
 
@@ -941,14 +875,13 @@ a {
 	height: 45px;
 
 	padding: 1px
-
 }
 
 
 
 .border-light-2 {
 
-    border-color: rgb(255 255 255 / 12%)!important;
+	border-color: rgb(255 255 255 / 12%) !important;
 
 }
 
@@ -959,7 +892,6 @@ a {
 	position: relative;
 
 	height: 450px
-
 }
 
 
@@ -969,7 +901,6 @@ a {
 	position: relative;
 
 	height: 360px
-
 }
 
 
@@ -979,16 +910,15 @@ a {
 	position: relative;
 
 	height: 450px
-
 }
 
 
 
 .store-metrics {
 
-    position: relative;
+	position: relative;
 
-    height: 450px;
+	height: 450px;
 
 }
 
@@ -996,9 +926,9 @@ a {
 
 .product-list-2 {
 
-    position: relative;
+	position: relative;
 
-    height: 450px;
+	height: 450px;
 
 }
 
@@ -1013,7 +943,6 @@ a {
 	-o-transition: all .2s;
 
 	transition: all .2s
-
 }
 
 
@@ -1031,7 +960,6 @@ a {
 		-webkit-box-shadow: 0 .5rem 1rem 0 rgba(0, 0, 0, .2);
 
 		box-shadow: 0 .25rem .5rem 0 rgba(0, 0, 0, .2)
-
 	}
 
 }
@@ -1055,7 +983,6 @@ a {
 	border-radius: 10px;
 
 	border: 1px solid #e6e6e6
-
 }
 
 
@@ -1067,7 +994,6 @@ a {
 	height: 40px;
 
 	padding: 6px
-
 }
 
 
@@ -1075,7 +1001,6 @@ a {
 .theme-icons {
 
 	background-color: #fff
-
 }
 
 
@@ -1085,7 +1010,6 @@ a {
 	border-collapse: separate;
 
 	border-spacing: 0 10px
-
 }
 
 
@@ -1099,7 +1023,6 @@ a {
 	display: flex;
 
 	align-items: center
-
 }
 
 
@@ -1107,7 +1030,6 @@ a {
 .fm-menu .list-group a i {
 
 	font-size: 23px
-
 }
 
 
@@ -1119,7 +1041,6 @@ a {
 	color: #fff;
 
 	transition: all .2s ease-out
-
 }
 
 
@@ -1141,7 +1062,6 @@ a {
 	justify-content: center;
 
 	border-radius: .25rem
-
 }
 
 
@@ -1163,7 +1083,6 @@ a {
 	justify-content: center;
 
 	border-radius: .25rem
-
 }
 
 
@@ -1191,7 +1110,6 @@ a {
 	border: 1px dotted #a9b2bb;
 
 	color: #404142
-
 }
 
 
@@ -1205,7 +1123,6 @@ a {
 	padding: 2px;
 
 	cursor: pointer
-
 }
 
 
@@ -1229,7 +1146,6 @@ a {
 	border-radius: 50%;
 
 	color: #2b2a2a
-
 }
 
 
@@ -1257,7 +1173,6 @@ a {
 	border-radius: 50%;
 
 	color: #2b2a2a
-
 }
 
 
@@ -1285,7 +1200,6 @@ a {
 	border-radius: 20%;
 
 	color: #2b2a2a
-
 }
 
 
@@ -1300,7 +1214,7 @@ a {
 
 	min-height: 100vh;
 
-	
+
 
 }
 
@@ -1334,7 +1248,7 @@ a {
 
 .error {
 
-    color: #dc3545;
+	color: #dc3545;
 
 }
 
@@ -1352,7 +1266,7 @@ form textarea.error:focus,
 
 form select.error:focus {
 
-    border-color: #ea5455 !important;
+	border-color: #ea5455 !important;
 
 }
 
@@ -1365,7 +1279,6 @@ form select.error:focus {
 	-o-transition: all .2s;
 
 	transition: all .2s
-
 }
 
 
@@ -1385,7 +1298,6 @@ form select.error:focus {
 		-webkit-box-shadow: 0 .5rem 1rem 0 rgba(0, 0, 0, .2);
 
 		box-shadow: 0 .25rem .5rem 0 rgba(0, 0, 0, .2)
-
 	}
 
 }
@@ -1394,8 +1306,7 @@ form select.error:focus {
 
 .right-15 {
 
-	right: 15px!important
-
+	right: 15px !important
 }
 
 
@@ -1403,7 +1314,6 @@ form select.error:focus {
 .font-13 {
 
 	font-size: 13px
-
 }
 
 
@@ -1411,7 +1321,6 @@ form select.error:focus {
 .font-14 {
 
 	font-size: 14px
-
 }
 
 
@@ -1419,7 +1328,6 @@ form select.error:focus {
 .font-18 {
 
 	font-size: 18px
-
 }
 
 
@@ -1427,7 +1335,6 @@ form select.error:focus {
 .font-20 {
 
 	font-size: 20px
-
 }
 
 
@@ -1435,7 +1342,6 @@ form select.error:focus {
 .font-22 {
 
 	font-size: 22px
-
 }
 
 
@@ -1443,7 +1349,6 @@ form select.error:focus {
 .font-24 {
 
 	font-size: 24px
-
 }
 
 
@@ -1451,7 +1356,6 @@ form select.error:focus {
 .font-30 {
 
 	font-size: 30px
-
 }
 
 
@@ -1459,7 +1363,6 @@ form select.error:focus {
 .font-35 {
 
 	font-size: 35px
-
 }
 
 
@@ -1467,7 +1370,6 @@ form select.error:focus {
 .font-50 {
 
 	font-size: 50px
-
 }
 
 
@@ -1475,7 +1377,6 @@ form select.error:focus {
 .font-60 {
 
 	font-size: 60px
-
 }
 
 
@@ -1483,7 +1384,6 @@ form select.error:focus {
 .radius-30 {
 
 	border-radius: 30px
-
 }
 
 
@@ -1491,7 +1391,6 @@ form select.error:focus {
 .radius-10 {
 
 	border-radius: 10px
-
 }
 
 
@@ -1499,14 +1398,13 @@ form select.error:focus {
 .radius-15 {
 
 	border-radius: 15px
-
 }
 
 
 
 .row.row-group>div {
 
-    border-right: 1px solid rgba(0, 0, 0, 0.12);
+	border-right: 1px solid rgba(0, 0, 0, 0.12);
 
 }
 
@@ -1514,7 +1412,7 @@ form select.error:focus {
 
 .row.row-group>div:last-child {
 
-    border-right: none;
+	border-right: none;
 
 }
 
@@ -1525,18 +1423,15 @@ form select.error:focus {
 
 
 	cursor: pointer
-
-
-
 }
 
 
 
 .dash-wrapper {
 
-    margin: -1.5rem -1.5rem -3.5rem -1.5rem;
+	margin: -1.5rem -1.5rem -3.5rem -1.5rem;
 
-    padding: 1.5rem 1.5rem 3.5rem 1.5rem;
+	padding: 1.5rem 1.5rem 3.5rem 1.5rem;
 
 }
 
@@ -1544,35 +1439,35 @@ form select.error:focus {
 
 .dash-array-chart-box {
 
-    width: 105px;
+	width: 105px;
 
-    height: 90px;
+	height: 90px;
 
-    position: relative;
+	position: relative;
 
-    top: -15px;
+	top: -15px;
 
-    right: 30px;
+	right: 30px;
 
 }
 
 .piechart-legend {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	text-align: center;
 }
 
 
 .chart-js-container1 {
-    position: relative;
-    height: 300px;
+	position: relative;
+	height: 300px;
 }
 
 .chart-js-container2 {
-    position: relative;
-    height: 250px;
+	position: relative;
+	height: 250px;
 }
 
 .chart-js-container3 {
@@ -1585,124 +1480,124 @@ form select.error:focus {
 	height: 320px
 }
 
-.chart-container{
+.chart-container {
 
-	position:relative;
+	position: relative;
 
-	height:380px;
-
-}
-
-
-.chart-container-0{
-
-	position:relative;
-
-	height:320px;
+	height: 380px;
 
 }
 
 
+.chart-container-0 {
 
-.chart-container-1{
+	position: relative;
 
-	position:relative;
-
-	height:260px;
+	height: 320px;
 
 }
 
 
 
-.chart-container-2{
+.chart-container-1 {
 
-	position:relative;
+	position: relative;
 
-	height:220px;
-
-}
-
-
-
-.chart-container-3{
-
-	position:relative;
-
-	height:188px;
+	height: 260px;
 
 }
 
 
 
-.chart-container-4{
+.chart-container-2 {
 
-	position:relative;
+	position: relative;
 
-	height:162px;
-
-}
-
-
-
-.chart-container-5{
-
-	position:relative;
-
-	height:110px;
+	height: 220px;
 
 }
 
 
 
-.chart-container-6{
+.chart-container-3 {
 
-	position:relative;
+	position: relative;
 
-	height:205px;
+	height: 188px;
+
+}
+
+
+
+.chart-container-4 {
+
+	position: relative;
+
+	height: 162px;
 
 }
 
 
 
-.chart-container-7{
+.chart-container-5 {
 
-	position:relative;
+	position: relative;
 
-	height:60px;
+	height: 110px;
 
 }
 
- .chart-container-8 {
 
-   position: relative;
 
-   height: 260px;
+.chart-container-6 {
+
+	position: relative;
+
+	height: 205px;
+
+}
+
+
+
+.chart-container-7 {
+
+	position: relative;
+
+	height: 60px;
+
+}
+
+.chart-container-8 {
+
+	position: relative;
+
+	height: 260px;
 
 }
 
 .chart-container-9 {
 
-   position: relative;
+	position: relative;
 
-   height: 280px;
+	height: 280px;
 
 }
 
 .chart-container-10 {
 
-   position: relative;
+	position: relative;
 
-   height: 300px;
+	height: 300px;
 
-   top: 20px;
+	top: 20px;
 
 }
 
 .chart-container-11 {
 
-   position: relative;
+	position: relative;
 
-   height: 280px;
+	height: 280px;
 
 }
 
@@ -1710,25 +1605,25 @@ form select.error:focus {
 
 .chart-container-12 {
 
-   position: relative;
+	position: relative;
 
-   height: 160px;
+	height: 160px;
 
 }
 
 .chart-container-13 {
 
-   position: relative;
+	position: relative;
 
-   height: 240px;
+	height: 240px;
 
 }
 
-.chart-container-14{
+.chart-container-14 {
 
-  position:relative;
+	position: relative;
 
-  height:40px;
+	height: 40px;
 
 }
 
@@ -1748,13 +1643,13 @@ form select.error:focus {
 
 	color: #32393f;
 
-  }
+}
 
 
 
-  
 
-  .w_chart canvas {
+
+.w_chart canvas {
 
 	position: absolute;
 
@@ -1766,9 +1661,9 @@ form select.error:focus {
 
 	height: 80px !important;
 
-  }
+}
 
-  .w_percent {
+.w_percent {
 
 	display: inline-block;
 
@@ -1777,9 +1672,9 @@ form select.error:focus {
 	z-index: 2;
 	font-size: 1.3rem;
 
-  }
+}
 
-  .w_percent:after {
+.w_percent:after {
 
 	content: '%';
 
@@ -1787,13 +1682,13 @@ form select.error:focus {
 
 	font-size: .8em;
 
-  }
+}
 
 
 .review-list {
-    position: relative;
-    height: 360px;
-    overflow-y: scroll;
+	position: relative;
+	height: 360px;
+	overflow-y: scroll;
 }
 
 
@@ -1830,7 +1725,6 @@ form select.error:focus {
 	transition: all .3s linear;
 
 	box-shadow: none
-
 }
 
 
@@ -1846,7 +1740,6 @@ form select.error:focus {
 	margin: 0 8px 0 -12px;
 
 	border-radius: 50%
-
 }
 
 
@@ -1862,7 +1755,6 @@ form select.error:focus {
 	font-size: 16px;
 
 	cursor: pointer
-
 }
 
 
@@ -1874,7 +1766,6 @@ form select.error:focus {
 	line-height: 42px;
 
 	border-radius: 21px
-
 }
 
 
@@ -1884,7 +1775,6 @@ form select.error:focus {
 	height: 42px;
 
 	width: 42px
-
 }
 
 
@@ -1892,7 +1782,6 @@ form select.error:focus {
 #invoice {
 
 	padding: 0
-
 }
 
 
@@ -1906,7 +1795,6 @@ form select.error:focus {
 	min-height: 680px;
 
 	padding: 15px
-
 }
 
 
@@ -1918,7 +1806,6 @@ form select.error:focus {
 	margin-bottom: 20px;
 
 	border-bottom: 1px solid #5e72e4
-
 }
 
 
@@ -1926,7 +1813,6 @@ form select.error:focus {
 .invoice .company-details {
 
 	text-align: right
-
 }
 
 
@@ -1936,7 +1822,6 @@ form select.error:focus {
 	margin-top: 0;
 
 	margin-bottom: 0
-
 }
 
 
@@ -1944,7 +1829,6 @@ form select.error:focus {
 .invoice .contacts {
 
 	margin-bottom: 20px
-
 }
 
 
@@ -1952,7 +1836,6 @@ form select.error:focus {
 .invoice .invoice-to {
 
 	text-align: left
-
 }
 
 
@@ -1962,7 +1845,6 @@ form select.error:focus {
 	margin-top: 0;
 
 	margin-bottom: 0
-
 }
 
 
@@ -1970,7 +1852,6 @@ form select.error:focus {
 .invoice .invoice-details {
 
 	text-align: right
-
 }
 
 
@@ -1980,7 +1861,6 @@ form select.error:focus {
 	margin-top: 0;
 
 	color: #5e72e4
-
 }
 
 
@@ -1988,7 +1868,6 @@ form select.error:focus {
 .invoice main {
 
 	padding-bottom: 50px
-
 }
 
 
@@ -2000,7 +1879,6 @@ form select.error:focus {
 	font-size: 2em;
 
 	margin-bottom: 50px
-
 }
 
 
@@ -2014,7 +1892,6 @@ form select.error:focus {
 	background: #e7f2ff;
 
 	padding: 10px
-
 }
 
 
@@ -2022,7 +1899,6 @@ form select.error:focus {
 .invoice main .notices .notice {
 
 	font-size: 1.2em
-
 }
 
 
@@ -2036,7 +1912,6 @@ form select.error:focus {
 	border-spacing: 0;
 
 	margin-bottom: 20px
-
 }
 
 
@@ -2050,7 +1925,6 @@ form select.error:focus {
 	background: #eee;
 
 	border-bottom: 1px solid #fff
-
 }
 
 
@@ -2062,7 +1936,6 @@ form select.error:focus {
 	font-weight: 400;
 
 	font-size: 16px
-
 }
 
 
@@ -2076,7 +1949,6 @@ form select.error:focus {
 	color: #5e72e4;
 
 	font-size: 1.2em
-
 }
 
 
@@ -2090,7 +1962,6 @@ form select.error:focus {
 	text-align: right;
 
 	font-size: 1.2em
-
 }
 
 
@@ -2102,7 +1973,6 @@ form select.error:focus {
 	font-size: 1.6em;
 
 	background: #5e72e4
-
 }
 
 
@@ -2110,7 +1980,6 @@ form select.error:focus {
 .invoice table .unit {
 
 	background: #ddd
-
 }
 
 
@@ -2120,7 +1989,6 @@ form select.error:focus {
 	background: #5e72e4;
 
 	color: #fff
-
 }
 
 
@@ -2128,7 +1996,6 @@ form select.error:focus {
 .invoice table tbody tr:last-child td {
 
 	border: none
-
 }
 
 
@@ -2148,7 +2015,6 @@ form select.error:focus {
 	font-size: 1.2em;
 
 	border-top: 1px solid #aaa
-
 }
 
 
@@ -2156,7 +2022,6 @@ form select.error:focus {
 .invoice table tfoot tr:first-child td {
 
 	border-top: none
-
 }
 
 
@@ -2168,7 +2033,6 @@ form select.error:focus {
 	font-size: 1.4em;
 
 	border-top: 1px solid #5e72e4
-
 }
 
 
@@ -2176,7 +2040,6 @@ form select.error:focus {
 .invoice table tfoot tr td:first-child {
 
 	border: none
-
 }
 
 
@@ -2192,7 +2055,6 @@ form select.error:focus {
 	border-top: 1px solid #aaa;
 
 	padding: 8px 0
-
 }
 
 
@@ -2201,10 +2063,9 @@ form select.error:focus {
 
 	.invoice {
 
-		font-size: 11px!important;
+		font-size: 11px !important;
 
-		overflow: hidden!important
-
+		overflow: hidden !important
 	}
 
 	.invoice footer {
@@ -2214,13 +2075,11 @@ form select.error:focus {
 		bottom: 10px;
 
 		page-break-after: always
-
 	}
 
 	.invoice>div:last-child {
 
 		page-break-before: always
-
 	}
 
 }
@@ -2230,7 +2089,6 @@ form select.error:focus {
 .main-row {
 
 	height: 100vh
-
 }
 
 
@@ -2240,7 +2098,6 @@ form select.error:focus {
 	max-width: 500px;
 
 	min-height: 300px
-
 }
 
 
@@ -2248,7 +2105,6 @@ form select.error:focus {
 .todo-done {
 
 	text-decoration: line-through
-
 }
 
 
@@ -2266,7 +2122,6 @@ form select.error:focus {
 	background: #fff;
 
 	box-shadow: 0 .1rem .7rem rgba(0, 0, 0, .1)
-
 }
 
 
@@ -2296,7 +2151,6 @@ form select.error:focus {
 	border-top-left-radius: .25rem;
 
 	border-bottom-left-radius: .25rem
-
 }
 
 
@@ -2318,7 +2172,6 @@ form select.error:focus {
 	border-top-left-radius: .25rem;
 
 	padding: 15px
-
 }
 
 
@@ -2326,7 +2179,6 @@ form select.error:focus {
 .chat-sidebar-content {
 
 	padding: 0
-
 }
 
 
@@ -2334,7 +2186,6 @@ form select.error:focus {
 .chat-user-online {
 
 	position: relative
-
 }
 
 
@@ -2358,7 +2209,6 @@ form select.error:focus {
 	box-shadow: 0 0 0 2px #fff;
 
 	background: #16e15e
-
 }
 
 
@@ -2382,7 +2232,6 @@ form select.error:focus {
 	box-shadow: 0 0 0 2px #fff;
 
 	background: #16e15e
-
 }
 
 
@@ -2392,7 +2241,6 @@ form select.error:focus {
 	margin-left: 340px;
 
 	padding: 85px 15px 15px 15px
-
 }
 
 
@@ -2418,7 +2266,6 @@ form select.error:focus {
 	border-top-right-radius: .25rem;
 
 	z-index: 1
-
 }
 
 
@@ -2442,7 +2289,6 @@ form select.error:focus {
 	border-top: 1px solid rgba(0, 0, 0, .125);
 
 	border-bottom-right-radius: .25rem
-
 }
 
 
@@ -2470,7 +2316,6 @@ form select.error:focus {
 	background-color: #fff;
 
 	border: 1px solid rgb(0 0 0 / 15%)
-
 }
 
 
@@ -2482,7 +2327,6 @@ form select.error:focus {
 	line-height: 1.2;
 
 	color: #4a4b4c
-
 }
 
 
@@ -2494,7 +2338,6 @@ form select.error:focus {
 	color: #5e72e4;
 
 	background-color: rgb(0 123 255 / 0%)
-
 }
 
 
@@ -2504,7 +2347,6 @@ form select.error:focus {
 	font-size: 14px;
 
 	color: #272b2f
-
 }
 
 
@@ -2514,7 +2356,6 @@ form select.error:focus {
 	font-size: 13px;
 
 	color: #6c757d
-
 }
 
 
@@ -2524,7 +2365,6 @@ form select.error:focus {
 	font-size: 13px;
 
 	color: #6c757d
-
 }
 
 
@@ -2534,7 +2374,6 @@ form select.error:focus {
 	position: relative;
 
 	height: 300px
-
 }
 
 
@@ -2544,7 +2383,6 @@ form select.error:focus {
 	border: 1px solid rgb(0 0 0 / 0%);
 
 	background-color: transparent
-
 }
 
 
@@ -2554,7 +2392,6 @@ form select.error:focus {
 	border: 1px solid rgb(0 0 0 / 0%);
 
 	background-color: rgb(13 110 253 / .12)
-
 }
 
 
@@ -2562,7 +2399,6 @@ form select.error:focus {
 .chat-list .list-group-item.active {
 
 	background-color: rgb(13 110 253 / .12)
-
 }
 
 
@@ -2570,7 +2406,6 @@ form select.error:focus {
 .chart-online {
 
 	color: #16e15e
-
 }
 
 
@@ -2598,7 +2433,6 @@ form select.error:focus {
 	background-color: #fff;
 
 	border: 1px solid rgb(0 0 0 / 15%)
-
 }
 
 
@@ -2610,7 +2444,6 @@ form select.error:focus {
 	width: auto;
 
 	height: 520px
-
 }
 
 
@@ -2630,7 +2463,6 @@ form select.error:focus {
 	text-align: left;
 
 	border-top-left-radius: 0
-
 }
 
 
@@ -2652,7 +2484,6 @@ form select.error:focus {
 	text-align: left;
 
 	border-bottom-right-radius: 0
-
 }
 
 
@@ -2680,7 +2511,6 @@ form select.error:focus {
 	background-color: #fff;
 
 	border: 1px solid rgb(0 0 0 / 15%)
-
 }
 
 
@@ -2700,7 +2530,6 @@ form select.error:focus {
 	background: #fff;
 
 	box-shadow: 0 .1rem .7rem rgba(0, 0, 0, .1)
-
 }
 
 
@@ -2730,7 +2559,6 @@ form select.error:focus {
 	border-top-left-radius: .25rem;
 
 	border-bottom-left-radius: .25rem
-
 }
 
 
@@ -2752,7 +2580,6 @@ form select.error:focus {
 	border-top-left-radius: .25rem;
 
 	padding: 15px
-
 }
 
 
@@ -2766,7 +2593,6 @@ form select.error:focus {
 	height: 345px;
 
 	border-bottom: 1px solid rgba(0, 0, 0, .125)
-
 }
 
 
@@ -2792,7 +2618,6 @@ form select.error:focus {
 	border-top-right-radius: .25rem;
 
 	z-index: 1
-
 }
 
 
@@ -2820,7 +2645,6 @@ form select.error:focus {
 	border-top-left-radius: .25rem;
 
 	border-top-right-radius: .25rem
-
 }
 
 
@@ -2836,7 +2660,6 @@ form select.error:focus {
 	border-bottom: 1px solid rgb(0 0 0 / 0%);
 
 	transition: all .3s ease-out
-
 }
 
 
@@ -2844,7 +2667,6 @@ form select.error:focus {
 .email-navigation a.list-group-item:hover {
 
 	background-color: rgb(13 110 253 / .12)
-
 }
 
 
@@ -2856,7 +2678,6 @@ form select.error:focus {
 	font-weight: 600;
 
 	background-color: rgb(13 110 253 / .12)
-
 }
 
 
@@ -2870,7 +2691,6 @@ form select.error:focus {
 	right: 0;
 
 	bottom: 0
-
 }
 
 
@@ -2884,7 +2704,6 @@ form select.error:focus {
 	background-color: #fff;
 
 	border-bottom: 1px solid rgb(0 0 0 / 0%)
-
 }
 
 
@@ -2894,7 +2713,6 @@ form select.error:focus {
 	background-color: rgb(0 123 255 / 15%);
 
 	transition: all .3s ease-out
-
 }
 
 
@@ -2918,7 +2736,6 @@ form select.error:focus {
 	box-shadow: 0 0 0 2px #fff;
 
 	background: #16e15e
-
 }
 
 
@@ -2944,7 +2761,6 @@ form select.error:focus {
 	background-color: #fff;
 
 	border: 0 solid rgb(0 0 0 / 15%)
-
 }
 
 
@@ -2952,7 +2768,6 @@ form select.error:focus {
 .email-actions {
 
 	width: 230px
-
 }
 
 
@@ -2962,7 +2777,6 @@ form select.error:focus {
 	font-size: 13px;
 
 	color: #6c757d
-
 }
 
 
@@ -2974,7 +2788,6 @@ form select.error:focus {
 	border-bottom: 1px solid rgb(0 0 0 / 8%);
 
 	color: #383a3c
-
 }
 
 
@@ -2984,7 +2797,6 @@ form select.error:focus {
 	transition: all .2s ease-out;
 
 	background-color: #eceef1
-
 }
 
 
@@ -2994,7 +2806,6 @@ form select.error:focus {
 	position: relative;
 
 	height: 530px
-
 }
 
 
@@ -3002,7 +2813,6 @@ form select.error:focus {
 .email-star {
 
 	color: #6c757d
-
 }
 
 
@@ -3012,7 +2822,6 @@ form select.error:focus {
 	position: relative;
 
 	height: 530px
-
 }
 
 
@@ -3030,7 +2839,6 @@ form select.error:focus {
 	z-index: 15;
 
 	display: none
-
 }
 
 
@@ -3038,7 +2846,6 @@ form select.error:focus {
 .compose-mail-toggled {
 
 	display: block
-
 }
 
 
@@ -3046,7 +2853,6 @@ form select.error:focus {
 .compose-mail-title {
 
 	font-size: 16px
-
 }
 
 
@@ -3066,7 +2872,6 @@ form select.error:focus {
 	border-radius: 2px;
 
 	background-color: rgb(255 255 255 / 0%)
-
 }
 
 
@@ -3074,7 +2879,6 @@ form select.error:focus {
 .compose-mail-close:hover {
 
 	background-color: rgb(255 255 255 / 20%)
-
 }
 
 
@@ -3084,7 +2888,6 @@ form select.error:focus {
 	color: #5e72e4;
 
 	border-color: #5e72e4 #5e72e4 #fff
-
 }
 
 
@@ -3094,7 +2897,6 @@ form select.error:focus {
 	color: #f41127;
 
 	border-color: #f41127 #f41127 #fff
-
 }
 
 
@@ -3104,7 +2906,6 @@ form select.error:focus {
 	color: #17a00e;
 
 	border-color: #17a00e #17a00e #fff
-
 }
 
 
@@ -3114,7 +2915,6 @@ form select.error:focus {
 	color: #ffc107;
 
 	border-color: #ffc107 #ffc107 #fff
-
 }
 
 
@@ -3124,7 +2924,6 @@ form select.error:focus {
 	color: #fff;
 
 	background-color: #f41127
-
 }
 
 
@@ -3134,7 +2933,6 @@ form select.error:focus {
 	color: #fff;
 
 	background-color: #17a00e
-
 }
 
 
@@ -3144,7 +2942,6 @@ form select.error:focus {
 	color: #000;
 
 	background-color: #ffc107
-
 }
 
 
@@ -3156,7 +2953,6 @@ form select.error:focus {
 	border: 1px solid rgb(255 255 255 / 45%);
 
 	color: #fff
-
 }
 
 
@@ -3168,25 +2964,22 @@ form select.error:focus {
 	border: 1px solid rgb(255 255 255 / 32%);
 
 	color: #fff
-
 }
 
 
 
 .nav-search input.form-control::placeholder {
 
-	opacity: .5!important;
+	opacity: .5 !important;
 
-	color: #fff!important
-
+	color: #fff !important
 }
 
 
 
 .nav-search input.form-control::-ms-input-placeholder {
 
-	color: #fff!important
-
+	color: #fff !important
 }
 
 
@@ -3196,7 +2989,6 @@ form select.error:focus {
 	border-top-left-radius: 30px;
 
 	border-bottom-left-radius: 30px
-
 }
 
 
@@ -3206,14 +2998,13 @@ form select.error:focus {
 	border-top-right-radius: 30px;
 
 	border-bottom-right-radius: 30px
-
 }
 
 
 
 .bg-body {
 
-	background-color: #f8f9fe!important;
+	background-color: #f8f9fe !important;
 
 }
 
@@ -3221,67 +3012,53 @@ form select.error:focus {
 
 .bg-light-primary {
 
-	background-color: rgb(13 110 253 / .11)!important
-
+	background-color: rgb(13 110 253 / .11) !important
 }
 
 
 
 .bg-light-success {
 
-	background-color: rgb(23 160 14 / .11)!important
-
+	background-color: rgb(23 160 14 / .11) !important
 }
 
 
 
 .bg-light-danger {
 
-	background-color: rgb(244 17 39 / .11)!important
-
+	background-color: rgb(244 17 39 / .11) !important
 }
 
 
 
 .bg-light-warning {
 
-	background-color: rgb(255 193 7 / .11)!important
-
+	background-color: rgb(255 193 7 / .11) !important
 }
 
 
 
 .bg-light-info {
 
-	background-color: rgb(13 202 240 / 18%)!important
-
+	background-color: rgb(13 202 240 / 18%) !important
 }
 
 
 
 .bg-light-transparent {
 
-	background-color: rgb(0 0 0 / 15%)!important
-
+	background-color: rgb(0 0 0 / 15%) !important
 }
 
 
 
 .bg-gradient-deepblue {
 
-    background: #6a11cb;
+	background: #6a11cb;
 
-    background: -webkit-linear-gradient(
+	background: -webkit-linear-gradient(45deg, #6a11cb, #2575fc) !important;
 
-	45deg
-
-	, #6a11cb, #2575fc)!important;
-
-		background: linear-gradient(
-
-	45deg
-
-	, #6a11cb , #2575fc)!important;
+	background: linear-gradient(45deg, #6a11cb, #2575fc) !important;
 
 }
 
@@ -3291,19 +3068,11 @@ form select.error:focus {
 
 .bg-gradient-orange {
 
-    background: #fc4a1a;
+	background: #fc4a1a;
 
-    background: -webkit-linear-gradient(
+	background: -webkit-linear-gradient(45deg, #fc4a1a, #f7b733) !important;
 
-	45deg
-
-	, #fc4a1a, #f7b733)!important;
-
-		background: linear-gradient(
-
-	45deg
-
-	, #fc4a1a, #f7b733)!important;
+	background: linear-gradient(45deg, #fc4a1a, #f7b733) !important;
 
 }
 
@@ -3311,19 +3080,11 @@ form select.error:focus {
 
 .bg-gradient-ohhappiness {
 
-    background: #00b09b;
+	background: #00b09b;
 
-    background: -webkit-linear-gradient(
+	background: -webkit-linear-gradient(45deg, #00b09b, #96c93d) !important;
 
-	45deg
-
-	, #00b09b, #96c93d)!important;
-
-		background: linear-gradient(
-
-	45deg
-
-	, #00b09b, #96c93d)!important;
+	background: linear-gradient(45deg, #00b09b, #96c93d) !important;
 
 }
 
@@ -3333,19 +3094,11 @@ form select.error:focus {
 
 .bg-gradient-ibiza {
 
-    background: #ee0979;
+	background: #ee0979;
 
-    background: -webkit-linear-gradient(
+	background: -webkit-linear-gradient(45deg, #ee0979, #ff6a00) !important;
 
-	45deg
-
-	, #ee0979, #ff6a00)!important;
-
-		background: linear-gradient(
-
-	45deg
-
-	, #ee0979, #ff6a00)!important;
+	background: linear-gradient(45deg, #ee0979, #ff6a00) !important;
 
 }
 
@@ -3353,19 +3106,11 @@ form select.error:focus {
 
 .bg-gradient-scooter {
 
-    background: #17ead9;
+	background: #17ead9;
 
-    background: -webkit-linear-gradient(
+	background: -webkit-linear-gradient(45deg, #17ead9, #6078ea) !important;
 
-45deg
-
-, #17ead9, #6078ea)!important;
-
-    background: linear-gradient(
-
-45deg
-
-, #17ead9, #6078ea)!important;
+	background: linear-gradient(45deg, #17ead9, #6078ea) !important;
 
 }
 
@@ -3375,19 +3120,11 @@ form select.error:focus {
 
 .bg-gradient-bloody {
 
-    background: #f54ea2;
+	background: #f54ea2;
 
-    background: -webkit-linear-gradient(
+	background: -webkit-linear-gradient(45deg, #f54ea2, #ff7676) !important;
 
-45deg
-
-, #f54ea2, #ff7676)!important;
-
-    background: linear-gradient(
-
-45deg
-
-, #f54ea2, #ff7676)!important;
+	background: linear-gradient(45deg, #f54ea2, #ff7676) !important;
 
 }
 
@@ -3397,19 +3134,11 @@ form select.error:focus {
 
 .bg-gradient-quepal {
 
-    background: #42e695;
+	background: #42e695;
 
-    background: -webkit-linear-gradient(
+	background: -webkit-linear-gradient(45deg, #42e695, #3bb2b8) !important;
 
-45deg
-
-, #42e695, #3bb2b8)!important;
-
-    background: linear-gradient(
-
-45deg
-
-, #42e695, #3bb2b8)!important;
+	background: linear-gradient(45deg, #42e695, #3bb2b8) !important;
 
 }
 
@@ -3419,84 +3148,70 @@ form select.error:focus {
 
 .bg-gradient-blooker {
 
-    background: #ffdf40;
+	background: #ffdf40;
 
-    background: -webkit-linear-gradient(
+	background: -webkit-linear-gradient(45deg, #ffdf40, #ff8359) !important;
 
-45deg
-
-, #ffdf40, #ff8359)!important;
-
-    background: linear-gradient(
-
-45deg
-
-, #ffdf40, #ff8359)!important;
+	background: linear-gradient(45deg, #ffdf40, #ff8359) !important;
 
 }
 
 
 .bg-gradient-purple {
-    background-image: linear-gradient(310deg,#7928ca,#ff0080);
+	background-image: linear-gradient(310deg, #7928ca, #ff0080);
 }
 
 .bg-gradient-voilet {
-    background: linear-gradient(87deg,#8965e0 0,#bc65e0 100%)!important;
+	background: linear-gradient(87deg, #8965e0 0, #bc65e0 100%) !important;
 }
 
 .bg-gradient-success {
-    background-image: linear-gradient( 310deg,#17ad37,#98ec2d);
+	background-image: linear-gradient(310deg, #17ad37, #98ec2d);
 }
 
 
 .bg-gradient-cosmic {
 
-	background: linear-gradient(to right, #8e2de2, #4a00e0)!important
-
+	background: linear-gradient(to right, #8e2de2, #4a00e0) !important
 }
 
 
 
 .bg-gradient-burning {
 
-	background: linear-gradient(to right, #ff416c, #ff4b2b)!important
-
+	background: linear-gradient(to right, #ff416c, #ff4b2b) !important
 }
 
 
 
 .bg-gradient-lush {
 
-	background: linear-gradient(to right, #56ab2f, #a8e063)!important
-
+	background: linear-gradient(to right, #56ab2f, #a8e063) !important
 }
 
 
 
 .bg-gradient-kyoto {
 
-	background: linear-gradient(to right, #f7971e, #ffd200)!important
-
+	background: linear-gradient(to right, #f7971e, #ffd200) !important
 }
 
 
 
 .bg-gradient-blues {
 
-	background: linear-gradient(to right, #56ccf2, #2f80ed)!important
-
+	background: linear-gradient(to right, #56ccf2, #2f80ed) !important
 }
 
 
 
 .bg-gradient-moonlit {
 
-	background: linear-gradient(to right, #0f2027, #203a43, #2c5364)!important
-
+	background: linear-gradient(to right, #0f2027, #203a43, #2c5364) !important
 }
 
 .bg-gradient-branding {
-    background: linear-gradient(87deg,#2dce89 0,#2dcecc 100%)!important;
+	background: linear-gradient(87deg, #2dce89 0, #2dcecc 100%) !important;
 }
 
 
@@ -3507,7 +3222,6 @@ form select.error:focus {
 	background-color: #0c62e0;
 
 	border-color: #0c62e0
-
 }
 
 
@@ -3517,7 +3231,6 @@ form select.error:focus {
 	background-color: #515a62;
 
 	border-color: #515a62
-
 }
 
 
@@ -3527,7 +3240,6 @@ form select.error:focus {
 	background-color: #128e0a;
 
 	border-color: #128e0a
-
 }
 
 
@@ -3537,7 +3249,6 @@ form select.error:focus {
 	background-color: #0bb2d3;
 
 	border-color: #0bb2d3
-
 }
 
 
@@ -3547,7 +3258,6 @@ form select.error:focus {
 	background-color: #e4ad07;
 
 	border-color: #e4ad07
-
 }
 
 
@@ -3557,39 +3267,34 @@ form select.error:focus {
 	background-color: #e20e22;
 
 	border-color: #e20e22
-
 }
 
 .bg-dribbble {
-    background-color: #ea4c89!important;
+	background-color: #ea4c89 !important;
 }
 
 .bg-behance {
-    background-color: #1769ff!important;
+	background-color: #1769ff !important;
 }
 
 .bg-facebook {
 
-	background-color: #3b5998!important
-
+	background-color: #3b5998 !important
 }
 
 .bg-twitter {
 
-    background-color: #55acee!important
-
+	background-color: #55acee !important
 }
 
 .bg-google {
 
-	background-color: #e52d27!important
-
+	background-color: #e52d27 !important
 }
 
 .bg-linkedin {
 
-	background-color: #0976b4!important
-
+	background-color: #0976b4 !important
 }
 
 
@@ -3598,41 +3303,37 @@ form select.error:focus {
 
 
 
-.text-option{
+.text-option {
 
-	color: #32393f!important
-
- }
-
+	color: #32393f !important
+}
 
 
-.text-facebook{
 
-	color: #3b5998!important
+.text-facebook {
 
- }
+	color: #3b5998 !important
+}
 
- 
 
- .text-twitter{
 
-	 color: #55acee!important
+.text-twitter {
 
-  }
+	color: #55acee !important
+}
 
- 
 
-  .text-youtube{
 
-	 color: #e52d27!important
+.text-youtube {
 
-  }
+	color: #e52d27 !important
+}
 
 
 
 .text-sky-light {
 
-    color: #b4d2ff;
+	color: #b4d2ff;
 
 }
 
@@ -3645,7 +3346,6 @@ form select.error:focus {
 .section-authentication-signin {
 
 	height: 100vh
-
 }
 
 
@@ -3655,7 +3355,6 @@ form select.error:focus {
 	height: 100vh;
 
 	padding: 0 1rem
-
 }
 
 
@@ -3665,7 +3364,6 @@ form select.error:focus {
 	height: 100vh;
 
 	padding: 0 1rem
-
 }
 
 
@@ -3675,7 +3373,6 @@ form select.error:focus {
 	height: 100vh;
 
 	padding: 0 1rem
-
 }
 
 
@@ -3685,7 +3382,6 @@ form select.error:focus {
 	height: 100vh;
 
 	padding: 0 1rem
-
 }
 
 
@@ -3710,8 +3406,7 @@ form select.error:focus {
 
 	margin: 5px;
 
-	box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075)!important
-
+	box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important
 }
 
 
@@ -3727,7 +3422,6 @@ form select.error:focus {
 	background-repeat: no-repeat;
 
 	background-attachment: fixed
-
 }
 
 
@@ -3743,7 +3437,6 @@ form select.error:focus {
 	background-repeat: no-repeat;
 
 	background-attachment: fixed
-
 }
 
 
@@ -3759,7 +3452,6 @@ form select.error:focus {
 	background-repeat: no-repeat;
 
 	background-attachment: fixed
-
 }
 
 
@@ -3781,7 +3473,6 @@ form select.error:focus {
 	color: #cbcbcb;
 
 	z-index: 1
-
 }
 
 
@@ -3797,7 +3488,6 @@ form select.error:focus {
 	margin-bottom: -1em;
 
 	margin-right: 5px
-
 }
 
 
@@ -3808,9 +3498,9 @@ form select.error:focus {
 
 	color: #5e72e4;
 
-    background-color: rgba(0, 140, 255, 0.18);
+	background-color: rgba(0, 140, 255, 0.18);
 
-    border-color: rgb(209, 234, 255);
+	border-color: rgb(209, 234, 255);
 
 }
 
@@ -3820,9 +3510,9 @@ form select.error:focus {
 
 	color: #5e72e4;
 
-    background-color: rgba(0, 140, 255, 0.18);
+	background-color: rgba(0, 140, 255, 0.18);
 
-    border-color: rgba(0, 140, 255, 0.18);
+	border-color: rgba(0, 140, 255, 0.18);
 
 }
 
@@ -3832,12 +3522,11 @@ form select.error:focus {
 
 	color: #5e72e4;
 
-    background-color: rgba(0, 140, 255, 0.18);
+	background-color: rgba(0, 140, 255, 0.18);
 
-    border-color: rgba(0, 140, 255, 0.18);
+	border-color: rgba(0, 140, 255, 0.18);
 
 	box-shadow: 0 0 0 .25rem rgba(49, 132, 253, .3)
-
 }
 
 
@@ -3848,9 +3537,9 @@ form select.error:focus {
 
 	color: #75808a;
 
-    background-color: rgba(117, 128, 138, 0.18);
+	background-color: rgba(117, 128, 138, 0.18);
 
-    border-color: rgb(230, 232, 234);
+	border-color: rgb(230, 232, 234);
 
 }
 
@@ -3860,9 +3549,9 @@ form select.error:focus {
 
 	color: #75808a;
 
-    background-color: rgba(117, 128, 138, 0.18);
+	background-color: rgba(117, 128, 138, 0.18);
 
-    border-color: rgba(117, 128, 138, 0.18);
+	border-color: rgba(117, 128, 138, 0.18);
 
 }
 
@@ -3872,9 +3561,9 @@ form select.error:focus {
 
 	color: #15ca20;
 
-    background-color: rgba(21, 202, 32, 0.18);
+	background-color: rgba(21, 202, 32, 0.18);
 
-    border-color: rgb(212, 246, 214);
+	border-color: rgb(212, 246, 214);
 
 }
 
@@ -3884,9 +3573,9 @@ form select.error:focus {
 
 	color: #15ca20;
 
-    background-color: rgba(21, 202, 32, 0.18);
+	background-color: rgba(21, 202, 32, 0.18);
 
-    border-color: rgba(21, 202, 32, 0.18);
+	border-color: rgba(21, 202, 32, 0.18);
 
 }
 
@@ -3894,12 +3583,11 @@ form select.error:focus {
 
 	color: #15ca20;
 
-    background-color: rgba(21, 202, 32, 0.18);
+	background-color: rgba(21, 202, 32, 0.18);
 
-    border-color: rgba(21, 202, 32, 0.18);
+	border-color: rgba(21, 202, 32, 0.18);
 
 	box-shadow: 0 0 0 .25rem rgb(23 160 14 / 32%)
-
 }
 
 
@@ -3908,9 +3596,9 @@ form select.error:focus {
 
 	color: #fd3550;
 
-    background-color: rgba(253, 53, 80, 0.18);
+	background-color: rgba(253, 53, 80, 0.18);
 
-    border-color: rgb(255, 218, 223);
+	border-color: rgb(255, 218, 223);
 
 }
 
@@ -3920,9 +3608,9 @@ form select.error:focus {
 
 	color: #fd3550;
 
-    background-color: rgba(253, 53, 80, 0.18);
+	background-color: rgba(253, 53, 80, 0.18);
 
-    border-color: rgba(253, 53, 80, 0.18);
+	border-color: rgba(253, 53, 80, 0.18);
 
 }
 
@@ -3930,12 +3618,11 @@ form select.error:focus {
 
 	color: #fd3550;
 
-    background-color: rgba(253, 53, 80, 0.18);
+	background-color: rgba(253, 53, 80, 0.18);
 
-    border-color: rgba(253, 53, 80, 0.18);
+	border-color: rgba(253, 53, 80, 0.18);
 
 	box-shadow: 0 0 0 .25rem rgba(225, 83, 97, .3)
-
 }
 
 
@@ -3946,9 +3633,9 @@ form select.error:focus {
 
 	color: #ff9700;
 
-    background-color: rgba(255, 151, 0, 0.18);
+	background-color: rgba(255, 151, 0, 0.18);
 
-    border-color: rgb(255, 236, 209);
+	border-color: rgb(255, 236, 209);
 
 }
 
@@ -3958,9 +3645,9 @@ form select.error:focus {
 
 	color: #ff9700;
 
-    background-color: rgba(255, 151, 0, 0.18);
+	background-color: rgba(255, 151, 0, 0.18);
 
-    border-color: rgba(255, 151, 0, 0.18);
+	border-color: rgba(255, 151, 0, 0.18);
 
 }
 
@@ -3970,12 +3657,11 @@ form select.error:focus {
 
 	color: #ff9700;
 
-    background-color: rgba(255, 151, 0, 0.18);
+	background-color: rgba(255, 151, 0, 0.18);
 
-    border-color: rgba(255, 151, 0, 0.18);
+	border-color: rgba(255, 151, 0, 0.18);
 
 	box-shadow: 0 0 0 .25rem rgba(217, 164, 6, .3)
-
 }
 
 
@@ -3984,9 +3670,9 @@ form select.error:focus {
 
 	color: #0dceec;
 
-    background-color: rgba(13, 206, 236, 0.18);
+	background-color: rgba(13, 206, 236, 0.18);
 
-    border-color: rgb(211, 246, 252);
+	border-color: rgb(211, 246, 252);
 
 }
 
@@ -3996,9 +3682,9 @@ form select.error:focus {
 
 	color: #0dceec;
 
-    background-color: rgba(13, 206, 236, 0.18);
+	background-color: rgba(13, 206, 236, 0.18);
 
-    border-color: rgba(13, 206, 236, 0.18);
+	border-color: rgba(13, 206, 236, 0.18);
 
 }
 
@@ -4008,9 +3694,9 @@ form select.error:focus {
 
 	color: #a7aaaa;
 
-    background-color: rgba(233, 234, 234, 0.2);
+	background-color: rgba(233, 234, 234, 0.2);
 
-    border-color: rgb(251, 251, 251);
+	border-color: rgb(251, 251, 251);
 
 }
 
@@ -4020,9 +3706,9 @@ form select.error:focus {
 
 	color: #a7aaaa;
 
-    background-color: rgba(233, 234, 234, 0.2);
+	background-color: rgba(233, 234, 234, 0.2);
 
-    border-color: rgba(233, 234, 234, 0.2);
+	border-color: rgba(233, 234, 234, 0.2);
 
 }
 
@@ -4032,9 +3718,9 @@ form select.error:focus {
 
 	color: #223035;
 
-    background-color: rgba(34, 48, 53, 0.2);
+	background-color: rgba(34, 48, 53, 0.2);
 
-    border-color: #d7d9da;
+	border-color: #d7d9da;
 
 }
 
@@ -4044,9 +3730,9 @@ form select.error:focus {
 
 	color: #223035;
 
-    background-color: rgba(34, 48, 53, 0.2);
+	background-color: rgba(34, 48, 53, 0.2);
 
-    border-color: rgba(34, 48, 53, 0.2);
+	border-color: rgba(34, 48, 53, 0.2);
 
 }
 
@@ -4063,10 +3749,7 @@ form select.error:focus {
 	border-color: #3b5998;
 
 	color: #fff
-
 }
-
-
 
 
 
@@ -4075,7 +3758,6 @@ form select.error:focus {
 	background-color: #fff;
 
 	border-color: #e7eaf3
-
 }
 
 
@@ -4085,13 +3767,12 @@ form select.error:focus {
 	position: relative;
 
 	height: 380px
-
 }
 
 .options {
-    font-size: 24px;
-    color: #4c5258;
-    cursor: pointer;
+	font-size: 24px;
+	color: #4c5258;
+	cursor: pointer;
 }
 
 .gmaps,
@@ -4103,7 +3784,6 @@ form select.error:focus {
 	background: #eee;
 
 	border-radius: 3px
-
 }
 
 
@@ -4119,7 +3799,6 @@ form select.error:focus {
 	-webkit-border-radius: 15px;
 
 	border-radius: 15px
-
 }
 
 
@@ -4129,7 +3808,6 @@ form select.error:focus {
 	border-top-left-radius: 15px;
 
 	border-top-right-radius: 15px
-
 }
 
 
@@ -4145,7 +3823,6 @@ form select.error:focus {
 		-webkit-box-shadow: 0 .5rem 1rem 0 rgba(0, 0, 0, .3);
 
 		box-shadow: 0 .5rem 1rem 0 rgba(0, 0, 0, .3)
-
 	}
 
 }
@@ -4159,7 +3836,6 @@ form select.error:focus {
 	letter-spacing: .2rem;
 
 	font-weight: 500
-
 }
 
 
@@ -4167,7 +3843,6 @@ form select.error:focus {
 .pricing-table .card .card-price {
 
 	font-size: 2.7rem
-
 }
 
 
@@ -4175,7 +3850,6 @@ form select.error:focus {
 .pricing-table .card .card-price .term {
 
 	font-size: .875rem
-
 }
 
 
@@ -4187,31 +3861,27 @@ form select.error:focus {
 	color: #3b3b3b;
 
 	font-size: 16px
-
 }
 
 
 
 input::placeholder {
 
-	color: #000!important;
+	color: #000 !important;
 
-	opacity: .3!important
-
+	opacity: .3 !important
 }
 
 
 
 .form-floating>.form-control::-moz-placeholder {
 
-	color: transparent!important
-
+	color: transparent !important
 }
 
 .form-floating>.form-control::placeholder {
 
-	color: transparent!important
-
+	color: transparent !important
 }
 
 
@@ -4219,7 +3889,6 @@ input::placeholder {
 .card-group {
 
 	margin-bottom: 1.5rem
-
 }
 
 
@@ -4294,7 +3963,7 @@ input::placeholder {
 
 	background-color: rgb(94 114 228 / 10%);
 
-    color: #5e72e4;
+	color: #5e72e4;
 
 }
 
@@ -4303,7 +3972,6 @@ input::placeholder {
 .dropdown-toggle-nocaret:after {
 
 	display: none
-
 }
 
 
@@ -4314,7 +3982,7 @@ input::placeholder {
 
 	top: 2px;
 
-    left: 22px;
+	left: 22px;
 
 	width: 18px;
 
@@ -4335,7 +4003,6 @@ input::placeholder {
 	color: #fff;
 
 	background: #f62718
-
 }
 
 
@@ -4363,7 +4030,6 @@ input::placeholder {
 	font-weight: 500;
 
 	color: #413c3c
-
 }
 
 
@@ -4373,7 +4039,6 @@ input::placeholder {
 	font-size: 13px;
 
 	color: #747474
-
 }
 
 
@@ -4402,15 +4067,15 @@ input::placeholder {
 
 .topbar .navbar .dropdown-app .dropdown-menu {
 
-    width: 270px;
+	width: 270px;
 
-    border: 1px solid #dee2e6;
+	border: 1px solid #dee2e6;
 
-    padding: 0.5rem;
+	padding: 0.5rem;
 
-    border-radius: 16px;
+	border-radius: 16px;
 
-    box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%);
+	box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%);
 
 }
 
@@ -4418,9 +4083,9 @@ input::placeholder {
 
 .topbar .navbar .dropdown-app .dropdown-menu .app-container {
 
-    position: relative;
+	position: relative;
 
-    height: 370px;
+	height: 370px;
 
 }
 
@@ -4430,11 +4095,11 @@ input::placeholder {
 
 .topbar .navbar .dropdown-app .dropdown-menu .app-box {
 
-    padding: .5rem;
+	padding: .5rem;
 
-    border-radius: 1rem;
+	border-radius: 1rem;
 
-    transition: .2s;
+	transition: .2s;
 
 }
 
@@ -4442,7 +4107,7 @@ input::placeholder {
 
 .topbar .navbar .dropdown-app .dropdown-menu .app-box:hover {
 
-    background-color: #edf0f3;
+	background-color: #edf0f3;
 
 }
 
@@ -4450,13 +4115,13 @@ input::placeholder {
 
 .topbar .navbar .dropdown-app .dropdown-menu .app-name {
 
-    color: #212529;
+	color: #212529;
 
-    font-size: .64rem;
+	font-size: .64rem;
 
-    text-decoration: none;
+	text-decoration: none;
 
-    font-weight: 500;
+	font-weight: 500;
 
 }
 
@@ -4481,7 +4146,6 @@ input::placeholder {
 .dropdown-large {
 
 	position: relative
-
 }
 
 
@@ -4497,7 +4161,6 @@ input::placeholder {
 	border-radius: 10px;
 
 	box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15)
-
 }
 
 
@@ -4523,7 +4186,6 @@ input::placeholder {
 	border-top: 1px solid #ddd;
 
 	border-left: 1px solid #ddd
-
 }
 
 
@@ -4549,7 +4211,6 @@ input::placeholder {
 	border-top: 1px solid #ddd;
 
 	border-left: 1px solid #ddd
-
 }
 
 
@@ -4575,7 +4236,6 @@ input::placeholder {
 	border-top-left-radius: 10px;
 
 	border-top-right-radius: 10px
-
 }
 
 
@@ -4584,13 +4244,13 @@ input::placeholder {
 
 	background-color: rgb(94 114 228 / 10%);
 
-    color: #5e72e4;
+	color: #5e72e4;
 
-    padding: 2px 8px;
+	padding: 2px 8px;
 
-    margin-bottom: 0;
+	margin-bottom: 0;
 
-    border-radius: 4px;
+	border-radius: 4px;
 
 }
 
@@ -4605,7 +4265,6 @@ input::placeholder {
 	margin-bottom: 0;
 
 	font-weight: 500
-
 }
 
 
@@ -4617,7 +4276,6 @@ input::placeholder {
 	color: #585858;
 
 	margin-bottom: 0
-
 }
 
 
@@ -4641,7 +4299,6 @@ input::placeholder {
 	border-bottom-left-radius: .25rem;
 
 	border-bottom-right-radius: .25rem
-
 }
 
 
@@ -4649,7 +4306,6 @@ input::placeholder {
 .dropdown-large .user-online {
 
 	position: relative
-
 }
 
 
@@ -4687,7 +4343,6 @@ input::placeholder {
 	border-radius: 50%;
 
 	margin-right: 15px
-
 }
 
 
@@ -4699,7 +4354,6 @@ input::placeholder {
 	margin-bottom: 0;
 
 	color: #818189
-
 }
 
 
@@ -4723,7 +4377,6 @@ input::placeholder {
 	box-shadow: 0 0 0 2px #fff;
 
 	background: #16e15e
-
 }
 
 
@@ -4733,7 +4386,6 @@ input::placeholder {
 	padding: .5rem 1.3rem;
 
 	border-bottom: 1px solid #ededed
-
 }
 
 
@@ -4743,7 +4395,6 @@ input::placeholder {
 	position: relative;
 
 	height: 360px
-
 }
 
 
@@ -4753,7 +4404,6 @@ input::placeholder {
 	position: relative;
 
 	height: 360px
-
 }
 
 
@@ -4762,25 +4412,25 @@ input::placeholder {
 
 	width: 45px;
 
-    height: 45px;
+	height: 45px;
 
-    font-size: 20px;
+	font-size: 20px;
 
-    text-align: center;
+	text-align: center;
 
-    border-radius: 50%;
+	border-radius: 50%;
 
-    background-color: #f1f1f1;
+	background-color: #f1f1f1;
 
-    margin-right: 15px;
+	margin-right: 15px;
 
-    text-transform: uppercase;
+	text-transform: uppercase;
 
-    display: flex;
+	display: flex;
 
-    align-items: center;
+	align-items: center;
 
-    justify-content: center;
+	justify-content: center;
 
 }
 
@@ -4792,9 +4442,9 @@ input::placeholder {
 
 	color: #140e22;
 
-    font-size: 14px;
+	font-size: 14px;
 
-    margin-bottom: 0px;
+	margin-bottom: 0px;
 
 }
 
@@ -4804,9 +4454,9 @@ input::placeholder {
 
 	color: #818189;
 
-    font-size: 14px;
+	font-size: 14px;
 
-    margin-bottom: 0;
+	margin-bottom: 0;
 
 }
 
@@ -4814,27 +4464,27 @@ input::placeholder {
 
 .dropdown-large .cart-product-cancel {
 
-    right: -7px;
+	right: -7px;
 
-    top: -5px;
+	top: -5px;
 
-    font-size: 16px;
+	font-size: 16px;
 
-    background-color: #fff;
+	background-color: #fff;
 
-    border: 1px solid #eee;
+	border: 1px solid #eee;
 
-    width: 1.4rem;
+	width: 1.4rem;
 
-    height: 1.4rem;
+	height: 1.4rem;
 
-    display: flex;
+	display: flex;
 
-    align-items: center;
+	align-items: center;
 
-    justify-content: center;
+	justify-content: center;
 
-    border-radius: 50%;
+	border-radius: 50%;
 
 }
 
@@ -4842,21 +4492,21 @@ input::placeholder {
 
 .dropdown-large .cart-product {
 
-    width: 50px;
+	width: 50px;
 
-    height: 50px;
+	height: 50px;
 
-    display: flex;
+	display: flex;
 
-    align-items: center;
+	align-items: center;
 
-    border-radius: 0px;
+	border-radius: 0px;
 
-    border: 1px solid rgb(231 231 231);
+	border: 1px solid rgb(231 231 231);
 
-    padding: 4px;
+	padding: 4px;
 
-    background-color: rgb(255 255 255);
+	background-color: rgb(255 255 255);
 
 }
 
@@ -4864,7 +4514,7 @@ input::placeholder {
 
 .dropdown-large .cart-product img {
 
-    width: 100%;
+	width: 100%;
 
 }
 
@@ -4877,7 +4527,6 @@ input::placeholder {
 	vertical-align: middle;
 
 	margin-right: 10px
-
 }
 
 
@@ -4893,7 +4542,6 @@ input::placeholder {
 	border-radius: 10px;
 
 	font-size: 14px
-
 }
 
 
@@ -4903,7 +4551,6 @@ input::placeholder {
 	-webkit-animation: .6s cubic-bezier(.25, .8, .25, 1) 0s normal forwards 1 animdropdown;
 
 	animation: .6s cubic-bezier(.25, .8, .25, 1) 0s normal forwards 1 animdropdown
-
 }
 
 
@@ -4917,7 +4564,6 @@ input::placeholder {
 		transform: translate3d(0, 6px, 0);
 
 		opacity: 0
-
 	}
 
 	to {
@@ -4927,7 +4573,6 @@ input::placeholder {
 		transform: translate3d(0, 0, 0);
 
 		opacity: 1
-
 	}
 
 }
@@ -4943,7 +4588,6 @@ input::placeholder {
 		transform: translate3d(0, 6px, 0);
 
 		opacity: 0
-
 	}
 
 	to {
@@ -4953,7 +4597,6 @@ input::placeholder {
 		transform: translate3d(0, 0, 0);
 
 		opacity: 1
-
 	}
 
 }
@@ -4964,9 +4607,9 @@ input::placeholder {
 
 .search-bar {
 
-    width: 30%;
+	width: 30%;
 
-    cursor: pointer;
+	cursor: pointer;
 
 }
 
@@ -4976,7 +4619,7 @@ input::placeholder {
 
 	cursor: pointer;
 
-    background-color: #f8f9fe;
+	background-color: #f8f9fe;
 
 	border: 0;
 
@@ -4999,7 +4642,6 @@ input::placeholder {
 	color: #404142;
 
 	cursor: pointer
-
 }
 
 
@@ -5027,7 +4669,6 @@ input::placeholder {
 	box-shadow: 0 .3rem .6rem rgba(0, 0, 0, .13);
 
 	transition: all .2s ease-out
-
 }
 
 
@@ -5061,7 +4702,6 @@ input::placeholder {
 	right: 100%;
 
 	cursor: pointer
-
 }
 
 
@@ -5069,7 +4709,6 @@ input::placeholder {
 .switcher-wrapper.switcher-toggled {
 
 	right: 0
-
 }
 
 
@@ -5077,7 +4716,6 @@ input::placeholder {
 .switcher-body {
 
 	padding: 1.25rem
-
 }
 
 
@@ -5087,7 +4725,6 @@ input::placeholder {
 .switcher-body .form-check .form-check-label {
 
 	cursor: pointer
-
 }
 
 
@@ -5103,7 +4740,6 @@ input::placeholder {
 	border-radius: 10px;
 
 	cursor: pointer
-
 }
 
 
@@ -5113,13 +4749,11 @@ input::placeholder {
 	.email-header {
 
 		height: auto
-
 	}
 
 	.email-content {
 
 		padding: 100px 0 0 0
-
 	}
 
 }
@@ -5158,16 +4792,14 @@ input::placeholder {
 
 	.topbar {
 
-		left: 0!important
-
+		left: 0 !important
 	}
 
-	
+
 
 	.mobile-toggle-menu {
 
 		display: block
-
 	}
 
 	.sidebar-wrapper {
@@ -5175,19 +4807,16 @@ input::placeholder {
 		left: -300px;
 
 		box-shadow: none
-
 	}
 
 	.page-wrapper {
 
 		margin-left: 0
-
 	}
 
 	.page-footer {
 
 		left: 0
-
 	}
 
 
@@ -5195,13 +4824,11 @@ input::placeholder {
 	.wrapper.toggled .sidebar-wrapper {
 
 		left: 0
-
 	}
 
 	.wrapper.toggled .page-wrapper {
 
 		margin-left: 0
-
 	}
 
 	.wrapper.toggled .overlay {
@@ -5227,7 +4854,6 @@ input::placeholder {
 		cursor: move;
 
 		transition: all .2s ease-out
-
 	}
 
 	.error-404 {
@@ -5235,49 +4861,41 @@ input::placeholder {
 		height: auto;
 
 		padding: 6rem 1rem
-
 	}
 
 	.chat-header {
 
 		border-top-left-radius: .25rem
-
 	}
 
 	.chat-footer {
 
 		border-bottom-left-radius: .25rem
-
 	}
 
 	.chat-sidebar {
 
 		left: -370px
-
 	}
 
 	.chat-content {
 
 		margin-left: 0
-
 	}
 
 	.chat-header {
 
 		left: 0
-
 	}
 
 	.chat-footer {
 
 		left: 0
-
 	}
 
 	.chat-toggled .chat-sidebar {
 
 		left: 0
-
 	}
 
 	.chat-toggled .overlay {
@@ -5303,37 +4921,31 @@ input::placeholder {
 		cursor: move;
 
 		transition: all .3s ease-out
-
 	}
 
 	.email-header {
 
 		border-top-left-radius: .25rem
-
 	}
 
 	.email-sidebar {
 
 		left: -280px
-
 	}
 
 	.email-content {
 
 		margin-left: 0
-
 	}
 
 	.email-header {
 
 		left: 0
-
 	}
 
 	.email-toggled .email-sidebar {
 
 		left: 0
-
 	}
 
 	.email-toggled .overlay {
@@ -5359,7 +4971,6 @@ input::placeholder {
 		cursor: move;
 
 		transition: all .3s ease-out
-
 	}
 
 }
@@ -5375,7 +4986,6 @@ input::placeholder {
 		margin-top: 6rem;
 
 		margin-bottom: 2rem
-
 	}
 
 	.authentication-reset-password {
@@ -5383,7 +4993,6 @@ input::placeholder {
 		height: auto;
 
 		padding: 2rem 1rem
-
 	}
 
 	.authentication-lock-screen {
@@ -5391,7 +5000,6 @@ input::placeholder {
 		height: auto;
 
 		padding: 2rem 1rem
-
 	}
 
 	.compose-mail-popup {
@@ -5405,7 +5013,6 @@ input::placeholder {
 		right: 0;
 
 		left: 0
-
 	}
 
 }
@@ -5417,7 +5024,6 @@ input::placeholder {
 	.user-box .user-info {
 
 		display: none
-
 	}
 
 	.authentication-forgot {
@@ -5425,7 +5031,6 @@ input::placeholder {
 		height: auto;
 
 		padding: 2.5rem 1rem
-
 	}
 
 }
@@ -5437,19 +5042,16 @@ input::placeholder {
 	.topbar .navbar .dropdown-menu::after {
 
 		display: none
-
 	}
 
 	.topbar .navbar .dropdown {
 
-		position: static!important
-
+		position: static !important
 	}
 
 	.topbar .navbar .dropdown-menu {
 
-		width: 100%!important
-
+		width: 100% !important
 	}
 
 }
@@ -5463,10 +5065,25 @@ input::placeholder {
 	.chat-top-header-menu {
 
 		display: none
-
 	}
 
 }
+
 .radius-10 {
-    border-radius: 3px;
+	border-radius: 9px;
+}
+
+.btn-f {
+	background: none !important;
+	border: none !important;
+	font-size: 1.5rem;
+
+}
+
+
+.btn-d {
+	background: none !important;
+	border: none !important;
+	font-size: 1.5rem;
+
 }

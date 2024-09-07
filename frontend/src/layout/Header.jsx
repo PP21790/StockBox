@@ -40,7 +40,7 @@ const Header = () => {
 
 
 
-                  <li className="nav-item dropdown dropdown-large">
+                  {/* <li className="nav-item dropdown dropdown-large">
                     <a
                       className="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative"
                       href="#"
@@ -228,7 +228,7 @@ const Header = () => {
                         </div>
                       </a>
                     </div>
-                  </li>
+                  </li> */}
 
                 </ul>
               </div>
@@ -241,7 +241,7 @@ const Header = () => {
                   aria-expanded="false"
                 >
                   <img
-                    src="/assets/images/avatars/avatar-2.png"
+                    src="/assets/images/user.png"
                     className="user-img"
                     alt="user avatar"
                   />
@@ -302,7 +302,7 @@ const Header = () => {
                   <li>
                     <Link
                       className="dropdown-item d-flex align-items-center"
-                      to="./login"
+                      to="/login"
                       onClick={(e) => localStorage.clear()}
                     >
                       <i className="bx bx-log-out-circle" />

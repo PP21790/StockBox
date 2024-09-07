@@ -1,6 +1,51 @@
-import React from 'react';
+import React, { useState } from 'react';
+import swal from 'sweetalert';
 
 const Service = () => {
+  const [title, setTitle] = useState('');
+  const token = localStorage.getItem('token');
+
+
+  const handleAddService = async () => {
+    try {
+      const response = await fetch('https://api.example.com/add-service', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `${token}`
+        },
+        body: JSON.stringify({ title }), // Send the title in the request body
+      });
+
+      if (response.ok) {
+        // Assuming the API response returns a JSON object
+        const result = await response.json();
+
+        console.log(result);
+
+
+        swal({
+          title: 'Success!',
+          text: 'Service added successfully!',
+          icon: 'success',
+          confirmButtonText: 'OK',
+        });
+
+        // Clear the input field after successful addition
+        setTitle('');
+      } else {
+        throw new Error('Failed to add service');
+      }
+    } catch (error) {
+      swal({
+        title: 'Error!',
+        text: 'There was an error adding the service.',
+        icon: 'error',
+        confirmButtonText: 'Try Again',
+      });
+    }
+  };
+
   return (
     <div>
       <div className="page-content">
@@ -15,11 +60,9 @@ const Service = () => {
                     <i className="bx bx-home-alt" />
                   </a>
                 </li>
-
               </ol>
             </nav>
           </div>
-
         </div>
         {/*end breadcrumb*/}
         <div className="card">
@@ -67,25 +110,19 @@ const Service = () => {
                         />
                       </div>
                       <div className="modal-body">
-                        <form action="">
+                        <form>
                           <div className="row">
-                            <div className="col-md-6">
-                              <label htmlFor="">Name</label>
-                              <input className="form-control mb-2" type="text" placeholder='enter your name' />
+                            <div className="col-md-12">
+                              <label htmlFor="serviceTitle">Title</label>
+                              <input
+                                id="serviceTitle"
+                                className="form-control mb-2"
+                                type="text"
+                                placeholder="Enter your title"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)} // Update title state
+                              />
                             </div>
-                            <div className="col-md-6">
-                              <label htmlFor="">Email</label>
-                              <input className="form-control" type="email" placeholder='enter your mail' />
-                            </div>
-                            <div className="col-md-6">
-                              <label htmlFor="">Phone</label>
-                              <input className="form-control" type="number" placeholder='enter your Phone no ' />
-                            </div>
-                            <div className="col-md-6">
-                              <label htmlFor="">Broker</label>
-                              <input className="form-control" type="text" placeholder='enter broker' />
-                            </div>
-
                           </div>
                         </form>
                       </div>
@@ -97,7 +134,12 @@ const Service = () => {
                         >
                           Close
                         </button>
-                        <button type="button" className="btn btn-primary">
+                        <button
+                          type="button"
+                          className="btn btn-primary"
+                          onClick={handleAddService}  // Call function on button click
+                          data-bs-dismiss="modal"  // Close modal after click
+                        >
                           Add
                         </button>
                       </div>
@@ -121,205 +163,13 @@ const Service = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>
-                      1
-                    </td>
-                    <td>Gaspur Antunes</td>
-                    <td>
-                      <div className="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3">
-                        <i className="bx bxs-circle me-1" />
-                        FulFilled
-                      </div>
-                    </td>
-                    <td>$485.20</td>
-                    <td>June 10, 2020</td>
-                    <td>
-                      <button
-                        type="button"
-                        className="btn btn-primary btn-sm radius-10 px-4"
-                      >
-                        View Details
-                      </button>
-                    </td>
-                    <td>
-                      <div className="d-flex order-actions">
-                        <a href="javascript:;" className="">
-                          <i className="bx bxs-edit" />
-                        </a>
-                        <a href="javascript:;" className="ms-3">
-                          <i className="bx bxs-trash" />
-                        </a>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      2
-                    </td>
-                    <td>Gaspur Antunes</td>
-                    <td>
-                      <div className="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3">
-                        <i className="bx bxs-circle me-1" />
-                        FulFilled
-                      </div>
-                    </td>
-                    <td>$650.30</td>
-                    <td>June 12, 2020</td>
-                    <td>
-                      <button
-                        type="button"
-                        className="btn btn-primary btn-sm radius-10 px-4"
-                      >
-                        View Details
-                      </button>
-                    </td>
-                    <td>
-                      <div className="d-flex order-actions">
-                        <a href="javascript:;" className="">
-                          <i className="bx bxs-edit" />
-                        </a>
-                        <a href="javascript:;" className="ms-3">
-                          <i className="bx bxs-trash" />
-                        </a>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      3
-                    </td>
-                    <td>Gaspur Antunes</td>
-                    <td>
-                      <div className="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3">
-                        <i className="bx bxs-circle me-1" />
-                        FulFilled
-                      </div>
-                    </td>
-                    <td>$159.45</td>
-                    <td>June 14, 2020</td>
-                    <td>
-                      <button
-                        type="button"
-                        className="btn btn-primary btn-sm radius-10 px-4"
-                      >
-                        View Details
-                      </button>
-                    </td>
-                    <td>
-                      <div className="d-flex order-actions">
-                        <a href="javascript:;" className="">
-                          <i className="bx bxs-edit" />
-                        </a>
-                        <a href="javascript:;" className="ms-3">
-                          <i className="bx bxs-trash" />
-                        </a>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      4
-                    </td>
-                    <td>Gaspur Antunes</td>
-                    <td>
-                      <div className="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3">
-                        <i className="bx bxs-circle align-middle me-1" />
-                        FulFilled
-                      </div>
-                    </td>
-                    <td>$968.40</td>
-                    <td>June 16, 2020</td>
-                    <td>
-                      <button
-                        type="button"
-                        className="btn btn-primary btn-sm radius-10 px-4"
-                      >
-                        View Details
-                      </button>
-                    </td>
-                    <td>
-                      <div className="d-flex order-actions">
-                        <a href="javascript:;" className="">
-                          <i className="bx bxs-edit" />
-                        </a>
-                        <a href="javascript:;" className="ms-3">
-                          <i className="bx bxs-trash" />
-                        </a>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      5
-                    </td>
-                    <td>Gaspur Antunes</td>
-                    <td>
-                      <div className="badge rounded-pill text-info bg-light-info p-2 text-uppercase px-3">
-                        <i className="bx bxs-circle align-middle me-1" />
-                        Confirmed
-                      </div>
-                    </td>
-                    <td>$689.50</td>
-                    <td>June 18, 2020</td>
-                    <td>
-                      <button
-                        type="button"
-                        className="btn btn-primary btn-sm radius-10 px-4"
-                      >
-                        View Details
-                      </button>
-                    </td>
-                    <td>
-                      <div className="d-flex order-actions">
-                        <a href="javascript:;" className="">
-                          <i className="bx bxs-edit" />
-                        </a>
-                        <a href="javascript:;" className="ms-3">
-                          <i className="bx bxs-trash" />
-                        </a>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      6
-                    </td>
-                    <td>Gaspur Antunes</td>
-                    <td>
-                      <div className="badge rounded-pill text-info bg-light-info p-2 text-uppercase px-3">
-                        <i className="bx bxs-circle align-middle me-1" />
-                        Confirmed
-                      </div>
-                    </td>
-                    <td>$478.60</td>
-                    <td>June 20, 2020</td>
-                    <td>
-                      <button
-                        type="button"
-                        className="btn btn-primary btn-sm radius-10 px-4"
-                      >
-                        View Details
-                      </button>
-                    </td>
-                    <td>
-                      <div className="d-flex order-actions">
-                        <a href="javascript:;" className="">
-                          <i className="bx bxs-edit" />
-                        </a>
-                        <a href="javascript:;" className="ms-3">
-                          <i className="bx bxs-trash" />
-                        </a>
-                      </div>
-                    </td>
-                  </tr>
+                  {/* Table data */}
                 </tbody>
               </table>
             </div>
           </div>
         </div>
       </div>
-
     </div>
   );
 }
