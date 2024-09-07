@@ -5,7 +5,7 @@ import Resetpass from './Auth/Resetpass';
 import Login from './Auth/Login';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import React, { useEffect } from 'react';
-import Main_Route from './Route'
+import Adminroutes from './Adminroutes'
 import Register from './Auth/Register';
 function App() {
   const navigate = useNavigate()
@@ -34,7 +34,7 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/admin/*" element={(token) ? <Main_Route /> : <Login />} />
+        <Route path="/admin/*" element={(token) ? <Adminroutes /> : <Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/resetpass" element={<Resetpass />} />
         <Route path="/forgetpass" element={<Forgetpass />} />
