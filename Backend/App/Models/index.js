@@ -20,6 +20,8 @@ module.exports = {
     Signal: require("./Signal"),
     Banner: require("./Banner"),
     Plancategory: require("./Plancategory"),
+    Content: require("./Content"),
+
 
 
 

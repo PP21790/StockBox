@@ -10,9 +10,9 @@ const PlanSubscription_Modal = db.PlanSubscription;
 const Coupon_Modal = db.Coupon;
 const Signal_Modal = db.Signal;
 const Stock_Modal = db.Stock;
+const Faq_Modal = db.Faq;
+const Content_Modal = db.Content;
 
-
-Signal_Modal
 
 mongoose  = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
@@ -481,6 +481,12 @@ async showSignalsToClients(req, res) {
         select: 'symbol' // Select only the symbol field from the stock collection
       });
 
+      const protocol = req.protocol; // Will be 'http' or 'https'
+      const baseUrl = `${protocol}://${req.headers.host}`;
+ matchingSignals.forEach(signal => {
+    signal.report = `${baseUrl}/uploads/report/${signal.report}`;
+  });
+
       relevantSignals = relevantSignals.concat(matchingSignals);
     }
 
@@ -516,6 +522,63 @@ async Servicelist(req, res) {
   }
 }
 
+async Faqlist(req, res) {
+  try {
+
+      const faq = await Faq_Modal.find({ del: false,status: true });
+     
+
+      return res.status(200).json({
+          status: true,
+          message: "Faq retrieved successfully",
+          data: faq
+      });
+  } catch (error) {
+      console.error("Error retrieving Faq:", error);
+      return res.status(500).json({
+          status: false,
+          message: "Server error",
+          error: error.message
+      });
+  }
+}
+async detailContent(req, res) {
+  try {
+      // Extract ID from request parameters
+      const { id } = req.params;
+
+      // Check if ID is provided
+      if (!id) {
+          return res.status(400).json({
+              status: false,
+              message: "Content ID is required"
+          });
+      }
+
+      const Content = await Content_Modal.findById(id);
+
+      if (!Content) {
+          return res.status(404).json({
+              status: false,
+              message: "Content not found"
+          });
+      }
+
+      return res.json({
+          status: true,
+          message: "Content details fetched successfully",
+          data: Content
+      });
+
+  } catch (error) {
+      console.error("Error fetching Content details:", error);
+      return res.status(500).json({
+          status: false,
+          message: "Server error",
+          data: []
+      });
+  }
+}
 
 
 }
