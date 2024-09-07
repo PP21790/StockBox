@@ -197,7 +197,7 @@ const Faq = () => {
                                 </div>
                             </div>
                         </div>
-                       
+
                     </div>
                 </div>
                 {/*end row*/}
