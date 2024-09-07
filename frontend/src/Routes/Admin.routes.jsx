@@ -12,6 +12,7 @@ import Basket from '../layout/Admin/Admin_basket/Basket';
 import Sidebar from '../layout/Sidebar';
 import Header from '../layout/Header';
 import Footer from '../layout/Footer';
+import Staff from '../layout/Admin/Admin_staff/Staff';
 
 // import Sidebar from './layout/Sidebar';
 import Dashboard from '../layout/Admin/Admin_dashboard/Dashboard';
@@ -85,7 +86,7 @@ function MainApp() {
                     <Route path="/kyc" element={<Kyc/>} />
                     <Route path="/signal" element={<Signal/>} />
                     <Route path="/permision" element={<Permision/>} />
-                    {/* <Route path="/user" element={<User />} /> */}
+                    <Route path="/staff" element={<Staff/>} />
                     <Route path="/basket" element={<Basket/>} />
                     <Route path="/faq" element={<Faq/>} />
                 </Routes>
