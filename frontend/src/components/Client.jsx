@@ -6,6 +6,8 @@ const Client = () => {
   const [clients, setClients] = useState([]);
   const token = localStorage.getItem('token');
 
+
+  
   useEffect(() => {
 
     axios.get('http://localhost:5001/client/list', {
