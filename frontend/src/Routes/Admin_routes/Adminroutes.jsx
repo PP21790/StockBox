@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
-import Sidebar from './layout/Sidebar';
-import Dashboard from './components/Dashbord';
-import Header from './layout/Header';
-import Footer from './layout/Footer';
+import Sidebar from './components/Sidebar/Sidebar';
+import Dashboard from './components/Dashbord';  // Corrected component name
+import Header from './components/Header/Header';
+import Footer from './components/Footer/Footer';
 import Client from './components/Client';
 
 // import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Profile from './components/Profile';
-import Service from './components/Service';
-import Kyc from './components/Kyc';
-import Signal from './components/Signal';
-import Permision from './components/Permision';
-import User from './components/User';
-import Basket from './components/Basket';
-import Faq from './components/Faq';
+import Profile from './layout/Admin-profile/Profile';
+import Service from './layout/Admin_service/Service';
+import Kyc from './layout/Admin_kyc/Kyc';
+import Signal from './layout/Admin_signal/Signal';
+import Permision from './layout/Admin-permision/Permision';
+import User from './layout/Admin_staff/Staff';
+import Basket from './layout/Admin_basket/Basket';
+import Faq from './layout/Admin-faq/Faq';
 
 
 function MainApp() {
@@ -62,8 +62,7 @@ function MainApp() {
             <Header />
             <div className="page-wrapper">
                 <Routes>
-                    {/* <Route path="/dashboard" element={<Dashboard />} /> */}
-                    <Route path="/client" element={<Dashboard />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/client" element={<Client />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/service" element={<Service />} />
