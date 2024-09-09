@@ -85,7 +85,7 @@ const Sidebar = ({ onToggleClick }) => {
                     </li>
 
                     <li>
-                      <Link href="/admin/refer">
+                      <Link to="/admin/refer">
                         <div className="parent-icon">
                           <i className="bx bxl-redux" />
                         </div>
