@@ -269,33 +269,7 @@ const Header = () => {
                       <span>Settings</span>
                     </a>
                   </li>
-                  <li>
-                    <a
-                      className="dropdown-item d-flex align-items-center"
-                      href="javascript:;"
-                    >
-                      <i className="bx bx-home-circle fs-5" />
-                      <span>Dashboard</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      className="dropdown-item d-flex align-items-center"
-                      href="javascript:;"
-                    >
-                      <i className="bx bx-dollar-circle fs-5" />
-                      <span>Earnings</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      className="dropdown-item d-flex align-items-center"
-                      href="javascript:;"
-                    >
-                      <i className="bx bx-download fs-5" />
-                      <span>Downloads</span>
-                    </a>
-                  </li>
+                 
                   <li>
                     <div className="dropdown-divider mb-0" />
                   </li>
