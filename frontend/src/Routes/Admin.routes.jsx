@@ -11,29 +11,14 @@ import Signal from '../layout/Admin/Admin_signal/Signal';
 import Permision from '../layout/Admin/Admin_permision/Permision';
 import Faq from '../layout/Admin/Admin_faq/Faq';
 import Basket from '../layout/Admin/Admin_basket/Basket';
-import Sidebar from '../layout/Sidebar';
-import Header from '../layout/Header';
-import Footer from '../layout/Footer';
-
-// import Sidebar from './layout/Sidebar';
-import Dashboard from '../layout/Admin/Admin_dashboard/Dashboard';
-import History from '../layout/Admin/Payment_history/Paymenthistory';
-import Refer from '../layout/Admin/Admin_refer/Refer';
-// import Header from './layout/Header';
-// import Footer from './layout/Footer';
-// import Client from './components/Client';
-
-// // import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-// import Profile from './components/Profile';
-// import Service from './components/Service';
-// import Kyc from './components/Kyc';
-// import Signal from './components/Signal';
-// import Permision from './components/Permision';
-// import User from './components/User';
-// import Basket from './components/Basket';
-// import Faq from './components/Faq';
-
-
+import Sidebar from '../layout/Admin/Sidebar';
+import Header from '../layout/Admin/Header';
+import Footer from '../layout/Admin/Footer';
+import Staff from '../layout/Admin/Admin_staff/Staff';
+import AddUser from '../layout/Admin/Admin_client/AddUser';
+import AddStaff from '../layout/Admin/Admin_staff/AddStaff';
+import Update from '../layout/Admin/Admin_staff/Update';
+;
 
 
 
@@ -96,16 +81,6 @@ function MainApp() {
                     <Route path="/basket" element={<Basket/>} />
                     <Route path="/faq" element={<Faq/>} />
                     
-                    {/* <Route path="/user" element={<User />} /> */}
-                    {/* <Route path="/user" element={<User />} /> */}
-                    <Route path="/basket" element={<Basket/>} />
-                    <Route path="/faq" element={<Faq/>} />
-                    <Route path="/history" element={<History/>} />
-                    <Route path="/refer" element={<Refer />} />
-                    
-
-                     
-                   
                 </Routes>
             </div>
             <Footer />
