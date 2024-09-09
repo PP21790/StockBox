@@ -160,12 +160,12 @@ const Service = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                     <tr>
-                                       <td>1</td>
-                                       <td>Kajal</td>
-                                       <td>Active</td>
-                                       <td></td>
-                                     </tr>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>Kajal</td>
+                                        <td>Active</td>
+                                        <td>delete</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>

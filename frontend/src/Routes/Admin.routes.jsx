@@ -18,7 +18,8 @@ import Staff from '../layout/Admin/Admin_staff/Staff';
 import AddUser from '../layout/Admin/Admin_client/AddUser';
 import AddStaff from '../layout/Admin/Admin_staff/AddStaff';
 import Update from '../layout/Admin/Admin_staff/Update';
-;
+import Refer from '../layout/Admin/Admin_refer/Refer';
+import Paymenthistory from '../layout/Admin/Payment_history/Paymenthistory';
 
 
 
@@ -80,6 +81,8 @@ function MainApp() {
                     <Route path="/staff/updatestaff/:id" element={<Update/>} />
                     <Route path="/basket" element={<Basket/>} />
                     <Route path="/faq" element={<Faq/>} />
+                    <Route path="/refer" element={<Refer />} />
+                    <Route path="/paymenthistory" element={<Paymenthistory />} />
                     
                 </Routes>
             </div>
