@@ -1,5 +1,7 @@
 const db = require("../Models");
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
+
 const Clients_Modal = db.Clients;
 
 
@@ -9,7 +11,6 @@ class Clients {
   async AddClient(req, res) {
     try {
       const { FullName, Email, PhoneNo, password,add_by } = req.body;
-
       if (!FullName) {
         return res.status(400).json({ status: false, message: "fullname is required" });
       }
@@ -39,8 +40,7 @@ class Clients {
         return res.status(400).json({ status: false, message: "Added by field is required" });
       }
 
-
-
+      const refer_token = crypto.randomBytes(10).toString('hex'); // 10 bytes = 20 hex characters
 
       const hashedPassword = await bcrypt.hash(password, 10);
       const result = new Clients_Modal({
@@ -48,8 +48,13 @@ class Clients {
       Email: Email,
       PhoneNo: PhoneNo,
       password: hashedPassword,
-      add_by: add_by
+      add_by: add_by,
+      refer_token:refer_token,
+      token:refer_token,
+      
+      
       })
+     
 
       await result.save();
 

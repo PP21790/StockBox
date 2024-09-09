@@ -390,5 +390,46 @@ async resetPassword(req, res) {
     }
 }
 
+async deleteClient(req, res) {
+  try {
+    const { id } = req.params; // Extract ID from URL params
+
+    if (!id) {
+      return res.status(400).json({
+        status: false,
+        message: "Client ID is required",
+      });
+    }
+
+  const deletedClient = await Clients_Modal.findByIdAndUpdate(
+    id, 
+    { del: 1 }, // Set del to true
+    { new: true }  // Return the updated document
+  );
+    if (!deletedClient) {
+      return res.status(404).json({
+        status: false,
+        message: "Client not found",
+      });
+    }
+
+    console.log("Deleted Client:", deletedClient);
+    return res.json({
+      status: true,
+      message: "Client deleted successfully",
+      data: deletedClient,
+    });
+  } catch (error) {
+    console.error("Error deleting client:", error);
+    return res.status(500).json({
+      status: false,
+      message: "Server error",
+      error: error.message,
+    });
+  }
+}
+
+
+
 }
 module.exports = new Clients();
