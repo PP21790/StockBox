@@ -88,10 +88,15 @@ function MainApp() {
                     <Route path="/signal" element={<Signal/>} />
                     <Route path="/permision" element={<Permision/>} />
                     {/* <Route path="/user" element={<User />} /> */}
+                    {/* <Route path="/user" element={<User />} /> */}
                     <Route path="/basket" element={<Basket/>} />
                     <Route path="/faq" element={<Faq/>} />
                     <Route path="/history" element={<History/>} />
                     <Route path="/refer" element={<Refer />} />
+                    
+
+                     
+                   
                 </Routes>
             </div>
             <Footer />
