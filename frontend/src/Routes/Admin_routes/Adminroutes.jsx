@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import Sidebar from './layout/Sidebar';
-import Dashboard from './components/Dashbord';
+import Dashboard from './component';
 import Header from './layout/Header';
 import Footer from './layout/Footer';
 import Client from './components/Client';
@@ -62,8 +62,8 @@ function MainApp() {
             <Header />
             <div className="page-wrapper">
                 <Routes>
-                    {/* <Route path="/dashboard" element={<Dashboard />} /> */}
-                    <Route path="/client" element={<Dashboard />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                  
                     <Route path="/client" element={<Client />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/service" element={<Service />} />
