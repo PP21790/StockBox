@@ -42,8 +42,6 @@ class Clients {
 
       const refer_token = crypto.randomBytes(10).toString('hex'); // 10 bytes = 20 hex characters
 
-
-
       const hashedPassword = await bcrypt.hash(password, 10);
       const result = new Clients_Modal({
       FullName: FullName,
