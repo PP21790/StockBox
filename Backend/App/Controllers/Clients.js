@@ -53,7 +53,7 @@ class Clients {
 
       await result.save();
 
-      console.log("result", result)
+      // console.log("result", result)
       return res.json({
         status: true,
         message: "add",

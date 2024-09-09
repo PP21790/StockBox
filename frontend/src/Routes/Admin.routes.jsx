@@ -18,7 +18,7 @@ import Staff from '../layout/Admin/Admin_staff/Staff';
 import AddUser from '../layout/Admin/Admin_client/AddUser';
 import AddStaff from '../layout/Admin/Admin_staff/AddStaff';
 import Update from '../layout/Admin/Admin_staff/Update';
-;
+import EditClient from '../layout/Admin/Admin_client/EditClient';;
 
 
 
@@ -70,14 +70,20 @@ function MainApp() {
                     {/* <Route path="/client" element={<Dashboard/>} /> */}
                     <Route path="/client" element={<Client/>} />
                     <Route path="/addclient" element={<AddUser/>} />
+                    <Route path="/client/updateclient/:id" element={<EditClient/>} />
+
                     <Route path="/profile" element={<Profile/>} />
                     <Route path="/service" element={<Service/>} />
                     <Route path="/kyc" element={<Kyc/>} />
                     <Route path="/signal" element={<Signal/>} />
                     <Route path="/permision" element={<Permision/>} />
+
+
                     <Route path="/staff" element={<Staff/>} />
                     <Route path="/addstaff" element={<AddStaff/>} />
                     <Route path="/staff/updatestaff/:id" element={<Update/>} />
+
+
                     <Route path="/basket" element={<Basket/>} />
                     <Route path="/faq" element={<Faq/>} />
                     
