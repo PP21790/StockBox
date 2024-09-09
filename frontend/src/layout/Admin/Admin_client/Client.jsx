@@ -1,32 +1,90 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { GetClient } from '../../../Services/Admin';
+import Table from '../../../components/Table';
 
 const Client = () => {
     const [clients, setClients] = useState([]);
+
     const token = localStorage.getItem('token');
 
-    useEffect(() => {
-
-        axios.get('http://localhost:5001/client/list', {
-            headers: {
-                Authorization: `${token}`,
+    const getAdminclient = async () => {
+        try {
+            const response = await GetClient(token);
+            if (response.status) {
+                setClients(response.data);
             }
-        })
-            .then(response => {
+        } catch (error) {
+            console.log("error");
+        }
+    }
 
-                if (response.data.status) {
-                    setClients(response.data.data);
-
-                } else {
-                    setClients([]);
-                }
-
-            })
-            .catch(error => {
-                console.log("There was an error fetching the client data!", error);
-            });
+    useEffect(() => {
+        getAdminclient();
     }, []);
+
+
+
+    
+    const columns = [
+        {
+            name: 'S.No',
+            selector: (row, index) => index + 1,
+            sortable: false,
+            width: '70px',
+        },
+        {
+            name: 'Full Name',
+            selector: row => row.FullName,
+            sortable: true,
+        },
+        {
+            name: 'Email',
+            selector: row => row.Email,
+            sortable: true,
+        },
+        {
+            name: 'Phone No',
+            selector: row => row.PhoneNo,
+            sortable: true,
+        },
+        {
+            name: 'Active Status',
+            selector: row => row.ActiveStatus === "1" ? 'Active' : 'Inactive',
+            sortable: true,
+        },
+        {
+            name: 'Created At',
+            selector: row => new Date(row.createdAt).toLocaleDateString(),
+            sortable: true,
+        },
+        {
+            name: 'Updated At',
+            selector: row => new Date(row.updatedAt).toLocaleDateString(),
+            sortable: true,
+        },
+        {
+            name: 'Actions',
+            cell: row => (
+                <div className="d-flex order-actions">
+                    <button
+                        className="btn-f"
+                        data-bs-toggle="modal"
+                        data-bs-target="#updateUserModal"
+                    >
+                        <i className="bx bxs-edit" />
+                    </button>
+                    <button className="text-danger btn-d">
+                        <i className="bx bxs-trash" />
+                    </button>
+                </div>
+            ),
+            ignoreRowClick: true,
+            allowOverflow: true,
+            button: true,
+        }
+    ];
 
     return (
         <div>
@@ -62,129 +120,23 @@ const Client = () => {
                                     </span>
                                 </div>
                                 <div className="ms-auto">
-                                    <button
-                                        type="button"
+                                    <Link
+                                        to="/admin/addclient"
                                         className="btn btn-primary"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#exampleModal"
                                     >
-                                        <i className="bx bxs-plus-square" />
+                                        <i
+                                            className="bx bxs-plus-square"
+                                            aria-hidden="true"
+                                        />
                                         Add Client
-                                    </button>
-                                    {/* Modal start */}
-                                    <div
-                                        className="modal fade"
-                                        id="exampleModal"
-                                        tabIndex={-1}
-                                        aria-labelledby="exampleModalLabel"
-                                        aria-hidden="true"
-                                    >
-                                        <div className="modal-dialog">
-                                            <div className="modal-content">
-                                                <div className="modal-header">
-                                                    <h5 className="modal-title" id="exampleModalLabel">
-                                                        Add Client
-                                                    </h5>
-                                                    <button
-                                                        type="button"
-                                                        className="btn-close"
-                                                        data-bs-dismiss="modal"
-                                                        aria-label="Close"
-                                                    />
-                                                </div>
-                                                <div className="modal-body">
-                                                    <form>
-                                                        <div className="row">
-                                                            <div className="col-md-6">
-                                                                <label>Name</label>
-                                                                <input className="form-control mb-2" type="text" placeholder="Enter your name" />
-                                                            </div>
-                                                            <div className="col-md-6">
-                                                                <label>Email</label>
-                                                                <input className="form-control" type="email" placeholder="Enter your email" />
-                                                            </div>
-                                                            <div className="col-md-6">
-                                                                <label>Phone</label>
-                                                                <input className="form-control" type="number" placeholder="Enter your phone number" />
-                                                            </div>
-                                                            <div className="col-md-6">
-                                                                <label>Broker</label>
-                                                                <input className="form-control" type="text" placeholder="Enter broker" />
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                                <div className="modal-footer">
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-secondary"
-                                                        data-bs-dismiss="modal"
-                                                    >
-                                                        Close
-                                                    </button>
-                                                    <button type="button" className="btn btn-primary">
-                                                        Add
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {/* Modal end */}
+                                    </Link>
                                 </div>
                             </div>
-                            <div className="table-responsive">
-                                <table className="table mb-0">
-                                    <thead className="table-light">
-                                        <tr>
-                                            <th>S.No</th>
-                                            <th>Full Name</th>
-                                            <th>Email</th>
-                                            <th>Phone No</th>
-                                            <th>Active Status</th>
-                                            <th>Created At</th>
-                                            <th>Updated At</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {clients.length > 0 ? (
-                                            clients.map((client, index) => (
-                                                <tr key={client._id}>
-                                                    <td>{index + 1}</td>
-                                                    <td>{client.FullName}</td>
-                                                    <td>{client.Email}</td>
-                                                    <td>{client.PhoneNo}</td>
-                                                    <td>{client.ActiveStatus === "1" ? 'Active' : 'Inactive'}</td>
-                                                    <td>{new Date(client.createdAt).toLocaleDateString()}</td>
-                                                    <td>{new Date(client.updatedAt).toLocaleDateString()}</td>
-                                                    <td>
-                                                        <div className="d-flex order-actions">
-                                                            <button
-                                                                className="btn-f"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#updateUserModal"
 
-                                                            >
-                                                                <i className="bx bxs-edit" />
-                                                            </button>
-                                                            <button
-                                                                className="text-danger btn-d"
-
-                                                            >
-                                                                <i className="bx bxs-trash" />
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            ))
-                                        ) : (
-                                            <tr>
-                                                <td colSpan="7" className="text-center">No Clients Found</td>
-                                            </tr>
-                                        )}
-                                    </tbody>
-                                </table>
-                            </div>
+                            <Table
+                                columns={columns}
+                                data={clients}
+                            />
                         </div>
                     </div>
                 </div>
