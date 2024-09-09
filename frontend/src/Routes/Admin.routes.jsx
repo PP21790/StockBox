@@ -15,6 +15,8 @@ import Footer from '../layout/Footer';
 
 // import Sidebar from './layout/Sidebar';
 import Dashboard from '../layout/Admin/Admin_dashboard/Dashboard';
+import History from '../layout/Admin/Payment_history/Paymenthistory';
+import Refer from '../layout/Admin/Admin_refer/Refer';
 // import Header from './layout/Header';
 // import Footer from './layout/Footer';
 // import Client from './components/Client';
@@ -88,6 +90,8 @@ function MainApp() {
                     {/* <Route path="/user" element={<User />} /> */}
                     <Route path="/basket" element={<Basket/>} />
                     <Route path="/faq" element={<Faq/>} />
+                    <Route path="/history" element={<History/>} />
+                    <Route path="/refer" element={<Refer />} />
                 </Routes>
             </div>
             <Footer />

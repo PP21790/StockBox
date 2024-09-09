@@ -85,12 +85,12 @@ const Sidebar = ({ onToggleClick }) => {
                                         </li>
 
                                         <li>
-                                            <a href="form-froala-editor.html">
+                                            <Link to="/admin/refer">
                                                 <div className="parent-icon">
                                                     <i className="bx bxl-redux" />
                                                 </div>
                                                 <div className="menu-title">Refer & Earn</div>
-                                            </a>
+                                            </Link>
                                         </li>
 
                                         <li>
@@ -114,13 +114,13 @@ const Sidebar = ({ onToggleClick }) => {
                                         </li>
 
                                         <li>
-                                            <a href="form-froala-editor.html">
+                                            <Link to="/admin/history">
                                                 <div className="parent-icon">
                                                     <i className="bx bx-credit-card" />
                                                 </div>
                                                 <div className="menu-title"> Payment History
                                                 </div>
-                                            </a>
+                                            </Link>
                                         </li>
 
                                         <li>
