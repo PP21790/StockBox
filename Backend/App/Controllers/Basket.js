@@ -7,7 +7,8 @@ class Basket {
 
     async AddBasket(req, res) {
         try {
-            const { title, description, price, validity, add_by,accuracy } = req.body;
+            const { title, description, price, add_by,accuracy,mininvamount,portfolioweightage,stocks,pricerange,stockweightage,entryprice,entrydate,exitprice,exitdate,comment,retunpercentage,holdingperiod,potentialleft,themename
+            } = req.body;
     
             // Debugging: Log the incoming request body to ensure the data is correct
             console.log("Request Body:", req.body);
@@ -16,9 +17,22 @@ class Basket {
                 title,
                 description,
                 price,
-                validity,
                 add_by,
                 accuracy,
+                mininvamount,
+                portfolioweightage,
+                stocks,
+                pricerange,
+                stockweightage,
+                entryprice,
+                entrydate,
+                exitprice,
+                exitdate,
+                comment,
+                retunpercentage,
+                holdingperiod,
+                potentialleft,
+                themename,
             });
     
             await result.save();
@@ -129,7 +143,10 @@ class Basket {
 
   async updateBasket(req, res) {
     try {
-        const { id, title, description, price, validity,accuracy } = req.body;
+      const { id,title, description, price,accuracy,mininvamount,portfolioweightage,stocks,pricerange,stockweightage,entryprice,entrydate,exitprice,exitdate,comment,retunpercentage,holdingperiod,potentialleft,themename
+      } = req.body;
+
+       // const { id, title, description, price, validity,accuracy } = req.body;
   
       if (!id) {
         return res.status(400).json({
@@ -141,11 +158,24 @@ class Basket {
       const updatedBasket = await Basket_Modal.findByIdAndUpdate(
         id,
         {
-            title,
-            description,
-            price,
-            validity,
-            accuracy,
+          title,
+          description,
+          price,
+          accuracy,
+          mininvamount,
+          portfolioweightage,
+          stocks,
+          pricerange,
+          stockweightage,
+          entryprice,
+          entrydate,
+          exitprice,
+          exitdate,
+          comment,
+          retunpercentage,
+          holdingperiod,
+          potentialleft,
+          themename,
         },
         { Basket: true, runValidators: true } // Options: return the updated document and run validators
       );

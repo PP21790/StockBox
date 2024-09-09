@@ -23,11 +23,62 @@ const BasketSchema = new Schema({
         required: true,
         min: 0
     },
-    // Rename total_month_service to totaldays
-    validity: {
+    mininvamount: {
         type: Number,
         required: true,
         min: 0
+    },
+    portfolioweightage: {
+        type: String,
+        default: null
+    },
+    stocks: {
+        type: String,
+        default: null
+    },
+    pricerange: {
+        type: String,
+        default: null
+    },
+    stockweightage: {
+        type: String,
+        default: null
+    },
+    entryprice: {
+        type: String,
+        default: null
+    },
+    entrydate: {
+        type: String,
+        default: null
+    },
+    exitprice: {
+        type: String,
+        default: null
+    },
+    exitdate: {
+        type: String,
+        default: null
+    },
+    comment: {
+        type: String,
+        default: null
+    },
+    retunpercentage: {
+        type: String,
+        default: null
+    },
+    holdingperiod: {
+        type: String,
+        default: null
+    },
+    potentialleft: {
+        type: String,
+        default: null
+    },
+    themename: {
+        type: String,
+        default: null
     },
     status: {
         type: String,
