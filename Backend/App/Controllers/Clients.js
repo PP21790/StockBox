@@ -64,6 +64,9 @@ class Clients {
     }
   }
 
+
+
+
   async getClient(req, res) {
     try {
 
@@ -83,6 +86,8 @@ class Clients {
       return res.json({ status: false, message: "Server error", data: [] });
     }
   }
+
+
 
   async activeClient(req, res) {
     try {
@@ -104,6 +109,9 @@ class Clients {
     }
   }
 
+
+
+  
   async detailClient(req, res) {
     try {
         // Extract ID from request parameters
