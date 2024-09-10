@@ -21,6 +21,7 @@ import Update from '../layout/Admin/Admin_staff/Update';
 import Refer from '../layout/Admin/Admin_refer/Refer';
 import Paymenthistory from '../layout/Admin/Payment_history/Paymenthistory';
 import EditClient from '../layout/Admin/Admin_client/EditClient';
+import Addsignal from '../layout/Admin/Admin_signal/Addsignal';
 
 
 function MainApp() {
@@ -89,6 +90,7 @@ function MainApp() {
                     <Route path="/faq" element={<Faq/>} />
                     <Route path="/refer" element={<Refer />} />
                     <Route path="/paymenthistory" element={<Paymenthistory />} />
+                    <Route path="/addsignal" element={<Addsignal />} />
                     
                 </Routes>
             </div>
