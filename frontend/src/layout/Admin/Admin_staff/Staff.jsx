@@ -4,7 +4,7 @@ import axios from 'axios';
 import { GetStaff } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import { Pencil ,Trash2 } from 'lucide-react';
-import { deleteStaff } from '../../../Services/Admin';
+import { deleteStaff , updateStaffstatus} from '../../../Services/Admin';
 import Swal from 'sweetalert2';
 
 const Staff = () => {
@@ -35,6 +35,7 @@ const Staff = () => {
         getAdminclient();
     }, []);
 
+   
 
 
     
@@ -91,6 +92,48 @@ const updateStaff= async(row)=>{
 
 
 
+// update status
+
+const handleSwitchChange = async (event, id) => {
+
+    const user_active_status = event.target.checked ? "1" : "0";
+
+    const data = { id:id, status: user_active_status }
+    const result = await Swal.fire({
+        title: "Do you want to save the changes?",
+        showCancelButton: true,
+        confirmButtonText: "Save",
+        cancelButtonText: "Cancel",
+        allowOutsideClick: false,
+    });
+
+    if (result.isConfirmed) {
+        try {
+            const response = await updateStaffstatus(data, token)
+            if (response.status) {
+                Swal.fire({
+                    title: "Saved!",
+                    icon: "success",
+                    timer: 1000,
+                    timerProgressBar: true,
+                });
+                setTimeout(() => {
+                    Swal.close();
+                }, 1000);
+            }
+            getAdminclient();
+        } catch (error) {
+            Swal.fire(
+                "Error",
+                "There was an error processing your request.",
+                "error"
+            );
+        }
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+        getAdminclient();
+    }
+};
+
 
     const columns = [
         {
@@ -116,9 +159,23 @@ const updateStaff= async(row)=>{
         },
         {
             name: 'Active Status',
-            selector: row => row.ActiveStatus === "1" ? 'Active' : 'Inactive',
+            selector: row => (
+              <div className="form-check form-switch form-check-info">
+                <input
+                  id={`rating_${row.ActiveStatus}`}
+                  className="form-check-input"
+                  type="checkbox"
+                  defaultChecked={row.ActiveStatus == 1}
+                  onChange={(event) => handleSwitchChange(event, row._id)}
+                />
+                <label
+                  htmlFor={`rating_${row.ActiveStatus}`}
+                  className="checktoggle checkbox-bg"
+                ></label>
+              </div>
+            ),
             sortable: true,
-        },
+          },
         {
             name: 'Created At',
             selector: row => new Date(row.createdAt).toLocaleDateString(),

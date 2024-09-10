@@ -1,43 +1,141 @@
-import React, { useState } from 'react';
-import swal from 'sweetalert';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { GetService, AddService, UpdateService, UpdateServiceStatus } from '../../../Services/Admin';
+import Table from '../../../components/Table';
+import { Pencil, Trash2, PanelBottomOpen } from 'lucide-react';
+import Swal from 'sweetalert2';
+
+
+
 
 const Service = () => {
-    const [title, setTitle] = useState('');
+
+
+    const navigate = useNavigate();
+
+    const [clients, setClients] = useState([]);
+    const [model, setModel] = useState(false);
+    const [serviceid, setServiceid] = useState({});
+    
+  const [searchInput, setSearchInput] = useState("");
+
+
+    const [updatetitle, setUpdatetitle] = useState({
+        title: "",
+        id: "",
+    });
+    const [title, setTitle] = useState({
+        title: "",
+        add_by: "",
+    });
+
     const token = localStorage.getItem('token');
+    const userid = localStorage.getItem('id');
 
 
-    const handleAddService = async () => {
+    
+
+  // getting client
+
+    const getAdminservice = async () => {
         try {
-            const response = await fetch('https://api.example.com/add-service', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `${token}`
-                },
-                body: JSON.stringify({ title }), // Send the title in the request body
-            });
-
-            if (response.ok) {
-                // Assuming the API response returns a JSON object
-                const result = await response.json();
-
-                console.log(result);
-
-
-                swal({
-                    title: 'Success!',
-                    text: 'Service added successfully!',
-                    icon: 'success',
-                    confirmButtonText: 'OK',
-                });
-
-                // Clear the input field after successful addition
-                setTitle('');
-            } else {
-                throw new Error('Failed to add service');
+            const response = await GetService(token);
+            if (response.status) {
+                const filterdata = response.data.filter((item) => 
+                    searchInput === "" || 
+                    item.title.toLowerCase().includes(searchInput.toLowerCase())
+                );
+                setClients(searchInput ? filterdata : response.data);
             }
         } catch (error) {
-            swal({
+            console.log("Error fetching services:", error);
+        }
+    };
+    
+
+    useEffect(() => {
+        getAdminservice();
+    }, [searchInput]);
+
+
+
+    // update service
+
+    const Updateservicebyadmin = async () => {
+        try {
+            const data = { title: updatetitle.title, id: serviceid._id };
+            const response = await UpdateService(data, token);
+
+            if (response && response.status) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Service updated successfully.',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    timer: 2000,
+                });
+
+                setUpdatetitle({ title: "", id: "" });
+                getAdminservice();
+                setModel(!model)
+
+            } else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'There was an error updating the service.',
+                    icon: 'error',
+                    confirmButtonText: 'Try Again',
+                });
+            }
+        } catch (error) {
+
+            Swal.fire({
+                title: 'Error!',
+                text: 'There was an error updating the service.',
+                icon: 'error',
+                confirmButtonText: 'Try Again',
+            });
+        }
+    };
+
+
+
+
+   // add service
+
+    const addservice = async () => {
+        try {
+            const data = { title: title.title, add_by: userid };
+            const response = await AddService(data, token);
+            if (response && response.status) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Service added successfully.',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    timer: 2000,
+                });
+
+                setTitle({ title: "", add_by: "" });
+                getAdminservice();
+
+                const modal = document.getElementById('exampleModal');
+                const bootstrapModal = window.bootstrap.Modal.getInstance(modal);
+                if (bootstrapModal) {
+                    bootstrapModal.hide();
+                }
+            } else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'There was an error adding the service.',
+                    icon: 'error',
+                    confirmButtonText: 'Try Again',
+                });
+
+            }
+        } catch (error) {
+            console.error("Error adding service:", error);
+            Swal.fire({
                 title: 'Error!',
                 text: 'There was an error adding the service.',
                 icon: 'error',
@@ -46,25 +144,152 @@ const Service = () => {
         }
     };
 
+
+
+
+
+    // update status 
+
+    const handleSwitchChange = async (event, id) => {
+
+        const user_active_status = event.target.checked ? "true" : "false";
+
+        const data = { id: id, status: user_active_status }
+        const result = await Swal.fire({
+            title: "Do you want to save the changes?",
+            showCancelButton: true,
+            confirmButtonText: "Save",
+            cancelButtonText: "Cancel",
+            allowOutsideClick: false,
+        });
+
+        if (result.isConfirmed) {
+            try {
+                const response = await UpdateServiceStatus(data, token)
+                if (response.status) {
+                    Swal.fire({
+                        title: "Saved!",
+                        icon: "success",
+                        timer: 1000,
+                        timerProgressBar: true,
+                    });
+                    setTimeout(() => {
+                        Swal.close();
+                    }, 1000);
+                }
+                getAdminservice();
+            } catch (error) {
+                Swal.fire(
+                    "Error",
+                    "There was an error processing your request.",
+                    "error"
+                );
+            }
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            getAdminservice();
+        }
+    };
+
+
+
+
+
+
+
+
+    const columns = [
+        {
+            name: 'S.No',
+            selector: (row, index) => index + 1,
+            sortable: false,
+            width: '70px',
+        },
+        {
+            name: 'Title',
+            selector: row => row.title,
+            sortable: true,
+        },
+        {
+            name: 'Active Status',
+            selector: row => (
+                <div className="form-check form-switch form-check-info">
+                    <input
+                        id={`rating_${row.status}`}
+                        className="form-check-input"
+                        type="checkbox"
+                        checked={row.status === true}
+                        onChange={(event) => handleSwitchChange(event, row._id)}
+                    />
+                    <label
+                        htmlFor={`rating_${row.status}`}
+                        className="checktoggle checkbox-bg"
+                    ></label>
+                </div>
+            ),
+            sortable: true,
+        },
+
+        {
+            name: 'Created At',
+            selector: row => new Date(row.created_at).toLocaleDateString(),
+            sortable: true,
+        },
+        {
+            name: 'Updated At',
+            selector: row => new Date(row.updated_at).toLocaleDateString(),
+            sortable: true,
+        },
+
+        {
+            name: 'Actions',
+            cell: row => (
+                <>
+                    <div>
+                        <PanelBottomOpen onClick={() => { setModel(true); setServiceid(row); }} />
+                    </div>
+                    <div>
+                        {/* <Trash2 onClick={() => DeleteClient(row._id)} /> */}
+                    </div>
+                </>
+            ),
+            ignoreRowClick: true,
+            allowOverflow: true,
+            button: true,
+        }
+    ];
+
+
+
+    const updateServiceTitle = (value) => {
+        setUpdatetitle(prev => ({
+            ...prev,
+            title: value
+        }));
+    }
+
+
+
+
+
     return (
         <div>
             <div className="page-content">
-                {/*breadcrumb*/}
+                {/* breadcrumb */}
                 <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
                     <div className="breadcrumb-title pe-3">Service</div>
                     <div className="ps-3">
                         <nav aria-label="breadcrumb">
                             <ol className="breadcrumb mb-0 p-0">
                                 <li className="breadcrumb-item">
-                                    <a href="javascript:;">
+                                    <Link to="/admin/dashboard">
                                         <i className="bx bx-home-alt" />
-                                    </a>
+                                    </Link>
                                 </li>
                             </ol>
                         </nav>
                     </div>
                 </div>
-                {/*end breadcrumb*/}
+                {/* end breadcrumb */}
                 <div className="card">
                     <div className="card-body">
                         <div className="d-lg-flex align-items-center mb-4 gap-3">
@@ -73,7 +298,9 @@ const Service = () => {
                                     type="text"
                                     className="form-control ps-5 radius-10"
                                     placeholder="Search Order"
-                                />{" "}
+                                    onChange={(e) => setSearchInput(e.target.value)}
+                                    value={searchInput}
+                                />
                                 <span className="position-absolute top-50 product-show translate-middle-y">
                                     <i className="bx bx-search" />
                                 </span>
@@ -86,9 +313,9 @@ const Service = () => {
                                     data-bs-target="#exampleModal"
                                 >
                                     <i className="bx bxs-plus-square" />
-                                    Add services
+                                    Add Service
                                 </button>
-                                {/* Modal start */}
+
                                 <div
                                     className="modal fade"
                                     id="exampleModal"
@@ -100,7 +327,7 @@ const Service = () => {
                                         <div className="modal-content">
                                             <div className="modal-header">
                                                 <h5 className="modal-title" id="exampleModalLabel">
-                                                    Add Client
+                                                    Add Service
                                                 </h5>
                                                 <button
                                                     type="button"
@@ -113,14 +340,13 @@ const Service = () => {
                                                 <form>
                                                     <div className="row">
                                                         <div className="col-md-12">
-                                                            <label htmlFor="serviceTitle">Title</label>
+                                                            <label htmlFor="">Title</label>
                                                             <input
-                                                                id="serviceTitle"
-                                                                className="form-control mb-2"
+                                                                className="form-control mb-3"
                                                                 type="text"
-                                                                placeholder="Enter your title"
-                                                                value={title}
-                                                                onChange={(e) => setTitle(e.target.value)} // Update title state
+                                                                placeholder='Enter Service Title'
+                                                                value={title.title}
+                                                                onChange={(e) => setTitle({ ...title, title: e.target.value })}
                                                             />
                                                         </div>
                                                     </div>
@@ -134,44 +360,80 @@ const Service = () => {
                                                 >
                                                     Close
                                                 </button>
-                                                <button
-                                                    type="button"
-                                                    className="btn btn-primary"
-                                                    onClick={handleAddService}  // Call function on button click
-                                                    data-bs-dismiss="modal"  // Close modal after click
-                                                >
+                                                <button type="button" className="btn btn-primary" onClick={addservice}>
                                                     Add
                                                 </button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                {/* Modal end*/}
                             </div>
                         </div>
-                        <div className="table-responsive">
-                            <table className="table mb-0">
-                                <thead className="table-light">
-                                    <tr>
-                                        <th>S.No</th>
-                                        <th>Name</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Kajal</td>
-                                        <td>Active</td>
-                                        <td>delete</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+
+                        <Table
+                            columns={columns}
+                            data={clients}
+                        />
                     </div>
                 </div>
             </div>
+
+            {model && (
+                <div
+                    className="modal fade show"
+                    style={{ display: 'block' }}
+                    tabIndex={-1}
+                    aria-labelledby="exampleModalLabel"
+                    aria-hidden="true"
+                >
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title" id="exampleModalLabel">
+                                    Update Service
+                                </h5>
+                                <button
+                                    type="button"
+                                    className="btn-close"
+                                    onClick={() => setModel(false)}
+                                />
+                            </div>
+                            <div className="modal-body">
+                                <form>
+                                    <div className="row">
+                                        <div className="col-md-12">
+                                            <label htmlFor="">Title</label>
+                                            <input
+                                                className="form-control mb-2"
+                                                type="text"
+                                                placeholder='Enter Service Title'
+                                                value={updatetitle.title || serviceid.title}
+                                                onChange={(e) => updateServiceTitle(e.target.value)}
+                                            />
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div className="modal-footer">
+                                <button
+                                    type="button"
+                                    className="btn btn-secondary"
+                                    onClick={() => setModel(false)}
+                                >
+                                    Close
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn btn-primary"
+                                    onClick={Updateservicebyadmin}
+                                >
+                                    Update Service
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

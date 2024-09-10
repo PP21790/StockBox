@@ -126,6 +126,8 @@ export async function deleteClient(_id,token) {
 }
 
 
+// add client
+
 export async function AddClient(data,token) {
     try {
         const res = await axios.post(`${Config.base_url}client/add`, data, { 
@@ -134,6 +136,142 @@ export async function AddClient(data,token) {
                 'Authorization': `${token}`,
             },
     
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message; 
+    }
+}
+
+
+// add signal by admin
+
+
+export async function AddSignalByAdmin(data,token) {
+    try {
+        const res = await axios.post(`${Config.base_url}signal/add`, data, { 
+            headers: {
+                data:{},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message; 
+    }
+}
+
+
+
+
+// service list
+
+
+export async function GetService(token) {
+    try {
+        const res = await axios.get(`${Config.base_url}service/list`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}
+
+
+// service add
+
+export async function AddService(data,token) {
+    try {
+        const res = await axios.post(`${Config.base_url}service/add`, data, { 
+            headers: {
+                data:{},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message; 
+    }
+}
+
+
+// update service 
+
+export async function UpdateService(data,token) {
+    try {
+        const res = await axios.put(`${Config.base_url}service/update`, data, { 
+            headers: {
+                data:{},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message; 
+    }
+}
+
+
+// update service status
+
+
+export async function UpdateServiceStatus(data,token) {
+    try {
+        const res = await axios.post(`${Config.base_url}service/change-status`, data, { 
+            headers: {
+                data:{},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message; 
+    }
+}
+
+
+// update client status
+
+export async function UpdateClientStatus(data,token) {
+    try {
+        const res = await axios.post(`${Config.base_url}client/change-status`, data, { 
+            headers: {
+                data:{},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message; 
+    }
+}
+
+
+// update staff status
+
+
+export async function updateStaffstatus(data,token) {
+    try {
+        const res = await axios.post(`${Config.base_url}user/change-status`, data, { 
+            headers: {
+                data:{},
+                'Authorization': `${token}`,
+            },
         });
 
         return res?.data;
