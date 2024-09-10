@@ -9,7 +9,7 @@ const AddStaff = () => {
   const navigate = useNavigate();
 
   const user_id = localStorage.getItem("id");
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("d5a8028ecbb70acf22bb");
 
   const validate = (values) => {
     let errors = {};

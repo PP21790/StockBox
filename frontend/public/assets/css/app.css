@@ -5087,3 +5087,81 @@ input::placeholder {
 	font-size: 1.5rem;
 
 }
+
+.lucide-trash2 {
+	color: red;
+	margin-left: 10px;
+
+	width: 18px;
+	height: 20px;
+
+}
+
+.lucide-pencil {
+	width: 18px;
+	height: 20px;
+}
+
+.lucide-trash2:hover {
+
+	background: #FF6D4A;
+	border-radius: 50%;
+	color: #FFF;
+	/* font-size: 20px; */
+	text-align: center;
+	line-height: 100px;
+	font-family: sans-serif;
+	text-transform: uppercase;
+	animation: animate-pulse 3s linear infinite;
+	cursor: pointer
+}
+
+@keyframes animate-pulse {
+	0% {
+		box-shadow: 0 0 0 0 rgba(255, 109, 74, 0.7), 0 0 0 0 rgba(255, 109, 74, 0.7);
+	}
+
+
+
+	100% {
+		box-shadow: 0 0 0 0 rgba(255, 109, 74, 0.0), 0 0 0 8px rgba(255, 109, 74, 0);
+	}
+
+}
+
+
+.lucide-pencil:hover {
+
+	background: #000;
+	border-radius: 70%;
+	color: #FFF;
+	font-size: 5px;
+	text-align: center;
+	line-height: 100px;
+	font-family: sans-serif;
+	text-transform: uppercase;
+	animation: animate-pulse 3s linear infinite;
+	cursor: pointer
+}
+
+@keyframes animate-pulse {
+	0% {
+		box-shadow: 0 0 0 0 rgba(255, 109, 74, 0.7), 0 0 0 0 rgba(255, 109, 74, 0.7);
+	}
+
+
+
+	100% {
+		box-shadow: 0 0 0 0 rgba(255, 109, 74, 0.0), 0 0 0 15px rgba(255, 109, 74, 0);
+	}
+
+}
+
+
+.btn-danger{
+	
+			width: 61px;
+			height: 29px;
+			font-size: 10px;
+	
+}
