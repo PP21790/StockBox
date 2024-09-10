@@ -114,7 +114,7 @@ const Sidebar = ({ onToggleClick }) => {
                                         </li>
 
                                         <li>
-                                            <Link to="/admin/history">
+                                            <Link to="/admin/paymenthistory">
                                                 <div className="parent-icon">
                                                     <i className="bx bx-credit-card" />
                                                 </div>
