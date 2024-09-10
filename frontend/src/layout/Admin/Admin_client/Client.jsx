@@ -59,7 +59,8 @@ const Client = () => {
                         icon: 'success',
                         confirmButtonText: 'OK',
                     });
-    
+                    getAdminclient();
+                     
                 }
             } else {
         
