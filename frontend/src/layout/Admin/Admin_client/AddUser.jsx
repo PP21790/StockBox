@@ -20,9 +20,6 @@ const AddUser = () => {
     if (!values.Email) {
       errors.Email = "Please enter Email";
     }
-    if (!values.UserName) {
-      errors.UserName = "Please enter Username";
-    }
     if (!values.PhoneNo) {
       errors.PhoneNo = "Please enter Phone Number";
     }
@@ -41,7 +38,6 @@ const AddUser = () => {
   const onSubmit = async (values) => {
     const req = {
       FullName: values.FullName,
-      UserName: values.UserName,
       Email: values.Email,
       PhoneNo: values.PhoneNo,
       password: values.password,
@@ -85,7 +81,6 @@ const AddUser = () => {
   const formik = useFormik({
     initialValues: {
       FullName: "",
-      UserName: "",
       Email: "",
       PhoneNo: "",
       password: "",
@@ -106,14 +101,6 @@ const AddUser = () => {
       disable: false,
     },
     {
-      name: "UserName",
-      label: "User Name",
-      type: "text",
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-    },
-    {
       name: "Email",
       label: "Email",
       type: "text",
@@ -124,7 +111,7 @@ const AddUser = () => {
     {
       name: "PhoneNo",
       label: "Phone Number",
-      type: "text3", // Ensure this is handled correctly in DynamicForm
+      type: "text3",
       label_size: 12,
       col_size: 6,
       disable: false,

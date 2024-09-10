@@ -19,6 +19,8 @@ const Update = () => {
   const user_id = localStorage.getItem("id");
   const token = localStorage.getItem("token");
 
+  
+
   const validate = (values) => {
     let errors = {};
 
@@ -63,7 +65,7 @@ const Update = () => {
           timerProgressBar: true,
         });
         setTimeout(() => {
-          navigate("/admin/client");
+          navigate("/admin/staff");
         }, 1500);
       } else {
         Swal.fire({
@@ -145,11 +147,11 @@ const Update = () => {
     <div style={{ marginTop: "100px" }}>
       <DynamicForm
         fields={fields}
-        page_title="Update User"
-        btn_name="Update User"
+        page_title="Edit Staff"
+        btn_name="Edit Staff"
         btn_name1="Cancel"
         formik={formik}
-        btn_name1_route={"/admin/client"}
+        btn_name1_route={"/admin/staff"}
         additional_field={<></>}
       />
     </div>

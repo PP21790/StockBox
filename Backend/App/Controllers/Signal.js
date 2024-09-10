@@ -174,7 +174,7 @@ class Signal {
   
   async closeSignal(req, res) {
     try {
-      const { id, closeprice, close_status, close_description,closedate } = req.body;
+      const { id, closeprice, close_status, close_description } = req.body;
   
       if (!id) {
         return res.status(400).json({
@@ -189,7 +189,7 @@ class Signal {
             closeprice,
             close_status,
             close_description,
-            closedate,
+            closedate: new Date() 
         },
         { signal: true, runValidators: true } // Options: return the updated document and run validators
       );

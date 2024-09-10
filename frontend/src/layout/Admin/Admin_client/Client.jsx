@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table';
+import { Pencil ,Trash2 } from 'lucide-react';
+import Swal from 'sweetalert2';
+import { deleteClient } from '../../../Services/Admin';
 
 const Client = () => {
+
+
+    const navigate = useNavigate();
+
     const [clients, setClients] = useState([]);
 
     const token = localStorage.getItem('token');
@@ -25,8 +32,59 @@ const Client = () => {
     }, []);
 
 
+   
 
+    const updateClient= async(row)=>{
+        navigate("/admin/client/updateclient/" + row._id ,{ state: { row } })
+    }
     
+
+    const DeleteClient = async (_id) => {
+        try {
+            const result = await Swal.fire({
+                title: 'Are you sure?',
+                text: 'Do you want to delete this staff member? This action cannot be undone.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel',
+            });
+    
+            if (result.isConfirmed) {
+                const response = await deleteClient(_id,token);
+                if (response.status) {
+                    Swal.fire({
+                        title: 'Deleted!',
+                        text: 'The staff has been successfully deleted.',
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                    });
+                    getAdminclient();
+                     
+                }
+            } else {
+        
+                Swal.fire({
+                    title: 'Cancelled',
+                    text: 'The staff deletion was cancelled.',
+                    icon: 'info',
+                    confirmButtonText: 'OK',
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'There was an error deleting the staff.',
+                icon: 'error',
+                confirmButtonText: 'Try Again',
+            });
+           
+        }
+    };
+    
+
+
+
     const columns = [
         {
             name: 'S.No',
@@ -67,18 +125,14 @@ const Client = () => {
         {
             name: 'Actions',
             cell: row => (
-                <div className="d-flex order-actions">
-                    <button
-                        className="btn-f"
-                        data-bs-toggle="modal"
-                        data-bs-target="#updateUserModal"
-                    >
-                        <i className="bx bxs-edit" />
-                    </button>
-                    <button className="text-danger btn-d">
-                        <i className="bx bxs-trash" />
-                    </button>
+                <>
+                <div>
+                 <Pencil onClick={() => updateClient(row)} />
                 </div>
+               <div>
+               <Trash2 onClick={() => DeleteClient(row._id)} />
+               </div>
+               </>
             ),
             ignoreRowClick: true,
             allowOverflow: true,

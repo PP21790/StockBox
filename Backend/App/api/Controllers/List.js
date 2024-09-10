@@ -10,9 +10,11 @@ const PlanSubscription_Modal = db.PlanSubscription;
 const Coupon_Modal = db.Coupon;
 const Signal_Modal = db.Signal;
 const Stock_Modal = db.Stock;
+const Faq_Modal = db.Faq;
+const Content_Modal = db.Content;
+const Basket_Modal = db.Basket;
 
 
-Signal_Modal
 
 mongoose  = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
@@ -261,7 +263,7 @@ class List {
    // Controller function to add a new plan subscription
 async  addPlanSubscription(req, res) {
   try {
-    const { plan_id, client_id} = req.body;
+    const { plan_id, client_id, price, discount} = req.body;
     // Validate input
     if (!plan_id || !client_id ) {
       return res.status(400).json({ status: false, message: 'Missing required fields' });
@@ -293,7 +295,9 @@ async  addPlanSubscription(req, res) {
     const newSubscription = new PlanSubscription_Modal({
       plan_id,
       client_id,
-      plan_price: plan.price,
+      total:plan.price,
+      plan_price:price,
+      discount:discount,
       plan_start:start,
       plan_end:end
     });
@@ -396,7 +400,6 @@ async Signallist(req, res) {
 
 async applyCoupon (req, res) {
 
-  console.log('aaaaa');
 
   try {
       const { code, purchaseValue } = req.body;
@@ -474,12 +477,35 @@ async showSignalsToClients(req, res) {
           return null;
         }
       }).filter(id => id !== null);
+  
+      const serviceObjectId = new mongoose.Types.ObjectId(service_id);
+     
 
-      const matchingSignals = await Signal_Modal.find({  service: service_id, service: { $in: serviceIds } })
-      .populate({
-        path: 'stock',   // Populate the stock field
-        select: 'symbol' // Select only the symbol field from the stock collection
+      // Step 4: Log comparisons and check for a match
+      serviceIds.forEach(id => {
+        const isEqual = id.equals(serviceObjectId);
+        console.log(`Comparing ${id} with ${serviceObjectId}: ${isEqual}`); // Should log 'true' if they are the same
       });
+
+      const matchingId = serviceIds.some(id => id.equals(serviceObjectId));
+
+      // Step 5: If there's a match, find the matching signals
+      let matchingSignals = [];
+      if (matchingId) {
+        console.log('Is there a matching ID?', matchingId);
+
+        matchingSignals = await Signal_Modal.find({ service: serviceObjectId })
+        .populate({
+          path: 'stock',
+          select: 'symbol' // Select only the symbol field from the stock collection
+        });
+    }
+
+      const protocol = req.protocol; // Will be 'http' or 'https'
+      const baseUrl = `${protocol}://${req.headers.host}`;
+ matchingSignals.forEach(signal => {
+    signal.report = `${baseUrl}/uploads/report/${signal.report}`;
+  });
 
       relevantSignals = relevantSignals.concat(matchingSignals);
     }
@@ -494,6 +520,67 @@ async showSignalsToClients(req, res) {
     return res.status(500).json({ message: 'Server error', error: error.message });
   }
 }
+
+
+async showSignalsToClientsClose(req, res) {
+  try {
+    const { client_id,service_id } = req.body;
+    const currentDate = new Date();
+
+    const activePlanPurchases = await PlanSubscription_Modal.find({
+      client_id: client_id,
+      status: 'active',
+      del: false,
+      plan_start: { $lte: currentDate },
+      plan_end: { $gte: currentDate }
+    });
+
+    let relevantSignals = [];
+
+    for (let purchase of activePlanPurchases) {
+      const plan = await Plan_Modal.findById(new mongoose.Types.ObjectId(purchase.plan_id));
+      if (!plan) continue;
+
+      const planCategory = await Plancategory_Modal.findById(plan.category);
+      if (!planCategory) continue;
+
+      const serviceIds = planCategory.service.split(',').map(id => {
+        id = id.trim(); // Remove any extra whitespace
+        if (mongoose.Types.ObjectId.isValid(id)) {
+          return new mongoose.Types.ObjectId(id);
+        } else {
+          return null;
+        }
+      }).filter(id => id !== null);
+
+      const matchingSignals = await Signal_Modal.find({  service: service_id,close_status:true, service: { $in: serviceIds } })
+      .populate({
+        path: 'stock',   // Populate the stock field
+        select: 'symbol' // Select only the symbol field from the stock collection
+      });
+
+      const protocol = req.protocol; // Will be 'http' or 'https'
+      const baseUrl = `${protocol}://${req.headers.host}`;
+ matchingSignals.forEach(signal => {
+    signal.report = `${baseUrl}/uploads/report/${signal.report}`;
+  });
+
+      relevantSignals = relevantSignals.concat(matchingSignals);
+    }
+
+    relevantSignals = [...new Map(relevantSignals.map(signal => [signal._id.toString(), signal])).values()];
+
+    return res.status(200).json({
+      message: 'Relevant signals for the client',
+      signals: relevantSignals
+    });
+  } catch (error) {
+    return res.status(500).json({ message: 'Server error', error: error.message });
+  }
+}
+
+
+
 
 async Servicelist(req, res) {
   try {
@@ -512,6 +599,85 @@ async Servicelist(req, res) {
           status: false,
           message: "Server error",
           error: error.message
+      });
+  }
+}
+
+async Faqlist(req, res) {
+  try {
+
+      const faq = await Faq_Modal.find({ del: false,status: true });
+     
+
+      return res.status(200).json({
+          status: true,
+          message: "Faq retrieved successfully",
+          data: faq
+      });
+  } catch (error) {
+      console.error("Error retrieving Faq:", error);
+      return res.status(500).json({
+          status: false,
+          message: "Server error",
+          error: error.message
+      });
+  }
+}
+async detailContent(req, res) {
+  try {
+      // Extract ID from request parameters
+      const { id } = req.params;
+
+      // Check if ID is provided
+      if (!id) {
+          return res.status(400).json({
+              status: false,
+              message: "Content ID is required"
+          });
+      }
+
+      const Content = await Content_Modal.findById(id);
+
+      if (!Content) {
+          return res.status(404).json({
+              status: false,
+              message: "Content not found"
+          });
+      }
+
+      return res.json({
+          status: true,
+          message: "Content details fetched successfully",
+          data: Content
+      });
+
+  } catch (error) {
+      console.error("Error fetching Content details:", error);
+      return res.status(500).json({
+          status: false,
+          message: "Server error",
+          data: []
+      });
+  }
+}
+
+async BasketList(req, res) {
+  try {
+
+     
+      const baskets = await Basket_Modal.find({ del: false,status:"active" });
+
+      return res.json({
+          status: true,
+          message: "Baskets fetched successfully",
+          data: baskets
+      });
+
+  } catch (error) {
+      return res.json({ 
+          status: false, 
+          message: "Server error", 
+          data: [] 
       });
   }
 }

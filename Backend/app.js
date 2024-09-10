@@ -28,7 +28,7 @@ const Signal_Modal = db.Signal;
 const Banner_Modal = db.Banner;
 const Plancategory_Modal = db.Plancategory;
 const PlanSubscription_Modal = db.PlanSubscription;
-
+const Content_Modal = db.Content;
 
 
 
@@ -58,6 +58,6 @@ require('./App/api/Routes/index')(app)
 //require('./App/api/Routes/index')(app)
 
 // httpsserver.listen(1001)
-server.listen(process.env.PORT,  () => {
+server.listen(process.env.PORT, () => {
   console.log(`Server is running on http://0.0.0.0:${process.env.PORT}`);
 });

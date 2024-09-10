@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import DynamicForm from '../../../components/FormicForm';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import { AddClient } from '../../../Services/Admin';
+import { AddStaffClient } from '../../../Services/Admin';
 
 const AddStaff = () => {
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ const AddStaff = () => {
     };
 
     try {
-      const response = await AddClient(req, token);
+      const response = await AddStaffClient(req, token);
       if (response.status) {
         Swal.fire({
           title: "Create Successful!",
@@ -59,7 +59,7 @@ const AddStaff = () => {
           timerProgressBar: true,
         });
         setTimeout(() => {
-          navigate("/admin/client");
+          navigate("/admin/staff");
         }, 1500);
       } else {
         Swal.fire({
@@ -151,11 +151,11 @@ const AddStaff = () => {
     <div style={{ marginTop: "100px" }}>
       <DynamicForm
         fields={fields}
-        page_title="Add New User"
-        btn_name="Add User"
+        page_title="Add New Staff"
+        btn_name="Add Staff"
         btn_name1="Cancel"
         formik={formik}
-        btn_name1_route={"/admin/client"}
+        btn_name1_route={"/admin/staff"}
         additional_field={<></>}
       />
     </div>

@@ -60,7 +60,7 @@ const Staff = () => {
                         icon: 'success',
                         confirmButtonText: 'OK',
                     });
-    
+                    getAdminclient();
                 }
             } else {
         

@@ -18,6 +18,15 @@ const PlanSubscriptionSchema = new Schema({
         required: true,
         min: 0
     },
+    total: {
+        type: Number,
+        required: true,
+        min: 0
+    },
+    discount: {
+        type: Number,
+        min: 0
+    },
     plan_start: {
         type: Date,
         required: true

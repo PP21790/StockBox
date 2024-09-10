@@ -22,7 +22,7 @@ export async function GetClient(token) {
 
 
 
-export async function AddClient(data,token) {
+export async function AddStaffClient(data,token) {
     try {
         const res = await axios.post(`${Config.base_url}user/add`, data, { 
             headers: {
@@ -89,5 +89,56 @@ export async function UpdateStaff(data,token) {
         return res?.data;
     } catch (err) {
         return { error: err.response?.data || err.message };
+    }
+}
+
+
+// update client 
+
+export async function UpdateClient(data,token) {
+    try {
+        const res = await axios.put(`${Config.base_url}client/update`,data ,{
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
+
+// delete client 
+
+
+export async function deleteClient(_id,token) {
+    try {
+        const res = await axios.get(`${Config.base_url}client/delete/${_id}`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
+
+export async function AddClient(data,token) {
+    try {
+        const res = await axios.post(`${Config.base_url}client/add`, data, { 
+            headers: {
+                data:{},
+                'Authorization': `${token}`,
+            },
+    
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message; 
     }
 }
