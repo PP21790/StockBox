@@ -20,7 +20,7 @@ import AddStaff from '../layout/Admin/Admin_staff/AddStaff';
 import Update from '../layout/Admin/Admin_staff/Update';
 import Refer from '../layout/Admin/Admin_refer/Refer';
 import Paymenthistory from '../layout/Admin/Payment_history/Paymenthistory';
-
+import EditClient from '../layout/Admin/Admin_client/EditClient';
 
 
 function MainApp() {
