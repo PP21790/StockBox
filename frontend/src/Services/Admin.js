@@ -280,3 +280,20 @@ export async function updateStaffstatus(data,token) {
         return err.response?.data || err.message; 
     }
 }
+
+
+// get service list for  signal page 
+
+
+export async function GetService(token) {
+    try {
+        const res = await axios.get(`${Config.base_url}service/list`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}
