@@ -4,22 +4,11 @@ import DynamicForm from '../../../components/FormicForm';
 import { AddSignalByAdmin } from '../../../Services/Admin';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-
-
-
-
-
-
 const AddSignal = () => {
   const navigate = useNavigate();
 
   const user_id = localStorage.getItem("id");
   const token = localStorage.getItem("token");
-
-
-
-
-
   // Validation function
   const validate = (values) => {
     let errors = {};
