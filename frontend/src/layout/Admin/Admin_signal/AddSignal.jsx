@@ -225,14 +225,7 @@ const AddSignal = () => {
       col_size: 6,
       disable: false,
     },
-    // {
-    //   name: 'calltype',
-    //   label: 'Call Calltype',
-    //   type: 'text',
-    //   label_size: 12,
-    //   col_size: 6,
-    //   disable: false,
-    // },
+    
     {
       name: 'description',
       label: 'Description',
