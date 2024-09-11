@@ -22,7 +22,6 @@ const Signaldetail = () => {
         try {
             const response = await Signalperdetail(id, token);
             if (response.status) {
-                // console.log("response.data",response.data)
                 setClients([response.data]);
             } 
         } catch (error) {
