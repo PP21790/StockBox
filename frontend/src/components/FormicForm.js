@@ -51,6 +51,16 @@ const DynamicForm = ({
     //   )?.prifix_key;
 
 
+    const handleFileChange2 = (event, index, fieldName) => {
+        const file = event.target.files[0];
+        if (file) {
+            formik.setFieldValue(fieldName, file);
+        }
+    };
+
+
+
+
     const handleFileChange = (event, index, name) => {
         if (event.target.files[0].size > 420000) {
             alert("Select file less then 420KB");
@@ -257,6 +267,29 @@ const DynamicForm = ({
                                                             </div>
                                                         </div>
                                                     </>
+                                                ) : field.type === "file2" ? (
+                                                    <>
+
+                                                        <div className={` col-lg-${field.col_size}`}>
+                                                            <div className="input-block mb-3 flex-column">
+                                                                <label className={`col-lg-${field.label_size}`}>
+                                                                    {field.label}
+                                                                    <span className="text-danger">*</span>
+                                                                </label>
+
+                                                                <input
+                                                                    type="file"
+                                                                    id={field.name}
+                                                                    className="form-control"
+                                                                    onChange={(e) => handleFileChange2(e, index, field.name)}
+                                                                    name={field.name}
+                                                                />
+                                                            </div>
+                                                        </div>
+
+
+                                                    </>
+
                                                 ) : field.type === "file1" ? (
                                                     <>
                                                         <div className={`col-lg-${field.col_size}`}>
@@ -308,10 +341,10 @@ const DynamicForm = ({
                                                             <div className="input-block row mb-3">
                                                                 <label
                                                                     className={`col-lg-${title === "forlogin"
-                                                                            ? 3
-                                                                            : title === "update_theme"
-                                                                                ? 12
-                                                                                : 7
+                                                                        ? 3
+                                                                        : title === "update_theme"
+                                                                            ? 12
+                                                                            : 7
                                                                         }  col-form-label p-0 mx-3 `}
                                                                     htmlFor={field.name}
                                                                 >
@@ -361,10 +394,10 @@ const DynamicForm = ({
                                                             <div className="input-block row mb-3">
                                                                 <label
                                                                     className={`col-lg-${title === "forlogin"
-                                                                            ? 3
-                                                                            : title === "update_theme"
-                                                                                ? 12
-                                                                                : 7
+                                                                        ? 3
+                                                                        : title === "update_theme"
+                                                                            ? 12
+                                                                            : 7
                                                                         }  col-form-label p-0 mx-3 `}
                                                                     htmlFor={field.name}
                                                                 >
@@ -540,16 +573,16 @@ const DynamicForm = ({
                                                                     <input
                                                                         id={field.name}
                                                                         autoComplete="new-password"
-                                                                        type={passwordVisible ? 'text' : field.type} 
+                                                                        type={passwordVisible ? 'text' : field.type}
                                                                         placeholder={`Enter ${field.label}`}
                                                                         {...formik.getFieldProps(field.name)}
                                                                         className="form-control"
-                                                                        style={{ paddingRight: '3rem' }} 
+                                                                        style={{ paddingRight: '3rem' }}
                                                                     />
                                                                     {/* Eye Icon inside input */}
                                                                     <FontAwesomeIcon
                                                                         icon={passwordVisible ? faEyeSlash : faEye}
-                                                                        onClick={togglePasswordVisibility} 
+                                                                        onClick={togglePasswordVisibility}
                                                                         style={{
                                                                             position: 'absolute',
                                                                             right: '20px',
@@ -559,13 +592,13 @@ const DynamicForm = ({
                                                                         }}
                                                                     />
                                                                     {/* Formik validation error */}
-                                                                   
+
                                                                 </div>
                                                                 {formik.touched[field.name] && formik.errors[field.name] ? (
-                                                                        <div style={{ color: 'red', marginTop: '5px' }}>
-                                                                            {formik.errors[field.name]}
-                                                                        </div>
-                                                                    ) : null}
+                                                                    <div style={{ color: 'red', marginTop: '5px' }}>
+                                                                        {formik.errors[field.name]}
+                                                                    </div>
+                                                                ) : null}
                                                             </div>
                                                         </div>
                                                     </>
