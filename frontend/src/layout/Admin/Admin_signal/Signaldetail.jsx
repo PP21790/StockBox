@@ -8,6 +8,10 @@ import Swal from 'sweetalert2';
 import { Signalperdetail } from '../../../Services/Admin';
 
 const Signaldetail = () => {
+    
+    useEffect(() => {
+        getsignaldetail();
+    }, [id]);
 
 
     const { id } = useParams()
@@ -31,10 +35,7 @@ const Signaldetail = () => {
 
 
     
-    useEffect(() => {
-        getsignaldetail();
-    }, [id]);
-
+    
 
 
     const columns = [
