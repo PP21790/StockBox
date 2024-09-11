@@ -22,6 +22,7 @@ import Refer from '../layout/Admin/Admin_refer/Refer';
 import Paymenthistory from '../layout/Admin/Payment_history/Paymenthistory';
 import EditClient from '../layout/Admin/Admin_client/EditClient';
 import AddSignal from '../layout/Admin/Admin_signal/AddSignal';
+import Signaldetail from '../layout/Admin/Admin_signal/Signaldetail';
 
 
 function MainApp() {
@@ -77,7 +78,7 @@ function MainApp() {
                     <Route path="/profile" element={<Profile/>} />
                     <Route path="/service" element={<Service/>} />
                     <Route path="/kyc" element={<Kyc/>} />
-                    <Route path="/signal" element={<Signal/>} />
+                    {/* <Route path="/signal" element={<Signal/>} /> */}
                     <Route path="/permision" element={<Permision/>} />
 
 
@@ -90,7 +91,12 @@ function MainApp() {
                     <Route path="/faq" element={<Faq/>} />
                     <Route path="/refer" element={<Refer />} />
                     <Route path="/paymenthistory" element={<Paymenthistory />} />
+                    
+
+
+                    <Route path="/signal" element={<Signal/>} />
                     <Route path="/addsignal" element={<AddSignal/>} />
+                    <Route path="/signal/signaldetaile/:id" element={<Signaldetail/>} />
 
 
                     

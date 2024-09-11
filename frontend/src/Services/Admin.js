@@ -327,3 +327,59 @@ export async function GetSignallist(token) {
         return err;
     }
 }
+
+
+// get signal detailperuser
+
+export async function Signalperdetail(_id,token) {
+         console.log("_id1",_id)
+    try {
+        const res = await axios.get(`${Config.base_url}signal/detail/${_id}`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
+
+
+// delete signal 
+
+export async function DeleteSignal(_id,token) {
+    try {
+        const res = await axios.get(`${Config.base_url}signal/delete/${_id}`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
+
+
+// for signal close api 
+
+// service add
+
+export async function SignalCloseApi(data,token) {
+    try {
+        const res = await axios.post(`${Config.base_url}signal/closesignal`, data, { 
+            headers: {
+                data:{},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message; 
+    }
+}

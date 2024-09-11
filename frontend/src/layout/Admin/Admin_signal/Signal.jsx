@@ -3,9 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { Pencil ,Trash2 } from 'lucide-react';
+import { Eye, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
-import {GetSignallist} from '../../../Services/Admin';
+import { GetSignallist, DeleteSignal, SignalCloseApi } from '../../../Services/Admin';
 
 const Signal = () => {
 
@@ -14,11 +14,23 @@ const Signal = () => {
 
     const [clients, setClients] = useState([]);
 
+    const [model, setModel] = useState(false);
+    const [serviceid, setServiceid] = useState({});
+
+    const [closedata, setClosedata] = useState({
+        id: "",
+        closeprice: "",
+        close_status: "",
+        close_description: ""
+    })
+
+
+
     const token = localStorage.getItem('token');
 
 
 
-    const getAdminclient = async () => {
+    const getAllSignal = async () => {
         try {
             const response = await GetSignallist(token);
             if (response.status) {
@@ -30,104 +42,101 @@ const Signal = () => {
     }
 
     useEffect(() => {
-        getAdminclient();
+        getAllSignal();
     }, []);
 
 
-   
 
-    // const updateClient= async(row)=>{
-    //     navigate("/admin/client/updateclient/" + row._id ,{ state: { row } })
-    // }
-    
 
-    // const DeleteClient = async (_id) => {
-    //     try {
-    //         const result = await Swal.fire({
-    //             title: 'Are you sure?',
-    //             text: 'Do you want to delete this staff member? This action cannot be undone.',
-    //             icon: 'warning',
-    //             showCancelButton: true,
-    //             confirmButtonText: 'Yes, delete it!',
-    //             cancelButtonText: 'No, cancel',
-    //         });
-    
-    //         if (result.isConfirmed) {
-    //             const response = await deleteClient(_id,token);
-    //             if (response.status) {
-    //                 Swal.fire({
-    //                     title: 'Deleted!',
-    //                     text: 'The staff has been successfully deleted.',
-    //                     icon: 'success',
-    //                     confirmButtonText: 'OK',
-    //                 });
-    //                 getAdminclient();
-                     
-    //             }
-    //         } else {
-        
-    //             Swal.fire({
-    //                 title: 'Cancelled',
-    //                 text: 'The staff deletion was cancelled.',
-    //                 icon: 'info',
-    //                 confirmButtonText: 'OK',
-    //             });
-    //         }
-    //     } catch (error) {
-    //         Swal.fire({
-    //             title: 'Error!',
-    //             text: 'There was an error deleting the staff.',
-    //             icon: 'error',
-    //             confirmButtonText: 'Try Again',
-    //         });
-           
-    //     }
-    // };
-    
-  
+    const Signaldetail = async (_id) => {
+        navigate(`signaldetaile/${_id}`)
+    }
 
-    //  // update status 
 
-    //  const handleSwitchChange = async (event, id) => {
+    const DeleteSignals = async (_id) => {
+        try {
+            const result = await Swal.fire({
+                title: 'Are you sure?',
+                text: 'Do you want to delete this staff member? This action cannot be undone.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel',
+            });
 
-    //     const user_active_status = event.target.checked ? "1" : "0";
+            if (result.isConfirmed) {
+                const response = await DeleteSignal(_id, token);
+                if (response.status) {
+                    Swal.fire({
+                        title: 'Deleted!',
+                        text: 'The staff has been successfully deleted.',
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                    });
+                    getAllSignal();
 
-    //     const data = { id:id, status: user_active_status }
-    //     const result = await Swal.fire({
-    //         title: "Do you want to save the changes?",
-    //         showCancelButton: true,
-    //         confirmButtonText: "Save",
-    //         cancelButtonText: "Cancel",
-    //         allowOutsideClick: false,
-    //     });
+                }
+            } else {
 
-    //     if (result.isConfirmed) {
-    //         try {
-    //             const response = await UpdateClientStatus(data, token)
-    //             if (response.status) {
-    //                 Swal.fire({
-    //                     title: "Saved!",
-    //                     icon: "success",
-    //                     timer: 1000,
-    //                     timerProgressBar: true,
-    //                 });
-    //                 setTimeout(() => {
-    //                     Swal.close();
-    //                 }, 1000);
-    //             }
-    //             getAdminclient();
-    //         } catch (error) {
-    //             Swal.fire(
-    //                 "Error",
-    //                 "There was an error processing your request.",
-    //                 "error"
-    //             );
-    //         }
-    //     } else if (result.dismiss === Swal.DismissReason.cancel) {
-    //         getAdminclient();
-    //     }
-    // };
+                Swal.fire({
+                    title: 'Cancelled',
+                    text: 'The staff deletion was cancelled.',
+                    icon: 'info',
+                    confirmButtonText: 'OK',
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'There was an error deleting the staff.',
+                icon: 'error',
+                confirmButtonText: 'Try Again',
+            });
 
+        }
+    };
+
+
+
+
+    // close signal
+
+    const closeSignalperUser = async () => {
+        try {
+            const data = { id: serviceid._id, closeprice: closedata.closeprice, close_status: "true", close_description: closedata.close_description };
+            const response = await SignalCloseApi(data, token);
+
+            if (response && response.status) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Signal Close Sucessfully.',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    timer: 2000,
+                });
+
+                setClosedata({ closeprice: "", close_description: "" });
+                getAllSignal();
+                setModel(!model)
+
+            } else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'There was an error  close signal.',
+                    icon: 'error',
+                    confirmButtonText: 'Try Again',
+                });
+            }
+        } catch (error) {
+
+            Swal.fire({
+                title: 'Error!',
+                text: 'There was an error updating the service.',
+                icon: 'error',
+                confirmButtonText: 'Try Again',
+            });
+        }
+    };
 
 
 
@@ -159,37 +168,54 @@ const Signal = () => {
             selector: row => row.stoploss,
             sortable: true,
         },
-       
-        // {
-        //     name: 'Active Status',
-        //     selector: row => (
-        //       <div className="form-check form-switch form-check-info">
-        //         <input
-        //           id={`rating_${row.ActiveStatus}`}
-        //           className="form-check-input"
-        //           type="checkbox"
-        //           defaultChecked={row.ActiveStatus == 1}
-        //           onChange={(event) => handleSwitchChange(event, row._id)}
-        //         />
-        //         <label
-        //           htmlFor={`rating_${row.ActiveStatus}`}
-        //           className="checktoggle checkbox-bg"
-        //         ></label>
-        //       </div>
-        //     ),
-        //     sortable: true,
-        //   },
-          
-        
-        // {
-        //     name: 'Created At',
-        //     selector: row => new Date(row.createdAt).toLocaleDateString(),
-        //     sortable: true,
-        // },
+        {
+            name: 'Status',
+            selector: row => row.close_status === true ? 'On' : 'Off',
+            sortable: true,
+            cell: row => (
+                <span style={{ color: row.close_status === true ? 'blue' : 'red' }}>
+                    {row.close_status === true ? 'On' : 'Off'}
+                </span>
+            ),
+        },
         {
             name: 'Updated At',
             selector: row => new Date(row.updated_at).toLocaleDateString(),
             sortable: true,
+        },
+
+        {
+            name: 'Actions',
+            cell: row => (
+                <>
+                    <div>
+                        <Eye onClick={() => Signaldetail(row._id)} />
+                    </div>
+                    <div>
+                        <Trash2 onClick={() => DeleteSignals(row._id)} />
+                    </div>
+                </>
+            ),
+            ignoreRowClick: true,
+            allowOverflow: true,
+            button: true,
+        },
+
+        {
+            name: 'Status',
+            cell: row => (
+                <>
+                    <button className='btn btn-danger'
+                        onClick={() => { setModel(true); setServiceid(row); }}
+                    >
+                        close
+                    </button>
+
+                </>
+            ),
+            ignoreRowClick: true,
+            allowOverflow: true,
+            button: true,
         },
         // {
         //     name: 'Actions',
@@ -208,6 +234,8 @@ const Signal = () => {
         //     button: true,
         // }
     ];
+
+
 
     return (
         <div>
@@ -264,6 +292,76 @@ const Signal = () => {
                     </div>
                 </div>
             </div>
+            {model && (
+                <div
+                    className="modal fade show"
+                    style={{ display: 'block' }}
+                    tabIndex={-1}
+                    aria-labelledby="exampleModalLabel"
+                    aria-hidden="true"
+                >
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title" id="exampleModalLabel">
+                                    Update Service
+                                </h5>
+                                <button
+                                    type="button"
+                                    className="btn-close"
+                                    onClick={() => setModel(false)}
+                                />
+                            </div>
+                            <div className="modal-body">
+                                <form>
+                                    <div className="row">
+                                        <div className="col-md-12">
+                                            <label htmlFor="">Closeprice</label>
+                                            <input
+                                                className="form-control mb-2"
+                                                type="number"
+                                                placeholder='Enter Service Title'
+                                                value={closedata.closeprice}
+                                                onChange={(e) => setClosedata({ ...closedata, closeprice: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="col-md-12">
+                                            <label htmlFor="">Closeprice</label>
+                                            <textarea
+                                                className='form-control'
+                                                rows={2.5}
+                                                cols={72}
+                                                name="comment"
+                                                form="usrform"
+                                                defaultValue={"Enter Description here..."}
+                                                value={closedata.close_description}
+                                                onChange={(e) => setClosedata({ ...closedata, close_description: e.target.value })}
+                                            />
+
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div className="modal-footer">
+                                <button
+                                    type="button"
+                                    className="btn btn-secondary"
+                                    onClick={() => setModel(false)}
+                                >
+                                    Close
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn btn-primary"
+                                    onClick={closeSignalperUser}
+                                >
+                                    Update Service
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
