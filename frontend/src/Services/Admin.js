@@ -148,22 +148,33 @@ export async function AddClient(data,token) {
 
 // add signal by admin
 
+// import axios from 'axios';
 
-export async function AddSignalByAdmin(data,token) {
+export async function AddSignalByAdmin(data, token) {
     try {
-        const res = await axios.post(`${Config.base_url}signal/add`, data, { 
+        const formData = new FormData();
+        for (const key in data) {
+            if (key === 'report' && data[key]) {
+                formData.append(key, data[key]);
+            } else {
+                formData.append(key, data[key]);
+            }
+        }
+ 
+        const res = await axios.post(`${Config.base_url}signal/add`, formData, {
             headers: {
-                data:{},
-                'Authorization': `${token}`,
+                'Content-Type': 'multipart/form-data',  
+                'Authorization': `${token}`, 
             },
         });
 
         return res?.data;
     } catch (err) {
         console.error('Error adding client:', err.response?.data || err.message);
-        return err.response?.data || err.message; 
+        return err.response?.data || err.message;
     }
 }
+
 
 
 
@@ -282,18 +293,37 @@ export async function updateStaffstatus(data,token) {
 }
 
 
-// get service list for  signal page 
 
 
-// export async function GetService(token) {
-//     try {
-//         const res = await axios.get(`${Config.base_url}service/list`, {
-//             headers: {
-//                 'Authorization': `${token}`
-//             },
-//         });
-//         return res?.data;
-//     } catch (err) {
-//         return err;
-//     }
-// }
+// get stock list and detail
+
+
+export async function GetStockDetail(token) {
+    try {
+        const res = await axios.get(`${Config.base_url}stock/list`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}
+
+
+// get signal list 
+
+
+export async function GetSignallist(token) {
+    try {
+        const res = await axios.get(`${Config.base_url}signal/list`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}

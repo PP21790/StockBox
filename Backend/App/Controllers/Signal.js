@@ -6,6 +6,8 @@ const Signal_Modal = db.Signal;
 
 class Signal {
 
+
+  
     async AddSignal(req, res) {
         try {
 
