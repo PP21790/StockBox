@@ -3,7 +3,6 @@ const Users_Modal = db.Users;
 
 const hasPermission = async (userId, permissionName) => {
   try {
-    console.log('token-',userId);
     const user = await Users_Modal.findOne({ token: userId });    
     if (!user) {
       if (!user) {
