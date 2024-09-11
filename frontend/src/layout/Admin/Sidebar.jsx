@@ -108,7 +108,7 @@ const Sidebar = ({ onToggleClick }) => {
                         <div className="parent-icon">
                           <i className="bx bx-wifi-2" />
                         </div>
-                        <div className="menu-title">Signal History
+                        <div className="menu-title">Signal
                         </div>
                       </Link>
                     </li>

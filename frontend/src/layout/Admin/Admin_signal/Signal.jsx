@@ -3,9 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { Pencil ,Trash2 } from 'lucide-react';
+import { Eye, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
-import {GetSignallist} from '../../../Services/Admin';
+import { GetSignallist } from '../../../Services/Admin';
 
 const Signal = () => {
 
@@ -34,12 +34,12 @@ const Signal = () => {
     }, []);
 
 
-   
+
 
     // const updateClient= async(row)=>{
     //     navigate("/admin/client/updateclient/" + row._id ,{ state: { row } })
     // }
-    
+
 
     // const DeleteClient = async (_id) => {
     //     try {
@@ -51,7 +51,7 @@ const Signal = () => {
     //             confirmButtonText: 'Yes, delete it!',
     //             cancelButtonText: 'No, cancel',
     //         });
-    
+
     //         if (result.isConfirmed) {
     //             const response = await deleteClient(_id,token);
     //             if (response.status) {
@@ -62,10 +62,10 @@ const Signal = () => {
     //                     confirmButtonText: 'OK',
     //                 });
     //                 getAdminclient();
-                     
+
     //             }
     //         } else {
-        
+
     //             Swal.fire({
     //                 title: 'Cancelled',
     //                 text: 'The staff deletion was cancelled.',
@@ -80,11 +80,11 @@ const Signal = () => {
     //             icon: 'error',
     //             confirmButtonText: 'Try Again',
     //         });
-           
+
     //     }
     // };
-    
-  
+
+
 
     //  // update status 
 
@@ -159,37 +159,44 @@ const Signal = () => {
             selector: row => row.stoploss,
             sortable: true,
         },
-       
-        // {
-        //     name: 'Active Status',
-        //     selector: row => (
-        //       <div className="form-check form-switch form-check-info">
-        //         <input
-        //           id={`rating_${row.ActiveStatus}`}
-        //           className="form-check-input"
-        //           type="checkbox"
-        //           defaultChecked={row.ActiveStatus == 1}
-        //           onChange={(event) => handleSwitchChange(event, row._id)}
-        //         />
-        //         <label
-        //           htmlFor={`rating_${row.ActiveStatus}`}
-        //           className="checktoggle checkbox-bg"
-        //         ></label>
-        //       </div>
-        //     ),
-        //     sortable: true,
-        //   },
-          
-        
-        // {
-        //     name: 'Created At',
-        //     selector: row => new Date(row.createdAt).toLocaleDateString(),
-        //     sortable: true,
-        // },
+
+
         {
             name: 'Updated At',
             selector: row => new Date(row.updated_at).toLocaleDateString(),
             sortable: true,
+        },
+
+        {
+            name: 'Actions',
+            cell: row => (
+                <>
+                    <div>
+                        <Eye />
+                    </div>
+                    <div>
+                        <Trash2 />
+                    </div>
+                </>
+            ),
+            ignoreRowClick: true,
+            allowOverflow: true,
+            button: true,
+        },
+
+        {
+            name: 'Status',
+            cell: row => (
+                <>
+                    <button className='btn btn-danger'>
+                        close
+                    </button>
+
+                </>
+            ),
+            ignoreRowClick: true,
+            allowOverflow: true,
+            button: true,
         },
         // {
         //     name: 'Actions',

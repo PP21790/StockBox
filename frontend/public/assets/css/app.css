@@ -5102,6 +5102,12 @@ input::placeholder {
 	height: 20px;
 }
 
+.lucide-square-pen {
+	width: 18px;
+	height: 20px;
+
+}
+
 .lucide-trash2:hover {
 
 	background: #FF6D4A;
