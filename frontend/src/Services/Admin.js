@@ -401,3 +401,23 @@ export async function BasketAllList(token) {
         return err;
     }
 }
+
+
+
+// add staff permission 
+
+export async function addStaffpermission(data,token) {
+    try {
+        const res = await axios.post(`${Config.base_url}user/update-permissions`, data, { 
+            headers: {
+                data:{},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message; 
+    }
+}

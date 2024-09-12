@@ -24,6 +24,7 @@ import EditClient from '../layout/Admin/Admin_client/EditClient';
 import AddSignal from '../layout/Admin/Admin_signal/AddSignal';
 import Signaldetail from '../layout/Admin/Admin_signal/Signaldetail';
 import Addbasket from '../layout/Admin/Admin_basket/Addbasket';
+import Staffpermission from '../layout/Admin/Admin_staff/Staffpermission';
 
 
 function MainApp() {
@@ -86,6 +87,7 @@ function MainApp() {
                     <Route path="/staff" element={<Staff/>} />
                     <Route path="/addstaff" element={<AddStaff/>} />
                     <Route path="/staff/updatestaff/:id" element={<Update/>} />
+                    <Route path="/staff/staffpermission/:id" element={<Staffpermission/>} />
 
 
                     <Route path="/faq" element={<Faq/>} />

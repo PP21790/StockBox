@@ -134,6 +134,8 @@ const Sidebar = ({ onToggleClick }) => {
                     </li>
 
                     <li>
+                      
+                       
                       <a href="form-froala-editor.html">
                         <div className="parent-icon">
                           <i className="bx bxs-coupon" />

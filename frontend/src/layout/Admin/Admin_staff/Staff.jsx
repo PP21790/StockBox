@@ -3,7 +3,7 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetStaff } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { Pencil ,Trash2 } from 'lucide-react';
+import { Pencil ,Trash2 , UserPen } from 'lucide-react';
 import { deleteStaff , updateStaffstatus} from '../../../Services/Admin';
 import Swal from 'sweetalert2';
 
@@ -88,6 +88,11 @@ const Staff = () => {
 
 const updateStaff= async(row)=>{
     navigate("/admin/staff/updatestaff/" + row._id ,{ state: { row } })
+}
+
+
+const updatepermission= async(row)=>{
+    navigate("/admin/staff/staffpermission/" + row._id ,{ state: { row } })
 }
 
 
@@ -185,6 +190,16 @@ const handleSwitchChange = async (event, id) => {
             name: 'Updated At',
             selector: row => new Date(row.updatedAt).toLocaleDateString(),
             sortable: true,
+        },
+        {
+            name: 'Permission',
+            cell: row => (
+                <>
+                <div>
+                <UserPen onClick={() => updatepermission(row)} />
+                </div>
+               </>
+            ),
         },
         {
             name: 'Actions',
