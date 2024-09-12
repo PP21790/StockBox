@@ -8,7 +8,7 @@ import Profile from '../layout/Admin/Admin_profile/Profile';
 import Service from '../layout/Admin/Admin_service/Service.s';
 import Kyc from '../layout/Admin/Admin_kyc/Kyc';
 import Signal from '../layout/Admin/Admin_signal/Signal';
-import Permision from '../layout/Admin/Admin_permision/Permision';
+
 import Faq from '../layout/Admin/Admin_faq/Faq';
 import Basket from '../layout/Admin/Admin_basket/Basket';
 import Sidebar from '../layout/Admin/Sidebar';
@@ -72,7 +72,6 @@ function MainApp() {
             <div className="page-wrapper">
                 <Routes>
                     <Route path="/dashboard" element={<Dashboard />} />
-                    {/* <Route path="/client" element={<Dashboard/>} /> */}
                     <Route path="/client" element={<Client/>} />
                     <Route path="/addclient" element={<AddUser/>} />
                     <Route path="/client/updateclient/:id" element={<EditClient/>} />
@@ -80,8 +79,8 @@ function MainApp() {
                     <Route path="/profile" element={<Profile/>} />
                     <Route path="/service" element={<Service/>} />
                     <Route path="/kyc" element={<Kyc/>} />
-                    {/* <Route path="/signal" element={<Signal/>} /> */}
-                    <Route path="/permision" element={<Permision/>} />
+    
+                   
 
 
                     <Route path="/staff" element={<Staff/>} />

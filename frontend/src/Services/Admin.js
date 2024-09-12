@@ -81,6 +81,7 @@ export async function deleteStaff(_id,token) {
 
 export async function UpdateStaff(data,token) {
     try {
+        
         const res = await axios.put(`${Config.base_url}user/update`,data ,{
             headers: {
                 'Authorization': `${token}`

@@ -6,7 +6,7 @@ import Resetpass from '../Auth/Resetpass';
 import Login from '../Auth/Login';
 import Register from '../Auth/Register';
 import AdminRouting from './Admin.routes';
-
+import Staff from './Staff.routes';
 
 
 
@@ -48,7 +48,11 @@ const Routing = () => {
                     navigate("/admin/dashboard");
                 }
                 break;
-   
+                case "2":
+                    if (location.pathname === "/login" || location.pathname === "/" || !location.pathname.startsWith("/staff")) {
+                        navigate("/staff/dashboard");
+                    }
+                    break;
             default:
                 break;
         }
@@ -61,7 +65,7 @@ const Routing = () => {
         <Routes>
          
             <Route path="/admin/*" element={(roles === "1") ? <AdminRouting /> : <Login />} />
-            {/* <Route path="/subadmin/*" element={(roles === "SUBADMIN") ? <SubadminRouting /> : <Login />} /> */}
+            <Route path="/Staff/*" element={(roles === "2") ? <Staff /> : <Login />} />
             {/*<Route path="/user/*" element={(roles === "USER") ? <UserRouting /> : <Login />} />
             <Route path="/employee/*" element={(roles === "EMPLOYEE") ? <EmployeeRouting /> : <Login />} />
             <Route path="/research/*" element={(roles === "RESEARCH") ? <ResearchRouting /> : <Login />} />
