@@ -23,6 +23,7 @@ import Paymenthistory from '../layout/Admin/Payment_history/Paymenthistory';
 import EditClient from '../layout/Admin/Admin_client/EditClient';
 import AddSignal from '../layout/Admin/Admin_signal/AddSignal';
 import Signaldetail from '../layout/Admin/Admin_signal/Signaldetail';
+import Addbasket from '../layout/Admin/Admin_basket/Addbasket';
 
 
 function MainApp() {
@@ -87,7 +88,6 @@ function MainApp() {
                     <Route path="/staff/updatestaff/:id" element={<Update/>} />
 
 
-                    <Route path="/basket" element={<Basket/>} />
                     <Route path="/faq" element={<Faq/>} />
                     <Route path="/refer" element={<Refer />} />
                     <Route path="/paymenthistory" element={<Paymenthistory />} />
@@ -97,8 +97,13 @@ function MainApp() {
                     <Route path="/signal" element={<Signal/>} />
                     <Route path="/addsignal" element={<AddSignal/>} />
                     <Route path="/signal/signaldetaile/:id" element={<Signaldetail/>} />
+                        
 
+                    <Route path="/basket" element={<Basket/>} />
+                    <Route path="/addbasket" element={<Addbasket/>} />
+                     
 
+             
                     
                 </Routes>
             </div>

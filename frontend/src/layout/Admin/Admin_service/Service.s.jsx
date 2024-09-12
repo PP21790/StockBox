@@ -5,21 +5,12 @@ import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
 import Swal from 'sweetalert2';
 
-
-
-
 const Service = () => {
-
-
     const navigate = useNavigate();
-
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
-
     const [searchInput, setSearchInput] = useState("");
-
-
     const [updatetitle, setUpdatetitle] = useState({
         title: "",
         id: "",
@@ -32,11 +23,7 @@ const Service = () => {
     const token = localStorage.getItem('token');
     const userid = localStorage.getItem('id');
 
-
-
-
-    // getting client
-
+    // Getting services
     const getAdminservice = async () => {
         try {
             const response = await GetService(token);
@@ -52,15 +39,11 @@ const Service = () => {
         }
     };
 
-
     useEffect(() => {
         getAdminservice();
     }, [searchInput]);
 
-
-
-    // update service
-
+    // Update service
     const Updateservicebyadmin = async () => {
         try {
             const data = { title: updatetitle.title, id: serviceid._id };
@@ -77,8 +60,7 @@ const Service = () => {
 
                 setUpdatetitle({ title: "", id: "" });
                 getAdminservice();
-                setModel(!model)
-
+                setModel(false);
             } else {
                 Swal.fire({
                     title: 'Error!',
@@ -88,7 +70,6 @@ const Service = () => {
                 });
             }
         } catch (error) {
-
             Swal.fire({
                 title: 'Error!',
                 text: 'There was an error updating the service.',
@@ -98,11 +79,7 @@ const Service = () => {
         }
     };
 
-
-
-
-    // add service
-
+    // Add service
     const addservice = async () => {
         try {
             const data = { title: title.title, add_by: userid };
@@ -131,7 +108,6 @@ const Service = () => {
                     icon: 'error',
                     confirmButtonText: 'Try Again',
                 });
-
             }
         } catch (error) {
             console.error("Error adding service:", error);
@@ -147,14 +123,10 @@ const Service = () => {
 
 
 
-
-    // update status 
-
+    // Update status
     const handleSwitchChange = async (event, id) => {
-
         const user_active_status = event.target.checked ? "true" : "false";
-
-        const data = { id: id, status: user_active_status }
+        const data = { id: id, status: user_active_status };
         const result = await Swal.fire({
             title: "Do you want to save the changes?",
             showCancelButton: true,
@@ -165,7 +137,7 @@ const Service = () => {
 
         if (result.isConfirmed) {
             try {
-                const response = await UpdateServiceStatus(data, token)
+                const response = await UpdateServiceStatus(data, token);
                 if (response.status) {
                     Swal.fire({
                         title: "Saved!",
@@ -189,9 +161,6 @@ const Service = () => {
             getAdminservice();
         }
     };
-
-
-
 
 
 
@@ -228,7 +197,6 @@ const Service = () => {
             ),
             sortable: true,
         },
-
         {
             name: 'Created At',
             selector: row => new Date(row.created_at).toLocaleDateString(),
@@ -239,13 +207,18 @@ const Service = () => {
             selector: row => new Date(row.updated_at).toLocaleDateString(),
             sortable: true,
         },
-
         {
             name: 'Actions',
             cell: row => (
                 <>
                     <div>
-                        <SquarePen onClick={() => { setModel(true); setServiceid(row); }} />
+                        <SquarePen
+                            onClick={() => {
+                                setModel(true);
+                                setServiceid(row);
+                                setUpdatetitle({ title: row.title, id: row._id });
+                            }}
+                        />
                     </div>
                     <div>
                         {/* <Trash2 onClick={() => DeleteClient(row._id)} /> */}
@@ -265,16 +238,14 @@ const Service = () => {
             ...prev,
             title: value
         }));
-    }
-
-
+    };
 
 
 
     return (
         <div>
             <div className="page-content">
-                {/* breadcrumb */}
+               
                 <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
                     <div className="breadcrumb-title pe-3">Service</div>
                     <div className="ps-3">
@@ -289,7 +260,7 @@ const Service = () => {
                         </nav>
                     </div>
                 </div>
-                {/* end breadcrumb */}
+              
                 <div className="card">
                     <div className="card-body">
                         <div className="d-lg-flex align-items-center mb-4 gap-3">
@@ -346,7 +317,7 @@ const Service = () => {
                                                                 type="text"
                                                                 placeholder='Enter Service Title'
                                                                 value={title.title}
-                                                                onChange={(e) => setTitle({ ...title, title: e.target.value })}
+                                                                onChange={(e) => setTitle({ title: e.target.value, add_by: userid })}
                                                             />
                                                         </div>
                                                     </div>
@@ -360,82 +331,93 @@ const Service = () => {
                                                 >
                                                     Close
                                                 </button>
-                                                <button type="button" className="btn btn-primary" onClick={addservice}>
-                                                    Add
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-primary"
+                                                    onClick={addservice}
+                                                >
+                                                    Save
                                                 </button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
+                              
+                                {model && (
+                                    <div
+                                        className="modal fade show"
+                                        style={{ display: 'block' }}
+                                        tabIndex={-1}
+                                        aria-labelledby="exampleModalLabel"
+                                        aria-hidden="true"
+                                    >
+                                        <div className="modal-dialog">
+                                            <div className="modal-content">
+                                                <div className="modal-header">
+                                                    <h5 className="modal-title" id="exampleModalLabel">
+                                                        Update Service
+                                                    </h5>
+                                                    <button
+                                                        type="button"
+                                                        className="btn-close"
+                                                        onClick={() => setModel(false)}
+                                                    />
+                                                </div>
+                                                <div className="modal-body">
+                                                    <form>
+                                                        <div className="row">
+                                                            <div className="col-md-12">
+                                                                <label htmlFor="">Title</label>
+                                                                <input
+                                                                    className="form-control mb-2"
+                                                                    type="text"
+                                                                    placeholder='Enter Service Title'
+                                                                    value={updatetitle.title}
+                                                                    onChange={(e) => updateServiceTitle(e.target.value)}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div className="modal-footer">
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-secondary"
+                                                        onClick={() => setModel(false)}
+                                                    >
+                                                        Close
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-primary"
+                                                        onClick={Updateservicebyadmin}
+                                                    >
+                                                        Update Service
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
                             </div>
                         </div>
-
-                        <Table
-                            columns={columns}
-                            data={clients}
-                        />
+                        <div className="table-responsive">
+                            <Table
+                                columns={columns}
+                                data={clients}
+                                pagination
+                                striped
+                                highlightOnHover
+                                dense
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
-
-            {model && (
-                <div
-                    className="modal fade show"
-                    style={{ display: 'block' }}
-                    tabIndex={-1}
-                    aria-labelledby="exampleModalLabel"
-                    aria-hidden="true"
-                >
-                    <div className="modal-dialog">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title" id="exampleModalLabel">
-                                    Update Service
-                                </h5>
-                                <button
-                                    type="button"
-                                    className="btn-close"
-                                    onClick={() => setModel(false)}
-                                />
-                            </div>
-                            <div className="modal-body">
-                                <form>
-                                    <div className="row">
-                                        <div className="col-md-12">
-                                            <label htmlFor="">Title</label>
-                                            <input
-                                                className="form-control mb-2"
-                                                type="text"
-                                                placeholder='Enter Service Title'
-                                                value={updatetitle.title || serviceid.title}
-                                                onChange={(e) => updateServiceTitle(e.target.value)}
-                                            />
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                            <div className="modal-footer">
-                                <button
-                                    type="button"
-                                    className="btn btn-secondary"
-                                    onClick={() => setModel(false)}
-                                >
-                                    Close
-                                </button>
-                                <button
-                                    type="button"
-                                    className="btn btn-primary"
-                                    onClick={Updateservicebyadmin}
-                                >
-                                    Update Service
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
     );
-}
+};
 
 export default Service;

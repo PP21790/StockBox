@@ -6,7 +6,7 @@ import Table from '../../../components/Table';
 import { Eye, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { GetSignallist, DeleteSignal, SignalCloseApi } from '../../../Services/Admin';
-// import { GetSignallist } from '../../../Services/Admin';
+
 
 const Signal = () => {
 
@@ -355,6 +355,8 @@ const Signal = () => {
                     </div>
                 </div>
             </div>
+
+            
             {model && (
                 <div
                     className="modal fade show"
@@ -418,7 +420,7 @@ const Signal = () => {
                                     className="btn btn-primary"
                                     onClick={closeSignalperUser}
                                 >
-                                    Update Service
+                                    Update Signal
                                 </button>
                             </div>
                         </div>

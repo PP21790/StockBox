@@ -383,3 +383,21 @@ export async function SignalCloseApi(data,token) {
         return err.response?.data || err.message; 
     }
 }
+
+
+
+// basket list 
+
+
+export async function BasketAllList(token) {
+    try {
+        const res = await axios.get(`${Config.base_url}basket/list`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}
