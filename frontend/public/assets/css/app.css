@@ -5102,6 +5102,12 @@ input::placeholder {
 	height: 20px;
 }
 
+.lucide-square-pen {
+	width: 18px;
+	height: 20px;
+
+}
+
 .lucide-trash2:hover {
 
 	background: #FF6D4A;
@@ -5158,10 +5164,17 @@ input::placeholder {
 }
 
 
-.btn-danger{
-	
-			width: 61px;
-			height: 29px;
-			font-size: 10px;
-	
+.btn-danger {
+
+	width: 61px;
+	height: 29px;
+	font-size: 10px;
+	font-weight: bold;
+
+}
+
+.form-check-input {
+
+	height: 20px;
+	width: 39px !important;
 }

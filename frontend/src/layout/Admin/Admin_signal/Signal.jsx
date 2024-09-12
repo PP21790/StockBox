@@ -6,6 +6,7 @@ import Table from '../../../components/Table';
 import { Eye, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { GetSignallist, DeleteSignal, SignalCloseApi } from '../../../Services/Admin';
+// import { GetSignallist } from '../../../Services/Admin';
 
 const Signal = () => {
 
@@ -51,6 +52,57 @@ const Signal = () => {
     const Signaldetail = async (_id) => {
         navigate(`signaldetaile/${_id}`)
     }
+
+
+    // const updateClient= async(row)=>{
+    //     navigate("/admin/client/updateclient/" + row._id ,{ state: { row } })
+    // }
+
+
+    // const DeleteClient = async (_id) => {
+    //     try {
+    //         const result = await Swal.fire({
+    //             title: 'Are you sure?',
+    //             text: 'Do you want to delete this staff member? This action cannot be undone.',
+    //             icon: 'warning',
+    //             showCancelButton: true,
+    //             confirmButtonText: 'Yes, delete it!',
+    //             cancelButtonText: 'No, cancel',
+    //         });
+
+    //         if (result.isConfirmed) {
+    //             const response = await deleteClient(_id,token);
+    //             if (response.status) {
+    //                 Swal.fire({
+    //                     title: 'Deleted!',
+    //                     text: 'The staff has been successfully deleted.',
+    //                     icon: 'success',
+    //                     confirmButtonText: 'OK',
+    //                 });
+    //                 getAdminclient();
+
+    //             }
+    //         } else {
+
+    //             Swal.fire({
+    //                 title: 'Cancelled',
+    //                 text: 'The staff deletion was cancelled.',
+    //                 icon: 'info',
+    //                 confirmButtonText: 'OK',
+    //             });
+    //         }
+    //     } catch (error) {
+    //         Swal.fire({
+    //             title: 'Error!',
+    //             text: 'There was an error deleting the staff.',
+    //             icon: 'error',
+    //             confirmButtonText: 'Try Again',
+    //         });
+
+    //     }
+    // };
+
+
 
 
     const DeleteSignals = async (_id) => {

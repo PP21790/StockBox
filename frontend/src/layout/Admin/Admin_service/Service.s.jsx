@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { GetService, AddService, UpdateService, UpdateServiceStatus } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { Pencil, Trash2, PanelBottomOpen } from 'lucide-react';
+import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
 import Swal from 'sweetalert2';
 
 
@@ -16,8 +16,8 @@ const Service = () => {
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
-    
-  const [searchInput, setSearchInput] = useState("");
+
+    const [searchInput, setSearchInput] = useState("");
 
 
     const [updatetitle, setUpdatetitle] = useState({
@@ -33,16 +33,16 @@ const Service = () => {
     const userid = localStorage.getItem('id');
 
 
-    
 
-  // getting client
+
+    // getting client
 
     const getAdminservice = async () => {
         try {
             const response = await GetService(token);
             if (response.status) {
-                const filterdata = response.data.filter((item) => 
-                    searchInput === "" || 
+                const filterdata = response.data.filter((item) =>
+                    searchInput === "" ||
                     item.title.toLowerCase().includes(searchInput.toLowerCase())
                 );
                 setClients(searchInput ? filterdata : response.data);
@@ -51,7 +51,7 @@ const Service = () => {
             console.log("Error fetching services:", error);
         }
     };
-    
+
 
     useEffect(() => {
         getAdminservice();
@@ -101,7 +101,7 @@ const Service = () => {
 
 
 
-   // add service
+    // add service
 
     const addservice = async () => {
         try {
@@ -245,7 +245,7 @@ const Service = () => {
             cell: row => (
                 <>
                     <div>
-                        <PanelBottomOpen onClick={() => { setModel(true); setServiceid(row); }} />
+                        <SquarePen onClick={() => { setModel(true); setServiceid(row); }} />
                     </div>
                     <div>
                         {/* <Trash2 onClick={() => DeleteClient(row._id)} /> */}

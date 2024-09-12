@@ -4,7 +4,6 @@ import DynamicForm from '../../../components/FormicForm';
 import { AddSignalByAdmin, GetService, GetStockDetail } from '../../../Services/Admin';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-
 const AddSignal = () => {
   const navigate = useNavigate();
   const user_id = localStorage.getItem('id');
@@ -117,10 +116,10 @@ const AddSignal = () => {
       target2: '',
       target3: '',
       stoploss: '',
-      report: null,  
+      report: null,
       description: '',
       callduration: '',
-      calltype: '' 
+      calltype: ''
     },
     validate,
     onSubmit,
@@ -220,7 +219,7 @@ const AddSignal = () => {
     {
       name: 'report',
       label: 'Report',
-      type: 'file2', 
+      type: 'file2',
       label_size: 12,
       col_size: 6,
       disable: false,
@@ -234,7 +233,7 @@ const AddSignal = () => {
       col_size: 15,
       disable: false,
     },
-   
+
   ];
 
   return (
