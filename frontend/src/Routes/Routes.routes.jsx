@@ -61,8 +61,8 @@ const Routing = () => {
         <Routes>
          
             <Route path="/admin/*" element={(roles === "1") ? <AdminRouting /> : <Login />} />
-            {/* <Route path="/subadmin/*" element={(roles === "SUBADMIN") ? <SubadminRouting /> : <Login />} />
-            <Route path="/user/*" element={(roles === "USER") ? <UserRouting /> : <Login />} />
+            {/* <Route path="/subadmin/*" element={(roles === "SUBADMIN") ? <SubadminRouting /> : <Login />} /> */}
+            {/*<Route path="/user/*" element={(roles === "USER") ? <UserRouting /> : <Login />} />
             <Route path="/employee/*" element={(roles === "EMPLOYEE") ? <EmployeeRouting /> : <Login />} />
             <Route path="/research/*" element={(roles === "RESEARCH") ? <ResearchRouting /> : <Login />} />
             <Route path="/superadmin/*" element={(roles === "SUPERADMIN") ? <SuperadminRouting /> : <Login />} /> */}

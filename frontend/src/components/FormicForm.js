@@ -122,7 +122,7 @@ const DynamicForm = ({
                         ) : (
                             ""
                         )}
-                        {/* {close_btn ? <h5 className="card-title mb-0 w-auto"><i className="fa-regular fa-circle-user pe-2"></i>{} </h5> : ""} */}
+                   
                     </div>
                 ) : (
                     ""

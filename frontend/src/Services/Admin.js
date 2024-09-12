@@ -408,7 +408,7 @@ export async function BasketAllList(token) {
 
 export async function addStaffpermission(data,token) {
     try {
-        const res = await axios.post(`${Config.base_url}user/update-permissions`, data, { 
+        const res = await axios.post(`${Config.base_url}user/update-permissions`,data, { 
             headers: {
                 data:{},
                 'Authorization': `${token}`,
@@ -419,5 +419,23 @@ export async function addStaffpermission(data,token) {
     } catch (err) {
         console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message; 
+    }
+}
+
+
+
+// staff detail per id
+
+export async function getstaffperuser(_id,token) {
+
+    try {
+        const res = await axios.get(`${Config.base_url}user/detail/${_id}`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
     }
 }

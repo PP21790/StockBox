@@ -1,26 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { GetStaff } from '../../../Services/Admin';
+import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { Pencil ,Trash2 , UserPen } from 'lucide-react';
-import { deleteStaff , updateStaffstatus} from '../../../Services/Admin';
+import { Pencil ,Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
+import { deleteClient ,UpdateClientStatus} from '../../../Services/Admin';
 
-const Staff = () => {
+const Client = () => {
+
 
     const navigate = useNavigate();
-
-
 
     const [clients, setClients] = useState([]);
 
     const token = localStorage.getItem('token');
 
-
     const getAdminclient = async () => {
         try {
-            const response = await GetStaff(token);
+            const response = await GetClient(token);
             if (response.status) {
                 setClients(response.data);
             }
@@ -33,13 +31,15 @@ const Staff = () => {
         getAdminclient();
     }, []);
 
+
    
 
-
+    const updateClient= async(row)=>{
+        navigate("/admin/client/updateclient/" + row._id ,{ state: { row } })
+    }
     
-// staff delete 
 
-    const DeleteStaff = async (_id) => {
+    const DeleteClient = async (_id) => {
         try {
             const result = await Swal.fire({
                 title: 'Are you sure?',
@@ -51,7 +51,7 @@ const Staff = () => {
             });
     
             if (result.isConfirmed) {
-                const response = await deleteStaff(_id,token);
+                const response = await deleteClient(_id,token);
                 if (response.status) {
                     Swal.fire({
                         title: 'Deleted!',
@@ -60,6 +60,7 @@ const Staff = () => {
                         confirmButtonText: 'OK',
                     });
                     getAdminclient();
+                     
                 }
             } else {
         
@@ -81,61 +82,52 @@ const Staff = () => {
         }
     };
     
+  
 
-    
+     // update status 
 
-const updateStaff= async(row)=>{
-    navigate("/admin/staff/updatestaff/" + row._id ,{ state: { row } })
-}
+     const handleSwitchChange = async (event, id) => {
 
+        const user_active_status = event.target.checked ? "1" : "0";
 
-const updatepermission= async(row)=>{
-    navigate("/admin/staff/staffpermission/" + row._id ,{ state: { row } })
-}
+        const data = { id:id, status: user_active_status }
+        const result = await Swal.fire({
+            title: "Do you want to save the changes?",
+            showCancelButton: true,
+            confirmButtonText: "Save",
+            cancelButtonText: "Cancel",
+            allowOutsideClick: false,
+        });
 
-
-
-// update status
-
-const handleSwitchChange = async (event, id) => {
-
-    const user_active_status = event.target.checked ? "1" : "0";
-
-    const data = { id:id, status: user_active_status }
-    const result = await Swal.fire({
-        title: "Do you want to save the changes?",
-        showCancelButton: true,
-        confirmButtonText: "Save",
-        cancelButtonText: "Cancel",
-        allowOutsideClick: false,
-    });
-
-    if (result.isConfirmed) {
-        try {
-            const response = await updateStaffstatus(data, token)
-            if (response.status) {
-                Swal.fire({
-                    title: "Saved!",
-                    icon: "success",
-                    timer: 1000,
-                    timerProgressBar: true,
-                });
-                setTimeout(() => {
-                    Swal.close();
-                }, 1000);
+        if (result.isConfirmed) {
+            try {
+                const response = await UpdateClientStatus(data, token)
+                if (response.status) {
+                    Swal.fire({
+                        title: "Saved!",
+                        icon: "success",
+                        timer: 1000,
+                        timerProgressBar: true,
+                    });
+                    setTimeout(() => {
+                        Swal.close();
+                    }, 1000);
+                }
+                getAdminclient();
+            } catch (error) {
+                Swal.fire(
+                    "Error",
+                    "There was an error processing your request.",
+                    "error"
+                );
             }
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
             getAdminclient();
-        } catch (error) {
-            Swal.fire(
-                "Error",
-                "There was an error processing your request.",
-                "error"
-            );
         }
-    } else if (result.dismiss === Swal.DismissReason.cancel) {
-        getAdminclient();
-    }
-};
+    };
+
+
+
 
 
     const columns = [
@@ -149,19 +141,18 @@ const handleSwitchChange = async (event, id) => {
             name: 'Full Name',
             selector: row => row.FullName,
             sortable: true,
-            width: '180px',
         },
         {
             name: 'Email',
             selector: row => row.Email,
             sortable: true,
-            width: '250px',
         },
         {
             name: 'Phone No',
             selector: row => row.PhoneNo,
             sortable: true,
         },
+       
         {
             name: 'Active Status',
             selector: row => (
@@ -181,6 +172,8 @@ const handleSwitchChange = async (event, id) => {
             ),
             sortable: true,
           },
+          
+        
         {
             name: 'Created At',
             selector: row => new Date(row.createdAt).toLocaleDateString(),
@@ -192,40 +185,30 @@ const handleSwitchChange = async (event, id) => {
             sortable: true,
         },
         {
-            name: 'Permission',
-            cell: row => (
-                <>
-                <div>
-                <UserPen onClick={() => updatepermission(row)} />
-                </div>
-               </>
-            ),
-        },
-        {
             name: 'Actions',
             cell: row => (
                 <>
                 <div>
-                 <Pencil onClick={() => updateStaff(row)} />
+                 <Pencil onClick={() => updateClient(row)} />
                 </div>
                <div>
-               <Trash2 onClick={() => DeleteStaff(row._id)} />
+               <Trash2 onClick={() => DeleteClient(row._id)} />
                </div>
                </>
             ),
+            ignoreRowClick: true,
+            allowOverflow: true,
+            button: true,
         }
-        
     ];
 
-
-  return (
-    <div>
+    return (
         <div>
             <div>
                 <div className="page-content">
                     {/* breadcrumb */}
                     <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                        <div className="breadcrumb-title pe-3">Staff</div>
+                        <div className="breadcrumb-title pe-3">Client</div>
                         <div className="ps-3">
                             <nav aria-label="breadcrumb">
                                 <ol className="breadcrumb mb-0 p-0">
@@ -254,14 +237,14 @@ const handleSwitchChange = async (event, id) => {
                                 </div>
                                 <div className="ms-auto">
                                     <Link
-                                        to="/admin/addstaff"
+                                        to="/admin/addclient"
                                         className="btn btn-primary"
                                     >
                                         <i
                                             className="bx bxs-plus-square"
                                             aria-hidden="true"
                                         />
-                                        Add Staff
+                                        Add Client
                                     </Link>
                                 </div>
                             </div>
@@ -275,10 +258,7 @@ const handleSwitchChange = async (event, id) => {
                 </div>
             </div>
         </div>
-    </div>
-  )
+    );
 }
 
-
-
-export default Staff
+export default Client;

@@ -74,6 +74,15 @@ const Sidebar = ({ onToggleClick }) => {
                         <div className="menu-title">Services</div>
                       </Link>
                     </li>
+                    <li>
+                      <Link to="/admin/signal">
+                        <div className="parent-icon">
+                          <i className="bx bx-wifi-2" />
+                        </div>
+                        <div className="menu-title">Signal
+                        </div>
+                      </Link>
+                    </li>
 
                     <li>
                       <Link to="/admin/basket">
@@ -81,6 +90,15 @@ const Sidebar = ({ onToggleClick }) => {
                           <i className="bx bx-basket" />
                         </div>
                         <div className="menu-title">Basket</div>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/admin/paymenthistory">
+                        <div className="parent-icon">
+                          <i className="bx bx-credit-card" />
+                        </div>
+                        <div className="menu-title">Payment History
+                        </div>
                       </Link>
                     </li>
 
@@ -104,38 +122,6 @@ const Sidebar = ({ onToggleClick }) => {
                     </li>
 
                     <li>
-                      <Link to="/admin/signal">
-                        <div className="parent-icon">
-                          <i className="bx bx-wifi-2" />
-                        </div>
-                        <div className="menu-title">Signal
-                        </div>
-                      </Link>
-                    </li>
-
-                    <li>
-                      <Link to="/admin/paymenthistory">
-                        <div className="parent-icon">
-                          <i className="bx bx-credit-card" />
-                        </div>
-                        <div className="menu-title">Payment History
-                        </div>
-                      </Link>
-                    </li>
-
-                    <li>
-                      <Link to="/admin/faq">
-                        <div className="parent-icon">
-                          <i className="bx bxs-chevron-right" />
-                        </div>
-                        <div className="menu-title">FAQ
-                        </div>
-                      </Link>
-                    </li>
-
-                    <li>
-                      
-                       
                       <a href="form-froala-editor.html">
                         <div className="parent-icon">
                           <i className="bx bxs-coupon" />
@@ -153,7 +139,15 @@ const Sidebar = ({ onToggleClick }) => {
                         </div>
                       </Link>
                     </li>
-
+                    <li>
+                      <Link to="/admin/faq">
+                        <div className="parent-icon">
+                          <i className="bx bxs-chevron-right" />
+                        </div>
+                        <div className="menu-title">FAQ
+                        </div>
+                      </Link>
+                    </li>
 
                   </ul>
                   {/*end navigation*/}
