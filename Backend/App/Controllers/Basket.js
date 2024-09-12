@@ -11,7 +11,6 @@ class Basket {
             } = req.body;
     
             // Debugging: Log the incoming request body to ensure the data is correct
-            console.log("Request Body:", req.body);
     
             const result = new Basket_Modal({
                 title,
@@ -37,7 +36,6 @@ class Basket {
     
             await result.save();
     
-            console.log("Basket successfully added:", result);
             return res.json({
                 status: true,
                 message: "Basket added successfully",

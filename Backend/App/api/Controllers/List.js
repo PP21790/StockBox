@@ -484,7 +484,6 @@ async showSignalsToClients(req, res) {
       // Step 4: Log comparisons and check for a match
       serviceIds.forEach(id => {
         const isEqual = id.equals(serviceObjectId);
-        console.log(`Comparing ${id} with ${serviceObjectId}: ${isEqual}`); // Should log 'true' if they are the same
       });
 
       const matchingId = serviceIds.some(id => id.equals(serviceObjectId));
@@ -492,7 +491,7 @@ async showSignalsToClients(req, res) {
       // Step 5: If there's a match, find the matching signals
       let matchingSignals = [];
       if (matchingId) {
-        console.log('Is there a matching ID?', matchingId);
+       
 
         matchingSignals = await Signal_Modal.find({ service: serviceObjectId })
         .populate({
@@ -663,17 +662,65 @@ async detailContent(req, res) {
 
 async BasketList(req, res) {
   try {
+      const baskets = await Basket_Modal.find({ del: false, status: "active" });
 
-     
-      const baskets = await Basket_Modal.find({ del: false,status:"active" });
+      // Process each basket to restructure the data
+      const processedBaskets = baskets.map(basket => {
+          // Split the data by '##'
+          const stocks = basket.stocks ? basket.stocks.split('##') : [];
+          const pricerange = basket.pricerange ? basket.pricerange.split('##') : [];
+          const stockweightage = basket.stockweightage ? basket.stockweightage.split('##') : [];
+          const entryprice = basket.entryprice ? basket.entryprice.split('##') : [];
+          const entrydate = basket.entrydate ? basket.entrydate.split('##') : [];
+          const exitprice = basket.exitprice ? basket.exitprice.split('##') : [];
+          const exitdate = basket.exitdate ? basket.exitdate.split('##') : [];
+          const comment = basket.comment ? basket.comment.split('##') : [];
+          const returnpercentage = basket.returnpercentage ? basket.returnpercentage.split('##') : [];
+          const holdingperiod = basket.holdingperiod ? basket.holdingperiod.split('##') : [];
+          const potentialleft = basket.potentialleft ? basket.potentialleft.split('##') : [];
+
+          // Group data into objects
+          const groupedData = stocks.map((stock, index) => ({
+              stock: stock || null,
+              pricerange: pricerange[index] || null,
+              stockweightage: stockweightage[index] || null,
+              entryprice: entryprice[index] || null,
+              entrydate: entrydate[index] || null,
+              exitprice: exitprice[index] || null,
+              exitdate: exitdate[index] || null,
+              comment: comment[index] || null,
+              returnpercentage: returnpercentage[index] || null,
+              holdingperiod: holdingperiod[index] || null,
+              potentialleft: potentialleft[index] || null
+          }));
+
+          return {
+              _id: basket._id,
+              title: basket.title,
+              description: basket.description,
+              accuracy: basket.accuracy,
+              price: basket.price,
+              mininvamount: basket.mininvamount,
+              portfolioweightage: basket.portfolioweightage,
+              themename: basket.themename,
+              status: basket.status,
+              add_by: basket.add_by,
+              del: basket.del,
+              created_at: basket.created_at,
+              updated_at: basket.updated_at,
+              __v: basket.__v,
+              groupedData // Include the grouped data
+          };
+      });
 
       return res.json({
           status: true,
           message: "Baskets fetched successfully",
-          data: baskets
+          data: processedBaskets
       });
 
   } catch (error) {
+      console.error("Server error occurred:", error);
       return res.json({ 
           status: false, 
           message: "Server error", 

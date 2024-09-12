@@ -46,7 +46,6 @@ class Signal {
     
             await result.save();
     
-            console.log("Signal successfully added:", result);
             return res.json({
                 status: true,
                 message: "Signal added successfully",
