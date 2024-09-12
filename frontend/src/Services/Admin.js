@@ -332,7 +332,7 @@ export async function GetSignallist(token) {
 // get signal detailperuser
 
 export async function Signalperdetail(_id,token) {
-         console.log("_id1",_id)
+
     try {
         const res = await axios.get(`${Config.base_url}signal/detail/${_id}`, {
             headers: {

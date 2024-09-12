@@ -11,14 +11,14 @@ const Signaldetail = () => {
     
     useEffect(() => {
         getsignaldetail();
-    }, [id]);
+    }, []);
 
 
     const { id } = useParams()
 
     const [clients, setClients] = useState([]);
 
-    const token = localStorage.getItem('token');
+    const token = localStorage?.getItem('token');
 
 
 

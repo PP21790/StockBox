@@ -103,7 +103,18 @@ const Signal = () => {
 
     const closeSignalperUser = async () => {
         try {
-            const data = { id: serviceid._id, closeprice: closedata.closeprice, close_status: "true", close_description: closedata.close_description };
+            if(!closedata.closeprice || !closedata.close_description){
+                Swal.fire({
+                    title: 'Alert',
+                    text: 'Please fill in all required fields',
+                    icon: 'warning', 
+                    confirmButtonText: 'OK',
+                    timer: 2000,
+                });
+                return; 
+            }
+
+            const data = { id: serviceid._id, closeprice: closedata.closeprice, close_status: "false", close_description: closedata.close_description };
             const response = await SignalCloseApi(data, token);
 
             if (response && response.status) {
@@ -326,7 +337,7 @@ const Signal = () => {
                                             />
                                         </div>
                                         <div className="col-md-12">
-                                            <label htmlFor="">Closeprice</label>
+                                            <label htmlFor="">Description</label>
                                             <textarea
                                                 className='form-control'
                                                 rows={2.5}
