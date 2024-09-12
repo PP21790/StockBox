@@ -130,7 +130,7 @@ const Sidebar = ({ onToggleClick }) => {
                         </div>
                       </a>
                     </li>
-                    <li>
+                    {/* <li>
                       <Link to="/admin/permision">
                         <div className="parent-icon">
                           <i className="bx bxs-coupon" />
@@ -138,7 +138,7 @@ const Sidebar = ({ onToggleClick }) => {
                         <div className="menu-title">Permision
                         </div>
                       </Link>
-                    </li>
+                    </li> */}
                     <li>
                       <Link to="/admin/faq">
                         <div className="parent-icon">
@@ -150,7 +150,7 @@ const Sidebar = ({ onToggleClick }) => {
                     </li>
 
                   </ul>
-                  {/*end navigation*/}
+                 
                 </div>
               </div>
             </div>

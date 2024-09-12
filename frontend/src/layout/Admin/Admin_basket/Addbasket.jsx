@@ -113,8 +113,8 @@ const Addbasket = () => {
 
   const formik = useFormik({
     initialValues: {
-      service: '',
-      action: '',
+      title: '',
+      accuracy: '',
       stock: '',
       rate: '',
       target1: '',
@@ -132,104 +132,150 @@ const Addbasket = () => {
 
   const fields = [
     {
-      name: 'service',
-      label: 'Select Service',
-      type: 'select',
-      options: serviceList.map((item) => ({
-        label: item.title,
-        value: item._id,
-      })),
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-    },
-    {
-      name: 'stock',
-      label: 'Select Stock',
-      type: 'select',
-      options: stockList.map((item) => ({
-        label: item.title,
-        value: item._id,
-      })),
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-    },
-    {
-      name: 'calltype',
-      label: 'Type',
-      type: 'select',
-      options: [
-        { label: 'Buy', value: 'buy' },
-        { label: 'Sell', value: 'sell' },
-        { label: 'Hold', value: 'hold' },
-      ],
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-    },
-    {
-      name: 'rate',
-      label: 'Rate',
-      type: 'select',
-      options: [
-        { label: '5%', value: '1' },
-        { label: '10%', value: '0' },
-        { label: '50%', value: '2' },
-      ],
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-    },
-    {
-      name: 'target1',
-      label: 'Target-1',
-      type: 'number',
-      label_size: 6,
-      col_size: 6,
-      disable: false,
-    },
-    {
-      name: 'target2',
-      label: 'Target-2',
-      type: 'number',
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-    },
-    {
-      name: 'target3',
-      label: 'Target-3',
-      type: 'number',
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-    },
-    {
-      name: 'stoploss',
-      label: 'Stoploss',
-      type: 'number',
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-    },
-    {
-      name: 'callduration',
-      label: 'Call duration',
+      name: 'title',
+      label: 'Title',
       type: 'text',
       label_size: 12,
       col_size: 6,
       disable: false,
     },
     {
-      name: 'report',
-      label: 'Report',
-      type: 'file2',
+      name: 'accuracy',
+      label: 'Accuracy',
+      type: 'text',
       label_size: 12,
       col_size: 6,
       disable: false,
     },
-    
+    {
+      name: 'Price',
+      label: 'price',
+      type: 'text',
+      label_size: 12,
+      col_size: 6,
+      disable: false,
+    },
+    {
+      name: 'minvamount',
+      label: 'Min Amount',
+      type: 'text',
+      label_size: 12,
+      col_size: 6,
+      disable: false,
+    },
+
+    {
+      name: 'status',
+      label: 'status',
+      type: 'text',
+      label_size: 12,
+      col_size: 6,
+      disable: false,
+    },
+    {
+      name: 'createdat',
+      label: 'Created At',
+      type: 'number',
+      label_size: 12,
+      col_size: 6,
+      disable: false,
+    },
+    {
+      name: 'Updatedat',
+      label: 'Updated At',
+      type: 'text',
+      label_size: 12,
+      col_size: 6,
+      disable: false,
+    },
+    {
+      name: '',
+      label: '',
+      label_size: 6,
+      col_size: 6,
+      disable: false,
+    },
+    {
+      name: 'portfolioweightage',
+      label: 'PortfolioWeight',
+      type: 'text',
+      label_size: 6,
+      col_size: 3,
+      disable: false,
+    },
+    {
+      name: 'stockweightage',
+      label: 'stockweightage',
+      type: 'text',
+      label_size: 12,
+      col_size: 3,
+      disable: false,
+    },
+    {
+      name: 'entryprice',
+      label: 'entryprice',
+      type: 'text',
+      label_size: 12,
+      col_size: 3,
+      disable: false,
+    },
+    {
+      name: 'entrydate',
+      label: 'entrydate',
+      type: 'text',
+      label_size: 12,
+      col_size: 3,
+      disable: false,
+    },
+    {
+      name: 'exitdate',
+      label: 'exitdate',
+      type: 'text',
+      label_size: 12,
+      col_size: 3,
+      disable: false,
+    },
+    {
+      name: 'comment',
+      label: 'comment',
+      type: 'text',
+      label_size: 12,
+      col_size: 3,
+      disable: false,
+    },
+    {
+      name: 'retunpercentage',
+      label: 'retunpercentage',
+      type: 'text',
+      label_size: 12,
+      col_size: 3,
+      disable: false,
+    },
+    {
+      name: 'holdingperiod',
+      label: 'holdingperiod',
+      type: 'text',
+      label_size: 12,
+      col_size: 3,
+      disable: false,
+    },
+    {
+      name: 'potentialleft',
+      label: 'potentialleft',
+      type: 'text',
+      label_size: 12,
+      col_size: 3,
+      disable: false,
+    },
+    {
+      name: 'themename',
+      label: 'themename',
+      type: 'text',
+      label_size: 12,
+      col_size: 3,
+      disable: false,
+    },
+
     {
       name: 'description',
       label: 'Description',
@@ -246,8 +292,8 @@ const Addbasket = () => {
       <div style={{ marginTop: '100px' }}>
         <DynamicForm
           fields={fields}
-          page_title="Add Signal"
-          btn_name="Add Signal"
+          page_title="Add Basket"
+          btn_name="Add Basket"
           btn_name1="Cancel"
           formik={formik}
           btn_name1_route="/admin/basket"
