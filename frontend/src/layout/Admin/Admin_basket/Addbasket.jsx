@@ -1,21 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import DynamicForm from '../../../components/FormicForm';
-import { AddSignalByAdmin, GetService, GetStockDetail } from '../../../Services/Admin';
+import { Addbasketplan, GetService, GetStockDetail } from '../../../Services/Admin';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 
-
-
 const Addbasket = () => {
-
-
   const navigate = useNavigate();
   const user_id = localStorage.getItem('id');
   const token = localStorage.getItem('token');
 
   const [serviceList, setServiceList] = useState([]);
   const [stockList, setStockList] = useState([]);
+  const [dynamicSections, setDynamicSections] = useState([{ id: Date.now(), values: {} }]);
 
   useEffect(() => {
     fetchAdminServices();
@@ -46,38 +43,37 @@ const Addbasket = () => {
 
   const validate = (values) => {
     const errors = {};
-    if (!values.service) errors.service = 'Please select a service';
-    if (!values.stock) errors.stock = 'Please select a stock';
-    if (!values.rate) errors.rate = 'Please select a rate';
-    if (!values.target1) errors.target1 = 'Please enter Target-1';
-    if (!values.target2) errors.target2 = 'Please enter Target-2';
-    if (!values.target3) errors.target3 = 'Please enter Target-3';
-    if (!values.stoploss) errors.stoploss = 'Please enter Stoploss';
-    if (!values.report) errors.report = 'Please upload a report';
-    if (!values.description) errors.description = 'Please enter description';
-    if (!values.callduration) errors.callduration = 'Please enter Call duration';
-    if (!values.calltype) errors.calltype = 'Please enter Call Calltype';
+    if (!values.title) errors.title = 'Please enter Title';
+    if (!values.description) errors.description = 'Please enter Description';
+    if (!values.accuracy) errors.accuracy = 'Please enter Accuracy';
+    if (!values.price) errors.price = 'Please enter Price';
+    if (!values.mininvamount) errors.mininvamount = 'Please enter Minimum Investment Amount';
+    if (!values.portfolioweightage) errors.portfolioweightage = 'Please enter Portfolio Weightage';
+
+    // Validate dynamic sections
+    values.dynamicSections.forEach((section, index) => {
+      if (!section.stocks) errors[`dynamicSections.${index}.stocks`] = 'Please enter Stocks';
+      if (!section.pricerange) errors[`dynamicSections.${index}.pricerange`] = 'Please enter Price Range';
+      if (!section.stockweightage) errors[`dynamicSections.${index}.stockweightage`] = 'Please enter Stock Weightage';
+      if (!section.entryprice) errors[`dynamicSections.${index}.entryprice`] = 'Please enter Entry Price';
+      if (!section.exitprice) errors[`dynamicSections.${index}.exitprice`] = 'Please enter Exit Price';
+      if (!section.comment) errors[`dynamicSections.${index}.comment`] = 'Please enter Comment';
+      if (!section.retunpercentage) errors[`dynamicSections.${index}.retunpercentage`] = 'Please enter Return Percentage';
+      if (!section.holdingperiod) errors[`dynamicSections.${index}.holdingperiod`] = 'Please enter Holding Period';
+      if (!section.potentialleft) errors[`dynamicSections.${index}.potentialleft`] = 'Please enter Potential Left';
+    });
+    if (!values.themename) errors.themename = 'Please enter Theme Name';
     return errors;
   };
 
   const onSubmit = async (values) => {
     const req = {
       add_by: user_id,
-      service: values.service,
-      stock: values.stock,
-      price: values.rate,
-      tag1: values.target1,
-      tag2: values.target2,
-      tag3: values.target3,
-      stoploss: values.stoploss,
-      description: values.description,
-      report: values.report,
-      calltype: values.calltype,
-      callduration: values.callduration
+      ...values,
     };
 
     try {
-      const response = await AddSignalByAdmin(req, token);
+      const response = await Addbasketplan(req, token);
       if (response.status) {
         Swal.fire({
           title: 'Create Successful!',
@@ -109,182 +105,55 @@ const Addbasket = () => {
     }
   };
 
-
-
   const formik = useFormik({
     initialValues: {
       title: '',
-      accuracy: '',
-      stock: '',
-      rate: '',
-      target1: '',
-      target2: '',
-      target3: '',
-      stoploss: '',
-      report: null,
       description: '',
-      callduration: '',
-      calltype: ''
+      accuracy: '',
+      price: '',
+      mininvamount: '',
+      portfolioweightage: '',
+      dynamicSections: [{ stocks: '', pricerange: '', stockweightage: '', entryprice: '', exitprice: '', comment: '', retunpercentage: '', holdingperiod: '', potentialleft: '' }],
+      themename: '',
+      add_by: '',
     },
     validate,
     onSubmit,
   });
 
+  // Functions to handle adding/removing sections
+  const addSection = () => {
+    const newSection = { id: Date.now(), values: {} };
+    setDynamicSections([...dynamicSections, newSection]);
+    formik.setFieldValue('dynamicSections', [...formik.values.dynamicSections, { stocks: '', pricerange: '', stockweightage: '', entryprice: '', exitprice: '', comment: '', retunpercentage: '', holdingperiod: '', potentialleft: '' }]);
+  };
+
+  const removeSection = (id) => {
+    const updatedSections = dynamicSections.filter(section => section.id !== id);
+    setDynamicSections(updatedSections);
+    formik.setFieldValue('dynamicSections', updatedSections.map((_, index) => formik.values.dynamicSections[index]));
+  };
+
   const fields = [
-    {
-      name: 'title',
-      label: 'Title',
-      type: 'text',
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-    },
-    {
-      name: 'accuracy',
-      label: 'Accuracy',
-      type: 'text',
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-    },
-    {
-      name: 'Price',
-      label: 'price',
-      type: 'text',
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-    },
-    {
-      name: 'minvamount',
-      label: 'Min Amount',
-      type: 'text',
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-    },
+    { name: 'title', label: 'Title', type: 'text', label_size: 12, col_size: 6, disable: false },
+    { name: 'description', label: 'Description', type: 'text', label_size: 12, col_size: 6, disable: false },
+    { name: 'accuracy', label: 'Accuracy', type: 'text', label_size: 12, col_size: 6, disable: false },
+    { name: 'price', label: 'Price', type: 'text', label_size: 12, col_size: 6, disable: false },
+    { name: 'mininvamount', label: 'Min Investment Amount', type: 'text', label_size: 12, col_size: 6, disable: false },
+    { name: 'portfolioweightage', label: 'Portfolio Weightage', type: 'text', label_size: 12, col_size: 6, disable: false },
+    { name: 'themename', label: 'Theme Name', type: 'text', label_size: 12, col_size: 6, disable: false },
 
-    {
-      name: 'status',
-      label: 'status',
-      type: 'text',
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-    },
-    {
-      name: 'createdat',
-      label: 'Created At',
-      type: 'number',
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-    },
-    {
-      name: 'Updatedat',
-      label: 'Updated At',
-      type: 'text',
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-    },
-    {
-      name: '',                                                                                                                                                                                                                                                                                                                                                                                                             
-      label: '',
-      label_size: 6,
-      col_size: 6,
-      disable: false,
-    },
-    {
-      name: 'portfolioweightage',
-      label: 'PortfolioWeight',
-      type: 'text',
-      label_size: 6,
-      col_size: 3,
-      disable: false,
-    },
-    {
-      name: 'stockweightage',
-      label: 'stockweightage',
-      type: 'text',
-      label_size: 12,
-      col_size: 3,
-      disable: false,
-    },
-    {
-      name: 'entryprice',
-      label: 'entryprice',
-      type: 'text',
-      label_size: 12,
-      col_size: 3,
-      disable: false,
-    },
-    {
-      name: 'entrydate',
-      label: 'entrydate',
-      type: 'text',
-      label_size: 12,
-      col_size: 3,
-      disable: false,
-    },
-    {
-      name: 'exitdate',
-      label: 'exitdate',
-      type: 'text',
-      label_size: 12,
-      col_size: 3,
-      disable: false,
-    },
-    {
-      name: 'comment',
-      label: 'comment',
-      type: 'text',
-      label_size: 12,
-      col_size: 3,
-      disable: false,
-    },
-    {
-      name: 'retunpercentage',
-      label: 'retunpercentage',
-      type: 'text',
-      label_size: 12,
-      col_size: 3,
-      disable: false,
-    },
-    {
-      name: 'holdingperiod',
-      label: 'holdingperiod',
-      type: 'text',
-      label_size: 12,
-      col_size: 3,
-      disable: false,
-    },
-    {
-      name: 'potentialleft',
-      label: 'potentialleft',
-      type: 'text',
-      label_size: 12,
-      col_size: 3,
-      disable: false,
-    },
-    {
-      name: 'themename',
-      label: 'themename',
-      type: 'text',
-      label_size: 12,
-      col_size: 3,
-      disable: false,
-    },
-
-    {
-      name: 'description',
-      label: 'Description',
-      type: 'text',
-      label_size: 12,
-      col_size: 15,
-      disable: false,
-    },
-
+    ...dynamicSections.map((section, index) => [
+      { name: `dynamicSections[${index}].stocks`, label: 'Stocks', type: 'text', label_size: 12, col_size: 6, disable: false },
+      { name: `dynamicSections[${index}].pricerange`, label: 'Price Range', type: 'text', label_size: 12, col_size: 6, disable: false },
+      { name: `dynamicSections[${index}].stockweightage`, label: 'Stock Weightage', type: 'text', label_size: 3, col_size: 6, disable: false },
+      { name: `dynamicSections[${index}].entryprice`, label: 'Entry Price', type: 'text', label_size: 12, col_size: 6, disable: false },
+      { name: `dynamicSections[${index}].exitprice`, label: 'Exit Price', type: 'text', label_size: 12, col_size: 6, disable: false },
+      { name: `dynamicSections[${index}].comment`, label: 'Comment', type: 'text', label_size: 12, col_size: 6, disable: false },
+      { name: `dynamicSections[${index}].retunpercentage`, label: 'Return Percentage', type: 'text', label_size: 3, col_size: 6, disable: false },
+      { name: `dynamicSections[${index}].holdingperiod`, label: 'Holding Period', type: 'text', label_size: 12, col_size: 6, disable: false },
+      { name: `dynamicSections[${index}].potentialleft`, label: 'Potential Left', type: 'text', label_size: 12, col_size: 6, disable: false },
+    ]).flat(),
   ];
 
   return (
@@ -297,7 +166,69 @@ const Addbasket = () => {
           btn_name1="Cancel"
           formik={formik}
           btn_name1_route="/admin/basket"
-          additional_field={<></>}
+          additional_field={
+            <>
+              {dynamicSections.map((section) => (
+                <div
+                  key={section.id}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    marginBottom: '30px', // Spacing between sections
+                    padding: '20px',
+                    borderRadius: '8px',
+                    backgroundColor: '#f9f9f9',
+                    position: 'relative',
+                  }}
+                >
+                  <DynamicForm
+                    fields={fields.filter(field => field.name.startsWith(`dynamicSections[${dynamicSections.indexOf(section)}]`))}
+                    formik={{
+                      ...formik,
+                      values: {
+                        ...formik.values,
+                        dynamicSections: formik.values.dynamicSections.map((sec, idx) =>
+                          idx === dynamicSections.indexOf(section) ? section : sec
+                        ),
+                      },
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeSection(section.id)}
+                    style={{
+                      position: 'absolute',
+                      bottom: '30px',
+                      right: '40px',
+                      backgroundColor: '#f44336',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '4px',
+                      padding: '5px 10px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Remove Section
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={addSection}
+                style={{
+                  marginTop: '20px',
+                  backgroundColor: '#4caf50',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '4px',
+                  padding: '10px 20px',
+                  cursor: 'pointer',
+                }}
+              >
+                Add Section
+              </button>
+            </>
+          }
         />
       </div>
     </div>

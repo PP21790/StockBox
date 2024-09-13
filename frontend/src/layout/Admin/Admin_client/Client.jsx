@@ -146,6 +146,7 @@ const Client = () => {
             name: 'Email',
             selector: row => row.Email,
             sortable: true,
+            width: '280px',
         },
         {
             name: 'Phone No',

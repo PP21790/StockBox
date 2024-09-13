@@ -367,7 +367,6 @@ export async function DeleteSignal(_id,token) {
 
 // for signal close api 
 
-// service add
 
 export async function SignalCloseApi(data,token) {
     try {
@@ -438,5 +437,26 @@ export async function getstaffperuser(_id,token) {
         return res?.data;
     } catch (err) {
         return { error: err.response?.data || err.message };
+    }
+}
+
+
+
+// basket
+// add basket 
+
+export async function Addbasketplan(data,token) {
+    try {
+        const res = await axios.post(`${Config.base_url}basket/add`, data, { 
+            headers: {
+                data:{},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message; 
     }
 }
