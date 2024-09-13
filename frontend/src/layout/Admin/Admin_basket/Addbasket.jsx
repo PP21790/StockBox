@@ -193,41 +193,38 @@ const Addbasket = () => {
                     fields={dynamicSectionFields(index)}
                     formik={formik}
                   />
-                  {dynamicSections.length > 1 && index !== 0 && (
+                  <div className='d-flex justify-content-end'>
+                    <button
+                      type="button"
+                      onClick={addSection}
+                      className='btn btn-success mt-2 ms-3'
+                    // style={{
+                    //   marginTop: '20px',
+                    //   backgroundColor: '#4caf50',
+                    //   color: '#fff',
+                    //   border: 'none',
+                    //   borderRadius: '4px',
+                    //   padding: '10px 20px',
+                    //   cursor: 'pointer',
+                    //   width: '150px'
+                    // }}
+                    >
+                      Add Section
+                    </button>
                     <button
                       type="button"
                       onClick={() => removeSection(section.id)}
-                      style={{
-                        position: 'absolute',
-                        bottom: '40px',
-                        right: '50px',
-                        backgroundColor: '#f44336',
-                        color: '#fff',
-                        border: 'none',
-                        borderRadius: '4px',
-                        padding: '10px 20px',
-                        cursor: 'pointer',
-                      }}
+                      className='btn btn-danger me-2 ms-2 mt-2'
+                    // style={{
+
+                    // }}
                     >
                       Remove Section
                     </button>
-                  )}
+                  </div>
                 </div>
               ))}
-              <button
-                type="button"
-                onClick={addSection}
-                style={{
-                  backgroundColor: '#4caf50',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '10px 20px',
-                  cursor: 'pointer',
-                }}
-              >
-                Add Section
-              </button>
+
             </>
           }
         />
