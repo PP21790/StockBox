@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login_Api } from "../Services/Apis"
 import { Link } from 'react-router-dom';
-import swal from 'sweetalert';
+import Swal from 'sweetalert2';
 
 
 const Login = () => {
+
+
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -14,22 +16,22 @@ const Login = () => {
 
     const loginpageOpen = async (e) => {
         e.preventDefault();
-
+    
         let req = {
             UserName: username,
             password: password,
         };
-
+    
         try {
             var login_data = await login_Api(req);
-
+    
             if (login_data.data.status) {
-                // Success - Show SweetAlert and navigate to the dashboard
-                swal({
+                Swal.fire({
                     title: "Login Successful!",
                     text: "You will be redirected to the dashboard.",
                     icon: "success",
-                    button: "OK",
+                    showConfirmButton: false,  
+                    timer: 2000,  
                 }).then(() => {
                     localStorage.setItem("token", login_data.data.data.token);
                     localStorage.setItem("id", login_data.data.data.id);
@@ -38,26 +40,26 @@ const Login = () => {
                     navigate("/admin/dashboard");
                 });
             } else {
-                // Error - Show SweetAlert with the error message
-                swal({
+                Swal.fire({
                     title: "Login Failed",
                     text: login_data.data.message || "Invalid username or password.",
                     icon: "error",
-                    button: "Try Again",
+                    showConfirmButton: false, 
+                    timer: 2000,  
                 });
             }
         } catch (error) {
-            console.error('There was an error logging in!', error);
-
-            // General error handling with SweetAlert
-            swal({
+            Swal.fire({
                 title: "Error!",
                 text: "Something went wrong during login. Please try again later.",
                 icon: "error",
-                button: "OK",
+                showConfirmButton: false,  
+                timer: 2000,  
             });
         }
     };
+
+
 
 
     return (
@@ -154,38 +156,12 @@ const Login = () => {
                                             <span>OR SIGN IN WITH</span>
                                             <hr />
                                         </div>
-                                        {/* <div className="list-inline contacts-social text-center">
-                                            <a
-                                                href="javascript:;"
-                                                className="list-inline-item bg-facebook text-white border-0 rounded-3"
-                                            >
-                                                <i className="bx bxl-facebook" />
-                                            </a>
-                                            <a
-                                                href="javascript:;"
-                                                className="list-inline-item bg-twitter text-white border-0 rounded-3"
-                                            >
-                                                <i className="bx bxl-twitter" />
-                                            </a>
-                                            <a
-                                                href="javascript:;"
-                                                className="list-inline-item bg-google text-white border-0 rounded-3"
-                                            >
-                                                <i className="bx bxl-google" />
-                                            </a>
-                                            <a
-                                                href="javascript:;"
-                                                className="list-inline-item bg-linkedin text-white border-0 rounded-3"
-                                            >
-                                                <i className="bx bxl-linkedin" />
-                                            </a>
-                                        </div> */}
+                                        
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    {/*end row*/}
                 </div>
             </div>
         </div>

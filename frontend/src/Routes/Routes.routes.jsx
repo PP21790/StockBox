@@ -34,14 +34,14 @@ const Routing = () => {
             return;
         }
 
-        // Check if user details exist
+       
         if ( !roles || token === "null" || roles === "null" || location.pathname === "/login") {
             navigate("/login");
             return;
         }
 
 
-        //Redirect based on user role and route prefix
+        
         switch (roles) {
             case "1":
                 if (location.pathname === "/login" || location.pathname === "/" || !location.pathname.startsWith("/admin")) {
@@ -67,9 +67,7 @@ const Routing = () => {
             <Route path="/admin/*" element={(roles === "1") ? <AdminRouting /> : <Login />} />
             <Route path="/Staff/*" element={(roles === "2") ? <Staff /> : <Login />} />
             {/*<Route path="/user/*" element={(roles === "USER") ? <UserRouting /> : <Login />} />
-            <Route path="/employee/*" element={(roles === "EMPLOYEE") ? <EmployeeRouting /> : <Login />} />
-            <Route path="/research/*" element={(roles === "RESEARCH") ? <ResearchRouting /> : <Login />} />
-            <Route path="/superadmin/*" element={(roles === "SUPERADMIN") ? <SuperadminRouting /> : <Login />} /> */}
+           
 
 
 
