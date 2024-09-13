@@ -189,7 +189,7 @@ const Addbasket = () => {
       disable: false,
     },
     {
-      name: '',
+      name: '',                                                                                                                                                                                                                                                                                                                                                                                                             
       label: '',
       label_size: 6,
       col_size: 6,
