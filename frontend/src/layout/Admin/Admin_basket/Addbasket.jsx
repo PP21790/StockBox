@@ -12,7 +12,7 @@ const Addbasket = () => {
 
   const [serviceList, setServiceList] = useState([]);
   const [stockList, setStockList] = useState([]);
-  const [dynamicSections, setDynamicSections] = useState([{ id: Date.now(), values: {} }]);
+  const [dynamicSections, setDynamicSections] = useState([{ id: Date.now(), values: { stocks: '', pricerange: '', stockweightage: '', entryprice: '', exitprice: '', comment: '', retunpercentage: '', holdingperiod: '', potentialleft: '' } }]);
 
   useEffect(() => {
     fetchAdminServices();
@@ -43,27 +43,35 @@ const Addbasket = () => {
 
   const validate = (values) => {
     const errors = {};
+    const dynamicSectionErrors = values.dynamicSections.reduce((acc, section, index) => {
+      const sectionErrors = {};
+      
+      if (!section.stocks) sectionErrors.stocks = 'Please enter Stocks';
+      if (!section.pricerange) sectionErrors.pricerange = 'Please enter Price Range';
+      if (!section.stockweightage) sectionErrors.stockweightage = 'Please enter Stock Weightage';
+      if (!section.entryprice) sectionErrors.entryprice = 'Please enter Entry Price';
+      if (!section.exitprice) sectionErrors.exitprice = 'Please enter Exit Price';
+      if (!section.comment) sectionErrors.comment = 'Please enter Comment';
+      if (!section.retunpercentage) sectionErrors.retunpercentage = 'Please enter Return Percentage';
+      if (!section.holdingperiod) sectionErrors.holdingperiod = 'Please enter Holding Period';
+      if (!section.potentialleft) sectionErrors.potentialleft = 'Please enter Potential Left';
+      
+      if (Object.keys(sectionErrors).length > 0) {
+        acc[`dynamicSections[${index}]`] = sectionErrors;
+      }
+
+      return acc;
+    }, {});
+
     if (!values.title) errors.title = 'Please enter Title';
     if (!values.description) errors.description = 'Please enter Description';
     if (!values.accuracy) errors.accuracy = 'Please enter Accuracy';
     if (!values.price) errors.price = 'Please enter Price';
     if (!values.mininvamount) errors.mininvamount = 'Please enter Minimum Investment Amount';
     if (!values.portfolioweightage) errors.portfolioweightage = 'Please enter Portfolio Weightage';
-
-    // Validate dynamic sections
-    values.dynamicSections.forEach((section, index) => {
-      if (!section.stocks) errors[`dynamicSections.${index}.stocks`] = 'Please enter Stocks';
-      if (!section.pricerange) errors[`dynamicSections.${index}.pricerange`] = 'Please enter Price Range';
-      if (!section.stockweightage) errors[`dynamicSections.${index}.stockweightage`] = 'Please enter Stock Weightage';
-      if (!section.entryprice) errors[`dynamicSections.${index}.entryprice`] = 'Please enter Entry Price';
-      if (!section.exitprice) errors[`dynamicSections.${index}.exitprice`] = 'Please enter Exit Price';
-      if (!section.comment) errors[`dynamicSections.${index}.comment`] = 'Please enter Comment';
-      if (!section.retunpercentage) errors[`dynamicSections.${index}.retunpercentage`] = 'Please enter Return Percentage';
-      if (!section.holdingperiod) errors[`dynamicSections.${index}.holdingperiod`] = 'Please enter Holding Period';
-      if (!section.potentialleft) errors[`dynamicSections.${index}.potentialleft`] = 'Please enter Potential Left';
-    });
     if (!values.themename) errors.themename = 'Please enter Theme Name';
-    return errors;
+
+    return { ...errors, ...dynamicSectionErrors };
   };
 
   const onSubmit = async (values) => {
@@ -121,20 +129,21 @@ const Addbasket = () => {
     onSubmit,
   });
 
-  // Functions to handle adding/removing sections
   const addSection = () => {
-    const newSection = { id: Date.now(), values: {} };
-    setDynamicSections([...dynamicSections, newSection]);
-    formik.setFieldValue('dynamicSections', [...formik.values.dynamicSections, { stocks: '', pricerange: '', stockweightage: '', entryprice: '', exitprice: '', comment: '', retunpercentage: '', holdingperiod: '', potentialleft: '' }]);
+    const newSection = { stocks: '', pricerange: '', stockweightage: '', entryprice: '', exitprice: '', comment: '', retunpercentage: '', holdingperiod: '', potentialleft: '' };
+    setDynamicSections([...dynamicSections, { id: Date.now(), values: newSection }]);
+    formik.setFieldValue('dynamicSections', [...formik.values.dynamicSections, newSection]);
   };
 
   const removeSection = (id) => {
-    const updatedSections = dynamicSections.filter(section => section.id !== id);
-    setDynamicSections(updatedSections);
-    formik.setFieldValue('dynamicSections', updatedSections.map((_, index) => formik.values.dynamicSections[index]));
+    if (dynamicSections.length > 1) { 
+      const updatedSections = dynamicSections.filter(section => section.id !== id);
+      setDynamicSections(updatedSections);
+      formik.setFieldValue('dynamicSections', updatedSections.map(section => section.values));
+    }
   };
 
-  const fields = [
+  const mainFormFields = [
     { name: 'title', label: 'Title', type: 'text', label_size: 12, col_size: 6, disable: false },
     { name: 'description', label: 'Description', type: 'text', label_size: 12, col_size: 6, disable: false },
     { name: 'accuracy', label: 'Accuracy', type: 'text', label_size: 12, col_size: 6, disable: false },
@@ -142,25 +151,24 @@ const Addbasket = () => {
     { name: 'mininvamount', label: 'Min Investment Amount', type: 'text', label_size: 12, col_size: 6, disable: false },
     { name: 'portfolioweightage', label: 'Portfolio Weightage', type: 'text', label_size: 12, col_size: 6, disable: false },
     { name: 'themename', label: 'Theme Name', type: 'text', label_size: 12, col_size: 6, disable: false },
+  ];
 
-    ...dynamicSections.map((section, index) => [
-      { name: `dynamicSections[${index}].stocks`, label: 'Stocks', type: 'text', label_size: 12, col_size: 6, disable: false },
-      { name: `dynamicSections[${index}].pricerange`, label: 'Price Range', type: 'text', label_size: 12, col_size: 6, disable: false },
-      { name: `dynamicSections[${index}].stockweightage`, label: 'Stock Weightage', type: 'text', label_size: 3, col_size: 6, disable: false },
-      { name: `dynamicSections[${index}].entryprice`, label: 'Entry Price', type: 'text', label_size: 12, col_size: 6, disable: false },
-      { name: `dynamicSections[${index}].exitprice`, label: 'Exit Price', type: 'text', label_size: 12, col_size: 6, disable: false },
-      { name: `dynamicSections[${index}].comment`, label: 'Comment', type: 'text', label_size: 12, col_size: 6, disable: false },
-      { name: `dynamicSections[${index}].retunpercentage`, label: 'Return Percentage', type: 'text', label_size: 3, col_size: 6, disable: false },
-      { name: `dynamicSections[${index}].holdingperiod`, label: 'Holding Period', type: 'text', label_size: 12, col_size: 6, disable: false },
-      { name: `dynamicSections[${index}].potentialleft`, label: 'Potential Left', type: 'text', label_size: 12, col_size: 6, disable: false },
-    ]).flat(),
+  const dynamicSectionFields = (index) => [
+    { name: `dynamicSections[${index}].stocks`, label: 'Stocks', type: 'text', label_size: 12, col_size: 6, disable: false },
+    { name: `dynamicSections[${index}].pricerange`, label: 'Price Range', type: 'text', label_size: 12, col_size: 6, disable: false },
+    { name: `dynamicSections[${index}].stockweightage`, label: 'Stock Weightage', type: 'text', label_size: 3, col_size: 6, disable: false },
+    { name: `dynamicSections[${index}].entryprice`, label: 'Entry Price', type: 'text', label_size: 12, col_size: 6, disable: false },
+    { name: `dynamicSections[${index}].exitprice`, label: 'Exit Price', type: 'text', label_size: 12, col_size: 6, disable: false },
+    { name: `dynamicSections[${index}].comment`, label: 'Comment', type: 'text', label_size: 12, col_size: 6, disable: false },
+    { name: `dynamicSections[${index}].retunpercentage`, label: 'Return Percentage', type: 'text', label_size: 3, col_size: 6, disable: false },
+    { name: `dynamicSections[${index}].potentialleft`, label: 'Potential Left', type: 'text', label_size: 12, col_size: 6, disable: false },
   ];
 
   return (
     <div>
       <div style={{ marginTop: '100px' }}>
         <DynamicForm
-          fields={fields}
+          fields={mainFormFields}
           page_title="Add Basket"
           btn_name="Add Basket"
           btn_name1="Cancel"
@@ -168,55 +176,48 @@ const Addbasket = () => {
           btn_name1_route="/admin/basket"
           additional_field={
             <>
-              {dynamicSections.map((section) => (
+              {dynamicSections.map((section, index) => (
                 <div
                   key={section.id}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
-                    marginBottom: '30px', // Spacing between sections
-                    padding: '20px',
+                    marginBottom: '30px', 
+                    padding: '10px 0px 0px',
                     borderRadius: '8px',
                     backgroundColor: '#f9f9f9',
                     position: 'relative',
                   }}
                 >
                   <DynamicForm
-                    fields={fields.filter(field => field.name.startsWith(`dynamicSections[${dynamicSections.indexOf(section)}]`))}
-                    formik={{
-                      ...formik,
-                      values: {
-                        ...formik.values,
-                        dynamicSections: formik.values.dynamicSections.map((sec, idx) =>
-                          idx === dynamicSections.indexOf(section) ? section : sec
-                        ),
-                      },
-                    }}
+                    fields={dynamicSectionFields(index)}
+                    formik={formik}
                   />
-                  <button
-                    type="button"
-                    onClick={() => removeSection(section.id)}
-                    style={{
-                      position: 'absolute',
-                      bottom: '30px',
-                      right: '40px',
-                      backgroundColor: '#f44336',
-                      color: '#fff',
-                      border: 'none',
-                      borderRadius: '4px',
-                      padding: '5px 10px',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Remove Section
-                  </button>
+                  {dynamicSections.length > 1 && index !== 0 && (
+                    <button
+                      type="button"
+                      onClick={() => removeSection(section.id)}
+                      style={{
+                        position: 'absolute',
+                        bottom: '40px',
+                        right: '50px',
+                        backgroundColor: '#f44336',
+                        color: '#fff',
+                        border: 'none',
+                        borderRadius: '4px',
+                        padding: '10px 20px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Remove Section
+                    </button>
+                  )}
                 </div>
               ))}
               <button
                 type="button"
                 onClick={addSection}
                 style={{
-                  marginTop: '20px',
                   backgroundColor: '#4caf50',
                   color: '#fff',
                   border: 'none',
