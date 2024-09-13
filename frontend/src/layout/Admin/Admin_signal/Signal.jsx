@@ -268,7 +268,7 @@ const Signal = () => {
             name: 'Status',
             cell: row => (
                 <>
-                    <button className='btn btn-danger'
+                    <button className='btn btn-danger btnclose'
                         onClick={() => { setModel(true); setServiceid(row); }}
                     >
                         close

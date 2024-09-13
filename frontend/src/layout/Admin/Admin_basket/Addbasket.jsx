@@ -193,40 +193,38 @@ const Addbasket = () => {
                       },
                     }}
                   />
-                  <button
-                    type="button"
-                    onClick={() => removeSection(section.id)}
-                    style={{
-                      position: 'absolute',
-                      bottom: '30px',
-                      right: '40px',
-                      backgroundColor: '#f44336',
-                      color: '#fff',
-                      border: 'none',
-                      borderRadius: '4px',
-                      padding: '5px 10px',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Remove Section
-                  </button>
+                  <div className='d-flex justify-content-end'>
+                    <button
+                      type="button"
+                      onClick={addSection}
+                      className='btn btn-success mt-2 ms-3'
+                    // style={{
+                    //   marginTop: '20px',
+                    //   backgroundColor: '#4caf50',
+                    //   color: '#fff',
+                    //   border: 'none',
+                    //   borderRadius: '4px',
+                    //   padding: '10px 20px',
+                    //   cursor: 'pointer',
+                    //   width: '150px'
+                    // }}
+                    >
+                      Add Section
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => removeSection(section.id)}
+                      className='btn btn-danger me-2 ms-2 mt-2'
+                    // style={{
+
+                    // }}
+                    >
+                      Remove Section
+                    </button>
+                  </div>
                 </div>
               ))}
-              <button
-                type="button"
-                onClick={addSection}
-                style={{
-                  marginTop: '20px',
-                  backgroundColor: '#4caf50',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '10px 20px',
-                  cursor: 'pointer',
-                }}
-              >
-                Add Section
-              </button>
+
             </>
           }
         />
