@@ -918,12 +918,12 @@ const DynamicForm = ({
                                         )}
                                         {
                                             <>
-                                                <button
+                                                {/* <button
                                                     type="submit"
                                                     className="btn customer-btn-save btn btn-primary m-2"
                                                 >
                                                     {btn_name}
-                                                </button>
+                                                </button> */}
                                                 {btn_name2 ? (
                                                     <button
                                                         type="submit"
