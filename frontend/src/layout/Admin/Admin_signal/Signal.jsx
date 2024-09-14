@@ -26,10 +26,7 @@ const Signal = () => {
     })
 
 
-
     const token = localStorage.getItem('token');
-
-
 
     const getAllSignal = async () => {
         try {

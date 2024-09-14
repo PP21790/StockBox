@@ -27,13 +27,13 @@ class List {
         try {
 
             const banners = await Banner_Modal.find({ del: false,status: true });
-            const protocol = req.protocol; // Will be 'http' or 'https'
+            const protocol = req.protocol; 
             const baseUrl = `${protocol}://${req.headers.host}`;
 
             const bannerWithImageUrls = banners.map(banner => {
                 return {
-                    ...banner._doc, // Spread the original bannerss document
-                    image: banner.image ? `${baseUrl}/uploads/banner/${banner.image}` : null // Append full image URL
+                    ...banner._doc, 
+                    image: banner.image ? `${baseUrl}/uploads/banner/${banner.image}` : null 
                 };
             });
 
