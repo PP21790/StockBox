@@ -17,6 +17,8 @@ const AddSignal = () => {
     fetchStockList();
   }, []);
 
+
+
   const fetchAdminServices = async () => {
     try {
       const response = await GetService(token);
@@ -27,6 +29,8 @@ const AddSignal = () => {
       console.log('Error fetching services:', error);
     }
   };
+
+
 
   const fetchStockList = async () => {
     try {
@@ -48,8 +52,6 @@ const AddSignal = () => {
     if (!values.target2) errors.target2 = 'Please enter Target-2';
     if (!values.target3) errors.target3 = 'Please enter Target-3';
     if (!values.stoploss) errors.stoploss = 'Please enter Stoploss';
-    if (!values.report) errors.report = 'Please upload a report';
-    if (!values.description) errors.description = 'Please enter description';
     if (!values.callduration) errors.callduration = 'Please enter Call duration';
     if (!values.calltype) errors.calltype = 'Please enter Call Calltype';
     return errors;
@@ -66,7 +68,7 @@ const AddSignal = () => {
       tag3: values.target3,
       stoploss: values.stoploss,
       description: values.description,
-      report: values.report,
+      report: values.report || "",
       calltype: values.calltype,
       callduration: values.callduration
     };
@@ -76,7 +78,7 @@ const AddSignal = () => {
       if (response.status) {
         Swal.fire({
           title: 'Create Successful!',
-          text: response.msg,
+          text: response.message,
           icon: 'success',
           timer: 1500,
           timerProgressBar: true,
@@ -87,7 +89,7 @@ const AddSignal = () => {
       } else {
         Swal.fire({
           title: 'Error',
-          text: response.msg,
+          text: response.message,
           icon: 'error',
           timer: 1500,
           timerProgressBar: true,

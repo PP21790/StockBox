@@ -59,7 +59,7 @@ const Update = () => {
       if (response.status) {
         Swal.fire({
           title: "Update Successful!",
-          text: response.msg,
+          text: response.message,
           icon: "success",
           timer: 1500,
           timerProgressBar: true,
@@ -70,7 +70,7 @@ const Update = () => {
       } else {
         Swal.fire({
           title: "Error",
-          text: response.msg,
+          text: response.message,
           icon: "error",
           timer: 1500,
           timerProgressBar: true,
