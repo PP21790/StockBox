@@ -245,6 +245,7 @@ const AddSignal = () => {
           btn_name="Add Signal"
           btn_name1="Cancel"
           formik={formik}
+          sumit_btn={true}
           btn_name1_route="/admin/signal"
           additional_field={<></>}
         />

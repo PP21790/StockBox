@@ -28,6 +28,7 @@ const DynamicForm = ({
     content_btn_name,
     content_path,
     btn_name2,
+    sumit_btn 
 }) => {
 
 
@@ -122,7 +123,7 @@ const DynamicForm = ({
                         ) : (
                             ""
                         )}
-                   
+
                     </div>
                 ) : (
                     ""
@@ -918,12 +919,12 @@ const DynamicForm = ({
                                         )}
                                         {
                                             <>
-                                                {/* <button
+                                                {sumit_btn === true && <button
                                                     type="submit"
                                                     className="btn customer-btn-save btn btn-primary m-2"
                                                 >
                                                     {btn_name}
-                                                </button> */}
+                                                </button>}
                                                 {btn_name2 ? (
                                                     <button
                                                         type="submit"

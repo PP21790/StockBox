@@ -10,6 +10,7 @@ class Clients {
 
   async AddClient(req, res) {
     try {
+      
       const { FullName, Email, PhoneNo, password,add_by } = req.body;
       if (!FullName) {
         return res.status(400).json({ status: false, message: "fullname is required" });
@@ -40,7 +41,7 @@ class Clients {
         return res.status(400).json({ status: false, message: "Added by field is required" });
       }
 
-      const refer_token = crypto.randomBytes(10).toString('hex'); // 10 bytes = 20 hex characters
+      const refer_token = crypto.randomBytes(10).toString('hex'); 
 
       const hashedPassword = await bcrypt.hash(password, 10);
       const result = new Clients_Modal({
