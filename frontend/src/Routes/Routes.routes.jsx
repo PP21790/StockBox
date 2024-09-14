@@ -7,6 +7,7 @@ import Login from '../Auth/Login';
 import Register from '../Auth/Register';
 import AdminRouting from './Admin.routes';
 import Staff from './Staff.routes';
+import Client from './Client.routes';
 
 
 
@@ -23,7 +24,7 @@ const Routing = () => {
 
 
     useEffect(() => {
-        
+
         if (location.pathname === "/forget") {
             navigate("/forget");
             return;
@@ -34,40 +35,45 @@ const Routing = () => {
             return;
         }
 
-       
-        if ( !roles || token === "null" || roles === "null" || location.pathname === "/login") {
+
+        if (!roles || token === "null" || roles === "null" || location.pathname === "/login") {
             navigate("/login");
             return;
         }
 
 
-        
+
         switch (roles) {
             case "1":
                 if (location.pathname === "/login" || location.pathname === "/" || !location.pathname.startsWith("/admin")) {
                     navigate("/admin/dashboard");
                 }
                 break;
-                case "2":
-                    if (location.pathname === "/login" || location.pathname === "/" || !location.pathname.startsWith("/staff")) {
-                        navigate("/staff/dashboard");
-                    }
-                    break;
+            case "2":
+                if (location.pathname === "/login" || location.pathname === "/" || !location.pathname.startsWith("/staff")) {
+                    navigate("/staff/dashboard");
+                }
+                break;
+            case "3":
+                if (location.pathname === "/login" || location.pathname === "/" || !location.pathname.startsWith("/client")) {
+                    navigate("/client/dashboard");
+                }
+                break;
             default:
                 break;
         }
 
-    }, [navigate, location.pathname, roles, id,FullName,token]);
+    }, [navigate, location.pathname, roles, id, FullName, token]);
 
 
 
     return (
         <Routes>
-         
+
             <Route path="/admin/*" element={(roles === "1") ? <AdminRouting /> : <Login />} />
             <Route path="/Staff/*" element={(roles === "2") ? <Staff /> : <Login />} />
-            {/*<Route path="/user/*" element={(roles === "USER") ? <UserRouting /> : <Login />} />
-           
+            <Route path="/client/*" element={(roles === "3") ? <Client /> : <Login />} />
+
 
 
 

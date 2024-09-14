@@ -45,6 +45,7 @@ const AddStaff = () => {
       Email: values.Email,
       PhoneNo: values.PhoneNo,
       password: values.password,
+    
       add_by: user_id,
     };
 
@@ -155,6 +156,7 @@ const AddStaff = () => {
         btn_name="Add Staff"
         btn_name1="Cancel"
         formik={formik}
+        sumit_btn={true}
         btn_name1_route={"/admin/staff"}
         additional_field={<></>}
       />

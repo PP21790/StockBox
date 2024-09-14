@@ -138,12 +138,14 @@ const AddUser = () => {
     <div style={{ marginTop: "100px" }}>
       <DynamicForm
         fields={fields}
+        formik={formik}
         page_title="Add New User"
         btn_name="Add User"
         btn_name1="Cancel"
-        formik={formik}
+        sumit_btn={true}
         btn_name1_route={"/admin/client"}
         additional_field={<></>}
+        
       />
     </div>
   );
