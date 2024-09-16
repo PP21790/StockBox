@@ -202,7 +202,7 @@ const Register = () => {
                                                             placeholder="example@user.com"
                                                         />
                                                     </div>
-                                                    <div className="col-12">
+                                                    <div className="col-6">
                                                         <label htmlFor="inputChoosePassword" className="form-label">
                                                             Password
                                                         </label>
@@ -222,9 +222,9 @@ const Register = () => {
                                                             </a>
                                                         </div>
                                                     </div>
-                                                    <div className="col-12">
+                                                    <div className="col-6">
                                                         <label htmlFor="inputChoosePassword" className="form-label">
-                                                          confirm  Password
+                                                            confirm  Password
                                                         </label>
                                                         <div className="input-group" id="show_hide_password">
                                                             <input
