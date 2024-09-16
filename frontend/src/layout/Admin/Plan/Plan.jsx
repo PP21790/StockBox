@@ -233,8 +233,13 @@ const Plan = () => {
                     </div>
                     <div className="ms-auto">
                         <div className="btn-group">
-                            <Link to="/addplan" className="btn btn-primary">
+                            <Link to="/admin/   addplan" className="btn btn-primary">
+                                <i
+                                    className="bx bxs-plus-square"
+                                    aria-hidden="true"
+                                />
                                 Add Plan
+
                             </Link>
 
 
