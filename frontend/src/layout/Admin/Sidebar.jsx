@@ -102,7 +102,7 @@ const Sidebar = ({ onToggleClick }) => {
                       </Link>
                     </li>
                     <li>
-                      <Link to="/admin/plan">
+                      <Link to="/admin/category">
                         <div className="parent-icon">
                           <i className="bx bx-filter" />
                         </div>
