@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { Pencil ,Trash2 } from 'lucide-react';
+import { Pencil, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
 // import { deleteClient ,UpdateClientStatus} from '../../../Services/Admin';
 import { getplanlist } from '../../../Services/Admin';
@@ -34,12 +34,12 @@ const Plan = () => {
     }, []);
 
 
-   
+
 
     // const updateClient= async(row)=>{
     //     navigate("/admin/client/updateclient/" + row._id ,{ state: { row } })
     // }
-    
+
 
     // const DeleteClient = async (_id) => {
     //     try {
@@ -51,7 +51,7 @@ const Plan = () => {
     //             confirmButtonText: 'Yes, delete it!',
     //             cancelButtonText: 'No, cancel',
     //         });
-    
+
     //         if (result.isConfirmed) {
     //             const response = await deleteClient(_id,token);
     //             if (response.status) {
@@ -62,10 +62,10 @@ const Plan = () => {
     //                     confirmButtonText: 'OK',
     //                 });
     //                 getAdminclient();
-                     
+
     //             }
     //         } else {
-        
+
     //             Swal.fire({
     //                 title: 'Cancelled',
     //                 text: 'The staff deletion was cancelled.',
@@ -80,13 +80,13 @@ const Plan = () => {
     //             icon: 'error',
     //             confirmButtonText: 'Try Again',
     //         });
-           
+
     //     }
     // };
-    
-  
 
-     // update status 
+
+
+    // update status 
 
     //  const handleSwitchChange = async (event, id) => {
 
@@ -132,140 +132,281 @@ const Plan = () => {
 
 
 
-    const columns = [
-        {
-            name: 'S.No',
-            selector: (row, index) => index + 1,
-            sortable: false,
-            width: '70px',
-        },
-        {
-            name: 'Title',
-            selector: row => row.title,
-            sortable: true,
-        },
-        {
-            name: 'Validity',
-            selector: row => row.validity,
-            sortable: true,
-            width: '220px',
-        },
-        {
-            name: 'price',
-            selector: row => row.price,
-            sortable: true,
-        },
-        {
-            name: 'Description',
-            selector: row => row.description,
-            sortable: true,
-        },
-       
-        {
-            name: 'Active Status',
-            selector: row => (
-              <div className="form-check form-switch form-check-info">
-                <input
-                  id={`rating_${row.status}`}
-                  className="form-check-input"
-                  type="checkbox"
-                  defaultChecked={row.status === "active"}
-                //   onChange={(event) => handleSwitchChange(event, row._id)}
-                />
-                <label
-                  htmlFor={`rating_${row.ActiveStatus}`}
-                  className="checktoggle checkbox-bg"
-                ></label>
-              </div>
-            ),
-            sortable: true,
-          },
-          
-        
-        {
-            name: 'Created At',
-            selector: row => new Date(row.created_at).toLocaleDateString(),
-            sortable: true,
-        },
-        {
-            name: 'Updated At',
-            selector: row => new Date(row.updated_at).toLocaleDateString(),
-            sortable: true,
-        },
-        // {
-        //     name: 'Actions',
-        //     cell: row => (
-        //         <>
-        //         <div>
-        //          <Pencil onClick={() => updateClient(row)} />
-        //         </div>
-        //        <div>
-        //        <Trash2 onClick={() => DeleteClient(row._id)} />
-        //        </div>
-        //        </>
-        //     ),
-        //     ignoreRowClick: true,
-        //     allowOverflow: true,
-        //     button: true,
-        // }
-    ];
+    // const columns = [
+    //     {
+    //         name: 'S.No',
+    //         selector: (row, index) => index + 1,
+    //         sortable: false,
+    //         width: '70px',
+    //     },
+    //     {
+    //         name: 'Title',
+    //         selector: row => row.title,
+    //         sortable: true,
+    //     },
+    //     {
+    //         name: 'Validity',
+    //         selector: row => row.validity,
+    //         sortable: true,
+    //         width: '220px',
+    //     },
+    //     {
+    //         name: 'price',
+    //         selector: row => row.price,
+    //         sortable: true,
+    //     },
+    //     {
+    //         name: 'Description',
+    //         selector: row => row.description,
+    //         sortable: true,
+    //     },
+
+    //     {
+    //         name: 'Active Status',
+    //         selector: row => (
+    //           <div className="form-check form-switch form-check-info">
+    //             <input
+    //               id={`rating_${row.status}`}
+    //               className="form-check-input"
+    //               type="checkbox"
+    //               defaultChecked={row.status === "active"}
+    //             //   onChange={(event) => handleSwitchChange(event, row._id)}
+    //             />
+    //             <label
+    //               htmlFor={`rating_${row.ActiveStatus}`}
+    //               className="checktoggle checkbox-bg"
+    //             ></label>
+    //           </div>
+    //         ),
+    //         sortable: true,
+    //       },
+
+
+    //     {
+    //         name: 'Created At',
+    //         selector: row => new Date(row.created_at).toLocaleDateString(),
+    //         sortable: true,
+    //     },
+    //     {
+    //         name: 'Updated At',
+    //         selector: row => new Date(row.updated_at).toLocaleDateString(),
+    //         sortable: true,
+    //     },
+    //     // {
+    //     //     name: 'Actions',
+    //     //     cell: row => (
+    //     //         <>
+    //     //         <div>
+    //     //          <Pencil onClick={() => updateClient(row)} />
+    //     //         </div>
+    //     //        <div>
+    //     //        <Trash2 onClick={() => DeleteClient(row._id)} />
+    //     //        </div>
+    //     //        </>
+    //     //     ),
+    //     //     ignoreRowClick: true,
+    //     //     allowOverflow: true,
+    //     //     button: true,
+    //     // }
+    // ];
 
     return (
         <div>
-            <div>
-                <div className="page-content">
-                    {/* breadcrumb */}
-                    <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                        <div className="breadcrumb-title pe-3">Plan</div>
-                        <div className="ps-3">
-                            <nav aria-label="breadcrumb">
-                                <ol className="breadcrumb mb-0 p-0">
-                                    <li className="breadcrumb-item">
-                                        <Link to="/admin/dashboard">
-                                            <i className="bx bx-home-alt" />
-                                        </Link>
-                                    </li>
-                                </ol>
-                            </nav>
-                        </div>
-                    </div>
-                    {/* end breadcrumb */}
-                    <div className="card">
-                        <div className="card-body">
-                            <div className="d-lg-flex align-items-center mb-4 gap-3">
-                                <div className="position-relative">
-                                    <input
-                                        type="text"
-                                        className="form-control ps-5 radius-10"
-                                        placeholder="Search Order"
-                                    />
-                                    <span className="position-absolute top-50 product-show translate-middle-y">
-                                        <i className="bx bx-search" />
-                                    </span>
-                                </div>
-                                <div className="ms-auto">
-                                    <Link
-                                        to="/admin/addplan"
-                                        className="btn btn-primary"
-                                    >
-                                        <i
-                                            className="bx bxs-plus-square"
-                                            aria-hidden="true"
-                                        />
-                                        Add Plan
-                                    </Link>
-                                </div>
-                            </div>
 
-                            <Table
-                                columns={columns}
-                                data={clients}
-                            />
+            <div className="page-content">
+                {/*breadcrumb*/}
+                <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+                    <div className="breadcrumb-title pe-3">Plan</div>
+                    <div className="ps-3">
+                        <nav aria-label="breadcrumb">
+                            <ol className="breadcrumb mb-0 p-0">
+                                <li className="breadcrumb-item">
+                                    <a href="javascript:;">
+                                        <i className="bx bx-home-alt" />
+                                    </a>
+                                </li>
+                                <li className="breadcrumb-item active" aria-current="page">
+
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div className="ms-auto">
+                        <div className="btn-group">
+                            <Link to="/addplan" className="btn btn-primary">
+                                Add Plan
+                            </Link>
+
+
                         </div>
                     </div>
                 </div>
+                {/*end breadcrumb*/}
+                {/* Section: Pricing table */}
+                <div className="pricing-table">
+
+                    <hr />
+                    <div className="row row-cols-1 row-cols-lg-3">
+                        {/* Free Tier */}
+                        <div className="col">
+                            <div className="card mb-5 mb-lg-0">
+                                <div className="card-header bg-danger py-3">
+                                    <h5 className="card-title text-white text-uppercase text-center">
+                                        Free
+                                    </h5>
+                                    <h6 className="card-price text-white text-center">
+                                        $0<span className="term">/month</span>
+                                    </h6>
+                                </div>
+                                <div className="card-body">
+                                    <ul className="list-group list-group-flush">
+                                        <li className="list-group-item text-secondary">
+                                            <p>Title :</p>
+
+                                        </li>
+                                        <li className="list-group-item">
+                                            <p>Price : </p>
+
+                                        </li>
+                                        <li className="list-group-item">
+                                            <p>category: </p>
+
+                                        </li>
+
+                                        <li className="list-group-item">
+                                            <p>Description :</p>
+
+                                        </li>
+
+
+                                        <li className="list-group-item text-secondary">
+                                            <p>Updated At :</p>
+
+                                        </li>
+                                        <li className="list-group-item text-secondary">
+                                            <p>validity :</p>
+
+                                        </li>
+                                    </ul>
+                                    <div className="d-grid">
+                                        {" "}
+                                        <a href="#" className="btn btn-danger my-2 radius-30">
+                                            Order Now
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/* Plus Tier */}
+                        <div className="col">
+                            <div className="card mb-5 mb-lg-0">
+                                <div className="card-header bg-primary py-3">
+                                    <h5 className="card-title text-white text-uppercase text-center">
+                                        Plus
+                                    </h5>
+                                    <h6 className="card-price text-white text-center">
+                                        $9<span className="term">/month</span>
+                                    </h6>
+                                </div>
+                                <div className="card-body">
+                                    <ul className="list-group list-group-flush">
+                                        <li className="list-group-item text-secondary">
+                                            <p>Title :</p>
+
+                                        </li>
+                                        <li className="list-group-item">
+                                            <p>Price : </p>
+
+                                        </li>
+                                        <li className="list-group-item">
+                                            <p>category: </p>
+
+                                        </li>
+
+                                        <li className="list-group-item">
+                                            <p>Description :</p>
+
+                                        </li>
+
+
+                                        <li className="list-group-item text-secondary">
+                                            <p>Updated At :</p>
+
+                                        </li>
+                                        <li className="list-group-item text-secondary">
+                                            <p>validity :</p>
+
+                                        </li>
+                                    </ul>
+                                    <div className="d-grid">
+                                        {" "}
+                                        <a href="#" className="btn btn-primary my-2 radius-30">
+                                            Order Now
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/* Pro Tier */}
+                        <div className="col">
+                            <div className="card">
+                                <div className="card-header bg-warning py-3">
+                                    <h5 className="card-title text-dark text-uppercase text-center">
+                                        Pro
+                                    </h5>
+                                    <h6 className="card-price text-center">
+                                        $49<span className="term">/month</span>
+                                    </h6>
+                                </div>
+                                <div className="card-body">
+                                    <ul className="list-group list-group-flush">
+                                        <li className="list-group-item text-secondary">
+                                            <p>Title :</p>
+
+                                        </li>
+                                        <li className="list-group-item">
+                                            <p>Price : </p>
+
+                                        </li>
+                                        <li className="list-group-item">
+                                            <p>category: </p>
+
+                                        </li>
+
+                                        <li className="list-group-item">
+                                            <p>Description :</p>
+
+                                        </li>
+
+
+                                        <li className="list-group-item text-secondary">
+                                            <p>Updated At :</p>
+
+                                        </li>
+                                        <li className="list-group-item text-secondary">
+                                            <p>validity :</p>
+
+                                        </li>
+                                    </ul>
+                                    <div className="d-grid">
+                                        {" "}
+                                        <a href="#" className="btn btn-warning my-2 radius-30">
+                                            Order Now
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
             </div>
         </div>
+
+
     );
 }
 
