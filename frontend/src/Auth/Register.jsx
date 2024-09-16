@@ -27,7 +27,7 @@ const Register = () => {
                                             <img src="assets/images/logo-icon.png" width={60} alt="" />
                                         </div>
                                         <div className="text-center mb-4">
-                                            <h5 className="">Rukada Admin</h5>
+                                            <h5 className="">Stock Box</h5>
                                             <p className="mb-0">
                                                 Please fill the below details to create your account
                                             </p>
