@@ -7,16 +7,18 @@ import { Addplanbyadmin , getcategoryplan } from '../../../Services/Admin';
 
 
 
-
 const Addplan = () => {
-  
+
+
+
 
     const navigate = useNavigate();
-
     const user_id = localStorage.getItem("id");
     const token = localStorage.getItem("token");
     const [clients, setClients] = useState([]);
-  
+
+
+
 
     const getcategoryplanlist = async () => {
         try {
@@ -34,25 +36,27 @@ const Addplan = () => {
     }, []);
 
 
+
+
+
     const validate = (values) => {
         let errors = {};
 
         if (!values.title) {
-            errors.title = "Please enter Full Name";
+            errors.title = "Please enter Title";
         }
         if (!values.description) {
-            errors.description = "Please enter Email";
+            errors.description = "Please enter Description";
         }
         if (!values.price) {
-            errors.PhoneNo = "Please enter Phone Number";
+            errors.price = "Please enter Price";
         }
         if (!values.validity) {
-            errors.category = "Please enter password";
+            errors.validity = "Please enter Validity";
         }
         if (!values.category) {
-            errors.category = "Please enter password";
+            errors.category = "Please enter Category";
         }
-       
 
         return errors;
     };
@@ -107,54 +111,17 @@ const Addplan = () => {
             description: "",
             price: "",
             validity: "",
-            category:"",
+            category: "",
             add_by: "",
         },
         validate,
         onSubmit,
     });
 
+
+
+    
     const fields = [
-        {
-            name: "Title",
-            label: "title",
-            type: "text",
-            label_size: 6,
-            col_size: 6,
-            disable: false,
-        },
-        {
-            name: "Email",
-            label: "Email",
-            type: "text",
-            label_size: 12,
-            col_size: 6,
-            disable: false,
-        },
-        {
-            name: "price",
-            label: "Price",
-            type: "number",
-            label_size: 12,
-            col_size: 6,
-            disable: false,
-        },
-        {
-            name: "validity",
-            label: "Validity",
-            type: "select", 
-            label_size: 12,
-            col_size: 6,
-            disable: false,
-            options: [
-                { value: "1Month", label: "1 Month" },
-                { value: "3Month", label: "3 Month" },
-                { value: "6Month", label: "6 Month" },
-                { value: "1Year", label: "1 Year" },
-                { value: "5Year", label: "5 Year" }
-            ]  
-        },
-        
         {
             name: "category",
             label: "Category",
@@ -167,29 +134,62 @@ const Addplan = () => {
             col_size: 6,
             disable: false,
         },
-
         {
-            name: "Description",
-            label: "description",
-            type: "password",
+            name: "validity",
+            label: "Validity",
+            type: "select", 
+            label_size: 12,
+            col_size: 6,
+            disable: false,
+            options: [
+                { value: "1 Month", label: "1 Month" },
+                { value: "3 Month", label: "3 Month" },
+                { value: "6 Month", label: "6 Month" },
+                { value: "1 Year", label: "1 Year" },
+                { value: "5 Year", label: "5 Year" }
+            ]  
+        },
+        {
+            name: "title",
+            label: "Title",
+            type: "text",
+            label_size: 6,
+            col_size: 6,
+            disable: false,
+        },
+        {
+            name: "price",
+            label: "Price",
+            type: "number",
+            label_size: 12,
+            col_size: 6,
+            disable: false,
+        },
+        
+        {
+            name: "description",
+            label: "Description",
+            type: "text",
             label_size: 12,
             col_size: 6,
             disable: false,
         },
     ];
 
+
+
+    
     return (
         <div style={{ marginTop: "100px" }}>
             <DynamicForm
                 fields={fields}
                 formik={formik}
-                page_title="Add New User"
-                btn_name="Add User"
+                page_title="Add New Plan"
+                btn_name="Add Plan"
                 btn_name1="Cancel"
                 sumit_btn={true}
                 btn_name1_route={"/admin/plan"}
                 additional_field={<></>}
-
             />
         </div>
     );

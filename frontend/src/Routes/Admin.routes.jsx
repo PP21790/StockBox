@@ -25,8 +25,8 @@ import AddSignal from '../layout/Admin/Admin_signal/AddSignal';
 import Signaldetail from '../layout/Admin/Admin_signal/Signaldetail';
 import Addbasket from '../layout/Admin/Admin_basket/Addbasket';
 import Staffpermission from '../layout/Admin/Admin_staff/Staffpermission';
-import Plan from '../layout/Admin/Plan/Plan';
-import Addplan from '../layout/Admin/Plan/Addplan';
+import Plan from '../layout/Admin/Plans/Plan';
+import Addplan from '../layout/Admin/Plans/Addplan';
 
 
 function MainApp() {
