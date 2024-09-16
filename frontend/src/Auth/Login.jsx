@@ -129,8 +129,12 @@ const Login = () => {
                                                     </div>
                                                 </div>
                                                 <div className="col-md-6 text-end">
-                                                    <p onClick={() => navigate("/forgetpass")}>
+                                                    {/* <p onClick={() => navigate("/forgetpass")}>
                                                         Forgot Password?
+                                                    </p> */}
+                                                    <p className="mb-0">
+                                                      
+                                                        <Link to="/forgetpass">Forgot Password?</Link>
                                                     </p>
                                                 </div>
 
