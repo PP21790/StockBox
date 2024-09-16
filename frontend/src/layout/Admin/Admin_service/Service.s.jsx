@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { GetService, AddService, UpdateService, UpdateServiceStatus } from '../../../Services/Admin';
+import { GetService, AddService, UpdateService, UpdateServiceStatus, Deleteservices } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
 import Swal from 'sweetalert2';
 
 const Service = () => {
+
+
+
     const navigate = useNavigate();
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
@@ -22,6 +25,10 @@ const Service = () => {
 
     const token = localStorage.getItem('token');
     const userid = localStorage.getItem('id');
+
+
+
+
 
     // Getting services
     const getAdminservice = async () => {
@@ -42,6 +49,10 @@ const Service = () => {
     useEffect(() => {
         getAdminservice();
     }, [searchInput]);
+
+
+
+
 
     // Update service
     const Updateservicebyadmin = async () => {
@@ -78,6 +89,10 @@ const Service = () => {
             });
         }
     };
+
+
+
+
 
     // Add service
     const addservice = async () => {
@@ -165,6 +180,55 @@ const Service = () => {
 
 
 
+    // delete sevices
+
+    // delete plan cartegory 
+
+    const DeleteService = async (_id) => {
+        // console.log("_id",_id)
+        try {
+            const result = await Swal.fire({
+                title: 'Are you sure?',
+                text: 'Do you want to delete this ? This action cannot be undone.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel',
+            });
+
+            if (result.isConfirmed) {
+                const response = await Deleteservices(_id, token);
+                if (response.status) {
+                    Swal.fire({
+                        title: 'Deleted!',
+                        text: 'The staff has been successfully deleted.',
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                    });
+                    getAdminservice();
+
+                }
+            } else {
+
+                Swal.fire({
+                    title: 'Cancelled',
+                    text: 'The staff deletion was cancelled.',
+                    icon: 'info',
+                    confirmButtonText: 'OK',
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'There was an error deleting the staff.',
+                icon: 'error',
+                confirmButtonText: 'Try Again',
+            });
+
+        }
+    };
+
+
 
     const columns = [
         {
@@ -221,7 +285,7 @@ const Service = () => {
                         />
                     </div>
                     <div>
-                        {/* <Trash2 onClick={() => DeleteClient(row._id)} /> */}
+                        <Trash2 onClick={() => DeleteService(row._id)} />
                     </div>
                 </>
             ),

@@ -33,7 +33,6 @@ const Sidebar = ({ onToggleClick }) => {
                       <i className="bx bx-arrow-back" />
                     </div>
                   </div>
-                  {/*navigation*/}
                   <ul className="metismenu mm-show" id="menu">
                     <li>
                       <Link

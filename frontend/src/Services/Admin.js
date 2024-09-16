@@ -274,8 +274,9 @@ export async function UpdateClientStatus(data,token) {
 }
 
 
-// update staff status
 
+
+// update staff status
 
 export async function updateStaffstatus(data,token) {
     try {
@@ -521,18 +522,94 @@ export async function getcategoryplan(token) {
 
 
 
-// // get category list 
+// plan category add 
 
-// export async function getcategoryplan(token) {
+export async function Addplancategory(data,token) {
+    try {
+        const res = await axios.post(`${Config.base_url}plancategory/add`, data, { 
+            headers: {
+                data:{},
+                'Authorization': `${token}`,
+            },
+    
+        });
 
-//     try {
-//         const res = await axios.get(`${Config.base_url}plancategory/list`, {
-//             headers: {
-//                 'Authorization': `${token}`
-//             },
-//         });
-//         return res?.data;
-//     } catch (err) {
-//         return { error: err.response?.data || err.message };
-//     }
-// }
+        return res?.data;
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message; 
+    }
+}
+
+
+
+//  update category plan 
+
+export async function UpdateCategoryplan(data,token) {
+    try {
+        const res = await axios.put(`${Config.base_url}plancategory/update`,data ,{
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
+
+// delete plan category 
+
+
+export async function deleteplancategory(_id,token) {
+    try {
+        const res = await axios.get(`${Config.base_url}plancategory/delete/${_id}`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
+
+// update plan status 
+
+export async function updatecategorydstatus(data,token) {
+    try {
+        const res = await axios.post(`${Config.base_url}plancategory/change-status`, data, { 
+            headers: {
+                data:{},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message; 
+    }
+}
+
+
+// delet api for service
+
+export async function Deleteservices(_id,token) {
+    try {
+        const res = await axios.get(`${Config.base_url}service/delete/${_id}`, { 
+            headers: {
+                data:{},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message; 
+    }
+}
+
