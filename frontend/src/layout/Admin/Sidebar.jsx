@@ -93,6 +93,15 @@ const Sidebar = ({ onToggleClick }) => {
                       </Link>
                     </li>
                     <li>
+                      <Link to="/admin/plan">
+                        <div className="parent-icon">
+                          <i className="bx bx-credit-card" />
+                        </div>
+                        <div className="menu-title">Plan
+                        </div>
+                      </Link>
+                    </li>
+                    <li>
                       <Link to="/admin/paymenthistory">
                         <div className="parent-icon">
                           <i className="bx bx-credit-card" />
@@ -150,7 +159,7 @@ const Sidebar = ({ onToggleClick }) => {
                     </li>
 
                   </ul>
-                 
+
                 </div>
               </div>
             </div>

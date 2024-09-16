@@ -460,3 +460,62 @@ export async function Addbasketplan(data,token) {
         return err.response?.data || err.message; 
     }
 }
+
+
+
+// plan list 
+
+
+export async function getplanlist(token) {
+
+    try {
+        const res = await axios.get(`${Config.base_url}plan/list`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
+
+
+// add plan 
+
+
+export async function Addplanbyadmin(data,token) {
+    try {
+        const res = await axios.post(`${Config.base_url}plan/add`, data, { 
+            headers: {
+                data:{},
+                'Authorization': `${token}`,
+            },
+    
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message; 
+    }
+}
+
+
+// plan  plancategory list
+
+export async function getcategoryplan(token) {
+
+    try {
+        const res = await axios.get(`${Config.base_url}plancategory/list`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+

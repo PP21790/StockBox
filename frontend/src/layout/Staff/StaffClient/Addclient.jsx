@@ -2,19 +2,12 @@ import React from 'react';
 import { useFormik } from 'formik';
 import DynamicForm from '../../../components/FormicForm';
 import Swal from 'sweetalert2';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { UpdateClient } from '../../../Services/Admin';
+import { useNavigate } from 'react-router-dom';
+import { AddClient } from '../../../Services/Admin';
+import { getstaffperuser } from '../../../Services/Admin';
 
-
-
-const EditClient = () => {
-
-
+const AddUser = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { row } = location.state; 
-
-  // console.log("row",row)
 
   const user_id = localStorage.getItem("id");
   const token = localStorage.getItem("token");
@@ -28,16 +21,17 @@ const EditClient = () => {
     if (!values.Email) {
       errors.Email = "Please enter Email";
     }
-    // if (!values.UserName) {
-    //   errors.UserName = "Please enter Username";
-    // }
     if (!values.PhoneNo) {
       errors.PhoneNo = "Please enter Phone Number";
     }
     if (!values.password) {
-      errors.password = "Please enter Phone Number";
+      errors.password = "Please enter password";
     }
-    
+    if (!values.ConfirmPassword) {
+      errors.ConfirmPassword = "Please confirm your password";
+    } else if (values.password !== values.ConfirmPassword) {
+      errors.ConfirmPassword = "Passwords must match";
+    }
 
     return errors;
   };
@@ -45,25 +39,24 @@ const EditClient = () => {
   const onSubmit = async (values) => {
     const req = {
       FullName: values.FullName,
-      // UserName: values.UserName,
       Email: values.Email,
       PhoneNo: values.PhoneNo,
-      password:values.password,
-      id: row._id,
+      password: values.password,
+      add_by: user_id,
     };
 
     try {
-      const response = await UpdateClient(req,token);
+      const response = await AddClient(req, token);
       if (response.status) {
         Swal.fire({
-          title: "Update Successful!",
+          title: "Create Successful!",
           text: response.message,
           icon: "success",
           timer: 1500,
           timerProgressBar: true,
         });
         setTimeout(() => {
-          navigate("/admin/client");
+          navigate("/staff/client");
         }, 1500);
       } else {
         Swal.fire({
@@ -88,11 +81,12 @@ const EditClient = () => {
 
   const formik = useFormik({
     initialValues: {
-      FullName: row?.FullName || "",
-      // UserName: row?.UserName || "",
-      Email: row?.Email || "",
-      PhoneNo: row?.PhoneNo || "",
-    
+      FullName: "",
+      Email: "",
+      PhoneNo: "",
+      password: "",
+      ConfirmPassword: "",
+      add_by: "",
     },
     validate,
     onSubmit,
@@ -107,14 +101,6 @@ const EditClient = () => {
       col_size: 6,
       disable: false,
     },
-    // {
-    //   name: "UserName",
-    //   label: "User Name",
-    //   type: "text",
-    //   label_size: 12,
-    //   col_size: 6,
-    //   disable: false,
-    // },
     {
       name: "Email",
       label: "Email",
@@ -126,7 +112,7 @@ const EditClient = () => {
     {
       name: "PhoneNo",
       label: "Phone Number",
-      type: "text3", 
+      type: "text3",
       label_size: 12,
       col_size: 6,
       disable: false,
@@ -134,7 +120,15 @@ const EditClient = () => {
     {
       name: "password",
       label: "Password",
-      type: "text", 
+      type: "password", 
+      label_size: 12,
+      col_size: 6,
+      disable: false,
+    },
+    {
+      name: "ConfirmPassword",
+      label: "Confirm Password",
+      type: "password",
       label_size: 12,
       col_size: 6,
       disable: false,
@@ -145,16 +139,17 @@ const EditClient = () => {
     <div style={{ marginTop: "100px" }}>
       <DynamicForm
         fields={fields}
-        page_title="Update User"
-        btn_name="Update User"
-        btn_name1="Cancel"
         formik={formik}
+        page_title="Add New User"
+        btn_name="Add User"
+        btn_name1="Cancel"
         sumit_btn={true}
-        btn_name1_route={"/admin/client"}
+        btn_name1_route={"/staff/client"}
         additional_field={<></>}
+        
       />
     </div>
   );
 };
 
-export default EditClient;
+export default AddUser;

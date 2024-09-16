@@ -13,6 +13,8 @@ const Staffpermission = () => {
     const [clients, setClients] = useState([]);
     const _id = row._id;
     
+
+    
     useEffect(() => {
         getAdminclient();
     }, []);
@@ -185,6 +187,7 @@ const Staffpermission = () => {
                 page_title="Edit Staff"
                 btn_name="Edit Staff"
                 btn_name1="Cancel"
+                sumit_btn={true}
                 formik={formik}
                 btn_name1_route={'/admin/staff'}
                 additional_field={<></>}

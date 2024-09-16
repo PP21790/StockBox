@@ -25,6 +25,8 @@ import AddSignal from '../layout/Admin/Admin_signal/AddSignal';
 import Signaldetail from '../layout/Admin/Admin_signal/Signaldetail';
 import Addbasket from '../layout/Admin/Admin_basket/Addbasket';
 import Staffpermission from '../layout/Admin/Admin_staff/Staffpermission';
+import Plan from '../layout/Admin/Plan/Plan';
+import Addplan from '../layout/Admin/Plan/Addplan';
 
 
 function MainApp() {
@@ -103,6 +105,9 @@ function MainApp() {
                     <Route path="/basket" element={<Basket/>} />
                     <Route path="/addbasket" element={<Addbasket/>} />
                      
+                    
+                    <Route path="/plan" element={<Plan/>} />
+                    <Route path="/addplan" element={<Addplan/>} />
 
              
                     

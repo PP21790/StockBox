@@ -149,8 +149,7 @@ const EditClient = () => {
         btn_name="Update User"
         btn_name1="Cancel"
         formik={formik}
-        sumit_btn={true}
-        btn_name1_route={"/admin/client"}
+        btn_name1_route={"/staff/client"}
         additional_field={<></>}
       />
     </div>

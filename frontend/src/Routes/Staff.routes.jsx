@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Dashboard from '../layout/Admin/Admin_dashboard/Dashboard';
 
 
-import Client from '../layout/Admin/Admin_client/Client';
+
 import Profile from '../layout/Admin/Admin_profile/Profile';
 
 
@@ -12,9 +12,11 @@ import Sidebar from '../layout/Staff/Sidebar'
 import Header from '../layout/Staff/Header';
 import Footer from '../layout/Staff/Footer';
 
+import Client from '../layout/Staff/StaffClient/Client';
+import Addclient from '../layout/Staff/StaffClient/Addclient';
+import EditClient from '../layout/Staff/StaffClient/Editclient';
 
-import AddUser from '../layout/Admin/Admin_client/AddUser';
-import EditClient from '../layout/Admin/Admin_client/EditClient';
+
 
 
 function Staff() {
@@ -64,7 +66,7 @@ function Staff() {
                 <Routes>
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/client" element={<Client />} />
-                    <Route path="/addclient" element={<AddUser />} />
+                    <Route path="/addclient" element={<Addclient />} />
                     <Route path="/client/updateclient/:id" element={<EditClient />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/faq" element={<Faq />} />
