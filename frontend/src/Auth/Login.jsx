@@ -16,22 +16,22 @@ const Login = () => {
 
     const loginpageOpen = async (e) => {
         e.preventDefault();
-    
+
         let req = {
             UserName: username,
             password: password,
         };
-    
+
         try {
             var login_data = await login_Api(req);
-    
+
             if (login_data.data.status) {
                 Swal.fire({
                     title: "Login Successful!",
                     text: "You will be redirected to the dashboard.",
                     icon: "success",
-                    showConfirmButton: false,  
-                    timer: 2000,  
+                    showConfirmButton: false,
+                    timer: 2000,
                 }).then(() => {
                     localStorage.setItem("token", login_data.data.data.token);
                     localStorage.setItem("id", login_data.data.data.id);
@@ -44,8 +44,8 @@ const Login = () => {
                     title: "Login Failed",
                     text: login_data.data.message || "Invalid username or password.",
                     icon: "error",
-                    showConfirmButton: false, 
-                    timer: 2000,  
+                    showConfirmButton: false,
+                    timer: 2000,
                 });
             }
         } catch (error) {
@@ -53,8 +53,8 @@ const Login = () => {
                 title: "Error!",
                 text: "Something went wrong during login. Please try again later.",
                 icon: "error",
-                showConfirmButton: false,  
-                timer: 2000,  
+                showConfirmButton: false,
+                timer: 2000,
             });
         }
     };
@@ -129,8 +129,12 @@ const Login = () => {
                                                     </div>
                                                 </div>
                                                 <div className="col-md-6 text-end">
-                                                    <p onClick={() => navigate("/forgetpass")}>
+                                                    {/* <p onClick={() => navigate("/forgetpass")}>
                                                         Forgot Password?
+                                                    </p> */}
+                                                    <p className="mb-0">
+                                                      
+                                                        <Link to="/forgetpass">Forgot Password?</Link>
                                                     </p>
                                                 </div>
 
@@ -153,13 +157,13 @@ const Login = () => {
                                             {error && <div className="alert alert-danger mt-3">{error}</div>}
                                         </div>
                                         <div className="login-separater text-center mb-5">
-                                            <span>OR SIGN IN WITH</span>
-                                            <hr />
+                                            {/* <span>OR SIGN IN WITH</span> */}
+                                            {/* <hr /> */}
                                         </div>
-                                        
+
                                     </div>
                                 </div>
-                            </div>
+                            </div>  
                         </div>
                     </div>
                 </div>

@@ -160,7 +160,7 @@ const Client = () => {
               <div className="form-check form-switch form-check-info">
                 <input
                   id={`rating_${row.ActiveStatus}`}
-                  className="form-check-input"
+                  className="form-check-input toggleswitch"
                   type="checkbox"
                   defaultChecked={row.ActiveStatus == 1}
                   onChange={(event) => handleSwitchChange(event, row._id)}

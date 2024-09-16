@@ -184,7 +184,7 @@ const Service = () => {
                 <div className="form-check form-switch form-check-info">
                     <input
                         id={`rating_${row.status}`}
-                        className="form-check-input"
+                        className="form-check-input toggleswitch"
                         type="checkbox"
                         checked={row.status === true}
                         onChange={(event) => handleSwitchChange(event, row._id)}
@@ -245,7 +245,7 @@ const Service = () => {
     return (
         <div>
             <div className="page-content">
-               
+
                 <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
                     <div className="breadcrumb-title pe-3">Service</div>
                     <div className="ps-3">
@@ -260,7 +260,7 @@ const Service = () => {
                         </nav>
                     </div>
                 </div>
-              
+
                 <div className="card">
                     <div className="card-body">
                         <div className="d-lg-flex align-items-center mb-4 gap-3">
@@ -343,7 +343,7 @@ const Service = () => {
                                     </div>
                                 </div>
 
-                              
+
                                 {model && (
                                     <div
                                         className="modal fade show"
