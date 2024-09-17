@@ -74,7 +74,7 @@ const Plan = () => {
                                         {item.validity}<span className="term">/month</span>
                                     </h6>
                                 </div>
-                                <div className="card-body">
+                                <div className="card-body" style={{ height: "433px" }}>
                                     <ul className="list-group list-group-flush">
                                         <li className="list-group-item bg-transparent text-white">
                                             <p><b>Title:</b> {item.title}</p>
@@ -91,6 +91,7 @@ const Plan = () => {
                                         <li className="list-group-item bg-transparent text-white">
                                             <p><b>Created At:</b> {new Date(item.created_at).toLocaleDateString()}</p>
                                         </li>
+
 
                                     </ul>
                                     {/* <div className="d-grid">
