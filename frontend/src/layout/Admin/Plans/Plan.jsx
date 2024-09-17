@@ -8,11 +8,6 @@ const Plan = () => {
     const navigate = useNavigate();
     const [clients, setClients] = useState([]);
     const token = localStorage.getItem('token');
-
-
-
-
-
     const getAdminclient = async () => {
         try {
             const response = await getplanlist(token);
@@ -27,9 +22,6 @@ const Plan = () => {
     useEffect(() => {
         getAdminclient();
     }, []);
-
-
-
 
 
     return (
