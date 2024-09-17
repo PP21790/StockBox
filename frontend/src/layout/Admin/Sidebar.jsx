@@ -91,7 +91,7 @@ const Sidebar = ({ onToggleClick }) => {
                       </ul>
                     </li>
 
-                    <li className={activeDropdown === 'refer' ? 'mm-active' : ''}>
+                    {/* <li className={activeDropdown === 'refer' ? 'mm-active' : ''}>
                       <a href="#" onClick={toggleDropdown('refer')} className="has-arrow" aria-expanded={activeDropdown === 'refer'}>
                         <div className="parent-icon">
                           <i className="bx bxl-redux" />
@@ -118,7 +118,7 @@ const Sidebar = ({ onToggleClick }) => {
                           </Link>
                         </li>
                       </ul>
-                    </li>
+                    </li> */}
 
                     <li>
                       <Link to="/admin/staff">
@@ -162,6 +162,15 @@ const Sidebar = ({ onToggleClick }) => {
                           <i className="bx bx-edit-alt" />
                         </div>
                         <div className="menu-title">Kyc & Agreement</div>
+                      </Link>
+                    </li>
+
+                    <li>
+                      <Link to="/admin/refer">
+                        <div className="parent-icon">
+                          <i className="bx bx-user-plus" />
+                        </div>
+                        <div className="menu-title">Refer & Earn</div>
                       </Link>
                     </li>
 
