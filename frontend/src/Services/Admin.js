@@ -613,3 +613,99 @@ export async function Deleteservices(_id,token) {
     }
 }
 
+
+
+// get stock list 
+
+export async function getstocklist(token) {
+
+    try {
+        const res = await axios.get(`${Config.base_url}stock/list`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
+
+
+// add stock 
+
+export async function AddstockbyAdmin(data,token) {
+    try {
+        const res = await axios.post(`${Config.base_url}stock/add`, data, { 
+            headers: {
+                data:{},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message; 
+    }
+}
+
+// update stock
+
+
+export async function Updatestock(data,token) {
+    try {
+        const res = await axios.put(`${Config.base_url}stock/update`, data, { 
+            headers: {
+                data:{},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message; 
+    }
+}
+
+
+// delet api for stock
+
+export async function DeleteStock(_id,token) {
+    try {
+        const res = await axios.get(`${Config.base_url}stock/delete/${_id}`, { 
+            headers: {
+                data:{},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message; 
+    }
+}
+
+
+
+// change status of stock 
+
+export async function Stockstatus(data,token) {
+    try {
+        const res = await axios.post(`${Config.base_url}stock/change-status`, data, { 
+            headers: {
+                data:{},
+                'Authorization': `${token}`,
+            },
+    
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message; 
+    }
+}
