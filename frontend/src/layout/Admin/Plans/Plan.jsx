@@ -12,7 +12,7 @@ const Plan = () => {
 
 
 
-    
+
     const getAdminclient = async () => {
         try {
             const response = await getplanlist(token);
@@ -64,7 +64,7 @@ const Plan = () => {
             {/* Section: Pricing Table */}
             <div className="pricing-table">
                 <hr />
-                <div className="row row-cols-1 row-cols-lg-3">
+                <div className="row row-cols-1 row-cols-lg-4">
                     {/* Free Tier */}
                     {clients && clients.map((item, index) => (
                         <div key={item.id} className="col mb-4">
@@ -77,19 +77,19 @@ const Plan = () => {
                                 <div className="card-body">
                                     <ul className="list-group list-group-flush">
                                         <li className="list-group-item bg-transparent text-white">
-                                            <p><strong>Title:</strong> {item.title}</p>
+                                            <p><b>Title:</b> {item.title}</p>
                                         </li>
                                         <li className="list-group-item bg-transparent text-white">
-                                            <p><strong>Price:</strong> {item.price}</p>
+                                            <p><b>Price:</b> {item.price}</p>
                                         </li>
                                         <li className="list-group-item bg-transparent text-white">
-                                            <p><strong>Description:</strong> {item.description}</p>
+                                            <p><b>Description:</b> {item.description}</p>
                                         </li>
                                         <li className="list-group-item bg-transparent text-white">
-                                            <p><strong>Updated At:</strong> {item.updated_at}</p>
+                                            <p><b>Updated At:</b> {item.updated_at}</p>
                                         </li>
                                         <li className="list-group-item bg-transparent text-white">
-                                            <p><strong>Created At:</strong> {new Date(item.created_at).toLocaleDateString()}</p>
+                                            <p><b>Created At:</b> {new Date(item.created_at).toLocaleDateString()}</p>
                                         </li>
 
                                     </ul>
