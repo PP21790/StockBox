@@ -12,6 +12,7 @@ const Stock = () => {
 
 
     const navigate = useNavigate();
+
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
@@ -332,40 +333,66 @@ const Stock = () => {
 
 
 
-    // const [selectedFile, setSelectedFile] = useState(null);
-    // const fileInputRef = useRef(null);
+    const [selectedFile, setSelectedFile] = useState(null);
+    const fileInputRef = useRef(null);
 
-    // const handleFileChange = (e) => {
-    //     const file = e.target.files[0];
-    //     if (file) {
-    //         setSelectedFile(file);
-    //     }
-    // };
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setSelectedFile(file);
+        }
+    };
 
-    // const handleAddPdf = async () => {
-    //     if (selectedFile) {
-    //         try {
-    //             const data = { add_by: userid, file: selectedFile.name };
-    //             const response = await Setstockinbulk(data, token);
 
-    //             if (response && response.status) {
-    //                 console.log('Response:', response.data);
-    //                 setSelectedFile(null);
-    //                 if (fileInputRef.current) {
-    //                     fileInputRef.current.value = '';
-    //                 }
-    //             } else {
-    //                 console.error('Upload failed:', response.error);
-    //             }
-    //         } catch (error) {
-    //             console.error('Error during file upload:', error);
-    //         }
-    //     } else {
-    //         console.log('No file selected.');
-    //     }
-    // };
-   
-// console.log("selectedFile",selectedFile)
+
+
+    const handleAddPdf = async () => {
+        if (selectedFile) {
+            try {
+                const data = { add_by: userid, file: selectedFile };
+                const response = await Setstockinbulk(data, token);
+
+                if (response && response.status) {
+                    console.log('Response:', response.data);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'File uploaded successfully.',
+                        confirmButtonText: 'OK',
+                    });
+
+                    setSelectedFile(null);
+                    if (fileInputRef.current) {
+                        fileInputRef.current.value = '';
+                    }
+                } else {
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Failed to upload file. Please try again.',
+                        confirmButtonText: 'OK',
+                    });
+                }
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Unexpected Error!',
+                    text: 'An error occurred during file upload.',
+                    confirmButtonText: 'OK',
+                });
+            }
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'No File Selected!',
+                text: 'Please choose a file to upload.',
+                confirmButtonText: 'OK',
+            });
+        }
+    };
+
+
 
 
     return (
@@ -558,13 +585,14 @@ const Stock = () => {
                                 )}
                             </div>
 
-                            {/* <div>
+                            <div>
                                 <input
                                     type="file"
-                                    id="avatar"
-                                    name="avatar"
-                                    accept="image/png, image/jpeg, application/pdf"
+                                    id="csvFile"
+                                    name="csvFile"
+                                    // accept=".csv"
                                     onChange={handleFileChange}
+                                    style={{ width: "240px",border:"2px solid black",marginRight:"2px" }}
                                 />
                                 <button
                                     type="button"
@@ -572,9 +600,10 @@ const Stock = () => {
                                     onClick={handleAddPdf}
                                 >
                                     <i className="bx bxs-plus-square" />
-                                    Upload Pdf
+                                    Upload CSV
                                 </button>
-                            </div> */}
+                            </div>
+
 
 
                         </div>

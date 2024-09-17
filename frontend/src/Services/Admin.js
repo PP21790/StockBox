@@ -681,8 +681,9 @@ export async function DeleteStock(_id,token) {
                 'Authorization': `${token}`,
             },
         });
-
+       
         return res?.data;
+       
     } catch (err) {
         console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message; 
@@ -715,20 +716,24 @@ export async function Stockstatus(data,token) {
 
 // set stock data in bulk 
 
-export async function Setstockinbulk(data,token) {
+export async function Setstockinbulk(data, token) {
     
+   console.log("token",token)
+    const formData = new FormData();
+    formData.append('add_by', data.add_by); 
+    formData.append('file', data.file); 
     try {
-        const res = await axios.post(`${Config.base_url}stock/addbulkstock`, data, { 
+        const res = await axios.post(`${Config.base_url}stock/addbulkstock`, formData, {
             headers: {
-                data:{},
-                'Authorization': `${token}`,
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`, 
             },
-    
         });
+
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
-        return err.response?.data || err.message; 
+        console.error('Error uploading CSV:', err.response?.data || err.message);
+        return err.response?.data || err.message;
     }
 }
