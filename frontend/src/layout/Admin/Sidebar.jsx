@@ -88,9 +88,18 @@ const Sidebar = ({ onToggleClick }) => {
                             <div className="menu-title">Category</div>
                           </Link>
                         </li>
+                        <li>
+                          <Link to="/admin/stock">
+                            <div className="parent-icon">
+                              <i className="bx bx-filter" />
+                            </div>
+                            <div className="menu-title">Stock</div>
+                          </Link>
+                        </li>
                       </ul>
                     </li>
 
+                  
                     {/* <li className={activeDropdown === 'refer' ? 'mm-active' : ''}>
                       <a href="#" onClick={toggleDropdown('refer')} className="has-arrow" aria-expanded={activeDropdown === 'refer'}>
                         <div className="parent-icon">
@@ -182,6 +191,36 @@ const Sidebar = ({ onToggleClick }) => {
                         <div className="menu-title">FAQ</div>
                       </Link>
                     </li>
+                     
+                    <li className={activeDropdown === 'refer' ? 'mm-active' : ''}>
+                      <a href="#" onClick={toggleDropdown('refer')} className="has-arrow" aria-expanded={activeDropdown === 'refer'}>
+                        <div className="parent-icon">
+                          <i className="bx bxl-redux" />
+                        </div>
+                        <div className="menu-title">Refer & Earn</div>
+                      </a>
+                      <ul className={`mm-collapse ${activeDropdown === 'refer' ? 'mm-show' : ''}`}>
+                        <li>
+                          <Link to="/admin/refer/invite">
+                            <i className="bx bx-radio-circle" />
+                            Invite Friends
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/admin/refer/history">
+                            <i className="bx bx-radio-circle" />
+                            Referral History
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/admin/refer/earnings">
+                            <i className="bx bx-radio-circle" />
+                            Earnings
+                          </Link>
+                        </li>
+                      </ul>
+                    </li>
+
                   </ul>
                 </div>
               </div>
