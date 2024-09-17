@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const Sidebar = ({ onToggleClick }) => {
-  const [activeDropdown, setActiveDropdown] = useState(null); 
+  const [activeDropdown, setActiveDropdown] = useState(null);
 
   const toggleDropdown = (dropdownName) => (e) => {
     e.preventDefault();
-    setActiveDropdown(activeDropdown === dropdownName ? null : dropdownName); 
+    setActiveDropdown(activeDropdown === dropdownName ? null : dropdownName);
   };
 
   return (
@@ -91,7 +91,7 @@ const Sidebar = ({ onToggleClick }) => {
                         <li>
                           <Link to="/admin/stock">
                             <div className="parent-icon">
-                              <i className="bx bx-filter" />
+                              <i className="bx bx-line-chart" />
                             </div>
                             <div className="menu-title">Stock</div>
                           </Link>
@@ -99,7 +99,7 @@ const Sidebar = ({ onToggleClick }) => {
                       </ul>
                     </li>
 
-                  
+
                     {/* <li className={activeDropdown === 'refer' ? 'mm-active' : ''}>
                       <a href="#" onClick={toggleDropdown('refer')} className="has-arrow" aria-expanded={activeDropdown === 'refer'}>
                         <div className="parent-icon">
@@ -191,8 +191,8 @@ const Sidebar = ({ onToggleClick }) => {
                         <div className="menu-title">FAQ</div>
                       </Link>
                     </li>
-                     
-                    <li className={activeDropdown === 'refer' ? 'mm-active' : ''}>
+
+                    {/* <li className={activeDropdown === 'refer' ? 'mm-active' : ''}>
                       <a href="#" onClick={toggleDropdown('refer')} className="has-arrow" aria-expanded={activeDropdown === 'refer'}>
                         <div className="parent-icon">
                           <i className="bx bxl-redux" />
@@ -219,7 +219,7 @@ const Sidebar = ({ onToggleClick }) => {
                           </Link>
                         </li>
                       </ul>
-                    </li>
+                    </li> */}
 
                   </ul>
                 </div>
