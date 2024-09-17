@@ -100,6 +100,34 @@ const Sidebar = ({ onToggleClick }) => {
                     </li>
 
                   
+                    {/* <li className={activeDropdown === 'refer' ? 'mm-active' : ''}>
+                      <a href="#" onClick={toggleDropdown('refer')} className="has-arrow" aria-expanded={activeDropdown === 'refer'}>
+                        <div className="parent-icon">
+                          <i className="bx bxl-redux" />
+                        </div>
+                        <div className="menu-title">Refer & Earn</div>
+                      </a>
+                      <ul className={`mm-collapse ${activeDropdown === 'refer' ? 'mm-show' : ''}`}>
+                        <li>
+                          <Link to="/admin/refer/invite">
+                            <i className="bx bx-radio-circle" />
+                            Invite Friends
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/admin/refer/history">
+                            <i className="bx bx-radio-circle" />
+                            Referral History
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/admin/refer/earnings">
+                            <i className="bx bx-radio-circle" />
+                            Earnings
+                          </Link>
+                        </li>
+                      </ul>
+                    </li> */}
 
                     <li>
                       <Link to="/admin/staff">
@@ -143,6 +171,15 @@ const Sidebar = ({ onToggleClick }) => {
                           <i className="bx bx-edit-alt" />
                         </div>
                         <div className="menu-title">Kyc & Agreement</div>
+                      </Link>
+                    </li>
+
+                    <li>
+                      <Link to="/admin/refer">
+                        <div className="parent-icon">
+                          <i className="bx bx-user-plus" />
+                        </div>
+                        <div className="menu-title">Refer & Earn</div>
                       </Link>
                     </li>
 
