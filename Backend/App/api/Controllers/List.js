@@ -14,8 +14,6 @@ const Faq_Modal = db.Faq;
 const Content_Modal = db.Content;
 const Basket_Modal = db.Basket;
 
-
-
 mongoose  = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -33,10 +31,9 @@ class List {
             const bannerWithImageUrls = banners.map(banner => {
                 return {
                     ...banner._doc, // Spread the original bannerss document
-                    image: banner.image ? `${baseUrl}/uploads/banner/${banner.image}` : null // Append full image URL
+                    image: banner.image ? `${baseUrl}/assets/uploads/banner/${banner.image}` : null // Append full image URL
                 };
             });
-
 
 
             return res.status(200).json({
@@ -65,7 +62,7 @@ class List {
             const blogsWithImageUrls = blogs.map(blog => {
                 return {
                     ...blog._doc, // Spread the original blog document
-                    image: blog.image ? `${baseUrl}/uploads/blogs/${blog.image}` : null // Append full image URL
+                    image: blog.image ? `${baseUrl}/assets/uploads/blogs/${blog.image}` : null // Append full image URL
                 };
             });
 
@@ -97,7 +94,7 @@ class List {
             const newsWithImageUrls = news.map(newss => {
                 return {
                     ...newss._doc, // Spread the original bannerss document
-                    image: newss.image ? `${baseUrl}/uploads/news/${newss.image}` : null // Append full image URL
+                    image: newss.image ? `${baseUrl}/assets/uploads/news/${newss.image}` : null // Append full image URL
                 };
             });
 
@@ -328,17 +325,61 @@ async  myPlan(req, res) {
       return res.status(400).json({ status: false, message: 'Client ID is required' });
     }
 
+    
     // Fetch subscriptions based on client_id and del status
     const result = await PlanSubscription_Modal.find({
       del: false,
       client_id: id
     }).exec();
 
+    // Process the subscriptions to calculate months and years difference
+     // Define validity mapping
+     const validityMapping = {
+      '1 month': 1,
+      '3 months': 3,
+      '6 months': 6,
+      '12 months': 12,
+      '5 years': 60
+    };
+
+    // Process the subscriptions to calculate months and years difference
+    const processedResult = result.map(subscription => {
+      const startDate = new Date(subscription.plan_start);
+      const endDate = new Date(subscription.plan_end);
+
+      // Calculate months difference
+      let monthsDifference = (endDate.getFullYear() - startDate.getFullYear()) * 12;
+      monthsDifference -= startDate.getMonth();
+      monthsDifference += endDate.getMonth();
+      monthsDifference = monthsDifference <= 0 ? 0 : monthsDifference;
+
+      // Calculate years difference
+      let yearsDifference = endDate.getFullYear() - startDate.getFullYear();
+      if (startDate.getMonth() > endDate.getMonth() || 
+          (startDate.getMonth() === endDate.getMonth() && startDate.getDate() > endDate.getDate())) {
+        yearsDifference--;
+      }
+
+      // Determine validity in months and years
+      const planValidity = validityMapping[subscription.validity];
+
+      let differenceString = '';
+      if (yearsDifference > 0) {
+        differenceString = `${yearsDifference} year${yearsDifference === 1 ? '' : 's'}`;
+      } else {
+        differenceString = `${monthsDifference} month${monthsDifference === 1 ? '' : 's'}`;
+      }
+      return {
+        ...subscription.toObject(),  // Convert Mongoose document to plain object
+        differenceString: differenceString,
+       };
+    });
+
     // Respond with the retrieved subscriptions
     return res.json({
       status: true,
       message: "Subscriptions retrieved successfully",
-      data: result
+      data: processedResult
     });
 
   } catch (error) {
@@ -363,7 +404,7 @@ async Couponlist(req, res) {
     const resultWithImageUrls = result.map(results => {
         return {
             ...results._doc, // Spread the original bannerss document
-            image: results.image ? `${baseUrl}/uploads/coupon/${results.image}` : null // Append full image URL
+            image: results.image ? `${baseUrl}/assets/uploads/coupon/${results.image}` : null // Append full image URL
         };
     });
 
@@ -503,7 +544,7 @@ async showSignalsToClients(req, res) {
       const protocol = req.protocol; // Will be 'http' or 'https'
       const baseUrl = `${protocol}://${req.headers.host}`;
  matchingSignals.forEach(signal => {
-    signal.report = `${baseUrl}/uploads/report/${signal.report}`;
+    signal.report = `${baseUrl}/assets/uploads/report/${signal.report}`;
   });
 
       relevantSignals = relevantSignals.concat(matchingSignals);
@@ -561,7 +602,7 @@ async showSignalsToClientsClose(req, res) {
       const protocol = req.protocol; // Will be 'http' or 'https'
       const baseUrl = `${protocol}://${req.headers.host}`;
  matchingSignals.forEach(signal => {
-    signal.report = `${baseUrl}/uploads/report/${signal.report}`;
+    signal.report = `${baseUrl}/assets/uploads/report/${signal.report}`;
   });
 
       relevantSignals = relevantSignals.concat(matchingSignals);
