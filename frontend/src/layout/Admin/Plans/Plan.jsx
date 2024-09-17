@@ -93,11 +93,11 @@ const Plan = () => {
                                         </li>
 
                                     </ul>
-                                    {/* <div className="d-grid">
+                                    <div className="d-grid">
                                         <a href="#" className="btn btn-light my-2 radius-30">
                                             Order Now
                                         </a>
-                                    </div> */}
+                                    </div>
                                 </div>
                             </div>
                         </div>
