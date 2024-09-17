@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const Sidebar = ({ onToggleClick }) => {
-  const [activeDropdown, setActiveDropdown] = useState(null); // Keep track of the active dropdown
+  const [activeDropdown, setActiveDropdown] = useState(null); 
 
   const toggleDropdown = (dropdownName) => (e) => {
     e.preventDefault();
-    setActiveDropdown(activeDropdown === dropdownName ? null : dropdownName); // Toggle between open and close
+    setActiveDropdown(activeDropdown === dropdownName ? null : dropdownName); 
   };
 
   return (
