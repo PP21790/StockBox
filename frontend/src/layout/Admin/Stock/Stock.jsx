@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getstocklist, AddstockbyAdmin, Updatestock, Stockstatus, DeleteStock } from '../../../Services/Admin';
+import { getstocklist, AddstockbyAdmin, Updatestock, Stockstatus, DeleteStock, Setstockinbulk } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
 import Swal from 'sweetalert2';
+import { useRef } from 'react';
+
 
 const Stock = () => {
 
@@ -59,13 +61,13 @@ const Stock = () => {
     }, [searchInput]);
 
 
-
+    // get 
 
 
     // Update service
     const UpdateStockbyadmin = async () => {
         try {
-            const data = { title: updatetitle.title, id: serviceid._id, symbol:updatetitle.symbol };
+            const data = { title: updatetitle.title, id: serviceid._id, symbol: updatetitle.symbol };
             const response = await Updatestock(data, token);
 
             if (response && response.status) {
@@ -77,7 +79,7 @@ const Stock = () => {
                     timer: 2000,
                 });
 
-                setUpdatetitle({ title: "", id: "" , symbol:""});
+                setUpdatetitle({ title: "", id: "", symbol: "" });
                 getstock();
                 setModel(false);
             } else {
@@ -295,7 +297,7 @@ const Stock = () => {
                             onClick={() => {
                                 setModel(true);
                                 setServiceid(row);
-                                setUpdatetitle({ title: row.title,symbol:row.symbol, id: row._id });
+                                setUpdatetitle({ title: row.title, symbol: row.symbol, id: row._id });
                             }}
                         />
                     </div>
@@ -327,7 +329,44 @@ const Stock = () => {
         }));
     };
 
+
+
+
+    // const [selectedFile, setSelectedFile] = useState(null);
+    // const fileInputRef = useRef(null);
+
+    // const handleFileChange = (e) => {
+    //     const file = e.target.files[0];
+    //     if (file) {
+    //         setSelectedFile(file);
+    //     }
+    // };
+
+    // const handleAddPdf = async () => {
+    //     if (selectedFile) {
+    //         try {
+    //             const data = { add_by: userid, file: selectedFile.name };
+    //             const response = await Setstockinbulk(data, token);
+
+    //             if (response && response.status) {
+    //                 console.log('Response:', response.data);
+    //                 setSelectedFile(null);
+    //                 if (fileInputRef.current) {
+    //                     fileInputRef.current.value = '';
+    //                 }
+    //             } else {
+    //                 console.error('Upload failed:', response.error);
+    //             }
+    //         } catch (error) {
+    //             console.error('Error during file upload:', error);
+    //         }
+    //     } else {
+    //         console.log('No file selected.');
+    //     }
+    // };
    
+// console.log("selectedFile",selectedFile)
+
 
     return (
         <div>
@@ -363,7 +402,10 @@ const Stock = () => {
                                     <i className="bx bx-search" />
                                 </span>
                             </div>
+
+
                             <div className="ms-auto">
+
                                 <button
                                     type="button"
                                     className="btn btn-primary"
@@ -515,6 +557,26 @@ const Stock = () => {
                                     </div>
                                 )}
                             </div>
+
+                            {/* <div>
+                                <input
+                                    type="file"
+                                    id="avatar"
+                                    name="avatar"
+                                    accept="image/png, image/jpeg, application/pdf"
+                                    onChange={handleFileChange}
+                                />
+                                <button
+                                    type="button"
+                                    className="btn btn-primary"
+                                    onClick={handleAddPdf}
+                                >
+                                    <i className="bx bxs-plus-square" />
+                                    Upload Pdf
+                                </button>
+                            </div> */}
+
+
                         </div>
                         <div className="table-responsive">
                             <Table

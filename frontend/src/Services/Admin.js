@@ -709,3 +709,26 @@ export async function Stockstatus(data,token) {
         return err.response?.data || err.message; 
     }
 }
+
+
+
+
+// set stock data in bulk 
+
+export async function Setstockinbulk(data,token) {
+    
+    try {
+        const res = await axios.post(`${Config.base_url}stock/addbulkstock`, data, { 
+            headers: {
+                data:{},
+                'Authorization': `${token}`,
+            },
+    
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message; 
+    }
+}
