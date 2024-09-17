@@ -165,14 +165,14 @@ const Sidebar = ({ onToggleClick }) => {
                       </Link>
                     </li>
 
-                    <li>
+                    {/* <li>
                       <Link to="/admin/kyc">
                         <div className="parent-icon">
                           <i className="bx bx-edit-alt" />
                         </div>
                         <div className="menu-title">Kyc & Agreement</div>
                       </Link>
-                    </li>
+                    </li> */}
 
                     <li>
                       <Link to="/admin/refer">
