@@ -28,6 +28,7 @@ import Staffpermission from '../layout/Admin/Admin_staff/Staffpermission';
 import Plan from '../layout/Admin/Plans/Plan';
 import Addplan from '../layout/Admin/Plans/Addplan';
 import Category from '../layout/Admin/Category/Category';
+import Stock from '../layout/Admin/Stock/Stock';
 
 
 function MainApp() {
@@ -109,8 +110,9 @@ function MainApp() {
                     
                     <Route path="/plan" element={<Plan/>} />
                     <Route path="/addplan" element={<Addplan/>} />
-
                     <Route path="/category" element={<Category/>} />
+                    <Route path="/stock" element={<Stock/>} />
+
                       
                     
                 </Routes>
