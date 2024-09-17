@@ -2,12 +2,11 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const Sidebar = ({ onToggleClick }) => {
-  const [referDropdownOpen, setReferDropdownOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState(null); // Keep track of the active dropdown
 
-  // Function to toggle the dropdown for "Refer & Earn"
-  const toggleReferDropdown = (e) => {
-    e.preventDefault(); // Prevent default anchor behavior
-    setReferDropdownOpen(!referDropdownOpen);
+  const toggleDropdown = (dropdownName) => (e) => {
+    e.preventDefault();
+    setActiveDropdown(activeDropdown === dropdownName ? null : dropdownName); // Toggle between open and close
   };
 
   return (
@@ -36,6 +35,7 @@ const Sidebar = ({ onToggleClick }) => {
                       <i className="bx bx-arrow-back" />
                     </div>
                   </div>
+
                   {/* Navigation */}
                   <ul className="metismenu mm-show" id="menu">
                     <li>
@@ -55,75 +55,50 @@ const Sidebar = ({ onToggleClick }) => {
                         <div className="menu-title">Client</div>
                       </Link>
                     </li>
-                    <li>
-                      <Link to={'/admin/staff'}>
-                        <div className="parent-icon">
-                          <i className="bx bx-user-plus" />
-                        </div>
-                        <div className="menu-title">Staff</div>
-                      </Link>
-                    </li>
 
-                    <li>
-                      <Link to="/admin/service">
+                    <li className={activeDropdown === 'plan' ? 'mm-active' : ''}>
+                      <a href="#" onClick={toggleDropdown('plan')} className="has-arrow" aria-expanded={activeDropdown === 'plan'}>
                         <div className="parent-icon">
-                          <i className="bx bx-cog" />
-                        </div>
-                        <div className="menu-title">Services</div>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/admin/signal">
-                        <div className="parent-icon">
-                          <i className="bx bx-wifi-2" />
-                        </div>
-                        <div className="menu-title">Signal</div>
-                      </Link>
-                    </li>
-
-                    <li>
-                      <Link to="/admin/basket">
-                        <div className="parent-icon">
-                          <i className="bx bx-basket" />
-                        </div>
-                        <div className="menu-title">Basket</div>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/admin/plan">
-                        <div className="parent-icon">
-                          <i className="bx bx-purchase-tag" />
+                          <i className="bx bxl-redux" />
                         </div>
                         <div className="menu-title">Plan</div>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/admin/category">
-                        <div className="parent-icon">
-                          <i className="bx bx-filter" />
-                        </div>
-                        <div className="menu-title">Category</div>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/admin/paymenthistory">
-                        <div className="parent-icon">
-                          <i className="bx bx-credit-card" />
-                        </div>
-                        <div className="menu-title">Payment History</div>
-                      </Link>
+                      </a>
+                      <ul className={`mm-collapse ${activeDropdown === 'plan' ? 'mm-show' : ''}`}>
+                        <li>
+                          <Link to="/admin/plan">
+                            <div className="parent-icon">
+                              <i className="bx bx-purchase-tag" />
+                            </div>
+                            <div className="menu-title">Plan</div>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/admin/service">
+                            <div className="parent-icon">
+                              <i className="bx bx-cog" />
+                            </div>
+                            <div className="menu-title">Services</div>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/admin/category">
+                            <div className="parent-icon">
+                              <i className="bx bx-filter" />
+                            </div>
+                            <div className="menu-title">Category</div>
+                          </Link>
+                        </li>
+                      </ul>
                     </li>
 
-                    {/* Dropdown for Refer & Earn */}
-                    <li className={referDropdownOpen ? "mm-active" : ""}>
-                      <a href="#" onClick={toggleReferDropdown} className="has-arrow" aria-expanded={referDropdownOpen}>
+                    <li className={activeDropdown === 'refer' ? 'mm-active' : ''}>
+                      <a href="#" onClick={toggleDropdown('refer')} className="has-arrow" aria-expanded={activeDropdown === 'refer'}>
                         <div className="parent-icon">
                           <i className="bx bxl-redux" />
                         </div>
                         <div className="menu-title">Refer & Earn</div>
                       </a>
-                      {/* Dropdown items */}
-                      <ul className={`mm-collapse ${referDropdownOpen ? "mm-show" : ""}`}>
+                      <ul className={`mm-collapse ${activeDropdown === 'refer' ? 'mm-show' : ''}`}>
                         <li>
                           <Link to="/admin/refer/invite">
                             <i className="bx bx-radio-circle" />
@@ -143,6 +118,42 @@ const Sidebar = ({ onToggleClick }) => {
                           </Link>
                         </li>
                       </ul>
+                    </li>
+
+                    <li>
+                      <Link to="/admin/staff">
+                        <div className="parent-icon">
+                          <i className="bx bx-user-plus" />
+                        </div>
+                        <div className="menu-title">Staff</div>
+                      </Link>
+                    </li>
+
+                    <li>
+                      <Link to="/admin/signal">
+                        <div className="parent-icon">
+                          <i className="bx bx-wifi-2" />
+                        </div>
+                        <div className="menu-title">Signal</div>
+                      </Link>
+                    </li>
+
+                    <li>
+                      <Link to="/admin/basket">
+                        <div className="parent-icon">
+                          <i className="bx bx-basket" />
+                        </div>
+                        <div className="menu-title">Basket</div>
+                      </Link>
+                    </li>
+
+                    <li>
+                      <Link to="/admin/paymenthistory">
+                        <div className="parent-icon">
+                          <i className="bx bx-credit-card" />
+                        </div>
+                        <div className="menu-title">Payment History</div>
+                      </Link>
                     </li>
 
                     <li>
@@ -167,15 +178,15 @@ const Sidebar = ({ onToggleClick }) => {
               </div>
             </div>
           </div>
-          <div className="simplebar-placeholder" style={{ width: "auto", height: 1393 }} />
+          <div className="simplebar-placeholder" style={{ width: 'auto', height: 1393 }} />
         </div>
-        <div className="simplebar-track simplebar-horizontal" style={{ visibility: "hidden" }}>
-          <div className="simplebar-scrollbar" style={{ width: 0, display: "none" }} />
+        <div className="simplebar-track simplebar-horizontal" style={{ visibility: 'hidden' }}>
+          <div className="simplebar-scrollbar" style={{ width: 0, display: 'none' }} />
         </div>
-        <div className="simplebar-track simplebar-vertical" style={{ visibility: "visible" }}>
+        <div className="simplebar-track simplebar-vertical" style={{ visibility: 'visible' }}>
           <div
             className="simplebar-scrollbar"
-            style={{ height: 294, transform: "translate3d(0px, 347px, 0px)", display: "block" }}
+            style={{ height: 294, transform: 'translate3d(0px, 347px, 0px)', display: 'block' }}
           />
         </div>
       </div>
