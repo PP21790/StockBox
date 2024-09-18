@@ -170,9 +170,10 @@ const AddSignal = () => {
       label: 'Call duration',
       type: 'select',
       options: [
-        { label: 'Long', value: '1' },
-        { label: 'Medium', value: '0' },
-        { label: 'Short', value: '2' },
+        { label: 'Long Term', value: '1' },
+        { label: 'Medium Term', value: '0' },
+        { label: 'Short Term', value: '2' },
+        { label: 'Intraday', value: '3' },
       ],
       label_size: 12,
       col_size: 6,
