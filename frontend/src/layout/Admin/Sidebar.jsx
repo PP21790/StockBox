@@ -10,6 +10,7 @@ const Sidebar = ({ onToggleClick }) => {
   };
 
   return (
+
     <div>
       <div data-simplebar="init">
         <div className="simplebar-wrapper" style={{ margin: 0 }}>
@@ -179,6 +180,15 @@ const Sidebar = ({ onToggleClick }) => {
                           <i className="bx bx-edit-alt" />
                         </div>
                         <div className="menu-title">News</div>
+                      </Link>
+                    </li>
+
+                    <li>
+                      <Link to="/admin/coupon">
+                        <div className="parent-icon">
+                          <i className="bx bx-edit-alt" />
+                        </div>
+                        <div className="menu-title">Coupon</div>
                       </Link>
                     </li>
 

@@ -31,6 +31,9 @@ import Category from '../layout/Admin/Category/Category';
 import Stock from '../layout/Admin/Stock/Stock';
 import Blogs from '../layout/Admin/Bloags/Blogs';
 import News from '../layout/Admin/News/News';
+import Coupon from '../layout/Admin/Coupon/Coupon';
+import Addcoupon from '../layout/Admin/Coupon/Addcoupon';
+import Updatecoupon from '../layout/Admin/Coupon/Updatecoupon';
 
 
 function MainApp() {
@@ -118,6 +121,10 @@ function MainApp() {
                     <Route path="/blogs" element={<Blogs/>} />
                     <Route path="/news" element={<News/>} />
                       
+                    <Route path="/coupon" element={<Coupon/>} />
+                    <Route path="/addcoupon" element={<Addcoupon/>} />
+                    <Route path="/Updatecoupon" element={<Updatecoupon/>} />
+                    
                     
                 </Routes>
             </div>

@@ -421,17 +421,17 @@ const Signal = () => {
                                         <form className='card-body'>
 
                                             <p>
-                                                Target 1
+                                                Target 1 : 
 
                                             </p>
 
                                             <p>
-                                                Target 2
+                                                Target 2 :
 
                                             </p>
 
                                             <p>
-                                                Target 3
+                                                Target 3 :
 
                                             </p>
 
@@ -600,6 +600,9 @@ const Signal = () => {
                     </div>
                 </div>
             )}
+
+
+            
         </div>
     );
 }
