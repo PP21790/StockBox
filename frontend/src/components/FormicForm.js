@@ -28,7 +28,7 @@ const DynamicForm = ({
     content_btn_name,
     content_path,
     btn_name2,
-    sumit_btn 
+    sumit_btn
 }) => {
 
 
@@ -186,6 +186,37 @@ const DynamicForm = ({
                                                                 ) : null}
                                                             </div>
                                                         </div>
+                                                    </>
+                                                ) : field.type === "text5" ? (
+                                                    <>
+                                                            <div className={`col-lg-${field.col_size}`}>
+                                                                <div className="input-block mb-3 flex-column">
+                                                                    <label className={`col-lg-${field.label_size}`}>
+                                                                        {field.label}
+                                                                        <span className="text-danger">*</span>
+                                                                    </label>
+
+                                                                    {/* Convert input to textarea */}
+                                                                    <textarea
+                                                                        autoComplete="new-email1"
+                                                                        aria-describedby="basic-addon1"
+                                                                        className="form-control"
+                                                                        placeholder={`Enter ${field.label}`}
+                                                                        readOnly={field.disable}
+                                                                        id={field.name}
+                                                                        name={field.name}
+                                                                        {...formik.getFieldProps(field.name)} // Formik binding
+                                                                    ></textarea>
+
+                                                                    {/* Error handling */}
+                                                                    {formik.touched[field.name] && formik.errors[field.name] ? (
+                                                                        <div style={{ color: "red" }}>
+                                                                            {formik.errors[field.name]}
+                                                                        </div>
+                                                                    ) : null}
+                                                                </div>
+                                                            </div>
+
                                                     </>
                                                 ) : field.type === "text2" ? (
                                                     <>

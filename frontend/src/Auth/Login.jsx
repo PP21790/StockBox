@@ -59,6 +59,20 @@ const Login = () => {
         }
     };
 
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+
+    const togglePasswordVisibility = (e) => {
+        e.preventDefault(); 
+        setShowPassword(!showPassword);
+    };
+
+    const toggleConfirmPasswordVisibility = (e) => {
+        e.preventDefault(); 
+        setShowConfirmPassword(!showConfirmPassword);
+    };
+
 
 
 
@@ -92,13 +106,14 @@ const Login = () => {
                                                         onChange={(e) => setUsername(e.target.value)}
                                                     />
                                                 </div>
+                                               
                                                 <div className="col-12">
                                                     <label htmlFor="inputChoosePassword" className="form-label">
                                                         Password
                                                     </label>
                                                     <div className="input-group" id="show_hide_password">
                                                         <input
-                                                            type="password"
+                                                            type={showPassword ? 'text' : 'password'}
                                                             className="form-control border-end-0"
                                                             id="inputChoosePassword"
                                                             value={password}
@@ -107,9 +122,11 @@ const Login = () => {
                                                         />
                                                         <a
                                                             href="javascript:;"
+                                                            onClick={togglePasswordVisibility}
                                                             className="input-group-text bg-transparent"
-                                                        >
-                                                            <i className="bx bx-hide" />
+
+                                                        >  
+                                                            <i className={`bx ${showPassword ? 'bx-show' : 'bx-hide'}`} />
                                                         </a>
                                                     </div>
                                                 </div>
