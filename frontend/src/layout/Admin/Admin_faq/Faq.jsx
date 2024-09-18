@@ -1,211 +1,536 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { getFaqlist, AddFaq, UpdateFaq, changeFAQStatus, DeleteFAQ } from '../../../Services/Admin';
+import Table from '../../../components/Table';
+import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
+import Swal from 'sweetalert2';
 
 const Faq = () => {
+
+
+
+    const navigate = useNavigate();
+    const [clients, setClients] = useState([]);
+    const [model, setModel] = useState(false);
+    const [serviceid, setServiceid] = useState({});
+    const [searchInput, setSearchInput] = useState("");
+    const [updatetitle, setUpdatetitle] = useState({
+        title: "",
+        id: "",
+        description: "",
+       
+
+    });
+
+
+
+
+    const [title, setTitle] = useState({
+        title: "",
+        description: "",
+        add_by: "",
+    });
+
+    const token = localStorage.getItem('token');
+    const userid = localStorage.getItem('id');
+
+
+
+
+
+    // Getting blogs
+    const getFaq = async () => {
+        try {
+            const response = await getFaqlist(token);
+            if (response.status) {
+                const filterdata = response.data.filter((item) =>
+                    searchInput === "" ||
+                    item.title.toLowerCase().includes(searchInput.toLowerCase())
+                );
+                setClients(searchInput ? filterdata : response.data);
+            }
+        } catch (error) {
+            console.log("Error fetching blogs:", error);
+        }
+    };
+
+    useEffect(() => {
+        getFaq();
+    }, [searchInput]);
+
+
+
+
+
+    // Update service
+    const updateFaqbyadmin = async () => {
+        try {
+            const data = { title: updatetitle.title, id: serviceid._id, description: updatetitle.description };
+            const response = await UpdateFaq(data, token);
+
+            if (response && response.status) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'bolgs updated successfully.',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    timer: 2000,
+                });
+
+                setUpdatetitle({ title: "", id: "" });
+                getFaq();
+                setModel(false);
+            } else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'There was an error updating the blogs.',
+                    icon: 'error',
+                    confirmButtonText: 'Try Again',
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'There was an error updating the blogs.',
+                icon: 'error',
+                confirmButtonText: 'Try Again',
+            });
+        }
+    };
+
+
+
+
+
+    // Add blogs
+    const addfaqbyadmin = async () => {
+        try {
+            const data = { title: title.title, description: title.description , add_by:userid};
+            const response = await AddFaq(data, token);
+            if (response && response.status) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'blogs added successfully.',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    timer: 2000,
+                });
+
+                setTitle({ title: "", add_by: "", description:"" });
+                getFaq();
+
+                const modal = document.getElementById('exampleModal');
+                const bootstrapModal = window.bootstrap.Modal.getInstance(modal);
+                if (bootstrapModal) {
+                    bootstrapModal.hide();
+                }
+            } else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'There was an error adding.',
+                    icon: 'error',
+                    confirmButtonText: 'Try Again',
+                });
+            }
+        } catch (error) {
+            console.error("Error adding service:", error);
+            Swal.fire({
+                title: 'Error!',
+                text: 'There was an error adding',
+                icon: 'error',
+                confirmButtonText: 'Try Again',
+            });
+        }
+    };
+
+
+
+
+    // Update status
+    const handleSwitchChange = async (event, id) => {
+        const user_active_status = event.target.checked ? "true" : "false";
+        const data = { id: id, status: user_active_status };
+        const result = await Swal.fire({
+            title: "Do you want to save the changes?",
+            showCancelButton: true,
+            confirmButtonText: "Save",
+            cancelButtonText: "Cancel",
+            allowOutsideClick: false,
+        });
+
+        if (result.isConfirmed) {
+            try {
+                const response = await changeFAQStatus(data, token);
+                if (response.status) {
+                    Swal.fire({
+                        title: "Saved!",
+                        icon: "success",
+                        timer: 1000,
+                        timerProgressBar: true,
+                    });
+                    setTimeout(() => {
+                        Swal.close();
+                    }, 1000);
+                }
+                getFaq();
+            } catch (error) {
+                Swal.fire(
+                    "Error",
+                    "There was an error processing your request.",
+                    "error"
+                );
+            }
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            getFaq();
+        }
+    };
+
+
+
+
+    // delete blogs
+
+
+    const DeleteFaq = async (_id) => {
+        try {
+            const result = await Swal.fire({
+                title: 'Are you sure?',
+                text: 'Do you want to delete this ? This action cannot be undone.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel',
+            });
+
+            if (result.isConfirmed) {
+                const response = await DeleteFAQ(_id, token);
+                if (response.status) {
+                    Swal.fire({
+                        title: 'Deleted!',
+                        text: 'The staff has been successfully deleted.',
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                    });
+                    getFaq();
+
+                }
+            } else {
+
+                Swal.fire({
+                    title: 'Cancelled',
+                    text: 'The staff deletion was cancelled.',
+                    icon: 'info',
+                    confirmButtonText: 'OK',
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'There was an error deleting the staff.',
+                icon: 'error',
+                confirmButtonText: 'Try Again',
+            });
+
+        }
+    };
+
+
+
+    const columns = [
+        {
+            name: 'S.No',
+            selector: (row, index) => index + 1,
+            sortable: false,
+            width: '70px',
+        },
+        {
+            name: 'Title',
+            selector: row => row.title,
+            sortable: true,
+        },
+        {
+            name: 'Active Status',
+            selector: row => (
+                <div className="form-check form-switch form-check-info">
+                    <input
+                        id={`rating_${row.status}`}
+                        className="form-check-input toggleswitch"
+                        type="checkbox"
+                        checked={row.status === true}
+                        onChange={(event) => handleSwitchChange(event, row._id)}
+                    />
+                    <label
+                        htmlFor={`rating_${row.status}`}
+                        className="checktoggle checkbox-bg"
+                    ></label>
+                </div>
+            ),
+            sortable: true,
+        },
+        {
+            name: 'Description',
+            selector: row => row.description,
+            sortable: true,
+        },
+
+        {
+            name: 'Created At',
+            selector: row => new Date(row.created_at).toLocaleDateString(),
+            sortable: true,
+        },
+        {
+            name: 'Updated At',
+            selector: row => new Date(row.updated_at).toLocaleDateString(),
+            sortable: true,
+        },
+        {
+            name: 'Actions',
+            cell: row => (
+                <>
+                    <div>
+                        <SquarePen
+                            onClick={() => {
+                                setModel(true);
+                                setServiceid(row);
+                                setUpdatetitle({ title: row.title, id: row._id, description: row.description });
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <Trash2 onClick={() => DeleteFaq(row._id)} />
+                    </div>
+                </>
+            ),
+            ignoreRowClick: true,
+            allowOverflow: true,
+            button: true,
+        }
+    ];
+
+
+
+    // const updateServiceTitle = (value) => {
+    //     setUpdatetitle(prev => ({
+    //         ...prev,
+    //         title: value
+    //     }));
+    // };
+
+
+    const updateServiceTitle = (updatedField) => {
+        setUpdatetitle(prev => ({
+            ...prev,
+            ...updatedField
+        }));
+    };
+
+
+
+
     return (
         <div>
             <div className="page-content">
-                {/*breadcrumb*/}
+
                 <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                    <div className="breadcrumb-title pe-3">Faq</div>
+                    <div className="breadcrumb-title pe-3">FAQ</div>
                     <div className="ps-3">
                         <nav aria-label="breadcrumb">
                             <ol className="breadcrumb mb-0 p-0">
                                 <li className="breadcrumb-item">
-                                    <a href="javascript:;">
+                                    <Link to="/admin/dashboard">
                                         <i className="bx bx-home-alt" />
-                                    </a>
-                                </li>
-                                <li className="breadcrumb-item active" aria-current="page">
-                                    Faq
+                                    </Link>
                                 </li>
                             </ol>
                         </nav>
                     </div>
-                    <div className="ms-auto">
-                        <div className="btn-group">
-                            <div className="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">
-                                {" "}
-                                <a className="dropdown-item" href="javascript:;">
-                                    Action
-                                </a>
-                                <a className="dropdown-item" href="javascript:;">
-                                    Another action
-                                </a>
-                                <a className="dropdown-item" href="javascript:;">
-                                    Something else here
-                                </a>
-                                <div className="dropdown-divider" />{" "}
-                                <a className="dropdown-item" href="javascript:;">
-                                    Separated link
-                                </a>
-                            </div>
-                        </div>
-                    </div>
                 </div>
-                {/*end breadcrumb*/}
-                <div className="row">
-                    <div className="col-12 col-lg-9 mx-auto">
-                        <div className="text-center">
-                            <h5 className="mb-0 text-uppercase">
-                                Frequently asked questions (FAQ
-                                <small className="text-lowercase">s</small>)
-                            </h5>
-                            <hr />
-                        </div>
-                        <div className="card">
-                            <div className="card-body">
-                                <div className="accordion" id="accordionExample">
-                                    <div className="accordion-item">
-                                        <h2 className="accordion-header" id="headingOne">
-                                            <button
-                                                className="accordion-button collapsed"
-                                                type="button"
-                                                data-bs-toggle="collapse"
-                                                data-bs-target="#collapseOne"
-                                                aria-expanded="false"
-                                                aria-controls="collapseOne"
-                                            >
-                                                Just once I'd like to eat dinner with a celebrity?
-                                            </button>
-                                        </h2>
-                                        <div
-                                            id="collapseOne"
-                                            className="accordion-collapse collapse"
-                                            aria-labelledby="headingOne"
-                                            data-bs-parent="#accordionExample"
-                                            style={{}}
-                                        >
-                                            <div className="accordion-body">
-                                                <p>
-                                                    Yes, if you make it look like an electrical fire. When you
-                                                    do things right, people won't be sure you've done anything
-                                                    at all. I was having the most wonderful dream. Except you
-                                                    were there, and you were there, and you were there! No
-                                                    argument here. Goodbye, cruel world. Goodbye, cruel lamp.
-                                                    Goodbye, cruel velvet drapes, lined with what would appear
-                                                    to be some sort of cruel muslin and the cute little pom-pom
-                                                    curtain pull cords. Cruel though they may be.
-                                                </p>
-                                                <p>
-                                                    <strong>Example: </strong>Shut up and get to the point!
-                                                </p>
+
+                <div className="card">
+                    <div className="card-body">
+                        <div className="d-lg-flex align-items-center mb-4 gap-3">
+                            <div className="position-relative">
+                                <input
+                                    type="text"
+                                    className="form-control ps-5 radius-10"
+                                    placeholder="Search Order"
+                                    onChange={(e) => setSearchInput(e.target.value)}
+                                    value={searchInput}
+                                />
+                                <span className="position-absolute top-50 product-show translate-middle-y">
+                                    <i className="bx bx-search" />
+                                </span>
+                            </div>
+                            <div className="ms-auto">
+                                <button
+                                    type="button"
+                                    className="btn btn-primary"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal"
+                                >
+                                    <i className="bx bxs-plus-square" />
+                                    Add FAQ
+                                </button>
+
+                                <div
+                                    className="modal fade"
+                                    id="exampleModal"
+                                    tabIndex={-1}
+                                    aria-labelledby="exampleModalLabel"
+                                    aria-hidden="true"
+                                >
+                                    <div className="modal-dialog">
+                                        <div className="modal-content">
+                                            <div className="modal-header">
+                                                <h5 className="modal-title" id="exampleModalLabel">
+                                                    Add FAQ
+                                                </h5>
+                                                <button
+                                                    type="button"
+                                                    className="btn-close"
+                                                    data-bs-dismiss="modal"
+                                                    aria-label="Close"
+                                                />
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div className="accordion-item">
-                                        <h2 className="accordion-header" id="headingTwo">
-                                            <button
-                                                className="accordion-button collapsed"
-                                                type="button"
-                                                data-bs-toggle="collapse"
-                                                data-bs-target="#collapseTwo"
-                                                aria-expanded="false"
-                                                aria-controls="collapseTwo"
-                                            >
-                                                Bender, I didn't know you liked cooking?
-                                            </button>
-                                        </h2>
-                                        <div
-                                            id="collapseTwo"
-                                            className="accordion-collapse collapse"
-                                            aria-labelledby="headingTwo"
-                                            data-bs-parent="#accordionExample"
-                                        >
-                                            <div className="accordion-body">
-                                                <p>
-                                                    That's so cute. Can we have Bender Burgers again? Is the
-                                                    Space Pope reptilian!? I wish! It's a nickel. Bender! Ship!
-                                                    Stop bickering or I'm going to come back there and change
-                                                    your opinions manually!
-                                                </p>
-                                                <p>
-                                                    <strong>Example: </strong>Okay, I like a challenge. Is that
-                                                    a cooking show? No argument here.
-                                                </p>
+                                            <div className="modal-body">
+                                                <form>
+                                                    <div className="row">
+                                                        <div className="col-md-12">
+                                                            <label htmlFor="">Title</label>
+                                                            <input
+                                                                className="form-control mb-3"
+                                                                type="text"
+                                                                placeholder='Enter blogs Title'
+                                                                value={title.title}
+                                                                onChange={(e) => setTitle({ ...title, title: e.target.value })}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                        
+                                                    <div className="row">
+                                                        <div className="col-md-12">
+                                                            <label htmlFor="">description</label>
+                                                            <input
+                                                                className="form-control mb-3"
+                                                                type="text"
+                                                                placeholder='Enter description'
+                                                                value={title.description}
+                                                                onChange={(e) => setTitle({ ...title, description: e.target.value })}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </form>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div className="accordion-item">
-                                        <h2 className="accordion-header" id="headingThree">
-                                            <button
-                                                className="accordion-button collapsed"
-                                                type="button"
-                                                data-bs-toggle="collapse"
-                                                data-bs-target="#collapseThree"
-                                                aria-expanded="false"
-                                                aria-controls="collapseThree"
-                                            >
-                                                My fellow Earthicans?
-                                            </button>
-                                        </h2>
-                                        <div
-                                            id="collapseThree"
-                                            className="accordion-collapse collapse"
-                                            aria-labelledby="headingThree"
-                                            data-bs-parent="#accordionExample"
-                                        >
-                                            <div className="accordion-body">
-                                                <p>
-                                                    As I have explained in my book 'Earth in the Balance', and
-                                                    the much more popular 'Harry Potter and the Balance of
-                                                    Earth', we need to defend our planet against pollution. Also
-                                                    dark wizards. Fry, you can't just sit here in the dark
-                                                    listening to classical music.
-                                                </p>
-                                                <p>
-                                                    <strong>Example: </strong>Actually, that's still true. Well,
-                                                    let's just dump it in the sewer and say we delivered it.
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="accordion-item">
-                                        <h2 className="accordion-header" id="headingFour">
-                                            <button
-                                                className="accordion-button collapsed"
-                                                type="button"
-                                                data-bs-toggle="collapse"
-                                                data-bs-target="#collapseFour"
-                                                aria-expanded="false"
-                                                aria-controls="collapseFour"
-                                            >
-                                                Who am I making this out to?
-                                            </button>
-                                        </h2>
-                                        <div
-                                            id="collapseFour"
-                                            className="accordion-collapse collapse"
-                                            aria-labelledby="headingFour"
-                                            data-bs-parent="#accordionExample"
-                                        >
-                                            <div className="accordion-body">
-                                                <p>
-                                                    Morbo can't understand his teleprompter because he forgot
-                                                    how you say that letter that's shaped like a man wearing a
-                                                    hat. Also Zoidberg. Can we have Bender Burgers again?
-                                                    Goodbye, cruel world. Goodbye, cruel lamp. Goodbye, cruel
-                                                    velvet drapes, lined with what would appear to be some sort
-                                                    of cruel muslin and the cute little pom-pom curtain pull
-                                                    cords.
-                                                </p>
-                                                <p>
-                                                    <strong>Example: </strong>Cruel though they may be...
-                                                </p>
+                                            <div className="modal-footer">
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-secondary"
+                                                    data-bs-dismiss="modal"
+                                                >
+                                                    Close
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-primary"
+                                                    onClick={addfaqbyadmin}
+                                                >
+                                                    Save
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
+
+                                {model && (
+                                    <div
+                                        className="modal fade show"
+                                        style={{ display: 'block' }}
+                                        tabIndex={-1}
+                                        aria-labelledby="exampleModalLabel"
+                                        aria-hidden="true"
+                                    >
+                                        <div className="modal-dialog">
+                                            <div className="modal-content">
+                                                <div className="modal-header">
+                                                    <h5 className="modal-title" id="exampleModalLabel">
+                                                        Update FAQ
+                                                    </h5>
+                                                    <button
+                                                        type="button"
+                                                        className="btn-close"
+                                                        onClick={() => setModel(false)}
+                                                    />
+                                                </div>
+                                                <div className="modal-body">
+                                                    <form>
+                                                        <div className="row">
+                                                            <div className="col-md-12">
+                                                                <label htmlFor="">Title</label>
+                                                                <input
+                                                                    className="form-control mb-2"
+                                                                    type="text"
+                                                                    placeholder='Enter blogs Title'
+                                                                    value={updatetitle.title}
+                                                                    onChange={(e) => updateServiceTitle({ title: e.target.value })}
+                                                                />
+                                                            </div>
+                                                        </div>
+
+                    
+                                                        <div className="row">
+                                                            <div className="col-md-12">
+                                                                <label htmlFor="">Description</label>
+                                                                <input
+                                                                    className="form-control mb-2"
+                                                                    type="text"
+                                                                    placeholder='Enter  Description'
+                                                                    value={updatetitle.description}
+                                                                    onChange={(e) => updateServiceTitle({ description: e.target.value })}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </form>
+
+                                                </div>
+                                                <div className="modal-footer">
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-secondary"
+                                                        onClick={() => setModel(false)}
+                                                    >
+                                                        Close
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-primary"
+                                                        onClick={updateFaqbyadmin}
+                                                    >
+                                                        Update FAQ
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
                             </div>
                         </div>
-
+                        <div className="table-responsive">
+                            <Table
+                                columns={columns}
+                                data={clients}
+                                pagination
+                                striped
+                                highlightOnHover
+                                dense
+                            />
+                        </div>
                     </div>
                 </div>
-                {/*end row*/}
             </div>
-
-
         </div>
     );
-}
+};
 
 export default Faq;

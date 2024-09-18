@@ -10,7 +10,7 @@ import { useRef } from 'react';
 const Stock = () => {
 
 
-
+    
     const navigate = useNavigate();
 
     const [clients, setClients] = useState([]);
@@ -336,6 +336,8 @@ const Stock = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const fileInputRef = useRef(null);
 
+
+
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -344,27 +346,27 @@ const Stock = () => {
     };
 
 
-
-
     const handleAddPdf = async () => {
         if (selectedFile) {
             try {
                 const data = { add_by: userid, file: selectedFile };
                 const response = await Setstockinbulk(data, token);
 
-                if (response && response.status) {
-                    console.log('Response:', response.data);
+                if (response.status) {
                     Swal.fire({
                         icon: 'success',
                         title: 'Success!',
                         text: 'File uploaded successfully.',
                         confirmButtonText: 'OK',
+                        timer: 2000,
                     });
 
-                    setSelectedFile(null);
+                    setSelectedFile("");
                     if (fileInputRef.current) {
                         fileInputRef.current.value = '';
                     }
+                    
+                    getstock();
                 } else {
 
                     Swal.fire({
@@ -372,6 +374,7 @@ const Stock = () => {
                         title: 'Error!',
                         text: 'Failed to upload file. Please try again.',
                         confirmButtonText: 'OK',
+                        timer: 2000,
                     });
                 }
             } catch (error) {
@@ -380,6 +383,7 @@ const Stock = () => {
                     title: 'Unexpected Error!',
                     text: 'An error occurred during file upload.',
                     confirmButtonText: 'OK',
+                    timer: 2000,
                 });
             }
         } else {
@@ -388,6 +392,7 @@ const Stock = () => {
                 title: 'No File Selected!',
                 text: 'Please choose a file to upload.',
                 confirmButtonText: 'OK',
+                timer: 2000,
             });
         }
     };
@@ -591,6 +596,7 @@ const Stock = () => {
                                     id="csvFile"
                                     name="csvFile"
                                     // accept=".csv"
+                                    ref={fileInputRef}
                                     onChange={handleFileChange}
                                     style={{ width: "240px",border:"2px solid black",marginRight:"2px" }}
                                 />

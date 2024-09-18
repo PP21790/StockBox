@@ -716,7 +716,7 @@ async BasketList(req, res) {
           const exitprice = basket.exitprice ? basket.exitprice.split('##') : [];
           const exitdate = basket.exitdate ? basket.exitdate.split('##') : [];
           const comment = basket.comment ? basket.comment.split('##') : [];
-          const returnpercentage = basket.returnpercentage ? basket.returnpercentage.split('##') : [];
+          const retunpercentage = basket.retunpercentage ? basket.retunpercentage.split('##') : [];
           const holdingperiod = basket.holdingperiod ? basket.holdingperiod.split('##') : [];
           const potentialleft = basket.potentialleft ? basket.potentialleft.split('##') : [];
 
@@ -730,7 +730,7 @@ async BasketList(req, res) {
               exitprice: exitprice[index] || null,
               exitdate: exitdate[index] || null,
               comment: comment[index] || null,
-              returnpercentage: returnpercentage[index] || null,
+              retunpercentage: retunpercentage[index] || null,
               holdingperiod: holdingperiod[index] || null,
               potentialleft: potentialleft[index] || null
           }));
@@ -741,6 +741,9 @@ async BasketList(req, res) {
               description: basket.description,
               accuracy: basket.accuracy,
               price: basket.price,
+              retunpercentage: basket.retunpercentage,
+              holdingperiod: basket.holdingperiod,
+              potentialleft: basket.potentialleft,
               mininvamount: basket.mininvamount,
               portfolioweightage: basket.portfolioweightage,
               themename: basket.themename,

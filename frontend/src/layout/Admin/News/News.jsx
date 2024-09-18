@@ -1,31 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { GetService, Addplancategory, UpdateCategoryplan, getcategoryplan, deleteplancategory, updatecategorydstatus } from '../../../Services/Admin';
+import { getnewslist, AddNewsbyadmin, UpdateNewsbyadmin, changeNewsStatus, DeleteNews } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
 import Swal from 'sweetalert2';
 
-const Category = () => {
+const News = () => {
+
+
+
     const navigate = useNavigate();
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
-    const [servicedata, setServicedata] = useState([]);
-
-
     const [searchInput, setSearchInput] = useState("");
-
     const [updatetitle, setUpdatetitle] = useState({
         title: "",
         id: "",
-        service: ""
+        description: "",
+        image: "",
+
     });
+
+
 
 
     const [title, setTitle] = useState({
         title: "",
+        description: "",
+        image: "",
         add_by: "",
-        service: ""
     });
 
     const token = localStorage.getItem('token');
@@ -34,10 +38,11 @@ const Category = () => {
 
 
 
+
     // Getting services
-    const getcategory = async () => {
+    const getNews = async () => {
         try {
-            const response = await getcategoryplan(token);
+            const response = await getnewslist(token);
             if (response.status) {
                 const filterdata = response.data.filter((item) =>
                     searchInput === "" ||
@@ -50,35 +55,19 @@ const Category = () => {
         }
     };
 
-
-
-    const getservice = async () => {
-        try {
-            const response = await GetService(token);
-            if (response.status) {
-                setServicedata(response.data)
-            }
-        } catch (error) {
-            console.log("Error fetching services:", error);
-        }
-    };
-
-
-
     useEffect(() => {
-        getcategory();
-        getservice()
+        getNews();
     }, [searchInput]);
 
 
 
 
-    // Update service
-    const Updatecategory = async () => {
-        try {
-            const data = { title: updatetitle.title, id: serviceid._id, service: updatetitle.service };
 
-            const response = await UpdateCategoryplan(data, token);
+    // Update service
+    const updateNews = async () => {
+        try {
+            const data = { title: updatetitle.title, id: serviceid._id, image: updatetitle.image, description: updatetitle.description };
+            const response = await UpdateNewsbyadmin(data, token);
 
             if (response && response.status) {
                 Swal.fire({
@@ -89,8 +78,8 @@ const Category = () => {
                     timer: 2000,
                 });
 
-                setUpdatetitle({ title: "", id: "", service: "" });
-                getcategory();
+                setUpdatetitle({ title: "", id: "" });
+                getNews();
                 setModel(false);
             } else {
                 Swal.fire({
@@ -112,25 +101,24 @@ const Category = () => {
 
 
 
+
+
     // Add service
-    const addcategory = async () => {
+    const AddNews = async () => {
         try {
-
-            const data = { title: title.title, add_by: userid, service: title.service };
-
-            console.log("data", data)
-            const response = await Addplancategory(data, token);
+            const data = { title: title.title, description: title.description, image: title.image, add_by: userid };
+            const response = await AddNewsbyadmin(data, token);
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
-                    text: 'Service added successfully.',
+                    text: 'blogs added successfully.',
                     icon: 'success',
                     confirmButtonText: 'OK',
                     timer: 2000,
                 });
 
-                setTitle({ title: "", add_by: "", service: "" });
-                getcategory();
+                setTitle({ title: "", add_by: "" });
+                getNews();
 
                 const modal = document.getElementById('exampleModal');
                 const bootstrapModal = window.bootstrap.Modal.getInstance(modal);
@@ -140,7 +128,7 @@ const Category = () => {
             } else {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'There was an error adding the service.',
+                    text: 'There was an error adding.',
                     icon: 'error',
                     confirmButtonText: 'Try Again',
                 });
@@ -149,7 +137,7 @@ const Category = () => {
             console.error("Error adding service:", error);
             Swal.fire({
                 title: 'Error!',
-                text: 'There was an error adding the service.',
+                text: 'There was an error adding',
                 icon: 'error',
                 confirmButtonText: 'Try Again',
             });
@@ -173,7 +161,7 @@ const Category = () => {
 
         if (result.isConfirmed) {
             try {
-                const response = await updatecategorydstatus(data, token);
+                const response = await changeNewsStatus(data, token);
                 if (response.status) {
                     Swal.fire({
                         title: "Saved!",
@@ -185,7 +173,7 @@ const Category = () => {
                         Swal.close();
                     }, 1000);
                 }
-                getcategory();
+                getNews();
             } catch (error) {
                 Swal.fire(
                     "Error",
@@ -194,20 +182,23 @@ const Category = () => {
                 );
             }
         } else if (result.dismiss === Swal.DismissReason.cancel) {
-            getcategory();
+            getNews();
         }
     };
 
 
 
 
-    // delete plan cartegory 
+    // delete news
 
-    const DeleteCategory = async (_id) => {
+
+
+    const DeleteService = async (_id) => {
+        // console.log("_id",_id)
         try {
             const result = await Swal.fire({
                 title: 'Are you sure?',
-                text: 'Do you want to delete this staff member? This action cannot be undone.',
+                text: 'Do you want to delete this ? This action cannot be undone.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, delete it!',
@@ -215,7 +206,7 @@ const Category = () => {
             });
 
             if (result.isConfirmed) {
-                const response = await deleteplancategory(_id, token);
+                const response = await DeleteNews(_id, token);
                 if (response.status) {
                     Swal.fire({
                         title: 'Deleted!',
@@ -223,7 +214,7 @@ const Category = () => {
                         icon: 'success',
                         confirmButtonText: 'OK',
                     });
-                    getcategory();
+                    getNews();
 
                 }
             } else {
@@ -246,23 +237,6 @@ const Category = () => {
         }
     };
 
-
-
-
-    const [selectedServices, setSelectedServices] = useState([]);
-
-
-    const handleCheckboxChange = (serviceId) => {
-        setSelectedServices((prevSelected) => {
-            if (prevSelected.includes(serviceId)) {
-                // If already selected, remove it
-                return prevSelected.filter((id) => id !== serviceId);
-            } else {
-                // Otherwise, add it
-                return [...prevSelected, serviceId];
-            }
-        });
-    };
 
 
     const columns = [
@@ -297,6 +271,18 @@ const Category = () => {
             sortable: true,
         },
         {
+            name: 'Description',
+            selector: row => row.description,
+            sortable: true,
+        },
+        {
+            name: 'Image',
+            cell: row => <img src={`/assets/uploads/news/${row.image}`} alt="Image" width="50" height="50" />,
+            sortable: true,
+        },
+        
+
+        {
             name: 'Created At',
             selector: row => new Date(row.created_at).toLocaleDateString(),
             sortable: true,
@@ -315,12 +301,12 @@ const Category = () => {
                             onClick={() => {
                                 setModel(true);
                                 setServiceid(row);
-                                setUpdatetitle({ title: row.title, id: row._id });
+                                setUpdatetitle({ title: row.title, id: row._id, description: row.description, image: row.image });
                             }}
                         />
                     </div>
                     <div>
-                        <Trash2 onClick={() => DeleteCategory(row._id)} />
+                        <Trash2 onClick={() => DeleteService(row._id)} />
                     </div>
                 </>
             ),
@@ -332,12 +318,21 @@ const Category = () => {
 
 
 
-    const updateServiceTitle = (key, value) => {
+    // const updateServiceTitle = (value) => {
+    //     setUpdatetitle(prev => ({
+    //         ...prev,
+    //         title: value
+    //     }));
+    // };
+
+
+    const updateServiceTitle = (updatedField) => {
         setUpdatetitle(prev => ({
             ...prev,
-            [key]: value
+            ...updatedField
         }));
     };
+
 
 
 
@@ -346,7 +341,7 @@ const Category = () => {
             <div className="page-content">
 
                 <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                    <div className="breadcrumb-title pe-3">Category</div>
+                    <div className="breadcrumb-title pe-3">News</div>
                     <div className="ps-3">
                         <nav aria-label="breadcrumb">
                             <ol className="breadcrumb mb-0 p-0">
@@ -383,7 +378,7 @@ const Category = () => {
                                     data-bs-target="#exampleModal"
                                 >
                                     <i className="bx bxs-plus-square" />
-                                    Add Category
+                                    Add News
                                 </button>
 
                                 <div
@@ -397,7 +392,7 @@ const Category = () => {
                                         <div className="modal-content">
                                             <div className="modal-header">
                                                 <h5 className="modal-title" id="exampleModalLabel">
-                                                    Add Category
+                                                    Add News
                                                 </h5>
                                                 <button
                                                     type="button"
@@ -410,12 +405,11 @@ const Category = () => {
                                                 <form>
                                                     <div className="row">
                                                         <div className="col-md-12">
-                                                            <label htmlFor="categoryTitle">Category</label>
+                                                            <label htmlFor="">Title</label>
                                                             <input
-                                                                id="categoryTitle"
                                                                 className="form-control mb-3"
                                                                 type="text"
-                                                                placeholder="Enter Service Title"
+                                                                placeholder='Enter News Title'
                                                                 value={title.title}
                                                                 onChange={(e) => setTitle({ ...title, title: e.target.value })}
                                                             />
@@ -423,26 +417,31 @@ const Category = () => {
                                                     </div>
                                                     <div className="row">
                                                         <div className="col-md-12">
-                                                            <label htmlFor="service">Service</label>
-                                                            <select
-                                                                id="service"
+                                                            <label htmlFor="imageUpload">Upload Image</label>
+                                                            <input
                                                                 className="form-control mb-3"
-                                                                value={title.service}
-                                                                onChange={(e) => setTitle({ ...title, service: e.target.value })}
-                                                            >
-                                                                <option value="">Select a Service</option>
-                                                                {servicedata &&
-                                                                    servicedata.map((item) => (
-                                                                        <option key={item._id} value={item._id}>
-                                                                            {item.title}
-                                                                        </option>
-                                                                    ))}
-                                                            </select>
+                                                                type="file"
+                                                                accept="image/*"
+                                                                id="imageUpload"
+                                                                onChange={(e) => setTitle({ ...title, image: e.target.files[0] })}
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="row">
+                                                        <div className="col-md-12">
+                                                            <label htmlFor="">description</label>
+                                                            <input
+                                                                className="form-control mb-3"
+                                                                type="text"
+                                                                placeholder='Enter description'
+                                                                value={title.description}
+                                                                onChange={(e) => setTitle({ ...title, description: e.target.value })}
+                                                            />
                                                         </div>
                                                     </div>
                                                 </form>
                                             </div>
-
                                             <div className="modal-footer">
                                                 <button
                                                     type="button"
@@ -454,7 +453,7 @@ const Category = () => {
                                                 <button
                                                     type="button"
                                                     className="btn btn-primary"
-                                                    onClick={addcategory}
+                                                    onClick={AddNews}
                                                 >
                                                     Save
                                                 </button>
@@ -463,25 +462,24 @@ const Category = () => {
                                     </div>
                                 </div>
 
+
                                 {model && (
                                     <div
                                         className="modal fade show"
                                         style={{ display: 'block' }}
                                         tabIndex={-1}
-                                        aria-labelledby="updateServiceModalLabel"
+                                        aria-labelledby="exampleModalLabel"
                                         aria-hidden="true"
-                                        role="dialog"
                                     >
                                         <div className="modal-dialog">
                                             <div className="modal-content">
                                                 <div className="modal-header">
-                                                    <h5 className="modal-title" id="updateServiceModalLabel">
-                                                        Update Category
+                                                    <h5 className="modal-title" id="exampleModalLabel">
+                                                        Update News
                                                     </h5>
                                                     <button
                                                         type="button"
                                                         className="btn-close"
-                                                        aria-label="Close"
                                                         onClick={() => setModel(false)}
                                                     />
                                                 </div>
@@ -489,45 +487,49 @@ const Category = () => {
                                                     <form>
                                                         <div className="row">
                                                             <div className="col-md-12">
-                                                                <label htmlFor="category">Category</label>
+                                                                <label htmlFor="">Title</label>
                                                                 <input
                                                                     className="form-control mb-2"
                                                                     type="text"
-                                                                    placeholder="Enter Category Title"
-                                                                    id="category"
+                                                                    placeholder='Enter news Title'
                                                                     value={updatetitle.title}
-                                                                    onChange={(e) =>
-                                                                        updateServiceTitle('title', e.target.value)
-                                                                    }
-                                                                    required
+                                                                    onChange={(e) => updateServiceTitle({ title: e.target.value })}
                                                                 />
                                                             </div>
                                                         </div>
+
                                                         <div className="row">
                                                             <div className="col-md-12">
-                                                                <label htmlFor="service">Service</label>
-                                                                <select
+                                                                <label htmlFor="imageUpload">Image</label>
+                                                                <input
+                                                                    className="form-control mb-3"
+                                                                    type="file"
+                                                                    accept="image/*"
+                                                                    id="imageUpload"
+                                                                    onChange={(e) => {
+                                                                        const file = e.target.files[0];
+                                                                        if (file) {
+                                                                            updateServiceTitle({ image: file });
+                                                                        }
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="row">
+                                                            <div className="col-md-12">
+                                                                <label htmlFor="">Description</label>
+                                                                <input
                                                                     className="form-control mb-2"
-                                                                    id="service"
-                                                                    value={updatetitle.service}
-                                                                    onChange={(e) =>
-                                                                        updateServiceTitle('service', e.target.value)
-                                                                    }
-                                                                    required
-                                                                >
-                                                                    <option value="" disabled>
-                                                                        Select a service
-                                                                    </option>
-                                                                    {servicedata &&
-                                                                        servicedata.map((item) => (
-                                                                            <option key={item._id} value={item._id}>
-                                                                                {item.title}
-                                                                            </option>
-                                                                        ))}
-                                                                </select>
+                                                                    type="text"
+                                                                    placeholder='Enter  Description'
+                                                                    value={updatetitle.description}
+                                                                    onChange={(e) => updateServiceTitle({ description: e.target.value })}
+                                                                />
                                                             </div>
                                                         </div>
                                                     </form>
+
                                                 </div>
                                                 <div className="modal-footer">
                                                     <button
@@ -540,18 +542,15 @@ const Category = () => {
                                                     <button
                                                         type="button"
                                                         className="btn btn-primary"
-                                                        onClick={Updatecategory}
-                                                        disabled={!updatetitle.title || !updatetitle.service}
+                                                        onClick={updateNews}
                                                     >
-                                                        Update Service
+                                                        Update News
                                                     </button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 )}
-
-
 
                             </div>
                         </div>
@@ -572,4 +571,4 @@ const Category = () => {
     );
 };
 
-export default Category;
+export default News;
