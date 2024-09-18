@@ -169,7 +169,7 @@ const Sidebar = ({ onToggleClick }) => {
                     <li>
                       <Link to="/admin/blogs">
                         <div className="parent-icon">
-                          <i className="bx bx-edit-alt" />
+                          <i className="fadeIn animated bx bx-comment-detail" />
                         </div>
                         <div className="menu-title">Blogs</div>
                       </Link>
@@ -177,7 +177,7 @@ const Sidebar = ({ onToggleClick }) => {
                     <li>
                       <Link to="/admin/news">
                         <div className="parent-icon">
-                          <i className="bx bx-edit-alt" />
+                          <i className="fadeIn animated bx bx-news" />
                         </div>
                         <div className="menu-title">News</div>
                       </Link>
