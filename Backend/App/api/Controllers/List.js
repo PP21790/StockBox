@@ -793,6 +793,20 @@ async pastPerformance(req, res) {
     let profitCount = 0;
     let lossCount = 0;
 
+
+
+    // if (count > 0) {
+     
+    //   // Find the earliest and latest `created_at` dates
+    //   const sortedSignals = signals.sort((a, b) => a.created_at - b.created_at);
+    //   const earliestDate = new Date(sortedSignals[0].created_at);
+    //   const latestDate = new Date(sortedSignals[sortedSignals.length - 1].created_at);
+     
+    // //  const monthsDifference = differenceInMonths(latestDate, earliestDate);
+    // }
+
+   
+  
     signals.forEach(signal => {
       const entryPrice = parseFloat(signal.price); // Entry price
       const exitPrice = parseFloat(signal.closeprice); // Exit price
