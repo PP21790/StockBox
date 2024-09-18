@@ -67,8 +67,8 @@ const AddSignal = () => {
       tag2: values.target2,
       tag3: values.target3,
       stoploss: values.stoploss,
-      description: values.description,
-      report: values.report || "",
+      // description: values.description,
+      // report: values.report || "",
       calltype: values.calltype,
       callduration: values.callduration
     };
@@ -166,13 +166,13 @@ const AddSignal = () => {
       disable: false,
     },
     {
-      name: 'rate',
-      label: 'Rate',
+      name: 'Call duration',
+      label: 'Call duration',
       type: 'select',
       options: [
-        { label: '5%', value: '1' },
-        { label: '10%', value: '0' },
-        { label: '50%', value: '2' },
+        { label: 'Long', value: '1' },
+        { label: 'Medium', value: '0' },
+        { label: 'Short', value: '2' },
       ],
       label_size: 12,
       col_size: 6,
@@ -183,7 +183,7 @@ const AddSignal = () => {
       label: 'Target-1',
       type: 'number',
       label_size: 6,
-      col_size: 6,
+      col_size: 3,
       disable: false,
     },
     {
@@ -191,7 +191,7 @@ const AddSignal = () => {
       label: 'Target-2',
       type: 'number',
       label_size: 12,
-      col_size: 6,
+      col_size: 3,
       disable: false,
     },
     {
@@ -199,7 +199,7 @@ const AddSignal = () => {
       label: 'Target-3',
       type: 'number',
       label_size: 12,
-      col_size: 6,
+      col_size: 3,
       disable: false,
     },
     {
@@ -207,12 +207,12 @@ const AddSignal = () => {
       label: 'Stoploss',
       type: 'number',
       label_size: 12,
-      col_size: 6,
+      col_size: 3,
       disable: false,
     },
     {
-      name: 'callduration',
-      label: 'Call duration',
+      name: 'Price',
+      label: 'Price',
       type: 'text',
       label_size: 12,
       col_size: 6,
@@ -226,7 +226,7 @@ const AddSignal = () => {
       col_size: 6,
       disable: false,
     },
-    
+
     {
       name: 'description',
       label: 'Description',

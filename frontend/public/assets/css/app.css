@@ -5192,3 +5192,7 @@ article.on {
 	font-weight: 500;
 
 }
+
+label {
+	margin-bottom: 0.25rem !important;
+}
