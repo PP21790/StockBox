@@ -11,6 +11,13 @@ import { GetSignallist, DeleteSignal, SignalCloseApi } from '../../../Services/A
 const Signal = () => {
 
 
+    const [checkedIndex, setCheckedIndex] = useState(null);
+
+    const handleTabChange = (index) => {
+        setCheckedIndex(index); // Update the checked tab index
+    };
+
+
     const navigate = useNavigate();
 
     const [clients, setClients] = useState([]);
@@ -152,15 +159,15 @@ const Signal = () => {
 
     const closeSignalperUser = async () => {
         try {
-            if(!closedata.closeprice || !closedata.close_description){
+            if (!closedata.closeprice || !closedata.close_description) {
                 Swal.fire({
                     title: 'Alert',
                     text: 'Please fill in all required fields',
-                    icon: 'warning', 
+                    icon: 'warning',
                     confirmButtonText: 'OK',
                     timer: 2000,
                 });
-                return; 
+                return;
             }
 
             const data = { id: serviceid._id, closeprice: closedata.closeprice, close_status: "false", close_description: closedata.close_description };
@@ -209,40 +216,56 @@ const Signal = () => {
             width: '70px',
         },
         {
-            name: 'Call Duration',
+            name: 'Signal Time',
             selector: row => row.callduration,
             sortable: true,
+            width: '132px',
         },
         {
-            name: 'Type',
+            name: 'Symbol',
             selector: row => row.calltype,
             sortable: true,
+            width: '132px',
         },
         {
-            name: 'Rate',
+            name: 'Entry Type',
             selector: row => row.price,
             sortable: true,
+            width: '132px',
         },
         {
-            name: 'Stoploss',
+            name: 'Entry Price',
             selector: row => row.stoploss,
             sortable: true,
+            width: '132px',
         },
         {
-            name: 'Status',
-            selector: row => row.close_status === true ? 'On' : 'Off',
+            name: 'Exit Price',
+            selector: row => row.stoploss,
             sortable: true,
-            cell: row => (
-                <span style={{ color: row.close_status === true ? 'blue' : 'red' }}>
-                    {row.close_status === true ? 'On' : 'Off'}
-                </span>
-            ),
+            width: '132px',
         },
         {
-            name: 'Updated At',
-            selector: row => new Date(row.updated_at).toLocaleDateString(),
+            name: 'Exit status',
+            selector: row => row.stoploss,
             sortable: true,
+            width: '132px',
         },
+        // {
+        //     name: 'Status',
+        //     selector: row => row.close_status === true ? 'On' : 'Off',
+        //     sortable: true,
+        //     cell: row => (
+        //         <span style={{ color: row.close_status === true ? 'blue' : 'red' }}>
+        //             {row.close_status === true ? 'On' : 'Off'}
+        //         </span>
+        //     ),
+        // },
+        // {
+        //     name: 'Updated At',
+        //     selector: row => new Date(row.updated_at).toLocaleDateString(),
+        //     sortable: true,
+        // },
 
         {
             name: 'Actions',
@@ -259,6 +282,7 @@ const Signal = () => {
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
+
         },
 
         {
@@ -276,6 +300,7 @@ const Signal = () => {
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
+
         },
         // {
         //     name: 'Actions',
@@ -353,7 +378,7 @@ const Signal = () => {
                 </div>
             </div>
 
-            
+
             {model && (
                 <div
                     className="modal fade show"
@@ -362,11 +387,11 @@ const Signal = () => {
                     aria-labelledby="exampleModalLabel"
                     aria-hidden="true"
                 >
-                    <div className="modal-dialog">
+                    <div className="modal-dialog modal-lg">
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title" id="exampleModalLabel">
-                                    Update Service
+                                    Close Signal
                                 </h5>
                                 <button
                                     type="button"
@@ -375,36 +400,187 @@ const Signal = () => {
                                 />
                             </div>
                             <div className="modal-body">
-                                <form>
-                                    <div className="row">
-                                        <div className="col-md-12">
-                                            <label htmlFor="">Closeprice</label>
-                                            <input
-                                                className="form-control mb-2"
-                                                type="number"
-                                                placeholder='Enter Service Title'
-                                                value={closedata.closeprice}
-                                                onChange={(e) => setClosedata({ ...closedata, closeprice: e.target.value })}
-                                            />
-                                        </div>
-                                        <div className="col-md-12">
-                                            <label htmlFor="">Description</label>
-                                            <textarea
-                                                className='form-control'
-                                                rows={2.5}
-                                                cols={72}
-                                                name="comment"
-                                                form="usrform"
-                                                defaultValue={"Enter Description here..."}
-                                                value={closedata.close_description}
-                                                onChange={(e) => setClosedata({ ...closedata, close_description: e.target.value })}
-                                            />
-
-                                        </div>
+                                <div className='card '>
+                                    <div className='d-flex justify-content-between align-items-center card-body'>
+                                        {['Fully Closed', 'Partially Closed', 'SL Hit', 'Closed Signal'].map((tab, index) => (
+                                            <label key={index} className='labelfont'>
+                                                <input
+                                                    type="radio"
+                                                    name="tab"
+                                                    checked={checkedIndex === index}
+                                                    onChange={() => handleTabChange(index)}
+                                                />
+                                                <span className='ps-2'>{tab}</span>
+                                            </label>
+                                        ))}
                                     </div>
-                                </form>
+                                </div>
+                                {/* Conditional Form Rendering for Each Tab */}
+                                <div className='card'>
+                                    {checkedIndex === 0 && (
+                                        <form className='card-body'>
+
+                                            <p>
+                                                Target 1
+
+                                            </p>
+
+                                            <p>
+                                                Target 2
+
+                                            </p>
+
+                                            <p>
+                                                Target 3
+
+                                            </p>
+
+                                            <div className="col-md-12">
+                                                <label htmlFor="input11" className="form-label">
+                                                    Remark
+                                                </label>
+                                                <textarea
+                                                    className="form-control"
+                                                    id="input11"
+                                                    placeholder="Remark ..."
+                                                    rows={3}
+                                                    defaultValue={""}
+                                                />
+                                            </div>
+
+                                            <button type="submit" className='btn btn-danger mt-2'>Submit</button>
+                                        </form>
+                                    )}
+
+                                    {checkedIndex === 1 && (
+                                        <form className='card-body'>
+
+                                            <div className="col-md-12">
+                                                <div className="form-check mb-2">
+                                                    <input className="form-check-input" type="checkbox" id="input12" />
+                                                    <label className="form-check-label" htmlFor="input12">
+                                                        Target 1
+                                                    </label>
+                                                </div>
+                                                <div className="form-check mb-2">
+                                                    <input className="form-control" type="text" id="input12" />
+
+                                                </div>
+                                            </div>
+
+                                            <div className="col-md-12">
+                                                <div className="form-check mb-2">
+                                                    <input className="form-check-input" type="checkbox" id="input12" />
+                                                    <label className="form-check-label" htmlFor="input12">
+                                                        Target 2
+                                                    </label>
+                                                </div>
+
+                                                <div className="form-check mb-2">
+                                                    <input className="form-control" type="text" id="input12" />
+
+                                                </div>
+                                            </div>
+
+                                            <div className="col-md-12">
+                                                <div className="form-check mb-2">
+                                                    <input className="form-check-input" type="checkbox" id="input12" />
+                                                    <label className="form-check-label" htmlFor="input12">
+                                                        Target 3
+                                                    </label>
+                                                </div>
+                                                <div className="form-check mb-2">
+                                                    <input className="form-control" type="text" id="input12" />
+
+                                                </div>
+                                            </div>
+
+                                            <div className="col-md-12">
+                                                <div className="form-check mb-2">
+                                                    <input className="form-check-input" type="checkbox" id="input12" />
+                                                    <label className="form-check-label" htmlFor="input12">
+                                                        close
+                                                    </label>
+                                                </div>
+
+                                            </div>
+
+                                            <div className="col-md-12">
+                                                <label className='mb-1'>Remark</label>
+                                                <textarea
+                                                    className="form-control"
+                                                    id="input11"
+                                                    placeholder="Remark ..."
+                                                    rows={2}
+                                                    defaultValue={""}
+                                                />
+                                            </div>
+
+                                            <button type="submit" className='btn btn-danger mt-2'>Submit</button>
+                                        </form>
+                                    )}
+
+                                    {checkedIndex === 2 && (
+                                        <form className='card-body'>
+
+                                            <div className="col-md-12">
+
+                                                <p>
+                                                    Stoploss: qff
+                                                </p>
+
+
+                                            </div>
+
+
+                                            <div className="col-md-12">
+                                                <label className='mb-1'>Remark</label>
+                                                <textarea
+                                                    className="form-control"
+                                                    id="input11"
+                                                    placeholder="Remark ..."
+                                                    rows={2}
+                                                    defaultValue={""}
+                                                />
+                                            </div>
+
+                                            <button type="submit" className='btn btn-danger mt-2'>Submit</button>
+                                        </form>
+                                    )}
+
+                                    {checkedIndex === 3 && (
+                                        <form className='card-body'>
+
+                                            <div className="col-md-12">
+
+                                                <p>
+                                                    Exit Price: qff
+                                                </p>
+
+
+                                            </div>
+
+
+                                            <div className="col-md-12">
+                                                <label className='mb-1'>Remark</label>
+                                                <textarea
+                                                    className="form-control"
+                                                    id="input11"
+                                                    placeholder="Remark ..."
+                                                    rows={2}
+                                                    defaultValue={""}
+                                                />
+                                            </div>
+
+                                            <button type="submit" className='btn btn-danger mt-2'>Submit</button>
+                                        </form>
+                                    )}
+                                </div>
+
+
+
                             </div>
-                            <div className="modal-footer">
+                            {/* <div className="modal-footer">
                                 <button
                                     type="button"
                                     className="btn btn-secondary"
@@ -419,7 +595,7 @@ const Signal = () => {
                                 >
                                     Update Signal
                                 </button>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>

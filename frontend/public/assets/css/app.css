@@ -5055,6 +5055,7 @@ input::placeholder {
 	}
 
 }
+
 @media screen and (max-width:520px) {
 
 	.chat-footer-menu,
@@ -5176,4 +5177,18 @@ input::placeholder {
 	width: 39px !important;
 }
 
+article {
+	/* background: #ccc; */
+	height: 200px;
+	display: none;
+}
 
+article.on {
+	display: block;
+}
+
+.labelfont {
+	font-size: 0.9rem;
+	font-weight: 500;
+
+}

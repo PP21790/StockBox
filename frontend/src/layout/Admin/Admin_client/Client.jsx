@@ -3,9 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { Pencil ,Trash2 } from 'lucide-react';
+import { Pencil, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { deleteClient ,UpdateClientStatus} from '../../../Services/Admin';
+import { deleteClient, UpdateClientStatus } from '../../../Services/Admin';
 
 const Client = () => {
 
@@ -32,12 +32,12 @@ const Client = () => {
     }, []);
 
 
-   
 
-    const updateClient= async(row)=>{
-        navigate("/admin/client/updateclient/" + row._id ,{ state: { row } })
+
+    const updateClient = async (row) => {
+        navigate("/admin/client/updateclient/" + row._id, { state: { row } })
     }
-    
+
 
     const DeleteClient = async (_id) => {
         try {
@@ -49,9 +49,9 @@ const Client = () => {
                 confirmButtonText: 'Yes, delete it!',
                 cancelButtonText: 'No, cancel',
             });
-    
+
             if (result.isConfirmed) {
-                const response = await deleteClient(_id,token);
+                const response = await deleteClient(_id, token);
                 if (response.status) {
                     Swal.fire({
                         title: 'Deleted!',
@@ -60,10 +60,10 @@ const Client = () => {
                         confirmButtonText: 'OK',
                     });
                     getAdminclient();
-                     
+
                 }
             } else {
-        
+
                 Swal.fire({
                     title: 'Cancelled',
                     text: 'The staff deletion was cancelled.',
@@ -78,19 +78,19 @@ const Client = () => {
                 icon: 'error',
                 confirmButtonText: 'Try Again',
             });
-           
+
         }
     };
-    
-  
 
-     // update status 
 
-     const handleSwitchChange = async (event, id) => {
+
+    // update status 
+
+    const handleSwitchChange = async (event, id) => {
 
         const user_active_status = event.target.checked ? "1" : "0";
 
-        const data = { id:id, status: user_active_status }
+        const data = { id: id, status: user_active_status }
         const result = await Swal.fire({
             title: "Do you want to save the changes?",
             showCancelButton: true,
@@ -153,28 +153,34 @@ const Client = () => {
             selector: row => row.PhoneNo,
             sortable: true,
         },
-       
+
+        {
+            name: 'Signup Status',
+            selector: row => row.Status,
+            sortable: true,
+        },
+
         {
             name: 'Active Status',
             selector: row => (
-              <div className="form-check form-switch form-check-info">
-                <input
-                  id={`rating_${row.ActiveStatus}`}
-                  className="form-check-input toggleswitch"
-                  type="checkbox"
-                  defaultChecked={row.ActiveStatus == 1}
-                  onChange={(event) => handleSwitchChange(event, row._id)}
-                />
-                <label
-                  htmlFor={`rating_${row.ActiveStatus}`}
-                  className="checktoggle checkbox-bg"
-                ></label>
-              </div>
+                <div className="form-check form-switch form-check-info">
+                    <input
+                        id={`rating_${row.ActiveStatus}`}
+                        className="form-check-input toggleswitch"
+                        type="checkbox"
+                        defaultChecked={row.ActiveStatus == 1}
+                        onChange={(event) => handleSwitchChange(event, row._id)}
+                    />
+                    <label
+                        htmlFor={`rating_${row.ActiveStatus}`}
+                        className="checktoggle checkbox-bg"
+                    ></label>
+                </div>
             ),
             sortable: true,
-          },
-          
-        
+        },
+
+
         {
             name: 'Created At',
             selector: row => new Date(row.createdAt).toLocaleDateString(),
@@ -189,13 +195,13 @@ const Client = () => {
             name: 'Actions',
             cell: row => (
                 <>
-                <div>
-                 <Pencil onClick={() => updateClient(row)} />
-                </div>
-               <div>
-               <Trash2 onClick={() => DeleteClient(row._id)} />
-               </div>
-               </>
+                    <div>
+                        <Pencil onClick={() => updateClient(row)} />
+                    </div>
+                    <div>
+                        <Trash2 onClick={() => DeleteClient(row._id)} />
+                    </div>
+                </>
             ),
             ignoreRowClick: true,
             allowOverflow: true,
