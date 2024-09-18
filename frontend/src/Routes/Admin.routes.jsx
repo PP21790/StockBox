@@ -30,6 +30,7 @@ import Addplan from '../layout/Admin/Plans/Addplan';
 import Category from '../layout/Admin/Category/Category';
 import Stock from '../layout/Admin/Stock/Stock';
 import Blogs from '../layout/Admin/Bloags/Blogs';
+import News from '../layout/Admin/News/News';
 
 
 function MainApp() {
@@ -115,6 +116,7 @@ function MainApp() {
                     <Route path="/stock" element={<Stock/>} />
 
                     <Route path="/blogs" element={<Blogs/>} />
+                    <Route path="/news" element={<News/>} />
                       
                     
                 </Routes>

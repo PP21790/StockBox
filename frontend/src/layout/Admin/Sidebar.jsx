@@ -173,6 +173,14 @@ const Sidebar = ({ onToggleClick }) => {
                         <div className="menu-title">Blogs</div>
                       </Link>
                     </li>
+                    <li>
+                      <Link to="/admin/news">
+                        <div className="parent-icon">
+                          <i className="bx bx-edit-alt" />
+                        </div>
+                        <div className="menu-title">News</div>
+                      </Link>
+                    </li>
 
                     <li>
                       <Link to="/admin/refer">

@@ -112,7 +112,6 @@ export async function UpdateClient(data, token) {
 
 // delete client 
 
-
 export async function deleteClient(_id, token) {
     try {
         const res = await axios.get(`${Config.base_url}client/delete/${_id}`, {
@@ -125,6 +124,8 @@ export async function deleteClient(_id, token) {
         return { error: err.response?.data || err.message };
     }
 }
+
+
 
 
 // add client
@@ -148,8 +149,6 @@ export async function AddClient(data, token) {
 
 
 // add signal by admin
-
-// import axios from 'axios';
 
 export async function AddSignalByAdmin(data, token) {
     try {
@@ -214,6 +213,8 @@ export async function AddService(data, token) {
         return err.response?.data || err.message;
     }
 }
+
+
 
 
 // update service 
@@ -739,7 +740,6 @@ export async function Setstockinbulk(data, token) {
 
 // get blogs list 
 
-// get stock list 
 
 export async function getblogslist(token) {
 
@@ -812,6 +812,247 @@ export async function Updateblogsbyadmin(data, token) {
 export async function changeblogsstatus(data, token) {
     try {
         const res = await axios.post(`${Config.base_url}blogs/change-status`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message;
+    }
+}
+
+// blogs delete 
+
+// delete news 
+
+export async function DeleteBlogs(_id, token) {
+    try {
+        const res = await axios.get(`${Config.base_url}blogs/delete/${_id}`, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+
+// get news list 
+
+
+export async function getnewslist(token) {
+
+    try {
+        const res = await axios.get(`${Config.base_url}news/list`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
+
+
+// add News by admin 
+
+
+export async function AddNewsbyadmin(data, token) {
+    const formData = new FormData();
+    formData.append('title', data.title);
+    formData.append('description', data.description);
+    formData.append('image', data.image);
+    formData.append('add_by', data.add_by);
+    try {
+        const res = await axios.post(`${Config.base_url}news/add`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error uploading CSV:', err.response?.data || err.message);
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// update news 
+
+export async function UpdateNewsbyadmin(data, token) {
+    const formData = new FormData();
+    formData.append('title', data.title);
+    formData.append('description', data.description);
+    formData.append('image', data.image);
+    formData.append('id', data.id);
+    try {
+        const res = await axios.post(`${Config.base_url}news/update`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error uploading CSV:', err.response?.data || err.message);
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// news status
+
+export async function changeNewsStatus(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}news/change-status`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// delete news 
+
+export async function DeleteNews(_id, token) {
+    try {
+        const res = await axios.get(`${Config.base_url}news/delete/${_id}`, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// FAQ
+
+
+// get FAQ list 
+
+
+export async function getFaqlist(token) {
+
+    try {
+        const res = await axios.get(`${Config.base_url}faq/list`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
+
+
+// add faq 
+
+export async function AddFaq(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}faq/add`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// update faq 
+
+export async function UpdateFaq(data, token) {
+    try {
+        const res = await axios.put(`${Config.base_url}faq/update`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// Faq delete 
+
+
+export async function DeleteFAQ(_id, token) {
+    try {
+        const res = await axios.get(`${Config.base_url}faq/delete/${_id}`, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// Change Faq status 
+
+// status
+
+export async function changeFAQStatus(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}faq/change-status`, data, {
             headers: {
                 data: {},
                 'Authorization': `${token}`,

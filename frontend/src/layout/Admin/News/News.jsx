@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getblogslist, Addblogsbyadmin, Updateblogsbyadmin, changeblogsstatus, DeleteBlogs } from '../../../Services/Admin';
+import { getnewslist, AddNewsbyadmin, UpdateNewsbyadmin, changeNewsStatus, DeleteNews } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
 import Swal from 'sweetalert2';
 
-const Blogs = () => {
+const News = () => {
 
 
 
@@ -39,10 +39,10 @@ const Blogs = () => {
 
 
 
-    // Getting blogs
-    const getblogs = async () => {
+    // Getting services
+    const getNews = async () => {
         try {
-            const response = await getblogslist(token);
+            const response = await getnewslist(token);
             if (response.status) {
                 const filterdata = response.data.filter((item) =>
                     searchInput === "" ||
@@ -51,12 +51,12 @@ const Blogs = () => {
                 setClients(searchInput ? filterdata : response.data);
             }
         } catch (error) {
-            console.log("Error fetching blogs:", error);
+            console.log("Error fetching services:", error);
         }
     };
 
     useEffect(() => {
-        getblogs();
+        getNews();
     }, [searchInput]);
 
 
@@ -64,27 +64,27 @@ const Blogs = () => {
 
 
     // Update service
-    const updateblogs = async () => {
+    const updateNews = async () => {
         try {
             const data = { title: updatetitle.title, id: serviceid._id, image: updatetitle.image, description: updatetitle.description };
-            const response = await Updateblogsbyadmin(data, token);
+            const response = await UpdateNewsbyadmin(data, token);
 
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
-                    text: 'bolgs updated successfully.',
+                    text: 'Service updated successfully.',
                     icon: 'success',
                     confirmButtonText: 'OK',
                     timer: 2000,
                 });
 
                 setUpdatetitle({ title: "", id: "" });
-                getblogs();
+                getNews();
                 setModel(false);
             } else {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'There was an error updating the blogs.',
+                    text: 'There was an error updating the service.',
                     icon: 'error',
                     confirmButtonText: 'Try Again',
                 });
@@ -92,7 +92,7 @@ const Blogs = () => {
         } catch (error) {
             Swal.fire({
                 title: 'Error!',
-                text: 'There was an error updating the blogs.',
+                text: 'There was an error updating the service.',
                 icon: 'error',
                 confirmButtonText: 'Try Again',
             });
@@ -103,11 +103,11 @@ const Blogs = () => {
 
 
 
-    // Add blogs
-    const addblogsbyadmin = async () => {
+    // Add service
+    const AddNews = async () => {
         try {
             const data = { title: title.title, description: title.description, image: title.image, add_by: userid };
-            const response = await Addblogsbyadmin(data, token);
+            const response = await AddNewsbyadmin(data, token);
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
@@ -118,7 +118,7 @@ const Blogs = () => {
                 });
 
                 setTitle({ title: "", add_by: "" });
-                getblogs();
+                getNews();
 
                 const modal = document.getElementById('exampleModal');
                 const bootstrapModal = window.bootstrap.Modal.getInstance(modal);
@@ -161,7 +161,7 @@ const Blogs = () => {
 
         if (result.isConfirmed) {
             try {
-                const response = await changeblogsstatus(data, token);
+                const response = await changeNewsStatus(data, token);
                 if (response.status) {
                     Swal.fire({
                         title: "Saved!",
@@ -173,7 +173,7 @@ const Blogs = () => {
                         Swal.close();
                     }, 1000);
                 }
-                getblogs();
+                getNews();
             } catch (error) {
                 Swal.fire(
                     "Error",
@@ -182,17 +182,18 @@ const Blogs = () => {
                 );
             }
         } else if (result.dismiss === Swal.DismissReason.cancel) {
-            getblogs();
+            getNews();
         }
     };
 
 
 
 
-    // delete blogs
+    // delete news
 
 
-    const DeleteBlogs = async (_id) => {
+
+    const DeleteService = async (_id) => {
         // console.log("_id",_id)
         try {
             const result = await Swal.fire({
@@ -205,7 +206,7 @@ const Blogs = () => {
             });
 
             if (result.isConfirmed) {
-                const response = await DeleteBlogs(_id, token);
+                const response = await DeleteNews(_id, token);
                 if (response.status) {
                     Swal.fire({
                         title: 'Deleted!',
@@ -213,7 +214,7 @@ const Blogs = () => {
                         icon: 'success',
                         confirmButtonText: 'OK',
                     });
-                    getblogs();
+                    getNews();
 
                 }
             } else {
@@ -270,15 +271,16 @@ const Blogs = () => {
             sortable: true,
         },
         {
-            name: 'Image',
-            cell: row => <img src={`/assets/uploads/blogs/${row.image}`} alt="Image" width="50" height="50" />,
-            sortable: true,
-        },
-        {
             name: 'Description',
             selector: row => row.description,
             sortable: true,
         },
+        {
+            name: 'Image',
+            cell: row => <img src={`/assets/uploads/news/${row.image}`} alt="Image" width="50" height="50" />,
+            sortable: true,
+        },
+        
 
         {
             name: 'Created At',
@@ -304,7 +306,7 @@ const Blogs = () => {
                         />
                     </div>
                     <div>
-                        <Trash2 onClick={() => DeleteBlogs(row._id)} />
+                        <Trash2 onClick={() => DeleteService(row._id)} />
                     </div>
                 </>
             ),
@@ -339,7 +341,7 @@ const Blogs = () => {
             <div className="page-content">
 
                 <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                    <div className="breadcrumb-title pe-3">Blogs</div>
+                    <div className="breadcrumb-title pe-3">News</div>
                     <div className="ps-3">
                         <nav aria-label="breadcrumb">
                             <ol className="breadcrumb mb-0 p-0">
@@ -376,7 +378,7 @@ const Blogs = () => {
                                     data-bs-target="#exampleModal"
                                 >
                                     <i className="bx bxs-plus-square" />
-                                    Add Blog
+                                    Add News
                                 </button>
 
                                 <div
@@ -390,7 +392,7 @@ const Blogs = () => {
                                         <div className="modal-content">
                                             <div className="modal-header">
                                                 <h5 className="modal-title" id="exampleModalLabel">
-                                                    Add Blogs
+                                                    Add News
                                                 </h5>
                                                 <button
                                                     type="button"
@@ -407,7 +409,7 @@ const Blogs = () => {
                                                             <input
                                                                 className="form-control mb-3"
                                                                 type="text"
-                                                                placeholder='Enter blogs Title'
+                                                                placeholder='Enter News Title'
                                                                 value={title.title}
                                                                 onChange={(e) => setTitle({ ...title, title: e.target.value })}
                                                             />
@@ -451,7 +453,7 @@ const Blogs = () => {
                                                 <button
                                                     type="button"
                                                     className="btn btn-primary"
-                                                    onClick={addblogsbyadmin}
+                                                    onClick={AddNews}
                                                 >
                                                     Save
                                                 </button>
@@ -473,7 +475,7 @@ const Blogs = () => {
                                             <div className="modal-content">
                                                 <div className="modal-header">
                                                     <h5 className="modal-title" id="exampleModalLabel">
-                                                        Update Blogs
+                                                        Update News
                                                     </h5>
                                                     <button
                                                         type="button"
@@ -489,7 +491,7 @@ const Blogs = () => {
                                                                 <input
                                                                     className="form-control mb-2"
                                                                     type="text"
-                                                                    placeholder='Enter blogs Title'
+                                                                    placeholder='Enter news Title'
                                                                     value={updatetitle.title}
                                                                     onChange={(e) => updateServiceTitle({ title: e.target.value })}
                                                                 />
@@ -540,9 +542,9 @@ const Blogs = () => {
                                                     <button
                                                         type="button"
                                                         className="btn btn-primary"
-                                                        onClick={updateblogs}
+                                                        onClick={updateNews}
                                                     >
-                                                        Update Blogs
+                                                        Update News
                                                     </button>
                                                 </div>
                                             </div>
@@ -569,4 +571,4 @@ const Blogs = () => {
     );
 };
 
-export default Blogs;
+export default News;
