@@ -4,6 +4,9 @@ import DynamicForm from '../../../components/FormicForm';
 import { AddSignalByAdmin, GetService, GetStockDetail } from '../../../Services/Admin';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+
+
+
 const AddSignal = () => {
   const navigate = useNavigate();
   const user_id = localStorage.getItem('id');
@@ -17,6 +20,8 @@ const AddSignal = () => {
     fetchStockList();
   }, []);
 
+
+  
 
 
   const fetchAdminServices = async () => {
@@ -43,88 +48,108 @@ const AddSignal = () => {
     }
   };
 
-  const validate = (values) => {
-    const errors = {};
-    if (!values.service) errors.service = 'Please select a service';
-    if (!values.stock) errors.stock = 'Please select a stock';
-    if (!values.rate) errors.rate = 'Please select a rate';
-    if (!values.target1) errors.target1 = 'Please enter Target-1';
-    if (!values.target2) errors.target2 = 'Please enter Target-2';
-    if (!values.target3) errors.target3 = 'Please enter Target-3';
-    if (!values.stoploss) errors.stoploss = 'Please enter Stoploss';
-    if (!values.callduration) errors.callduration = 'Please enter Call duration';
-    if (!values.calltype) errors.calltype = 'Please enter Call Calltype';
-    return errors;
-  };
 
-  const onSubmit = async (values) => {
-    const req = {
-      add_by: user_id,
-      service: values.service,
-      stock: values.stock,
-      price: values.rate,
-      tag1: values.target1,
-      tag2: values.target2,
-      tag3: values.target3,
-      stoploss: values.stoploss,
-      // description: values.description,
-      // report: values.report || "",
-      calltype: values.calltype,
-      callduration: values.callduration
-    };
 
-    try {
-      const response = await AddSignalByAdmin(req, token);
-      if (response.status) {
-        Swal.fire({
-          title: 'Create Successful!',
-          text: response.message,
-          icon: 'success',
-          timer: 1500,
-          timerProgressBar: true,
-        });
-        setTimeout(() => {
-          navigate('/admin/signal');
-        }, 1500);
-      } else {
-        Swal.fire({
-          title: 'Error',
-          text: response.message,
-          icon: 'error',
-          timer: 1500,
-          timerProgressBar: true,
-        });
-      }
-    } catch (error) {
-      Swal.fire({
-        title: 'Error',
-        text: 'An unexpected error occurred. Please try again later.',
-        icon: 'error',
-        timer: 1500,
-        timerProgressBar: true,
-      });
-    }
-  };
+  // const validate = (values) => {
+  //   const errors = {};
+  //   if (!values.service) errors.service = 'Please select a service';
+  //   if (!values.stock) errors.stock = 'Please select a stock';
+  //   if (!values.price) errors.price = 'Please select a price';
+  //   if (!values.target1) errors.target1 = 'Please enter Target-1';
+  //   if (!values.target2) errors.target2 = 'Please enter Target-2';
+  //   if (!values.target3) errors.target3 = 'Please enter Target-3';
+  //   if (!values.stoploss) errors.stoploss = 'Please enter Stoploss';
+  //   if (!values.callduration) errors.callduration = 'Please enter Call duration';
+  //   if (!values.calltype) errors.calltype = 'Please enter Call Calltype';
+  //   if (!values.callperiod) errors.callperiod = 'Please enter call Period';
+  //   console.log("values",values)
+  //   return errors;
+  // };
+
+ 
+  // const onSubmit =
 
 
 
   const formik = useFormik({
     initialValues: {
+      add_by:user_id,
       service: '',
-      action: '',
+      price:'',
       stock: '',
-      rate: '',
-      target1: '',
-      target2: '',
-      target3: '',
+      tag1: '',
+      tag2: '',
+      tag3: '',
       stoploss: '',
-      report: null,
-      description: '',
+      report: '',
+      description:'',
       callduration: '',
-      calltype: ''
+      calltype: '',
+      callperiod:''
     },
-    validate,
-    onSubmit,
+    validate:(values) => {
+      const errors = {};
+      if (!values.service) errors.service = 'Please select a service';
+      if (!values.stock) errors.stock = 'Please select a stock';
+      if (!values.price) errors.price = 'Please select a price';
+      if (!values.tag1) errors.tag1 = 'Please enter Target-1';
+      if (!values.tag2) errors.tag2 = 'Please enter Target-2';
+      if (!values.tag3) errors.tag3 = 'Please enter Target-3';
+      if (!values.stoploss) errors.stoploss = 'Please enter Stoploss';
+      if (!values.callduration) errors.callduration = 'Please enter Call duration';
+      if (!values.calltype) errors.calltype = 'Please enter Call Calltype';
+      if (!values.callperiod) errors.callperiod = 'Please enter call Period';
+      return errors;
+    },
+    onSubmit: async (values) => {
+      const req = {
+        add_by:user_id,
+        service: values.service,
+        stock: values.stock,
+        price: values.price,
+        tag1: values.tag1,
+        tag2: values.tag2,
+        tag3: values.tag3,
+        stoploss: values.stoploss,
+        description: values.description,
+        report: values.report ,
+        calltype: values.calltype,
+        callduration: values.callduration,
+        callperiod: values.callperiod
+  
+      };
+      try {
+        const response = await AddSignalByAdmin(req, token);
+        if (response.status) {
+          Swal.fire({
+            title: 'Create Successful!',
+            text: response.message,
+            icon: 'success',
+            timer: 1500,
+            timerProgressBar: true,
+          });
+          setTimeout(() => {
+            navigate('/admin/signal');
+          }, 1500);
+        } else {
+          Swal.fire({
+            title: 'Error',
+            text: response.message,
+            icon: 'error',
+            timer: 1500,
+            timerProgressBar: true,
+          });
+        }
+      } catch (error) {
+        Swal.fire({
+          title: 'Error',
+          text: 'An unexpected error occurred. Please try again later.',
+          icon: 'error',
+          timer: 1500,
+          timerProgressBar: true,
+        });
+      }
+    }
   });
 
   const fields = [
@@ -166,21 +191,21 @@ const AddSignal = () => {
       disable: false,
     },
     {
-      name: 'Call duration',
+      name: 'callduration',
       label: 'Call duration',
       type: 'select',
       options: [
-        { label: 'Long Term', value: '1' },
-        { label: 'Medium Term', value: '0' },
-        { label: 'Short Term', value: '2' },
-        { label: 'Intraday', value: '3' },
+        { label: 'Long Term', value: 'Long Term' },
+        { label: 'Medium Term', value: 'Medium Term' },
+        { label: 'Short Term', value: 'Short Term' },
+        { label: 'Intraday', value: 'Intraday' },
       ],
       label_size: 12,
       col_size: 6,
       disable: false,
     },
     {
-      name: 'target1',
+      name: 'tag1',
       label: 'Target-1',
       type: 'number',
       label_size: 6,
@@ -188,7 +213,7 @@ const AddSignal = () => {
       disable: false,
     },
     {
-      name: 'target2',
+      name: 'tag2',
       label: 'Target-2',
       type: 'number',
       label_size: 12,
@@ -196,7 +221,7 @@ const AddSignal = () => {
       disable: false,
     },
     {
-      name: 'target3',
+      name: 'tag3',
       label: 'Target-3',
       type: 'number',
       label_size: 12,
@@ -212,7 +237,7 @@ const AddSignal = () => {
       disable: false,
     },
     {
-      name: 'Price',
+      name: 'price',
       label: 'Price',
       type: 'text',
       label_size: 12,
@@ -229,7 +254,7 @@ const AddSignal = () => {
     },
 
     {
-      name: 'Call Period',
+      name: 'callperiod',
       label: 'Call Period',
       type: 'text',
       label_size: 12,

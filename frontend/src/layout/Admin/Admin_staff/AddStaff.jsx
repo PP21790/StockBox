@@ -45,7 +45,6 @@ const AddStaff = () => {
       Email: values.Email,
       PhoneNo: values.PhoneNo,
       password: values.password,
-    
       add_by: user_id,
     };
 
