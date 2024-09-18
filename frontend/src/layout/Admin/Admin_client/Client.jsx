@@ -141,12 +141,13 @@ const Client = () => {
             name: 'Full Name',
             selector: row => row.FullName,
             sortable: true,
+            width: '165px',
         },
         {
             name: 'Email',
             selector: row => row.Email,
             sortable: true,
-            width: '280px',
+            width: '243px',
         },
         {
             name: 'Phone No',
@@ -158,6 +159,7 @@ const Client = () => {
             name: 'Signup Status',
             selector: row => row.Status,
             sortable: true,
+            width: '165px',
         },
 
         {
@@ -178,6 +180,7 @@ const Client = () => {
                 </div>
             ),
             sortable: true,
+            width: '165px',
         },
 
 
@@ -185,11 +188,13 @@ const Client = () => {
             name: 'Created At',
             selector: row => new Date(row.createdAt).toLocaleDateString(),
             sortable: true,
+            width: '165px',
         },
         {
             name: 'Updated At',
             selector: row => new Date(row.updatedAt).toLocaleDateString(),
             sortable: true,
+            width: '165px',
         },
         {
             name: 'Actions',
@@ -206,6 +211,7 @@ const Client = () => {
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
+            width: '165px',
         }
     ];
 

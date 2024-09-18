@@ -551,7 +551,7 @@ const Signal = () => {
                                     {checkedIndex === 3 && (
                                         <form className='card-body'>
 
-                                            <div className="col-md-12 mb-2">
+                                            <div className="col-md-12  mb-2">
 
                                                 <label>Exit price</label>
                                                 <input className="form-control" type="text" />
