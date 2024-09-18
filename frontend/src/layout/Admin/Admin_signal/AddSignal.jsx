@@ -119,9 +119,10 @@ const AddSignal = () => {
       target3: '',
       stoploss: '',
       report: null,
-      description: '',
+      description: '', 
       callduration: '',
       calltype: ''
+      
     },
     validate,
     onSubmit,
