@@ -215,7 +215,7 @@ const Coupon = () => {
                 <div className="page-content">
                     {/* breadcrumb */}
                     <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                        <div className="breadcrumb-title pe-3">Client</div>
+                        <div className="breadcrumb-title pe-3">Coupon</div>
                         <div className="ps-3">
                             <nav aria-label="breadcrumb">
                                 <ol className="breadcrumb mb-0 p-0">
@@ -244,14 +244,14 @@ const Coupon = () => {
                                 </div>
                                 <div className="ms-auto">
                                     <Link
-                                        to="/admin/addclient"
+                                        to="/admin/addcoupon"
                                         className="btn btn-primary"
                                     >
                                         <i
                                             className="bx bxs-plus-square"
                                             aria-hidden="true"
                                         />
-                                        Add Client
+                                        Add Coupon
                                     </Link>
                                 </div>
                             </div>
