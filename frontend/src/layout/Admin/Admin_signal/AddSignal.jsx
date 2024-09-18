@@ -228,11 +228,20 @@ const AddSignal = () => {
     },
 
     {
+      name: 'Call Period',
+      label: 'Call Period',
+      type: 'text',
+      label_size: 12,
+      col_size: 6,
+      disable: false,
+    },
+
+    {
       name: 'description',
       label: 'Description',
       type: 'text',
       label_size: 12,
-      col_size: 15,
+      col_size: 6,
       disable: false,
     },
 
