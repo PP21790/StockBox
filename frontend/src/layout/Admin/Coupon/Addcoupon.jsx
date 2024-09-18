@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import DynamicForm from '../../../components/FormicForm';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import { AddClient } from '../../../Services/Admin';
+import { Addcouponbyadmin } from '../../../Services/Admin';
 
 
 const Addcoupon = () => {
@@ -42,9 +42,7 @@ const Addcoupon = () => {
         if (!values.mincouponvalue) {
             errors.mincouponvalue = "Please enter Min Coupon value";
         }
-        if (!values.image) {
-            errors.image = "Please enter image";
-        }
+       
 
         return errors;
     };
@@ -65,8 +63,9 @@ const Addcoupon = () => {
         };
 
         try {
-            const response = await AddClient(req, token);
+            const response = await Addcouponbyadmin(req, token);
             if (response.status) {
+
                 Swal.fire({
                     title: "Create Successful!",
                     text: response.message,
@@ -194,7 +193,7 @@ const Addcoupon = () => {
         },
         {
             name: "description",
-            label: "description",
+            label: "Description",
             type: "text",
             label_size: 12,
             col_size: 6,

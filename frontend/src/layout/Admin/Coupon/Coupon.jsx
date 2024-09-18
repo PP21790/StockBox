@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { GetClient } from '../../../Services/Admin';
+import { getcouponlist } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import { Pencil, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
@@ -16,9 +16,9 @@ const Coupon = () => {
 
     const token = localStorage.getItem('token');
 
-    const getAdminclient = async () => {
+    const getcoupon = async () => {
         try {
-            const response = await GetClient(token);
+            const response = await getcouponlist(token);
             if (response.status) {
                 setClients(response.data);
             }
@@ -28,7 +28,7 @@ const Coupon = () => {
     }
 
     useEffect(() => {
-        getAdminclient();
+        getcoupon();
     }, []);
 
 
@@ -59,7 +59,7 @@ const Coupon = () => {
                         icon: 'success',
                         confirmButtonText: 'OK',
                     });
-                    getAdminclient();
+                    getcoupon();
 
                 }
             } else {
@@ -113,7 +113,7 @@ const Coupon = () => {
                         Swal.close();
                     }, 1000);
                 }
-                getAdminclient();
+                getcoupon();
             } catch (error) {
                 Swal.fire(
                     "Error",
@@ -122,7 +122,7 @@ const Coupon = () => {
                 );
             }
         } else if (result.dismiss === Swal.DismissReason.cancel) {
-            getAdminclient();
+            getcoupon();
         }
     };
 

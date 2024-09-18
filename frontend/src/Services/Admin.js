@@ -1070,3 +1070,54 @@ export async function changeFAQStatus(data, token) {
         return err.response?.data || err.message;
     }
 }
+
+
+
+// add coupon
+
+export async function Addcouponbyadmin(data, token) {
+    const formData = new FormData();
+   
+    formData.append('add_by', data.add_by);
+    formData.append('image', data.image);
+    formData.append('name',data.name );
+    formData.append('code',data.code );
+    formData.append('type',data.type );
+    formData.append('value',data.value );
+    formData.append('startdate',data.startdate );
+    formData.append('enddate',data.enddate );
+    formData.append('minpurchasevalue',data.minpurchasevalue );
+    formData.append('mincouponvalue',data.mincouponvalue );
+    formData.append('description',data.description);
+
+    try {
+        const res = await axios.post(`${Config.base_url}coupon/add`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error uploading CSV:', err.response?.data || err.message);
+        return err.response?.data || err.message;
+    }
+}
+
+
+// get coupon list 
+
+export async function getcouponlist(token) {
+
+    try {
+        const res = await axios.get(`${Config.base_url}coupon/list`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
