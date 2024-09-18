@@ -1,8 +1,7 @@
 const db = require("../Models");
 const upload = require('../Utils/multerHelper'); 
-
 const Signal_Modal = db.Signal;
-
+mongoose  = require('mongoose');
 
 class Signal {
 
@@ -23,7 +22,7 @@ class Signal {
         });
 
 
-            const { price,service,calltype,stock,tag1,tag2,tag3,stoploss,description,callduration,add_by } = req.body;
+            const { price,service,calltype,stock,tag1,tag2,tag3,stoploss,description,callduration,callperiod,add_by } = req.body;
         
             const report = req.files['report'] ? req.files['report'][0].filename : null;
 
@@ -34,6 +33,7 @@ class Signal {
               service: service,
               calltype: calltype,
               callduration:callduration,
+              callperiod:callperiod,
               stock: stock,
               tag1: tag1,
               tag2: tag2,
@@ -65,7 +65,7 @@ class Signal {
     }
     
 
-  async getSignal(req, res) {
+  /*async getSignal(req, res) {
     try {
 
      
@@ -86,6 +86,68 @@ class Signal {
       return res.json({ status: false, message: "Server error", data: [] });
     }
   }
+*/
+
+
+async getSignal(req, res) {
+  try {
+    const { from, to, service, stock } = req.body;
+    // Set today's date and midnight time for filtering
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set to midnight for accurate comparison
+
+    // Default date range is today
+    const fromDate = from ? new Date(from) : today;
+    let toDate;
+    if (to) {
+      toDate = new Date(to);
+      toDate.setHours(23, 59, 59, 999); // End of the specified date
+    } else {
+      toDate = new Date(today);
+      toDate.setHours(23, 59, 59, 999); // End of today
+    }
+
+
+
+    // Build the query object with dynamic filters
+    const query = {
+      del: 0,
+      created_at: { $gte: fromDate, $lt: toDate } // Date range filter
+    };
+
+
+    if (service) {
+      query.service = new mongoose.Types.ObjectId(service); // Convert service ID to ObjectId
+    }
+
+    if (stock) {
+      query.stock = new mongoose.Types.ObjectId(stock); // Convert stock ID to ObjectId
+    }
+
+    // Log the query for debugging
+
+
+    // Execute the query and populate service and stock details
+   const result = await Signal_Modal.find(query)
+      .populate({ path: 'service', select: 'title' }) // Populate only the title from service
+      .populate({ path: 'stock', select: 'title' }); 
+
+    return res.json({
+      status: true,
+      message: "Signals fetched successfully",
+      data: result
+    });
+  } catch (error) {
+    return res.json({
+      status: false,
+      message: "Server error",
+      data: []
+    });
+  }
+}
+
+
+
 
 
   async detailSignal(req, res) {
