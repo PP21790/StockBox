@@ -10,9 +10,9 @@ const signalModel = Schema({
         default: null
     },
     service: {
-        type: String,
+        type: Types.ObjectId, // Use ObjectId for references
+        ref: 'Service', // Reference the Stock model
         required: true,
-        trim: true,
         default: null
     },
     calltype: {
@@ -22,6 +22,12 @@ const signalModel = Schema({
         default: null
     },
     callduration: {
+        type: String,
+        required: true,
+        trim: true,
+        default: null
+    },
+    callperiod: {
         type: String,
         required: true,
         trim: true,
@@ -82,12 +88,32 @@ const signalModel = Schema({
         type: Date,
         default: null // Date when the signal was closed
     },
-    targethit: {
+    targethit1: {
         type: String,
         trim: true,
         default: null
     },
-    targetprice: {
+    targetprice1: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    targethit2: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    targetprice2: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    targethit3: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    targetprice3: {
         type: String,
         trim: true,
         default: null

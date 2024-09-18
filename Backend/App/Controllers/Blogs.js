@@ -199,8 +199,6 @@ class BlogController {
                 });
             }
     
-            // Log the updated blog post for debugging
-            console.log("Updated Blog:", updatedBlogs);
     
             // Send the success response
             return res.json({

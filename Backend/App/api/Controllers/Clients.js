@@ -17,19 +17,19 @@ class Clients {
 
 
       if (!FullName) {
-        return res.status(400).json({ status: false, message: "fullname is required" });
+        return res.status(400).json({ status: false, message: "Please enter fullname" });
       }
      
       if (!Email) {
-        return res.status(400).json({ status: false, message: "email is required" });
+        return res.status(400).json({ status: false, message: "Please enter email" });
       } else if (!/^\S+@\S+\.\S+$/.test(Email)) {
-        return res.status(400).json({ status: false, message: "Invalid email format" });
+        return res.status(400).json({ status: false, message: "please enter valid email" });
       }
       
       if (!PhoneNo) {
-        return res.status(400).json({ status: false, message: "phone number is required" });
+        return res.status(400).json({ status: false, message: "Please enter phone number" });
       } else if (!/^\d{10}$/.test(PhoneNo)) {
-        return res.status(400).json({ status: false, message: "Invalid phone number format" });
+        return res.status(400).json({ status: false, message: "Please enter valid phone number" });
       }
       if (!password || password.length < 8 || 
           !/[A-Z]/.test(password) || 
@@ -42,9 +42,6 @@ class Clients {
         });
       }
      
-
-
-
       const hashedPassword = await bcrypt.hash(password, 10);
       const refer_token = crypto.randomBytes(10).toString('hex'); // 10 bytes = 20 hex characters
       const result = new Clients_Modal({
@@ -58,10 +55,31 @@ class Clients {
      
       await result.save();
 
-      console.log("result", result)
+
+    const resetToken = Math.floor(100000 + Math.random() * 900000); // Generates a 6-digit OTP
+
+
+      const settings = await BasicSetting_Modal.findOne();
+      if (!settings || !settings.smtp_status) {
+        throw new Error('SMTP settings are not configured or are disabled');
+      }
+        // Email options
+        const mailOptions = {
+          to: result.Email,
+          from: `${settings.from_name} <${settings.from_mail}>`, // Include business name
+          subject: 'Password Reset',
+          text: `Your verification code is: ${resetToken}. This code is valid for 10 minutes. Please do not share this code with anyone.`,
+        };
+    
+        // Send email
+        await sendEmail(mailOptions);
+
+
       return res.json({
         status: true,
-        message: "create client successfully",
+        otp:resetToken,
+        email:Email,
+        message: "OTP has been sent to your email. Please check your email.",
       });
 
     } catch (error) {
@@ -119,12 +137,12 @@ async loginClient(req, res) {
     const { UserName, password } = req.body;  // Extract password here
     
     if (!UserName) {
-      return res.status(400).json({ status: false, message: "username is required" });
+      return res.status(400).json({ status: false, message: "Please enter email/phone number" });
     }
    
 
     if (!password) {
-      return res.status(400).json({ status: false, message: "password is required" });
+      return res.status(400).json({ status: false, message: "Please enter password" });
     }
    
    
@@ -146,7 +164,7 @@ async loginClient(req, res) {
     if (!isMatch) {
       return res.status(401).json({
         status: false,
-        message: "Invalid credentials",
+        message: "Password not valid",
       });
     }
 
@@ -181,7 +199,7 @@ async forgotPassword(req, res) {
     const { Email } = req.body;
 
     if (!Email) {
-      return res.status(400).json({ status: false, message: "email is required" });
+      return res.status(400).json({ status: false, message: "Please enter valid email" });
     }
    
     
@@ -191,16 +209,17 @@ async forgotPassword(req, res) {
     if (!client) {
       return res.status(404).json({
         status: false,
-        message: "client with this email does not exist",
+        message: "Email does not exist",
       });
     }
 
     // Generate a reset token
-    const resetToken = crypto.randomBytes(20).toString('hex');
+    const resetToken = Math.floor(100000 + Math.random() * 900000); // Generates a 6-digit OTP
+    //const resetToken = crypto.randomBytes(20).toString('hex');
 
     // Set the token and expiry on the user
     client.forgotPasswordToken = resetToken;
-    client.forgotPasswordTokenExpiry = Date.now() + 3600000; // 1 hour from now
+    client.forgotPasswordTokenExpiry = Date.now() + 600000; // 1 hour from now
 
     await client.save();
 
@@ -213,7 +232,7 @@ async forgotPassword(req, res) {
       to: client.Email,
       from: `${settings.from_name} <${settings.from_mail}>`, // Include business name
       subject: 'Password Reset',
-      text: `Use This token ${resetToken} to reset your password`,
+      text: `Your verification code is: ${resetToken}. This code is valid for 10 minutes. Please do not share this code with anyone.`,
     };
 
     // Send email
@@ -221,7 +240,7 @@ async forgotPassword(req, res) {
 
     return res.json({
       status: true,
-      message: 'Reset token sent to email',
+      message: 'OTP has been sent to your email. Please check your email.',
     });
 
   } catch (error) {
@@ -235,12 +254,33 @@ async forgotPassword(req, res) {
 }
 async resetPassword(req, res) {
   try {
-    const { resetToken, newPassword } = req.body;
+    const { resetToken, newPassword, confirmPassword } = req.body;
 
-    if (!resetToken || !newPassword) {
+    if (!resetToken) {
       return res.status(400).json({
         status: false,
-        message: "Reset token and new password are required",
+        message: "Please enter otp",
+      });
+    }
+
+    if (!newPassword) {
+      return res.status(400).json({
+        status: false,
+        message: "Please enter new password",
+      });
+    }
+
+    if (!confirmPassword) {
+      return res.status(400).json({
+        status: false,
+        message: "Please confirm your password",
+      });
+    }
+    
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({
+        status: false,
+        message: "New password and confirm password do not match",
       });
     }
 
@@ -250,12 +290,11 @@ async resetPassword(req, res) {
       forgotPasswordTokenExpiry: { $gt: Date.now() } // Token should not be expired
     });
 
-    console.log(client);
 
     if (!client) {
       return res.status(400).json({
         status: false,
-        message: "Invalid or expired reset token",
+        message: "Otp is invalid or expired",
       });
     }
 
@@ -290,12 +329,21 @@ async resetPassword(req, res) {
     try {
       const { id, currentPassword, newPassword } = req.body;
 
-      if (!id || !currentPassword || !newPassword) {
+      
+      if (!currentPassword) {
         return res.status(400).json({
           status: false,
-          message: "Client ID, current password, and new password are required",
+          message: "Please enter current password",
         });
       }
+
+      if (!newPassword) {
+        return res.status(400).json({
+          status: false,
+          message: "Please enter new password",
+        });
+      }
+
 
       // Find the user by ID
       const client = await Clients_Modal.findById(id);
@@ -344,14 +392,14 @@ async resetPassword(req, res) {
         const { id, FullName } = req.body;
 
         if (!FullName) {
-          return res.status(400).json({ status: false, message: "fullname is required" });
+          return res.status(400).json({ status: false, message: "Please enter name" });
         }
 
         // Ensure the user ID is provided
         if (!id) {
             return res.status(400).json({
                 status: false,
-                message: "Client ID is required",
+                message: "Something went wrong",
             });
         }
 
@@ -421,6 +469,47 @@ async deleteClient(req, res) {
     });
   } catch (error) {
     console.error("Error deleting client:", error);
+    return res.status(500).json({
+      status: false,
+      message: "Server error",
+      error: error.message,
+    });
+  }
+}
+
+async otpSubmit(req, res) {
+  try {
+    const { otp, email } = req.body;
+
+    if (!otp) {
+      return res.status(400).json({
+        status: false,
+        message: "Please enter otp",
+      });
+    }
+
+    // Find the user by reset token and check if the token is valid
+    const client = await Clients_Modal.findOne({
+      Email: email
+    });
+
+
+    if (!client) {
+      return res.status(400).json({
+        status: false,
+        message: "Something went wrong",
+      });
+    }
+
+    client.ActiveStatus = 1;
+    await client.save();
+
+    return res.json({
+      status: true,
+      message: "Your registration is successfull",
+    });
+
+  } catch (error) {
     return res.status(500).json({
       status: false,
       message: "Server error",
