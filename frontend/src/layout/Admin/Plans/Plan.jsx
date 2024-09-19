@@ -142,7 +142,7 @@ const Plan = () => {
                                             <button className="btn-secondary btnsecond">Know More</button>
                                             <button className="btn-primary btnprime">Subscribe</button>
                                         </div>
-                                        <div className="picked-badge">Picked By You</div>
+                                       
                                     </div>
                                     {/* Second Card */}
                                     <div className="pricing-card">
