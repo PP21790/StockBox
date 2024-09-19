@@ -239,7 +239,7 @@ async getSignal(req, res) {
     try {
 
      
-      const { id, targethit1,targethit2,targethit3,targetprice1,targetprice2,targetprice3,slprice3,exitprice,closestatus,closetype, close_description } = req.body;
+      const { id, targethit1,targethit2,targethit3,targetprice1,targetprice2,targetprice3,slprice,exitprice,closestatus,closetype, close_description } = req.body;
      
 
       let close_status = false;  
