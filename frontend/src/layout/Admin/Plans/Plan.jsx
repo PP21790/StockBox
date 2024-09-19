@@ -53,6 +53,24 @@ const Plan = () => {
             </div>
             {/* End Breadcrumb */}
             <div className="card">
+                <div className='row mt-3 ms-2'>
+                    <div className="col-md-6">
+
+                        <label>Select Plan</label>
+                        <select
+                            className="default-select wide form-control"
+                            aria-describedby="basic-addon1"
+                            id="calltype"
+                            name="calltype"
+                        >
+                            <option value="">Select Plan</option>
+                            <option value="buy">Stock</option>
+                            <option value="sell">Cash</option>
+                            <option value="hold">Future</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div className="card-body">
                     <ul className="nav nav-tabs nav-primary" role="tablist">
                         <li className="nav-item" role="presentation">
@@ -143,8 +161,62 @@ const Plan = () => {
                                                     <li>Enjoy an ad-free experience on the platform</li>
                                                 </ul>
                                                 <div className="button-group">
-                                                    <button className="btn-secondary btnsecond">Know More</button>
-                                                    <button className="btn-primary btnprime">Subscribe</button>
+                                                    <>
+
+                                                        <button
+                                                            type="button"
+                                                            className="btnsecond "
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#exampleModal"
+                                                        >
+                                                            Know More
+                                                        </button>
+
+                                                        <div
+                                                            className="modal fade"
+                                                            id="exampleModal"
+                                                            tabIndex={-1}
+                                                            aria-labelledby="exampleModalLabel"
+                                                            aria-hidden="true"
+                                                            style={{ display: "none" }}
+                                                        >
+                                                            <div className="modal-dialog">
+                                                                <div className="modal-content">
+                                                                    <div className="modal-header">
+                                                                        <h5 className="modal-title" id="exampleModalLabel">
+                                                                            Modal title
+                                                                        </h5>
+                                                                        <button
+                                                                            type="button"
+                                                                            className="btn-close"
+                                                                            data-bs-dismiss="modal"
+                                                                            aria-label="Close"
+                                                                        />
+                                                                    </div>
+                                                                    <div className="modal-body">
+                                                                        Contrary to popular belief, Lorem Ipsum is not simply random text. It
+                                                                        has roots in a piece of classical Latin literature from 45 BC, making
+                                                                        it over 2000 years old. Richard McClintock, a Latin professor at
+                                                                        Hampden-Sydney College in Virginia, looked up one of the more obscure
+                                                                        Latin words, consectetur.
+                                                                    </div>
+                                                                    <div className="modal-footer">
+                                                                        <button
+                                                                            type="button"
+                                                                            className="btn btn-secondary"
+                                                                            data-bs-dismiss="modal"
+                                                                        >
+                                                                            Close
+                                                                        </button>
+                                                                        <button type="button" className="btn btn-primary">
+                                                                            Save changes
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </>
+                                                    <button className="btn-primary btnprime">Edit</button>
                                                 </div>
 
                                             </div>
@@ -177,12 +249,66 @@ const Plan = () => {
                                                     <li>Enjoy an ad-free experience on Cricbuzz</li>
                                                 </ul>
                                                 <div className="button-group">
-                                                    <button className="btn-secondary btnsecond">Know More</button>
-                                                    <button className="btn-primary btnprime">Subscribe</button>
+                                                    <>
+
+                                                        <button
+                                                            type="button"
+                                                            className="btnsecond "
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#exampleModal"
+                                                        >
+                                                            Know More
+                                                        </button>
+
+                                                        <div
+                                                            className="modal fade"
+                                                            id="exampleModal"
+                                                            tabIndex={-1}
+                                                            aria-labelledby="exampleModalLabel"
+                                                            aria-hidden="true"
+                                                            style={{ display: "none" }}
+                                                        >
+                                                            <div className="modal-dialog">
+                                                                <div className="modal-content">
+                                                                    <div className="modal-header">
+                                                                        <h5 className="modal-title" id="exampleModalLabel">
+                                                                            Modal title
+                                                                        </h5>
+                                                                        <button
+                                                                            type="button"
+                                                                            className="btn-close"
+                                                                            data-bs-dismiss="modal"
+                                                                            aria-label="Close"
+                                                                        />
+                                                                    </div>
+                                                                    <div className="modal-body">
+                                                                        Contrary to popular belief, Lorem Ipsum is not simply random text. It
+                                                                        has roots in a piece of classical Latin literature from 45 BC, making
+                                                                        it over 2000 years old. Richard McClintock, a Latin professor at
+                                                                        Hampden-Sydney College in Virginia, looked up one of the more obscure
+                                                                        Latin words, consectetur.
+                                                                    </div>
+                                                                    <div className="modal-footer">
+                                                                        <button
+                                                                            type="button"
+                                                                            className="btn btn-secondary"
+                                                                            data-bs-dismiss="modal"
+                                                                        >
+                                                                            Close
+                                                                        </button>
+                                                                        <button type="button" className="btn btn-primary">
+                                                                            Save changes
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </>
+                                                    <button className="btn-primary btnprime">Edit</button>
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -190,352 +316,372 @@ const Plan = () => {
 
                         </div>
                         <div className="tab-pane fade" id="primaryprofile" role="tabpanel">
-                            <div className="pricing-table">
+                            <div className="pricing-section mt-5">
 
-                                <div className="row row-cols-1 row-cols-lg-3">
-                                    {/* Free Tier */}
-                                    <div className="col">
-                                        <div className="card mb-5 mb-lg-0">
-                                            <div className="card-header bg-danger py-3">
-                                                <h5 className="card-title text-white text-uppercase text-center">
-                                                    Free
-                                                </h5>
-                                                <h6 className="card-price text-white text-center">
-                                                    $0<span className="term">/month</span>
-                                                </h6>
-                                            </div>
-                                            <div className="card-body">
-                                                <ul className="list-group list-group-flush">
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Single User
+                                <div className="card-container">
+                                    {/* First Card */}
+                                    <div className='row'>
+                                        <div className="col-md-6 mb-3">
+
+                                            <div className="pricing-card highlight-card">
+
+                                                <div className="offer-tag">Limited Time Offer</div>
+                                                <div className='row justify-content-between align-items-center'>
+                                                    <div className='col-md-6'>
+                                                        <h2 className='fonth3 me-4'>Cricbuzz Plus</h2>
+                                                        <h3 className='fonth2'>Annual Plan</h3>
+                                                    </div>
+                                                    <div className="price-section col-md-6">
+                                                        <span className="discount">-46%</span>
+                                                        <span className="original-price">INR 750</span>
+                                                        <h3 className='ms-4 fnt'>INR 399</h3>
+                                                    </div>
+                                                </div>
+                                                <hr />
+                                                <ul>
+                                                    <li>Avail Fantasy Handbook: Comprehensive Fantasy Cricket Guide</li>
+                                                    <li>
+                                                        Exclusive access to premium editorial content and Cricbuzz Originals
                                                     </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        5GB Storage
-                                                    </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Unlimited Public Projects
-                                                    </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Community Access
-                                                    </li>
-                                                    <li className="list-group-item text-secondary">
-                                                        <i className="bx bx-x me-2 font-18" />
-                                                        Unlimited Private Projects
-                                                    </li>
-                                                    <li className="list-group-item text-secondary">
-                                                        <i className="bx bx-x me-2 font-18" />
-                                                        Dedicated Phone Support
-                                                    </li>
-                                                    <li className="list-group-item text-secondary">
-                                                        <i className="bx bx-x me-2 font-18" />
-                                                        Free Subdomain
-                                                    </li>
-                                                    <li className="list-group-item text-secondary">
-                                                        <i className="bx bx-x me-2 font-18" />
-                                                        Monthly Status Reports
-                                                    </li>
+                                                    <li>Enjoy an ad-free experience on the platform</li>
                                                 </ul>
-                                                <div className="d-grid">
-                                                    {" "}
-                                                    <a href="#" className="btn btn-danger my-2 radius-30">
-                                                        Order Now
-                                                    </a>
+                                                <div className="button-group">
+                                                    <>
+
+                                                        <button
+                                                            type="button"
+                                                            className="btnsecond "
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#exampleModal2"
+                                                        >
+                                                            Know More
+                                                        </button>
+
+                                                        <div
+                                                            className="modal fade"
+                                                            id="exampleModal2"
+                                                            tabIndex={-1}
+                                                            aria-labelledby="exampleModalLabel"
+                                                            aria-hidden="true"
+                                                            style={{ display: "none" }}
+                                                        >
+                                                            <div className="modal-dialog">
+                                                                <div className="modal-content">
+                                                                    <div className="modal-header">
+                                                                        <h5 className="modal-title" id="exampleModalLabel">
+                                                                            Modal title
+                                                                        </h5>
+                                                                        <button
+                                                                            type="button"
+                                                                            className="btn-close"
+                                                                            data-bs-dismiss="modal"
+                                                                            aria-label="Close"
+                                                                        />
+                                                                    </div>
+                                                                    <div className="modal-body">
+                                                                        Contrary to popular belief, Lorem Ipsum is not simply random text. It
+                                                                        has roots in a piece of classical Latin literature from 45 BC, making
+                                                                        it over 2000 years old. Richard McClintock, a Latin professor at
+                                                                        Hampden-Sydney College in Virginia, looked up one of the more obscure
+                                                                        Latin words, consectetur.
+                                                                    </div>
+                                                                    <div className="modal-footer">
+                                                                        <button
+                                                                            type="button"
+                                                                            className="btn btn-secondary"
+                                                                            data-bs-dismiss="modal"
+                                                                        >
+                                                                            Close
+                                                                        </button>
+                                                                        <button type="button" className="btn btn-primary">
+                                                                            Save changes
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </>
+                                                    <button className="btn-primary btnprime">Edit</button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        {/* Second Card */}
+                                        <div className="col-md-6 mb-3">
+                                            <div className="pricing-card">
+                                                <div className='row justify-content-between align-items-center'>
+                                                    <div className='col-md-6'>
+
+
+                                                        <h3 className='fonth3'>Cricbuzz Plus Times Prime</h3>
+                                                        <h2 className='fonth2'>Annual Combo Plan</h2>
+                                                    </div>
+
+                                                    <div className="price-section col-md-6">
+                                                        <span className="discount">-16%</span>
+                                                        <span className="original-price">INR 1199</span>
+                                                        <h3 className='ms-4 fnt'>INR 999</h3>
+                                                    </div>
+                                                </div>
+                                                <hr />
+                                                <ul>
+                                                    <li>
+                                                        Access to 23 premium subscriptions, spanning popular platforms.
+
+                                                    </li>
+                                                    <li>Avail Fantasy Handbook: Comprehensive Fantasy Cricket Guide</li>
+                                                    <li>Enjoy an ad-free experience on Cricbuzz</li>
+                                                </ul>
+                                                <div className="button-group">
+                                                    <>
+
+                                                        <button
+                                                            type="button"
+                                                            className="btnsecond "
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#exampleModal2"
+                                                        >
+                                                            Know More
+                                                        </button>
+
+                                                        <div
+                                                            className="modal fade"
+                                                            id="exampleModal2"
+                                                            tabIndex={-1}
+                                                            aria-labelledby="exampleModalLabel"
+                                                            aria-hidden="true"
+                                                            style={{ display: "none" }}
+                                                        >
+                                                            <div className="modal-dialog">
+                                                                <div className="modal-content">
+                                                                    <div className="modal-header">
+                                                                        <h5 className="modal-title" id="exampleModalLabel">
+                                                                            Modal title
+                                                                        </h5>
+                                                                        <button
+                                                                            type="button"
+                                                                            className="btn-close"
+                                                                            data-bs-dismiss="modal"
+                                                                            aria-label="Close"
+                                                                        />
+                                                                    </div>
+                                                                    <div className="modal-body">
+                                                                        Contrary to popular belief, Lorem Ipsum is not simply random text. It
+                                                                        has roots in a piece of classical Latin literature from 45 BC, making
+                                                                        it over 2000 years old. Richard McClintock, a Latin professor at
+                                                                        Hampden-Sydney College in Virginia, looked up one of the more obscure
+                                                                        Latin words, consectetur.
+                                                                    </div>
+                                                                    <div className="modal-footer">
+                                                                        <button
+                                                                            type="button"
+                                                                            className="btn btn-secondary"
+                                                                            data-bs-dismiss="modal"
+                                                                        >
+                                                                            Close
+                                                                        </button>
+                                                                        <button type="button" className="btn btn-primary">
+                                                                            Save changes
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </>
+                                                    <button className="btn-primary btnprime">Edit</button>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    {/* Plus Tier */}
-                                    <div className="col">
-                                        <div className="card mb-5 mb-lg-0">
-                                            <div className="card-header bg-primary py-3">
-                                                <h5 className="card-title text-white text-uppercase text-center">
-                                                    Plus
-                                                </h5>
-                                                <h6 className="card-price text-white text-center">
-                                                    $9<span className="term">/month</span>
-                                                </h6>
-                                            </div>
-                                            <div className="card-body">
-                                                <ul className="list-group list-group-flush">
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Single User
-                                                    </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        5GB Storage
-                                                    </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Unlimited Public Projects
-                                                    </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Community Access
-                                                    </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Unlimited Private Projects
-                                                    </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Dedicated Phone Support
-                                                    </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Free Subdomain
-                                                    </li>
-                                                    <li className="list-group-item text-secondary">
-                                                        <i className="bx bx-x me-2 font-18" />
-                                                        Monthly Status Reports
-                                                    </li>
-                                                </ul>
-                                                <div className="d-grid">
-                                                    {" "}
-                                                    <a href="#" className="btn btn-primary my-2 radius-30">
-                                                        Order Now
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {/* Pro Tier */}
-                                    <div className="col">
-                                        <div className="card">
-                                            <div className="card-header bg-warning py-3">
-                                                <h5 className="card-title text-dark text-uppercase text-center">
-                                                    Pro
-                                                </h5>
-                                                <h6 className="card-price text-center">
-                                                    $49<span className="term">/month</span>
-                                                </h6>
-                                            </div>
-                                            <div className="card-body">
-                                                <ul className="list-group list-group-flush">
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Single User
-                                                    </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        5GB Storage
-                                                    </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Unlimited Public Projects
-                                                    </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Community Access
-                                                    </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Unlimited Private Projects
-                                                    </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Dedicated Phone Support
-                                                    </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Free Subdomain
-                                                    </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Monthly Status Reports
-                                                    </li>
-                                                </ul>
-                                                <div className="d-grid">
-                                                    {" "}
-                                                    <a href="#" className="btn btn-warning my-2 radius-30">
-                                                        Order Now
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
+
                                     </div>
                                 </div>
-
                             </div>
 
                         </div>
                         <div className="tab-pane fade" id="primarycontact" role="tabpanel">
-                            <div className="pricing-table">
+                            <div className="pricing-section mt-5">
 
-                                <div className="row row-cols-1 row-cols-lg-3">
-                                    {/* Free Tier */}
-                                    <div className="col">
-                                        <div className="card mb-5 mb-lg-0">
-                                            <div className="card-header bg-danger py-3">
-                                                <h5 className="card-title text-white text-uppercase text-center">
-                                                    Free
-                                                </h5>
-                                                <h6 className="card-price text-white text-center">
-                                                    $0<span className="term">/month</span>
-                                                </h6>
-                                            </div>
-                                            <div className="card-body">
-                                                <ul className="list-group list-group-flush">
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Single User
+                                <div className="card-container">
+                                    {/* First Card */}
+                                    <div className='row'>
+                                        <div className="col-md-6 mb-3">
+
+                                            <div className="pricing-card highlight-card">
+
+                                                <div className="offer-tag">Limited Time Offer</div>
+                                                <div className='row justify-content-between align-items-center'>
+                                                    <div className='col-md-6'>
+                                                        <h2 className='fonth3 me-4'>Cricbuzz Plus</h2>
+                                                        <h3 className='fonth2'>Annual Plan</h3>
+                                                    </div>
+                                                    <div className="price-section col-md-6">
+                                                        <span className="discount">-46%</span>
+                                                        <span className="original-price">INR 750</span>
+                                                        <h3 className='ms-4 fnt'>INR 399</h3>
+                                                    </div>
+                                                </div>
+                                                <hr />
+                                                <ul>
+                                                    <li>Avail Fantasy Handbook: Comprehensive Fantasy Cricket Guide</li>
+                                                    <li>
+                                                        Exclusive access to premium editorial content and Cricbuzz Originals
                                                     </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        5GB Storage
-                                                    </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Unlimited Public Projects
-                                                    </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Community Access
-                                                    </li>
-                                                    <li className="list-group-item text-secondary">
-                                                        <i className="bx bx-x me-2 font-18" />
-                                                        Unlimited Private Projects
-                                                    </li>
-                                                    <li className="list-group-item text-secondary">
-                                                        <i className="bx bx-x me-2 font-18" />
-                                                        Dedicated Phone Support
-                                                    </li>
-                                                    <li className="list-group-item text-secondary">
-                                                        <i className="bx bx-x me-2 font-18" />
-                                                        Free Subdomain
-                                                    </li>
-                                                    <li className="list-group-item text-secondary">
-                                                        <i className="bx bx-x me-2 font-18" />
-                                                        Monthly Status Reports
-                                                    </li>
+                                                    <li>Enjoy an ad-free experience on the platform</li>
                                                 </ul>
-                                                <div className="d-grid">
-                                                    {" "}
-                                                    <a href="#" className="btn btn-danger my-2 radius-30">
-                                                        Order Now
-                                                    </a>
+                                                <div className="button-group">
+                                                    <>
+
+                                                        <button
+                                                            type="button"
+                                                            className="btnsecond "
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#exampleModal3"
+                                                        >
+                                                            Know More
+                                                        </button>
+
+                                                        <div
+                                                            className="modal fade"
+                                                            id="exampleModal3"
+                                                            tabIndex={-1}
+                                                            aria-labelledby="exampleModalLabel"
+                                                            aria-hidden="true"
+                                                            style={{ display: "none" }}
+                                                        >
+                                                            <div className="modal-dialog">
+                                                                <div className="modal-content">
+                                                                    <div className="modal-header">
+                                                                        <h5 className="modal-title" id="exampleModalLabel">
+                                                                            Modal title
+                                                                        </h5>
+                                                                        <button
+                                                                            type="button"
+                                                                            className="btn-close"
+                                                                            data-bs-dismiss="modal"
+                                                                            aria-label="Close"
+                                                                        />
+                                                                    </div>
+                                                                    <div className="modal-body">
+                                                                        Contrary to popular belief, Lorem Ipsum is not simply random text. It
+                                                                        has roots in a piece of classical Latin literature from 45 BC, making
+                                                                        it over 2000 years old. Richard McClintock, a Latin professor at
+                                                                        Hampden-Sydney College in Virginia, looked up one of the more obscure
+                                                                        Latin words, consectetur.
+                                                                    </div>
+                                                                    <div className="modal-footer">
+                                                                        <button
+                                                                            type="button"
+                                                                            className="btn btn-secondary"
+                                                                            data-bs-dismiss="modal"
+                                                                        >
+                                                                            Close
+                                                                        </button>
+                                                                        <button type="button" className="btn btn-primary">
+                                                                            Save changes
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </>
+                                                    <button className="btn-primary btnprime">Edit</button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        {/* Second Card */}
+                                        <div className="col-md-6 mb-3">
+                                            <div className="pricing-card">
+                                                <div className='row justify-content-between align-items-center'>
+                                                    <div className='col-md-6'>
+
+
+                                                        <h3 className='fonth3'>Cricbuzz Plus Times Prime</h3>
+                                                        <h2 className='fonth2'>Annual Combo Plan</h2>
+                                                    </div>
+
+                                                    <div className="price-section col-md-6">
+                                                        <span className="discount">-16%</span>
+                                                        <span className="original-price">INR 1199</span>
+                                                        <h3 className='ms-4 fnt'>INR 999</h3>
+                                                    </div>
+                                                </div>
+                                                <hr />
+                                                <ul>
+                                                    <li>
+                                                        Access to 23 premium subscriptions, spanning popular platforms.
+
+                                                    </li>
+                                                    <li>Avail Fantasy Handbook: Comprehensive Fantasy Cricket Guide</li>
+                                                    <li>Enjoy an ad-free experience on Cricbuzz</li>
+                                                </ul>
+                                                <div className="button-group">
+                                                    <>
+
+                                                        <button
+                                                            type="button"
+                                                            className="btnsecond "
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#exampleModal3"
+                                                        >
+                                                            Know More
+                                                        </button>
+
+                                                        <div
+                                                            className="modal fade"
+                                                            id="exampleModal3"
+                                                            tabIndex={-1}
+                                                            aria-labelledby="exampleModalLabel"
+                                                            aria-hidden="true"
+                                                            style={{ display: "none" }}
+                                                        >
+                                                            <div className="modal-dialog">
+                                                                <div className="modal-content">
+                                                                    <div className="modal-header">
+                                                                        <h5 className="modal-title" id="exampleModalLabel">
+                                                                            Modal title
+                                                                        </h5>
+                                                                        <button
+                                                                            type="button"
+                                                                            className="btn-close"
+                                                                            data-bs-dismiss="modal"
+                                                                            aria-label="Close"
+                                                                        />
+                                                                    </div>
+                                                                    <div className="modal-body">
+                                                                        Contrary to popular belief, Lorem Ipsum is not simply random text. It
+                                                                        has roots in a piece of classical Latin literature from 45 BC, making
+                                                                        it over 2000 years old. Richard McClintock, a Latin professor at
+                                                                        Hampden-Sydney College in Virginia, looked up one of the more obscure
+                                                                        Latin words, consectetur.
+                                                                    </div>
+                                                                    <div className="modal-footer">
+                                                                        <button
+                                                                            type="button"
+                                                                            className="btn btn-secondary"
+                                                                            data-bs-dismiss="modal"
+                                                                        >
+                                                                            Close
+                                                                        </button>
+                                                                        <button type="button" className="btn btn-primary">
+                                                                            Save changes
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </>
+
+                                                    <button className="btn-primary btnprime">Edit</button>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    {/* Plus Tier */}
-                                    <div className="col">
-                                        <div className="card mb-5 mb-lg-0">
-                                            <div className="card-header bg-primary py-3">
-                                                <h5 className="card-title text-white text-uppercase text-center">
-                                                    Plus
-                                                </h5>
-                                                <h6 className="card-price text-white text-center">
-                                                    $9<span className="term">/month</span>
-                                                </h6>
-                                            </div>
-                                            <div className="card-body">
-                                                <ul className="list-group list-group-flush">
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Single User
-                                                    </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        5GB Storage
-                                                    </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Unlimited Public Projects
-                                                    </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Community Access
-                                                    </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Unlimited Private Projects
-                                                    </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Dedicated Phone Support
-                                                    </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Free Subdomain
-                                                    </li>
-                                                    <li className="list-group-item text-secondary">
-                                                        <i className="bx bx-x me-2 font-18" />
-                                                        Monthly Status Reports
-                                                    </li>
-                                                </ul>
-                                                <div className="d-grid">
-                                                    {" "}
-                                                    <a href="#" className="btn btn-primary my-2 radius-30">
-                                                        Order Now
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {/* Pro Tier */}
-                                    <div className="col">
-                                        <div className="card">
-                                            <div className="card-header bg-warning py-3">
-                                                <h5 className="card-title text-dark text-uppercase text-center">
-                                                    Pro
-                                                </h5>
-                                                <h6 className="card-price text-center">
-                                                    $49<span className="term">/month</span>
-                                                </h6>
-                                            </div>
-                                            <div className="card-body">
-                                                <ul className="list-group list-group-flush">
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Single User
-                                                    </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        5GB Storage
-                                                    </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Unlimited Public Projects
-                                                    </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Community Access
-                                                    </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Unlimited Private Projects
-                                                    </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Dedicated Phone Support
-                                                    </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Free Subdomain
-                                                    </li>
-                                                    <li className="list-group-item">
-                                                        <i className="bx bx-check me-2 font-18" />
-                                                        Monthly Status Reports
-                                                    </li>
-                                                </ul>
-                                                <div className="d-grid">
-                                                    {" "}
-                                                    <a href="#" className="btn btn-warning my-2 radius-30">
-                                                        Order Now
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
+
                                     </div>
                                 </div>
-
                             </div>
-
                         </div>
                     </div>
                 </div>
