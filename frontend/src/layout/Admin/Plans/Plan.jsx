@@ -143,22 +143,26 @@ const Plan = () => {
                                                 <div className="offer-tag">Limited Time Offer</div>
                                                 <div className='row justify-content-between align-items-center'>
                                                     <div className='col-md-6'>
-                                                        <h2 className='fonth3 me-4'>Cricbuzz Plus</h2>
-                                                        <h3 className='fonth2'>Annual Plan</h3>
+                                                        <h2 className='fonth3 me-4'>Basic Plan Plus</h2>
+                                                        <h3 className='fonth2'>Monthly Plan</h3>
                                                     </div>
                                                     <div className="price-section col-md-6">
                                                         <span className="discount">-46%</span>
                                                         <span className="original-price">INR 750</span>
-                                                        <h3 className='ms-4 fnt'>INR 399</h3>
+                                                        <h3 className='ms-4 fnt'>INR 8000</h3>
                                                     </div>
                                                 </div>
                                                 <hr />
                                                 <ul>
-                                                    <li>Avail Fantasy Handbook: Comprehensive Fantasy Cricket Guide</li>
+
                                                     <li>
-                                                        Exclusive access to premium editorial content and Cricbuzz Originals
+                                                        <b>validity</b> : 1 Month
                                                     </li>
-                                                    <li>Enjoy an ad-free experience on the platform</li>
+                                                    <li><b>Description</b> : This is a basic plan with essential features.</li>
+                                                    <li><b>Created At</b> : 2024-09-03T11:01:32.841Z</li>
+                                                    <li><b>Updated At</b> : 2024-09-03T11:01:32.841Z</li>
+
+
                                                 </ul>
                                                 <div className="button-group">
                                                     <>
@@ -194,11 +198,22 @@ const Plan = () => {
                                                                         />
                                                                     </div>
                                                                     <div className="modal-body">
-                                                                        Contrary to popular belief, Lorem Ipsum is not simply random text. It
-                                                                        has roots in a piece of classical Latin literature from 45 BC, making
-                                                                        it over 2000 years old. Richard McClintock, a Latin professor at
-                                                                        Hampden-Sydney College in Virginia, looked up one of the more obscure
-                                                                        Latin words, consectetur.
+                                                                        <ul>
+                                                                            <li>
+                                                                                <b>Title</b> : Basic Plan Plus
+                                                                            </li>
+                                                                            <li><b>Price</b> : 8000</li>
+
+
+                                                                            <li>
+                                                                                <b>validity</b> : 1 Month
+                                                                            </li>
+                                                                            <li><b>Description</b> : This is a basic plan with essential features.</li>
+                                                                            <li><b>Created At</b> : 2024-09-03T11:01:32.841Z</li>
+                                                                            <li><b>Updated At</b> : 2024-09-03T11:01:32.841Z</li>
+
+
+                                                                        </ul>
                                                                     </div>
                                                                     <div className="modal-footer">
                                                                         <button
@@ -208,9 +223,9 @@ const Plan = () => {
                                                                         >
                                                                             Close
                                                                         </button>
-                                                                        <button type="button" className="btn btn-primary">
+                                                                        {/* <button type="button" className="btn btn-primary">
                                                                             Save changes
-                                                                        </button>
+                                                                        </button> */}
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -229,24 +244,24 @@ const Plan = () => {
                                                     <div className='col-md-6'>
 
 
-                                                        <h3 className='fonth3'>Cricbuzz Plus Times Prime</h3>
-                                                        <h2 className='fonth2'>Annual Combo Plan</h2>
+                                                        <h3 className='fonth3'>Basic Plan Lite</h3>
+                                                        <h2 className='fonth2'>Monthly Plan</h2>
                                                     </div>
 
                                                     <div className="price-section col-md-6">
                                                         <span className="discount">-16%</span>
-                                                        <span className="original-price">INR 1199</span>
-                                                        <h3 className='ms-4 fnt'>INR 999</h3>
+                                                        <span className="original-price">INR 6199</span>
+                                                        <h3 className='ms-4 fnt'>INR 5000</h3>
                                                     </div>
                                                 </div>
                                                 <hr />
                                                 <ul>
                                                     <li>
-                                                        Access to 23 premium subscriptions, spanning popular platforms.
-
+                                                        <b>validity</b> : 1 Month
                                                     </li>
-                                                    <li>Avail Fantasy Handbook: Comprehensive Fantasy Cricket Guide</li>
-                                                    <li>Enjoy an ad-free experience on Cricbuzz</li>
+                                                    <li><b>Description</b> : This is a basic plan with essential features.</li>
+                                                    <li><b>Created At</b> : 2024-09-03T11:01:32.841Z</li>
+                                                    <li><b>Updated At</b> : 2024-09-03T11:01:32.841Z</li>
                                                 </ul>
                                                 <div className="button-group">
                                                     <>
@@ -272,7 +287,7 @@ const Plan = () => {
                                                                 <div className="modal-content">
                                                                     <div className="modal-header">
                                                                         <h5 className="modal-title" id="exampleModalLabel">
-                                                                            Modal title
+                                                                            About Plan
                                                                         </h5>
                                                                         <button
                                                                             type="button"
