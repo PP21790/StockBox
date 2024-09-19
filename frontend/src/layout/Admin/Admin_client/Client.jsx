@@ -9,7 +9,11 @@ import { deleteClient, UpdateClientStatus } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
 
 const Client = () => {
+    const [checkedIndex, setCheckedIndex] = useState(null);
 
+    const handleTabChange = (index) => {
+        setCheckedIndex(index); // Update the checked tab index
+    };
 
     const navigate = useNavigate();
 
@@ -58,8 +62,8 @@ const Client = () => {
         const values = Object.fromEntries(formData.entries());
         console.log('Form values:', values);
 
-        // Handle form submission logic here
-        updateClient(row);  // Update the client based on form data if needed
+
+        updateClient(row);
         setIsModalVisible(false);
     };
     const DeleteClient = async (_id) => {
@@ -250,52 +254,104 @@ const Client = () => {
                                 </div>
                                 <div className="modal-body">
                                     {/* Form inside the modal */}
-                                    <form onSubmit={onFinish}>
-                                        <div className="mb-3">
-                                            <label htmlFor="clientId" className="form-label">
-                                                Service
-                                            </label>
-                                            <select
-                                                className="default-select wide form-control"
-                                                aria-describedby="basic-addon1"
-                                                id="calltype"
-                                                name="calltype"
-                                            >
-                                                <option value="">Select Service</option>
-                                                <option value="buy">Stock</option>
-                                                <option value="sell">Future</option>
-                                                <option value="hold">Option</option>
-                                            </select>
-
+                                    <div className='card '>
+                                        <div className='d-flex justify-content-center align-items-center card-body'>
+                                            {['Plan', 'Basket'].map((tab, index) => (
+                                                <label key={index} className='labelfont'>
+                                                    <input
+                                                        className='ms-3'
+                                                        type="radio"
+                                                        name="tab"
+                                                        checked={checkedIndex === index}
+                                                        onChange={() => handleTabChange(index)}
+                                                    />
+                                                    <span className='ps-2'>{tab}</span>
+                                                </label>
+                                            ))}
                                         </div>
+                                    </div>
+                                    {/* Conditional Form Rendering for Each Tab */}
+                                    <div className='card'>
 
-                                        <div className="mb-3">
-                                            <label htmlFor="clientId" className="form-label">
-                                                Basket
-                                            </label>
-                                            <select
-                                                className="default-select wide form-control"
-                                                aria-describedby="basic-addon1"
-                                                id="calltype"
-                                                name="calltype"
-                                            >
-                                                <option value="">Select Type</option>
-                                                <option value="buy">Buy</option>
-                                                <option value="sell">Sell</option>
-                                                <option value="hold">Hold</option>
-                                            </select>
 
-                                        </div>
+                                        {checkedIndex === 0 && (
+                                            <form className='card-body'>
 
-                                        <div className="modal-footer">
-                                            <button type="button" className="btn btn-secondary" onClick={handleCancel}>
-                                                Close
-                                            </button>
-                                            <button type="submit" className="btn btn-primary">
-                                                Submit
-                                            </button>
-                                        </div>
-                                    </form>
+                                                <div className="col-md-12">
+                                                    <div className="form-check mb-2">
+                                                        <input className="form-check-input" type="checkbox" id="input12" />
+                                                        <label className="form-check-label" htmlFor="input12">
+                                                            stock
+                                                        </label>
+                                                    </div>
+
+                                                </div>
+
+                                                <div className="col-md-12">
+                                                    <div className="form-check mb-2">
+                                                        <input className="form-check-input" type="checkbox" id="input12" />
+                                                        <label className="form-check-label" htmlFor="input12">
+                                                            case
+                                                        </label>
+                                                    </div>
+
+
+                                                </div>
+
+                                                <div className="col-md-12">
+                                                    <div className="form-check mb-2">
+                                                        <input className="form-check-input" type="checkbox" id="input12" />
+                                                        <label className="form-check-label" htmlFor="input12">
+                                                            Future
+                                                        </label>
+                                                    </div>
+
+                                                </div>
+
+
+
+
+
+                                               
+                                            </form>
+                                        )}
+
+                                        {checkedIndex === 1 && (
+                                            <form className='card-body'>
+
+                                                <div className="col-md-12">
+
+                                                    <p>
+                                                        Stoploss: qff
+                                                    </p>
+
+
+                                                </div>
+
+
+                                              
+                                            </form>
+                                        )}
+
+
+                                    </div>
+
+                                </div>
+                                <div className="modal-footer">
+                                    <button
+                                        type="button"
+                                        className="btn btn-secondary"
+                                        data-bs-dismiss="modal"
+                                    >
+                                        Close
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary"
+                                       
+                                    >
+                                        Save
+                                    </button>
                                 </div>
                             </div>
                         </div>
