@@ -112,67 +112,77 @@ const Plan = () => {
                             id="primaryhome"
                             role="tabpanel"
                         >
+
                             <div className="pricing-section mt-5">
 
                                 <div className="card-container">
                                     {/* First Card */}
-                                    <div className="pricing-card highlight-card">
+                                    <div className='row'>
+                                        <div className="col-md-6 mb-3">
 
-                                        <div className="offer-tag">Limited Time Offer</div>
-                                        <div className='row justify-content-between align-items-center'>
-                                            <div className='col-md-6'>
-                                                <h2 className='fonth3 me-4'>Cricbuzz Plus</h2>
-                                                <h3 className='fonth2'>Annual Plan</h3>
-                                            </div>
-                                            <div className="price-section col-md-6">
-                                                <span className="discount">-46%</span>
-                                                <span className="original-price">INR 750</span>
-                                                <h3 className='ms-4 fnt'>INR 399</h3>
-                                            </div>
-                                        </div>
-                                        <hr />
-                                        <ul>
-                                            <li>Avail Fantasy Handbook: Comprehensive Fantasy Cricket Guide</li>
-                                            <li>
-                                                Exclusive access to premium editorial content and Cricbuzz Originals
-                                            </li>
-                                            <li>Enjoy an ad-free experience on the platform</li>
-                                        </ul>
-                                        <div className="button-group">
-                                            <button className="btn-secondary btnsecond">Know More</button>
-                                            <button className="btn-primary btnprime">Subscribe</button>
-                                        </div>
-                                       
-                                    </div>
-                                    {/* Second Card */}
-                                    <div className="pricing-card">
-                                        <div className='row justify-content-between align-items-center'>
-                                            <div className='col-md-6'>
+                                            <div className="pricing-card highlight-card">
 
+                                                <div className="offer-tag">Limited Time Offer</div>
+                                                <div className='row justify-content-between align-items-center'>
+                                                    <div className='col-md-6'>
+                                                        <h2 className='fonth3 me-4'>Cricbuzz Plus</h2>
+                                                        <h3 className='fonth2'>Annual Plan</h3>
+                                                    </div>
+                                                    <div className="price-section col-md-6">
+                                                        <span className="discount">-46%</span>
+                                                        <span className="original-price">INR 750</span>
+                                                        <h3 className='ms-4 fnt'>INR 399</h3>
+                                                    </div>
+                                                </div>
+                                                <hr />
+                                                <ul>
+                                                    <li>Avail Fantasy Handbook: Comprehensive Fantasy Cricket Guide</li>
+                                                    <li>
+                                                        Exclusive access to premium editorial content and Cricbuzz Originals
+                                                    </li>
+                                                    <li>Enjoy an ad-free experience on the platform</li>
+                                                </ul>
+                                                <div className="button-group">
+                                                    <button className="btn-secondary btnsecond">Know More</button>
+                                                    <button className="btn-primary btnprime">Subscribe</button>
+                                                </div>
 
-                                                <h3 className='fonth3'>Cricbuzz Plus Times Prime</h3>
-                                                <h2 className='fonth2'>Annual Combo Plan</h2>
-                                            </div>
-
-                                            <div className="price-section col-md-6">
-                                                <span className="discount">-16%</span>
-                                                <span className="original-price">INR 1199</span>
-                                                <h3 className='ms-4 fnt'>INR 999</h3>
                                             </div>
                                         </div>
-                                        <hr />
-                                        <ul>
-                                            <li>
-                                                Access to 23 premium subscriptions, spanning popular platforms.
 
-                                            </li>
-                                            <li>Avail Fantasy Handbook: Comprehensive Fantasy Cricket Guide</li>
-                                            <li>Enjoy an ad-free experience on Cricbuzz</li>
-                                        </ul>
-                                        <div className="button-group">
-                                            <button className="btn-secondary btnsecond">Know More</button>
-                                            <button className="btn-primary btnprime">Subscribe</button>
+                                        {/* Second Card */}
+                                        <div className="col-md-6 mb-3">
+                                            <div className="pricing-card">
+                                                <div className='row justify-content-between align-items-center'>
+                                                    <div className='col-md-6'>
+
+
+                                                        <h3 className='fonth3'>Cricbuzz Plus Times Prime</h3>
+                                                        <h2 className='fonth2'>Annual Combo Plan</h2>
+                                                    </div>
+
+                                                    <div className="price-section col-md-6">
+                                                        <span className="discount">-16%</span>
+                                                        <span className="original-price">INR 1199</span>
+                                                        <h3 className='ms-4 fnt'>INR 999</h3>
+                                                    </div>
+                                                </div>
+                                                <hr />
+                                                <ul>
+                                                    <li>
+                                                        Access to 23 premium subscriptions, spanning popular platforms.
+
+                                                    </li>
+                                                    <li>Avail Fantasy Handbook: Comprehensive Fantasy Cricket Guide</li>
+                                                    <li>Enjoy an ad-free experience on Cricbuzz</li>
+                                                </ul>
+                                                <div className="button-group">
+                                                    <button className="btn-secondary btnsecond">Know More</button>
+                                                    <button className="btn-primary btnprime">Subscribe</button>
+                                                </div>
+                                            </div>
                                         </div>
+                                        
                                     </div>
                                 </div>
                             </div>
