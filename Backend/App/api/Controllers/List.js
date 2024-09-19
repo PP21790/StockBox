@@ -775,5 +775,87 @@ async BasketList(req, res) {
 
 
 
+async pastPerformance(req, res) {
+  try {
+    const { id } = req.params;
+
+    // Query to find signals based on the service ID
+    const signals = await Signal_Modal.find({
+      del: 0,
+      close_status: true,
+      service: new mongoose.Types.ObjectId(id) // Ensure service is an ObjectId
+    });
+
+    // Count the number of signals
+    const count = signals.length;
+    let totalProfit = 0;
+    let totalLoss = 0;
+    let profitCount = 0;
+    let lossCount = 0;
+
+
+
+    // if (count > 0) {
+     
+    //   // Find the earliest and latest `created_at` dates
+    //   const sortedSignals = signals.sort((a, b) => a.created_at - b.created_at);
+    //   const earliestDate = new Date(sortedSignals[0].created_at);
+    //   const latestDate = new Date(sortedSignals[sortedSignals.length - 1].created_at);
+     
+    // //  const monthsDifference = differenceInMonths(latestDate, earliestDate);
+    // }
+
+   
+  
+    signals.forEach(signal => {
+      const entryPrice = parseFloat(signal.price); // Entry price
+      const exitPrice = parseFloat(signal.closeprice); // Exit price
+
+      if (!isNaN(entryPrice) && !isNaN(exitPrice)) {
+        const profitOrLoss = exitPrice - entryPrice;
+
+        if (profitOrLoss >= 0) {
+          totalProfit += profitOrLoss;
+          profitCount++; 
+        } else {
+          totalLoss += Math.abs(profitOrLoss); 
+          lossCount++;
+        }
+      }
+    });
+
+
+    const accuracy = (profitCount/count)*100; 
+    const avgreturnpertrade = (totalProfit-totalLoss)/count; 
+
+
+    return res.json({
+      status: true,
+      message: "Past performance data fetched successfully",
+      data: {
+        count,
+        totalProfit,
+        totalLoss,
+        profitCount,
+        lossCount,
+        accuracy,
+        avgreturnpertrade
+      }
+    });
+  } catch (error) {
+    console.error("Error fetching signal details:", error);
+
+    // Send an error response if something goes wrong
+    return res.status(500).json({
+      status: false,
+      message: "Server error",
+      error: error.message
+    });
+  }
+}
+
+
+
+
 }
 module.exports = new List();
