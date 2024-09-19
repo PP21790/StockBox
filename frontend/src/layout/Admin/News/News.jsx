@@ -191,8 +191,6 @@ const News = () => {
 
     // delete news
 
-
-
     const DeleteService = async (_id) => {
         // console.log("_id",_id)
         try {

@@ -123,7 +123,7 @@ function MainApp() {
                       
                     <Route path="/coupon" element={<Coupon/>} />
                     <Route path="/addcoupon" element={<Addcoupon/>} />
-                    <Route path="/Updatecoupon" element={<Updatecoupon/>} />
+                    <Route path="/coupon/updatecoupon/:id" element={<Updatecoupon/>} />
                     
                     
                 </Routes>

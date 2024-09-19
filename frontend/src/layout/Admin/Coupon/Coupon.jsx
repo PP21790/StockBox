@@ -34,8 +34,8 @@ const Coupon = () => {
 
 
 
-    const updateClient = async (row) => {
-        navigate("/admin/client/updateclient/" + row._id, { state: { row } })
+    const updatecoupon = async (row) => {
+        navigate("/admin/coupon/updatecoupon/" + row._id, { state: { row } })
     }
 
 
@@ -138,25 +138,42 @@ const Coupon = () => {
             width: '70px',
         },
         {
-            name: 'Full Name',
-            selector: row => row.FullName,
+            name: 'Name',
+            selector: row => row.name,
             sortable: true,
         },
         {
-            name: 'Email',
-            selector: row => row.Email,
+            name: 'Code',
+            selector: row => row.code,
             sortable: true,
-            width: '280px',
+            
         },
         {
-            name: 'Phone No',
-            selector: row => row.PhoneNo,
+            name: 'Image',
+            cell: row => <img src={`/assets/uploads/coupon/${row.image}`} alt="Image" width="50" height="50" />,
+            sortable: true,
+        },
+        {
+            name: 'Min Purchase Value',
+            selector: row => row.minpurchasevalue,
+            sortable: true,
+            width: '230px',
+        },
+        {
+            name: 'Min Coupon Value',
+            selector: row => row.mincouponvalue,
             sortable: true,
         },
 
         {
-            name: 'Signup Status',
-            selector: row => row.Status,
+            name: 'Description',
+            selector: row => row.description,
+            sortable: true,
+            width: '280px',
+        },
+        {
+            name: 'Type',
+            selector: row => row.type,
             sortable: true,
         },
 
@@ -182,13 +199,13 @@ const Coupon = () => {
 
 
         {
-            name: 'Created At',
-            selector: row => new Date(row.createdAt).toLocaleDateString(),
+            name: 'Startdate',
+            selector: row => new Date(row.startdate).toLocaleDateString(),
             sortable: true,
         },
         {
-            name: 'Updated At',
-            selector: row => new Date(row.updatedAt).toLocaleDateString(),
+            name: 'Enddate',
+            selector: row => new Date(row.enddate).toLocaleDateString(),
             sortable: true,
         },
         {
@@ -196,7 +213,7 @@ const Coupon = () => {
             cell: row => (
                 <>
                     <div>
-                        <Pencil onClick={() => updateClient(row)} />
+                        <Pencil onClick={() => updatecoupon(row)} />
                     </div>
                     <div>
                         <Trash2 onClick={() => DeleteClient(row._id)} />

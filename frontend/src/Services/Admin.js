@@ -1121,3 +1121,37 @@ export async function getcouponlist(token) {
         return { error: err.response?.data || err.message };
     }
 }
+
+
+
+// update coupon or edit coupon
+
+export async function updateCouponbyadmin(data, token) {
+    const formData = new FormData();
+   
+    formData.append('add_by', data.add_by);
+    formData.append('image', data.image);
+    formData.append('name',data.name );
+    formData.append('code',data.code );
+    formData.append('type',data.type );
+    formData.append('value',data.value );
+    formData.append('startdate',data.startdate );
+    formData.append('enddate',data.enddate );
+    formData.append('minpurchasevalue',data.minpurchasevalue );
+    formData.append('mincouponvalue',data.mincouponvalue );
+    formData.append('description',data.description);
+
+    try {
+        const res = await axios.put(`${Config.base_url}coupon/update`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error uploading CSV:', err.response?.data || err.message);
+        return err.response?.data || err.message;
+    }
+}
