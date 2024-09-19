@@ -235,8 +235,50 @@ async getSignal(req, res) {
   
   async closeSignal(req, res) {
     try {
-      const { id, closeprice, close_status, close_description } = req.body;
-  
+
+     
+      const { id, targethit1,targethit2,targethit3,targetprice1,targetprice2,targetprice3,slprice3,exitprice,closestatus,closetype, close_description } = req.body;
+     
+
+      let close_status = false;  
+      let closeprice = null;
+      let closedate = null;
+
+if(closetype==1)
+{
+  close_status = true;
+  closeprice = targetprice3;
+  closedate= new Date() ;
+}
+if(closetype==2)
+  {
+    
+    close_status = closestatus;
+    if(closestatus){
+      if (targetprice3) {
+        closeprice = targetprice3;
+      } else if (targetprice2) {
+        closeprice = targetprice2;
+      } else {
+        closeprice = targetprice1;
+      }
+    closedate= new Date() ;
+  }
+  }
+
+if(closetype==3)
+  {
+    close_status = true;
+    closeprice = slprice;
+    closedate= new Date() ;
+  }
+  if(closetype==4)
+    {
+      close_status = true;
+      closeprice = exitprice;
+      closedate= new Date() ;
+    }
+      
       if (!id) {
         return res.status(400).json({
           status: false,
@@ -244,13 +286,20 @@ async getSignal(req, res) {
         });
       }
   
+
       const updatedSignal = await Signal_Modal.findByIdAndUpdate(
         id,
         {
-            closeprice,
-            close_status,
+            closeprice:closeprice,
+            close_status:close_status,
             close_description,
-            closedate: new Date() 
+            targethit1,
+            targethit2,
+            targethit3,
+            targetprice1,
+            targetprice2,
+            targetprice3,
+            closedate: closedate
         },
         { signal: true, runValidators: true } // Options: return the updated document and run validators
       );

@@ -774,12 +774,12 @@ async BasketList(req, res) {
 }
 
 
-
 async pastPerformance(req, res) {
   try {
     const { id } = req.params;
 
     // Query to find signals based on the service ID
+    console.log("Fetching signals...");
     const signals = await Signal_Modal.find({
       del: 0,
       close_status: true,
@@ -788,25 +788,52 @@ async pastPerformance(req, res) {
 
     // Count the number of signals
     const count = signals.length;
+    if (count === 0) {
+      return res.status(404).json({
+        status: false,
+        message: "No signals found"
+      });
+    }
+
     let totalProfit = 0;
     let totalLoss = 0;
     let profitCount = 0;
     let lossCount = 0;
+    let avgreturnpermonth = 0;
 
+    const [firstSignal, lastSignal] = await Promise.all([
+      Signal_Modal.findOne({
+        del: 0,
+        close_status: true,
+        service: new mongoose.Types.ObjectId(id)
+      }).sort({ created_at: 1 }), // Sort by created_at in ascending order
 
+      Signal_Modal.findOne({
+        del: 0,
+        close_status: true,
+        service: new mongoose.Types.ObjectId(id)
+      }).sort({ created_at: -1 }) // Sort by created_at in descending order
+    ]);
 
-    // if (count > 0) {
-     
-    //   // Find the earliest and latest `created_at` dates
-    //   const sortedSignals = signals.sort((a, b) => a.created_at - b.created_at);
-    //   const earliestDate = new Date(sortedSignals[0].created_at);
-    //   const latestDate = new Date(sortedSignals[sortedSignals.length - 1].created_at);
-     
-    // //  const monthsDifference = differenceInMonths(latestDate, earliestDate);
-    // }
+    if (!firstSignal || !lastSignal) {
+      return res.status(404).json({
+        status: false,
+        message: "No signals found"
+      });
+    }
 
-   
-  
+    const firstCreatedAt = firstSignal.created_at;
+    const lastCreatedAt = lastSignal.created_at;
+
+    const startYear = firstCreatedAt.getFullYear();
+    const startMonth = firstCreatedAt.getMonth();
+    const endYear = lastCreatedAt.getFullYear();
+    const endMonth = lastCreatedAt.getMonth();
+
+    const yearDifference = endYear - startYear;
+    const monthDifference = endMonth - startMonth;
+    const monthsBetween = yearDifference * 12 + monthDifference;
+
     signals.forEach(signal => {
       const entryPrice = parseFloat(signal.price); // Entry price
       const exitPrice = parseFloat(signal.closeprice); // Exit price
@@ -816,18 +843,24 @@ async pastPerformance(req, res) {
 
         if (profitOrLoss >= 0) {
           totalProfit += profitOrLoss;
-          profitCount++; 
+          profitCount++;
         } else {
-          totalLoss += Math.abs(profitOrLoss); 
+          totalLoss += Math.abs(profitOrLoss);
           lossCount++;
         }
       }
     });
 
+    const accuracy = (profitCount / count) * 100;
+    const avgreturnpertrade = (totalProfit - totalLoss) / count;
 
-    const accuracy = (profitCount/count)*100; 
-    const avgreturnpertrade = (totalProfit-totalLoss)/count; 
+    if (monthsBetween > 0) {
+      avgreturnpermonth = (totalProfit - totalLoss) / monthsBetween;
+    } else {
+      avgreturnpermonth = totalProfit - totalLoss;
+    }
 
+    console.log("Past performance calculated successfully");
 
     return res.json({
       status: true,
@@ -839,7 +872,8 @@ async pastPerformance(req, res) {
         profitCount,
         lossCount,
         accuracy,
-        avgreturnpertrade
+        avgreturnpertrade,
+        avgreturnpermonth
       }
     });
   } catch (error) {
@@ -853,8 +887,6 @@ async pastPerformance(req, res) {
     });
   }
 }
-
-
 
 
 }
