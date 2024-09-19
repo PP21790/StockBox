@@ -1129,7 +1129,7 @@ export async function getcouponlist(token) {
 export async function updateCouponbyadmin(data, token) {
     const formData = new FormData();
    
-    formData.append('add_by', data.add_by);
+    formData.append('id', data.id);
     formData.append('image', data.image);
     formData.append('name',data.name );
     formData.append('code',data.code );
@@ -1152,6 +1152,103 @@ export async function updateCouponbyadmin(data, token) {
         return res?.data;
     } catch (err) {
         console.error('Error uploading CSV:', err.response?.data || err.message);
+        return err.response?.data || err.message;
+    }
+}
+
+
+// delete coupon
+
+export async function DeleteCoupon(_id, token) {
+    try {
+        const res = await axios.get(`${Config.base_url}coupon/delete/${_id}`, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// get terms content
+
+export async function getconsitionlist(token) {
+
+    try {
+        const res = await axios.get(`${Config.base_url}content/list`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
+
+// add condition 
+
+export async function Addtermscondition(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}content/add`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message;
+    }
+}
+
+
+// change condiiton status 
+
+export async function changeconditionstatus(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}content/change-status`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message;
+    }
+}
+
+
+// update terms and condition
+
+export async function UpdateCondition(data, token) {
+    try {
+        const res = await axios.put(`${Config.base_url}content/update`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }

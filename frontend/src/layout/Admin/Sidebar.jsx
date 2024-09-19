@@ -209,6 +209,14 @@ const Sidebar = ({ onToggleClick }) => {
                         <div className="menu-title">FAQ</div>
                       </Link>
                     </li>
+                    <li>
+                      <Link to="/admin/termsandcondtion">
+                        <div className="parent-icon">
+                          <i className="bx bxs-chevron-right" />
+                        </div>
+                        <div className="menu-title">Terms And Condition</div>
+                      </Link>
+                    </li>
 
                     {/* <li className={activeDropdown === 'refer' ? 'mm-active' : ''}>
                       <a href="#" onClick={toggleDropdown('refer')} className="has-arrow" aria-expanded={activeDropdown === 'refer'}>

@@ -1,29 +1,29 @@
-import React from 'react';
-import { useFormik } from 'formik';
-import DynamicForm from '../../../components/FormicForm';
-import Swal from 'sweetalert2';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { updateCouponbyadmin } from '../../../Services/Admin';
-
-
+import React from "react";
+import { useFormik } from "formik";
+import DynamicForm from "../../../components/FormicForm";
+import Swal from "sweetalert2";
+import { useLocation, useNavigate } from "react-router-dom";
+import { updateCouponbyadmin } from "../../../Services/Admin";
 
 const Updatecoupon = () => {
-
-
   const navigate = useNavigate();
   const location = useLocation();
   const { row } = location.state;
 
-  // console.log("row", row)
 
-  const user_id = localStorage.getItem("id");
+  console.log("row",row)
+   
+
   const token = localStorage.getItem("token");
+
+  const imageBaseUrl = "/assets/uploads/coupon/";
+
 
   const validate = (values) => {
     let errors = {};
 
     if (!values.name) {
-      errors.name = "Please enter  Name";
+      errors.name = "Please enter Name";
     }
     if (!values.code) {
       errors.code = "Please enter code";
@@ -35,10 +35,10 @@ const Updatecoupon = () => {
       errors.value = "Please enter value";
     }
     if (!values.startdate) {
-      errors.startdate = "Please enter Startdate";
+      errors.startdate = "Please enter Start Date";
     }
     if (!values.enddate) {
-      errors.enddate = "Please enter Enddate";
+      errors.enddate = "Please enter End Date";
     }
     if (!values.minpurchasevalue) {
       errors.minpurchasevalue = "Please enter Min Purchase value";
@@ -46,10 +46,6 @@ const Updatecoupon = () => {
     if (!values.mincouponvalue) {
       errors.mincouponvalue = "Please enter Min Coupon value";
     }
-    if (!values.mincouponvalue) {
-      errors.mincouponvalue = "Please enter Min Coupon value";
-    }
-
 
     return errors;
   };
@@ -103,22 +99,19 @@ const Updatecoupon = () => {
     }
   };
 
-
-
   const formik = useFormik({
     initialValues: {
-      name: row?.name || '',
-      code: row?.code || '',
-      type: row?.type || '',
-      value: row?.value || '',
-      startdate: row?.startdate || '',
-      enddate: row?.enddate || '',
-      minpurchasevalue: row?.minpurchasevalue || '',
-      mincouponvalue: row?.mincouponvalue || '',
-      description: row?.description || '',
-      image: row?.image || '',
-      id: ''
-
+      name: row?.name || "",
+      code: row?.code || "",
+      type: row?.type || "",
+      value: row?.value || "",
+      startdate: row?.startdate ? new Date(row.startdate).toISOString().split("T")[0] : "",
+      enddate: row?.enddate ? new Date(row.enddate).toISOString().split("T")[0] : "",
+      minpurchasevalue: row?.minpurchasevalue || "",
+      mincouponvalue: row?.mincouponvalue || "",
+      description: row?.description || "",
+      image: row?.image || "",
+      id: "",
     },
     validate,
     onSubmit,
@@ -157,7 +150,6 @@ const Updatecoupon = () => {
       col_size: 6,
       disable: false,
     },
-
     {
       name: "minpurchasevalue",
       label: "Min Purchase Value",
@@ -197,6 +189,13 @@ const Updatecoupon = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
+      additional_content: row?.image ? (
+        <img
+          src={`${imageBaseUrl}${row.image}`}
+          alt="Uploaded"
+          style={{ width: "100px", marginTop: "10px" }}
+        />
+      ) : null,
     },
     {
       name: "description",
@@ -206,7 +205,6 @@ const Updatecoupon = () => {
       col_size: 6,
       disable: false,
     },
-
   ];
 
   return (

@@ -5,7 +5,7 @@ import { getcouponlist } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import { Pencil, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { deleteClient, UpdateClientStatus } from '../../../Services/Admin';
+import { DeleteCoupon, UpdateClientStatus } from '../../../Services/Admin';
 
 const Coupon = () => {
 
@@ -39,7 +39,7 @@ const Coupon = () => {
     }
 
 
-    const DeleteClient = async (_id) => {
+    const DeleteCouponbyadmin = async (_id) => {
         try {
             const result = await Swal.fire({
                 title: 'Are you sure?',
@@ -51,7 +51,7 @@ const Coupon = () => {
             });
 
             if (result.isConfirmed) {
-                const response = await deleteClient(_id, token);
+                const response = await DeleteCoupon(_id, token);
                 if (response.status) {
                     Swal.fire({
                         title: 'Deleted!',
@@ -216,7 +216,7 @@ const Coupon = () => {
                         <Pencil onClick={() => updatecoupon(row)} />
                     </div>
                     <div>
-                        <Trash2 onClick={() => DeleteClient(row._id)} />
+                        <Trash2 onClick={() => DeleteCouponbyadmin(row._id)} />
                     </div>
                 </>
             ),
