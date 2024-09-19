@@ -1,6 +1,6 @@
 const router = require("express").Router()
 const { checkPermission } = require('../Middleware/permissionMiddleware'); // Path to your middleware
-const {AddPlan,getPlan,updatePlan,deletePlan,detailPlan,statusChange,activePlan} = require('../Controllers/Plan')
+const {AddPlan,getPlan,updatePlan,deletePlan,detailPlan,statusChange,activePlan,addPlanSubscription} = require('../Controllers/Plan')
 
 
 const PERMISSIONS = {
@@ -10,6 +10,7 @@ const PERMISSIONS = {
     UPDATE: 'editplan',
     DELETE: 'deleteplan',
     CHANGE_STATUS: 'planchangestatus',
+    addPlanSubscription: 'addPlanSubscription',
   };
   
 
@@ -20,6 +21,8 @@ router.get('/plan/delete/:id', checkPermission(PERMISSIONS.DELETE), deletePlan);
 router.get('/plan/detail/:id', checkPermission(PERMISSIONS.VIEW), detailPlan);
 router.post('/plan/change-status', checkPermission(PERMISSIONS.CHANGE_STATUS), statusChange);
 router.get('/plan/activeplan',   activePlan);
+router.post('/plan/addplansubscription',  checkPermission(PERMISSIONS.addPlanSubscription), addPlanSubscription); 
+
 
 
 module.exports = router;

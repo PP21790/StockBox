@@ -25,7 +25,8 @@ const PlanSubscriptionSchema = new Schema({
     },
     discount: {
         type: Number,
-        min: 0
+        min: 0,
+        default: 0
     },
     plan_start: {
         type: Date,

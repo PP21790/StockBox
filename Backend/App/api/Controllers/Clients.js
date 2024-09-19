@@ -42,6 +42,20 @@ class Clients {
         });
       }
      
+
+      const existingUser = await Clients_Modal.findOne({
+        $or: [{ Email }, { PhoneNo }]
+      });
+  
+      if (existingUser) {
+        if (existingUser.Email === Email) {
+          return res.status(400).json({ status: false, message: "Email already exists" });
+        } else if (existingUser.PhoneNo === PhoneNo) {
+          return res.status(400).json({ status: false, message: "Phone number already exists" });
+        }
+      }
+
+
       const hashedPassword = await bcrypt.hash(password, 10);
       const refer_token = crypto.randomBytes(10).toString('hex'); // 10 bytes = 20 hex characters
       const result = new Clients_Modal({

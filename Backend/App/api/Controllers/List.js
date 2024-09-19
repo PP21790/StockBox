@@ -167,10 +167,14 @@ class List {
                       $switch: {
                         branches: [
                           { case: { $eq: ['$validity', '1 month'] }, then: { $divide: ['$price', 1] } },
-                          { case: { $eq: ['$validity', '3 month'] }, then: { $divide: ['$price', 3] } },
-                          { case: { $eq: ['$validity', '6 month'] }, then: { $divide: ['$price', 6] } },
-                          { case: { $eq: ['$validity', '12 month'] }, then: { $divide: ['$price', 12] } },
-                          { case: { $eq: ['$validity', '5 year'] }, then: { $divide: ['$price', 60] } }, // 5 years = 60 months
+                          { case: { $eq: ['$validity', '3 months'] }, then: { $divide: ['$price', 3] } },
+                          { case: { $eq: ['$validity', '6 months'] }, then: { $divide: ['$price', 6] } },
+                          { case: { $eq: ['$validity', '9 months'] }, then: { $divide: ['$price', 9] } },
+                          { case: { $eq: ['$validity', '1 year'] }, then: { $divide: ['$price', 12] } },
+                          { case: { $eq: ['$validity', '2 years'] }, then: { $divide: ['$price', 24] } },
+                          { case: { $eq: ['$validity', '3 years'] }, then: { $divide: ['$price', 36] } },
+                          { case: { $eq: ['$validity', '4 years'] }, then: { $divide: ['$price', 48] } },
+                          { case: { $eq: ['$validity', '5 years'] }, then: { $divide: ['$price', 60] } }, // 5 years = 60 months
                         ],
                         default: '$price', // Fallback to total price if validity doesn't match
                       },
@@ -271,7 +275,11 @@ async  addPlanSubscription(req, res) {
       '1 month': 1,
       '3 months': 3,
       '6 months': 6,
-      '12 months': 12,
+      '9 months': 9,
+      '1 year': 12,
+      '2 years': 24,
+      '3 years': 36,
+      '4 years': 48,
       '5 years': 60
     };
 
@@ -284,9 +292,12 @@ async  addPlanSubscription(req, res) {
     }
   
     const end = new Date(start);
-    end.setMonth(start.getMonth() + monthsToAdd);
+    end.setHours(23, 59, 59, 999);  // Set to end of the day
+        end.setMonth(start.getMonth() + monthsToAdd);
 
-    
+
+
+
 
     // Create a new subscription
     const newSubscription = new PlanSubscription_Modal({
@@ -338,7 +349,11 @@ async  myPlan(req, res) {
       '1 month': 1,
       '3 months': 3,
       '6 months': 6,
-      '12 months': 12,
+      '9 months': 9,
+      '1 year': 12,
+      '2 years': 24,
+      '3 years': 36,
+      '4 years': 48,
       '5 years': 60
     };
 
@@ -716,9 +731,9 @@ async BasketList(req, res) {
           const exitprice = basket.exitprice ? basket.exitprice.split('##') : [];
           const exitdate = basket.exitdate ? basket.exitdate.split('##') : [];
           const comment = basket.comment ? basket.comment.split('##') : [];
-          const retunpercentage = basket.retunpercentage ? basket.retunpercentage.split('##') : [];
-          const holdingperiod = basket.holdingperiod ? basket.holdingperiod.split('##') : [];
-          const potentialleft = basket.potentialleft ? basket.potentialleft.split('##') : [];
+        //  const retunpercentage = basket.retunpercentage ? basket.retunpercentage.split('##') : [];
+       //   const holdingperiod = basket.holdingperiod ? basket.holdingperiod.split('##') : [];
+        //  const potentialleft = basket.potentialleft ? basket.potentialleft.split('##') : [];
 
           // Group data into objects
           const groupedData = stocks.map((stock, index) => ({
@@ -730,9 +745,9 @@ async BasketList(req, res) {
               exitprice: exitprice[index] || null,
               exitdate: exitdate[index] || null,
               comment: comment[index] || null,
-              retunpercentage: retunpercentage[index] || null,
-              holdingperiod: holdingperiod[index] || null,
-              potentialleft: potentialleft[index] || null
+           //   retunpercentage: retunpercentage[index] || null,
+          //    holdingperiod: holdingperiod[index] || null,
+           //   potentialleft: potentialleft[index] || null
           }));
 
           return {
