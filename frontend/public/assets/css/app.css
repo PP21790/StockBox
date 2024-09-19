@@ -5196,3 +5196,185 @@ article.on {
 label {
 	margin-bottom: 0.25rem !important;
 }
+
+.lucide-eye:hover {
+	margin-left: 6px;
+	background: #000;
+	border-radius: 70%;
+	color: #FFF;
+	font-size: 5px;
+	text-align: center;
+	line-height: 100px;
+	font-family: sans-serif;
+	text-transform: uppercase;
+	animation: animate-pulse 3s linear infinite;
+	cursor: pointer
+}
+
+.lucide-eye {
+	margin-left: 6px;
+}
+
+.lucide-user-pen {
+	margin-left: 6px;
+}
+
+.lucide-user-pen:hover {
+	margin-left: 6px;
+	background: #000;
+	border-radius: 70%;
+	color: #FFF;
+	font-size: 5px;
+	text-align: center;
+	line-height: 100px;
+	font-family: sans-serif;
+	text-transform: uppercase;
+	animation: animate-pulse 3s linear infinite;
+	cursor: pointer
+}
+
+.lucide-settings2:hover {
+
+	background: #000;
+	border-radius: 70%;
+	color: #FFF;
+	font-size: 5px;
+	text-align: center;
+	line-height: 100px;
+	font-family: sans-serif;
+	text-transform: uppercase;
+	animation: animate-pulse 3s linear infinite;
+	cursor: pointer
+}
+
+.modal-backdrop {
+	backdrop-filter: blur(1px);
+
+}
+
+
+
+
+
+.pricing-section {
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+.card-container {
+	display: flex;
+	justify-content: center;
+	gap: 20px;
+}
+
+.pricing-card {
+	background-color: white;
+	border: 1px solid #ccc;
+	border-radius: 8px;
+	width: 491px;
+	padding: 20px;
+	position: relative;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.highlight-card {
+	border-color: #ffc107;
+}
+
+.offer-tag {
+	position: absolute;
+	top: -15px;
+	left: 20px;
+	background-color: #ffc107;
+	color: black;
+	padding: 5px 10px;
+	font-size: 12px;
+	border-radius: 3px;
+	font-weight: bold;
+}
+
+.fonth2 {
+	font-size: 21px;
+	font-weight: bold;
+	color: #333;
+}
+
+.fonth3 {
+	margin-top: 5px;
+	color: #333;
+	font-size: 16px;
+}
+
+/* .price-section {
+	margin: 20px 0;
+} */
+
+.discount {
+	color: red;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.original-price {
+	text-decoration: line-through;
+	color: gray;
+	margin-left: 5px;
+	font-size: 14px;
+}
+
+
+
+ul {
+	list-style: none;
+	text-align: left;
+	margin: 15px 0;
+}
+
+ul li {
+	margin-bottom: 10px;
+	font-size: 14px;
+	color: #666;
+}
+
+.button-group {
+	display: flex;
+	gap: 10px;
+}
+
+.btnsecond {
+	background-color: #e0e0e0;
+	color: #333;
+	padding: 10px 20px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	flex-grow: 1;
+}
+
+.btnprime {
+	background-color: #2ecc71;
+	color: white;
+	padding: 10px 20px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	flex-grow: 1;
+}
+
+.picked-badge {
+	position: absolute;
+	bottom: -15px;
+	right: 20px;
+	background-color: #ffa000;
+	color: white;
+	padding: 5px 10px;
+	font-size: 12px;
+	border-radius: 3px;
+	font-weight: bold;
+}
+
+.fnt {
+	font-weight: bold;
+	font-size: 22px;
+
+}
