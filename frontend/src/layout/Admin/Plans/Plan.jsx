@@ -141,12 +141,23 @@ const Plan = () => {
 
                                                     <div className="card-container">
                                                         {/* First Card */}
+
                                                         <div className='row'>
                                                             <div className="col-md-6 mb-3">
 
                                                                 <div className="pricing-card highlight-card">
 
                                                                     <div className="offer-tag">Limited Time Offer</div>
+                                                                    <div className='row justify-content-end mb-3'>
+                                                                        <div className='col-md-6 d-flex justify-content-end'>
+                                                                            {/* <div>
+                                                                                <h4 className='text-success'>active</h4>
+                                                                            </div> */}
+                                                                            <div>
+                                                                                <i className="bx bx-trash trashbtn ms-3" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                     <div className='row justify-content-between align-items-center'>
                                                                         <div className='col-md-6'>
                                                                             <h2 className='fonth3 me-4'>Basic Plan Plus</h2>
@@ -246,6 +257,16 @@ const Plan = () => {
                                                             {/* Second Card */}
                                                             <div className="col-md-6 mb-3">
                                                                 <div className="pricing-card">
+                                                                    <div className='row justify-content-end mb-3'>
+                                                                        <div className='col-md-6 d-flex justify-content-end'>
+                                                                            {/* <div>
+                                                                                <h4 className='text-success'>active</h4>
+                                                                            </div> */}
+                                                                            <div>
+                                                                                <i className="bx bx-trash trashbtn ms-3" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                     <div className='row justify-content-between align-items-center'>
                                                                         <div className='col-md-6'>
 
@@ -719,7 +740,7 @@ const Plan = () => {
                                     aria-expanded="false"
                                     aria-controls="collapseTwo"
                                 >
-                                  Case
+                                    Case
                                 </button>
                             </h2>
                             <div
@@ -1371,7 +1392,7 @@ const Plan = () => {
                                     aria-expanded="false"
                                     aria-controls="collapseThree"
                                 >
-                                   Future
+                                    Future
                                 </button>
                             </h2>
                             <div
@@ -2013,15 +2034,15 @@ const Plan = () => {
                                 </div>
                             </div>
                         </div>
-                      
+
                     </div>
                 </div>
             </div>
 
-          
 
 
-       
+
+
         </div>
     );
 };
