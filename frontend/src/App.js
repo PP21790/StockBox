@@ -1,25 +1,52 @@
-import logo from './logo.svg';
+
 import './App.css';
+// import Forgetpass from './Auth/Forgetpass';
+// import Resetpass from './Auth/Resetpass';
+// import Login from './Auth/Login';
+import React, { useState, useEffect, useRef } from 'react';
+import Routing from './Routes/Routes.routes';
+import Loader from './Utils/Loader';
+import AOS from "aos";
+import "aos/dist/aos.css";
+
 
 
 function App() {
+
+
+  const [loading, setLoading] = useState(true);
+  const pageRef = useRef(null);
+
+  useEffect(() => {
+    AOS.init({
+      disable: "phone",
+      duration: 700,
+      easing: "ease-out-cubic",
+    });
+
+    const loadData = () => {
+      setTimeout(() => {
+        setLoading(false); 
+      }, 1200); 
+    };
+
+    loadData();
+  }, []);
+   
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <>
+      
+      <div id="App">
+      {loading ? (
+        <Loader /> 
+      ) : (
+        <div ref={pageRef}>
+          <Routing />
+        </div>
+      )}
     </div>
+    </>
   );
 }
 

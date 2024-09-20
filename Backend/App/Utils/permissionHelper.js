@@ -13,7 +13,7 @@ const hasPermission = async (userId, permissionName) => {
     if (user.Role === '1') {
       return true;
     } else if (user.Role === '2') {
-       
+
       return user.permissions.includes(permissionName);
     } else {
       return false;

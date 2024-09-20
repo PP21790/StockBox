@@ -10,6 +10,7 @@ class Clients {
 
   async AddClient(req, res) {
     try {
+      
       const { FullName, Email, PhoneNo, password,add_by } = req.body;
       if (!FullName) {
         return res.status(400).json({ status: false, message: "fullname is required" });
@@ -40,7 +41,7 @@ class Clients {
         return res.status(400).json({ status: false, message: "Added by field is required" });
       }
 
-      const refer_token = crypto.randomBytes(10).toString('hex'); // 10 bytes = 20 hex characters
+      const refer_token = crypto.randomBytes(10).toString('hex'); 
 
       const hashedPassword = await bcrypt.hash(password, 10);
       const result = new Clients_Modal({
@@ -58,7 +59,7 @@ class Clients {
 
       await result.save();
 
-      console.log("result", result)
+      // console.log("result", result)
       return res.json({
         status: true,
         message: "add",
@@ -68,6 +69,9 @@ class Clients {
       return res.json({ status: false, message: "Server error", data: [] });
     }
   }
+
+
+
 
   async getClient(req, res) {
     try {
@@ -89,6 +93,8 @@ class Clients {
     }
   }
 
+
+
   async activeClient(req, res) {
     try {
 
@@ -109,6 +115,9 @@ class Clients {
     }
   }
 
+
+
+  
   async detailClient(req, res) {
     try {
         // Extract ID from request parameters
