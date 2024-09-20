@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import DynamicForm from '../../../components/FormicForm';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import { Addplanbyadmin , getcategoryplan } from '../../../Services/Admin';
+import { Addplanbyadmin, getcategoryplan } from '../../../Services/Admin';
 
 
 
@@ -120,15 +120,15 @@ const Addplan = () => {
 
 
 
-    
+
     const fields = [
         {
             name: "category",
             label: "Category",
             type: 'select',
             options: clients.map((item) => ({
-              label: item.title,
-              value: item._id,
+                label: item.title,
+                value: item._id,
             })),
             label_size: 12,
             col_size: 6,
@@ -137,7 +137,7 @@ const Addplan = () => {
         {
             name: "validity",
             label: "Validity",
-            type: "select", 
+            type: "select",
             label_size: 12,
             col_size: 6,
             disable: false,
@@ -168,11 +168,11 @@ const Addplan = () => {
             col_size: 6,
             disable: false,
         },
-        
+
         {
             name: "description",
             label: "Description",
-            type: "text",
+            type: "text5",
             label_size: 12,
             col_size: 6,
             disable: false,
@@ -181,7 +181,7 @@ const Addplan = () => {
 
 
 
-    
+
     return (
         <div style={{ marginTop: "100px" }}>
             <DynamicForm

@@ -35,6 +35,7 @@ import Coupon from '../layout/Admin/Coupon/Coupon';
 import Addcoupon from '../layout/Admin/Coupon/Addcoupon';
 import Updatecoupon from '../layout/Admin/Coupon/Updatecoupon';
 import Condition from '../layout/Admin/Termscondition/Condition';
+import Editbasket from '../layout/Admin/Admin_basket/Editbasket';
 
 
 function MainApp() {
@@ -121,6 +122,7 @@ function MainApp() {
 
                     <Route path="/blogs" element={<Blogs/>} />
                     <Route path="/news" element={<News/>} />
+                    <Route path="/editbasket" element={<Editbasket />} />
                       
                     <Route path="/coupon" element={<Coupon/>} />
                     <Route path="/addcoupon" element={<Addcoupon/>} />

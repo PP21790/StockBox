@@ -24,7 +24,7 @@ const BasketField = ({ push, remove, Basket }) => (
     <div className="card mb-3">
       <div className="card-header d-flex justify-content-between align-items-center">
         <h5 className="card-title mb-0">
-          <i className="fa-regular fa-circle-user pe-2"></i> Basket
+          <i className="fa-regular fa-circle-user pe-2"></i> Stock
         </h5>
       </div>
       <div className="card-body">
@@ -32,17 +32,17 @@ const BasketField = ({ push, remove, Basket }) => (
           Basket.map((BasketData, index) => (
             <div className="card Basket-group mb-3" key={index}>
               <div className="card-header d-flex justify-content-between align-items-center">
-                <h6 className="mb-0">Basket {index + 1}</h6>
+                <h6 className="mb-0">Stock {index + 1}</h6>
               </div>
               <div className="card-body">
                 <div className="row">
-                  {['stocks', 'pricerange', 'stockweightage', 'entryprice', 'exitprice', 'comment', 'returnpercentage', 'holdingperiod', 'potentialleft'].map(field => (
-                    <div className="col-lg-4 form-group mb-3" key={field}>
-                      <label htmlFor={`Basket.${index}.${field}`}>{field.replace(/([A-Z])/g, ' $1').toUpperCase()}</label>
+                  {['Stocks', 'Price Range', 'Stock Weightage', 'Entry Price', 'Exit Price', 'Comment', 'Return Percentage', 'Holding Period', 'Potential Left'].map(field => (
+                    <div className="col-lg-4 form-group mb-2" key={field}>
+                      <label htmlFor={`Basket.${index}.${field}`}>{field.replace(/([A-Z])/g, ' $1')}</label>
                       <Field
                         name={`Basket.${index}.${field}`}
                         placeholder={`Enter ${field}`}
-                        className="form-control"
+                        className="form-control mb-2"
                       />
                       <ErrorMessage
                         name={`Basket.${index}.${field}`}
@@ -72,7 +72,7 @@ const BasketField = ({ push, remove, Basket }) => (
           className="btn btn-primary"
           onClick={() => push({ stocks: '', pricerange: '', stockweightage: '', entryprice: '', exitprice: '', comment: '', returnpercentage: '', holdingperiod: '', potentialleft: '' })}
         >
-          Add Basket
+          Add Stock
         </button>
       </div>
     </div>
@@ -94,7 +94,7 @@ const DynamicForm = ({ fields, page_title, btn_name1, btn_name1_route, formik, s
           </div>
         )}
         <form onSubmit={formik.handleSubmit} autoComplete="off">
-         
+
           <div className="card-body">
             <div className="row">
               {fields.map((field, index) => {
