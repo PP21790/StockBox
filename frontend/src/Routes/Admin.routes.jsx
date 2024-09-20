@@ -31,6 +31,7 @@ import Category from '../layout/Admin/Category/Category';
 import Stock from '../layout/Admin/Stock/Stock';
 import Blogs from '../layout/Admin/Bloags/Blogs';
 import News from '../layout/Admin/News/News';
+import Editbasket from '../layout/Admin/Admin_basket/Editbasket';
 
 
 function MainApp() {
@@ -117,6 +118,7 @@ function MainApp() {
 
                     <Route path="/blogs" element={<Blogs/>} />
                     <Route path="/news" element={<News/>} />
+                    <Route path="/editbasket" element={<Editbasket />} />
                       
                     
                 </Routes>

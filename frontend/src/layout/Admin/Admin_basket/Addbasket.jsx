@@ -4,13 +4,14 @@ import * as Yup from 'yup';
 import DynamicForm from '../../../components/DynamicForm';
 
 const fieldConfigurations = [
-  { col_size: 6, name: 'title', label: 'Title', type: 'text', placeholder: 'Enter title' },
-  { col_size: 6, name: 'description', label: 'Description', type: 'text', placeholder: 'Enter description' },
-  { col_size: 6, name: 'accuracy', label: 'Accuracy', type: 'text', placeholder: 'Enter accuracy' },
-  { col_size: 6, name: 'price', label: 'Price', type: 'text', placeholder: 'Enter price' },
-  { col_size: 6, name: 'mininvamount', label: 'Minimum Investment Amount', type: 'text', placeholder: 'Enter minimum investment amount' },
-  { col_size: 6, name: 'portfolioweightage', label: 'Portfolio Weightage', type: 'text', placeholder: 'Enter portfolio weightage' },
-  { col_size: 6, name: 'themename', label: 'Theme Name', type: 'text', placeholder: 'Enter theme name' },
+  { col_size: 4, name: 'title', label: 'Title', type: 'text', placeholder: 'Enter title' },
+
+  { col_size: 4, name: 'accuracy', label: 'Accuracy', type: 'text', placeholder: 'Enter accuracy' },
+  { col_size: 4, name: 'price', label: 'Price', type: 'text', placeholder: 'Enter price' },
+  { col_size: 4, name: 'mininvamount', label: 'Minimum Investment Amount', type: 'text', placeholder: 'Enter minimum investment amount' },
+  { col_size: 4, name: 'portfolioweightage', label: 'Portfolio Weightage', type: 'text', placeholder: 'Enter portfolio weightage' },
+  { col_size: 4, name: 'themename', label: 'Theme Name', type: 'text', placeholder: 'Enter theme name' },
+  { col_size: 6, name: 'description', label: 'Description', type: 'text5', placeholder: 'Enter description' },
   { col_size: 12, name: 'Basket', label: 'Basket', type: 'Basket', placeholder: 'Add Basket', data: [{ stocks: '', pricerange: '', stockweightage: '', entryprice: '', exitprice: '', comment: '', returnpercentage: '', holdingperiod: '', potentialleft: '' }] },
 ];
 
@@ -52,7 +53,7 @@ const validationSchema = Yup.object().shape({
 
 const AddBasket = () => {
 
-  
+
   const handleSubmit = (values) => {
     console.log("ok")
     console.log('Submitted values:', values);

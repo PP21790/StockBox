@@ -3,9 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { Pencil ,Trash2 } from 'lucide-react';
+import { Eye, X } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { BasketAllList} from '../../../Services/Admin';
+import { Tooltip } from 'antd';
+import { BasketAllList } from '../../../Services/Admin';
 
 const Basket = () => {
 
@@ -32,12 +33,12 @@ const Basket = () => {
     }, []);
 
 
-   
+
 
     // const updateClient= async(row)=>{
     //     navigate("/admin/client/updateclient/" + row._id ,{ state: { row } })
     // }
-    
+
 
     // const DeleteClient = async (_id) => {
     //     try {
@@ -49,7 +50,7 @@ const Basket = () => {
     //             confirmButtonText: 'Yes, delete it!',
     //             cancelButtonText: 'No, cancel',
     //         });
-    
+
     //         if (result.isConfirmed) {
     //             const response = await deleteClient(_id,token);
     //             if (response.status) {
@@ -60,10 +61,10 @@ const Basket = () => {
     //                     confirmButtonText: 'OK',
     //                 });
     //                 getAdminclient();
-                     
+
     //             }
     //         } else {
-        
+
     //             Swal.fire({
     //                 title: 'Cancelled',
     //                 text: 'The staff deletion was cancelled.',
@@ -78,13 +79,13 @@ const Basket = () => {
     //             icon: 'error',
     //             confirmButtonText: 'Try Again',
     //         });
-           
+
     //     }
     // };
-    
-  
 
-     // update status 
+
+
+    // update status 
 
     //  const handleSwitchChange = async (event, id) => {
 
@@ -162,7 +163,7 @@ const Basket = () => {
             selector: row => row.exitprice,
             sortable: true,
         },
-       
+
         // {
         //     name: 'Active Status',
         //     selector: row => (
@@ -182,7 +183,7 @@ const Basket = () => {
         //     ),
         //     sortable: true,
         //   },
-          
+
         {
             name: 'Exitdate',
             selector: row => new Date(row.exitdate).toLocaleDateString(),
@@ -267,6 +268,242 @@ const Basket = () => {
                                 columns={columns}
                                 data={clients}
                             />
+
+                            <div className="pricing-table">
+
+                                <div className="row row-cols-1 row-cols-lg-3">
+                                    {/* Free Tier */}
+                                    <div className="col">
+                                        <div className="card mb-5 mb-lg-0">
+                                            <div className="card-header bg-danger py-3">
+
+                                                <div className='d-flex justify-content-between'>
+                                                    <div>
+                                                        <h6 className="card-price text-white text-start">
+                                                            INR 9000
+                                                        </h6>
+                                                    </div>
+                                                    <div className="text-white text-end">
+                                                        <Tooltip title="Delete">
+                                                            <X style={{ fontSize: "1.6rem" }} />
+                                                        </Tooltip>
+                                                    </div>
+                                                </div>
+                                                {/* <div className="text-white text-start">
+                                                    <Tooltip title="view">
+                                                        <Eye style={{ fontSize: "1rem" }} />
+                                                    </Tooltip>
+
+                                                </div> */}
+
+
+                                            </div>
+                                            <div className="card-body">
+                                                <div>
+
+                                                    <p><b>Stocks</b> : </p>
+
+
+                                                    <p><b>Accuracy</b> : </p>
+
+
+                                                    <p><b>Entry Price</b> : </p>
+
+
+                                                    <p><b>Exit Price</b> : </p>
+
+
+                                                    <p><b>Exit Date</b> : </p>
+
+                                                    <p><b>Created At</b> : </p>
+
+
+                                                    <p><b>Updated At</b> : </p>
+
+
+                                                </div>
+
+                                                <div className="row">
+                                                    <div className="col-md-3">
+                                                        <Link to="/admin/editbasket" className="btnanchor btn btn-danger my-2 radius-30" >
+                                                            View
+                                                        </Link>
+                                                    </div>
+
+                                                    <div className="col-md-3">
+                                                        <Link to="/admin/editbasket" className="btnanchor btn btn-danger my-2 radius-30" >
+                                                            Edit
+                                                        </Link>
+                                                    </div>
+
+                                                    <div className="col-md-6">
+                                                        <Link to="/admin/editbasket" className="btnanchor btn btn-outline-danger my-2 radius-30" >
+                                                            Rebalancing
+                                                        </Link>
+                                                    </div>
+
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {/* Plus Tier */}
+                                    <div className="col">
+                                        <div className="card mb-5 mb-lg-0">
+                                            <div className="card-header bg-primary py-3">
+
+                                                <div className='d-flex justify-content-between'>
+                                                    <div>
+                                                        <h6 className="card-price text-white text-start">
+                                                            INR 9000
+                                                        </h6>
+                                                    </div>
+                                                    <div className="text-white text-end">
+                                                        <Tooltip title="Delete">
+                                                            <X style={{ fontSize: "1.6rem" }} />
+                                                        </Tooltip>
+                                                    </div>
+                                                </div>
+                                                {/* <div className="text-white text-start">
+                                                    <Tooltip title="view">
+                                                        <Eye style={{ fontSize: "1rem" }} />
+                                                    </Tooltip>
+                                                </div> */}
+
+
+                                            </div>
+                                            <div className="card-body">
+                                                <div>
+
+                                                    <p><b>Stocks</b> : </p>
+
+
+                                                    <p><b>Accuracy</b> : </p>
+
+
+                                                    <p><b>Entry Price</b> : </p>
+
+
+                                                    <p><b>Exit Price</b> : </p>
+
+
+                                                    <p><b>Exit Date</b> : </p>
+
+                                                    <p><b>Created At</b> : </p>
+
+
+                                                    <p><b>Updated At</b> : </p>
+
+
+                                                </div>
+
+                                                <div className="row">
+                                                    <div className="col-md-3">
+                                                        <Link to="/admin/editbasket" className="btnanchor btn btn-danger my-2 radius-30" >
+                                                            View
+                                                        </Link>
+                                                    </div>
+
+                                                    <div className="col-md-3">
+                                                        <Link to="/admin/editbasket" className="btnanchor btn btn-danger my-2 radius-30" >
+                                                            Edit
+                                                        </Link>
+                                                    </div>
+
+                                                    <div className="col-md-6">
+                                                        <Link to="/admin/editbasket" className="btnanchor btn btn-outline-danger my-2 radius-30" >
+                                                            Rebalancing
+                                                        </Link>
+                                                    </div>
+
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {/* Pro Tier */}
+                                    <div className="col">
+                                        <div className="card mb-5 mb-lg-0">
+                                            <div className="card-header bg-warning py-3">
+
+                                                <div className='d-flex justify-content-between'>
+                                                    <div>
+                                                        <h6 className="card-price text-white text-start">
+                                                            INR 9000
+                                                        </h6>
+                                                    </div>
+                                                    <div className="text-white text-end">
+                                                        <Tooltip title="Delete">
+                                                            <X style={{ fontSize: "1.6rem" }} />
+                                                        </Tooltip>
+                                                    </div>
+                                                </div>
+                                                {/* <div className="text-white text-start">
+                                                    <Tooltip title="view">
+                                                        <Eye style={{ fontSize: "1rem" }} />
+                                                    </Tooltip>
+                                                </div> */}
+
+
+                                            </div>
+                                            <div className="card-body">
+                                                <div>
+
+                                                    <p><b>Stocks</b> : </p>
+
+
+                                                    <p><b>Accuracy</b> : </p>
+
+
+                                                    <p><b>Entry Price</b> : </p>
+
+
+                                                    <p><b>Exit Price</b> : </p>
+
+
+                                                    <p><b>Exit Date</b> : </p>
+
+                                                    <p><b>Created At</b> : </p>
+
+
+                                                    <p><b>Updated At</b> : </p>
+
+
+                                                </div>
+
+                                                <div className="row">
+
+                                                    <div className="col-md-3">
+                                                        <Link to="/admin/editbasket" className="btnanchor btn btn-danger my-2 radius-30" >
+                                                            View
+                                                        </Link>
+                                                    </div>
+
+                                                    <div className="col-md-3">
+                                                        <Link to="/admin/editbasket" className="btnanchor btn btn-danger my-2 radius-30" >
+                                                            Edit
+                                                        </Link>
+                                                    </div>
+
+                                                    <div className="col-md-6">
+                                                        <Link to="" className="btnanchor btn btn-outline-danger my-2 radius-30" >
+                                                            Rebalancing
+                                                        </Link>
+                                                    </div>
+
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {/*end row*/}
+
+                            </div>
+
                         </div>
                     </div>
                 </div>
