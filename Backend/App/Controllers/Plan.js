@@ -2,6 +2,7 @@ const db = require("../Models");
 const mongoose = require('mongoose'); // Import mongoose
 const Plan_Modal = db.Plan;
 const Service_Modal = db.Service;
+const PlanSubscription_Modal = db.PlanSubscription;
 
 
 class Plan {
@@ -315,6 +316,72 @@ async  statusChange(req, res) {
       });
   }
 }
+
+async  addPlanSubscription(req, res) {
+    try {
+      const { plan_id, client_id, price} = req.body;
+      // Validate input
+      if (!plan_id || !client_id ) {
+        return res.status(400).json({ status: false, message: 'Missing required fields' });
+      }
+      const plan = await Plan_Modal.findById(plan_id).exec();
+  
+      const validityMapping = {
+        '1 month': 1,
+        '3 months': 3,
+        '6 months': 6,
+        '9 months': 9,
+        '1 year': 12,
+        '2 years': 24,
+        '3 years': 36,
+        '4 years': 48,
+        '5 years': 60
+      };
+  
+      const start = new Date();
+  
+      const monthsToAdd = validityMapping[plan.validity];
+    
+      if (monthsToAdd === undefined) {
+        throw new Error('Invalid validity period');
+      }
+    
+      const end = new Date(start);
+      end.setHours(23, 59, 59, 999);  // Set to end of the day
+          end.setMonth(start.getMonth() + monthsToAdd);
+  
+  
+  
+  
+  
+      // Create a new subscription
+      const newSubscription = new PlanSubscription_Modal({
+        plan_id,
+        client_id,
+        total:plan.price,
+        plan_price:price,
+        plan_start:start,
+        plan_end:end
+      });
+  
+      // Save to the database
+      const savedSubscription = await newSubscription.save();
+  
+      // Respond with the created subscription
+      return res.status(201).json({
+        status: true,
+        message: 'Subscription added successfully',
+        data: savedSubscription
+      });
+  
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ status: false, message: 'Server error', data: [] });
+    }
+  }
+  
+
+
 
 
 }
