@@ -1,6 +1,6 @@
 const router = require("express").Router()
 
-const {AddClient,detailClient,loginClient,forgotPassword,resetPassword,changePassword,updateProfile,deleteClient} = require('../Controllers/Clients')
+const {AddClient,detailClient,loginClient,forgotPassword,resetPassword,changePassword,updateProfile,deleteClient,otpSubmit} = require('../Controllers/Clients')
 
 
 router.post('/api/client/add',AddClient);
@@ -11,6 +11,8 @@ router.post('/api/client/reset-password', resetPassword);
 router.post('/api/client/change-password', changePassword);
 router.post('/api/client/update-profile', updateProfile);
 router.get('/api/client/deleteclient/:id', deleteClient);
+router.post('/api/client/otp_submit', otpSubmit);
+
 
 
 module.exports = router;

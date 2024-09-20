@@ -2,10 +2,10 @@
 
 const { Schema, model } = require('mongoose');
 
-const PlanSubscriptionSchema = new Schema({
-    plan_id: {
+const BasketSubscriptionSchema = new Schema({
+    basket_id: {
         type: Schema.Types.ObjectId,
-        ref: 'Plan', // Assuming there's a 'Plan' model to reference
+        ref: 'Basket', // Assuming there's a 'Plan' model to reference
         required: true
     },
     client_id: {
@@ -28,14 +28,6 @@ const PlanSubscriptionSchema = new Schema({
         min: 0,
         default: 0
     },
-    plan_start: {
-        type: Date,
-        required: true
-    },
-    plan_end: {
-        type: Date,
-        required: true
-    },
     status: {
         type: String,
         enum: ['active', 'inactive', 'expired'], // Example statuses
@@ -50,6 +42,6 @@ const PlanSubscriptionSchema = new Schema({
 });
 
 // Define the model
-const PlanSubscription = model('PlanSubscription', PlanSubscriptionSchema);
+const BasketSubscription = model('BasketSubscription', BasketSubscriptionSchema);
 
-module.exports = PlanSubscription;
+module.exports = BasketSubscription;

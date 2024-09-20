@@ -13,6 +13,8 @@ const Stock_Modal = db.Stock;
 const Faq_Modal = db.Faq;
 const Content_Modal = db.Content;
 const Basket_Modal = db.Basket;
+const BasketSubscription_Modal = db.BasketSubscription;
+
 
 mongoose  = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
@@ -167,10 +169,14 @@ class List {
                       $switch: {
                         branches: [
                           { case: { $eq: ['$validity', '1 month'] }, then: { $divide: ['$price', 1] } },
-                          { case: { $eq: ['$validity', '3 month'] }, then: { $divide: ['$price', 3] } },
-                          { case: { $eq: ['$validity', '6 month'] }, then: { $divide: ['$price', 6] } },
-                          { case: { $eq: ['$validity', '12 month'] }, then: { $divide: ['$price', 12] } },
-                          { case: { $eq: ['$validity', '5 year'] }, then: { $divide: ['$price', 60] } }, // 5 years = 60 months
+                          { case: { $eq: ['$validity', '3 months'] }, then: { $divide: ['$price', 3] } },
+                          { case: { $eq: ['$validity', '6 months'] }, then: { $divide: ['$price', 6] } },
+                          { case: { $eq: ['$validity', '9 months'] }, then: { $divide: ['$price', 9] } },
+                          { case: { $eq: ['$validity', '1 year'] }, then: { $divide: ['$price', 12] } },
+                          { case: { $eq: ['$validity', '2 years'] }, then: { $divide: ['$price', 24] } },
+                          { case: { $eq: ['$validity', '3 years'] }, then: { $divide: ['$price', 36] } },
+                          { case: { $eq: ['$validity', '4 years'] }, then: { $divide: ['$price', 48] } },
+                          { case: { $eq: ['$validity', '5 years'] }, then: { $divide: ['$price', 60] } }, // 5 years = 60 months
                         ],
                         default: '$price', // Fallback to total price if validity doesn't match
                       },
@@ -271,7 +277,11 @@ async  addPlanSubscription(req, res) {
       '1 month': 1,
       '3 months': 3,
       '6 months': 6,
-      '12 months': 12,
+      '9 months': 9,
+      '1 year': 12,
+      '2 years': 24,
+      '3 years': 36,
+      '4 years': 48,
       '5 years': 60
     };
 
@@ -284,9 +294,12 @@ async  addPlanSubscription(req, res) {
     }
   
     const end = new Date(start);
-    end.setMonth(start.getMonth() + monthsToAdd);
+    end.setHours(23, 59, 59, 999);  // Set to end of the day
+        end.setMonth(start.getMonth() + monthsToAdd);
 
-    
+
+
+
 
     // Create a new subscription
     const newSubscription = new PlanSubscription_Modal({
@@ -315,6 +328,46 @@ async  addPlanSubscription(req, res) {
   }
 }
 
+
+  
+   // Controller function to add a new plan subscription
+   async  addBasketSubscription(req, res) {
+    try {
+      const { basket_id, client_id, price, discount} = req.body;
+      // Validate input
+      if (!basket_id || !client_id ) {
+        return res.status(400).json({ status: false, message: 'Missing required fields' });
+      }
+      const basket = await Basket_Modal.findById(basket_id).exec();
+  
+      // Create a new subscription
+      const newSubscription = new BasketSubscription_Modal({
+        basket_id,
+        client_id,
+        total:basket.price,
+        plan_price:price,
+        discount:discount
+      });
+  
+      // Save to the database
+      const savedSubscription = await newSubscription.save();
+  
+      // Respond with the created subscription
+      return res.status(201).json({
+        status: true,
+        message: 'Subscription added successfully',
+        data: savedSubscription
+      });
+  
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ status: false, message: 'Server error', data: [] });
+    }
+  }
+  
+
+
+
 async  myPlan(req, res) {
   try {
     const { id } = req.params; 
@@ -338,7 +391,11 @@ async  myPlan(req, res) {
       '1 month': 1,
       '3 months': 3,
       '6 months': 6,
-      '12 months': 12,
+      '9 months': 9,
+      '1 year': 12,
+      '2 years': 24,
+      '3 years': 36,
+      '4 years': 48,
       '5 years': 60
     };
 
@@ -703,10 +760,20 @@ async detailContent(req, res) {
 
 async BasketList(req, res) {
   try {
+
+    const { clientId } = req.params;
       const baskets = await Basket_Modal.find({ del: false, status: "active" });
 
       // Process each basket to restructure the data
-      const processedBaskets = baskets.map(basket => {
+        const processedBaskets = await Promise.all(baskets.map(async (basket) => {
+
+        const subscription = await BasketSubscription_Modal.findOne({
+          basket_id: basket._id,
+          client_id: clientId,
+          del: false // Only check active (non-deleted) subscriptions
+      });
+
+
           // Split the data by '##'
           const stocks = basket.stocks ? basket.stocks.split('##') : [];
           const pricerange = basket.pricerange ? basket.pricerange.split('##') : [];
@@ -716,9 +783,9 @@ async BasketList(req, res) {
           const exitprice = basket.exitprice ? basket.exitprice.split('##') : [];
           const exitdate = basket.exitdate ? basket.exitdate.split('##') : [];
           const comment = basket.comment ? basket.comment.split('##') : [];
-          const retunpercentage = basket.retunpercentage ? basket.retunpercentage.split('##') : [];
-          const holdingperiod = basket.holdingperiod ? basket.holdingperiod.split('##') : [];
-          const potentialleft = basket.potentialleft ? basket.potentialleft.split('##') : [];
+        //  const retunpercentage = basket.retunpercentage ? basket.retunpercentage.split('##') : [];
+       //   const holdingperiod = basket.holdingperiod ? basket.holdingperiod.split('##') : [];
+        //  const potentialleft = basket.potentialleft ? basket.potentialleft.split('##') : [];
 
           // Group data into objects
           const groupedData = stocks.map((stock, index) => ({
@@ -730,9 +797,9 @@ async BasketList(req, res) {
               exitprice: exitprice[index] || null,
               exitdate: exitdate[index] || null,
               comment: comment[index] || null,
-              retunpercentage: retunpercentage[index] || null,
-              holdingperiod: holdingperiod[index] || null,
-              potentialleft: potentialleft[index] || null
+           //   retunpercentage: retunpercentage[index] || null,
+          //    holdingperiod: holdingperiod[index] || null,
+           //   potentialleft: potentialleft[index] || null
           }));
 
           return {
@@ -753,9 +820,11 @@ async BasketList(req, res) {
               created_at: basket.created_at,
               updated_at: basket.updated_at,
               __v: basket.__v,
-              groupedData // Include the grouped data
+              groupedData,
+              purchaseStatus: subscription ? 1 : 0 
           };
-      });
+        }));
+
 
       return res.json({
           status: true,
@@ -773,6 +842,120 @@ async BasketList(req, res) {
   }
 }
 
+
+async pastPerformance(req, res) {
+  try {
+    const { id } = req.params;
+
+    // Query to find signals based on the service ID
+    console.log("Fetching signals...");
+    const signals = await Signal_Modal.find({
+      del: 0,
+      close_status: true,
+      service: new mongoose.Types.ObjectId(id) // Ensure service is an ObjectId
+    });
+
+    // Count the number of signals
+    const count = signals.length;
+    if (count === 0) {
+      return res.status(404).json({
+        status: false,
+        message: "No signals found"
+      });
+    }
+
+    let totalProfit = 0;
+    let totalLoss = 0;
+    let profitCount = 0;
+    let lossCount = 0;
+    let avgreturnpermonth = 0;
+
+    const [firstSignal, lastSignal] = await Promise.all([
+      Signal_Modal.findOne({
+        del: 0,
+        close_status: true,
+        service: new mongoose.Types.ObjectId(id)
+      }).sort({ created_at: 1 }), // Sort by created_at in ascending order
+
+      Signal_Modal.findOne({
+        del: 0,
+        close_status: true,
+        service: new mongoose.Types.ObjectId(id)
+      }).sort({ created_at: -1 }) // Sort by created_at in descending order
+    ]);
+
+    if (!firstSignal || !lastSignal) {
+      return res.status(404).json({
+        status: false,
+        message: "No signals found"
+      });
+    }
+
+    const firstCreatedAt = firstSignal.created_at;
+    const lastCreatedAt = lastSignal.created_at;
+
+    const startYear = firstCreatedAt.getFullYear();
+    const startMonth = firstCreatedAt.getMonth();
+    const endYear = lastCreatedAt.getFullYear();
+    const endMonth = lastCreatedAt.getMonth();
+
+    const yearDifference = endYear - startYear;
+    const monthDifference = endMonth - startMonth;
+    const monthsBetween = yearDifference * 12 + monthDifference;
+
+    signals.forEach(signal => {
+      const entryPrice = parseFloat(signal.price); // Entry price
+      const exitPrice = parseFloat(signal.closeprice); // Exit price
+
+      if (!isNaN(entryPrice) && !isNaN(exitPrice)) {
+        const profitOrLoss = exitPrice - entryPrice;
+
+        if (profitOrLoss >= 0) {
+          totalProfit += profitOrLoss;
+          profitCount++;
+        } else {
+          totalLoss += Math.abs(profitOrLoss);
+          lossCount++;
+        }
+      }
+    });
+
+    const accuracy = (profitCount / count) * 100;
+    const avgreturnpertrade = (totalProfit - totalLoss) / count;
+
+    if (monthsBetween > 0) {
+      avgreturnpermonth = (totalProfit - totalLoss) / monthsBetween;
+    } else {
+      avgreturnpermonth = totalProfit - totalLoss;
+    }
+
+    console.log("Past performance calculated successfully");
+
+    return res.json({
+      status: true,
+      message: "Past performance data fetched successfully",
+      data: {
+        count,
+        totalProfit,
+        totalLoss,
+        profitCount,
+        lossCount,
+        accuracy,
+        avgreturnpertrade,
+        avgreturnpermonth
+      }
+    });
+  } catch (error) {
+    console.error("Error fetching signal details:", error);
+
+    // Send an error response if something goes wrong
+    return res.status(500).json({
+      status: false,
+      message: "Server error",
+      error: error.message
+    });
+  }
+}
 
 
 }

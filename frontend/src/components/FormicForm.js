@@ -189,33 +189,33 @@ const DynamicForm = ({
                                                     </>
                                                 ) : field.type === "text5" ? (
                                                     <>
-                                                            <div className={`col-lg-${field.col_size}`}>
-                                                                <div className="input-block mb-3 flex-column">
-                                                                    <label className={`col-lg-${field.label_size}`}>
-                                                                        {field.label}
-                                                                        <span className="text-danger">*</span>
-                                                                    </label>
+                                                        <div className={`col-lg-${field.col_size}`}>
+                                                            <div className="input-block mb-3 flex-column">
+                                                                <label className={`col-lg-${field.label_size}`}>
+                                                                    {field.label}
+                                                                    <span className="text-danger">*</span>
+                                                                </label>
 
-                                                                    {/* Convert input to textarea */}
-                                                                    <textarea
-                                                                        autoComplete="new-email1"
-                                                                        aria-describedby="basic-addon1"
-                                                                        className="form-control"
-                                                                        placeholder={`Enter ${field.label}`}
-                                                                        readOnly={field.disable}
-                                                                        id={field.name}
-                                                                        name={field.name}
-                                                                        {...formik.getFieldProps(field.name)} // Formik binding
-                                                                    ></textarea>
+                                                                {/* Convert input to textarea */}
+                                                                <textarea
+                                                                    autoComplete="new-email1"
+                                                                    aria-describedby="basic-addon1"
+                                                                    className="form-control"
+                                                                    placeholder={`Enter ${field.label}`}
+                                                                    readOnly={field.disable}
+                                                                    id={field.name}
+                                                                    name={field.name}
+                                                                    {...formik.getFieldProps(field.name)} // Formik binding
+                                                                ></textarea>
 
-                                                                    {/* Error handling */}
-                                                                    {formik.touched[field.name] && formik.errors[field.name] ? (
-                                                                        <div style={{ color: "red" }}>
-                                                                            {formik.errors[field.name]}
-                                                                        </div>
-                                                                    ) : null}
-                                                                </div>
+                                                                {/* Error handling */}
+                                                                {formik.touched[field.name] && formik.errors[field.name] ? (
+                                                                    <div style={{ color: "red" }}>
+                                                                        {formik.errors[field.name]}
+                                                                    </div>
+                                                                ) : null}
                                                             </div>
+                                                        </div>
 
                                                     </>
                                                 ) : field.type === "text2" ? (
@@ -302,7 +302,7 @@ const DynamicForm = ({
                                                 ) : field.type === "file2" ? (
                                                     <>
 
-                                                        <div className={` col-lg-${field.col_size}`}>
+                                                        <div className={`col-lg-${field.col_size}`}>
                                                             <div className="input-block mb-3 flex-column">
                                                                 <label className={`col-lg-${field.label_size}`}>
                                                                     {field.label}
@@ -316,6 +316,13 @@ const DynamicForm = ({
                                                                     onChange={(e) => handleFileChange2(e, index, field.name)}
                                                                     name={field.name}
                                                                 />
+
+                                                                {/* Additional content for image preview */}
+                                                                {field.additional_content && (
+                                                                    <div style={{ marginTop: "10px" }}>
+                                                                        {field.additional_content}
+                                                                    </div>
+                                                                )}
                                                             </div>
                                                         </div>
 

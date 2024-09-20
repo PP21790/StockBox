@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getnewslist, AddNewsbyadmin, UpdateNewsbyadmin, changeNewsStatus, DeleteNews } from '../../../Services/Admin';
+import { getconsitionlist, Addtermscondition, UpdateCondition, changeconditionstatus, Deleteservices } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
 import Swal from 'sweetalert2';
 
-const News = () => {
+const Condition = () => {
 
 
 
@@ -18,17 +18,9 @@ const News = () => {
         title: "",
         id: "",
         description: "",
-        image: "",
-
     });
-
-
-
-
     const [title, setTitle] = useState({
         title: "",
-        description: "",
-        image: "",
         add_by: "",
     });
 
@@ -40,9 +32,9 @@ const News = () => {
 
 
     // Getting services
-    const getNews = async () => {
+    const gettermslist = async () => {
         try {
-            const response = await getnewslist(token);
+            const response = await getconsitionlist(token);
             if (response.status) {
                 const filterdata = response.data.filter((item) =>
                     searchInput === "" ||
@@ -56,7 +48,7 @@ const News = () => {
     };
 
     useEffect(() => {
-        getNews();
+        gettermslist();
     }, [searchInput]);
 
 
@@ -64,10 +56,10 @@ const News = () => {
 
 
     // Update service
-    const updateNews = async () => {
+    const Updatetermsandcondition = async () => {
         try {
-            const data = { title: updatetitle.title, id: serviceid._id, image: updatetitle.image, description: updatetitle.description };
-            const response = await UpdateNewsbyadmin(data, token);
+            const data = { title: updatetitle.title, id: serviceid._id, description: updatetitle.description };
+            const response = await UpdateCondition(data, token);
 
             if (response && response.status) {
                 Swal.fire({
@@ -78,8 +70,8 @@ const News = () => {
                     timer: 2000,
                 });
 
-                setUpdatetitle({ title: "", id: "" });
-                getNews();
+                setUpdatetitle({ title: "", id: "", description: "" });
+                gettermslist();
                 setModel(false);
             } else {
                 Swal.fire({
@@ -104,21 +96,21 @@ const News = () => {
 
 
     // Add service
-    const AddNews = async () => {
+    const addcondition = async () => {
         try {
-            const data = { title: title.title, description: title.description, image: title.image, add_by: userid };
-            const response = await AddNewsbyadmin(data, token);
+            const data = { title: title.title, add_by: userid, description: title.description };
+            const response = await Addtermscondition(data, token);
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
-                    text: 'blogs added successfully.',
+                    text: 'Service added successfully.',
                     icon: 'success',
                     confirmButtonText: 'OK',
                     timer: 2000,
                 });
 
-                setTitle({ title: "", add_by: "" });
-                getNews();
+                setTitle({ title: "", add_by: "", description: "" });
+                gettermslist();
 
                 const modal = document.getElementById('exampleModal');
                 const bootstrapModal = window.bootstrap.Modal.getInstance(modal);
@@ -128,7 +120,7 @@ const News = () => {
             } else {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'There was an error adding.',
+                    text: 'There was an error adding the service.',
                     icon: 'error',
                     confirmButtonText: 'Try Again',
                 });
@@ -137,7 +129,7 @@ const News = () => {
             console.error("Error adding service:", error);
             Swal.fire({
                 title: 'Error!',
-                text: 'There was an error adding',
+                text: 'There was an error adding the service.',
                 icon: 'error',
                 confirmButtonText: 'Try Again',
             });
@@ -161,7 +153,7 @@ const News = () => {
 
         if (result.isConfirmed) {
             try {
-                const response = await changeNewsStatus(data, token);
+                const response = await changeconditionstatus(data, token);
                 if (response.status) {
                     Swal.fire({
                         title: "Saved!",
@@ -173,7 +165,7 @@ const News = () => {
                         Swal.close();
                     }, 1000);
                 }
-                getNews();
+                gettermslist();
             } catch (error) {
                 Swal.fire(
                     "Error",
@@ -182,14 +174,16 @@ const News = () => {
                 );
             }
         } else if (result.dismiss === Swal.DismissReason.cancel) {
-            getNews();
+            gettermslist();
         }
     };
 
 
 
 
-    // delete news
+    // delete sevices
+
+    // delete plan cartegory 
 
     const DeleteService = async (_id) => {
         // console.log("_id",_id)
@@ -204,7 +198,7 @@ const News = () => {
             });
 
             if (result.isConfirmed) {
-                const response = await DeleteNews(_id, token);
+                const response = await Deleteservices(_id, token);
                 if (response.status) {
                     Swal.fire({
                         title: 'Deleted!',
@@ -212,7 +206,7 @@ const News = () => {
                         icon: 'success',
                         confirmButtonText: 'OK',
                     });
-                    getNews();
+                    gettermslist();
 
                 }
             } else {
@@ -248,6 +242,13 @@ const News = () => {
             name: 'Title',
             selector: row => row.title,
             sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'Description',
+            selector: row => row.description,
+            sortable: true,
+            width: '300px',
         },
         {
             name: 'Active Status',
@@ -267,19 +268,8 @@ const News = () => {
                 </div>
             ),
             sortable: true,
+            width: '200px',
         },
-        {
-            name: 'Description',
-            selector: row => row.description,
-            sortable: true,
-        },
-        {
-            name: 'Image',
-            cell: row => <img src={`/assets/uploads/news/${row.image}`} alt="Image" width="50" height="50" />,
-            sortable: true,
-        },
-        
-
         {
             name: 'Created At',
             selector: row => new Date(row.created_at).toLocaleDateString(),
@@ -299,7 +289,7 @@ const News = () => {
                             onClick={() => {
                                 setModel(true);
                                 setServiceid(row);
-                                setUpdatetitle({ title: row.title, id: row._id, description: row.description, image: row.image });
+                                setUpdatetitle({ title: row.title, id: row._id,  description: row.description });
                             }}
                         />
                     </div>
@@ -311,6 +301,7 @@ const News = () => {
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
+
         }
     ];
 
@@ -323,14 +314,12 @@ const News = () => {
     //     }));
     // };
 
-
-    const updateServiceTitle = (updatedField) => {
+    const updateServiceTitle = (value) => {
         setUpdatetitle(prev => ({
             ...prev,
-            ...updatedField
+            ...value
         }));
     };
-
 
 
 
@@ -339,7 +328,7 @@ const News = () => {
             <div className="page-content">
 
                 <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                    <div className="breadcrumb-title pe-3">News</div>
+                    <div className="breadcrumb-title pe-3">Service</div>
                     <div className="ps-3">
                         <nav aria-label="breadcrumb">
                             <ol className="breadcrumb mb-0 p-0">
@@ -376,7 +365,7 @@ const News = () => {
                                     data-bs-target="#exampleModal"
                                 >
                                     <i className="bx bxs-plus-square" />
-                                    Add News
+                                    Add Condition
                                 </button>
 
                                 <div
@@ -390,7 +379,7 @@ const News = () => {
                                         <div className="modal-content">
                                             <div className="modal-header">
                                                 <h5 className="modal-title" id="exampleModalLabel">
-                                                    Add News
+                                                    Add Condition
                                                 </h5>
                                                 <button
                                                     type="button"
@@ -413,22 +402,10 @@ const News = () => {
                                                             />
                                                         </div>
                                                     </div>
-                                                    <div className="row">
-                                                        <div className="col-md-12">
-                                                            <label htmlFor="imageUpload">Upload Image</label>
-                                                            <input
-                                                                className="form-control mb-3"
-                                                                type="file"
-                                                                accept="image/*"
-                                                                id="imageUpload"
-                                                                onChange={(e) => setTitle({ ...title, image: e.target.files[0] })}
-                                                            />
-                                                        </div>
-                                                    </div>
 
                                                     <div className="row">
                                                         <div className="col-md-12">
-                                                            <label htmlFor="">description</label>
+                                                            <label htmlFor="">Description</label>
                                                             <input
                                                                 className="form-control mb-3"
                                                                 type="text"
@@ -451,7 +428,7 @@ const News = () => {
                                                 <button
                                                     type="button"
                                                     className="btn btn-primary"
-                                                    onClick={AddNews}
+                                                    onClick={addcondition}
                                                 >
                                                     Save
                                                 </button>
@@ -459,8 +436,6 @@ const News = () => {
                                         </div>
                                     </div>
                                 </div>
-
-
                                 {model && (
                                     <div
                                         className="modal fade show"
@@ -489,27 +464,9 @@ const News = () => {
                                                                 <input
                                                                     className="form-control mb-2"
                                                                     type="text"
-                                                                    placeholder='Enter news Title'
+                                                                    placeholder="Enter news Title"
                                                                     value={updatetitle.title}
                                                                     onChange={(e) => updateServiceTitle({ title: e.target.value })}
-                                                                />
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="row">
-                                                            <div className="col-md-12">
-                                                                <label htmlFor="imageUpload">Image</label>
-                                                                <input
-                                                                    className="form-control mb-3"
-                                                                    type="file"
-                                                                    accept="image/*"
-                                                                    id="imageUpload"
-                                                                    onChange={(e) => {
-                                                                        const file = e.target.files[0];
-                                                                        if (file) {
-                                                                            updateServiceTitle({ image: file });
-                                                                        }
-                                                                    }}
                                                                 />
                                                             </div>
                                                         </div>
@@ -520,14 +477,13 @@ const News = () => {
                                                                 <input
                                                                     className="form-control mb-2"
                                                                     type="text"
-                                                                    placeholder='Enter  Description'
+                                                                    placeholder="Enter Description"
                                                                     value={updatetitle.description}
                                                                     onChange={(e) => updateServiceTitle({ description: e.target.value })}
                                                                 />
                                                             </div>
                                                         </div>
                                                     </form>
-
                                                 </div>
                                                 <div className="modal-footer">
                                                     <button
@@ -540,16 +496,15 @@ const News = () => {
                                                     <button
                                                         type="button"
                                                         className="btn btn-primary"
-                                                        onClick={updateNews}
+                                                        onClick={Updatetermsandcondition}
                                                     >
-                                                        Update News
+                                                        Update Condition
                                                     </button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 )}
-
                             </div>
                         </div>
                         <div className="table-responsive">
@@ -569,4 +524,4 @@ const News = () => {
     );
 };
 
-export default News;
+export default Condition;

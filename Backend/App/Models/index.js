@@ -21,6 +21,8 @@ module.exports = {
     Banner: require("./Banner"),
     Plancategory: require("./Plancategory"),
     Content: require("./Content"),
+    BasketSubscription: require("./BasketSubscription"),
+
 
 
 

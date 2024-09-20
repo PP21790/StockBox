@@ -31,6 +31,10 @@ import Category from '../layout/Admin/Category/Category';
 import Stock from '../layout/Admin/Stock/Stock';
 import Blogs from '../layout/Admin/Bloags/Blogs';
 import News from '../layout/Admin/News/News';
+import Coupon from '../layout/Admin/Coupon/Coupon';
+import Addcoupon from '../layout/Admin/Coupon/Addcoupon';
+import Updatecoupon from '../layout/Admin/Coupon/Updatecoupon';
+import Condition from '../layout/Admin/Termscondition/Condition';
 import Editbasket from '../layout/Admin/Admin_basket/Editbasket';
 
 
@@ -120,7 +124,14 @@ function MainApp() {
                     <Route path="/news" element={<News/>} />
                     <Route path="/editbasket" element={<Editbasket />} />
                       
+                    <Route path="/coupon" element={<Coupon/>} />
+                    <Route path="/addcoupon" element={<Addcoupon/>} />
+                    <Route path="/coupon/updatecoupon/:id" element={<Updatecoupon/>} />
+
+                    <Route path="/termsandcondtion" element={<Condition/>} />
+
                     
+                      
                 </Routes>
             </div>
             <Footer />

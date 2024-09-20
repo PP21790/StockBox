@@ -1,6 +1,6 @@
 import axios from 'axios';
 import * as Config from "../Utils/config";
-
+const qs = require('qs');
 
 
 export async function GetClient(token) {
@@ -10,15 +10,20 @@ export async function GetClient(token) {
                 'Authorization': `${token}`
             },
         });
+
         return res?.data;
     } catch (err) {
+
+
+        if ("Forbidden" == err.response?.data || err.message) {
+            localStorage.clear()
+            window.location.reload()
+        }
         return err;
     }
 }
 
 
-
-// add user 
 
 
 
@@ -305,6 +310,7 @@ export async function GetStockDetail(token) {
     try {
         const res = await axios.get(`${Config.base_url}stock/list`, {
             headers: {
+
                 'Authorization': `${token}`
             },
         });
@@ -315,25 +321,37 @@ export async function GetStockDetail(token) {
 }
 
 
-// get signal list 
 
+export async function GetSignallist(data, token) {
+    console.log("data", data);
 
-export async function GetSignallist(token) {
     try {
         const res = await axios.get(`${Config.base_url}signal/list`, {
             headers: {
-                'Authorization': `${token}`
+                'Authorization': token,
+                'Content-Type': 'application/x-www-form-urlencoded'
             },
+            params: {
+                from: data.from,
+                to: data.to,
+                service:data.service,
+                stock:data.stock
+            }
         });
+
+        console.log(res.data);
         return res?.data;
-    } catch (err) {
-        return err;
+    } catch (error) {
+        console.error("Error fetching signals:", error.response ? error.response.data : error.message);
     }
+
 }
 
 
-// get signal detailperuser
 
+
+
+// get signal detailperuser
 export async function Signalperdetail(_id, token) {
 
     try {
@@ -351,7 +369,6 @@ export async function Signalperdetail(_id, token) {
 
 
 // delete signal 
-
 export async function DeleteSignal(_id, token) {
     try {
         const res = await axios.get(`${Config.base_url}signal/delete/${_id}`, {
@@ -368,8 +385,6 @@ export async function DeleteSignal(_id, token) {
 
 
 // for signal close api 
-
-
 export async function SignalCloseApi(data, token) {
     try {
         const res = await axios.post(`${Config.base_url}signal/closesignal`, data, {
@@ -389,8 +404,6 @@ export async function SignalCloseApi(data, token) {
 
 
 // basket list 
-
-
 export async function BasketAllList(token) {
     try {
         const res = await axios.get(`${Config.base_url}basket/list`, {
@@ -1057,6 +1070,188 @@ export async function changeFAQStatus(data, token) {
                 data: {},
                 'Authorization': `${token}`,
             },
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// add coupon
+
+export async function Addcouponbyadmin(data, token) {
+    const formData = new FormData();
+
+    formData.append('add_by', data.add_by);
+    formData.append('image', data.image);
+    formData.append('name', data.name);
+    formData.append('code', data.code);
+    formData.append('type', data.type);
+    formData.append('value', data.value);
+    formData.append('startdate', data.startdate);
+    formData.append('enddate', data.enddate);
+    formData.append('minpurchasevalue', data.minpurchasevalue);
+    formData.append('mincouponvalue', data.mincouponvalue);
+    formData.append('description', data.description);
+
+    try {
+        const res = await axios.post(`${Config.base_url}coupon/add`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error uploading CSV:', err.response?.data || err.message);
+        return err.response?.data || err.message;
+    }
+}
+
+
+// get coupon list 
+
+export async function getcouponlist(token) {
+
+    try {
+        const res = await axios.get(`${Config.base_url}coupon/list`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
+
+
+// update coupon or edit coupon
+
+export async function updateCouponbyadmin(data, token) {
+    const formData = new FormData();
+
+    formData.append('id', data.id);
+    formData.append('image', data.image);
+    formData.append('name', data.name);
+    formData.append('code', data.code);
+    formData.append('type', data.type);
+    formData.append('value', data.value);
+    formData.append('startdate', data.startdate);
+    formData.append('enddate', data.enddate);
+    formData.append('minpurchasevalue', data.minpurchasevalue);
+    formData.append('mincouponvalue', data.mincouponvalue);
+    formData.append('description', data.description);
+
+    try {
+        const res = await axios.put(`${Config.base_url}coupon/update`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error uploading CSV:', err.response?.data || err.message);
+        return err.response?.data || err.message;
+    }
+}
+
+
+// delete coupon
+
+export async function DeleteCoupon(_id, token) {
+    try {
+        const res = await axios.get(`${Config.base_url}coupon/delete/${_id}`, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// get terms content
+
+export async function getconsitionlist(token) {
+
+    try {
+        const res = await axios.get(`${Config.base_url}content/list`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
+
+// add condition 
+
+export async function Addtermscondition(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}content/add`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message;
+    }
+}
+
+
+// change condiiton status 
+
+export async function changeconditionstatus(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}content/change-status`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message;
+    }
+}
+
+
+// update terms and condition
+
+export async function UpdateCondition(data, token) {
+    try {
+        const res = await axios.put(`${Config.base_url}content/update`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+
         });
 
         return res?.data;

@@ -507,11 +507,9 @@
 		};
 
 		var UploadChunkDone = function(e, data) {
-			// Reset retries for successful chunked uploads.
+			
 			data.ff_info.retries = 0;
 			data.ff_info.retrydelay = settings.retrydelay;
-
-			// Save for the next UploadChunkSend() call.
 			data.ff_info.lastresult = data.result;
 		};
 

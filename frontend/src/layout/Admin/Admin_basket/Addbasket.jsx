@@ -55,8 +55,7 @@ const AddBasket = () => {
 
 
   const handleSubmit = (values) => {
-    console.log("ok")
-    console.log('Submitted values:', values);
+   
   };
 
   return (
