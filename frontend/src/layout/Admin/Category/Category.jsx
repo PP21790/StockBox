@@ -410,19 +410,6 @@ const Category = () => {
                                                 <form>
                                                     <div className="row">
                                                         <div className="col-md-12">
-                                                            <label htmlFor="categoryTitle">Category</label>
-                                                            <input
-                                                                id="categoryTitle"
-                                                                className="form-control mb-3"
-                                                                type="text"
-                                                                placeholder="Enter Service Title"
-                                                                value={title.title}
-                                                                onChange={(e) => setTitle({ ...title, title: e.target.value })}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                    <div className="row">
-                                                        <div className="col-md-12">
                                                             <label htmlFor="service">Service</label>
                                                             <select
                                                                 id="service"
@@ -439,7 +426,19 @@ const Category = () => {
                                                                     ))}
                                                             </select>
                                                         </div>
+                                                        <div className="col-md-12">
+                                                            <label htmlFor="categoryTitle">Category</label>
+                                                            <input
+                                                                id="categoryTitle"
+                                                                className="form-control mb-3"
+                                                                type="text"
+                                                                placeholder="Enter Service Title"
+                                                                value={title.title}
+                                                                onChange={(e) => setTitle({ ...title, title: e.target.value })}
+                                                            />
+                                                        </div>
                                                     </div>
+
                                                 </form>
                                             </div>
 
