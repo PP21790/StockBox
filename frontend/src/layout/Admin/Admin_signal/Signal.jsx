@@ -437,6 +437,7 @@ const Signal = () => {
                                         <i className="bx bx-search" />
                                     </span>
                                 </div>
+                                
                                 <div className="ms-auto">
                                     <Link
                                         to="/admin/addsignal"
