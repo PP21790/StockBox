@@ -50,27 +50,6 @@ const AddSignal = () => {
 
 
 
-  // const validate = (values) => {
-  //   const errors = {};
-  //   if (!values.service) errors.service = 'Please select a service';
-  //   if (!values.stock) errors.stock = 'Please select a stock';
-  //   if (!values.price) errors.price = 'Please select a price';
-  //   if (!values.target1) errors.target1 = 'Please enter Target-1';
-  //   if (!values.target2) errors.target2 = 'Please enter Target-2';
-  //   if (!values.target3) errors.target3 = 'Please enter Target-3';
-  //   if (!values.stoploss) errors.stoploss = 'Please enter Stoploss';
-  //   if (!values.callduration) errors.callduration = 'Please enter Call duration';
-  //   if (!values.calltype) errors.calltype = 'Please enter Call Calltype';
-  //   if (!values.callperiod) errors.callperiod = 'Please enter call Period';
-  //   console.log("values",values)
-  //   return errors;
-  // };
-
- 
-  // const onSubmit =
-
-
-
   const formik = useFormik({
     initialValues: {
       add_by:user_id,
@@ -151,6 +130,10 @@ const AddSignal = () => {
       }
     }
   });
+
+
+
+
 
   const fields = [
     {
@@ -273,6 +256,9 @@ const AddSignal = () => {
 
   ];
 
+
+
+  
   return (
     <div>
       <div style={{ marginTop: '100px' }}>

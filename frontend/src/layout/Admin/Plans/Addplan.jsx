@@ -142,11 +142,14 @@ const Addplan = () => {
             col_size: 6,
             disable: false,
             options: [
-                { value: "1 Month", label: "1 Month" },
-                { value: "3 Month", label: "3 Month" },
-                { value: "6 Month", label: "6 Month" },
-                { value: "1 Year", label: "1 Year" },
-                { value: "5 Year", label: "5 Year" }
+                { value: "3 months", label: "3 months" },
+                { value: "6 months", label: "6 months" },
+                { value: "9 months", label: "9 months" },
+                { value: "1 year"  , label:  "1 year" },
+                { value: "2 years", label: "2 years" },
+                { value: "3 years", label: "3 years" },
+                { value: "4 years", label: "4 years" },
+                { value: "5 years", label: "5 years" }
             ]  
         },
         {
