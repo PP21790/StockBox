@@ -13,6 +13,8 @@ const Stock_Modal = db.Stock;
 const Faq_Modal = db.Faq;
 const Content_Modal = db.Content;
 const Basket_Modal = db.Basket;
+const BasketSubscription_Modal = db.BasketSubscription;
+
 
 mongoose  = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
@@ -325,6 +327,46 @@ async  addPlanSubscription(req, res) {
     return res.status(500).json({ status: false, message: 'Server error', data: [] });
   }
 }
+
+
+  
+   // Controller function to add a new plan subscription
+   async  addBasketSubscription(req, res) {
+    try {
+      const { basket_id, client_id, price, discount} = req.body;
+      // Validate input
+      if (!basket_id || !client_id ) {
+        return res.status(400).json({ status: false, message: 'Missing required fields' });
+      }
+      const basket = await Basket_Modal.findById(basket_id).exec();
+  
+      // Create a new subscription
+      const newSubscription = new BasketSubscription_Modal({
+        basket_id,
+        client_id,
+        total:basket.price,
+        plan_price:price,
+        discount:discount
+      });
+  
+      // Save to the database
+      const savedSubscription = await newSubscription.save();
+  
+      // Respond with the created subscription
+      return res.status(201).json({
+        status: true,
+        message: 'Subscription added successfully',
+        data: savedSubscription
+      });
+  
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ status: false, message: 'Server error', data: [] });
+    }
+  }
+  
+
+
 
 async  myPlan(req, res) {
   try {
@@ -718,10 +760,20 @@ async detailContent(req, res) {
 
 async BasketList(req, res) {
   try {
+
+    const { clientId } = req.params;
       const baskets = await Basket_Modal.find({ del: false, status: "active" });
 
       // Process each basket to restructure the data
-      const processedBaskets = baskets.map(basket => {
+        const processedBaskets = await Promise.all(baskets.map(async (basket) => {
+
+        const subscription = await BasketSubscription_Modal.findOne({
+          basket_id: basket._id,
+          client_id: clientId,
+          del: false // Only check active (non-deleted) subscriptions
+      });
+
+
           // Split the data by '##'
           const stocks = basket.stocks ? basket.stocks.split('##') : [];
           const pricerange = basket.pricerange ? basket.pricerange.split('##') : [];
@@ -768,9 +820,11 @@ async BasketList(req, res) {
               created_at: basket.created_at,
               updated_at: basket.updated_at,
               __v: basket.__v,
-              groupedData // Include the grouped data
+              groupedData,
+              purchaseStatus: subscription ? 1 : 0 
           };
-      });
+        }));
+
 
       return res.json({
           status: true,

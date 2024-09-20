@@ -29,6 +29,7 @@ const Banner_Modal = db.Banner;
 const Plancategory_Modal = db.Plancategory;
 const PlanSubscription_Modal = db.PlanSubscription;
 const Content_Modal = db.Content;
+const BasketSubscription_Modal = db.BasketSubscription;
 
 
 
