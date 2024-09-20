@@ -3,12 +3,17 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { Pencil, Trash2 } from 'lucide-react';
+import { Settings2, Eye, UserPen, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { deleteClient, UpdateClientStatus } from '../../../Services/Admin';
+import { Tooltip } from 'antd';
 
 const Client = () => {
+    const [checkedIndex, setCheckedIndex] = useState(null);
 
+    const handleTabChange = (index) => {
+        setCheckedIndex(index); // Update the checked tab index
+    };
 
     const navigate = useNavigate();
 
@@ -38,7 +43,29 @@ const Client = () => {
         navigate("/admin/client/updateclient/" + row._id, { state: { row } })
     }
 
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
+    // Function to show the modal
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
+
+    // Function to handle modal closing
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
+
+    // Form submit handler
+    const onFinish = (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const values = Object.fromEntries(formData.entries());
+        console.log('Form values:', values);
+
+
+        updateClient(row);
+        setIsModalVisible(false);
+    };
     const DeleteClient = async (_id) => {
         try {
             const result = await Swal.fire({
@@ -184,28 +211,160 @@ const Client = () => {
         },
 
 
-        {
-            name: 'Created At',
-            selector: row => new Date(row.createdAt).toLocaleDateString(),
-            sortable: true,
-            width: '165px',
-        },
-        {
-            name: 'Updated At',
-            selector: row => new Date(row.updatedAt).toLocaleDateString(),
-            sortable: true,
-            width: '165px',
-        },
+        // {
+        //     name: 'Created At',
+        //     selector: row => new Date(row.createdAt).toLocaleDateString(),
+        //     sortable: true,
+        //     width: '165px',
+        // },
+        // {
+        //     name: 'Updated At',
+        //     selector: row => new Date(row.updatedAt).toLocaleDateString(),
+        //     sortable: true,
+        //     width: '165px',
+        // },
         {
             name: 'Actions',
             cell: row => (
                 <>
-                    <div>
-                        <Pencil onClick={() => updateClient(row)} />
+                    <Tooltip placement="top" overlay="Package Assign">
+                        <span onClick={showModal} style={{ cursor: 'pointer' }}>
+                            <Settings2 />
+                        </span>
+                    </Tooltip>
+
+                    {/* Bootstrap Modal */}
+                    <div
+                        className={`modal fade ${isModalVisible ? 'show d-block' : ''}`}
+                        style={{ backdropFilter: 'blur(1px)' }}  // Only apply blur effect to the background
+                        tabIndex="-1"
+                        aria-labelledby="exampleModalLabel"
+                        aria-hidden="true"
+                    >
+                        <div className="modal-dialog">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="exampleModalLabel">Package Assign</h5>
+                                    <button
+                                        type="button"
+                                        className="btn-close"
+                                        onClick={handleCancel}
+                                        aria-label="Close"
+                                    ></button>
+                                </div>
+                                <div className="modal-body">
+                                    {/* Form inside the modal */}
+                                    <div className='card '>
+                                        <div className='d-flex justify-content-center align-items-center card-body'>
+                                            {['Plan', 'Basket'].map((tab, index) => (
+                                                <label key={index} className='labelfont'>
+                                                    <input
+                                                        className='ms-3'
+                                                        type="radio"
+                                                        name="tab"
+                                                        checked={checkedIndex === index}
+                                                        onChange={() => handleTabChange(index)}
+                                                    />
+                                                    <span className='ps-2'>{tab}</span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    {/* Conditional Form Rendering for Each Tab */}
+                                    <div className='card'>
+
+
+                                        {checkedIndex === 0 && (
+                                            <form className='card-body'>
+
+                                                <div className="col-md-12">
+                                                    <div className="form-check mb-2">
+                                                        <input className="form-check-input" type="checkbox" id="input12" />
+                                                        <label className="form-check-label" htmlFor="input12">
+                                                            stock
+                                                        </label>
+                                                    </div>
+
+                                                </div>
+
+                                                <div className="col-md-12">
+                                                    <div className="form-check mb-2">
+                                                        <input className="form-check-input" type="checkbox" id="input12" />
+                                                        <label className="form-check-label" htmlFor="input12">
+                                                            case
+                                                        </label>
+                                                    </div>
+
+
+                                                </div>
+
+                                                <div className="col-md-12">
+                                                    <div className="form-check mb-2">
+                                                        <input className="form-check-input" type="checkbox" id="input12" />
+                                                        <label className="form-check-label" htmlFor="input12">
+                                                            Future
+                                                        </label>
+                                                    </div>
+
+                                                </div>
+
+
+
+
+
+                                               
+                                            </form>
+                                        )}
+
+                                        {checkedIndex === 1 && (
+                                            <form className='card-body'>
+
+                                                <div className="col-md-12">
+
+                                                    <p>
+                                                        Stoploss: qff
+                                                    </p>
+
+
+                                                </div>
+
+
+                                              
+                                            </form>
+                                        )}
+
+
+                                    </div>
+
+                                </div>
+                                <div className="modal-footer">
+                                    <button
+                                        type="button"
+                                        className="btn btn-secondary"
+                                        data-bs-dismiss="modal"
+                                    >
+                                        Close
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary"
+                                       
+                                    >
+                                        Save
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div>
+                    <Tooltip title="view">
+                        <Eye onClick={() => updateClient(row)} />
+                    </Tooltip>
+                    <Tooltip title="Update">
+                        <UserPen onClick={() => updateClient(row)} />
+                    </Tooltip>
+                    <Tooltip title="delete">
                         <Trash2 onClick={() => DeleteClient(row._id)} />
-                    </div>
+                    </Tooltip>
                 </>
             ),
             ignoreRowClick: true,

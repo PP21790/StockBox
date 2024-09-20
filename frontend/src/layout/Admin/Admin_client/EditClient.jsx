@@ -12,7 +12,7 @@ const EditClient = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { row } = location.state; 
+  const { row } = location.state;
 
   // console.log("row",row)
 
@@ -37,7 +37,7 @@ const EditClient = () => {
     if (!values.password) {
       errors.password = "Please enter Phone Number";
     }
-    
+
 
     return errors;
   };
@@ -48,12 +48,12 @@ const EditClient = () => {
       // UserName: values.UserName,
       Email: values.Email,
       PhoneNo: values.PhoneNo,
-      password:values.password,
+      password: values.password,
       id: row._id,
     };
 
     try {
-      const response = await UpdateClient(req,token);
+      const response = await UpdateClient(req, token);
       if (response.status) {
         Swal.fire({
           title: "Update Successful!",
@@ -92,7 +92,7 @@ const EditClient = () => {
       // UserName: row?.UserName || "",
       Email: row?.Email || "",
       PhoneNo: row?.PhoneNo || "",
-    
+
     },
     validate,
     onSubmit,
@@ -126,7 +126,7 @@ const EditClient = () => {
     {
       name: "PhoneNo",
       label: "Phone Number",
-      type: "text3", 
+      type: "text3",
       label_size: 12,
       col_size: 6,
       disable: false,
@@ -134,7 +134,7 @@ const EditClient = () => {
     {
       name: "password",
       label: "Password",
-      type: "text", 
+      type: "text",
       label_size: 12,
       col_size: 6,
       disable: false,
@@ -145,8 +145,8 @@ const EditClient = () => {
     <div style={{ marginTop: "100px" }}>
       <DynamicForm
         fields={fields}
-        page_title="Update User"
-        btn_name="Update User"
+        page_title="Update Client"
+        btn_name="Update Client"
         btn_name1="Cancel"
         formik={formik}
         sumit_btn={true}
