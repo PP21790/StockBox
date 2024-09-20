@@ -66,7 +66,6 @@ const Signal = () => {
 
 
     const navigate = useNavigate();
-
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
@@ -287,40 +286,48 @@ const Signal = () => {
         },
         {
             name: 'Signal Time',
-            selector: row => row.callduration,
+            selector: row => new Date(row.created_at).toLocaleDateString(),
             sortable: true,
             width: '132px',
         },
         {
             name: 'Symbol',
-            selector: row => row.calltype,
+            selector: row => row.stock.title,
             sortable: true,
             width: '132px',
         },
         {
             name: 'Entry Type',
-            selector: row => row.price,
+            selector: row => row.calltype,
             sortable: true,
             width: '132px',
         },
         {
             name: 'Entry Price',
-            selector: row => row.stoploss,
+            selector: row => row.price,
             sortable: true,
             width: '132px',
         },
+    
         {
             name: 'Exit Price',
-            selector: row => row.stoploss,
+            selector: row => row.closeprice ? row.closeprice : '-',
             sortable: true,
             width: '132px',
         },
         {
-            name: 'Exit status',
-            selector: row => row.stoploss,
+            name: 'Entry Date',
+            selector: row => new Date(row.created_at).toLocaleDateString(),
             sortable: true,
             width: '132px',
         },
+        {
+            name: 'Exit Date',
+            selector: row => new Date(row.closedate).toLocaleDateString(),
+            sortable: true,
+            width: '132px',
+        },
+        
         // {
         //     name: 'Status',
         //     selector: row => row.close_status === true ? 'On' : 'Off',
@@ -358,10 +365,9 @@ const Signal = () => {
             name: 'Status',
             cell: row => (
                 <>
-
-                    {!row.close_status &&
+                    {!row.close_status ? (
                         <button
-                            className='btn btn-danger btnclose'
+                            className="btn btn-danger btnclose"
                             onClick={() => {
                                 setModel(true);
                                 setServiceid(row);
@@ -370,7 +376,19 @@ const Signal = () => {
                         >
                             Close
                         </button>
-                    }
+                    ) : (
+                        <button
+                            className="btn btn-danger btnclose"
+                            onClick={() => {
+                                setModel(true);
+                                setServiceid(row);
+                                setTargetvalue(row);
+                            }}
+                            disabled
+                        >
+                            Closed
+                        </button>
+                    )}
                 </>
             ),
             ignoreRowClick: true,

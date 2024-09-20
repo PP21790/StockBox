@@ -55,17 +55,20 @@ const Client = () => {
         setIsModalVisible(false);
     };
 
-    // Form submit handler
-    const onFinish = (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        const values = Object.fromEntries(formData.entries());
-        console.log('Form values:', values);
+    // // Form submit handler
+    // const onFinish = (e) => {
+    //     e.preventDefault();
+    //     const formData = new FormData(e.target);
+    //     const values = Object.fromEntries(formData.entries());
+    //     console.log('Form values:', values);
 
 
-        updateClient(row);
-        setIsModalVisible(false);
-    };
+    //     updateClient(row);
+    //     setIsModalVisible(false);
+    // };
+
+
+
     const DeleteClient = async (_id) => {
         try {
             const result = await Swal.fire({

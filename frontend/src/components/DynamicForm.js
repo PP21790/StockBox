@@ -37,7 +37,7 @@ const BasketField = ({ push, remove, Basket }) => (
               <div className="card-body">
                 <div className="row">
                   {['stocks', 'pricerange', 'stockweightage', 'entryprice', 'exitprice', 'comment', 'returnpercentage', 'holdingperiod', 'potentialleft'].map(field => (
-                    <div className="col-lg-6 form-group mb-3" key={field}>
+                    <div className="col-lg-4 form-group mb-3" key={field}>
                       <label htmlFor={`Basket.${index}.${field}`}>{field.replace(/([A-Z])/g, ' $1').toUpperCase()}</label>
                       <Field
                         name={`Basket.${index}.${field}`}
