@@ -89,7 +89,7 @@ class Signal {
 
 async getSignal(req, res) {
   try {
-    const { from, to, service, stock } = req.body;
+    const { from, to, service, stock } = req.query;
     // Set today's date and midnight time for filtering
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Set to midnight for accurate comparison
@@ -130,10 +130,22 @@ async getSignal(req, res) {
       .populate({ path: 'service', select: 'title' }) // Populate only the title from service
       .populate({ path: 'stock', select: 'title' }); 
 
+
+
+      const arr = [];
+result.map((data) => {
+if (data.close_status) {
+arr.push({...data._doc,Ttype:"0"});
+arr.push({...data._doc,Ttype:"1"});
+} else {
+arr.push({...data._doc,Ttype:"0"});
+}
+});
+
     return res.json({
       status: true,
       message: "Signals fetched successfully",
-      data: result
+      data: arr
     });
   } catch (error) {
     return res.json({
