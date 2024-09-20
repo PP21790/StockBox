@@ -91,51 +91,62 @@ class Signal {
 
   async getSignal(req, res) {
     try {
-      const { from, to, service, stock } = req.body;
-      // Set today's date and midnight time for filtering
-      const today = new Date();
-      today.setHours(0, 0, 0, 0); // Set to midnight for accurate comparison
+      const { from, to, service, stock } = req.query;
 
-      // Default date range is today
+
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); 
+
       const fromDate = from ? new Date(from) : today;
       let toDate;
       if (to) {
         toDate = new Date(to);
-        toDate.setHours(23, 59, 59, 999); // End of the specified date
+        toDate.setHours(23, 59, 59, 999); 
       } else {
         toDate = new Date(today);
-        toDate.setHours(23, 59, 59, 999); // End of today
+        toDate.setHours(23, 59, 59, 999); 
       }
 
 
-
-      // Build the query object with dynamic filters
       const query = {
         del: 0,
-        created_at: { $gte: fromDate, $lt: toDate } // Date range filter
+        created_at: { $gte: fromDate, $lt: toDate } 
       };
 
 
       if (service) {
-        query.service = new mongoose.Types.ObjectId(service); // Convert service ID to ObjectId
+        query.service = new mongoose.Types.ObjectId(service); 
       }
 
       if (stock) {
-        query.stock = new mongoose.Types.ObjectId(stock); // Convert stock ID to ObjectId
+        query.stock = new mongoose.Types.ObjectId(stock); 
       }
 
-      // Log the query for debugging
-
-
-      // Execute the query and populate service and stock details
+   
       const result = await Signal_Modal.find(query)
-        .populate({ path: 'service', select: 'title' }) // Populate only the title from service
+        .populate({ path: 'service', select: 'title' })
         .populate({ path: 'stock', select: 'title' });
+
+
+
+        const arr = [];
+        result.map((data) => {
+         
+            if (data.close_status) {
+                arr.push({...data._doc,Ttype:"0"});
+                arr.push({...data._doc,Ttype:"1"});
+            } else {
+                arr.push({...data._doc,Ttype:"0"});
+            }
+        });
+        
+
 
       return res.json({
         status: true,
         message: "Signals fetched successfully",
-        data: result
+        data: arr
       });
     } catch (error) {
       return res.json({

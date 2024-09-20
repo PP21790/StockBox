@@ -5,13 +5,25 @@ import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import { Eye, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { GetSignallist, DeleteSignal, SignalCloseApi } from '../../../Services/Admin';
-
+import { GetSignallist, DeleteSignal, SignalCloseApi, GetService, GetStockDetail } from '../../../Services/Admin';
+import { fDateTimeSuffix } from '../../../Utils/Date_formate'
 
 
 
 const Signal = () => {
 
+    const token = localStorage.getItem('token');
+    const [searchInput, setSearchInput] = useState("");
+
+    const [filters, setFilters] = useState({
+        from: '',
+        to: '',
+        service: '',
+        stock: '',
+    });
+
+    const [serviceList, setServiceList] = useState([]);
+    const [stockList, setStockList] = useState([]);
 
     const [checkedIndex, setCheckedIndex] = useState(null);
 
@@ -31,8 +43,6 @@ const Signal = () => {
         target2: 0,
         target3: 0,
     });
-
-
 
 
     const handleCheckboxChange = (e, target) => {
@@ -70,6 +80,7 @@ const Signal = () => {
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
 
+
     const [targetvalue, setTargetvalue] = useState("")
 
 
@@ -90,84 +101,79 @@ const Signal = () => {
     })
 
 
-    const token = localStorage.getItem('token');
-
 
     const getAllSignal = async () => {
         try {
-            const response = await GetSignallist(token);
-            if (response.status) {
+            const response = await GetSignallist(filters, token);
+            if (response && response.status) {
+                const searchInputMatch = response.data.filter((item) => {
+                    return (
+                        searchInput === "" ||
+                        item.stock.title.toLowerCase().includes(searchInput.toLowerCase()) 
+                        ||
+                        item.calltype.toLowerCase().includes(searchInput.toLowerCase())
+                    );
+                });
 
 
-                setClients(response.data);
+              console.log("searchInputMatch",searchInputMatch)
 
+
+                setClients(searchInput ? searchInputMatch : response.data);
             }
         } catch (error) {
-            console.log("error");
+            console.log("error", error);
         }
-    }
+    };
+
+
+
+    const fetchAdminServices = async () => {
+        try {
+            const response = await GetService(token);
+            if (response.status) {
+                setServiceList(response.data);
+            }
+        } catch (error) {
+            console.log('Error fetching services:', error);
+        }
+    };
+
+
+
+    const fetchStockList = async () => {
+        try {
+            const response = await GetStockDetail(token);
+            if (response.status) {
+                setStockList(response.data);
+            }
+        } catch (error) {
+            console.log('Error fetching stock list:', error);
+        }
+    };
+
 
 
 
     useEffect(() => {
-        getAllSignal();
+        fetchAdminServices()
+        fetchStockList()
     }, []);
 
+    useEffect(() => {
+        getAllSignal();
+    }, [filters, searchInput]);
 
+
+    const handleFilterChange = (e) => {
+        const { name, value } = e.target;
+        setFilters((prev) => ({ ...prev, [name]: value }));
+    };
 
 
     const Signaldetail = async (_id) => {
         navigate(`signaldetaile/${_id}`)
     }
-
-
-    // const updateClient= async(row)=>{
-    //     navigate("/admin/client/updateclient/" + row._id ,{ state: { row } })
-    // }
-
-
-    // const DeleteClient = async (_id) => {
-    //     try {
-    //         const result = await Swal.fire({
-    //             title: 'Are you sure?',
-    //             text: 'Do you want to delete this staff member? This action cannot be undone.',
-    //             icon: 'warning',
-    //             showCancelButton: true,
-    //             confirmButtonText: 'Yes, delete it!',
-    //             cancelButtonText: 'No, cancel',
-    //         });
-
-    //         if (result.isConfirmed) {
-    //             const response = await deleteClient(_id,token);
-    //             if (response.status) {
-    //                 Swal.fire({
-    //                     title: 'Deleted!',
-    //                     text: 'The staff has been successfully deleted.',
-    //                     icon: 'success',
-    //                     confirmButtonText: 'OK',
-    //                 });
-    //                 getAdminclient();
-
-    //             }
-    //         } else {
-
-    //             Swal.fire({
-    //                 title: 'Cancelled',
-    //                 text: 'The staff deletion was cancelled.',
-    //                 icon: 'info',
-    //                 confirmButtonText: 'OK',
-    //             });
-    //         }
-    //     } catch (error) {
-    //         Swal.fire({
-    //             title: 'Error!',
-    //             text: 'There was an error deleting the staff.',
-    //             icon: 'error',
-    //             confirmButtonText: 'Try Again',
-    //         });
-
-    //     }
-    // };
 
 
 
@@ -219,16 +225,12 @@ const Signal = () => {
 
 
     // close signal
-
     const closeSignalperUser = async (index) => {
         try {
             const data = {
                 id: serviceid._id,
                 closestatus: closedata.closestatus,
                 closetype: index == 0 ? "1" : index == "1" ? "2" : index == "2" ? "3" : "4",
-                // closetype:index == 1 ? 2: "", 
-                // closetype:index == 2 ? 3: "", 
-                // closetype:index == 3 ? 4: "", 
                 close_description: closedata.close_description,
                 targethit1: index == 1 ? checkedTargets1.target1 : "",
                 targethit2: index == 1 ? checkedTargets1.target1 : "",
@@ -284,12 +286,7 @@ const Signal = () => {
             sortable: false,
             width: '70px',
         },
-        {
-            name: 'Signal Time',
-            selector: row => new Date(row.created_at).toLocaleDateString(),
-            sortable: true,
-            width: '132px',
-        },
+
         {
             name: 'Symbol',
             selector: row => row.stock.title,
@@ -304,45 +301,32 @@ const Signal = () => {
         },
         {
             name: 'Entry Price',
-            selector: row => row.price,
+            selector: row => row.Ttype == 0 ? row.price : "-",
             sortable: true,
             width: '132px',
         },
-    
+
         {
             name: 'Exit Price',
-            selector: row => row.closeprice ? row.closeprice : '-',
+            selector: row => row.Ttype == 1 ? row.closeprice : '-',
             sortable: true,
             width: '132px',
+
         },
         {
             name: 'Entry Date',
-            selector: row => new Date(row.created_at).toLocaleDateString(),
+            selector: row => row.Ttype == 0 ? fDateTimeSuffix(row.created_at) : "-",
             sortable: true,
-            width: '132px',
+            width: '160px',
         },
         {
             name: 'Exit Date',
-            selector: row => new Date(row.closedate).toLocaleDateString(),
+            selector: row => row.Ttype == 1 ? fDateTimeSuffix(row.closedate) : "-",
             sortable: true,
-            width: '132px',
+            width: '160px',
         },
-        
-        // {
-        //     name: 'Status',
-        //     selector: row => row.close_status === true ? 'On' : 'Off',
-        //     sortable: true,
-        //     cell: row => (
-        //         <span style={{ color: row.close_status === true ? 'blue' : 'red' }}>
-        //             {row.close_status === true ? 'On' : 'Off'}
-        //         </span>
-        //     ),
-        // },
-        // {
-        //     name: 'Updated At',
-        //     selector: row => new Date(row.updated_at).toLocaleDateString(),
-        //     sortable: true,
-        // },
+
+
 
         {
             name: 'Actions',
@@ -418,11 +402,11 @@ const Signal = () => {
 
 
 
+
     return (
         <div>
             <div>
                 <div className="page-content">
-                    {/* breadcrumb */}
                     <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
                         <div className="breadcrumb-title pe-3">Signal</div>
                         <div className="ps-3">
@@ -437,7 +421,6 @@ const Signal = () => {
                             </nav>
                         </div>
                     </div>
-                    {/* end breadcrumb */}
                     <div className="card">
                         <div className="card-body">
                             <div className="d-lg-flex align-items-center mb-4 gap-3">
@@ -446,6 +429,9 @@ const Signal = () => {
                                         type="text"
                                         className="form-control ps-5 radius-10"
                                         placeholder="Search Order"
+                                            value={searchInput}
+                                            onChange={(e) => setSearchInput(e.target.value)}
+
                                     />
                                     <span className="position-absolute top-50 product-show translate-middle-y">
                                         <i className="bx bx-search" />
@@ -465,11 +451,69 @@ const Signal = () => {
                                 </div>
                             </div>
 
-                            <Table
-                                columns={columns}
-                                data={clients}
-                            />
+                            <div className="row">
+
+                                <div className="col-md-3">
+                                    <input
+                                        type="date"
+                                        name="from"
+                                        className="form-control radius-10"
+                                        placeholder="From"
+                                        value={filters.from}
+                                        onChange={handleFilterChange}
+                                    />
+                                </div>
+                                <div className="col-md-3">
+                                    <input
+                                        type="date"
+                                        name="to"
+                                        className="form-control radius-10"
+                                        placeholder="To"
+                                        value={filters.to}
+                                        onChange={handleFilterChange}
+                                    />
+                                </div>
+                                <div className="col-md-3">
+                                    <select
+                                        name="service"
+                                        className="form-control radius-10"
+                                        value={filters.service}
+                                        onChange={handleFilterChange}
+                                    >
+                                        <option value="">Select Service</option>
+                                        {serviceList.map((service) => (
+                                            <option key={service._id} value={service._id}>
+                                                {service.title}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div className="col-md-3">
+                                    <select
+                                        name="stock"
+                                        className="form-control radius-10"
+                                        value={filters.stock}
+                                        onChange={handleFilterChange}
+                                    >
+                                        <option value="">Select Stock</option>
+                                        {stockList.map((stock) => (
+                                            <option key={stock._id} value={stock._id}>
+                                                {stock.title}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                            </div>
+
                         </div>
+
+                        <Table
+                            columns={columns}
+                            data={clients}
+                        />
+
                     </div>
                 </div>
             </div>
@@ -511,7 +555,7 @@ const Signal = () => {
                                         ))}
                                     </div>
                                 </div>
-                                {/* Conditional Form Rendering for Each Tab */}
+
                                 <div className='card'>
                                     {checkedIndex === 0 && (
                                         <form className='card-body'>
@@ -736,7 +780,6 @@ const Signal = () => {
 
                                             </div>
 
-
                                             <div className="col-md-12">
                                                 <label className='mb-1'>Remark</label>
                                                 <textarea
@@ -776,10 +819,7 @@ const Signal = () => {
                                                     }
 
                                                 />
-
-
                                             </div>
-
 
                                             <div className="col-md-12">
                                                 <label className='mb-1'>Remark</label>

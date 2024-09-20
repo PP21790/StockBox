@@ -1,6 +1,6 @@
 import axios from 'axios';
 import * as Config from "../Utils/config";
-
+const qs = require('qs');
 
 
 export async function GetClient(token) {
@@ -310,6 +310,7 @@ export async function GetStockDetail(token) {
     try {
         const res = await axios.get(`${Config.base_url}stock/list`, {
             headers: {
+
                 'Authorization': `${token}`
             },
         });
@@ -320,25 +321,37 @@ export async function GetStockDetail(token) {
 }
 
 
-// get signal list 
 
+export async function GetSignallist(data, token) {
+    console.log("data", data);
 
-export async function GetSignallist(token) {
     try {
         const res = await axios.get(`${Config.base_url}signal/list`, {
             headers: {
-                'Authorization': `${token}`
+                'Authorization': token,
+                'Content-Type': 'application/x-www-form-urlencoded'
             },
+            params: {
+                from: data.from,
+                to: data.to,
+                service:data.service,
+                stock:data.stock
+            }
         });
+
+        console.log(res.data);
         return res?.data;
-    } catch (err) {
-        return err;
+    } catch (error) {
+        console.error("Error fetching signals:", error.response ? error.response.data : error.message);
     }
+
 }
 
 
-// get signal detailperuser
 
+
+
+// get signal detailperuser
 export async function Signalperdetail(_id, token) {
 
     try {
@@ -356,7 +369,6 @@ export async function Signalperdetail(_id, token) {
 
 
 // delete signal 
-
 export async function DeleteSignal(_id, token) {
     try {
         const res = await axios.get(`${Config.base_url}signal/delete/${_id}`, {
@@ -373,8 +385,6 @@ export async function DeleteSignal(_id, token) {
 
 
 // for signal close api 
-
-
 export async function SignalCloseApi(data, token) {
     try {
         const res = await axios.post(`${Config.base_url}signal/closesignal`, data, {
@@ -394,8 +404,6 @@ export async function SignalCloseApi(data, token) {
 
 
 // basket list 
-
-
 export async function BasketAllList(token) {
     try {
         const res = await axios.get(`${Config.base_url}basket/list`, {
@@ -1077,18 +1085,18 @@ export async function changeFAQStatus(data, token) {
 
 export async function Addcouponbyadmin(data, token) {
     const formData = new FormData();
-   
+
     formData.append('add_by', data.add_by);
     formData.append('image', data.image);
-    formData.append('name',data.name );
-    formData.append('code',data.code );
-    formData.append('type',data.type );
-    formData.append('value',data.value );
-    formData.append('startdate',data.startdate );
-    formData.append('enddate',data.enddate );
-    formData.append('minpurchasevalue',data.minpurchasevalue );
-    formData.append('mincouponvalue',data.mincouponvalue );
-    formData.append('description',data.description);
+    formData.append('name', data.name);
+    formData.append('code', data.code);
+    formData.append('type', data.type);
+    formData.append('value', data.value);
+    formData.append('startdate', data.startdate);
+    formData.append('enddate', data.enddate);
+    formData.append('minpurchasevalue', data.minpurchasevalue);
+    formData.append('mincouponvalue', data.mincouponvalue);
+    formData.append('description', data.description);
 
     try {
         const res = await axios.post(`${Config.base_url}coupon/add`, formData, {
@@ -1128,18 +1136,18 @@ export async function getcouponlist(token) {
 
 export async function updateCouponbyadmin(data, token) {
     const formData = new FormData();
-   
+
     formData.append('id', data.id);
     formData.append('image', data.image);
-    formData.append('name',data.name );
-    formData.append('code',data.code );
-    formData.append('type',data.type );
-    formData.append('value',data.value );
-    formData.append('startdate',data.startdate );
-    formData.append('enddate',data.enddate );
-    formData.append('minpurchasevalue',data.minpurchasevalue );
-    formData.append('mincouponvalue',data.mincouponvalue );
-    formData.append('description',data.description);
+    formData.append('name', data.name);
+    formData.append('code', data.code);
+    formData.append('type', data.type);
+    formData.append('value', data.value);
+    formData.append('startdate', data.startdate);
+    formData.append('enddate', data.enddate);
+    formData.append('minpurchasevalue', data.minpurchasevalue);
+    formData.append('mincouponvalue', data.mincouponvalue);
+    formData.append('description', data.description);
 
     try {
         const res = await axios.put(`${Config.base_url}coupon/update`, formData, {
