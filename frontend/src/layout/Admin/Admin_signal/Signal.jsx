@@ -278,7 +278,6 @@ const Signal = () => {
 
     // colums
 
-
     let columns = [
         {
             name: 'S.No',

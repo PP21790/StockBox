@@ -323,8 +323,6 @@ export async function GetStockDetail(token) {
 
 
 export async function GetSignallist(data, token) {
-    console.log("data", data);
-
     try {
         const res = await axios.get(`${Config.base_url}signal/list`, {
             headers: {

@@ -137,6 +137,14 @@ const AddSignal = () => {
 
   const fields = [
     {
+      name: 'price',
+      label: 'Price',
+      type: 'text',
+      label_size: 12,
+      col_size: 6,
+      disable: false,
+    },
+    {
       name: 'service',
       label: 'Select Service',
       type: 'select',
@@ -219,14 +227,7 @@ const AddSignal = () => {
       col_size: 3,
       disable: false,
     },
-    {
-      name: 'price',
-      label: 'Price',
-      type: 'text',
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-    },
+    
     {
       name: 'report',
       label: 'Report',

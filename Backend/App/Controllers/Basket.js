@@ -7,6 +7,9 @@ class Basket {
 
     async AddBasket(req, res) {
         try {
+
+          console.log('body',req.body);
+
             const { title, description, price, add_by,accuracy,mininvamount,portfolioweightage,stocks,pricerange,stockweightage,entryprice,entrydate,exitprice,exitdate,comment,retunpercentage,holdingperiod,potentialleft,themename
             } = req.body;
     
