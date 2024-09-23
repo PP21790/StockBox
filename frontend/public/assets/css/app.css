@@ -255,7 +255,9 @@ a {
 
 
 .sidebar-wrapper .metismenu {
-
+	height: 550px;
+	overflow-x: auto;
+	scrollbar-width: none;
 	background: 0 0;
 
 	display: -webkit-box;
@@ -301,21 +303,13 @@ a {
 
 
 .sidebar-wrapper .metismenu>li {
-
 	display: -webkit-box;
-
 	display: -ms-flexbox;
-
 	display: flex;
-
 	-webkit-box-orient: vertical;
-
 	-webkit-box-direction: normal;
-
 	-ms-flex-direction: column;
-
 	flex-direction: column;
-
 	position: relative
 }
 
