@@ -1,86 +1,120 @@
 
 import React, { useState, useEffect } from 'react';
-import { useFormik } from 'formik';
-import DynamicForm from '../../../components/FormicForm';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+import DynamicForm from '../../../components/DynamicForm';
+import { Updatebasket, Viewbasket } from '../../../Services/Admin';
 import Swal from 'sweetalert2';
-import { useLocation, useNavigate, useParams} from 'react-router-dom';
-import { UpdateClient } from '../../../Services/Admin';
-import { Viewbasket } from '../../../Services/Admin';
+import { useNavigate, useParams } from 'react-router-dom';
 
+const fieldConfigurations = [
+  { col_size: 4, name: 'price', label: 'Price', type: 'number', placeholder: 'Enter price' },
+  { col_size: 4, name: 'title', label: 'Title', type: 'text', placeholder: 'Enter title' },
+  { col_size: 4, name: 'accuracy', label: 'Accuracy', type: 'number', placeholder: 'Enter accuracy' },
+  { col_size: 4, name: 'mininvamount', label: 'Minimum Investment Amount', type: 'number', placeholder: 'Enter minimum investment amount' },
+  { col_size: 4, name: 'portfolioweightage', label: 'Portfolio Weightage', type: 'number', placeholder: 'Enter portfolio weightage' },
+  { col_size: 4, name: 'themename', label: 'Theme Name', type: 'text', placeholder: 'Enter theme name' },
+  { col_size: 6, name: 'returnpercentage', label: 'Return Percentage', type: 'number', placeholder: 'Enter Return Percentage' },
+  { col_size: 6, name: 'holdingperiod', label: 'Holding Period', type: 'text', placeholder: 'Enter Holding Period' },
+  { col_size: 6, name: 'potentialleft', label: 'Potential Left', type: 'text', placeholder: 'Enter Potential Left' },
+  { col_size: 6, name: 'description', label: 'Description', type: 'text', placeholder: 'Enter description' },
+  {
+    col_size: 12, name: 'Stock', label: 'Stock', type: 'Stock', placeholder: 'Add Stock',
+    data: [{ stocks: '', pricerange: '', stockweightage: '', entryprice: '', exitprice: '', exitdate: '', comment: '' }]
+  },
+];
 
+const validationSchema = Yup.object().shape({
+  title: Yup.string().required('Title is required'),
+  description: Yup.string().required('Description is required'),
+  accuracy: Yup.string().required('Accuracy is required'),
+  price: Yup.string().required('Price is required'),
+  mininvamount: Yup.string().required('Minimum Investment Amount is required'),
+  portfolioweightage: Yup.string().required('Portfolio Weightage is required'),
+  themename: Yup.string().required('Theme Name is required'),
+  returnpercentage: Yup.string().required('Return percentage is required'),
+  holdingperiod: Yup.string().required('Holding period is required'),
+  potentialleft: Yup.string().required('Potential left is required'),
+  Stock: Yup.array().of(
+    Yup.object().shape({
+      stocks: Yup.string().required('Stocks are required'),
+      pricerange: Yup.string().required('Price range is required'),
+      stockweightage: Yup.string().required('Stock weightage is required'),
+      entryprice: Yup.string().required('Entry price is required'),
+      exitprice: Yup.string().required('Exit price is required'),
+      exitdate: Yup.string().required('Exit date is required'),
+      comment: Yup.string().required('Comment is required'),
+    })
+  ),
+});
 
 const Viewbasketdetail = () => {
 
-
+  const { id } = useParams();
   const navigate = useNavigate();
-
-  
-      useEffect(() => {
-        getbasketdetail();
-    }, []);
-
-
-    const { id } = useParams()
-
-    const [clients, setClients] = useState([]);
-
-
-    const getbasketdetail = async () => {
-        try {
-            const response = await Viewbasket(id, token);
-            if (response.status) {
-                setClients([response.data]);
-            } 
-        } catch (error) {
-            console.log("Error fetching signal details:", error);
-        }
-    };
-
-
-
-
-
-
-  console.log("clients",clients)
-
   const user_id = localStorage.getItem("id");
   const token = localStorage.getItem("token");
 
-  const validate = (values) => {
-    let errors = {};
+  const [initialValues, setInitialValues] = useState({
+    title: '',
+    description: '',
+    accuracy: '',
+    price: '',
+    mininvamount: '',
+    portfolioweightage: '',
+    themename: '',
+    returnpercentage: '',
+    holdingperiod: '',
+    potentialleft: '',
+    Stock: [{ stocks: '', pricerange: '', stockweightage: '', entryprice: '', exitprice: '', exitdate: '', comment: '' }],
+  });
 
-    if (!values.FullName) {
-      errors.FullName = "Please enter Full Name";
-    }
-    if (!values.Email) {
-      errors.Email = "Please enter Email";
-    }
-    // if (!values.UserName) {
-    //   errors.UserName = "Please enter Username";
-    // }
-    if (!values.PhoneNo) {
-      errors.PhoneNo = "Please enter Phone Number";
-    }
-    if (!values.password) {
-      errors.password = "Please enter Phone Number";
-    }
+  useEffect(() => {
+    getbasketdetail();
+  }, []);
 
-
-    return errors;
+  const getbasketdetail = async () => {
+    try {
+      const response = await Viewbasket(id, token);
+      if (response.status) {
+        const basketData = response.data;
+        const updatedInitialValues = {
+          title: basketData.title || '',
+          description: basketData.description || '',
+          accuracy: basketData.accuracy || '',
+          price: basketData.price || '',
+          mininvamount: basketData.mininvamount || '',
+          portfolioweightage: basketData.portfolioweightage || '',
+          themename: basketData.themename || '',
+          returnpercentage: basketData.returnpercentage || '',
+          holdingperiod: basketData.holdingperiod || '',
+          potentialleft: basketData.potentialleft || '',
+          Stock: basketData.groupedData || [{ stocks: '', pricerange: '', stockweightage: '', entryprice: '', exitprice: '', exitdate: '', comment: '' }],
+        };
+        setInitialValues(updatedInitialValues);
+      }
+    } catch (error) {
+      console.log("Error fetching basket details:", error);
+    }
   };
 
   const onSubmit = async (values) => {
+  
     const req = {
-      FullName: values.FullName,
-      // UserName: values.UserName,
       title: values.title,
-      PhoneNo: values.PhoneNo,
-      password: values.password,
-      id: clients._id,
+      description: values.description,
+      accuracy: values.accuracy,
+      price: values.price,
+      mininvamount: values.mininvamount,
+      portfolioweightage: values.portfolioweightage,
+      themename: values.themename,
+      id: id,
+      Stock: values.Stock,
     };
+   
 
     try {
-      const response = await UpdateClient(req, token);
+      const response = await Updatebasket(req, token);
       if (response.status) {
         Swal.fire({
           title: "Update Successful!",
@@ -90,7 +124,7 @@ const Viewbasketdetail = () => {
           timerProgressBar: true,
         });
         setTimeout(() => {
-          navigate("/admin/client");
+          navigate("/admin/basket");
         }, 1500);
       } else {
         Swal.fire({
@@ -113,75 +147,30 @@ const Viewbasketdetail = () => {
     }
   };
 
-  const formik = useFormik({
-    initialValues: {
-      FullName: clients?.FullName || "",
-      // UserName: row?.UserName || "",
-      title: clients?.title || "",
-      PhoneNo: clients?.PhoneNo || "",
-
-    },
-    validate,
-    onSubmit,
-  });
-
-  const fields = [
-    {
-      name: "title",
-      label: "title",
-      type: "text",
-      label_size: 6,
-      col_size: 6,
-      disable: false,
-    },
-    // {
-    //   name: "UserName",
-    //   label: "User Name",
-    //   type: "text",
-    //   label_size: 12,
-    //   col_size: 6,
-    //   disable: false,
-    // },
-    {
-      name: "Email",
-      label: "Email",
-      type: "text",
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-    },
-    {
-      name: "PhoneNo",
-      label: "Phone Number",
-      type: "text3",
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-    },
-    {
-      name: "password",
-      label: "Password",
-      type: "text",
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-    },
-  ];
-
   return (
-    <div style={{ marginTop: "100px" }}>
-      <DynamicForm
-        fields={fields}
-        page_title="Update Client"
-        btn_name="Update Client"
-        btn_name1="Cancel"
-        formik={formik}
-        sumit_btn={true}
-        btn_name1_route={"/admin/client"}
-        additional_field={<></>}
-      />
+    <div>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={onSubmit}
+        enableReinitialize={true}  
+      >
+        {formikProps => (
+          <DynamicForm
+            fields={fieldConfigurations}
+            formik={formikProps}
+            btn_name="Submit"
+            sumit_btn={true}
+            page_title="Edit Basket"
+            btn_name1="Cancel"
+            btn_name1_route="/admin/basket"
+           
+          />
+        )}
+      </Formik>
     </div>
   );
 };
 
 export default Viewbasketdetail;
+

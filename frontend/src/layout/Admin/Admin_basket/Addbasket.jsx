@@ -97,7 +97,7 @@ const AddBasket = () => {
           timerProgressBar: true,
         });
         setTimeout(() => {
-          navigate("/admin/staff");
+          navigate("/admin/basket");
         }, 1500);
       } else {
         Swal.fire({

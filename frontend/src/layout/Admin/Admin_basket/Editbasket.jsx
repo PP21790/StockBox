@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -76,7 +77,6 @@ const Editbasket = () => {
       const response = await Viewbasket(id, token);
       if (response.status) {
         const basketData = response.data;
-        // Populate form fields from the API response
         const updatedInitialValues = {
           title: basketData.title || '',
           description: basketData.description || '',
@@ -88,7 +88,7 @@ const Editbasket = () => {
           returnpercentage: basketData.returnpercentage || '',
           holdingperiod: basketData.holdingperiod || '',
           potentialleft: basketData.potentialleft || '',
-          Stock: basketData.Stock || [{ stocks: '', pricerange: '', stockweightage: '', entryprice: '', exitprice: '', exitdate: '', comment: '' }],
+          Stock: basketData.groupedData || [{ stocks: '', pricerange: '', stockweightage: '', entryprice: '', exitprice: '', exitdate: '', comment: '' }],
         };
         setInitialValues(updatedInitialValues);
       }
@@ -98,6 +98,7 @@ const Editbasket = () => {
   };
 
   const onSubmit = async (values) => {
+  
     const req = {
       title: values.title,
       description: values.description,
@@ -106,9 +107,10 @@ const Editbasket = () => {
       mininvamount: values.mininvamount,
       portfolioweightage: values.portfolioweightage,
       themename: values.themename,
-      add_by: user_id,
+      id: id,
       Stock: values.Stock,
     };
+   
 
     try {
       const response = await Updatebasket(req, token);
@@ -121,7 +123,7 @@ const Editbasket = () => {
           timerProgressBar: true,
         });
         setTimeout(() => {
-          navigate("/admin/staff");
+          navigate("/admin/basket");
         }, 1500);
       } else {
         Swal.fire({
@@ -147,10 +149,10 @@ const Editbasket = () => {
   return (
     <div>
       <Formik
-        enableReinitialize
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={onSubmit}
+        enableReinitialize={true}  
       >
         {formikProps => (
           <DynamicForm
@@ -169,3 +171,4 @@ const Editbasket = () => {
 };
 
 export default Editbasket;
+

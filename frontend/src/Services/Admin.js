@@ -502,7 +502,7 @@ export async function Addbasketplan(data, token) {
 
 export async function Updatebasket(data, token) {
     try {
-        const res = await axios.post(`${Config.base_url}basket/update`, data, {
+        const res = await axios.put(`${Config.base_url}basket/update`, data, {
             headers: {
                 data: {},
                 'Authorization': `${token}`,
