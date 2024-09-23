@@ -10,11 +10,11 @@ import { UpdateStaff } from '../../../Services/Admin';
 const Update = () => {
 
 
+
+
   const navigate = useNavigate();
   const location = useLocation();
   const { row } = location.state; 
-
-  // console.log("row",row)
 
   const user_id = localStorage.getItem("id");
   const token = localStorage.getItem("token");
@@ -151,6 +151,7 @@ const Update = () => {
         btn_name="Edit Staff"
         btn_name1="Cancel"
         formik={formik}
+        sumit_btn={true}
         btn_name1_route={"/admin/staff"}
         additional_field={<></>}
       />

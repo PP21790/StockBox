@@ -7,6 +7,8 @@ import { BasketAllList, deletebasket } from '../../../Services/Admin';
 import { fDate } from '../../../Utils/Date_formate';
 
 const Basket = () => {
+
+
     const navigate = useNavigate();
     const [clients, setClients] = useState([]);
     const token = localStorage.getItem('token');
@@ -34,6 +36,10 @@ const Basket = () => {
     useEffect(() => {
         getbasketlist();
     }, []);
+
+
+// delete basket page 
+
 
     const Deletebasket = async (_id) => {
         try {
