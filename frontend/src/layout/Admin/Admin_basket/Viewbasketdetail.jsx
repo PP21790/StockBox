@@ -7,8 +7,12 @@ import { Updatebasket, Viewbasket } from '../../../Services/Admin';
 import Swal from 'sweetalert2';
 import { useNavigate, useParams } from 'react-router-dom';
 
+
+
+
+
 const fieldConfigurations = [
-  { col_size: 4, name: 'price', label: 'Price', type: 'number', placeholder: 'Enter price' },
+  { col_size: 4, name: 'price', label: 'Price', type: 'number', placeholder: 'Enter price',disabled: true },
   { col_size: 4, name: 'title', label: 'Title', type: 'text', placeholder: 'Enter title' },
   { col_size: 4, name: 'accuracy', label: 'Accuracy', type: 'number', placeholder: 'Enter accuracy' },
   { col_size: 4, name: 'mininvamount', label: 'Minimum Investment Amount', type: 'number', placeholder: 'Enter minimum investment amount' },
@@ -23,6 +27,9 @@ const fieldConfigurations = [
     data: [{ stocks: '', pricerange: '', stockweightage: '', entryprice: '', exitprice: '', exitdate: '', comment: '' }]
   },
 ];
+
+
+
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required('Title is required'),
@@ -48,6 +55,10 @@ const validationSchema = Yup.object().shape({
   ),
 });
 
+
+
+
+
 const Viewbasketdetail = () => {
 
   const { id } = useParams();
@@ -69,9 +80,12 @@ const Viewbasketdetail = () => {
     Stock: [{ stocks: '', pricerange: '', stockweightage: '', entryprice: '', exitprice: '', exitdate: '', comment: '' }],
   });
 
+
   useEffect(() => {
     getbasketdetail();
   }, []);
+
+
 
   const getbasketdetail = async () => {
     try {
@@ -154,6 +168,7 @@ const Viewbasketdetail = () => {
         validationSchema={validationSchema}
         onSubmit={onSubmit}
         enableReinitialize={true}  
+       
       >
         {formikProps => (
           <DynamicForm
@@ -164,6 +179,7 @@ const Viewbasketdetail = () => {
             page_title="Edit Basket"
             btn_name1="Cancel"
             btn_name1_route="/admin/basket"
+            disable={true}
            
           />
         )}

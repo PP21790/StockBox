@@ -124,26 +124,25 @@ const AddBasket = () => {
 
 
     <div>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={onSubmit}
-      >
-        {formikProps => (
-          <DynamicForm
-            fields={fieldConfigurations}
-            formik={formikProps}
-            btn_name="Submit"
-            sumit_btn={true}
-            page_title="Add Basket"
-            btn_name1="Cancel"
-            btn_name1_route="/admin/basket"
-          />
-        )}
-
-
-      </Formik>
-    </div>
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={onSubmit}
+    >
+      {formikProps => (
+        <DynamicForm
+          fields={fieldConfigurations}
+          formik={formikProps}
+          btn_name="Submit"
+          sumit_btn={true}
+          page_title="Add Basket"
+          btn_name1="Cancel"
+          btn_name1_route="/admin/basket"
+          showAddRemoveButtons={true} 
+        />
+      )}
+    </Formik>
+  </div>
   );
 };
 

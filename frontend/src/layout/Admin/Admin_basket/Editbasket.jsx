@@ -7,6 +7,10 @@ import { Updatebasket, Viewbasket } from '../../../Services/Admin';
 import Swal from 'sweetalert2';
 import { useNavigate, useParams } from 'react-router-dom';
 
+
+
+
+
 const fieldConfigurations = [
   { col_size: 4, name: 'price', label: 'Price', type: 'number', placeholder: 'Enter price' },
   { col_size: 4, name: 'title', label: 'Title', type: 'text', placeholder: 'Enter title' },
@@ -23,6 +27,9 @@ const fieldConfigurations = [
     data: [{ stocks: '', pricerange: '', stockweightage: '', entryprice: '', exitprice: '', exitdate: '', comment: '' }]
   },
 ];
+
+
+
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required('Title is required'),
@@ -163,6 +170,8 @@ const Editbasket = () => {
             page_title="Edit Basket"
             btn_name1="Cancel"
             btn_name1_route="/admin/basket"
+            showAddRemoveButtons={true} 
+            
           />
         )}
       </Formik>
