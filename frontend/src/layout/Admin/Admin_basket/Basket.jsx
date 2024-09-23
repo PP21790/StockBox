@@ -7,6 +7,8 @@ import { Eye, X } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { Tooltip } from 'antd';
 import { BasketAllList } from '../../../Services/Admin';
+import { fDate } from '../../../Utils/Date_formate';
+
 
 const Basket = () => {
 
@@ -131,91 +133,6 @@ const Basket = () => {
 
 
 
-    const columns = [
-        {
-            name: 'S.No',
-            selector: (row, index) => index + 1,
-            sortable: false,
-            width: '70px',
-        },
-        {
-            name: 'Price',
-            selector: row => row.price,
-            sortable: true,
-        },
-        {
-            name: 'Stocks',
-            selector: row => row.stocks,
-            sortable: true,
-        },
-        {
-            name: 'accuracy',
-            selector: row => row.accuracy,
-            sortable: true,
-        },
-        {
-            name: 'Entryprice',
-            selector: row => row.entryprice,
-            sortable: true,
-        },
-        {
-            name: 'Exitprice',
-            selector: row => row.exitprice,
-            sortable: true,
-        },
-
-        // {
-        //     name: 'Active Status',
-        //     selector: row => (
-        //       <div className="form-check form-switch form-check-info">
-        //         <input
-        //           id={`rating_${row.status}`}
-        //           className="form-check-input"
-        //           type="checkbox"
-        //           defaultChecked={row.status === "active"}
-        //         //   onChange={(event) => handleSwitchChange(event, row._id)}
-        //         />
-        //         <label
-        //           htmlFor={`rating_${row.status}`}
-        //           className="checktoggle checkbox-bg"
-        //         ></label>
-        //       </div>
-        //     ),
-        //     sortable: true,
-        //   },
-
-        {
-            name: 'Exitdate',
-            selector: row => new Date(row.exitdate).toLocaleDateString(),
-            sortable: true,
-        },
-        {
-            name: 'Created At',
-            selector: row => new Date(row.created_at).toLocaleDateString(),
-            sortable: true,
-        },
-        {
-            name: 'Updated At',
-            selector: row => new Date(row.updated_at).toLocaleDateString(),
-            sortable: true,
-        },
-        // {
-        //     name: 'Actions',
-        //     cell: row => (
-        //         <>
-        //         <div>
-        //          {/* <Pencil onClick={() => updateClient(row)} /> */}
-        //         </div>
-        //        <div>
-        //        {/* <Trash2 onClick={() => DeleteClient(row._id)} /> */}
-        //        </div>
-        //        </>
-        //     ),
-        //     ignoreRowClick: true,
-        //     allowOverflow: true,
-        //     button: true,
-        // }
-    ];
 
     return (
         <div>
@@ -236,7 +153,6 @@ const Basket = () => {
                             </nav>
                         </div>
                     </div>
-                    {/* end breadcrumb */}
                     <div className="card">
                         <div className="card-body">
                             <div className="d-lg-flex align-items-center mb-4 gap-3">
@@ -264,245 +180,58 @@ const Basket = () => {
                                 </div>
                             </div>
 
-                            <Table
-                                columns={columns}
-                                data={clients}
-                            />
-
-                            <div className="pricing-table">
-
-                                <div className="row row-cols-1 row-cols-lg-3">
-                                    {/* Free Tier */}
-                                    <div className="col">
-                                        <div className="card mb-5 mb-lg-0">
-                                            <div className="card-header bg-danger py-3">
-
-                                                <div className='d-flex justify-content-between'>
-                                                    <div>
-                                                        <h6 className="card-price text-white text-start">
-                                                            INR 9000
-                                                        </h6>
+                            {clients && (
+                                <div className="pricing-table">
+                                    <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                                        {clients.map((item, index) => (
+                                            <div className="col" key={index}>
+                                                <div className="card mb-5">
+                                                    <div className="card-header bg-danger py-3">
+                                                        <div className='d-flex justify-content-between'>
+                                                            <h6 className="card-price text-white text-start">
+                                                                INR {item.price}
+                                                            </h6>
+                                                            <Tooltip title="Delete">
+                                                                <X style={{ fontSize: "1.6rem", color: "white" }} />
+                                                            </Tooltip>
+                                                        </div>
                                                     </div>
-                                                    <div className="text-white text-end">
-                                                        <Tooltip title="Delete">
-                                                            <X style={{ fontSize: "1.6rem" }} />
-                                                        </Tooltip>
+                                                    <div className="card-body">
+                                                        <p><b>Stocks:</b> {item.stocks}</p>
+                                                        <p><b>Accuracy:</b> {item.accuracy}</p>
+                                                        <p><b>Entry Price:</b> {item.entryprice}</p>
+                                                        <p><b>Exit Price:</b> {item.exitprice}</p>
+                                                        <p><b>Exit Date:</b> {item.exitdate}</p>
+                                                        <p><b>Created At:</b> {fDate(item.created_at)}</p>
+                                                        <p><b>Updated At:</b> {fDate(item.updated_at)}</p>
+                                                        <div className="row">
+                                                            <div className="col-md-4">
+                                                                <Link to="/admin/editbasket" className="btnanchor btn btn-danger my-2 radius-30">
+                                                                    View
+                                                                </Link>
+                                                            </div>
+                                                            <div className="col-md-4">
+                                                                <Link to="/admin/editbasket" className="btnanchor btn btn-danger my-2 radius-30">
+                                                                    Edit
+                                                                </Link>
+                                                            </div>
+                                                            <div className="col-md-4">
+                                                                <Link to="/admin/editbasket" className="btnanchor btn btn-outline-danger my-2 radius-30">
+                                                                    Rebalancing
+                                                                </Link>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                {/* <div className="text-white text-start">
-                                                    <Tooltip title="view">
-                                                        <Eye style={{ fontSize: "1rem" }} />
-                                                    </Tooltip>
-
-                                                </div> */}
-
-
-                                            </div>
-                                            <div className="card-body">
-                                                <div>
-
-                                                    <p><b>Stocks</b> : </p>
-
-
-                                                    <p><b>Accuracy</b> : </p>
-
-
-                                                    <p><b>Entry Price</b> : </p>
-
-
-                                                    <p><b>Exit Price</b> : </p>
-
-
-                                                    <p><b>Exit Date</b> : </p>
-
-                                                    <p><b>Created At</b> : </p>
-
-
-                                                    <p><b>Updated At</b> : </p>
-
-
-                                                </div>
-
-                                                <div className="row">
-                                                    <div className="col-md-3">
-                                                        <Link to="/admin/editbasket" className="btnanchor btn btn-danger my-2 radius-30" >
-                                                            View
-                                                        </Link>
-                                                    </div>
-
-                                                    <div className="col-md-3">
-                                                        <Link to="/admin/editbasket" className="btnanchor btn btn-danger my-2 radius-30" >
-                                                            Edit
-                                                        </Link>
-                                                    </div>
-
-                                                    <div className="col-md-6">
-                                                        <Link to="/admin/editbasket" className="btnanchor btn btn-outline-danger my-2 radius-30" >
-                                                            Rebalancing
-                                                        </Link>
-                                                    </div>
-
-
-
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    {/* Plus Tier */}
-                                    <div className="col">
-                                        <div className="card mb-5 mb-lg-0">
-                                            <div className="card-header bg-primary py-3">
-
-                                                <div className='d-flex justify-content-between'>
-                                                    <div>
-                                                        <h6 className="card-price text-white text-start">
-                                                            INR 9000
-                                                        </h6>
-                                                    </div>
-                                                    <div className="text-white text-end">
-                                                        <Tooltip title="Delete">
-                                                            <X style={{ fontSize: "1.6rem" }} />
-                                                        </Tooltip>
-                                                    </div>
-                                                </div>
-                                                {/* <div className="text-white text-start">
-                                                    <Tooltip title="view">
-                                                        <Eye style={{ fontSize: "1rem" }} />
-                                                    </Tooltip>
-                                                </div> */}
-
-
-                                            </div>
-                                            <div className="card-body">
-                                                <div>
-
-                                                    <p><b>Stocks</b> : </p>
-
-
-                                                    <p><b>Accuracy</b> : </p>
-
-
-                                                    <p><b>Entry Price</b> : </p>
-
-
-                                                    <p><b>Exit Price</b> : </p>
-
-
-                                                    <p><b>Exit Date</b> : </p>
-
-                                                    <p><b>Created At</b> : </p>
-
-
-                                                    <p><b>Updated At</b> : </p>
-
-
-                                                </div>
-
-                                                <div className="row">
-                                                    <div className="col-md-3">
-                                                        <Link to="/admin/editbasket" className="btnanchor btn btn-danger my-2 radius-30" >
-                                                            View
-                                                        </Link>
-                                                    </div>
-
-                                                    <div className="col-md-3">
-                                                        <Link to="/admin/editbasket" className="btnanchor btn btn-danger my-2 radius-30" >
-                                                            Edit
-                                                        </Link>
-                                                    </div>
-
-                                                    <div className="col-md-6">
-                                                        <Link to="/admin/editbasket" className="btnanchor btn btn-outline-danger my-2 radius-30" >
-                                                            Rebalancing
-                                                        </Link>
-                                                    </div>
-
-
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {/* Pro Tier */}
-                                    <div className="col">
-                                        <div className="card mb-5 mb-lg-0">
-                                            <div className="card-header bg-warning py-3">
-
-                                                <div className='d-flex justify-content-between'>
-                                                    <div>
-                                                        <h6 className="card-price text-white text-start">
-                                                            INR 9000
-                                                        </h6>
-                                                    </div>
-                                                    <div className="text-white text-end">
-                                                        <Tooltip title="Delete">
-                                                            <X style={{ fontSize: "1.6rem" }} />
-                                                        </Tooltip>
-                                                    </div>
-                                                </div>
-                                                {/* <div className="text-white text-start">
-                                                    <Tooltip title="view">
-                                                        <Eye style={{ fontSize: "1rem" }} />
-                                                    </Tooltip>
-                                                </div> */}
-
-
-                                            </div>
-                                            <div className="card-body">
-                                                <div>
-
-                                                    <p><b>Stocks</b> : </p>
-
-
-                                                    <p><b>Accuracy</b> : </p>
-
-
-                                                    <p><b>Entry Price</b> : </p>
-
-
-                                                    <p><b>Exit Price</b> : </p>
-
-
-                                                    <p><b>Exit Date</b> : </p>
-
-                                                    <p><b>Created At</b> : </p>
-
-
-                                                    <p><b>Updated At</b> : </p>
-
-
-                                                </div>
-
-                                                <div className="row">
-
-                                                    <div className="col-md-3">
-                                                        <Link to="/admin/editbasket" className="btnanchor btn btn-danger my-2 radius-30" >
-                                                            View
-                                                        </Link>
-                                                    </div>
-
-                                                    <div className="col-md-3">
-                                                        <Link to="/admin/editbasket" className="btnanchor btn btn-danger my-2 radius-30" >
-                                                            Edit
-                                                        </Link>
-                                                    </div>
-
-                                                    <div className="col-md-6">
-                                                        <Link to="" className="btnanchor btn btn-outline-danger my-2 radius-30" >
-                                                            Rebalancing
-                                                        </Link>
-                                                    </div>
-
-
-
-                                                </div>
-                                            </div>
-                                        </div>
+                                        ))}
                                     </div>
                                 </div>
-                                {/*end row*/}
+                            )}
 
-                            </div>
+
+
+
 
                         </div>
                     </div>

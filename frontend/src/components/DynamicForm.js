@@ -50,6 +50,7 @@ const BasketField = ({ push, remove, Stock }) => (
                       name={`Stock.${index}.pricerange`}
                       placeholder="Enter Price Range"
                       className="form-control mb-2"
+                      type='number'
                     />
                     <ErrorMessage name={`Stock.${index}.pricerange`} component="div" className="text-danger" />
                   </div>
@@ -59,6 +60,7 @@ const BasketField = ({ push, remove, Stock }) => (
                       name={`Stock.${index}.stockweightage`}
                       placeholder="Enter Stock Weightage"
                       className="form-control mb-2"
+                       type='number'
                     />
                     <ErrorMessage name={`Stock.${index}.stockweightage`} component="div" className="text-danger" />
                   </div>
@@ -68,6 +70,7 @@ const BasketField = ({ push, remove, Stock }) => (
                       name={`Stock.${index}.entryprice`}
                       placeholder="Enter Entry Price"
                       className="form-control mb-2"
+                       type='number'
                     />
                     <ErrorMessage name={`Stock.${index}.entryprice`} component="div" className="text-danger" />
                   </div>
@@ -77,6 +80,7 @@ const BasketField = ({ push, remove, Stock }) => (
                       name={`Stock.${index}.exitprice`}
                       placeholder="Enter Exit Price"
                       className="form-control mb-2"
+                       type='number'
                     />
                     <ErrorMessage name={`Stock.${index}.exitprice`} component="div" className="text-danger" />
                   </div>
@@ -86,6 +90,7 @@ const BasketField = ({ push, remove, Stock }) => (
                       name={`Stock.${index}.exitdate`}
                       placeholder="Enter Exit Date"
                       className="form-control mb-2"
+                       type='date'
                     />
                     <ErrorMessage name={`Stock.${index}.exitdate`} component="div" className="text-danger" />
                   </div>
