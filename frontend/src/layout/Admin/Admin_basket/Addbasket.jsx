@@ -71,7 +71,6 @@ const AddBasket = () => {
   const token = localStorage.getItem("token");
 
   const onSubmit = async (values) => {
-    console.log("Submitted Values:", values);
 
     const req = {
       title: values.title,
@@ -85,7 +84,7 @@ const AddBasket = () => {
       Stock: values.Stock
     };
 
-    console.log("Request Payload:", req);
+
   
     try {
       const response = await Addbasketplan(req, token);
@@ -142,7 +141,7 @@ const AddBasket = () => {
           />
         )}
 
-        
+
       </Formik>
     </div>
   );

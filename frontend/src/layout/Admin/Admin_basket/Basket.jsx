@@ -34,13 +34,11 @@ const Basket = () => {
         getbasketlist();
     }, []);
 
-   console.log("clients",clients)
 
     return (
         <div>
             <div>
                 <div className="page-content">
-                    {/* breadcrumb */}
                     <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
                         <div className="breadcrumb-title pe-3">Basket</div>
                         <div className="ps-3">
@@ -109,12 +107,12 @@ const Basket = () => {
 
                                                         <div className="row">
                                                             <div className="col-md-4">
-                                                                <Link to="/admin/editbasket" className="btnanchor btn btn-danger my-2 radius-30">
+                                                                <Link to={`viewdetail/${item._id}`} className="btnanchor btn btn-danger my-2 radius-30">
                                                                     View
                                                                 </Link>
                                                             </div>
                                                             <div className="col-md-4">
-                                                                <Link to="/admin/editbasket" className="btnanchor btn btn-danger my-2 radius-30">
+                                                                <Link to={`editbasket/${item._id}`} className="btnanchor btn btn-danger my-2 radius-30">
                                                                     Edit
                                                                 </Link>
                                                             </div>

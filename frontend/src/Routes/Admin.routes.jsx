@@ -36,6 +36,7 @@ import Addcoupon from '../layout/Admin/Coupon/Addcoupon';
 import Updatecoupon from '../layout/Admin/Coupon/Updatecoupon';
 import Condition from '../layout/Admin/Termscondition/Condition';
 import Editbasket from '../layout/Admin/Admin_basket/Editbasket';
+import Viewbasketdetail from '../layout/Admin/Admin_basket/Viewbasketdetail';
 
 
 function MainApp() {
@@ -113,20 +114,26 @@ function MainApp() {
 
                     <Route path="/basket" element={<Basket/>} />
                     <Route path="/addbasket" element={<Addbasket/>} />
+                    <Route path="/basket/viewdetail/:id" element={<Viewbasketdetail/>} />
+                    <Route path="/basket/editbasket/:id" element={<Editbasket />} />
                      
                     
+
                     <Route path="/plan" element={<Plan/>} />
                     <Route path="/addplan" element={<Addplan/>} />
                     <Route path="/category" element={<Category/>} />
                     <Route path="/stock" element={<Stock/>} />
 
+
                     <Route path="/blogs" element={<Blogs/>} />
                     <Route path="/news" element={<News/>} />
-                    <Route path="/editbasket" element={<Editbasket />} />
                       
+
+
                     <Route path="/coupon" element={<Coupon/>} />
                     <Route path="/addcoupon" element={<Addcoupon/>} />
                     <Route path="/coupon/updatecoupon/:id" element={<Updatecoupon/>} />
+
 
                     <Route path="/termsandcondtion" element={<Condition/>} />
 

@@ -417,6 +417,29 @@ export async function BasketAllList(token) {
 
 
 
+
+// get basket detail per stock
+
+export async function  Viewbasket(_id, token) {
+    try {
+        const res = await axios.get(`${Config.base_url}basket/detail/${_id}`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
+
+
+
+
+
+
+
 // add staff permission 
 
 export async function addStaffpermission(data, token) {

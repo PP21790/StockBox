@@ -104,12 +104,12 @@ const AddSignal = () => {
             title: 'Create Successful!',
             text: response.message,
             icon: 'success',
-            timer: 1500,
+            timer: 2000,
             timerProgressBar: true,
           });
           setTimeout(() => {
             navigate('/admin/signal');
-          }, 1500);
+          },  2000);
         } else {
           Swal.fire({
             title: 'Error',
