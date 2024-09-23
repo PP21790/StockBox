@@ -64,7 +64,7 @@ const BasketSchema = new Schema({
         type: String,
         default: null
     },
-    retunpercentage: {
+    returnpercentage: {
         type: String,
         default: null
     },
