@@ -850,7 +850,6 @@ async pastPerformance(req, res) {
     const { id } = req.params;
 
     // Query to find signals based on the service ID
-    console.log("Fetching signals...");
     const signals = await Signal_Modal.find({
       del: 0,
       close_status: true,
@@ -931,7 +930,6 @@ async pastPerformance(req, res) {
       avgreturnpermonth = totalProfit - totalLoss;
     }
 
-    console.log("Past performance calculated successfully");
 
     return res.json({
       status: true,
@@ -950,7 +948,6 @@ async pastPerformance(req, res) {
   } catch (error) {
     console.error("Error fetching signal details:", error);
 
-    // Send an error response if something goes wrong
     return res.status(500).json({
       status: false,
       message: "Server error",
