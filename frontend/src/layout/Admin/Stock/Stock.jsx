@@ -590,15 +590,16 @@ const Stock = () => {
                                 )}
                             </div>
 
-                            <div>
+                            <div className='d-flex'>
                                 <input
+                                   className='form-control'
                                     type="file"
                                     id="csvFile"
                                     name="csvFile"
                                     // accept=".csv"
                                     ref={fileInputRef}
                                     onChange={handleFileChange}
-                                    style={{ width: "240px",border:"2px solid black",marginRight:"2px" }}
+                                    style={{ width: "240px",border:"2px solid black",marginRight:"8px" }}
                                 />
                                 <button
                                     type="button"
