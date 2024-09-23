@@ -160,10 +160,20 @@ class Basket {
 
   async updateBasket(req, res) {
     try {
-      const { id,title, description, price,accuracy,mininvamount,portfolioweightage,stocks,pricerange,stockweightage,entryprice,entrydate,exitprice,exitdate,comment,returnpercentage,holdingperiod,potentialleft,themename
-      } = req.body;
+      const {
+        title, description, price, add_by, accuracy, mininvamount, portfolioweightage, themename, returnpercentage,holdingperiod,potentialleft, Stock
+    } = req.body;
 
-       // const { id, title, description, price, validity,accuracy } = req.body;
+    // Concatenate each stock field into a delimited string
+    const stocks = Stock.map(stock => stock.stocks).join('##');
+    const pricerange = Stock.map(stock => stock.pricerange).join('##');
+    const stockweightage = Stock.map(stock => stock.stockweightage).join('##');
+    const entryprice = Stock.map(stock => stock.entryprice).join('##');
+    const entrydate = Stock.map(stock => stock.entrydate).join('##');
+    const exitprice = Stock.map(stock => stock.exitprice).join('##');
+    const exitdate = Stock.map(stock => stock.exitdate).join('##');
+    const comment = Stock.map(stock => stock.comment).join('##');
+
   
       if (!id) {
         return res.status(400).json({
