@@ -45,7 +45,7 @@ class Basket {
                         themename,
           });
   
-          // Save the basket to the database
+
           await result.save();
   
           return res.json({
@@ -72,7 +72,7 @@ class Basket {
   async getBasket(req, res) {
     try {
 
-      console.log(`${removeResult.modifiedCount} documents updated with field removal`);
+      // console.log(`${removeResult.modifiedCount} documents updated with field removal`);
 
 
         // Fetch active baskets
