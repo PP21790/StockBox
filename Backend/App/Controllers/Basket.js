@@ -149,11 +149,68 @@ class Basket {
 
          
           const baskets = await Basket_Modal.find({ del: false,status:"active" });
+
+          const processedBaskets = await Promise.all(baskets.map(async (basket) => {
+  
+      
+            // Split the data by '##'
+            const stocks = basket.stocks ? basket.stocks.split('##') : [];
+            const pricerange = basket.pricerange ? basket.pricerange.split('##') : [];
+            const stockweightage = basket.stockweightage ? basket.stockweightage.split('##') : [];
+            const entryprice = basket.entryprice ? basket.entryprice.split('##') : [];
+            const entrydate = basket.entrydate ? basket.entrydate.split('##') : [];
+            const exitprice = basket.exitprice ? basket.exitprice.split('##') : [];
+            const exitdate = basket.exitdate ? basket.exitdate.split('##') : [];
+            const comment = basket.comment ? basket.comment.split('##') : [];
+          //  const returnpercentage = basket.returnpercentage ? basket.returnpercentage.split('##') : [];
+         //   const holdingperiod = basket.holdingperiod ? basket.holdingperiod.split('##') : [];
+          //  const potentialleft = basket.potentialleft ? basket.potentialleft.split('##') : [];
+  
+            // Group data into objects
+            const groupedData = stocks.map((stock, index) => ({
+                stock: stock || null,
+                pricerange: pricerange[index] || null,
+                stockweightage: stockweightage[index] || null,
+                entryprice: entryprice[index] || null,
+                entrydate: entrydate[index] || null,
+                exitprice: exitprice[index] || null,
+                exitdate: exitdate[index] || null,
+                comment: comment[index] || null,
+             //   returnpercentage: returnpercentage[index] || null,
+            //    holdingperiod: holdingperiod[index] || null,
+             //   potentialleft: potentialleft[index] || null
+            }));
+  
+            return {
+                _id: basket._id,
+                title: basket.title,
+                description: basket.description,
+                accuracy: basket.accuracy,
+                price: basket.price,
+                returnpercentage: basket.returnpercentage,
+                holdingperiod: basket.holdingperiod,
+                potentialleft: basket.potentialleft,
+                mininvamount: basket.mininvamount,
+                portfolioweightage: basket.portfolioweightage,
+                themename: basket.themename,
+                status: basket.status,
+                add_by: basket.add_by,
+                del: basket.del,
+                created_at: basket.created_at,
+                updated_at: basket.updated_at,
+                __v: basket.__v,
+                groupedData
+            };
+          }));
+  
+
+
+
   
           return res.json({
               status: true,
               message: "Baskets fetched successfully",
-              data: baskets
+              data: processedBaskets
           });
   
       } catch (error) {
@@ -166,46 +223,88 @@ class Basket {
   }
  
    
-    async detailBasket(req, res) {
-        try {
-            // Extract ID from request parameters
-            const { id } = req.params;
-    
-            // Check if ID is provided
-            if (!id) {
-                return res.status(400).json({
-                    status: false,
-                    message: "Basket ID is required"
-                });
-            }
-    
+  async detailBasket(req, res) {
+    try {
+        // Extract ID from request parameters
+        const { id } = req.params;
 
-            const basket = await Basket_Modal.findById(id);
-            
-          
-            // Check if Basket is found
-            if (basket.length === 0) {
-                return res.status(404).json({
-                    status: false,
-                    message: "Basket not found"
-                });
-            }
-    
-            return res.json({
-                status: true,
-                message: "Basket details fetched successfully",
-                data: basket // Since we're matching by ID, the result will be an array with a single document
-            });
-    
-        } catch (error) {
-            console.error("Error fetching Basket details:", error);
-            return res.status(500).json({
+        // Check if ID is provided
+        if (!id) {
+            return res.status(400).json({
                 status: false,
-                message: "Server error",
-                data: []
+                message: "Basket ID is required"
             });
         }
+
+        // Find the basket by ID
+        const basket = await Basket_Modal.findById(id);
+
+        // Check if the basket is found
+        if (!basket) {
+            return res.status(404).json({
+                status: false,
+                message: "Basket not found"
+            });
+        }
+
+        // Split the data by '##'
+        const stocks = basket.stocks ? basket.stocks.split('##') : [];
+        const pricerange = basket.pricerange ? basket.pricerange.split('##') : [];
+        const stockweightage = basket.stockweightage ? basket.stockweightage.split('##') : [];
+        const entryprice = basket.entryprice ? basket.entryprice.split('##') : [];
+        const entrydate = basket.entrydate ? basket.entrydate.split('##') : [];
+        const exitprice = basket.exitprice ? basket.exitprice.split('##') : [];
+        const exitdate = basket.exitdate ? basket.exitdate.split('##') : [];
+        const comment = basket.comment ? basket.comment.split('##') : [];
+
+        // Group data into objects
+        const groupedData = stocks.map((stock, index) => ({
+            stock: stock || null,
+            pricerange: pricerange[index] || null,
+            stockweightage: stockweightage[index] || null,
+            entryprice: entryprice[index] || null,
+            entrydate: entrydate[index] || null,
+            exitprice: exitprice[index] || null,
+            exitdate: exitdate[index] || null,
+            comment: comment[index] || null,
+        }));
+
+        // Return the basket details along with grouped data
+        return res.json({
+            status: true,
+            message: "Basket details fetched successfully",
+            data: {
+                _id: basket._id,
+                title: basket.title,
+                description: basket.description,
+                accuracy: basket.accuracy,
+                price: basket.price,
+                returnpercentage: basket.returnpercentage,
+                holdingperiod: basket.holdingperiod,
+                potentialleft: basket.potentialleft,
+                mininvamount: basket.mininvamount,
+                portfolioweightage: basket.portfolioweightage,
+                themename: basket.themename,
+                status: basket.status,
+                add_by: basket.add_by,
+                del: basket.del,
+                created_at: basket.created_at,
+                updated_at: basket.updated_at,
+                __v: basket.__v,
+                groupedData
+            }
+        });
+
+    } catch (error) {
+        console.error("Error fetching Basket details:", error);
+        return res.status(500).json({
+            status: false,
+            message: "Server error",
+            data: []
+        });
     }
+}
+
 
   async updateBasket(req, res) {
     try {
