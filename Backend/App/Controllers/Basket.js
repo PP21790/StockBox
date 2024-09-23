@@ -5,79 +5,95 @@ const Basket_Modal = db.Basket;
 
 class Basket {
 
+  
     async AddBasket(req, res) {
-        try {
+      try {
+          const {
+              title, description, price, add_by, accuracy, mininvamount, portfolioweightage, themename, returnpercentage,holdingperiod,potentialleft, Stock
+          } = req.body;
+  
+          // Concatenate each stock field into a delimited string
+          const stocks = Stock.map(stock => stock.stocks).join('##');
+          const pricerange = Stock.map(stock => stock.pricerange).join('##');
+          const stockweightage = Stock.map(stock => stock.stockweightage).join('##');
+          const entryprice = Stock.map(stock => stock.entryprice).join('##');
+          const entrydate = Stock.map(stock => stock.entrydate).join('##');
+          const exitprice = Stock.map(stock => stock.exitprice).join('##');
+          const exitdate = Stock.map(stock => stock.exitdate).join('##');
+          const comment = Stock.map(stock => stock.comment).join('##');
+  
+          // Create a new basket document
+          const result = new Basket_Modal({
+                        title,
+                        description,
+                        price,
+                        add_by,
+                        accuracy,
+                        mininvamount,
+                        portfolioweightage,
+                        stocks,
+                        pricerange,
+                        stockweightage,
+                        entryprice,
+                        entrydate,
+                        exitprice,
+                        exitdate,
+                        comment,
+                        returnpercentage,
+                        holdingperiod,
+                        potentialleft,
+                        themename,
+          });
+  
+          // Save the basket to the database
+          await result.save();
+  
+          return res.json({
+              status: true,
+              message: "Basket added successfully",
+              data: result,
+          });
+      } catch (error) {
+          console.error("Error adding Basket:", error);
+  
+          return res.status(500).json({
+              status: false,
+              message: "Server error",
+              error: error.message,
+          });
+      }
+  }
+  
+  
 
-          console.log('body',req.body);
 
-            const { title, description, price, add_by,accuracy,mininvamount,portfolioweightage,stocks,pricerange,stockweightage,entryprice,entrydate,exitprice,exitdate,comment,retunpercentage,holdingperiod,potentialleft,themename
-            } = req.body;
-    
-            // Debugging: Log the incoming request body to ensure the data is correct
-    
-            const result = new Basket_Modal({
-                title,
-                description,
-                price,
-                add_by,
-                accuracy,
-                mininvamount,
-                portfolioweightage,
-                stocks,
-                pricerange,
-                stockweightage,
-                entryprice,
-                entrydate,
-                exitprice,
-                exitdate,
-                comment,
-                retunpercentage,
-                holdingperiod,
-                potentialleft,
-                themename,
-            });
-    
-            await result.save();
-    
-            return res.json({
-                status: true,
-                message: "Basket added successfully",
-                data: result,
-            });
-    
-        } catch (error) {
-            // Enhanced error logging
-            console.error("Error adding Basket:", error);
-    
-            return res.status(500).json({
-                status: false,
-                message: "Server error",
-                error: error.message,
-            });
-        }
+
+
+  async getBasket(req, res) {
+    try {
+
+      console.log(`${removeResult.modifiedCount} documents updated with field removal`);
+
+
+        // Fetch active baskets
+        const baskets = await Basket_Modal.find({ del: false });
+
+        return res.json({
+            status: true,
+            message: "Baskets fetched successfully",
+            data: baskets
+        });
+
+    } catch (error) {
+        console.error("An error occurred:", error);
+        return res.json({ 
+            status: false, 
+            message: "Server error", 
+            data: [] 
+        });
     }
-    
+}
 
-    async getBasket(req, res) {
-        try {
-
-           
-            const baskets = await Basket_Modal.find({ del: false });
-    
-            return res.json({
-                status: true,
-                message: "Baskets fetched successfully",
-                data: baskets
-            });
-    
-        } catch (error) {
-            return res.json({ 
-                status: false, 
-                message: "Server error", 
-                data: [] 
-            });
-        }
-    }
 
     async activeBasket(req, res) {
       try {
@@ -144,8 +160,19 @@ class Basket {
 
   async updateBasket(req, res) {
     try {
-      const { id,title, description, price,accuracy,mininvamount,portfolioweightage,stocks,pricerange,stockweightage,entryprice,entrydate,exitprice,exitdate,comment,retunpercentage,holdingperiod,potentialleft,themename
-      } = req.body;
+      const {
+       id, title, description, price, add_by, accuracy, mininvamount, portfolioweightage, themename, returnpercentage,holdingperiod,potentialleft, Stock
+    } = req.body;
+
+    // Concatenate each stock field into a delimited string
+    const stocks = Stock.map(stock => stock.stocks).join('##');
+    const pricerange = Stock.map(stock => stock.pricerange).join('##');
+    const stockweightage = Stock.map(stock => stock.stockweightage).join('##');
+    const entryprice = Stock.map(stock => stock.entryprice).join('##');
+    const entrydate = Stock.map(stock => stock.entrydate).join('##');
+    const exitprice = Stock.map(stock => stock.exitprice).join('##');
+    const exitdate = Stock.map(stock => stock.exitdate).join('##');
+    const comment = Stock.map(stock => stock.comment).join('##');
 
        // const { id, title, description, price, validity,accuracy } = req.body;
   
@@ -173,7 +200,7 @@ class Basket {
           exitprice,
           exitdate,
           comment,
-          retunpercentage,
+          returnpercentage,
           holdingperiod,
           potentialleft,
           themename,

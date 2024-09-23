@@ -774,6 +774,8 @@ async BasketList(req, res) {
       });
 
 
+     
+
           // Split the data by '##'
           const stocks = basket.stocks ? basket.stocks.split('##') : [];
           const pricerange = basket.pricerange ? basket.pricerange.split('##') : [];
@@ -783,7 +785,7 @@ async BasketList(req, res) {
           const exitprice = basket.exitprice ? basket.exitprice.split('##') : [];
           const exitdate = basket.exitdate ? basket.exitdate.split('##') : [];
           const comment = basket.comment ? basket.comment.split('##') : [];
-        //  const retunpercentage = basket.retunpercentage ? basket.retunpercentage.split('##') : [];
+        //  const returnpercentage = basket.returnpercentage ? basket.returnpercentage.split('##') : [];
        //   const holdingperiod = basket.holdingperiod ? basket.holdingperiod.split('##') : [];
         //  const potentialleft = basket.potentialleft ? basket.potentialleft.split('##') : [];
 
@@ -797,7 +799,7 @@ async BasketList(req, res) {
               exitprice: exitprice[index] || null,
               exitdate: exitdate[index] || null,
               comment: comment[index] || null,
-           //   retunpercentage: retunpercentage[index] || null,
+           //   returnpercentage: returnpercentage[index] || null,
           //    holdingperiod: holdingperiod[index] || null,
            //   potentialleft: potentialleft[index] || null
           }));
@@ -808,7 +810,7 @@ async BasketList(req, res) {
               description: basket.description,
               accuracy: basket.accuracy,
               price: basket.price,
-              retunpercentage: basket.retunpercentage,
+              returnpercentage: basket.returnpercentage,
               holdingperiod: basket.holdingperiod,
               potentialleft: basket.potentialleft,
               mininvamount: basket.mininvamount,
