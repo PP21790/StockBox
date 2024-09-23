@@ -19,7 +19,7 @@ const FormField = ({ name, label, type, placeholder, col_size, label_size, disab
   </div>
 );
 
-// BasketField component for managing stock items
+
 const BasketField = ({ push, remove, Stock, showRemoveButtons, disable, fieldTypes }) => (
   <div className="content container-fluid" data-aos="fade-left">
     <div className="card mb-3">
@@ -84,7 +84,7 @@ const BasketField = ({ push, remove, Stock, showRemoveButtons, disable, fieldTyp
 const DynamicForm = ({ fields, page_title, btn_name1, btn_name1_route, formik, sumit_btn, btn_name, btn_name2, submitFunction, showAddRemoveButtons, disable }) => {
   const { values } = formik;
 
-  // Define field types for the stock items
+
   const stockFieldTypes = [
     { name: 'stocks', label: 'Stocks', type: 'text' },
     { name: 'pricerange', label: 'Price Range', type: 'number' },

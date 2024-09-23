@@ -435,6 +435,20 @@ export async function  Viewbasket(_id, token) {
 
 
 
+// get delete basket 
+
+export async function deletebasket(_id, token) {
+    try {
+        const res = await axios.get(`${Config.base_url}basket/delete/${_id}`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
 
 
 
