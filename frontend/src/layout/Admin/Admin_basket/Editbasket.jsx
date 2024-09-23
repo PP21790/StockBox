@@ -2,16 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import DynamicForm from '../../../components/DynamicForm';
-import { Addbasketplan } from '../../../Services/Admin';
+import { Updatebasket, Viewbasket } from '../../../Services/Admin';
 import Swal from 'sweetalert2';
-import { useNavigate,useParams } from 'react-router-dom';
-import { Viewbasket } from '../../../Services/Admin';
-
-
-
+import { useNavigate, useParams } from 'react-router-dom';
 
 const fieldConfigurations = [
-
   { col_size: 4, name: 'price', label: 'Price', type: 'number', placeholder: 'Enter price' },
   { col_size: 4, name: 'title', label: 'Title', type: 'text', placeholder: 'Enter title' },
   { col_size: 4, name: 'accuracy', label: 'Accuracy', type: 'number', placeholder: 'Enter accuracy' },
@@ -27,20 +22,6 @@ const fieldConfigurations = [
     data: [{ stocks: '', pricerange: '', stockweightage: '', entryprice: '', exitprice: '', exitdate: '', comment: '' }]
   },
 ];
-
-const initialValues = {
-  title: '',
-  description: '',
-  accuracy: '',
-  price: '',
-  mininvamount: '',
-  portfolioweightage: '',
-  themename: '',
-  returnpercentage: '',
-  holdingperiod: '',
-  potentialleft: '',
-  Stock: [{ stocks: '', pricerange: '', stockweightage: '', entryprice: '', exitprice: '', exitdate: '', comment: '' }],
-};
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required('Title is required'),
@@ -67,39 +48,56 @@ const validationSchema = Yup.object().shape({
 });
 
 const Editbasket = () => {
-    
-
-    useEffect(() => {
-        getbasketdetail();
-    }, []);
-
-
-    const { id } = useParams()
-
-    const [clients, setClients] = useState([]);
-
-
-    const getbasketdetail = async () => {
-        try {
-            const response = await Viewbasket(id, token);
-            if (response.status) {
-                setClients([response.data]);
-            } 
-        } catch (error) {
-            console.log("Error fetching signal details:", error);
-        }
-    };
- 
-
-console.log("clients",clients)
-
-
+  const { id } = useParams();
   const navigate = useNavigate();
   const user_id = localStorage.getItem("id");
   const token = localStorage.getItem("token");
 
-  const onSubmit = async (values) => {
+  const [initialValues, setInitialValues] = useState({
+    title: '',
+    description: '',
+    accuracy: '',
+    price: '',
+    mininvamount: '',
+    portfolioweightage: '',
+    themename: '',
+    returnpercentage: '',
+    holdingperiod: '',
+    potentialleft: '',
+    Stock: [{ stocks: '', pricerange: '', stockweightage: '', entryprice: '', exitprice: '', exitdate: '', comment: '' }],
+  });
 
+  useEffect(() => {
+    getbasketdetail();
+  }, []);
+
+  const getbasketdetail = async () => {
+    try {
+      const response = await Viewbasket(id, token);
+      if (response.status) {
+        const basketData = response.data;
+        // Populate form fields from the API response
+        const updatedInitialValues = {
+          title: basketData.title || '',
+          description: basketData.description || '',
+          accuracy: basketData.accuracy || '',
+          price: basketData.price || '',
+          mininvamount: basketData.mininvamount || '',
+          portfolioweightage: basketData.portfolioweightage || '',
+          themename: basketData.themename || '',
+          returnpercentage: basketData.returnpercentage || '',
+          holdingperiod: basketData.holdingperiod || '',
+          potentialleft: basketData.potentialleft || '',
+          Stock: basketData.Stock || [{ stocks: '', pricerange: '', stockweightage: '', entryprice: '', exitprice: '', exitdate: '', comment: '' }],
+        };
+        setInitialValues(updatedInitialValues);
+      }
+    } catch (error) {
+      console.log("Error fetching basket details:", error);
+    }
+  };
+
+  const onSubmit = async (values) => {
     const req = {
       title: values.title,
       description: values.description,
@@ -109,16 +107,14 @@ console.log("clients",clients)
       portfolioweightage: values.portfolioweightage,
       themename: values.themename,
       add_by: user_id,
-      Stock: values.Stock
+      Stock: values.Stock,
     };
 
-
-  
     try {
-      const response = await Addbasketplan(req, token);
+      const response = await Updatebasket(req, token);
       if (response.status) {
         Swal.fire({
-          title: "Create Successful!",
+          title: "Update Successful!",
           text: response.message,
           icon: "success",
           timer: 1500,
@@ -149,10 +145,9 @@ console.log("clients",clients)
   };
 
   return (
-
-
     <div>
       <Formik
+        enableReinitialize
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={onSubmit}
@@ -163,13 +158,11 @@ console.log("clients",clients)
             formik={formikProps}
             btn_name="Submit"
             sumit_btn={true}
-            page_title="Add Basket"
+            page_title="Edit Basket"
             btn_name1="Cancel"
             btn_name1_route="/admin/basket"
           />
         )}
-
-
       </Formik>
     </div>
   );

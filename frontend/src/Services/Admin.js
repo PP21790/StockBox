@@ -498,6 +498,24 @@ export async function Addbasketplan(data, token) {
 }
 
 
+// update basket 
+
+export async function Updatebasket(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}basket/update`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        console.error('Error adding client:', err.response?.data || err.message);
+        return err.response?.data || err.message;
+    }
+}
+
 
 // plan list 
 
