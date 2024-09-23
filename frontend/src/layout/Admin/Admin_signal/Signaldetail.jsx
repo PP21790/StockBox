@@ -6,9 +6,11 @@ import Table from '../../../components/Table';
 import { Eye, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { Signalperdetail } from '../../../Services/Admin';
+import { useFormik } from 'formik';
+import DynamicForm from '../../../components/FormicForm';
 
 const Signaldetail = () => {
-    
+
     useEffect(() => {
         getsignaldetail();
     }, []);
@@ -27,15 +29,15 @@ const Signaldetail = () => {
             const response = await Signalperdetail(id, token);
             if (response.status) {
                 setClients([response.data]);
-            } 
+            }
         } catch (error) {
             console.log("Error fetching signal details:", error);
         }
     };
 
 
-    
-    
+
+
 
 
     const columns = [
@@ -90,14 +92,118 @@ const Signaldetail = () => {
             selector: row => new Date(row.closedate).toLocaleDateString(),
             sortable: true,
         },
-        
+
         {
             name: 'Updated At',
             selector: row => new Date(row.updated_at).toLocaleDateString(),
             sortable: true,
         },
 
-        
+
+
+    ];
+
+    const formik = useFormik({
+        initialValues: {
+
+            service: '',
+            price: '',
+            stock: '',
+            tag1: '',
+            tag2: '',
+            tag3: '',
+            stoploss: '',
+            report: '',
+            description: '',
+            callduration: '',
+            calltype: '',
+            callperiod: ''
+        },
+    })
+
+    const fields = [
+        {
+            name: 'call Duration',
+            label: 'call Duration',
+            type: 'text',
+            label_size: 12,
+            col_size: 6,
+            disable: false,
+        },
+        {
+            name: 'Type',
+            label: 'Type',
+            type: 'text',
+            label_size: 12,
+            col_size: 6,
+            disable: false,
+        },
+        {
+            name: 'Rate',
+            label: 'Rate',
+            type: 'text',
+            label_size: 12,
+            col_size: 6,
+            disable: false,
+        },
+        {
+            name: 'Stoploss',
+            label: 'Stoploss',
+            type: 'text',
+            label_size: 12,
+            col_size: 6,
+            disable: false,
+        },
+
+        {
+            name: 'tag1',
+            label: 'Target-1',
+            type: 'number',
+            label_size: 6,
+            col_size: 3,
+            disable: false,
+        },
+        {
+            name: 'tag2',
+            label: 'Target-2',
+            type: 'number',
+            label_size: 12,
+            col_size: 3,
+            disable: false,
+        },
+        {
+            name: 'tag3',
+            label: 'Target-3',
+            type: 'number',
+            label_size: 12,
+            col_size: 3,
+            disable: false,
+        },
+        {
+            name: 'Target',
+            label: 'Target',
+            type: 'number',
+            label_size: 12,
+            col_size: 3,
+            disable: false,
+        },
+        {
+            name: 'Created At',
+            label: 'Created At',
+            type: 'text',
+            label_size: 12,
+            col_size: 6,
+            disable: false,
+        },
+        {
+            name: 'Updated At',
+            label: 'Updated At',
+            type: 'text',
+            label_size: 12,
+            col_size: 6,
+            disable: false,
+        },
+
 
     ];
 
@@ -120,7 +226,7 @@ const Signaldetail = () => {
                             </nav>
                         </div>
                     </div>
-    
+
                     <div className="card">
                         <div className="card-body">
                             <div className="d-lg-flex align-items-center mb-4 gap-3">
@@ -134,7 +240,7 @@ const Signaldetail = () => {
                                         <i className="bx bx-search" />
                                     </span>
                                 </div>
-                               
+
                             </div>
 
                             <Table
@@ -142,6 +248,17 @@ const Signaldetail = () => {
                                 data={clients}
                             />
                         </div>
+                    </div>
+
+                    <div style={{ marginTop: '100px' }}>
+                        <DynamicForm
+                            fields={fields}
+                            page_title="Signal Detail"
+                            formik={formik}
+                            sumit_btn={true}
+                            btn_name1_route="/admin/signal"
+                            additional_field={<></>}
+                        />
                     </div>
                 </div>
             </div>

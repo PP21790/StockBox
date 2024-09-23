@@ -396,10 +396,6 @@ const Stock = () => {
             });
         }
     };
-
-
-
-
     return (
         <div>
             <div className="page-content">

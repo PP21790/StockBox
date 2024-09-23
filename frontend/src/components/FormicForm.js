@@ -957,12 +957,12 @@ const DynamicForm = ({
                                         )}
                                         {
                                             <>
-                                                {sumit_btn === true && <button
+                                                {/* {sumit_btn === true && <button
                                                     type="submit"
                                                     className="btn customer-btn-save btn btn-primary m-2"
                                                 >
                                                     {btn_name}
-                                                </button>}
+                                                </button>} */}
                                                 {btn_name2 ? (
                                                     <button
                                                         type="submit"
