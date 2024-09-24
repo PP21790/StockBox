@@ -97,7 +97,7 @@ class Clients {
       });
 
     } catch (error) {
-      console.error("Error occurred while saving client:", error); // Log detailed error
+     
       return res.json({
         status: false,
         message: "Server error",
@@ -137,7 +137,6 @@ class Clients {
         });
 
     } catch (error) {
-        console.error("Error fetching client details:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",
@@ -258,7 +257,7 @@ async forgotPassword(req, res) {
     });
 
   } catch (error) {
-    console.error("Error in forgotPassword:", error);
+    console.log("Error in forgotPassword:", error);
     return res.status(500).json({
       status: false,
       message: "Server error",
@@ -329,7 +328,7 @@ async resetPassword(req, res) {
     });
 
   } catch (error) {
-    console.error("Error in resetPassword:", error);
+    console.log("Error in resetPassword:", error);
     return res.status(500).json({
       status: false,
       message: "Server error",
@@ -392,7 +391,7 @@ async resetPassword(req, res) {
       });
 
     } catch (error) {
-      console.error("Error in changePassword:", error);
+      console.log("Error in changePassword:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -443,7 +442,7 @@ async resetPassword(req, res) {
         });
 
     } catch (error) {
-        console.error("Error in updateProfile:", error);
+        console.log("Error in updateProfile:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",
@@ -482,7 +481,7 @@ async deleteClient(req, res) {
       data: deletedClient,
     });
   } catch (error) {
-    console.error("Error deleting client:", error);
+    console.log("Error deleting client:", error);
     return res.status(500).json({
       status: false,
       message: "Server error",

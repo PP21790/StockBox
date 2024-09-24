@@ -46,7 +46,7 @@ const Plan = () => {
                 setClients(response.data);
             }
         } catch (error) {
-            console.error("Failed to fetch plans", error);
+            console.log("Failed to fetch plans", error);
         }
     };
 

@@ -12,7 +12,7 @@ class Coupon {
           await new Promise((resolve, reject) => {
             upload('coupon').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
                 if (err) {
-                    console.error('File upload error:', err);
+                    console.log('File upload error:', err);
                     return reject(err);
                 }
 
@@ -89,7 +89,7 @@ class Coupon {
     
         } catch (error) {
             // Enhanced error logging
-            console.error("Error adding coupon:", error);
+            console.log("Error adding coupon:", error);
     
             return res.status(500).json({
                 status: false,
@@ -169,7 +169,7 @@ class Coupon {
         });
 
     } catch (error) {
-        console.error("Error fetching Coupon details:", error);
+        console.log("Error fetching Coupon details:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",
@@ -186,7 +186,7 @@ class Coupon {
       await new Promise((resolve, reject) => {
         upload('coupon').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
             if (err) {
-                console.error('File upload error:', err);
+                console.log('File upload error:', err);
                 return reject(err);
             }
 
@@ -280,7 +280,7 @@ class Coupon {
       });
   
     } catch (error) {
-      console.error("Error updating Coupon:", error);
+      console.log("Error updating Coupon:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -322,7 +322,7 @@ class Coupon {
         data: deletedCoupon,
       });
     } catch (error) {
-      console.error("Error deleting Coupon:", error);
+      console.log("Error deleting Coupon:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -364,7 +364,7 @@ class Coupon {
         });
   
     } catch (error) {
-        console.error("Error updating status:", error);
+        console.log("Error updating status:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",

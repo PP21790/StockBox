@@ -80,6 +80,8 @@ const AddSignal = () => {
       if (!values.callperiod) errors.callperiod = 'Please enter call Period';
       return errors;
     },
+
+    
     onSubmit: async (values) => {
       const req = {
         add_by:user_id,

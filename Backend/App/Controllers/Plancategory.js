@@ -37,7 +37,7 @@ class Plancategory {
     
         } catch (error) {
             // Enhanced error logging
-            console.error("Error adding Plan category:", error);
+            console.log("Error adding Plan category:", error);
     
             return res.status(500).json({
                 status: false,
@@ -124,7 +124,7 @@ class Plancategory {
         });
 
     } catch (error) {
-        console.error("Error fetching Plancategory details:", error);
+        console.log("Error fetching Plancategory details:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",
@@ -176,7 +176,7 @@ class Plancategory {
       });
   
     } catch (error) {
-      console.error("Error updating Plancategory:", error);
+      console.log("Error updating Plancategory:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -220,7 +220,7 @@ class Plancategory {
         data: deletedPlancategory,
       });
     } catch (error) {
-      console.error("Error deleting Plancategory:", error);
+      console.log("Error deleting Plancategory:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -263,7 +263,7 @@ class Plancategory {
         });
   
     } catch (error) {
-        console.error("Error updating status:", error);
+        console.log("Error updating status:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",

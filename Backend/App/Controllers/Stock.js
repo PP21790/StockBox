@@ -44,7 +44,7 @@ class Stock {
     
         } catch (error) {
             // Enhanced error logging
-            console.error("Error adding Stock:", error);
+            console.log("Error adding Stock:", error);
     
             return res.status(500).json({
                 status: false,
@@ -126,7 +126,7 @@ class Stock {
         });
 
     } catch (error) {
-        console.error("Error fetching Stock details:", error);
+        console.log("Error fetching Stock details:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",
@@ -179,7 +179,7 @@ class Stock {
       });
   
     } catch (error) {
-      console.error("Error updating Stock:", error);
+      console.log("Error updating Stock:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -222,7 +222,7 @@ class Stock {
         data: deletedStock,
       });
     } catch (error) {
-      console.error("Error deleting Stock:", error);
+      console.log("Error deleting Stock:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -265,7 +265,7 @@ class Stock {
         });
   
     } catch (error) {
-        console.error("Error updating status:", error);
+        console.log("Error updating status:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",
@@ -340,7 +340,7 @@ class Stock {
         });
 
     } catch (error) {
-        console.error("Error processing stocks:", error);
+        console.log("Error processing stocks:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",

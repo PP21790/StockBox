@@ -38,7 +38,7 @@ class Faq {
     
         } catch (error) {
             // Enhanced error logging
-            console.error("Error adding Faq:", error);
+            console.log("Error adding Faq:", error);
     
             return res.status(500).json({
                 status: false,
@@ -122,7 +122,7 @@ class Faq {
         });
 
     } catch (error) {
-        console.error("Error fetching Faq details:", error);
+        console.log("Error fetching Faq details:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",
@@ -176,7 +176,7 @@ class Faq {
       });
   
     } catch (error) {
-      console.error("Error updating Faq:", error);
+      console.log("Error updating Faq:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -220,7 +220,7 @@ class Faq {
         data: deletedFaq,
       });
     } catch (error) {
-      console.error("Error deleting Faq:", error);
+      console.log("Error deleting Faq:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -263,7 +263,7 @@ class Faq {
         });
   
     } catch (error) {
-        console.error("Error updating status:", error);
+        console.log("Error updating status:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",

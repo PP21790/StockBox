@@ -11,7 +11,7 @@ class Signal {
       await new Promise((resolve, reject) => {
         upload('report').fields([{ name: 'report', maxCount: 1 }])(req, res, (err) => {
           if (err) {
-            console.error('File upload error:', err);
+            console.log('File upload error:', err);
             return reject(err);
           }
 
@@ -52,7 +52,7 @@ class Signal {
 
     } catch (error) {
       // Enhanced error logging
-      console.error("Error adding Signal:", error);
+      console.log("Error adding Signal:", error);
 
       return res.status(500).json({
         status: false,
@@ -189,7 +189,7 @@ class Signal {
       });
 
     } catch (error) {
-      console.error("Error fetching Signal details:", error);
+      console.log("Error fetching Signal details:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -234,7 +234,7 @@ class Signal {
         data: deletedSignal,
       });
     } catch (error) {
-      console.error("Error deleting Signal:", error);
+      console.log("Error deleting Signal:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -327,7 +327,7 @@ class Signal {
       });
 
     } catch (error) {
-      console.error("Error updating Signal:", error);
+      console.log("Error updating Signal:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -372,7 +372,7 @@ class Signal {
       });
 
     } catch (error) {
-      console.error("Error updating Signal:", error);
+      console.log("Error updating Signal:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",

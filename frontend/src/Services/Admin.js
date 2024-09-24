@@ -3,6 +3,8 @@ import * as Config from "../Utils/config";
 const qs = require('qs');
 
 
+
+
 export async function GetClient(token) {
     try {
         const res = await axios.get(`${Config.base_url}client/list`, {
@@ -25,8 +27,6 @@ export async function GetClient(token) {
 
 
 
-
-
 export async function AddStaffClient(data, token) {
     try {
         const res = await axios.post(`${Config.base_url}user/add`, data, {
@@ -39,15 +39,14 @@ export async function AddStaffClient(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }
 
 
 
-// get list for staaf
 
+// get list for staaf
 export async function GetStaff(token) {
     try {
         const res = await axios.get(`${Config.base_url}user/list`, {
@@ -64,7 +63,6 @@ export async function GetStaff(token) {
 
 
 // delete staaf
-
 
 export async function deleteStaff(_id, token) {
     try {
@@ -147,7 +145,6 @@ export async function AddClient(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }
@@ -175,7 +172,6 @@ export async function AddSignalByAdmin(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }
@@ -214,7 +210,6 @@ export async function AddService(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }
@@ -235,7 +230,6 @@ export async function UpdateService(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }
@@ -255,7 +249,6 @@ export async function UpdateServiceStatus(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }
@@ -274,7 +267,6 @@ export async function UpdateClientStatus(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }
@@ -295,7 +287,6 @@ export async function updateStaffstatus(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }
@@ -332,15 +323,14 @@ export async function GetSignallist(data, token) {
             params: {
                 from: data.from,
                 to: data.to,
-                service:data.service,
-                stock:data.stock
+                service: data.service,
+                stock: data.stock
             }
         });
 
-        console.log(res.data);
         return res?.data;
     } catch (error) {
-        console.error("Error fetching signals:", error.response ? error.response.data : error.message);
+        console.log("Error fetching signals:", error.response ? error.response.data : error.message);
     }
 
 }
@@ -394,7 +384,6 @@ export async function SignalCloseApi(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }
@@ -420,7 +409,7 @@ export async function BasketAllList(token) {
 
 // get basket detail per stock
 
-export async function  Viewbasket(_id, token) {
+export async function Viewbasket(_id, token) {
     try {
         const res = await axios.get(`${Config.base_url}basket/detail/${_id}`, {
             headers: {
@@ -467,7 +456,6 @@ export async function addStaffpermission(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }
@@ -506,7 +494,6 @@ export async function Addbasketplan(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }
@@ -525,7 +512,6 @@ export async function Updatebasket(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }
@@ -565,7 +551,6 @@ export async function Addplanbyadmin(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }
@@ -603,7 +588,7 @@ export async function Addplancategory(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -656,7 +641,7 @@ export async function updatecategorydstatus(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -675,7 +660,6 @@ export async function Deleteservices(_id, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }
@@ -713,7 +697,7 @@ export async function AddstockbyAdmin(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -732,7 +716,7 @@ export async function Updatestock(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -752,7 +736,7 @@ export async function DeleteStock(_id, token) {
         return res?.data;
 
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -773,7 +757,7 @@ export async function Stockstatus(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -797,7 +781,7 @@ export async function Setstockinbulk(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error uploading CSV:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -842,7 +826,7 @@ export async function Addblogsbyadmin(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error uploading CSV:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -866,7 +850,7 @@ export async function Updateblogsbyadmin(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error uploading CSV:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -886,7 +870,7 @@ export async function changeblogsstatus(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -907,7 +891,7 @@ export async function DeleteBlogs(_id, token) {
         return res?.data;
 
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -953,7 +937,7 @@ export async function AddNewsbyadmin(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error uploading CSV:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -978,7 +962,7 @@ export async function UpdateNewsbyadmin(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error uploading CSV:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -998,7 +982,7 @@ export async function changeNewsStatus(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -1019,7 +1003,7 @@ export async function DeleteNews(_id, token) {
         return res?.data;
 
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -1062,7 +1046,7 @@ export async function AddFaq(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -1083,7 +1067,7 @@ export async function UpdateFaq(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -1105,7 +1089,7 @@ export async function DeleteFAQ(_id, token) {
         return res?.data;
 
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -1127,7 +1111,7 @@ export async function changeFAQStatus(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -1161,7 +1145,7 @@ export async function Addcouponbyadmin(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error uploading CSV:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -1212,7 +1196,7 @@ export async function updateCouponbyadmin(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error uploading CSV:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -1232,7 +1216,7 @@ export async function DeleteCoupon(_id, token) {
         return res?.data;
 
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -1270,7 +1254,7 @@ export async function Addtermscondition(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -1289,7 +1273,7 @@ export async function changeconditionstatus(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -1309,7 +1293,7 @@ export async function UpdateCondition(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -1330,7 +1314,7 @@ export async function PlanSubscription(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -1349,7 +1333,7 @@ export async function BasketSubscription(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -1369,7 +1353,7 @@ export async function Updateplan(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -1390,7 +1374,6 @@ export async function getbyidplan(_id, token) {
         return res?.data;
 
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }
@@ -1410,7 +1393,6 @@ export async function Deleteplan(_id, token) {
         return res?.data;
 
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }

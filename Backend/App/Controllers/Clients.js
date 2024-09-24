@@ -149,7 +149,7 @@ class Clients {
         });
 
     } catch (error) {
-        console.error("Error fetching client details:", error);
+        console.log("Error fetching client details:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",
@@ -230,7 +230,7 @@ class Clients {
       });
   
     } catch (error) {
-      console.error("Error updating client:", error);
+      console.log("Error updating client:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -271,7 +271,7 @@ class Clients {
         data: deletedClient,
       });
     } catch (error) {
-      console.error("Error deleting client:", error);
+      console.log("Error deleting client:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -313,7 +313,7 @@ class Clients {
         });
   
     } catch (error) {
-        console.error("Error updating status:", error);
+        console.log("Error updating status:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",

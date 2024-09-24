@@ -126,7 +126,7 @@ const Condition = () => {
                 });
             }
         } catch (error) {
-            console.error("Error adding service:", error);
+            console.log("Error adding service:", error);
             Swal.fire({
                 title: 'Error!',
                 text: 'There was an error adding the service.',

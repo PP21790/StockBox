@@ -15,12 +15,18 @@ const Signal = () => {
     const token = localStorage.getItem('token');
     const [searchInput, setSearchInput] = useState("");
 
+
+
+
     const [filters, setFilters] = useState({
         from: '',
         to: '',
         service: '',
         stock: '',
     });
+
+
+
 
     const [serviceList, setServiceList] = useState([]);
     const [stockList, setStockList] = useState([]);
@@ -109,15 +115,11 @@ const Signal = () => {
                 const searchInputMatch = response.data.filter((item) => {
                     return (
                         searchInput === "" ||
-                        item.stock.title.toLowerCase().includes(searchInput.toLowerCase()) 
+                        item.stock.title.toLowerCase().includes(searchInput.toLowerCase())
                         ||
                         item.calltype.toLowerCase().includes(searchInput.toLowerCase())
                     );
                 });
-
-
-              console.log("searchInputMatch",searchInputMatch)
-
 
                 setClients(searchInput ? searchInputMatch : response.data);
             }
@@ -379,23 +381,6 @@ const Signal = () => {
             button: true,
         }
 
-
-        // {
-        //     name: 'Actions',
-        //     cell: row => (
-        //         <>
-        //         <div>
-        //          <Pencil onClick={() => updateClient(row)} />
-        //         </div>
-        //        <div>
-        //        <Trash2 onClick={() => DeleteClient(row._id)} />
-        //        </div>
-        //        </>
-        //     ),
-        //     ignoreRowClick: true,
-        //     allowOverflow: true,
-        //     button: true,
-        // }
     ];
 
 
@@ -428,15 +413,15 @@ const Signal = () => {
                                         type="text"
                                         className="form-control ps-5 radius-10"
                                         placeholder="Search Order"
-                                            value={searchInput}
-                                            onChange={(e) => setSearchInput(e.target.value)}
+                                        value={searchInput}
+                                        onChange={(e) => setSearchInput(e.target.value)}
 
                                     />
                                     <span className="position-absolute top-50 product-show translate-middle-y">
                                         <i className="bx bx-search" />
                                     </span>
                                 </div>
-                                
+
                                 <div className="ms-auto">
                                     <Link
                                         to="/admin/addsignal"

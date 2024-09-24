@@ -36,7 +36,7 @@ const Editplan = () => {
                 setInfo(response.data); 
             }
         } catch (error) {
-            console.error("Failed to fetch plans", error);
+            console.log("Failed to fetch plans", error);
         }
     };
 
@@ -89,7 +89,6 @@ const Editplan = () => {
                 });
             }
         } catch (error) {
-            console.error("An error occurred", error);
             Swal.fire({
                 title: "Error",
                 text: "An unexpected error occurred. Please try again later.",

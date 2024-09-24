@@ -63,7 +63,7 @@ class Users {
       });
 
     } catch (error) {
-      console.error("Error adding user:", error); // Log the full error
+      console.log("Error adding user:", error); // Log the full error
       return res.status(500).json({ status: false, message: "Server error", error: error.message });
     }
   }
@@ -145,7 +145,7 @@ class Users {
       });
 
     } catch (error) {
-      console.error("Error fetching user details:", error);
+      console.log("Error fetching user details:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -222,7 +222,7 @@ class Users {
       });
 
     } catch (error) {
-      console.error("Error updating User:", error);
+      console.log("Error updating User:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -265,7 +265,7 @@ class Users {
         data: deletedUser,
       });
     } catch (error) {
-      console.error("Error deleting User:", error);
+      console.log("Error deleting User:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -369,7 +369,7 @@ class Users {
       });
 
     } catch (error) {
-      console.error("Error updating status:", error);
+      console.log("Error updating status:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -414,7 +414,7 @@ class Users {
       });
 
     } catch (error) {
-      console.error("Error updating User permissions:", error);
+      console.log("Error updating User permissions:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -476,7 +476,7 @@ class Users {
       });
 
     } catch (error) {
-      console.error("Error in forgotPassword:", error);
+      console.log("Error in forgotPassword:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -525,7 +525,7 @@ class Users {
       });
 
     } catch (error) {
-      console.error("Error in resetPassword:", error);
+      console.log("Error in resetPassword:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -573,7 +573,7 @@ class Users {
 
 
     } catch (error) {
-      console.error("Error in changePassword:", error);
+      console.log("Error in changePassword:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -639,7 +639,7 @@ class Users {
       });
 
     } catch (error) {
-      console.error("Error in updateProfile:", error);
+      console.log("Error in updateProfile:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -692,7 +692,7 @@ class Users {
       });
 
     } catch (error) {
-      console.error("Error in updateProfile:", error);
+      console.log("Error in updateProfile:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",

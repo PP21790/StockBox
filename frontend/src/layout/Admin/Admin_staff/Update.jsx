@@ -77,7 +77,6 @@ const Update = () => {
         });
       }
     } catch (error) {
-      console.error("An error occurred", error);
       Swal.fire({
         title: "Error",
         text: "An unexpected error occurred. Please try again later.",

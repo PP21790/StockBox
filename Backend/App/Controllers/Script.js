@@ -33,7 +33,7 @@ class Script {
     
         } catch (error) {
             // Enhanced error logging
-            console.error("Error adding Script:", error);
+            console.log("Error adding Script:", error);
     
             return res.status(500).json({
                 status: false,
@@ -96,7 +96,7 @@ class Script {
         });
 
     } catch (error) {
-        console.error("Error fetching Script details:", error);
+        console.log("Error fetching Script details:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",
@@ -141,7 +141,7 @@ class Script {
         data: deletedScript,
       });
     } catch (error) {
-      console.error("Error deleting Script:", error);
+      console.log("Error deleting Script:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",

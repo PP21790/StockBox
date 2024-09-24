@@ -38,7 +38,7 @@ class Content {
     
         } catch (error) {
             // Enhanced error logging
-            console.error("Error adding Content:", error);
+            console.log("Error adding Content:", error);
     
             return res.status(500).json({
                 status: false,
@@ -122,7 +122,7 @@ class Content {
         });
 
     } catch (error) {
-        console.error("Error fetching Content details:", error);
+        console.log("Error fetching Content details:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",
@@ -176,7 +176,7 @@ class Content {
       });
   
     } catch (error) {
-      console.error("Error updating Content:", error);
+      console.log("Error updating Content:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -220,7 +220,7 @@ class Content {
         data: deletedContent,
       });
     } catch (error) {
-      console.error("Error deleting Content:", error);
+      console.log("Error deleting Content:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -263,7 +263,7 @@ class Content {
         });
   
     } catch (error) {
-        console.error("Error updating status:", error);
+        console.log("Error updating status:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",

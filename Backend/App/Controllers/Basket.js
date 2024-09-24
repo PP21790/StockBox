@@ -54,7 +54,7 @@ class Basket {
               data: result,
           });
       } catch (error) {
-          console.error("Error adding Basket:", error);
+          console.log("Error adding Basket:", error);
   
           return res.status(500).json({
               status: false,
@@ -134,7 +134,7 @@ class Basket {
         });
 
     } catch (error) {
-        console.error("An error occurred:", error);
+        console.log("An error occurred:", error);
         return res.json({ 
             status: false, 
             message: "Server error", 
@@ -296,7 +296,7 @@ class Basket {
         });
 
     } catch (error) {
-        console.error("Error fetching Basket details:", error);
+        console.log("Error fetching Basket details:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",
@@ -371,7 +371,7 @@ class Basket {
       });
   
     } catch (error) {
-      console.error("Error updating Basket:", error);
+      console.log("Error updating Basket:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -413,7 +413,7 @@ class Basket {
         data: deletedBasket,
       });
     } catch (error) {
-      console.error("Error deleting Basket:", error);
+      console.log("Error deleting Basket:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -456,7 +456,7 @@ async  statusChange(req, res) {
       });
 
   } catch (error) {
-      console.error("Error updating status:", error);
+      console.log("Error updating status:", error);
       return res.status(500).json({
           status: false,
           message: "Server error",

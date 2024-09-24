@@ -34,7 +34,7 @@ class Service {
     
         } catch (error) {
             // Enhanced error logging
-            console.error("Error adding Service:", error);
+            console.log("Error adding Service:", error);
     
             return res.status(500).json({
                 status: false,
@@ -121,7 +121,7 @@ class Service {
         });
 
     } catch (error) {
-        console.error("Error fetching Service details:", error);
+        console.log("Error fetching Service details:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",
@@ -170,7 +170,7 @@ class Service {
       });
   
     } catch (error) {
-      console.error("Error updating Service:", error);
+      console.log("Error updating Service:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -214,7 +214,7 @@ class Service {
         data: deletedService,
       });
     } catch (error) {
-      console.error("Error deleting Service:", error);
+      console.log("Error deleting Service:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -257,7 +257,7 @@ class Service {
         });
   
     } catch (error) {
-        console.error("Error updating status:", error);
+        console.log("Error updating status:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",

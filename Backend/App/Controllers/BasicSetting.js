@@ -77,7 +77,7 @@ class BasicSetting {
                 });
             });
         } catch (error) {
-            console.error("Error adding/updating basic setting:", error);
+            console.log("Error adding/updating basic setting:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -98,7 +98,7 @@ class BasicSetting {
                 data: settings
             });
         } catch (error) {
-            console.error("Error retrieving settings:", error);
+            console.log("Error retrieving settings:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",

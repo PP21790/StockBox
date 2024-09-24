@@ -41,7 +41,7 @@ const Forgetpass = () => {
                 icon: "error",
                 button: "OK",
             });
-            console.error('There was an error sending the forgot password email:', error);
+           
         }
     };
 

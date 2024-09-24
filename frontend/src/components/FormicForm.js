@@ -205,10 +205,10 @@ const DynamicForm = ({
                                                                     readOnly={field.disable}
                                                                     id={field.name}
                                                                     name={field.name}
-                                                                    {...formik.getFieldProps(field.name)} // Formik binding
+                                                                    {...formik.getFieldProps(field.name)} 
                                                                 ></textarea>
 
-                                                                {/* Error handling */}
+                                                        
                                                                 {formik.touched[field.name] && formik.errors[field.name] ? (
                                                                     <div style={{ color: "red" }}>
                                                                         {formik.errors[field.name]}
@@ -691,6 +691,7 @@ const DynamicForm = ({
                                                                         <input
                                                                             type={field.type}
                                                                             name={field.name}
+                                                                            readOnly={field.disable}
                                                                             className="form-control"
                                                                             id={field.name}
                                                                             {...formik.getFieldProps(field.name)}
@@ -721,6 +722,7 @@ const DynamicForm = ({
                                                                             className="form-control"
                                                                             rows={field.row_size}
                                                                             id={field.name}
+                                                                            readOnly={field.disable}
                                                                             name={field.name}
                                                                             {...formik.getFieldProps(field.name)}
                                                                             placeholder={field.label}
@@ -753,6 +755,7 @@ const DynamicForm = ({
                                                                                 aria-describedby="basic-addon1"
                                                                                 className="form-control"
                                                                                 id={field.name}
+                                                                                readOnly={field.disable}
                                                                                 placeholder={`Enter ${field.label}`}
                                                                                 {...formik.getFieldProps(field.name)}
                                                                             />
