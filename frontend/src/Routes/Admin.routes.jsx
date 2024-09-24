@@ -38,6 +38,7 @@ import Condition from '../layout/Admin/Termscondition/Condition';
 import Editbasket from '../layout/Admin/Admin_basket/Editbasket';
 import Viewbasketdetail from '../layout/Admin/Admin_basket/Viewbasketdetail';
 import Editplan from '../layout/Admin/Plans/Editplan';
+import Banner from '../layout/Admin/Banner/Banner';
 
 
 function MainApp() {
@@ -142,6 +143,10 @@ function MainApp() {
 
                     <Route path="/termsandcondtion" element={<Condition/>} />
 
+                    
+                    <Route path="/banner" element={<Banner/>} />
+                    
+                    
                     
                       
                 </Routes>

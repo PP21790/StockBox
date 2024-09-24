@@ -1396,3 +1396,113 @@ export async function Deleteplan(_id, token) {
         return err.response?.data || err.message;
     }
 }
+
+
+
+
+
+// banner  
+
+// get banner list
+
+export async function getbannerlist(token) {
+
+    try {
+        const res = await axios.get(`${Config.base_url}api/list/banner`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
+
+// add banner by admin 
+
+
+export async function Addbanner(data, token) {
+    const formData = new FormData();
+    formData.append('image', data.image);
+    formData.append('add_by', data.add_by);
+    try {
+        const res = await axios.post(`${Config.base_url}banner/add`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// update  banner
+
+export async function UpdateBanner(data, token) {
+    const formData = new FormData();
+    formData.append('image', data.image);
+    formData.append('id', data.id);
+    try {
+        const res = await axios.post(`${Config.base_url}banner/update`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// banner status
+
+export async function changeBannerStatus(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}banner/change-status`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// banner delete
+
+export async function DeleteBanner(_id, token) {
+    try {
+        const res = await axios.get(`${Config.base_url}banner/delete/${_id}`, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+

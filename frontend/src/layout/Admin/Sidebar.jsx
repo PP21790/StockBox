@@ -183,12 +183,23 @@ const Sidebar = ({ onToggleClick }) => {
                       </Link>
                     </li>
 
+                   
+
                     <li>
                       <Link to="/admin/coupon">
                         <div className="parent-icon">
                           <i className="bx bx-edit-alt" />
                         </div>
                         <div className="menu-title">Coupon</div>
+                      </Link>
+                    </li>
+                         
+                    <li>
+                      <Link to="/admin/banner">
+                        <div className="parent-icon">
+                          <i className="fadeIn animated bx bx-news" />
+                        </div>
+                        <div className="menu-title">Banner</div>
                       </Link>
                     </li>
 
