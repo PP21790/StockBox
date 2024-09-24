@@ -272,14 +272,6 @@ const Banner = () => {
             ),
             sortable: true,
         },
-        // {
-        //     name: 'Description',
-        //     selector: row => row.description,
-        //     sortable: true,
-        // },
-       
-        
-
         {
             name: 'Created At',
             selector: row => fDateTime(row.created_at),
@@ -339,7 +331,7 @@ const Banner = () => {
             <div className="page-content">
 
                 <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                    <div className="breadcrumb-title pe-3">News</div>
+                    <div className="breadcrumb-title pe-3">Banner</div>
                     <div className="ps-3">
                         <nav aria-label="breadcrumb">
                             <ol className="breadcrumb mb-0 p-0">
