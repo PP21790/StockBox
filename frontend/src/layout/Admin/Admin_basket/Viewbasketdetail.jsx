@@ -175,9 +175,9 @@ const Viewbasketdetail = () => {
             fields={fieldConfigurations}
             formik={formikProps}
             btn_name="Submit"
-            sumit_btn={true}
+            // sumit_btn={true}
             page_title="Edit Basket"
-            btn_name1="Cancel"
+            btn_name1="Back"
             btn_name1_route="/admin/basket"
             disable={true}
            

@@ -12,7 +12,7 @@ const Service = () => {
     const navigate = useNavigate();
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
-    const [serviceid, setServiceid] = useState({});
+    const [serviceid, setServiceid] = useState({}); 
     const [searchInput, setSearchInput] = useState("");
     const [updatetitle, setUpdatetitle] = useState({
         title: "",

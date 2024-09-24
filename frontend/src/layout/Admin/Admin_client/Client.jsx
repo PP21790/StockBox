@@ -5,21 +5,54 @@ import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import { Settings2, Eye, UserPen, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { deleteClient, UpdateClientStatus } from '../../../Services/Admin';
+import { deleteClient, UpdateClientStatus, PlanSubscription, getplanlist, BasketSubscription, BasketAllList } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
 
 const Client = () => {
-    const [checkedIndex, setCheckedIndex] = useState(null);
 
-    const handleTabChange = (index) => {
-        setCheckedIndex(index); // Update the checked tab index
-    };
-
-    const navigate = useNavigate();
-
-    const [clients, setClients] = useState([]);
-
+  
     const token = localStorage.getItem('token');
+    const navigate = useNavigate();
+    
+    const [checkedIndex, setCheckedIndex] = useState(null);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [clients, setClients] = useState([]);
+    const [planlist, setPlanlist] = useState([]);
+    const [basketlist, setBasketlist] = useState([]);
+    const [client, setClientid] = useState({});
+    const [basketdetail, setBasketdetail] = useState({
+        plan_id: "",
+        client_id: "",
+        price: "",
+        discount: ""
+    });
+
+    const [updatetitle, setUpdatetitle] = useState({
+        plan_id: "",
+        client_id: "",
+        price: ""
+    });
+    
+    
+    
+    
+    const handleTabChange = (index) => {
+        setCheckedIndex(index);
+    };
+    
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
+    
+    
+    useEffect(() => {
+        getAdminclient();
+        getplanlistbyadmin()
+        getbasketlist()
+    }, []);
 
     const getAdminclient = async () => {
         try {
@@ -32,9 +65,31 @@ const Client = () => {
         }
     }
 
-    useEffect(() => {
-        getAdminclient();
-    }, []);
+    const getplanlistbyadmin = async () => {
+        try {
+            const response = await getplanlist(token);
+            if (response.status) {
+                setPlanlist(response.data);
+            }
+        } catch (error) {
+            console.log("error");
+        }
+    }
+
+
+
+    const getbasketlist = async () => {
+        try {
+            const response = await BasketAllList(token);
+            if (response.status) {
+                setBasketlist(response.data);
+            }
+        } catch (error) {
+            console.log("error");
+        }
+    }
+
+
 
 
 
@@ -43,29 +98,7 @@ const Client = () => {
         navigate("/admin/client/updateclient/" + row._id, { state: { row } })
     }
 
-    const [isModalVisible, setIsModalVisible] = useState(false);
-
-    // Function to show the modal
-    const showModal = () => {
-        setIsModalVisible(true);
-    };
-
-    // Function to handle modal closing
-    const handleCancel = () => {
-        setIsModalVisible(false);
-    };
-
-    // // Form submit handler
-    // const onFinish = (e) => {
-    //     e.preventDefault();
-    //     const formData = new FormData(e.target);
-    //     const values = Object.fromEntries(formData.entries());
-    //     console.log('Form values:', values);
-
-
-    //     updateClient(row);
-    //     setIsModalVisible(false);
-    // };
+   
 
 
 
@@ -160,6 +193,85 @@ const Client = () => {
 
 
 
+    // Update service
+    const Updateplansubscription = async () => {
+
+        try {
+            const data = { plan_id: updatetitle.plan_id, client_id: client._id, price: updatetitle.price };
+            const response = await PlanSubscription(data, token);
+
+
+            if (response && response.status) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Plan updated successfully.',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    timer: 2000,
+                });
+
+                setUpdatetitle({ plan_id: "", client_id: "", price: "" });
+                getAdminclient();
+                handleCancel()
+            } else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'There was an error updating the Plan.',
+                    icon: 'error',
+                    confirmButtonText: 'Try Again',
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'There was an error updating the Plan.',
+                icon: 'error',
+                confirmButtonText: 'Try Again',
+            });
+        }
+    };
+
+
+
+
+    // assign basket 
+    const UpdateBasketservice = async () => {
+
+        try {
+            const data = { basket_id: basketdetail.basket_id, client_id: client._id, price: basketdetail.price, discount: basketdetail.discount };
+            const response = await BasketSubscription(data, token);
+            
+            if (response && response.status) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Basket service updated successfully.',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    timer: 2000,
+                });
+
+                setBasketdetail({ basket_id: "", client_id: "", price: "", discount: "" });
+                getAdminclient();
+                handleCancel()
+            } else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'There was an error updating the Basket.',
+                    icon: 'error',
+                    confirmButtonText: 'Try Again',
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'There was an error updating the Basket.',
+                icon: 'error',
+                confirmButtonText: 'Try Again',
+            });
+        }
+    };
+
+
     const columns = [
         {
             name: 'S.No',
@@ -212,153 +324,16 @@ const Client = () => {
             sortable: true,
             width: '165px',
         },
-
-
-        // {
-        //     name: 'Created At',
-        //     selector: row => new Date(row.createdAt).toLocaleDateString(),
-        //     sortable: true,
-        //     width: '165px',
-        // },
-        // {
-        //     name: 'Updated At',
-        //     selector: row => new Date(row.updatedAt).toLocaleDateString(),
-        //     sortable: true,
-        //     width: '165px',
-        // },
         {
             name: 'Actions',
-            cell: row => (
+            selector: (row) => (
                 <>
                     <Tooltip placement="top" overlay="Package Assign">
-                        <span onClick={showModal} style={{ cursor: 'pointer' }}>
+                        <span onClick={(e) => { showModal(true); setClientid(row); }} style={{ cursor: 'pointer' }}>
                             <Settings2 />
                         </span>
                     </Tooltip>
 
-                    {/* Bootstrap Modal */}
-                    <div
-                        className={`modal fade ${isModalVisible ? 'show d-block' : ''}`}
-                        style={{ backdropFilter: 'blur(1px)' }}  // Only apply blur effect to the background
-                        tabIndex="-1"
-                        aria-labelledby="exampleModalLabel"
-                        aria-hidden="true"
-                    >
-                        <div className="modal-dialog">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title" id="exampleModalLabel">Package Assign</h5>
-                                    <button
-                                        type="button"
-                                        className="btn-close"
-                                        onClick={handleCancel}
-                                        aria-label="Close"
-                                    ></button>
-                                </div>
-                                <div className="modal-body">
-                                    {/* Form inside the modal */}
-                                    <div className='card '>
-                                        <div className='d-flex justify-content-center align-items-center card-body'>
-                                            {['Plan', 'Basket'].map((tab, index) => (
-                                                <label key={index} className='labelfont'>
-                                                    <input
-                                                        className='ms-3'
-                                                        type="radio"
-                                                        name="tab"
-                                                        checked={checkedIndex === index}
-                                                        onChange={() => handleTabChange(index)}
-                                                    />
-                                                    <span className='ps-2'>{tab}</span>
-                                                </label>
-                                            ))}
-                                        </div>
-                                    </div>
-                                    {/* Conditional Form Rendering for Each Tab */}
-                                    <div className='card'>
-
-
-                                        {checkedIndex === 0 && (
-                                            <form className='card-body'>
-
-                                                <div className="col-md-12">
-                                                    <div className="form-check mb-2">
-                                                        <input className="form-check-input" type="checkbox" id="input12" />
-                                                        <label className="form-check-label" htmlFor="input12">
-                                                            stock
-                                                        </label>
-                                                    </div>
-
-                                                </div>
-
-                                                <div className="col-md-12">
-                                                    <div className="form-check mb-2">
-                                                        <input className="form-check-input" type="checkbox" id="input12" />
-                                                        <label className="form-check-label" htmlFor="input12">
-                                                            case
-                                                        </label>
-                                                    </div>
-
-
-                                                </div>
-
-                                                <div className="col-md-12">
-                                                    <div className="form-check mb-2">
-                                                        <input className="form-check-input" type="checkbox" id="input12" />
-                                                        <label className="form-check-label" htmlFor="input12">
-                                                            Future
-                                                        </label>
-                                                    </div>
-
-                                                </div>
-
-
-
-
-
-                                               
-                                            </form>
-                                        )}
-
-                                        {checkedIndex === 1 && (
-                                            <form className='card-body'>
-
-                                                <div className="col-md-12">
-
-                                                    <p>
-                                                        Stoploss: qff
-                                                    </p>
-
-
-                                                </div>
-
-
-                                              
-                                            </form>
-                                        )}
-
-
-                                    </div>
-
-                                </div>
-                                <div className="modal-footer">
-                                    <button
-                                        type="button"
-                                        className="btn btn-secondary"
-                                        data-bs-dismiss="modal"
-                                    >
-                                        Close
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className="btn btn-primary"
-                                       
-                                    >
-                                        Save
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <Tooltip title="view">
                         <Eye onClick={() => updateClient(row)} />
                     </Tooltip>
@@ -376,6 +351,10 @@ const Client = () => {
             width: '165px',
         }
     ];
+
+
+
+
 
     return (
         <div>
@@ -432,7 +411,139 @@ const Client = () => {
                     </div>
                 </div>
             </div>
+
+
+
+            {isModalVisible && (
+                <div
+                    className="modal fade show d-block"
+                    style={{ backdropFilter: 'blur(1px)' }}
+                    tabIndex="-1"
+                    aria-labelledby="exampleModalLabel"
+                    aria-hidden="true"
+                >
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title" id="exampleModalLabel">Package Assign</h5>
+                                <button
+                                    type="button"
+                                    className="btn-close"
+                                    onClick={handleCancel}
+                                    aria-label="Close"
+                                ></button>
+                            </div>
+                            <div className="modal-body">
+                                <div className='card'>
+                                    <div className='d-flex justify-content-center align-items-center card-body'>
+                                        {['Plan', 'Basket'].map((tab, index) => (
+                                            <label key={index} className='labelfont'>
+                                                <input
+                                                    className='ms-3'
+                                                    type="radio"
+                                                    name="tab"
+                                                    checked={checkedIndex === index}
+                                                    onChange={() => handleTabChange(index)}
+                                                />
+                                                <span className='ps-2'>{tab}</span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className='card'>
+                                    {checkedIndex === 0 && (
+                                        <form className='card-body'>
+                                            <div className="row">
+                                                {planlist.map((item, index) => (
+                                                    <div className="col-md-6" key={index}>
+                                                        <div className="form-check mb-2">
+                                                            <input
+                                                                className="form-check-input"
+                                                                type="radio"
+                                                                name="planSelection"
+                                                                id={`input-plan-${index}`}
+                                                                onClick={() => {
+                                                                    setUpdatetitle({ plan_id: item._id, price: item.price, title: item.title });
+                                                                }}
+                                                            />
+                                                            <label className="form-check-label" htmlFor={`input-plan-${index}`}>
+                                                                {item.title}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </form>
+                                    )}
+
+                                    {checkedIndex === 1 && (
+                                        <form className='card-body'>
+                                            <div className="row">
+                                                {basketlist.map((item, index) => (
+                                                    <div className="col-md-6" key={index}>
+                                                        <div className="form-check mb-2">
+                                                            <input
+                                                                className="form-check-input"
+                                                                type="radio"
+                                                                name="basketSelection"
+                                                                id={`input-basket-${index}`}
+                                                                onClick={() => {
+                                                                    setBasketdetail({ basket_id: item._id, price: item.price, title: item.title, discount: "0" });
+                                                                }}
+                                                            />
+                                                            <label className="form-check-label" htmlFor={`input-basket-${index}`}>
+                                                                {item.title}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </form>
+                                    )}
+
+
+                                </div>
+                            </div>
+                            <div className="modal-footer">
+                                <button
+                                    type="button"
+                                    className="btn btn-secondary"
+                                    onClick={handleCancel}
+                                >
+                                    Close
+                                </button>
+
+                                {checkedIndex === 0 && (
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary"
+                                        onClick={(e) => Updateplansubscription()}
+                                    >
+                                        Save Plan
+                                    </button>
+                                )}
+
+                                {checkedIndex === 1 && (
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary"
+                                        onClick={(e) => UpdateBasketservice()}
+                                    >
+                                        Save Basket
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+
+
         </div>
+
+
     );
 }
 
