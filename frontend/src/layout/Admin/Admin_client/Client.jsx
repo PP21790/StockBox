@@ -10,10 +10,10 @@ import { Tooltip } from 'antd';
 
 const Client = () => {
 
-  
+
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
-    
+
     const [checkedIndex, setCheckedIndex] = useState(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [clients, setClients] = useState([]);
@@ -32,22 +32,22 @@ const Client = () => {
         client_id: "",
         price: ""
     });
-    
-    
-    
-    
+
+
+
+
     const handleTabChange = (index) => {
         setCheckedIndex(index);
     };
-    
+
     const showModal = () => {
         setIsModalVisible(true);
     };
     const handleCancel = () => {
         setIsModalVisible(false);
     };
-    
-    
+
+
     useEffect(() => {
         getAdminclient();
         getplanlistbyadmin()
@@ -98,7 +98,7 @@ const Client = () => {
         navigate("/admin/client/updateclient/" + row._id, { state: { row } })
     }
 
-   
+
 
 
 
@@ -240,7 +240,7 @@ const Client = () => {
         try {
             const data = { basket_id: basketdetail.basket_id, client_id: client._id, price: basketdetail.price, discount: basketdetail.discount };
             const response = await BasketSubscription(data, token);
-            
+
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
@@ -296,6 +296,12 @@ const Client = () => {
             selector: row => row.PhoneNo,
             sortable: true,
         },
+        {
+            name: 'CreatedAt',
+            selector: row => row.createdAT,
+            sortable: true,
+            width: '146px',
+        },
 
         {
             name: 'Signup Status',
@@ -335,8 +341,104 @@ const Client = () => {
                     </Tooltip>
 
                     <Tooltip title="view">
-                        <Eye onClick={() => updateClient(row)} />
+                        <Eye
+
+                            data-bs-toggle="modal"
+                            data-bs-target={`#modal-${client.id}`} />
                     </Tooltip>
+
+                    <div
+                        className="modal fade"
+                        id={`modal-${client.id}`}
+                        tabIndex={-1}
+                        aria-labelledby={`modalLabel-${client.id}`}
+                        aria-hidden="true"
+                    >
+                        <div className="modal-dialog">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id={`modalLabel-${client.id}`}>
+                                        View Client
+                                    </h5>
+                                    <button
+                                        type="button"
+                                        className="btn-close"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Close"
+                                    />
+                                </div>
+                                <div className="modal-body">
+                                    <ul>
+                                        <li className='viewlist'>
+                                            <div className='row justify-content-between'>
+                                                <div className="col">
+                                                    <b>Name</b>
+                                                </div>
+                                                <div className="col">
+                                                    Pankaj
+                                                </div>
+
+                                            </div>
+                                        </li>
+                                        <li className='viewlist'> <div className='row justify-content-between'>
+                                            <div className="col">
+                                                <b>Email</b>
+                                            </div>
+                                            <div className="col">
+                                                pankaj@gmail.com
+                                            </div>
+
+                                        </div></li>
+                                        <li className='viewlist'> <div className='row justify-content-between'>
+                                            <div className="col">
+                                                <b>Phone No.</b>
+                                            </div>
+                                            <div className="col">
+                                                9876543210
+                                            </div>
+
+                                        </div></li>
+                                        <li className='viewlist'> <div className='row justify-content-between'>
+                                            <div className="col">
+                                                <b>Signup Status</b>
+                                            </div>
+                                            <div className="col">
+                                                App
+                                            </div>
+
+                                        </div></li>
+                                        <li className='viewlist'> <div className='row justify-content-between'>
+                                            <div className="col">
+                                                <b>Created At</b>
+                                            </div>
+                                            <div className="col">
+                                                25/09/2024
+                                            </div>
+
+                                        </div></li>
+                                        <li className='viewlist'> <div className='row justify-content-between'>
+                                            <div className="col">
+                                                <b>Updated At</b>
+                                            </div>
+                                            <div className="col">
+                                                26/09/2024
+                                            </div>
+
+                                        </div></li>
+                                    </ul>
+                                </div>
+                                {/* <div className="modal-footer">
+                                    <button
+                                        type="button"
+                                        className="btn btn-secondary"
+                                        data-bs-dismiss="modal"
+                                    >
+                                        Close
+                                    </button>
+                                </div> */}
+                            </div>
+                        </div>
+                    </div>
                     <Tooltip title="Update">
                         <UserPen onClick={() => updateClient(row)} />
                     </Tooltip>

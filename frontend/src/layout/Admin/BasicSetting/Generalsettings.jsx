@@ -3,7 +3,7 @@ import { basicsettinglist, Updatebasicsettings } from '../../../Services/Admin';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Generalsettings = () => {
 
@@ -53,8 +53,27 @@ const Generalsettings = () => {
     }
 
     return (
-        <div className="general-settings">
-            <h2 className="header">General Settings</h2>
+        
+        <div className="page-content">
+             <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+                        <div className="breadcrumb-title pe-3">General Settings</div>
+                        <div className="ps-3">
+                            <nav aria-label="breadcrumb">
+                                <ol className="breadcrumb mb-0 p-0">
+                                    <li className="breadcrumb-item">
+                                        <Link to="/admin/dashboard">
+                                            <i className="bx bx-home-alt" />
+                                        </Link>
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+             <div className="row">
+             <div className="col-lg-8 mx-auto">
+            <div className="card">
+
+          
             <Formik
                 enableReinitialize={true}
                 initialValues={{
@@ -110,69 +129,129 @@ const Generalsettings = () => {
                 }}
             >
                 {({ setFieldValue, values }) => (
-                    <Form className="form-container">
-                        <div className="form-group">
-                            <label htmlFor="from_name">From Name</label>
-                            <Field name="from_name" type="text" className="form-control" />
-                            <ErrorMessage name="from_name" component="div" className="error" />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="address">Address</label>
-                            <Field name="address" type="text" className="form-control" />
-                            <ErrorMessage name="address" component="div" className="error" />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="contact_number">Contact Number</label>
-                            <Field name="contact_number" type="text" className="form-control" />
-                            <ErrorMessage name="contact_number" component="div" className="error" />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="email_address">Email Address</label>
-                            <Field name="email_address" type="email" className="form-control" />
-                            <ErrorMessage name="email_address" component="div" className="error" />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="favicon">Favicon</label>
-                            <input
-                                name="favicon"
-                                type="file"
-                                className="form-control-file"
-                                onChange={(event) => setFieldValue("favicon", event.currentTarget.files[0])}
-                            />
-                            {clients[0].favicon && (
-                                <div className="file-preview">
-                                    <p>Current Favicon:</p>
-                                    <img src={`/assets/uploads/basicsetting/${clients[0].favicon}`} alt="Favicon Preview" className="image-preview" />
-                                </div>
-                            )}
-                            <ErrorMessage name="favicon" component="div" className="error" />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="logo">Logo</label>
-                            <input
-                                name="logo"
-                                type="file"
-                                className="form-control-file"
-                                onChange={(event) => setFieldValue("logo", event.currentTarget.files[0])}
-                            />
-                            {clients[0].logo && (
-                                <div className="file-preview">
-                                    <p>Current Logo:</p>
-                                    <img src={`/assets/uploads/basicsetting/${clients[0].logo}`} alt="Logo Preview" className="image-preview" />
-                                </div>
-                            )}
-                            <ErrorMessage name="logo" component="div" className="error" />
-                        </div>
-
-                        <button type="submit" className="btn btn-primary">Update</button>
-                    </Form>
+                    
+                    
+                  <Form className="card-body p-4">
+                  <h5 className="mb-4">General Setting</h5>
+              
+                  <div className="row mb-3">
+                      <label htmlFor="from_name" className="col-sm-3 col-form-label">
+                          From Name
+                      </label>
+                      <div className="col-sm-9">
+                          <div className="input-group">
+                              <span className="input-group-text">
+                                  <i className="bx bx-user" />
+                              </span>
+                              <Field name="from_name" type="text" className="form-control" placeholder="Your Name" />
+                          </div>
+                          <ErrorMessage name="from_name" component="div" className="error" />
+                      </div>
+                  </div>
+              
+                  <div className="row mb-3">
+                      <label htmlFor="contact_number" className="col-sm-3 col-form-label">
+                          Phone No
+                      </label>
+                      <div className="col-sm-9">
+                          <div className="input-group">
+                              <span className="input-group-text">
+                                  <i className="bx bx-microphone" />
+                              </span>
+                              <Field name="contact_number" type="text" className="form-control" placeholder="Phone No" />
+                          </div>
+                          <ErrorMessage name="contact_number" component="div" className="error" />
+                      </div>
+                  </div>
+              
+                  <div className="row mb-3">
+                      <label htmlFor="email_address" className="col-sm-3 col-form-label">
+                          Email Address
+                      </label>
+                      <div className="col-sm-9">
+                          <div className="input-group">
+                              <span className="input-group-text">
+                                  <i className="bx bx-envelope" />
+                              </span>
+                              <Field name="email_address" type="email" className="form-control" placeholder="Email" />
+                          </div>
+                          <ErrorMessage name="email_address" component="div" className="error" />
+                      </div>
+                  </div>
+              
+                  <div className="row mb-3">
+                      <label htmlFor="favicon" className="col-sm-3 col-form-label">
+                          Favicon
+                      </label>
+                      <div className="col-sm-8">
+                          <input
+                              name="favicon"
+                              type="file"
+                              className="form-control"
+                              onChange={(event) => setFieldValue("favicon", event.currentTarget.files[0])}
+                          />
+                         
+                          <ErrorMessage name="favicon" component="div" className="error" />
+                      </div>
+                      <div className="col-sm-1">
+                         
+                          {clients[0].favicon && (
+                              <div className="file-preview">
+                                 
+                                  <img src={`/assets/uploads/basicsetting/${clients[0].favicon}`} alt="Favicon Preview" className="image-preview" />
+                              </div>
+                          )}
+                          <ErrorMessage name="favicon" component="div" className="error" />
+                      </div>
+                  </div>
+              
+                  <div className="row mb-3">
+                      <label htmlFor="logo" className="col-sm-3 col-form-label">
+                          Logo
+                      </label>
+                      <div className="col-sm-8">
+                          <input
+                              name="logo"
+                              type="file"
+                              className="form-control"
+                              onChange={(event) => setFieldValue("logo", event.currentTarget.files[0])}
+                          />
+                        
+                          <ErrorMessage name="logo" component="div" className="error" />
+                      </div>
+                      <div className="col-sm-1">
+                          
+                          {clients[0].logo && (
+                              <div className="file-preview">
+                                 
+                                  <img src={`/assets/uploads/basicsetting/${clients[0].logo}`} alt="Logo Preview" className="image-preview" />
+                              </div>
+                          )}
+                          <ErrorMessage name="logo" component="div" className="error" />
+                      </div>
+                  </div>
+              
+                 
+              
+                  <div className="row">
+                      <label className="col-sm-3 col-form-label" />
+                      <div className="col-sm-9">
+                          <div className="d-md-flex d-grid align-items-center gap-3">
+                              <button type="submit" className="btn btn-primary px-4">
+                                  Update
+                              </button>
+                              
+                          </div>
+                      </div>
+                  </div>
+              </Form>
+              
+              
                 )}
             </Formik>
+            </div>
+            </div>
+            </div>
 
             <style jsx>{`
         .general-settings {
@@ -214,11 +293,11 @@ const Generalsettings = () => {
           font-size: 14px;
           color: #555;
         }
-        .image-preview {
-          width: 100px;
-          height: auto;
-          margin-top: 10px;
-        }
+       .image-preview {
+    width: 42px;
+    height: auto;
+    margin-top: -10px;
+}
         .error {
           color: red;
           font-size: 12px;

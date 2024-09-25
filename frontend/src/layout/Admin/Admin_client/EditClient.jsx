@@ -103,7 +103,7 @@ const EditClient = () => {
       label: "Full Name",
       type: "text",
       label_size: 6,
-      col_size: 6,
+      col_size: 3,
       disable: false,
     },
     // {
@@ -119,7 +119,7 @@ const EditClient = () => {
       label: "Email",
       type: "text",
       label_size: 12,
-      col_size: 6,
+      col_size: 3,
       disable: false,
     },
     {
@@ -127,7 +127,7 @@ const EditClient = () => {
       label: "Phone Number",
       type: "text3",
       label_size: 12,
-      col_size: 6,
+      col_size: 3,
       disable: false,
     },
     {
@@ -135,7 +135,7 @@ const EditClient = () => {
       label: "Password",
       type: "text",
       label_size: 12,
-      col_size: 6,
+      col_size: 3,
       disable: false,
     },
   ];

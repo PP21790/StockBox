@@ -5404,3 +5404,12 @@ ul li {
 .showbtnn {
 	line-height: normal !important;
 }
+
+.toggleswitch:checked {
+	background-color: #14a514c9 !important;
+	border-color: #14a514c9 !important;
+}
+
+.viewlist{
+	padding: 3px;
+}
