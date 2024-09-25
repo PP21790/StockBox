@@ -201,7 +201,17 @@ const Sidebar = ({ onToggleClick }) => {
                         </div>
                         <div className="menu-title">Banner</div>
                       </Link>
-                    </li>
+                    </li>  
+                      
+                    <li>
+                      <Link to="/admin/setting">
+                        <div className="parent-icon">
+                          <i className="fadeIn animated bx bx-news" />
+                        </div>
+                        <div className="menu-title">Settings</div>
+                      </Link>
+                    </li> 
+                      
 
                     <li>
                       <Link to="/admin/refer">

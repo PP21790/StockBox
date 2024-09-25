@@ -317,14 +317,6 @@ const News = () => {
 
 
 
-    // const updateServiceTitle = (value) => {
-    //     setUpdatetitle(prev => ({
-    //         ...prev,
-    //         title: value
-    //     }));
-    // };
-
-
     const updateServiceTitle = (updatedField) => {
         setUpdatetitle(prev => ({
             ...prev,

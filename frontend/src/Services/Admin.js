@@ -1506,3 +1506,19 @@ export async function DeleteBanner(_id, token) {
     }
 }
 
+
+// basic setting 
+
+export async function basiclist(token) {
+
+    try {
+        const res = await axios.get(`${Config.base_url}basicsetting/detail`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
