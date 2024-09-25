@@ -95,7 +95,38 @@ const BasicSettingSchema = new Schema({
         type: String,
         trim: true,
         default: null
+    },
+    refer_image: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    surepass_token: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    digio_client_id: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    digio_client_secret: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    razorpay_key: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    razorpay_secret: {
+        type: String,
+        trim: true,
+        default: null
     }
+
 }, {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
 });

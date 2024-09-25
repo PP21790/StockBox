@@ -38,6 +38,14 @@ import Condition from '../layout/Admin/Termscondition/Condition';
 import Editbasket from '../layout/Admin/Admin_basket/Editbasket';
 import Viewbasketdetail from '../layout/Admin/Admin_basket/Viewbasketdetail';
 import Editplan from '../layout/Admin/Plans/Editplan';
+import Banner from '../layout/Admin/Banner/Banner';
+import Generalsettings from '../layout/Admin/BasicSetting/Generalsettings';
+import Apiinfo from '../layout/Admin/BasicSetting/Apiinfo';
+import Payementgateway from '../layout/Admin/BasicSetting/Payementgateway';
+import Emailsettings from '../layout/Admin/BasicSetting/Emailsettings';
+
+
+
 
 
 function MainApp() {
@@ -142,6 +150,18 @@ function MainApp() {
 
                     <Route path="/termsandcondtion" element={<Condition/>} />
 
+                    
+                    <Route path="/banner" element={<Banner/>} />
+
+
+                    <Route path="/generalsettings" element={<Generalsettings/>} />
+                    <Route path="/Apiinfo" element={<Apiinfo/>} />
+                    <Route path="/paymentgeteway" element={<Payementgateway/>} />
+                    <Route path="/emailsetting" element={<Emailsettings/>} />
+                    
+
+                    
+                    
                     
                       
                 </Routes>

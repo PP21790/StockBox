@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getnewslist, AddNewsbyadmin, UpdateNewsbyadmin, changeNewsStatus, DeleteNews } from '../../../Services/Admin';
+import { getbannerlist, Addbanner, UpdateBanner, changeBannerStatus, DeleteBanner } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
 import Swal from 'sweetalert2';
-
-
-
-const News = () => {
+import { fDateTime } from '../../../Utils/Date_formate';
+const Banner = () => {
 
 
 
@@ -42,9 +40,9 @@ const News = () => {
 
 
     // Getting services
-    const getNews = async () => {
+    const getBanner = async () => {
         try {
-            const response = await getnewslist(token);
+            const response = await getbannerlist(token);
             if (response.status) {
                 const filterdata = response.data.filter((item) =>
                     searchInput === "" ||
@@ -58,7 +56,7 @@ const News = () => {
     };
 
     useEffect(() => {
-        getNews();
+        getBanner();
     }, [searchInput]);
 
 
@@ -66,10 +64,10 @@ const News = () => {
 
 
     // Update service
-    const updateNews = async () => {
+    const updatebanner = async () => {
         try {
-            const data = { title: updatetitle.title, id: serviceid._id, image: updatetitle.image, description: updatetitle.description };
-            const response = await UpdateNewsbyadmin(data, token);
+            const data = {  id: serviceid._id, image: updatetitle.image };
+            const response = await UpdateBanner(data, token);
 
             if (response && response.status) {
                 Swal.fire({
@@ -81,7 +79,7 @@ const News = () => {
                 });
 
                 setUpdatetitle({ title: "", id: "" });
-                getNews();
+                getBanner();
                 setModel(false);
             } else {
                 Swal.fire({
@@ -106,10 +104,10 @@ const News = () => {
 
 
     // Add service
-    const AddNews = async () => {
+    const AddBanner = async () => {
         try {
             const data = { title: title.title, description: title.description, image: title.image, add_by: userid };
-            const response = await AddNewsbyadmin(data, token);
+            const response = await Addbanner(data, token);
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
@@ -120,7 +118,7 @@ const News = () => {
                 });
 
                 setTitle({ title: "", add_by: "" });
-                getNews();
+                getBanner();
 
                 const modal = document.getElementById('exampleModal');
                 const bootstrapModal = window.bootstrap.Modal.getInstance(modal);
@@ -162,7 +160,7 @@ const News = () => {
 
         if (result.isConfirmed) {
             try {
-                const response = await changeNewsStatus(data, token);
+                const response = await changeBannerStatus(data, token);
                 if (response.status) {
                     Swal.fire({
                         title: "Saved!",
@@ -174,7 +172,7 @@ const News = () => {
                         Swal.close();
                     }, 1000);
                 }
-                getNews();
+                getBanner();
             } catch (error) {
                 Swal.fire(
                     "Error",
@@ -183,7 +181,7 @@ const News = () => {
                 );
             }
         } else if (result.dismiss === Swal.DismissReason.cancel) {
-            getNews();
+            getBanner();
         }
     };
 
@@ -192,7 +190,7 @@ const News = () => {
 
     // delete news
 
-    const DeleteService = async (_id) => {
+    const Deletebannerlist = async (_id) => {
         // console.log("_id",_id)
         try {
             const result = await Swal.fire({
@@ -205,7 +203,7 @@ const News = () => {
             });
 
             if (result.isConfirmed) {
-                const response = await DeleteNews(_id, token);
+                const response = await DeleteBanner(_id, token);
                 if (response.status) {
                     Swal.fire({
                         title: 'Deleted!',
@@ -213,7 +211,7 @@ const News = () => {
                         icon: 'success',
                         confirmButtonText: 'OK',
                     });
-                    getNews();
+                    getBanner();
 
                 }
             } else {
@@ -245,9 +243,14 @@ const News = () => {
             sortable: false,
             width: '70px',
         },
+        // {
+        //     name: 'Title',
+        //     selector: row => row.title,
+        //     sortable: true,
+        // },
         {
-            name: 'Title',
-            selector: row => row.title,
+            name: 'Image',
+            cell: row => <img src={`/assets/uploads/banner/${row.image}`} alt="Image" width="50" height="50" />,
             sortable: true,
         },
         {
@@ -258,7 +261,7 @@ const News = () => {
                         id={`rating_${row.status}`}
                         className="form-check-input toggleswitch"
                         type="checkbox"
-                        checked={row.status === true}
+                        checked={row.status == true}
                         onChange={(event) => handleSwitchChange(event, row._id)}
                     />
                     <label
@@ -270,25 +273,13 @@ const News = () => {
             sortable: true,
         },
         {
-            name: 'Description',
-            selector: row => row.description,
-            sortable: true,
-        },
-        {
-            name: 'Image',
-            cell: row => <img src={`/assets/uploads/news/${row.image}`} alt="Image" width="50" height="50" />,
-            sortable: true,
-        },
-        
-
-        {
             name: 'Created At',
-            selector: row => new Date(row.created_at).toLocaleDateString(),
+            selector: row => fDateTime(row.created_at),
             sortable: true,
         },
         {
             name: 'Updated At',
-            selector: row => new Date(row.updated_at).toLocaleDateString(),
+            selector: row => fDateTime(row.updated_at),
             sortable: true,
         },
         {
@@ -305,7 +296,7 @@ const News = () => {
                         />
                     </div>
                     <div>
-                        <Trash2 onClick={() => DeleteService(row._id)} />
+                        <Trash2 onClick={() => Deletebannerlist(row._id)} />
                     </div>
                 </>
             ),
@@ -315,6 +306,14 @@ const News = () => {
         }
     ];
 
+
+
+    // const updateServiceTitle = (value) => {
+    //     setUpdatetitle(prev => ({
+    //         ...prev,
+    //         title: value
+    //     }));
+    // };
 
 
     const updateServiceTitle = (updatedField) => {
@@ -332,7 +331,7 @@ const News = () => {
             <div className="page-content">
 
                 <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                    <div className="breadcrumb-title pe-3">News</div>
+                    <div className="breadcrumb-title pe-3">Banner</div>
                     <div className="ps-3">
                         <nav aria-label="breadcrumb">
                             <ol className="breadcrumb mb-0 p-0">
@@ -369,7 +368,7 @@ const News = () => {
                                     data-bs-target="#exampleModal"
                                 >
                                     <i className="bx bxs-plus-square" />
-                                    Add News
+                                    Add Banner
                                 </button>
 
                                 <div
@@ -383,7 +382,7 @@ const News = () => {
                                         <div className="modal-content">
                                             <div className="modal-header">
                                                 <h5 className="modal-title" id="exampleModalLabel">
-                                                    Add News
+                                                    Add Banner
                                                 </h5>
                                                 <button
                                                     type="button"
@@ -396,18 +395,6 @@ const News = () => {
                                                 <form>
                                                     <div className="row">
                                                         <div className="col-md-12">
-                                                            <label htmlFor="">Title</label>
-                                                            <input
-                                                                className="form-control mb-3"
-                                                                type="text"
-                                                                placeholder='Enter News Title'
-                                                                value={title.title}
-                                                                onChange={(e) => setTitle({ ...title, title: e.target.value })}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                    <div className="row">
-                                                        <div className="col-md-12">
                                                             <label htmlFor="imageUpload">Upload Image</label>
                                                             <input
                                                                 className="form-control mb-3"
@@ -415,19 +402,6 @@ const News = () => {
                                                                 accept="image/*"
                                                                 id="imageUpload"
                                                                 onChange={(e) => setTitle({ ...title, image: e.target.files[0] })}
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="row">
-                                                        <div className="col-md-12">
-                                                            <label htmlFor="">description</label>
-                                                            <input
-                                                                className="form-control mb-3"
-                                                                type="text"
-                                                                placeholder='Enter description'
-                                                                value={title.description}
-                                                                onChange={(e) => setTitle({ ...title, description: e.target.value })}
                                                             />
                                                         </div>
                                                     </div>
@@ -444,7 +418,7 @@ const News = () => {
                                                 <button
                                                     type="button"
                                                     className="btn btn-primary"
-                                                    onClick={AddNews}
+                                                    onClick={AddBanner}
                                                 >
                                                     Save
                                                 </button>
@@ -476,19 +450,7 @@ const News = () => {
                                                 </div>
                                                 <div className="modal-body">
                                                     <form>
-                                                        <div className="row">
-                                                            <div className="col-md-12">
-                                                                <label htmlFor="">Title</label>
-                                                                <input
-                                                                    className="form-control mb-2"
-                                                                    type="text"
-                                                                    placeholder='Enter news Title'
-                                                                    value={updatetitle.title}
-                                                                    onChange={(e) => updateServiceTitle({ title: e.target.value })}
-                                                                />
-                                                            </div>
-                                                        </div>
-
+                                        
                                                         <div className="row">
                                                             <div className="col-md-12">
                                                                 <label htmlFor="imageUpload">Image</label>
@@ -507,18 +469,7 @@ const News = () => {
                                                             </div>
                                                         </div>
 
-                                                        <div className="row">
-                                                            <div className="col-md-12">
-                                                                <label htmlFor="">Description</label>
-                                                                <input
-                                                                    className="form-control mb-2"
-                                                                    type="text"
-                                                                    placeholder='Enter  Description'
-                                                                    value={updatetitle.description}
-                                                                    onChange={(e) => updateServiceTitle({ description: e.target.value })}
-                                                                />
-                                                            </div>
-                                                        </div>
+                                                      
                                                     </form>
 
                                                 </div>
@@ -533,9 +484,9 @@ const News = () => {
                                                     <button
                                                         type="button"
                                                         className="btn btn-primary"
-                                                        onClick={updateNews}
+                                                        onClick={updatebanner}
                                                     >
-                                                        Update News
+                                                        Update Banner
                                                     </button>
                                                 </div>
                                             </div>
@@ -562,4 +513,4 @@ const News = () => {
     );
 };
 
-export default News;
+export default Banner;

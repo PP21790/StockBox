@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const BasicSetting_Modal = db.BasicSetting;
 const Clients_Modal = db.Clients;
 const { sendEmail } = require('../../Utils/emailService');
-
+const axios = require('axios');
 
 class Clients {
 
@@ -530,6 +530,214 @@ async otpSubmit(req, res) {
     });
   }
 }
+
+
+async  aadhaarVerification(req, res) {
+  try {
+    const { aadhaarNumber, id } = req.body; // Extract Aadhaar number and id from request body
+
+    // Validate that Aadhaar number is provided
+    if (!aadhaarNumber) {
+      return res.status(400).json({
+        status: false,
+        message: "Please provide Aadhaar number",
+      });
+    }
+
+    const settings = await BasicSetting_Modal.findOne();
+      if (!settings || !settings.smtp_status) {
+        throw new Error('SMTP settings are not configured or are disabled');
+      }   
+
+    // Aadhaar verification API token
+    const apiToken = settings.surepass_token;
+
+    // Aadhaar verification API call
+    const response = await axios.post(
+      'https://kyc-api.aadhaarkyc.io/api/v1/aadhaar-v2/generate-otp',
+      {
+        id_number: aadhaarNumber
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiToken}`,
+        }
+      }
+    );
+
+    return res.status(200).json({
+      status: true,
+      message: "OTP generated successfully",
+      data: response.data, // Respond with the data from the API
+    });
+
+  } catch (error) {
+
+    if (error.response) {
+
+      return res.status(error.response.status).json({
+        status: false,
+        message: error.response.data.message || "Failed to generate OTP",
+        error: error.response.data,
+      });
+    } else {
+
+      return res.status(500).json({
+        status: false,
+        message: "Server error during Aadhaar verification",
+        error: error.message,
+      });
+    }
+  }
+}
+
+
+
+
+async  aadhaarOtpSubmit(req, res) {
+  try {
+    const { client_id,otp, id } = req.body; // Extract Aadhaar number and id from request body
+
+    // Validate that Aadhaar number is provided
+    if (!otp) {
+      return res.status(400).json({
+        status: false,
+        message: "Please Enter Otp",
+      });
+    }
+
+    const settings = await BasicSetting_Modal.findOne();
+      if (!settings || !settings.smtp_status) {
+        throw new Error('SMTP settings are not configured or are disabled');
+      }   
+
+    // Aadhaar verification API token
+    const apiToken = settings.surepass_token;
+
+    // Aadhaar verification API call
+    const response = await axios.post(
+      'https://kyc-api.aadhaarkyc.io/api/v1/aadhaar-v2/submit-otp',
+      {
+        "client_id":client_id,
+        "otp":otp
+    },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiToken}`,
+        }
+      }
+    );
+
+    return res.status(200).json({
+      status: true,
+      message: "Aadhaar Verification successfully",
+      data: response.data, // Respond with the data from the API
+    });
+
+  } catch (error) {
+
+    if (error.response) {
+
+      return res.status(error.response.status).json({
+        status: false,
+        message: error.response.data.message || "Failed to generate OTP",
+        error: error.response.data,
+      });
+    } else {
+
+      return res.status(500).json({
+        status: false,
+        message: "Server error during Aadhaar verification",
+        error: error.message,
+      });
+    }
+  }
+}
+
+
+
+
+async  clientKycAndAgreement(req, res) {
+  try {
+    // Extract data from the request body
+    const email = req.body.email;
+    const name = req.body.name;
+    const phone = req.body.phone;
+    const panno = req.body.panno;
+    const aadhaarno = req.body.aadhaarno;
+    const id = req.body.id;
+
+    const refid = Math.floor(10000 + Math.random() * 90000); // Generate a random reference ID
+
+    const client = await Clients_Modal.findOne({
+      _id: id
+    });
+
+
+    if (!client) {
+      return res.status(400).json({
+        status: false,
+        message: "Something went wrong",
+      });
+    }
+
+
+    const payload = {
+        customer_identifier: email,
+        customer_name: name,
+        reference_id: refid,
+        template_name: 'KYC',
+        notify_customer: false,
+        request_details: {},
+        transaction_id: refid,
+        generate_access_token: true
+    };
+
+    // Make the POST request to Digio API using Axios
+    const response = await axios.post(
+        'https://api.digio.in/client/kyc/v2/request/with_template',
+        payload,
+        {
+            headers: {
+                'Authorization': 'Basic xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', // Replace with your actual token
+                'Content-Type': 'application/json'
+            },
+            timeout: 300000, // 300 seconds
+        }
+    );
+
+    const resData = response.data;
+
+    if (resData && resData.status === 'requested') {
+        const kid = resData.id;
+        const customer_identifier = resData.customer_identifier;
+        const gid = resData.access_token.id;
+
+        // Prepare data to be returned
+        const data = {
+            redirectUrl: '/Frontend/getDigilockerResponse',  // Adjust this to your route handler
+            kid,
+            customer_identifier,
+            gid
+        };
+
+        // Return JSON response
+        res.json(data);
+    } else {
+        // Handle error case when status is not 'requested'
+        res.status(400).json({ error: 'Digio status is not "requested"' });
+    }
+} catch (error) {
+    console.error('Error in submitting KYC:', error.message);
+    res.status(500).json({ error: 'CURL request failed', details: error.message });
+}
+}
+
+
+
+
 
 
 
