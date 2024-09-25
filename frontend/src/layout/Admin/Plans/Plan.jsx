@@ -143,6 +143,19 @@ const Plan = () => {
                                             <div className="col-md-6 mb-3" key={client._id}>
                                                 <div className="pricing-card">
                                                     <div className='row justify-content-end mb-3'>
+                                                        <div className='col-md-6 d-flex justify-content-start'>
+                                                            <div className="form-check form-switch">
+                                                                <input
+                                                                    className="form-check-input toggleswitch"
+                                                                    type="checkbox"
+                                                                    role="switch"
+                                                                    id="flexSwitchCheckDefault1"
+                                                                    defaultChecked=""
+                                                                />
+
+                                                            </div>
+
+                                                        </div>
                                                         <div className='col-md-6 d-flex justify-content-end'>
                                                             <div>
                                                                 <i className="bx bx-trash trashbtn ms-3" onClick={() => Deleteplanbyadmin(client._id)} />

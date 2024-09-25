@@ -40,7 +40,7 @@ const Header = () => {
 
 
 
-                  {/* <li className="nav-item dropdown dropdown-large">
+                 <li className="nav-item dropdown dropdown-large">
                     <a
                       className="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative"
                       href="#"
@@ -109,116 +109,8 @@ const Header = () => {
                             </div>
                           </div>
                         </a>
-                        <a className="dropdown-item" href="javascript:;">
-                          <div className="d-flex align-items-center">
-                            <div className="notify bg-light-success text-success">
-                              <img
-                                src="/assets/images/app/outlook.png"
-                                width={25}
-                                alt="user avatar"
-                              />
-                            </div>
-                            <div className="flex-grow-1">
-                              <h6 className="msg-name">
-                                Account Created
-                                <span className="msg-time float-end">28 min ago</span>
-                              </h6>
-                              <p className="msg-info">
-                                Successfully created new email
-                              </p>
-                            </div>
-                          </div>
-                        </a>
-                        <a className="dropdown-item" href="javascript:;">
-                          <div className="d-flex align-items-center">
-                            <div className="notify bg-light-info text-info">Ss</div>
-                            <div className="flex-grow-1">
-                              <h6 className="msg-name">
-                                New Product Approved{" "}
-                                <span className="msg-time float-end">2 hrs ago</span>
-                              </h6>
-                              <p className="msg-info">
-                                Your new product has approved
-                              </p>
-                            </div>
-                          </div>
-                        </a>
-                        <a className="dropdown-item" href="javascript:;">
-                          <div className="d-flex align-items-center">
-                            <div className="user-online">
-                              <img
-                                src="/assets/images/avatars/avatar-4.png"
-                                className="msg-avatar"
-                                alt="user avatar"
-                              />
-                            </div>
-                            <div className="flex-grow-1">
-                              <h6 className="msg-name">
-                                Katherine Pechon{" "}
-                                <span className="msg-time float-end">15 min ago</span>
-                              </h6>
-                              <p className="msg-info">
-                                Making this the first true generator
-                              </p>
-                            </div>
-                          </div>
-                        </a>
-                        <a className="dropdown-item" href="javascript:;">
-                          <div className="d-flex align-items-center">
-                            <div className="notify bg-light-success text-success">
-                              <i className="bx bx-check-square" />
-                            </div>
-                            <div className="flex-grow-1">
-                              <h6 className="msg-name">
-                                Your item is shipped{" "}
-                                <span className="msg-time float-end">5 hrs ago</span>
-                              </h6>
-                              <p className="msg-info">
-                                Successfully shipped your item
-                              </p>
-                            </div>
-                          </div>
-                        </a>
-                        <a className="dropdown-item" href="javascript:;">
-                          <div className="d-flex align-items-center">
-                            <div className="notify bg-light-primary">
-                              <img
-                                src="/assets/images/app/github.png"
-                                width={25}
-                                alt="user avatar"
-                              />
-                            </div>
-                            <div className="flex-grow-1">
-                              <h6 className="msg-name">
-                                New 24 authors
-                                <span className="msg-time float-end">1 day ago</span>
-                              </h6>
-                              <p className="msg-info">
-                                24 new authors joined last week
-                              </p>
-                            </div>
-                          </div>
-                        </a>
-                        <a className="dropdown-item" href="javascript:;">
-                          <div className="d-flex align-items-center">
-                            <div className="user-online">
-                              <img
-                                src="/assets/images/avatars/avatar-8.png"
-                                className="msg-avatar"
-                                alt="user avatar"
-                              />
-                            </div>
-                            <div className="flex-grow-1">
-                              <h6 className="msg-name">
-                                Peter Costanzo{" "}
-                                <span className="msg-time float-end">6 hrs ago</span>
-                              </h6>
-                              <p className="msg-info">
-                                It was popularised in the 1960s
-                              </p>
-                            </div>
-                          </div>
-                        </a>
+                     
+                     
                       </div>
                       <a href="javascript:;">
                         <div className="text-center msg-footer">
@@ -228,7 +120,7 @@ const Header = () => {
                         </div>
                       </a>
                     </div>
-                  </li> */}
+                  </li> 
 
                 </ul>
               </div>
