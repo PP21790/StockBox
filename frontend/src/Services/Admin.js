@@ -1595,3 +1595,55 @@ export async function UpdateEmailSettings(data, token) {
         return err.response?.data || err.message;
     }
 }
+
+
+// api information 
+
+
+export async function updateApiinfo(data, token) {
+    const formData = new FormData();
+
+    formData.append('digio_client_id', data.digio_client_id);
+    formData.append('digio_client_secret', data.digio_client_secret);
+    // formData.append('razorpay_key', data.razorpay_key);
+    // formData.append('razorpay_secret', data.razorpay_secret);
+
+    try {
+        const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+// update payment gateway 
+
+
+export async function updatePayementgateway(data, token) {
+    const formData = new FormData();
+
+    formData.append('razorpay_key', data.razorpay_key);
+    formData.append('razorpay_secret', data.razorpay_secret);
+
+    try {
+        const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
