@@ -9,7 +9,7 @@ class BasicSetting {
     async AddBasicSetting(req, res) {
         try {
             // Handle the image uploads
-            upload('basicsetting').fields([{ name: 'favicon', maxCount: 1 }, { name: 'logo', maxCount: 1 }])(req, res, async (err) => {
+            upload('basicsetting').fields([{ name: 'favicon', maxCount: 1 }, { name: 'logo', maxCount: 1 }, , { name: 'refer_image', maxCount: 1 }])(req, res, async (err) => {
                 if (err) {
                     return res.status(500).json({ status: false, message: "File upload error", error: err.message });
                 }
@@ -31,13 +31,23 @@ class BasicSetting {
                     refer_title,
                     refer_description,
                     sender_earn,
-                    receiver_earn
+                    receiver_earn,
+                    surepass_token,
+                    digio_client_id,
+                    digio_client_secret,
+                    razorpay_key,
+                    razorpay_secret
+
                 } = req.body;
 
                 // Get the uploaded file paths
-                const favicon = req.files['favicon'] ? req.files['favicon'][0].filename : null;
-                const logo = req.files['logo'] ? req.files['logo'][0].filename : null;
 
+                const existingSetting = await BasicSetting_Modal.findOne({});
+
+                   // Get the uploaded file paths or retain the existing values
+            const favicon = req.files['favicon'] ? req.files['favicon'][0].filename : (existingSetting ? existingSetting.favicon : null);
+            const logo = req.files['logo'] ? req.files['logo'][0].filename : (existingSetting ? existingSetting.logo : null);
+            const refer_image = req.files['refer_image'] ? req.files['refer_image'][0].filename : (existingSetting ? existingSetting.refer_image : null);
                 // Define the update payload
                 const update = {
                     favicon,
@@ -57,8 +67,14 @@ class BasicSetting {
                     to_mail,
                     refer_title,
                     refer_description,
+                    refer_image,
                     sender_earn,
-                    receiver_earn
+                    receiver_earn,
+                    surepass_token,
+                    digio_client_id,
+                    digio_client_secret,
+                    razorpay_key,
+                    razorpay_secret
                 };
 
                 // Upsert the setting
