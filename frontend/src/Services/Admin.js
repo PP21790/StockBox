@@ -1509,7 +1509,7 @@ export async function DeleteBanner(_id, token) {
 
 // basic setting 
 
-export async function basiclist(token) {
+export async function basicsettinglist(token) {
 
     try {
         const res = await axios.get(`${Config.base_url}basicsetting/detail`, {
@@ -1520,5 +1520,55 @@ export async function basiclist(token) {
         return res?.data;
     } catch (err) {
         return { error: err.response?.data || err.message };
+    }
+}
+
+
+
+// add or update basic setting 
+
+export async function Updatebasicsettings(data, token) {
+    const formData = new FormData();
+    
+  console.log("data",data)
+
+    formData.append('id', data.id);
+    formData.append('from_name', data.from_name);
+    formData.append('address', data.address);
+    formData.append('email_address', data.email_address);
+    formData.append('contact_number', data.contact_number);
+    formData.append('favicon', data.favicon);
+    formData.append('logo', data.logo);
+    
+
+    // formData.append('from_mail', data.from_mail);
+    // formData.append('receiver_earn', data.receiver_earn);
+    // formData.append('refer_description', data.refer_description);
+    // formData.append('refer_title', data.refer_title);
+    // formData.append('sender_earn', data.sender_earn);
+    // formData.append('smtp_host', data.smtp_host);
+    // formData.append('smtp_password', data.smtp_password);
+    // formData.append('smtp_port', data.smtp_port);
+    // formData.append('smtp_status', data.smtp_status);
+    // formData.append('smtp_username', data.smtp_username);
+    // formData.append('refer_image', data.refer_image);
+    // formData.append('surepass_token', data.surepass_token);
+    // formData.append('digio_client_id', data.digio_client_id);
+    // formData.append('digio_client_secret', data.digio_client_secret);
+    // formData.append('razorpay_key', data.razorpay_key);
+    // formData.append('razorpay_secret', data.razorpay_secret);
+
+    try {
+        const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
     }
 }
