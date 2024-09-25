@@ -1530,8 +1530,6 @@ export async function basicsettinglist(token) {
 export async function Updatebasicsettings(data, token) {
     const formData = new FormData();
     
-  console.log("data",data)
-
     formData.append('id', data.id);
     formData.append('from_name', data.from_name);
     formData.append('address', data.address);
@@ -1540,17 +1538,42 @@ export async function Updatebasicsettings(data, token) {
     formData.append('favicon', data.favicon);
     formData.append('logo', data.logo);
     
+    try {
+        const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// update email setting
+
+
+export async function UpdateEmailSettings(data, token) {
+    const formData = new FormData();
+    
 
     // formData.append('from_mail', data.from_mail);
     // formData.append('receiver_earn', data.receiver_earn);
     // formData.append('refer_description', data.refer_description);
     // formData.append('refer_title', data.refer_title);
     // formData.append('sender_earn', data.sender_earn);
-    // formData.append('smtp_host', data.smtp_host);
-    // formData.append('smtp_password', data.smtp_password);
-    // formData.append('smtp_port', data.smtp_port);
+    formData.append('smtp_host', data.smtp_host);
+    formData.append('smtp_password', data.smtp_password);
+    formData.append('smtp_port', data.smtp_port);
     // formData.append('smtp_status', data.smtp_status);
-    // formData.append('smtp_username', data.smtp_username);
+    formData.append('smtp_username', data.smtp_username);
+    formData.append('to_mail', data.to_mail);
+    formData.append('encryption', data.encryption);
     // formData.append('refer_image', data.refer_image);
     // formData.append('surepass_token', data.surepass_token);
     // formData.append('digio_client_id', data.digio_client_id);

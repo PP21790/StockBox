@@ -191,7 +191,6 @@ const Banner = () => {
     // delete news
 
     const Deletebannerlist = async (_id) => {
-        // console.log("_id",_id)
         try {
             const result = await Swal.fire({
                 title: 'Are you sure?',
@@ -250,7 +249,7 @@ const Banner = () => {
         // },
         {
             name: 'Image',
-            cell: row => <img src={`/assets/uploads/banner/${row.image}`} alt="Image" width="50" height="50" />,
+            cell: row => <img src={`/assets/uploads/banner/${row.image}`} alt="image" width="50" height="50" />,
             sortable: true,
         },
         {
