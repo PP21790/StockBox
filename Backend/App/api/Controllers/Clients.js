@@ -689,7 +689,7 @@ async  clientKycAndAgreement(req, res) {
 
 
       // PDF generation section
-      const templatePath = path.join(__dirname, '../../../uploads/template', 'kyc-agreement-template.html');
+      const templatePath = path.join(__dirname, 'assets/uploads/template', 'kyc-agreement-template.html');
       let htmlContent = fs.readFileSync(templatePath, 'utf8');
   
       // Replace placeholders with actual values
@@ -705,7 +705,7 @@ async  clientKycAndAgreement(req, res) {
       await page.setContent(htmlContent);
       
       // Define the path to save the PDF
-      const pdfDir = path.join(__dirname, '..', '../../uploads', 'pdf'); // Adjust this as needed
+      const pdfDir = path.join(__dirname, 'assets/uploads', 'pdf'); // Adjust this as needed
       const pdfPath = path.join(pdfDir, `kyc-agreement-${phone}.pdf`);
       // Generate PDF and save to the specified path
       await page.pdf({
