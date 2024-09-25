@@ -58,7 +58,7 @@ const Sidebar = ({ onToggleClick }) => {
                     </li>
 
                     <li>
-                      <Link to={'/admin/client'}>
+                      <Link to={'/admin/freeclient'}>
                         <div className="parent-icon">
                           <i className="bx bx-user" />
                         </div>
@@ -163,7 +163,7 @@ const Sidebar = ({ onToggleClick }) => {
                       </Link>
                     </li>
 
-                   
+
 
                     <li>
                       <Link to="/admin/coupon">
@@ -173,7 +173,7 @@ const Sidebar = ({ onToggleClick }) => {
                         <div className="menu-title">Coupon</div>
                       </Link>
                     </li>
-                         
+
                     <li>
                       <Link to="/admin/banner">
                         <div className="parent-icon">
@@ -181,9 +181,9 @@ const Sidebar = ({ onToggleClick }) => {
                         </div>
                         <div className="menu-title">Banner</div>
                       </Link>
-                    </li>  
-                      
-        
+                    </li>
+
+
                     <li className={activeDropdown === 'Basic Settings' ? 'mm-active' : ''}>
                       <a href="#" onClick={toggleDropdown('Basic Settings')} className="has-arrow" aria-expanded={activeDropdown === 'Basic Settings'}>
                         <div className="parent-icon">
