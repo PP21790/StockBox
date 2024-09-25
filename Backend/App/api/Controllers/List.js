@@ -33,9 +33,10 @@ class List {
             const bannerWithImageUrls = banners.map(banner => {
                 return {
                     ...banner._doc, // Spread the original bannerss document
-                    image: banner.image ? `${baseUrl}/assets/uploads/banner/${banner.image}` : null // Append full image URL
+                    image: banner.image ? `${baseUrl}/Backend/uploads/banner/${banner.image}` : null // Append full image URL
                 };
             });
+            
 
 
             return res.status(200).json({
@@ -64,7 +65,7 @@ class List {
             const blogsWithImageUrls = blogs.map(blog => {
                 return {
                     ...blog._doc, // Spread the original blog document
-                    image: blog.image ? `${baseUrl}/assets/uploads/blogs/${blog.image}` : null // Append full image URL
+                    image: blog.image ? `${baseUrl}/Backend/uploads/blogs/${blog.image}` : null // Append full image URL
                 };
             });
 
@@ -96,7 +97,7 @@ class List {
             const newsWithImageUrls = news.map(newss => {
                 return {
                     ...newss._doc, // Spread the original bannerss document
-                    image: newss.image ? `${baseUrl}/assets/uploads/news/${newss.image}` : null // Append full image URL
+                    image: newss.image ? `${baseUrl}/Backend/uploads/news/${newss.image}` : null // Append full image URL
                 };
             });
 
@@ -461,7 +462,7 @@ async Couponlist(req, res) {
     const resultWithImageUrls = result.map(results => {
         return {
             ...results._doc, // Spread the original bannerss document
-            image: results.image ? `${baseUrl}/assets/uploads/coupon/${results.image}` : null // Append full image URL
+            image: results.image ? `${baseUrl}/Backend/uploads/coupon/${results.image}` : null // Append full image URL
         };
     });
 
@@ -601,7 +602,7 @@ async showSignalsToClients(req, res) {
       const protocol = req.protocol; // Will be 'http' or 'https'
       const baseUrl = `${protocol}://${req.headers.host}`;
  matchingSignals.forEach(signal => {
-    signal.report = `${baseUrl}/assets/uploads/report/${signal.report}`;
+    signal.report = `${baseUrl}/Backend/uploads/report/${signal.report}`;
   });
 
       relevantSignals = relevantSignals.concat(matchingSignals);
@@ -659,7 +660,7 @@ async showSignalsToClientsClose(req, res) {
       const protocol = req.protocol; // Will be 'http' or 'https'
       const baseUrl = `${protocol}://${req.headers.host}`;
  matchingSignals.forEach(signal => {
-    signal.report = `${baseUrl}/assets/uploads/report/${signal.report}`;
+    signal.report = `${baseUrl}/Backend/uploads/report/${signal.report}`;
   });
 
       relevantSignals = relevantSignals.concat(matchingSignals);

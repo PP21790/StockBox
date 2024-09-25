@@ -49,6 +49,11 @@ const clientsModel = Schema({
         unique: true,
         default: null
     },
+    pdf: {
+        type: String,
+        trim: true,
+        default: null
+    },
     add_by: {
         type: String,
         trim: true,

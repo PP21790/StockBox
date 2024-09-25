@@ -116,6 +116,11 @@ const BasicSettingSchema = new Schema({
         trim: true,
         default: null
     },
+    digio_template_name: {
+        type: String,
+        trim: true,
+        default: null
+    },
     razorpay_key: {
         type: String,
         trim: true,
