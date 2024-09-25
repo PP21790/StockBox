@@ -101,35 +101,6 @@ const Sidebar = ({ onToggleClick }) => {
                     </li>
 
 
-                    {/* <li className={activeDropdown === 'refer' ? 'mm-active' : ''}>
-                      <a href="#" onClick={toggleDropdown('refer')} className="has-arrow" aria-expanded={activeDropdown === 'refer'}>
-                        <div className="parent-icon">
-                          <i className="bx bxl-redux" />
-                        </div>
-                        <div className="menu-title">Refer & Earn</div>
-                      </a>
-                      <ul className={`mm-collapse ${activeDropdown === 'refer' ? 'mm-show' : ''}`}>
-                        <li>
-                          <Link to="/admin/refer/invite">
-                            <i className="bx bx-radio-circle" />
-                            Invite Friends
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="/admin/refer/history">
-                            <i className="bx bx-radio-circle" />
-                            Referral History
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="/admin/refer/earnings">
-                            <i className="bx bx-radio-circle" />
-                            Earnings
-                          </Link>
-                        </li>
-                      </ul>
-                    </li> */}
-
                     <li>
                       <Link to="/admin/staff">
                         <div className="parent-icon">
@@ -203,23 +174,48 @@ const Sidebar = ({ onToggleClick }) => {
                       </Link>
                     </li>  
                       
-                    <li>
-                      <Link to="/admin/setting">
+        
+                    <li className={activeDropdown === 'Basic Settings' ? 'mm-active' : ''}>
+                      <a href="#" onClick={toggleDropdown('Basic Settings')} className="has-arrow" aria-expanded={activeDropdown === 'Basic Settings'}>
                         <div className="parent-icon">
-                          <i className="fadeIn animated bx bx-news" />
+                          <i className="bx bxl-redux" />
                         </div>
-                        <div className="menu-title">Settings</div>
-                      </Link>
-                    </li> 
-                      
-
-                    <li>
-                      <Link to="/admin/refer">
-                        <div className="parent-icon">
-                          <i className="bx bx-user-plus" />
-                        </div>
-                        <div className="menu-title">Refer & Earn</div>
-                      </Link>
+                        <div className="menu-title">Basic Settings</div>
+                      </a>
+                      <ul className={`mm-collapse ${activeDropdown === 'Basic Settings' ? 'mm-show' : ''}`}>
+                        <li>
+                          <Link to="/admin/generalsettings">
+                            <div className="parent-icon">
+                              <i className="bx bx-purchase-tag" />
+                            </div>
+                            <div className="menu-title">General Setting</div>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/admin/emailsetting">
+                            <div className="parent-icon">
+                              <i className="bx bx-cog" />
+                            </div>
+                            <div className="menu-title">Email Setting</div>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/admin/Apiinfo">
+                            <div className="parent-icon">
+                              <i className="bx bx-filter" />
+                            </div>
+                            <div className="menu-title">Api Information</div>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/admin/paymentgeteway">
+                            <div className="parent-icon">
+                              <i className="bx bx-line-chart" />
+                            </div>
+                            <div className="menu-title">Payment Gateway</div>
+                          </Link>
+                        </li>
+                      </ul>
                     </li>
 
                     <li>
