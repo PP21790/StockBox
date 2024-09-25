@@ -230,7 +230,7 @@ const Sidebar = ({ onToggleClick }) => {
                     <li>
                       <Link to="/admin/faq">
                         <div className="parent-icon">
-                          <i className="bx bx-message-square-edit" />
+                          <i className="fadeIn animated bx bx-conversation" />
                         </div>
                         <div className="menu-title">Broadcast SMS</div>
                       </Link>
@@ -263,7 +263,7 @@ const Sidebar = ({ onToggleClick }) => {
                     <li>
                       <Link to="/admin/termsandcondtion">
                         <div className="parent-icon">
-                          <i className="bx bxs-chevron-right" />
+                          <i className="fadeIn animated bx bx-info-square" />
                         </div>
                         <div className="menu-title">Terms And Condition</div>
                       </Link>
