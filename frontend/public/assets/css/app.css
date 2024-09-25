@@ -373,11 +373,11 @@ a {
 
 
 
-.sidebar-wrapper .metismenu ul a i {
+/* .sidebar-wrapper .metismenu ul a i {
 
 	margin-right: 14px;
 
-}
+} */
 
 
 
@@ -5410,6 +5410,10 @@ ul li {
 	border-color: #14a514c9 !important;
 }
 
-.viewlist{
+.viewlist {
 	padding: 3px;
+}
+
+.radiocricle{
+	font-size: 19px !important;
 }
