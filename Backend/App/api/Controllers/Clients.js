@@ -5,6 +5,9 @@ const BasicSetting_Modal = db.BasicSetting;
 const Clients_Modal = db.Clients;
 const { sendEmail } = require('../../Utils/emailService');
 const axios = require('axios');
+const puppeteer = require('puppeteer');
+const path = require('path');
+const fs = require('fs');
 
 class Clients {
 
@@ -545,8 +548,8 @@ async  aadhaarVerification(req, res) {
     }
 
     const settings = await BasicSetting_Modal.findOne();
-      if (!settings || !settings.smtp_status) {
-        throw new Error('SMTP settings are not configured or are disabled');
+      if (!settings || !settings.surepass_token) {
+        throw new Error('Sure Pass settings are not configured or are disabled');
       }   
 
     // Aadhaar verification API token
@@ -608,8 +611,8 @@ async  aadhaarOtpSubmit(req, res) {
     }
 
     const settings = await BasicSetting_Modal.findOne();
-      if (!settings || !settings.smtp_status) {
-        throw new Error('SMTP settings are not configured or are disabled');
+      if (!settings || !settings.surepass_token) {
+        throw new Error('Sure Pass settings are not configured or are disabled');
       }   
 
     // Aadhaar verification API token
@@ -684,16 +687,73 @@ async  clientKycAndAgreement(req, res) {
     }
 
 
+
+      // PDF generation section
+      const templatePath = path.join(__dirname, '../../../uploads/template', 'kyc-agreement-template.html');
+      let htmlContent = fs.readFileSync(templatePath, 'utf8');
+  
+      // Replace placeholders with actual values
+      htmlContent = htmlContent
+        .replace('{{name}}', name)
+        .replace('{{email}}', email)
+        .replace('{{phone}}', phone)
+        .replace('{{panno}}', panno)
+        .replace('{{aadhaarno}}', aadhaarno);
+
+      const browser = await puppeteer.launch();
+      const page = await browser.newPage();
+      await page.setContent(htmlContent);
+      
+      // Define the path to save the PDF
+      const pdfDir = path.join(__dirname, '..', '../../uploads', 'pdf'); // Adjust this as needed
+      const pdfPath = path.join(pdfDir, `kyc-agreement-${phone}.pdf`);
+      // Generate PDF and save to the specified path
+      await page.pdf({
+        path: pdfPath,
+        format: 'A4',
+        printBackground: true,
+      });
+
+      await browser.close();
+
+      // Optionally send the PDF back in the response
+      // res.contentType("application/pdf");
+      // res.setHeader('Content-Disposition', `attachment; filename=kyc-agreement-${phone}.pdf`);
+      // res.sendFile(pdfPath);
+
+
+    client.panno = panno;
+    client.aadhaarno = aadhaarno;
+    client.pdf = `kyc-agreement-${phone}.pdf`;  // Correctly set the PDF filename
+   await client.save();
+
+
+    const settings = await BasicSetting_Modal.findOne();
+    if (!settings || !settings.digio_client_id || !settings.digio_client_secret) {
+      throw new Error('Digio settings are not configured or are disabled');
+    }   
+
+  // Aadhaar verification API token
+  const digio_client_id = settings.digio_client_id;
+  const digio_client_secret = settings.digio_client_secret;
+  const digio_template_name = settings.digio_template_name;
+
+  const authToken = Buffer.from(`${digio_client_id}:${digio_client_secret}`).toString('base64');
+  
+
     const payload = {
         customer_identifier: email,
         customer_name: name,
         reference_id: refid,
-        template_name: 'KYC',
+        template_name: digio_template_name,
         notify_customer: false,
         request_details: {},
         transaction_id: refid,
         generate_access_token: true
     };
+
+
+
 
     // Make the POST request to Digio API using Axios
     const response = await axios.post(
@@ -701,32 +761,28 @@ async  clientKycAndAgreement(req, res) {
         payload,
         {
             headers: {
-                'Authorization': 'Basic xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', // Replace with your actual token
-                'Content-Type': 'application/json'
+              'Authorization': `Basic ${authToken}`,
+              'Content-Type': 'application/json'
             },
             timeout: 300000, // 300 seconds
         }
     );
 
-    const resData = response.data;
+
+     const resData = response.data;
 
     if (resData && resData.status === 'requested') {
         const kid = resData.id;
         const customer_identifier = resData.customer_identifier;
         const gid = resData.access_token.id;
 
-        // Prepare data to be returned
         const data = {
-            redirectUrl: '/Frontend/getDigilockerResponse',  // Adjust this to your route handler
             kid,
             customer_identifier,
             gid
         };
-
-        // Return JSON response
-        res.json(data);
+        res.json(data);   
     } else {
-        // Handle error case when status is not 'requested'
         res.status(400).json({ error: 'Digio status is not "requested"' });
     }
 } catch (error) {
