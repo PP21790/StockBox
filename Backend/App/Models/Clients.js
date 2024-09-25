@@ -37,6 +37,18 @@ const clientsModel = Schema({
         unique: true,
         default: null
     },
+    panno: {
+        type: String,
+        trim: true,
+        unique: true,
+        default: null
+    },
+    aadhaarno: {
+        type: String,
+        trim: true,
+        unique: true,
+        default: null
+    },
     add_by: {
         type: String,
         trim: true,
