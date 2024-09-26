@@ -128,14 +128,14 @@ const Sidebar = ({ onToggleClick }) => {
                       </Link>
                     </li>
 
-                    <li>
+                    {/* <li>
                       <Link to="/admin/basket">
                         <div className="parent-icon">
                           <i className="bx bx-basket" />
                         </div>
                         <div className="menu-title">Basket</div>
                       </Link>
-                    </li>
+                    </li> */}
 
                     <li>
                       <Link to="/admin/paymenthistory">

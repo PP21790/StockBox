@@ -152,15 +152,15 @@ const Header = () => {
                       <span>Profile</span>
                     </Link>
                   </li>
-                  <li>
-                    <a
+                  {/* <li>
+                    <Link
                       className="dropdown-item d-flex align-items-center"
-                      href="javascript:;"
+                      to="/admin/changepass"
                     >
                       <i className="bx bx-cog fs-5" />
                       <span>Settings</span>
-                    </a>
-                  </li>
+                    </Link>
+                  </li> */}
 
                   <li>
                     <div className="dropdown-divider mb-0" />

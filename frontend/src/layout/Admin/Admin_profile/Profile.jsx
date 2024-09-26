@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Profile = () => {
     return (
@@ -6,7 +7,7 @@ const Profile = () => {
             <div className="page-content">
                 {/*breadcrumb*/}
                 <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                    <div className="breadcrumb-title pe-3">User Profile</div>
+                    <div className="breadcrumb-title pe-3">Admin Profile</div>
                     <div className="ps-3">
                         <nav aria-label="breadcrumb">
                             <ol className="breadcrumb mb-0 p-0">
@@ -16,7 +17,7 @@ const Profile = () => {
                                     </a>
                                 </li>
                                 <li className="breadcrumb-item active" aria-current="page">
-                                    User Profile
+                                    Admin Profile
                                 </li>
                             </ol>
                         </nav>
@@ -59,12 +60,8 @@ const Profile = () => {
                                                 width={110}
                                             />
                                             <div className="mt-3">
-                                                <h4>John Doe</h4>
-                                                <p className="text-secondary mb-1">Full Stack Developer</p>
-                                                <p className="text-muted font-size-sm">
-                                                    Bay Area, San Francisco, CA
-                                                </p>
-
+                                                <h4>Admin</h4>
+          
                                             </div>
                                         </div>
                                         <hr className="my-4" />
@@ -91,7 +88,7 @@ const Profile = () => {
                                                 </h6>
                                                 <span className="text-secondary">https://codervent.com</span>
                                             </li>
-                                          
+
                                             <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                 <h6 className="mb-0">
                                                     <svg
@@ -194,6 +191,15 @@ const Profile = () => {
                                                 <p>
                                                     Bay Area, San Francisco, CA
                                                 </p>
+                                            </div>
+                                        </div>
+
+                                        <div className="row mb-3">
+                                            <div className="col-sm-3">
+                                                <Link to="/admin/changepass" className="btn btn-primary mb-0" style={{fontSize:"14px"}}>Change Password</Link>
+                                            </div>
+                                            <div className="col-sm-9 text-secondary">
+
                                             </div>
                                         </div>
 
