@@ -186,7 +186,7 @@ const AddSignal = () => {
     },
     {
       name: 'callduration',
-      label: 'Call duration',
+      label: 'Trade duration',
       type: 'select',
       options: [
         { label: 'Long Term', value: 'Long Term' },

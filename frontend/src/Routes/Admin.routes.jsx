@@ -44,6 +44,7 @@ import Apiinfo from '../layout/Admin/BasicSetting/Apiinfo';
 import Payementgateway from '../layout/Admin/BasicSetting/Payementgateway';
 import Emailsettings from '../layout/Admin/BasicSetting/Emailsettings';
 import Freeclient from '../layout/Admin/Admin_client/Freeclient';
+import Message from '../layout/Admin/Broadcast/Message';
 
 
 
@@ -160,6 +161,7 @@ function MainApp() {
                     <Route path="/Apiinfo" element={<Apiinfo/>} />
                     <Route path="/paymentgeteway" element={<Payementgateway/>} />
                     <Route path="/emailsetting" element={<Emailsettings/>} />
+                    <Route path="/message" element={<Message />} />
                     
 
                     

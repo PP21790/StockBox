@@ -228,7 +228,7 @@ const Sidebar = ({ onToggleClick }) => {
                     </li>
 
                     <li>
-                      <Link to="/admin/faq">
+                      <Link to="/admin/message">
                         <div className="parent-icon">
                           <i className="fadeIn animated bx bx-conversation" />
                         </div>
@@ -236,7 +236,7 @@ const Sidebar = ({ onToggleClick }) => {
                       </Link>
                     </li>
                     <li>
-                      <Link to="/admin/faq">
+                      <Link to="/admin/kyc">
                         <div className="parent-icon">
                           <i className="bx bxs-chevron-right" />
                         </div>

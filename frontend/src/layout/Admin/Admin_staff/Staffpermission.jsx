@@ -183,7 +183,7 @@ const Staffpermission = () => {
         <div style={{ marginTop: '100px' }}>
             <DynamicForm
                 fields={fields}
-                page_title="Edit Staff"
+                page_title="Add Staff Permision"
                 btn_name="Edit Staff"
                 btn_name1="Cancel"
                 sumit_btn={true}

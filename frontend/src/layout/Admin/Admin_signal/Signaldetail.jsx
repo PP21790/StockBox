@@ -92,7 +92,7 @@ const Signaldetail = () => {
             label: 'Target-1',
             type: 'number',
             label_size: 6,
-            col_size: 3,
+            col_size: 4,
             disable: true,
         },
         {
@@ -100,7 +100,7 @@ const Signaldetail = () => {
             label: 'Target-2',
             type: 'number',
             label_size: 12,
-            col_size: 3,
+            col_size: 4,
             disable: true,
         },
         {
@@ -108,14 +108,14 @@ const Signaldetail = () => {
             label: 'Target-3',
             type: 'number',
             label_size: 12,
-            col_size: 3,
+            col_size: 4,
             disable: true,
         },
 
     ];
 
 
-    
+
 
     return (
         <div>
@@ -135,7 +135,7 @@ const Signaldetail = () => {
                     </div>
                 </div>
 
-                <div style={{ marginTop: '100px' }}>
+                <div>
                     <DynamicForm
                         fields={fields}
                         page_title="Signal Detail"
