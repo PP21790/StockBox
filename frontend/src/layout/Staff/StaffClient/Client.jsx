@@ -26,13 +26,18 @@ const Client = () => {
         try {
             const response = await GetClient(token);
             if (response.status) {
-                
-                setClients(response.data);
+                const filterdata = response.data.filter((item)=>{
+                    return item.add_by === userid
+                })
+                setClients(filterdata);
             }
         } catch (error) {
             console.log("error");
         }
     }
+
+
+    
 
  
     const getpermissioninfo = async () => {

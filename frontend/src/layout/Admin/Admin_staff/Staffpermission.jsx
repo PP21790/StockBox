@@ -96,7 +96,7 @@ const Staffpermission = () => {
             PhoneNo: row?.PhoneNo || '',
             addclient: false,
             viewclient: false,
-            allviewclient: false,
+            viewdetail: false,
             editclient: false,
             deleteclient: false,
             clientchangestatus: false,
@@ -111,7 +111,7 @@ const Staffpermission = () => {
         if (clients.length > 0) {
             formik.setFieldValue('addclient', clients.includes('addclient'));
             formik.setFieldValue('viewclient', clients.includes('viewclient'));
-            formik.setFieldValue('allviewclient', clients.includes('allviewclient'));
+            formik.setFieldValue('viewdetail', clients.includes('viewdetail'));
             formik.setFieldValue('editclient', clients.includes('editclient'));
             formik.setFieldValue('deleteclient', clients.includes('deleteclient'));
             formik.setFieldValue('clientchangestatus', clients.includes('clientchangestatus'));
@@ -161,12 +161,12 @@ const Staffpermission = () => {
             check_box_true: formik.values.viewclient,
         },
         {
-            name: 'allviewclient',
-            label: 'View All Client',
+            name: 'viewdetail',
+            label: 'View Client Detail',
             type: 'checkbox',
             label_size: 12,
             col_size: 6,
-            check_box_true: formik.values.allviewclient,
+            check_box_true: formik.values.viewdetail,
         },
         {
             name: 'editclient',
