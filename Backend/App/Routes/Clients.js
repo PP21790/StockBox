@@ -13,12 +13,12 @@ const PERMISSIONS = {
     CHANGE_STATUS: 'clientchangestatus',
   };
 
-router.post('/client/add', checkPermission(PERMISSIONS.ADD), AddClient);
-router.get('/client/list', checkPermission(PERMISSIONS.ALL_VIEW), getClient);
-router.put('/client/update', checkPermission(PERMISSIONS.UPDATE), updateClient);
-router.get('/client/delete/:id', checkPermission(PERMISSIONS.DELETE), deleteClient);
-router.get('/client/detail/:id', checkPermission(PERMISSIONS.VIEW), detailClient);
-router.post('/client/change-status', checkPermission(PERMISSIONS.CHANGE_STATUS), statusChange);
+router.post('/client/add', AddClient);
+router.get('/client/list', getClient);
+router.put('/client/update', updateClient);
+router.get('/client/delete/:id', deleteClient);
+router.get('/client/detail/:id', detailClient);
+router.post('/client/change-status', statusChange);
 router.get('/client/activeclient',   activeClient);
 
 

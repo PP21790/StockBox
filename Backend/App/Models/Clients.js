@@ -40,14 +40,17 @@ const clientsModel = Schema({
     panno: {
         type: String,
         trim: true,
-        unique: true,
         default: null
     },
     aadhaarno: {
         type: String,
         trim: true,
-        unique: true,
         default: null
+    },
+    kyc_verification: {
+        type: String,
+        enum: ['1', '0'],
+        default: 0
     },
     pdf: {
         type: String,

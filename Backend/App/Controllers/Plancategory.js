@@ -17,12 +17,19 @@ class Plancategory {
             if (!add_by) {
               return res.status(400).json({ status: false, message: "add_by is required" });
             }
-    
-            console.log("Request Body:", req.body);
+
+            let services;
+            if (Array.isArray(service)) {
+                services = service.join(',');  // Convert array to comma-separated string
+            } else if (typeof service === 'string') {
+                services = service;  // If it's already a string, use it directly
+            } else {
+                return res.status(400).json({ status: false, message: "Invalid service format" });
+            }
     
             const result = new Plancategory_Modal({
                 title,
-                service,
+                service:services,
                 add_by,
             });
     
@@ -151,12 +158,20 @@ class Plancategory {
           message: "Plan category ID is required",
         });
       }
-  
+      let services;
+      if (Array.isArray(service)) {
+          services = service.join(',');  // Convert array to comma-separated string
+      } else if (typeof service === 'string') {
+          services = service;  // If it's already a string, use it directly
+      } else {
+          return res.status(400).json({ status: false, message: "Invalid service format" });
+      }
+ 
       const updatedPlancategory = await Plancategory_Modal.findByIdAndUpdate(
         id,
         {
           title,
-          service,
+          service:services,
         },
         { Plancategory: true, runValidators: true } // Options: return the updated document and run validators
       );

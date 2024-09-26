@@ -8,7 +8,7 @@ const axios = require('axios');
 const puppeteer = require('puppeteer');
 const path = require('path');
 const fs = require('fs');
-
+const FormData = require('form-data');
 class Clients {
 
 
@@ -17,7 +17,6 @@ class Clients {
   
     try {
       const { FullName, Email, PhoneNo, password } = req.body;
-
 
       if (!FullName) {
         return res.status(400).json({ status: false, message: "Please enter fullname" });
@@ -670,7 +669,7 @@ async  clientKycAndAgreement(req, res) {
     const name = req.body.name;
     const phone = req.body.phone;
     const panno = req.body.panno;
-    const aadhaarno = req.body.aadhaarno;
+    const aadhaarno = req.body.aadharno;
     const id = req.body.id;
 
     const refid = Math.floor(10000 + Math.random() * 90000); // Generate a random reference ID
@@ -686,31 +685,63 @@ async  clientKycAndAgreement(req, res) {
         message: "Something went wrong",
       });
     }
+    const settings = await BasicSetting_Modal.findOne();
+
+    if (!settings || !settings.digio_client_id || !settings.digio_client_secret) {
+      throw new Error('Digio settings are not configured or are disabled');
+    }   
+
+    const company_name = settings.website_title;
+    const company_address = settings.address;
+
+    const now = new Date();
+    
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const day = String(now.getDate()).padStart(2, '0');
+    
+    const hours = String(now.getHours() % 12 || 12).padStart(2, '0'); // 12-hour format
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    
+    const ampm = now.getHours() >= 12 ? 'pm' : 'am';
+    
+    const datetime =  `${year}-${month}-${day} ${hours}:${minutes}:${seconds}${ampm}`;
+
 
       // PDF generation section
-      const templatePath = path.join(__dirname, 'uploads/template', 'kyc-agreement-template.html');
+      const templatePath = path.join(__dirname, '../../../template', 'kyc-agreement-template.html');
       let htmlContent = fs.readFileSync(templatePath, 'utf8');
   
       // Replace placeholders with actual values
       htmlContent = htmlContent
-        .replace('{{name}}', name)
-        .replace('{{email}}', email)
-        .replace('{{phone}}', phone)
-        .replace('{{panno}}', panno)
-        .replace('{{aadhaarno}}', aadhaarno);
+      .replace(/{{name}}/g, name)
+      .replace(/{{email}}/g, email)
+      .replace(/{{phone}}/g, phone)
+      .replace(/{{panno}}/g, panno)
+      .replace(/{{datetime}}/g, datetime)
+      .replace(/{{company_name}}/g, company_name)
+      .replace(/{{company_address}}/g, company_address)
+      .replace(/{{aadhaarno}}/g, aadhaarno);
 
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
       await page.setContent(htmlContent);
       
       // Define the path to save the PDF
-      const pdfDir = path.join(__dirname, 'uploads', 'pdf'); // Adjust this as needed
+      const pdfDir = path.join(__dirname, '../../../../stockboxpnp.pnpuniverse.com/uploads', 'pdf'); // Adjust this as needed
       const pdfPath = path.join(pdfDir, `kyc-agreement-${phone}.pdf`);
       // Generate PDF and save to the specified path
       await page.pdf({
         path: pdfPath,
         format: 'A4',
         printBackground: true,
+        margin: {
+          top: '20mm',
+          right: '10mm',
+          bottom: '50mm', // Adjust to create space for the footer
+          left: '10mm',
+      },
       });
 
       await browser.close();
@@ -727,10 +758,7 @@ async  clientKycAndAgreement(req, res) {
    await client.save();
 
 
-    const settings = await BasicSetting_Modal.findOne();
-    if (!settings || !settings.digio_client_id || !settings.digio_client_secret) {
-      throw new Error('Digio settings are not configured or are disabled');
-    }   
+    
 
   // Aadhaar verification API token
   const digio_client_id = settings.digio_client_id;
@@ -755,6 +783,7 @@ async  clientKycAndAgreement(req, res) {
 
 
     // Make the POST request to Digio API using Axios
+ 
     const response = await axios.post(
         'https://api.digio.in/client/kyc/v2/request/with_template',
         payload,
@@ -780,20 +809,186 @@ async  clientKycAndAgreement(req, res) {
             customer_identifier,
             gid
         };
-        res.json(data);   
+        res.json(data); 
+        
     } else {
         res.status(400).json({ error: 'Digio status is not "requested"' });
     }
+         
 } catch (error) {
     console.error('Error in submitting KYC:', error.message);
     res.status(500).json({ error: 'CURL request failed', details: error.message });
 }
 }
 
+async uploadDocument(req, res) {
+  const id = req.body.id;
+  
+  // Fetch client details
+  const client = await Clients_Modal.findOne({ _id: id });
+  if (!client) {
+      return res.status(400).json({
+          status: false,
+          message: "Client not found",
+      });
+  }
 
+  // Fetch Digio settings
+  const settings = await BasicSetting_Modal.findOne();
+  if (!settings || !settings.digio_client_id || !settings.digio_client_secret) {
+      return res.status(500).json({
+          status: false,
+          message: 'Digio settings are not configured or missing',
+      });
+  }
 
+  // Extract Digio credentials
+  const digio_client_id = settings.digio_client_id;
+  const digio_client_secret = settings.digio_client_secret;
 
+  // Path to the PDF document
+  const filename = client.pdf;
+  const dir = path.join(__dirname, '../../../../stockboxpnp.pnpuniverse.com/uploads/pdf', filename);
 
+  if (!fs.existsSync(dir)) {
+      return res.status(400).json({
+          status: false,
+          message: 'PDF file not found',
+      });
+  }
+
+  // Create form-data with the PDF file
+  const form = new FormData();
+  form.append('file', fs.createReadStream(dir), {
+      filename: filename,
+      contentType: 'application/pdf'
+  });
+
+  // Prepare the request body for signing
+  const requestBody = {
+      signers: [{
+          identifier: client.Email,
+          aadhaar_id: client.aadhaarno,
+          reason: 'Contract'
+      }],
+      sign_coordinates: {
+          [client.Email]: {
+              "1": [{ llx: 315, lly: 160, urx: 600, ury: 60 }],
+              "2": [{ llx: 315, lly: 160, urx: 600, ury: 60 }],
+              "3": [{ llx: 315, lly: 160, urx: 600, ury: 60 }]
+          }
+      },
+      expire_in_days: 10,
+      display_on_page: "custom",
+      notify_signers: true,
+      send_sign_link: true
+  };
+
+  // Add the request payload to the form
+  form.append('request', JSON.stringify(requestBody));
+
+  // Prepare the Authorization header
+  const authToken = Buffer.from(`${digio_client_id}:${digio_client_secret}`).toString('base64');
+
+  try {
+      // Send the request to upload the document and get Digio response
+      const response = await axios.post('https://api.digio.in/v2/client/document/upload', form, {
+          headers: {
+              ...form.getHeaders(),
+              'Authorization': `Basic ${authToken}`
+          }
+      });
+
+      // Process the response data
+      const refid = Math.floor(10000 + Math.random() * 90000); // Generate a random reference ID
+      const doc_id = response.data.id;
+      const email = client.Email;
+
+      // Define the redirect URL
+      const baseUrl = "https://app.digio.in/#/gateway/login/";
+      const redirectUrl = encodeURIComponent("https://stockboxpnp.pnpuniverse.com");
+
+      const fullUrl = `${baseUrl}${doc_id}/${refid}/${email}?redirect_url=${redirectUrl}`;
+
+      // Respond with the redirect URL or use it on the frontend
+      res.json({
+          status: true,
+          message: 'Document uploaded successfully',
+          redirectUrl: fullUrl
+      });
+
+  } catch (error) {
+      console.error('Error uploading document:', error.response ? error.response.data : error.message);
+      res.status(400).json({ error: 'Error uploading document to Digio' });
+  }
+}
+async downloadDocument(req, res) {
+  try {
+      const { id, doc_id } = req.body;
+
+      // Fetch client details
+      const client = await Clients_Modal.findById(id);
+      if (!client) {
+          return res.status(404).json({
+              status: false,
+              message: "Client not found",
+          });
+      }
+
+      // Fetch Digio settings
+      const settings = await BasicSetting_Modal.findOne();
+      if (!settings || !settings.digio_client_id || !settings.digio_client_secret) {
+          return res.status(500).json({
+              status: false,
+              message: 'Digio settings are not configured or missing',
+          });
+      }
+
+      // Prepare the authentication token
+      const authToken = Buffer.from(`${settings.digio_client_id}:${settings.digio_client_secret}`).toString('base64');
+
+      // Define the API endpoint with the document ID
+      const url = `https://api.digio.in/v2/client/document/download?document_id=${doc_id}`;
+
+      // Make a GET request to download the document
+      const response = await axios.get(url, {
+          headers: {
+              'Authorization': `Basic ${authToken}`,
+              'Content-Type': 'application/json'
+          },
+          responseType: 'arraybuffer'  // Handle binary data like PDF
+      });
+
+      // Generate a unique filename
+      const fileName = `kyc-agreement-${client.PhoneNo}.pdf`;
+      const tempPath = path.join(__dirname, '../../../../stockboxpnp.pnpuniverse.com/uploads/pdf', fileName);
+
+      // Ensure the directory exists
+      await fs.promises.mkdir(path.dirname(tempPath), { recursive: true });
+
+      // Write the downloaded content to a PDF file
+      await fs.promises.writeFile(tempPath, response.data);
+
+      // Update client record
+      client.kyc_verification = 1;
+      client.pdf = fileName;  // Set the PDF filename
+      await client.save();
+
+      // Return the file name or path for further use
+      res.json({
+          status: true,
+          pdf: fileName,
+          message: 'Document downloaded and saved successfully'
+      });
+  } catch (error) {
+      console.error('Error downloading the document:', error);
+      return res.status(500).json({
+          status: false,
+          message: 'Failed to download the document',
+          error: error.message || 'An unknown error occurred'
+      });
+  }
+}
 
 
 }

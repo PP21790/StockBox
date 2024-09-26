@@ -1,6 +1,6 @@
 const router = require("express").Router()
 
-const {AddClient,detailClient,loginClient,forgotPassword,resetPassword,changePassword,updateProfile,deleteClient,otpSubmit,aadhaarVerification,aadhaarOtpSubmit,clientKycAndAgreement} = require('../Controllers/Clients')
+const {AddClient,detailClient,loginClient,forgotPassword,resetPassword,changePassword,updateProfile,deleteClient,otpSubmit,aadhaarVerification,aadhaarOtpSubmit,clientKycAndAgreement,uploadDocument,downloadDocument} = require('../Controllers/Clients')
 
 
 router.post('/api/client/add',AddClient);
@@ -15,6 +15,8 @@ router.post('/api/client/otp_submit', otpSubmit);
 router.post('/api/client/aadhaarverification', aadhaarVerification);
 router.post('/api/client/aadhaarotpsubmit', aadhaarOtpSubmit);
 router.post('/api/client/clientkycandagreement', clientKycAndAgreement);
+router.post('/api/client/uploaddocument', uploadDocument);
+router.post('/api/client/downloaddocument', downloadDocument);
 
 
 

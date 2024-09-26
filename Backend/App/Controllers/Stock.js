@@ -3,6 +3,9 @@ const multer = require('multer');
 const xlsx = require('xlsx');
 const csv = require('csv-parser');
 const path = require('path');
+const axios = require('axios');
+const fs = require('fs');
+const dateTime = require('date-and-time'); 
 const Stock_Modal = db.Stock;
 
 
@@ -13,24 +16,19 @@ class Stock {
 
     async AddStock(req, res) {
         try {
-            const { title,add_by,symbol } = req.body;
+            const { symbol } = req.body;
     
-            if (!title) {
-              return res.status(400).json({ status: false, message: "title is required" });
-            }
+          
             if (!symbol) {
               return res.status(400).json({ status: false, message: "symbol is required" });
             }
         
-            if (!add_by) {
-              return res.status(400).json({ status: false, message: "add_by is required" });
-            }
+          
            // console.log("Request Body:", req.body);
     
             const result = new Stock_Modal({
-                title,
                 symbol,
-                add_by,
+          
             });
     
             await result.save();
@@ -138,11 +136,9 @@ class Stock {
 
   async updateStock(req, res) {
     try {
-      const { id, title, symbol } = req.body;
+      const { id, symbol } = req.body;
 
-      if (!title) {
-        return res.status(400).json({ status: false, message: "title is required" });
-      }
+   
       if (!symbol) {
         return res.status(400).json({ status: false, message: "symbol is required" });
       }
@@ -158,7 +154,6 @@ class Stock {
       const updatedStock = await Stock_Modal.findByIdAndUpdate(
         id,
         {
-          title,
           symbol,
         },
         { stock: true, runValidators: true } // Options: return the updated document and run validators
@@ -275,7 +270,7 @@ class Stock {
   }
   async AddBulkStock(req, res) {
     try {
-        const { add_by } = req.body;
+       
         const file = req.file;
 
         if (!file) {
@@ -314,22 +309,21 @@ class Stock {
 
         const results = [];
         for (let stock of stocks) {
-            const { symbol, title } = stock;
+            const { symbol } = stock;
 
             // Check if the stock symbol already exists
             const existingStock = await Stock_Modal.findOne({ symbol });
 
             if (existingStock) {
                 // Update the existing stock
-                existingStock.title = title;
-                existingStock.add_by = add_by;
+               
                 await existingStock.save();
-                results.push({ symbol, title, action: 'updated' });
+                results.push({ symbol, action: 'updated' });
             } else {
                 // Add new stock
-                const newStock = new Stock_Modal({ symbol, title, add_by });
+                const newStock = new Stock_Modal({ symbol });
                 await newStock.save();
-                results.push({ symbol, title, action: 'added' });
+                results.push({ symbol, action: 'added' });
             }
         }
 
@@ -350,10 +344,7 @@ class Stock {
 }
 
 
-// Helper function to process Excel from buffer
 
 }
-
-
 
 module.exports = new Stock();
