@@ -26,6 +26,7 @@ router.get('/stock/detail/:id',  checkPermission(PERMISSIONS.VIEW), detailStock)
 router.post('/stock/change-status',  checkPermission(PERMISSIONS.CHANGE_STATUS), statusChange);
 router.post('/stock/addbulkstock',  checkPermission(PERMISSIONS.ADDBULKSTOCK), upload.single('file'), AddBulkStock);
 router.get('/stock/activestock',   activeStock);
+router.get('/stock/addbulkstockcron',   AddBulkStockCron);
 
 
 

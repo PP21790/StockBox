@@ -1,3 +1,4 @@
+
 "use strict";
 
 const { Schema, model } = require('mongoose');
@@ -5,70 +6,70 @@ const { Schema, model } = require('mongoose');
 const StockSchema = new Schema({
     symbol: {
         type: String,
-        required: true,
+        index: true
     },
     expiry: {
         type: String,
-        required: true,
+        index: true
+
     },
     expiry_month_year: {
         type: String,
-        required: true,
     },
     expiry_date: {
         type: String,
-        required: true,
     },
     expiry_str: {
         type: String,
-        required: true,
     },
     strike: {
         type: String,
-        required: true,
+        index: true
     },
     option_type: {
         type: String,
-        enum: ['CE', 'PE'], // Assuming these are the only valid values for option_type
-        required: true,
+        index: true
     },
     segment: {
         type: String,
-        required: true,
+        index: true
     },
     instrument_token: {
         type: String,
-        required: true,
+        // unique: true
+        
     },
     lotsize: {
-        type: Number,
-        required: true,
+        type: String,
     },
     tradesymbol: {
         type: String,
-        required: true,
-    },
+    },  
     exch_seg: {
         type: String,
-        required: true,
     },
     tradesymbol_m_w: {
         type: String,
-        required: true,
     },
-    tkr: {
+    tkr : {
         type: String,
-        default: null,
+        default: null
     },
-    a3tkr: {
+    a3tkr : {
         type: String,
-        default: null,
+        default: null
     },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
+
 }, {
-    timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
+    // This enables Mongoose to handle the _id field automatically
+    _id: true,
 });
 
 // Define the model
 const Stock = model('Stock', StockSchema);
-
 module.exports = Stock;
+
