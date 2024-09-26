@@ -236,7 +236,7 @@ const Generalsettings = () => {
                   <div className="row">
                       <label className="col-sm-3 col-form-label" />
                       <div className="col-sm-9">
-                          <div className="d-md-flex d-grid align-items-center gap-3">
+                          <div className="d-md-flex d-grid align-items-center justify-content-end gap-3">
                               <button type="submit" className="btn btn-primary px-4">
                                   Update
                               </button>

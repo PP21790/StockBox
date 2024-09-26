@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Profile = () => {
 
@@ -7,7 +8,7 @@ const Profile = () => {
             <div className="page-content">
                 {/*breadcrumb*/}
                 <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                    <div className="breadcrumb-title pe-3">User Profile</div>
+                    <div className="breadcrumb-title pe-3">Admin Profile</div>
                     <div className="ps-3">
                         <nav aria-label="breadcrumb">
                             <ol className="breadcrumb mb-0 p-0">
@@ -17,7 +18,7 @@ const Profile = () => {
                                     </a>
                                 </li>
                                 <li className="breadcrumb-item active" aria-current="page">
-                                    User Profile
+                                    Admin Profile
                                 </li>
                             </ol>
                         </nav>
@@ -60,12 +61,8 @@ const Profile = () => {
                                                 width={110}
                                             />
                                             <div className="mt-3">
-                                                <h4>John Doe</h4>
-                                                <p className="text-secondary mb-1">Full Stack Developer</p>
-                                                <p className="text-muted font-size-sm">
-                                                    Bay Area, San Francisco, CA
-                                                </p>
-
+                                                <h4>Admin</h4>
+          
                                             </div>
                                         </div>
                                         <hr className="my-4" />
@@ -92,26 +89,7 @@ const Profile = () => {
                                                 </h6>
                                                 <span className="text-secondary">https://codervent.com</span>
                                             </li>
-                                            <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                                <h6 className="mb-0">
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        width={24}
-                                                        height={24}
-                                                        viewBox="0 0 24 24"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        strokeWidth={2}
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        className="feather feather-github me-2 icon-inline"
-                                                    >
-                                                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
-                                                    </svg>
-                                                    Github
-                                                </h6>
-                                                <span className="text-secondary">codervent</span>
-                                            </li>
+
                                             <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                 <h6 className="mb-0">
                                                     <svg
@@ -214,6 +192,15 @@ const Profile = () => {
                                                 <p>
                                                     Bay Area, San Francisco, CA
                                                 </p>
+                                            </div>
+                                        </div>
+
+                                        <div className="row mb-3">
+                                            <div className="col-sm-3">
+                                                <Link to="/admin/changepass" className="btn btn-primary mb-0" style={{fontSize:"14px"}}>Change Password</Link>
+                                            </div>
+                                            <div className="col-sm-9 text-secondary">
+
                                             </div>
                                         </div>
 

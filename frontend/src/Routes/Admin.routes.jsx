@@ -43,6 +43,9 @@ import Generalsettings from '../layout/Admin/BasicSetting/Generalsettings';
 import Apiinfo from '../layout/Admin/BasicSetting/Apiinfo';
 import Payementgateway from '../layout/Admin/BasicSetting/Payementgateway';
 import Emailsettings from '../layout/Admin/BasicSetting/Emailsettings';
+import Freeclient from '../layout/Admin/Admin_client/Freeclient';
+import Message from '../layout/Admin/Broadcast/Message';
+import Changepass from '../layout/Admin/Password/Changepass';
 
 
 
@@ -94,6 +97,7 @@ function MainApp() {
                 <Routes>
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/client" element={<Client/>} />
+                    <Route path="/freeclient" element={<Freeclient />} />
                     <Route path="/addclient" element={<AddUser/>} />
                     <Route path="/client/updateclient/:id" element={<EditClient/>} />
 
@@ -158,6 +162,8 @@ function MainApp() {
                     <Route path="/Apiinfo" element={<Apiinfo/>} />
                     <Route path="/paymentgeteway" element={<Payementgateway/>} />
                     <Route path="/emailsetting" element={<Emailsettings/>} />
+                    <Route path="/message" element={<Message />} />
+                    <Route path="/changepass" element={<Changepass />} />
                     
 
                     

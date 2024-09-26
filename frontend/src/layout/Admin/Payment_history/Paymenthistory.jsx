@@ -44,11 +44,12 @@ const History = () => {
                                         <tr>
                                             <th>S.No</th>
                                             <th>Client Name</th>
-                                            <th>Client Phone</th>
-                                            <th>Client Services</th>
-                                            <th>Client Validity</th>
-                                            <th>Client Amount</th>
-                                            <th>Client Purchase Date</th>
+                                            <th>Phone No.</th>
+                                            <th>Service Name</th>
+                                            <th>Validity</th>
+                                            <th>Amount</th>
+                                            <th>Purchased By</th>
+                                            <th>Purchase Date</th>
 
 
                                         </tr>
@@ -60,12 +61,13 @@ const History = () => {
                                             </td>
                                             <td>RD Burman</td>
                                             <td>7893216540</td>
-                                            <td>2</td>
+                                            <td>Cash</td>
                                             <td>10/06/25</td>
                                             <td>
                                                 450000
                                             </td>
 
+                                            <td>Admin</td>
                                             <td>05/05/2023</td>
 
 
@@ -76,14 +78,14 @@ const History = () => {
                                             </td>
                                             <td>RD Burman</td>
                                             <td>7893216540</td>
-                                            <td>2</td>
+                                            <td>Stock</td>
                                             <td>10/06/25</td>
                                             <td>
                                                 450000
                                             </td>
 
+                                            <td>App</td>
                                             <td>05/05/2023</td>
-
 
                                         </tr>
                                         <tr>
@@ -92,12 +94,13 @@ const History = () => {
                                             </td>
                                             <td>RD Burman</td>
                                             <td>7893216540</td>
-                                            <td>2</td>
+                                            <td>Future</td>
                                             <td>10/06/25</td>
                                             <td>
                                                 450000
                                             </td>
 
+                                            <td>Admin</td>
                                             <td>05/05/2023</td>
 
 
@@ -108,12 +111,13 @@ const History = () => {
                                             </td>
                                             <td>RD Burman</td>
                                             <td>7893216540</td>
-                                            <td>2</td>
+                                            <td>Cash</td>
                                             <td>10/06/25</td>
                                             <td>
                                                 450000
                                             </td>
 
+                                            <td>App</td>
                                             <td>05/05/2023</td>
 
 
@@ -124,12 +128,13 @@ const History = () => {
                                             </td>
                                             <td>RD Burman</td>
                                             <td>7893216540</td>
-                                            <td>2</td>
+                                            <td>Stock</td>
                                             <td>10/06/25</td>
                                             <td>
                                                 450000
                                             </td>
 
+                                            <td>Admin</td>
                                             <td>05/05/2023</td>
 
 
@@ -140,12 +145,13 @@ const History = () => {
                                             </td>
                                             <td>RD Burman</td>
                                             <td>7893216540</td>
-                                            <td>2</td>
+                                            <td>cash</td>
                                             <td>10/06/25</td>
                                             <td>
                                                 450000
                                             </td>
 
+                                            <td>App</td>
                                             <td>05/05/2023</td>
 
 

@@ -246,8 +246,8 @@ const Header = () => {
                     alt="user avatar"
                   />
                   <div className="user-info">
-                    <p className="user-name mb-0">Pauline Seitz</p>
-                    <p className="designattion mb-0">Web Designer</p>
+                    <p className="user-name mb-0">Admin</p>
+
                   </div>
                 </a>
                 <ul className="dropdown-menu dropdown-menu-end">

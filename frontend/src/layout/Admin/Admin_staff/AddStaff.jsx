@@ -104,14 +104,14 @@ const AddStaff = () => {
       col_size: 6,
       disable: false,
     },
-    {
-      name: "UserName",
-      label: "User Name",
-      type: "text",
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-    },
+    // {
+    //   name: "UserName",
+    //   label: "User Name",
+    //   type: "text",
+    //   label_size: 12,
+    //   col_size: 6,
+    //   disable: false,
+    // },
     {
       name: "Email",
       label: "Email",

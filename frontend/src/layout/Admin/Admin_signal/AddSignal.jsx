@@ -64,7 +64,7 @@ const AddSignal = () => {
       description:'',
       callduration: '',
       calltype: '',
-      callperiod:''
+      // callperiod:''
     },
     validate:(values) => {
       const errors = {};
@@ -138,15 +138,7 @@ const AddSignal = () => {
 
 
   const fields = [
-    {
-      name: 'price',
-      label: 'Price',
-      type: 'text',
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-    },
-    {
+     {
       name: 'service',
       label: 'Select Service',
       type: 'select',
@@ -158,6 +150,15 @@ const AddSignal = () => {
       col_size: 6,
       disable: false,
     },
+    {
+      name: 'price',
+      label: 'Price',
+      type: 'text',
+      label_size: 12,
+      col_size: 6,
+      disable: false,
+    },
+   
     {
       name: 'stock',
       label: 'Select Stock',
@@ -185,7 +186,7 @@ const AddSignal = () => {
     },
     {
       name: 'callduration',
-      label: 'Call duration',
+      label: 'Trade duration',
       type: 'select',
       options: [
         { label: 'Long Term', value: 'Long Term' },
@@ -193,6 +194,13 @@ const AddSignal = () => {
         { label: 'Short Term', value: 'Short Term' },
         { label: 'Intraday', value: 'Intraday' },
       ],
+      label_size: 12,
+      col_size: 6,
+      disable: false,
+    },
+    {
+     
+     
       label_size: 12,
       col_size: 6,
       disable: false,
@@ -239,14 +247,14 @@ const AddSignal = () => {
       disable: false,
     },
 
-    {
-      name: 'callperiod',
-      label: 'Call Period',
-      type: 'text',
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-    },
+    // {
+    //   name: 'callperiod',
+    //   label: 'Call Period',
+    //   type: 'text',
+    //   label_size: 12,
+    //   col_size: 6,
+    //   disable: false,
+    // },
 
     {
       name: 'description',

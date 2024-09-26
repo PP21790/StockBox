@@ -40,7 +40,7 @@ const Header = () => {
 
 
 
-                 <li className="nav-item dropdown dropdown-large">
+                  <li className="nav-item dropdown dropdown-large">
                     <a
                       className="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative"
                       href="#"
@@ -109,8 +109,8 @@ const Header = () => {
                             </div>
                           </div>
                         </a>
-                     
-                     
+
+
                       </div>
                       <a href="javascript:;">
                         <div className="text-center msg-footer">
@@ -120,7 +120,7 @@ const Header = () => {
                         </div>
                       </a>
                     </div>
-                  </li> 
+                  </li>
 
                 </ul>
               </div>
@@ -138,8 +138,8 @@ const Header = () => {
                     alt="user avatar"
                   />
                   <div className="user-info">
-                    <p className="user-name mb-0">Pauline Seitz</p>
-                    <p className="designattion mb-0">Web Designer</p>
+                    <p className="user-name mb-0">Admin</p>
+
                   </div>
                 </a>
                 <ul className="dropdown-menu dropdown-menu-end">
@@ -152,16 +152,16 @@ const Header = () => {
                       <span>Profile</span>
                     </Link>
                   </li>
-                  <li>
-                    <a
+                  {/* <li>
+                    <Link
                       className="dropdown-item d-flex align-items-center"
-                      href="javascript:;"
+                      to="/admin/changepass"
                     >
                       <i className="bx bx-cog fs-5" />
                       <span>Settings</span>
-                    </a>
-                  </li>
-                 
+                    </Link>
+                  </li> */}
+
                   <li>
                     <div className="dropdown-divider mb-0" />
                   </li>

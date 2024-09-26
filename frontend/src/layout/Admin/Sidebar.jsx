@@ -58,7 +58,7 @@ const Sidebar = ({ onToggleClick }) => {
                     </li>
 
                     <li>
-                      <Link to={'/admin/client'}>
+                      <Link to={'/admin/freeclient'}>
                         <div className="parent-icon">
                           <i className="bx bx-user" />
                         </div>
@@ -77,7 +77,7 @@ const Sidebar = ({ onToggleClick }) => {
                         <li>
                           <Link to="/admin/plan">
                             <div className="parent-icon">
-                              <i className="bx bx-purchase-tag" />
+                              <i className="bx bx-radio-circle radiocricle" />
                             </div>
                             <div className="menu-title">Plan</div>
                           </Link>
@@ -85,7 +85,7 @@ const Sidebar = ({ onToggleClick }) => {
                         <li>
                           <Link to="/admin/service">
                             <div className="parent-icon">
-                              <i className="bx bx-cog" />
+                              <i className="bx bx-radio-circle radiocricle" />
                             </div>
                             <div className="menu-title">Services</div>
                           </Link>
@@ -93,7 +93,7 @@ const Sidebar = ({ onToggleClick }) => {
                         <li>
                           <Link to="/admin/category">
                             <div className="parent-icon">
-                              <i className="bx bx-filter" />
+                              <i className="bx bx-radio-circle radiocricle" />
                             </div>
                             <div className="menu-title">Category</div>
                           </Link>
@@ -128,14 +128,14 @@ const Sidebar = ({ onToggleClick }) => {
                       </Link>
                     </li>
 
-                    <li>
+                    {/* <li>
                       <Link to="/admin/basket">
                         <div className="parent-icon">
                           <i className="bx bx-basket" />
                         </div>
                         <div className="menu-title">Basket</div>
                       </Link>
-                    </li>
+                    </li> */}
 
                     <li>
                       <Link to="/admin/paymenthistory">
@@ -163,7 +163,7 @@ const Sidebar = ({ onToggleClick }) => {
                       </Link>
                     </li>
 
-                   
+
 
                     <li>
                       <Link to="/admin/coupon">
@@ -173,7 +173,7 @@ const Sidebar = ({ onToggleClick }) => {
                         <div className="menu-title">Coupon</div>
                       </Link>
                     </li>
-                         
+
                     <li>
                       <Link to="/admin/banner">
                         <div className="parent-icon">
@@ -181,13 +181,13 @@ const Sidebar = ({ onToggleClick }) => {
                         </div>
                         <div className="menu-title">Banner</div>
                       </Link>
-                    </li>  
-                      
-        
+                    </li>
+
+
                     <li className={activeDropdown === 'Basic Settings' ? 'mm-active' : ''}>
                       <a href="#" onClick={toggleDropdown('Basic Settings')} className="has-arrow" aria-expanded={activeDropdown === 'Basic Settings'}>
                         <div className="parent-icon">
-                          <i className="bx bxl-redux" />
+                          <i className="bx bx-cog" />
                         </div>
                         <div className="menu-title">Basic Settings</div>
                       </a>
@@ -195,7 +195,7 @@ const Sidebar = ({ onToggleClick }) => {
                         <li>
                           <Link to="/admin/generalsettings">
                             <div className="parent-icon">
-                              <i className="bx bx-purchase-tag" />
+                              <i className="bx bx-radio-circle radiocricle" />
                             </div>
                             <div className="menu-title">General Setting</div>
                           </Link>
@@ -203,7 +203,7 @@ const Sidebar = ({ onToggleClick }) => {
                         <li>
                           <Link to="/admin/emailsetting">
                             <div className="parent-icon">
-                              <i className="bx bx-cog" />
+                              <i className="bx bx-radio-circle radiocricle" />
                             </div>
                             <div className="menu-title">Email Setting</div>
                           </Link>
@@ -211,7 +211,7 @@ const Sidebar = ({ onToggleClick }) => {
                         <li>
                           <Link to="/admin/Apiinfo">
                             <div className="parent-icon">
-                              <i className="bx bx-filter" />
+                              <i className="bx bx-radio-circle radiocricle" />
                             </div>
                             <div className="menu-title">Api Information</div>
                           </Link>
@@ -219,7 +219,7 @@ const Sidebar = ({ onToggleClick }) => {
                         <li>
                           <Link to="/admin/paymentgeteway">
                             <div className="parent-icon">
-                              <i className="bx bx-line-chart" />
+                              <i className="bx bx-radio-circle radiocricle" />
                             </div>
                             <div className="menu-title">Payment Gateway</div>
                           </Link>
@@ -228,15 +228,15 @@ const Sidebar = ({ onToggleClick }) => {
                     </li>
 
                     <li>
-                      <Link to="/admin/faq">
+                      <Link to="/admin/message">
                         <div className="parent-icon">
-                          <i className="bx bxs-chevron-right" />
+                          <i className="fadeIn animated bx bx-conversation" />
                         </div>
                         <div className="menu-title">Broadcast SMS</div>
                       </Link>
                     </li>
                     <li>
-                      <Link to="/admin/faq">
+                      <Link to="/admin/kyc">
                         <div className="parent-icon">
                           <i className="bx bxs-chevron-right" />
                         </div>
@@ -247,7 +247,7 @@ const Sidebar = ({ onToggleClick }) => {
 
                       <Link to="/admin/faq">
                         <div className="parent-icon">
-                          <i className="bx bxs-chevron-right" />
+                          <i className="bx bx-help-circle" />
                         </div>
                         <div className="menu-title">FAQ</div>
                       </Link>
@@ -263,7 +263,7 @@ const Sidebar = ({ onToggleClick }) => {
                     <li>
                       <Link to="/admin/termsandcondtion">
                         <div className="parent-icon">
-                          <i className="bx bxs-chevron-right" />
+                          <i className="fadeIn animated bx bx-info-square" />
                         </div>
                         <div className="menu-title">Terms And Condition</div>
                       </Link>

@@ -113,7 +113,59 @@ const Plan = () => {
 
             <div className="card">
                 <div className="card-body">
-                    <ul className="nav nav-tabs nav-primary" role="tablist">
+                    {/* <ul className="nav nav-pills mb-3" role="tablist">
+                        <li className="nav-item" role="presentation">
+                            <a
+                                className="nav-link"
+                                data-bs-toggle="pill"
+                                href="#primary-pills-home"
+                                role="tab"
+                                aria-selected="false"
+                                tabIndex={-1}
+                            >
+                                <div className="d-flex align-items-center">
+                                    <div className="tab-icon">
+                                        <i className="bx bx-home font-18 me-1" />
+                                    </div>
+                                    <div className="tab-title">Home</div>
+                                </div>
+                            </a>
+                        </li>
+                        <li className="nav-item" role="presentation">
+                            <a
+                                className="nav-link"
+                                data-bs-toggle="pill"
+                                href="#primary-pills-profile"
+                                role="tab"
+                                aria-selected="false"
+                                tabIndex={-1}
+                            >
+                                <div className="d-flex align-items-center">
+                                    <div className="tab-icon">
+                                        <i className="bx bx-user-pin font-18 me-1" />
+                                    </div>
+                                    <div className="tab-title">Profile</div>
+                                </div>
+                            </a>
+                        </li>
+                        <li className="nav-item" role="presentation">
+                            <a
+                                className="nav-link active"
+                                data-bs-toggle="pill"
+                                href="#primary-pills-contact"
+                                role="tab"
+                                aria-selected="true"
+                            >
+                                <div className="d-flex align-items-center">
+                                    <div className="tab-icon">
+                                        <i className="bx bx-microphone font-18 me-1" />
+                                    </div>
+                                    <div className="tab-title">Contact</div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul> */}
+                    <ul className="nav nav-pills mb-1" role="tablist">
                         {category.map((cat) => (
                             <li className="nav-item" role="presentation" key={cat._id}>
                                 <a
@@ -133,8 +185,9 @@ const Plan = () => {
                             </li>
                         ))}
                     </ul>
+                    <hr />
 
-                    <div className="tab-content py-3">
+                    <div className="tab-content">
                         <div className="tab-pane fade active show">
                             <div className="pricing-section mt-5">
                                 <div className="card-container">
@@ -187,7 +240,7 @@ const Plan = () => {
                                                             data-bs-toggle="modal"
                                                             data-bs-target={`#modal-${client.id}`}
                                                         >
-                                                            Know More
+                                                            View More
                                                         </button>
                                                         <div
                                                             className="modal fade"
@@ -200,7 +253,7 @@ const Plan = () => {
                                                                 <div className="modal-content">
                                                                     <div className="modal-header">
                                                                         <h5 className="modal-title" id={`modalLabel-${client.id}`}>
-                                                                            About {client.title}
+                                                                            {client.title}
                                                                         </h5>
                                                                         <button
                                                                             type="button"
@@ -211,15 +264,66 @@ const Plan = () => {
                                                                     </div>
                                                                     <div className="modal-body">
                                                                         <ul>
-                                                                            <li><b>Title</b>: {client.title}</li>
-                                                                            <li><b>Price</b>: {client.price}</li>
-                                                                            <li><b>Validity</b>: {client.validity}</li>
-                                                                            <li><b>Description</b>: {client.description}</li>
-                                                                            <li><b>Created At</b>: {fDateTime(client.created_at)}</li>
-                                                                            <li><b>Updated At</b>: {fDateTime(client.updated_at)}</li>
+                                                                            <li>
+                                                                                <div className="row justify-content-between">
+                                                                                    <div className="col-md-6">
+                                                                                        <b>Title</b>
+                                                                                    </div>
+                                                                                    <div className="col-md-6">
+                                                                                        {client.title}
+                                                                                    </div>
+                                                                                </div>
+                                                                            </li>
+                                                                            <li>
+                                                                                <div className="row justify-content-between">
+                                                                                    <div className="col-md-6">
+                                                                                        <b>Price</b>
+                                                                                    </div>
+                                                                                    <div className="col-md-6">
+                                                                                        {client.price}
+                                                                                    </div>
+                                                                                </div>
+                                                                            </li>
+                                                                            <li>
+                                                                                <div className="row justify-content-between">
+                                                                                    <div className="col-md-6">
+                                                                                        <b>Validity</b>
+                                                                                    </div>
+                                                                                    <div className="col-md-6">
+                                                                                        {client.validity}
+                                                                                    </div>
+                                                                                </div>
+                                                                            </li>
+                                                                            <li><div className="row justify-content-between">
+                                                                                <div className="col-md-6">
+                                                                                    <b>Description</b>
+                                                                                </div>
+                                                                                <div className="col-md-6">
+                                                                                    {client.description}
+                                                                                </div>
+                                                                            </div>
+                                                                            </li>
+                                                                            <li><div className="row justify-content-between">
+                                                                                <div className="col-md-6">
+                                                                                    <b>Created At</b>
+                                                                                </div>
+                                                                                <div className="col-md-6">
+                                                                                    {fDateTime(client.created_at)}
+                                                                                </div>
+                                                                            </div>
+                                                                            </li>
+                                                                            <li><div className="row justify-content-between">
+                                                                                <div className="col-md-6">
+                                                                                    <b>Updated At</b>
+                                                                                </div>
+                                                                                <div className="col-md-6">
+                                                                                    {fDateTime(client.updated_at)}
+                                                                                </div>
+                                                                            </div>
+                                                                            </li>
                                                                         </ul>
                                                                     </div>
-                                                                    <div className="modal-footer">
+                                                                    {/* <div className="modal-footer">
                                                                         <button
                                                                             type="button"
                                                                             className="btn btn-secondary"
@@ -227,7 +331,7 @@ const Plan = () => {
                                                                         >
                                                                             Close
                                                                         </button>
-                                                                    </div>
+                                                                    </div> */}
                                                                 </div>
                                                             </div>
                                                         </div>
