@@ -17,9 +17,7 @@ class Plancategory {
             if (!add_by) {
               return res.status(400).json({ status: false, message: "add_by is required" });
             }
-    
-            console.log("Request Body:", req.body);
-    
+  
             const result = new Plancategory_Modal({
                 title,
                 service,

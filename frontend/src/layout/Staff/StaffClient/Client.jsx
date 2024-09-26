@@ -19,6 +19,9 @@ const Client = () => {
     const token = localStorage.getItem('token');
     const userid = localStorage.getItem('id');
 
+
+
+
     const getAdminclient = async () => {
         try {
             const response = await GetClient(token);
@@ -36,7 +39,6 @@ const Client = () => {
         try {
             const response = await getstaffperuser(userid, token);
             if (response.status) {
-                console.log("response.data",response.data)
                 setPermission(response.data.permissions);
             }
         } catch (error) {
@@ -44,6 +46,8 @@ const Client = () => {
         }
     };
     
+    console.log("permission",permission)
+   
 
 
     useEffect(() => {
@@ -225,11 +229,13 @@ const Client = () => {
         }
     ];
 
+
+
+
     return (
         <div>
             <div>
                 <div className="page-content">
-                    {/* breadcrumb */}
                     <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
                         <div className="breadcrumb-title pe-3">Client</div>
                         <div className="ps-3">
@@ -244,7 +250,6 @@ const Client = () => {
                             </nav>
                         </div>
                     </div>
-                    {/* end breadcrumb */}
                     <div className="card">
                         <div className="card-body">
                             <div className="d-lg-flex align-items-center mb-4 gap-3">
@@ -259,7 +264,7 @@ const Client = () => {
                                     </span>
                                 </div>
                                 <div className="ms-auto">
-                                    {permission.includes("adduser") ? 
+                                    {/* {permission.includes("addclient") ?  */}
                                     <Link
                                         to="/staff/addclient"
                                         className="btn btn-primary"
@@ -269,7 +274,8 @@ const Client = () => {
                                             aria-hidden="true"
                                         />
                                         Add Client
-                                    </Link> : "" }
+                                    </Link> 
+                                    {/* : "" } */}
                                 </div>
                             </div>
 

@@ -17,10 +17,10 @@ export async function GetClient(token) {
     } catch (err) {
 
 
-        if ("Forbidden" == err.response?.data || err.message) {
-            localStorage.clear()
-            window.location.reload()
-        }
+        // if ("Forbidden" == err.response?.data || err.message) {
+        //     localStorage.clear()
+        //     window.location.reload()
+        // }
         return err;
     }
 }
@@ -477,7 +477,6 @@ export async function getstaffperuser(_id, token) {
         return { error: err.response?.data || err.message };
     }
 }
-
 
 
 // basket

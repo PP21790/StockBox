@@ -4,7 +4,7 @@ import { getnewslist, AddNewsbyadmin, UpdateNewsbyadmin, changeNewsStatus, Delet
 import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
 import Swal from 'sweetalert2';
-
+import { image_baseurl } from '../../../Utils/config';
 
 
 const News = () => {
@@ -276,7 +276,7 @@ const News = () => {
         },
         {
             name: 'Image',
-            cell: row => <img src={`/assets/uploads/news/${row.image}`} alt="Image" width="50" height="50" />,
+            cell: row => <img src={`${image_baseurl}uploads/news/${row.image}`}  alt={row.image} width="50" height="50"  />,
             sortable: true,
         },
         

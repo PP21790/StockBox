@@ -19,7 +19,7 @@ router.put('/client/update', checkPermission(PERMISSIONS.UPDATE), updateClient);
 router.get('/client/delete/:id', checkPermission(PERMISSIONS.DELETE), deleteClient);
 router.get('/client/detail/:id', checkPermission(PERMISSIONS.VIEW), detailClient);
 router.post('/client/change-status', checkPermission(PERMISSIONS.CHANGE_STATUS), statusChange);
-router.get('/client/activeclient',   activeClient);
+router.get('/client/activeclient',activeClient);
 
 
 module.exports = router;

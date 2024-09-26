@@ -4,6 +4,7 @@ import { GetService, Addplancategory, UpdateCategoryplan, getcategoryplan, delet
 import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
 import Swal from 'sweetalert2';
+import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 
 const Category = () => {
     const navigate = useNavigate();
@@ -11,6 +12,9 @@ const Category = () => {
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
     const [servicedata, setServicedata] = useState([]);
+
+
+    console.log("servicedata", servicedata)
 
 
     const [searchInput, setSearchInput] = useState("");
@@ -25,7 +29,7 @@ const Category = () => {
     const [title, setTitle] = useState({
         title: "",
         add_by: "",
-        service: ""
+        service:""
     });
 
     const token = localStorage.getItem('token');
@@ -57,6 +61,7 @@ const Category = () => {
             const response = await GetService(token);
             if (response.status) {
                 setServicedata(response.data)
+
             }
         } catch (error) {
             console.log("Error fetching services:", error);
@@ -410,20 +415,21 @@ const Category = () => {
                                                     <div className="row">
                                                         <div className="col-md-12">
                                                             <label htmlFor="service">Service</label>
-                                                            <select
-                                                                id="service"
-                                                                className="form-control mb-3"
-                                                                value={title.service}
-                                                                onChange={(e) => setTitle({ ...title, service: e.target.value })}
-                                                            >
-                                                                <option value="">Select a Service</option>
-                                                                {servicedata &&
-                                                                    servicedata.map((item) => (
-                                                                        <option key={item._id} value={item._id}>
-                                                                            {item.title}
-                                                                        </option>
-                                                                    ))}
-                                                            </select>
+                                                            {servicedata.length > 0 && (
+                                                                <DropdownMultiselect
+                                                                    options={servicedata.map((item) => ({
+                                                                        key: item._id,  
+                                                                        label: item.title 
+                                                                    }))}
+                                                                    name="Service"
+                                                                    handleOnChange={(selected) => {
+                                                                        const selectedService = selected;
+                                                                        setTitle({ ...title, service: selectedService });
+                                                                      
+                                                                    }}
+                                                                />
+                                                            )}
+
                                                         </div>
                                                         <div className="col-md-12">
                                                             <label htmlFor="categoryTitle">Category</label>
@@ -437,10 +443,8 @@ const Category = () => {
                                                             />
                                                         </div>
                                                     </div>
-
                                                 </form>
                                             </div>
-
                                             <div className="modal-footer">
                                                 <button
                                                     type="button"

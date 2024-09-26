@@ -4,6 +4,7 @@ import { getblogslist, Addblogsbyadmin, Updateblogsbyadmin, changeblogsstatus, D
 import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
 import Swal from 'sweetalert2';
+import { image_baseurl } from '../../../Utils/config';
 
 const Blogs = () => {
 
@@ -270,7 +271,7 @@ const Blogs = () => {
         },
         {
             name: 'Image',
-            cell: row => <img src={`/assets/uploads/blogs/${row.image}`} alt="Image" width="50" height="50" />,
+            cell: row => <img src={`${image_baseurl}/uploads/blogs/${row.image}`} alt="Image" width="50" height="50" />,
             sortable: true,
         },
         {

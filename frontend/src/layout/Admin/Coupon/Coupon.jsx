@@ -6,6 +6,7 @@ import Table from '../../../components/Table';
 import { Pencil, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { DeleteCoupon, UpdateClientStatus } from '../../../Services/Admin';
+import { image_baseurl } from '../../../Utils/config';
 
 const Coupon = () => {
 
@@ -150,7 +151,7 @@ const Coupon = () => {
         },
         {
             name: 'Image',
-            cell: row => <img src={`/assets/uploads/coupon/${row.image}`} alt="Image" width="50" height="50" />,
+            cell: row => <img src={`${image_baseurl}/uploads/coupon/${row.image}`} alt="Image" width="50" height="50" />,
             sortable: true,
         },
         {

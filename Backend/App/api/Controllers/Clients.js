@@ -714,15 +714,11 @@ async  clientKycAndAgreement(req, res) {
 
       await browser.close();
 
-      // Optionally send the PDF back in the response
-      // res.contentType("application/pdf");
-      // res.setHeader('Content-Disposition', `attachment; filename=kyc-agreement-${phone}.pdf`);
-      // res.sendFile(pdfPath);
-
+    
 
     client.panno = panno;
     client.aadhaarno = aadhaarno;
-    client.pdf = `kyc-agreement-${phone}.pdf`;  // Correctly set the PDF filename
+    client.pdf = `kyc-agreement-${phone}.pdf`;  
    await client.save();
 
 

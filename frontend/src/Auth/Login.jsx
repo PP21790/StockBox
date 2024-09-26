@@ -24,7 +24,6 @@ const Login = () => {
 
         try {
             var login_data = await login_Api(req);
-
             if (login_data.data.status) {
                 Swal.fire({
                     title: "Login Successful!",
@@ -64,12 +63,12 @@ const Login = () => {
 
 
     const togglePasswordVisibility = (e) => {
-        e.preventDefault(); 
+        e.preventDefault();
         setShowPassword(!showPassword);
     };
 
     const toggleConfirmPasswordVisibility = (e) => {
-        e.preventDefault(); 
+        e.preventDefault();
         setShowConfirmPassword(!showConfirmPassword);
     };
 
@@ -106,7 +105,7 @@ const Login = () => {
                                                         onChange={(e) => setUsername(e.target.value)}
                                                     />
                                                 </div>
-                                               
+
                                                 <div className="col-12">
                                                     <label htmlFor="inputChoosePassword" className="form-label">
                                                         Password
@@ -125,7 +124,7 @@ const Login = () => {
                                                             onClick={togglePasswordVisibility}
                                                             className="input-group-text bg-transparent"
 
-                                                        >  
+                                                        >
                                                             <i className={`bx ${showPassword ? 'bx-show' : 'bx-hide'}`} />
                                                         </a>
                                                     </div>
@@ -150,7 +149,7 @@ const Login = () => {
                                                         Forgot Password?
                                                     </p> */}
                                                     <p className="mb-0">
-                                                      
+
                                                         <Link to="/forgetpass">Forgot Password?</Link>
                                                     </p>
                                                 </div>
@@ -180,7 +179,7 @@ const Login = () => {
 
                                     </div>
                                 </div>
-                            </div>  
+                            </div>
                         </div>
                     </div>
                 </div>

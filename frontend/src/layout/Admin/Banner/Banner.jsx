@@ -5,6 +5,8 @@ import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { fDateTime } from '../../../Utils/Date_formate';
+import { image_baseurl } from '../../../Utils/config';
+
 const Banner = () => {
 
 
@@ -249,7 +251,7 @@ const Banner = () => {
         // },
         {
             name: 'Image',
-            cell: row => <img src={`/assets/uploads/banner/${row.image}`} alt="image" width="50" height="50" />,
+            cell: row => <img src={`${image_baseurl}/uploads/banner/${row.image}`} alt="image" width="50" height="50" />,
             sortable: true,
         },
         {

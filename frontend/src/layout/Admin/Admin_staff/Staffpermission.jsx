@@ -13,12 +13,9 @@ const Staffpermission = () => {
     const [clients, setClients] = useState([]);
     const _id = row._id;
     
-
-    
     useEffect(() => {
         getAdminclient();
     }, []);
-
 
     const getAdminclient = async () => {
         try {
@@ -30,8 +27,6 @@ const Staffpermission = () => {
             console.log("Error fetching client permissions:", error);
         }
     };
-
-
 
     const validate = (values) => {
         let errors = {};
@@ -99,11 +94,14 @@ const Staffpermission = () => {
             UserName: row?.UserName || '',
             Email: row?.Email || '',
             PhoneNo: row?.PhoneNo || '',
-            adduser: false,
-            edituser: false,
-            deleteuser: false,
+            addclient: false,
+            viewclient: false,
+            allviewclient: false,
+            editclient: false,
+            deleteclient: false,
+            clientchangestatus: false,
             viewuser: false,
-            addservice: false,
+           
         },
         validate,
         onSubmit,
@@ -111,11 +109,13 @@ const Staffpermission = () => {
 
     useEffect(() => {
         if (clients.length > 0) {
-            formik.setFieldValue('adduser', clients.includes('adduser'));
-            formik.setFieldValue('edituser', clients.includes('edituser'));
-            formik.setFieldValue('deleteuser', clients.includes('deleteuser'));
+            formik.setFieldValue('addclient', clients.includes('addclient'));
+            formik.setFieldValue('viewclient', clients.includes('viewclient'));
+            formik.setFieldValue('allviewclient', clients.includes('allviewclient'));
+            formik.setFieldValue('editclient', clients.includes('editclient'));
+            formik.setFieldValue('deleteclient', clients.includes('deleteclient'));
+            formik.setFieldValue('clientchangestatus', clients.includes('clientchangestatus'));
             formik.setFieldValue('viewuser', clients.includes('viewuser'));
-            formik.setFieldValue('addservice', clients.includes('addservice'));
         }
     }, [clients]);
 
@@ -137,54 +137,92 @@ const Staffpermission = () => {
             disable: true,
         },
         {
-            name: 'adduser',
-            label: 'Add User',
+            name: 'userPermissions',
+            label: 'Clent Permissions',
             type: 'checkbox',
             label_size: 12,
-            col_size: 6,
-            check_box_true: formik.values.adduser,
+            col_size: 12,
+            
         },
         {
-            name: 'edituser',
-            label: 'Edit User',
+            name: 'addclient',
+            label: 'Add Client',
             type: 'checkbox',
             label_size: 12,
             col_size: 6,
-            check_box_true: formik.values.edituser,
+            check_box_true: formik.values.addclient,
         },
         {
-            name: 'deleteuser',
-            label: 'Delete User',
+            name: 'viewclient',
+            label: 'View Client',
             type: 'checkbox',
             label_size: 12,
             col_size: 6,
-            check_box_true: formik.values.deleteuser,
+            check_box_true: formik.values.viewclient,
+        },
+        {
+            name: 'allviewclient',
+            label: 'View All Client',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 6,
+            check_box_true: formik.values.allviewclient,
+        },
+        {
+            name: 'editclient',
+            label: 'Edit Client',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 6,
+            check_box_true: formik.values.editclient,
+        },
+        {
+            name: 'deleteclient',
+            label: 'Delete Client',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 6,
+            check_box_true: formik.values.deleteclient,
+        },
+        {
+            name: 'clientchangestatus',
+            label: 'Client Status',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 6,
+            check_box_true: formik.values.clientchangestatus,
+        },
+        {
+            name: 'staffPermissions',
+            label: 'User Permissions',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 12,
         },
         {
             name: 'viewuser',
-            label: 'View User',
+            label: 'View Staff',
             type: 'checkbox',
             label_size: 12,
             col_size: 6,
             check_box_true: formik.values.viewuser,
         },
-        {
-            name: 'addservice',
-            label: 'Add Service',
-            type: 'checkbox',
-            label_size: 12,
-            col_size: 6,
-            check_box_true: formik.values.addservice,
-        },
+        // {
+        //     name: 'deleteservice',
+        //     label: 'Delete Service',
+        //     type: 'checkbox',
+        //     label_size: 12,
+        //     col_size: 6,
+        //     check_box_true: formik.values.deleteservice,
+        // },
     ];
-
 
     return (
         <div style={{ marginTop: '100px' }}>
             <DynamicForm
                 fields={fields}
-                page_title="Edit Staff"
-                btn_name="Edit Staff"
+                page_title="Edit Permission"
+                btn_name="Edit Permission"
                 btn_name1="Cancel"
                 sumit_btn={true}
                 formik={formik}
@@ -195,4 +233,4 @@ const Staffpermission = () => {
     );
 };
 
-export default Staffpermission;
+export default Staffpermission;  

@@ -282,9 +282,9 @@ const Service = () => {
                             }}
                         />
                     </div>
-                    <div>
+                    {/* <div>
                         <Trash2 onClick={() => DeleteService(row._id)} />
-                    </div>
+                    </div> */}
                 </>
             ),
             ignoreRowClick: true,
@@ -339,7 +339,7 @@ const Service = () => {
                                 </span>
                             </div>
                             <div className="ms-auto">
-                                <button
+                                {/* <button
                                     type="button"
                                     className="btn btn-primary"
                                     data-bs-toggle="modal"
@@ -347,7 +347,7 @@ const Service = () => {
                                 >
                                     <i className="bx bxs-plus-square" />
                                     Add Service
-                                </button>
+                                </button> */}
 
                                 <div
                                     className="modal fade"
