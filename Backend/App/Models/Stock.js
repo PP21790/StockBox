@@ -3,30 +3,67 @@
 const { Schema, model } = require('mongoose');
 
 const StockSchema = new Schema({
-    title: {
-        type: String,
-        required: true,
-        trim: true
-    },
     symbol: {
         type: String,
         required: true,
-        trim: true
     },
-    add_by: {
+    expiry: {
         type: String,
         required: true,
-        trim: true,
-        default: null
     },
-    status: {
-        type: Boolean,
-        default: true // assuming true means active and false means inactive
+    expiry_month_year: {
+        type: String,
+        required: true,
     },
-    del: {
-        type: Boolean,
-        default: false
-    }
+    expiry_date: {
+        type: String,
+        required: true,
+    },
+    expiry_str: {
+        type: String,
+        required: true,
+    },
+    strike: {
+        type: String,
+        required: true,
+    },
+    option_type: {
+        type: String,
+        enum: ['CE', 'PE'], // Assuming these are the only valid values for option_type
+        required: true,
+    },
+    segment: {
+        type: String,
+        required: true,
+    },
+    instrument_token: {
+        type: String,
+        required: true,
+    },
+    lotsize: {
+        type: Number,
+        required: true,
+    },
+    tradesymbol: {
+        type: String,
+        required: true,
+    },
+    exch_seg: {
+        type: String,
+        required: true,
+    },
+    tradesymbol_m_w: {
+        type: String,
+        required: true,
+    },
+    tkr: {
+        type: String,
+        default: null,
+    },
+    a3tkr: {
+        type: String,
+        default: null,
+    },
 }, {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
 });

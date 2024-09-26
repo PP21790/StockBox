@@ -80,8 +80,8 @@ class Clients {
       const { } = req.body;
 
     //  const result = await Clients_Modal.find()
-    const result = await Clients_Modal.find({ del: 0 });
-
+   // const result = await Clients_Modal.find({ del: 0 });
+    const result = await Clients_Modal.find({ del: 0 }).sort({ _id: -1 });
       return res.json({
         status: true,
         message: "get",

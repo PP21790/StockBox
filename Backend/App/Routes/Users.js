@@ -16,19 +16,19 @@ const PERMISSIONS = {
 
   
   // Apply permission checks
-  router.post('/user/add', checkPermission(PERMISSIONS.ADD), AddUser);
-  router.get('/user/list', checkPermission(PERMISSIONS.ALL_VIEW), getUser);
-  router.put('/user/update', checkPermission(PERMISSIONS.UPDATE), updateUser);
-  router.get('/user/delete/:id', checkPermission(PERMISSIONS.DELETE), deleteUser);
-  router.get('/user/detail/:id', checkPermission(PERMISSIONS.VIEW), detailUser);
+  router.post('/user/add', AddUser);
+  router.get('/user/list', getUser);
+  router.put('/user/update', updateUser);
+  router.get('/user/delete/:id', deleteUser);
+  router.get('/user/detail/:id', detailUser);
   router.post('/user/login', loginUser); // No permission check for login
-  router.post('/user/change-status', checkPermission(PERMISSIONS.CHANGE_STATUS), statusChange);
-  router.post('/user/update-permissions', checkPermission(PERMISSIONS.UPDATE_PERMISSIONS), updateUserPermissions);
+  router.post('/user/change-status', statusChange);
+  router.post('/user/update-permissions', updateUserPermissions);
   router.post('/user/forgot-password', forgotPassword);
   router.post('/user/reset-password', resetPassword);
   router.post('/user/change-password', changePassword);
   router.post('/user/update-profile', updateProfile);
-  router.get('/user/activeUser',checkPermission(PERMISSIONS.ALL_VIEW),   activeUser);
+  router.get('/user/activeUser', activeUser);
 
   
   
