@@ -6,7 +6,8 @@ import Resetpass from '../Auth/Resetpass';
 import Login from '../Auth/Login';
 import Register from '../Auth/Register';
 import AdminRouting from './Admin.routes';
-import Staff from './Staff.routes';
+// import Staff from './Staff.routes';
+import Staffrouting from './Staff.routes';
 import Client from './Client.routes';
 
 
@@ -71,7 +72,7 @@ const Routing = () => {
         <Routes>
 
             <Route path="/admin/*" element={(roles === "1") ? <AdminRouting /> : <Login />} />
-            <Route path="/Staff/*" element={(roles === "2") ? <Staff /> : <Login />} />
+            <Route path="/Staff/*" element={(roles === "2") ? <Staffrouting /> : <Login />} />
             <Route path="/client/*" element={(roles === "3") ? <Client /> : <Login />} />
 
 

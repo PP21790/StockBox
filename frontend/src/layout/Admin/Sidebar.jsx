@@ -1,6 +1,43 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
+const menuItems = [
+  { title: 'Dashboard', icon: 'bx-home-alt', link: '/admin/dashboard' },
+  { title: 'Client', icon: 'bx-user', link: '/admin/client' },
+  { title: 'Free Trial Client', icon: 'bx-user', link: '/admin/freeclient' },
+  {
+    title: 'Plan',
+    icon: 'bxl-redux',
+    subMenu: [
+      { title: 'Plan', icon: 'bx-radio-circle', link: '/admin/plan' },
+      { title: 'Services', icon: 'bx-radio-circle', link: '/admin/service' },
+      { title: 'Category', icon: 'bx-radio-circle', link: '/admin/category' }
+    ]
+  },
+  { title: 'Staff', icon: 'bx-user-plus', link: '/admin/staff' },
+  { title: 'Signal', icon: 'bx-wifi-2', link: '/admin/signal' },
+  { title: 'Payment History', icon: 'bx-credit-card', link: '/admin/paymenthistory' },
+  { title: 'Blogs', icon: 'bx-comment-detail', link: '/admin/blogs' },
+  { title: 'News', icon: 'bx-news', link: '/admin/news' },
+  { title: 'Coupon', icon: 'bx-edit-alt', link: '/admin/coupon' },
+  { title: 'Banner', icon: 'bx-news', link: '/admin/banner' },
+  {
+    title: 'Basic Settings',
+    icon: 'bx-cog',
+    subMenu: [
+      { title: 'General Setting', icon: 'bx-radio-circle', link: '/admin/generalsettings' },
+      { title: 'Email Setting', icon: 'bx-radio-circle', link: '/admin/emailsetting' },
+      { title: 'Api Information', icon: 'bx-radio-circle', link: '/admin/Apiinfo' },
+      { title: 'Payment Gateway', icon: 'bx-radio-circle', link: '/admin/paymentgeteway' }
+    ]
+  },
+  { title: 'Broadcast SMS', icon: 'bx-conversation', link: '/admin/message' },
+  { title: 'KYC Agreement', icon: 'bxs-chevron-right', link: '/admin/kyc' },
+  { title: 'FAQ', icon: 'bx-help-circle', link: '/admin/faq' },
+  { title: 'Help Center', icon: 'bxs-chevron-right', link: '/admin/helpcenter' },
+  { title: 'Terms And Condition', icon: 'bx-info-square', link: '/admin/termsandcondtion' }
+];
+
 const Sidebar = ({ onToggleClick }) => {
   const [activeDropdown, setActiveDropdown] = useState(null);
 
@@ -10,309 +47,63 @@ const Sidebar = ({ onToggleClick }) => {
   };
 
   return (
-
     <div>
       <div data-simplebar="init">
         <div className="simplebar-wrapper" style={{ margin: 0 }}>
-          <div className="simplebar-height-auto-observer-wrapper">
-            <div className="simplebar-height-auto-observer" />
-          </div>
-          <div className="simplebar-mask">
-            <div className="simplebar-offset" style={{ right: 0, bottom: 0 }}>
-              <div className="simplebar-content-wrapper">
-                <div className="simplebar-content mm-active" style={{ padding: 0 }}>
-                  <div className="sidebar-header">
-                    <div>
-                      <img
-                        src="/assets/images/logo-icon.png"
-                        className="logo-icon"
-                        alt="logo icon"
-                      />
-                    </div>
-                    <div>
-                      <h4 className="logo-text">STOCK BOX</h4>
-                    </div>
-                    <div className="toggle-icon ms-auto" onClick={onToggleClick}>
-                      <i className="bx bx-arrow-back" />
-                    </div>
-                  </div>
-
-                  {/* Navigation */}
-                  <ul className="metismenu mm-show" id="menu">
-                    <li>
-                      <Link to={'/admin/dashboard'}>
-                        <div className="parent-icon">
-                          <i className="bx bx-home-alt" />
-                        </div>
-                        <div className="menu-title">Dashboard</div>
-                      </Link>
-                    </li>
-
-                    <li>
-                      <Link to={'/admin/client'}>
-                        <div className="parent-icon">
-                          <i className="bx bx-user" />
-                        </div>
-                        <div className="menu-title">Client</div>
-                      </Link>
-                    </li>
-
-                    <li>
-                      <Link to={'/admin/freeclient'}>
-                        <div className="parent-icon">
-                          <i className="bx bx-user" />
-                        </div>
-                        <div className="menu-title">Free Trial Client</div>
-                      </Link>
-                    </li>
-
-                    <li className={activeDropdown === 'plan' ? 'mm-active' : ''}>
-                      <a href="#" onClick={toggleDropdown('plan')} className="has-arrow" aria-expanded={activeDropdown === 'plan'}>
-                        <div className="parent-icon">
-                          <i className="bx bxl-redux" />
-                        </div>
-                        <div className="menu-title">Plan</div>
-                      </a>
-                      <ul className={`mm-collapse ${activeDropdown === 'plan' ? 'mm-show' : ''}`}>
-                        <li>
-                          <Link to="/admin/plan">
-                            <div className="parent-icon">
-                              <i className="bx bx-radio-circle radiocricle" />
-                            </div>
-                            <div className="menu-title">Plan</div>
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="/admin/service">
-                            <div className="parent-icon">
-                              <i className="bx bx-radio-circle radiocricle" />
-                            </div>
-                            <div className="menu-title">Services</div>
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="/admin/category">
-                            <div className="parent-icon">
-                              <i className="bx bx-radio-circle radiocricle" />
-                            </div>
-                            <div className="menu-title">Category</div>
-                          </Link>
-                        </li>
-                        {/* <li>
-                          <Link to="/admin/stock">
-                            <div className="parent-icon">
-                              <i className="bx bx-line-chart" />
-                            </div>
-                            <div className="menu-title">Stock</div>
-                          </Link>
-                        </li> */}
-                      </ul>
-                    </li>
-
-
-                    <li>
-                      <Link to="/admin/staff">
-                        <div className="parent-icon">
-                          <i className="bx bx-user-plus" />
-                        </div>
-                        <div className="menu-title">Staff</div>
-                      </Link>
-                    </li>
-
-                    <li>
-                      <Link to="/admin/signal">
-                        <div className="parent-icon">
-                          <i className="bx bx-wifi-2" />
-                        </div>
-                        <div className="menu-title">Signal</div>
-                      </Link>
-                    </li>
-
-                    {/* <li>
-                      <Link to="/admin/basket">
-                        <div className="parent-icon">
-                          <i className="bx bx-basket" />
-                        </div>
-                        <div className="menu-title">Basket</div>
-                      </Link>
-                    </li> */}
-
-                    <li>
-                      <Link to="/admin/paymenthistory">
-                        <div className="parent-icon">
-                          <i className="bx bx-credit-card" />
-                        </div>
-                        <div className="menu-title">Payment History</div>
-                      </Link>
-                    </li>
-
-                    <li>
-                      <Link to="/admin/blogs">
-                        <div className="parent-icon">
-                          <i className="fadeIn animated bx bx-comment-detail" />
-                        </div>
-                        <div className="menu-title">Blogs</div>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/admin/news">
-                        <div className="parent-icon">
-                          <i className="fadeIn animated bx bx-news" />
-                        </div>
-                        <div className="menu-title">News</div>
-                      </Link>
-                    </li>
-
-
-
-                    <li>
-                      <Link to="/admin/coupon">
-                        <div className="parent-icon">
-                          <i className="bx bx-edit-alt" />
-                        </div>
-                        <div className="menu-title">Coupon</div>
-                      </Link>
-                    </li>
-
-                    <li>
-                      <Link to="/admin/banner">
-                        <div className="parent-icon">
-                          <i className="fadeIn animated bx bx-news" />
-                        </div>
-                        <div className="menu-title">Banner</div>
-                      </Link>
-                    </li>
-
-
-                    <li className={activeDropdown === 'Basic Settings' ? 'mm-active' : ''}>
-                      <a href="#" onClick={toggleDropdown('Basic Settings')} className="has-arrow" aria-expanded={activeDropdown === 'Basic Settings'}>
-                        <div className="parent-icon">
-                          <i className="bx bx-cog" />
-                        </div>
-                        <div className="menu-title">Basic Settings</div>
-                      </a>
-                      <ul className={`mm-collapse ${activeDropdown === 'Basic Settings' ? 'mm-show' : ''}`}>
-                        <li>
-                          <Link to="/admin/generalsettings">
-                            <div className="parent-icon">
-                              <i className="bx bx-radio-circle radiocricle" />
-                            </div>
-                            <div className="menu-title">General Setting</div>
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="/admin/emailsetting">
-                            <div className="parent-icon">
-                              <i className="bx bx-radio-circle radiocricle" />
-                            </div>
-                            <div className="menu-title">Email Setting</div>
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="/admin/Apiinfo">
-                            <div className="parent-icon">
-                              <i className="bx bx-radio-circle radiocricle" />
-                            </div>
-                            <div className="menu-title">Api Information</div>
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="/admin/paymentgeteway">
-                            <div className="parent-icon">
-                              <i className="bx bx-radio-circle radiocricle" />
-                            </div>
-                            <div className="menu-title">Payment Gateway</div>
-                          </Link>
-                        </li>
-                      </ul>
-                    </li>
-
-                    <li>
-                      <Link to="/admin/message">
-                        <div className="parent-icon">
-                          <i className="fadeIn animated bx bx-conversation" />
-                        </div>
-                        <div className="menu-title">Broadcast SMS</div>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/admin/kyc">
-                        <div className="parent-icon">
-                          <i className="bx bxs-chevron-right" />
-                        </div>
-                        <div className="menu-title">KYC Agreement</div>
-                      </Link>
-                    </li>
-                    <li>
-
-                      <Link to="/admin/faq">
-                        <div className="parent-icon">
-                          <i className="bx bx-help-circle" />
-                        </div>
-                        <div className="menu-title">FAQ</div>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/admin/faq">
-                        <div className="parent-icon">
-                          <i className="bx bxs-chevron-right" />
-                        </div>
-                        <div className="menu-title">Help Center</div>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/admin/termsandcondtion">
-                        <div className="parent-icon">
-                          <i className="fadeIn animated bx bx-info-square" />
-                        </div>
-                        <div className="menu-title">Terms And Condition</div>
-                      </Link>
-                    </li>
-
-                    {/* <li className={activeDropdown === 'refer' ? 'mm-active' : ''}>
-                      <a href="#" onClick={toggleDropdown('refer')} className="has-arrow" aria-expanded={activeDropdown === 'refer'}>
-                        <div className="parent-icon">
-                          <i className="bx bxl-redux" />
-                        </div>
-                        <div className="menu-title">Refer & Earn</div>
-                      </a>
-                      <ul className={`mm-collapse ${activeDropdown === 'refer' ? 'mm-show' : ''}`}>
-                        <li>
-                          <Link to="/admin/refer/invite">
-                            <i className="bx bx-radio-circle" />
-                            Invite Friends
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="/admin/refer/history">
-                            <i className="bx bx-radio-circle" />
-                            Referral History
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="/admin/refer/earnings">
-                            <i className="bx bx-radio-circle" />
-                            Earnings
-                          </Link>
-                        </li>
-                      </ul>
-                    </li> */}
-
-                  </ul>
-                </div>
+          <div className="simplebar-content mm-active" style={{ padding: 0 }}>
+            <div className="sidebar-header">
+              <div>
+                <img
+                  src="/assets/images/logo-icon.png"
+                  className="logo-icon"
+                  alt="logo icon"
+                />
+              </div>
+              <div>
+                <h4 className="logo-text">STOCK BOX</h4>
+              </div>
+              <div className="toggle-icon ms-auto" onClick={onToggleClick}>
+                <i className="bx bx-arrow-back" />
               </div>
             </div>
+
+            {/* Dynamic Navigation */}
+            <ul className="metismenu mm-show" id="menu">
+              {menuItems.map((item, index) => (
+                <li key={index} className={item.subMenu ? (activeDropdown === item.title ? 'mm-active' : '') : ''}>
+                  {item.subMenu ? (
+                    <>
+                      <a href="#" onClick={toggleDropdown(item.title)} className="has-arrow" aria-expanded={activeDropdown === item.title}>
+                        <div className="parent-icon">
+                          <i className={`bx ${item.icon}`} />
+                        </div>
+                        <div className="menu-title">{item.title}</div>
+                      </a>
+                      <ul className={`mm-collapse ${activeDropdown === item.title ? 'mm-show' : ''}`}>
+                        {item.subMenu.map((subItem, subIndex) => (
+                          <li key={subIndex}>
+                            <Link to={subItem.link}>
+                              <div className="parent-icon">
+                                <i className={`bx ${subItem.icon}`} />
+                              </div>
+                              <div className="menu-title">{subItem.title}</div>
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  ) : (
+                    <Link to={item.link}>
+                      <div className="parent-icon">
+                        <i className={`bx ${item.icon}`} />
+                      </div>
+                      <div className="menu-title">{item.title}</div>
+                    </Link>
+                  )}
+                </li>
+              ))}
+            </ul>
           </div>
-          <div className="simplebar-placeholder" style={{ width: 'auto', height: 1393 }} />
-        </div>
-        <div className="simplebar-track simplebar-horizontal" style={{ visibility: 'hidden' }}>
-          <div className="simplebar-scrollbar" style={{ width: 0, display: 'none' }} />
-        </div>
-        <div className="simplebar-track simplebar-vertical" style={{ visibility: 'visible' }}>
-          <div
-            className="simplebar-scrollbar"
-            style={{ height: 294, transform: 'translate3d(0px, 347px, 0px)', display: 'block' }}
-          />
         </div>
       </div>
     </div>
