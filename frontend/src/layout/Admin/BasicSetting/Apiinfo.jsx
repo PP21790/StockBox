@@ -58,10 +58,20 @@ const Apiinfo = () => {
               <form className="row g-3 mt-2 mb-3">
                 <div className="row">
 
+                    <div className="col-md-12 mb-2">
+                      <label htmlFor="input3" className="form-label">
+                       Template Name
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="input3"
 
+                      />
+                    </div>
                   <div className="col-md-12 mb-2">
                     <label htmlFor="input3" className="form-label">
-                      Digio Client
+                      Digio E-Sign API
                     </label>
                     <input
                       type="text"

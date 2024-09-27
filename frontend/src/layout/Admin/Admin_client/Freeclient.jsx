@@ -532,6 +532,8 @@ const Freeclient = () => {
 
 
                 {isModalVisible && (
+                    <>
+                        <div className="modal-backdrop fade show"></div>
                     <div
                         className="modal fade show d-block"
                         style={{ backdropFilter: 'blur(1px)' }}
@@ -654,6 +656,7 @@ const Freeclient = () => {
                             </div>
                         </div>
                     </div>
+                    </>
                 )}
 
 

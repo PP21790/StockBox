@@ -461,6 +461,8 @@ const Blogs = () => {
 
 
                                 {model && (
+                                    <>
+                                        <div className="modal-backdrop fade show"></div>
                                     <div
                                         className="modal fade show"
                                         style={{ display: 'block' }}
@@ -547,6 +549,7 @@ const Blogs = () => {
                                             </div>
                                         </div>
                                     </div>
+                                    </>
                                 )}
 
                             </div>
