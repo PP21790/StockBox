@@ -12,7 +12,10 @@ const Staffpermission = () => {
     const token = localStorage.getItem('token');
     const [clients, setClients] = useState([]);
     const _id = row._id;
-    
+
+
+
+
     useEffect(() => {
         getAdminclient();
     }, []);
@@ -27,6 +30,9 @@ const Staffpermission = () => {
             console.log("Error fetching client permissions:", error);
         }
     };
+
+
+
 
     const validate = (values) => {
         let errors = {};
@@ -101,7 +107,13 @@ const Staffpermission = () => {
             deleteclient: false,
             clientchangestatus: false,
             viewuser: false,
-           
+            userPermissions: false,
+            Servicepermission: false,
+            addservice: false,
+            editservice: false,
+            viewservice: false,
+            deleteservice: false,
+
         },
         validate,
         onSubmit,
@@ -115,9 +127,59 @@ const Staffpermission = () => {
             formik.setFieldValue('editclient', clients.includes('editclient'));
             formik.setFieldValue('deleteclient', clients.includes('deleteclient'));
             formik.setFieldValue('clientchangestatus', clients.includes('clientchangestatus'));
-            formik.setFieldValue('viewuser', clients.includes('viewuser'));
+            formik.setFieldValue('userPermissions', clients.includes('userPermissions'));
+
+
+            
+            formik.setFieldValue('Servicepermission', clients.includes('Servicepermission'));
+            formik.setFieldValue('addservice', clients.includes('addservice'));
+            formik.setFieldValue('editservice', clients.includes('editservice'));
+            formik.setFieldValue('viewservice', clients.includes('viewservice'));
+            formik.setFieldValue('deleteservice', clients.includes('deleteservice'));
+           
+           
         }
     }, [clients]);
+
+
+
+    useEffect(() => {
+        if (formik.values.userPermissions == true) {
+            formik.setFieldValue('addclient', true);
+            formik.setFieldValue('viewclient', true);
+            formik.setFieldValue('viewdetail', true);
+            formik.setFieldValue('editclient', true);
+            formik.setFieldValue('deleteclient', true);
+            formik.setFieldValue('clientchangestatus', true);
+        }
+        else {
+            formik.setFieldValue('addclient', false);
+            formik.setFieldValue('viewclient', false);
+            formik.setFieldValue('viewdetail', false);
+            formik.setFieldValue('editclient', false);
+            formik.setFieldValue('deleteclient', false);
+            formik.setFieldValue('clientchangestatus', false); 
+        }
+
+    }, [formik.values.userPermissions])
+
+
+    useEffect(()=>{
+        if (formik.values.Servicepermission == true) {
+            formik.setFieldValue('addservice', true);
+            formik.setFieldValue('editservice', true);
+            formik.setFieldValue('viewservice', true);
+            formik.setFieldValue('deleteservice', true);
+           
+        }
+        else {
+            formik.setFieldValue('addservice', false);
+            formik.setFieldValue('editservice', false);
+            formik.setFieldValue('viewservice', false);
+            formik.setFieldValue('deleteservice', false);
+        }
+    },[formik.values.Servicepermission])
+
 
     const fields = [
         {
@@ -142,7 +204,8 @@ const Staffpermission = () => {
             type: 'checkbox',
             label_size: 12,
             col_size: 12,
-            
+            check_box_true: formik.values.userPermissions,
+
         },
         {
             name: 'addclient',
@@ -150,7 +213,8 @@ const Staffpermission = () => {
             type: 'checkbox',
             label_size: 12,
             col_size: 6,
-            check_box_true: formik.values.addclient,
+            // check_box_true: formik.values.addclient,
+            check_box_true: formik.values.userPermissions || formik.values.addclient ? true : false,
         },
         {
             name: 'viewclient',
@@ -158,7 +222,9 @@ const Staffpermission = () => {
             type: 'checkbox',
             label_size: 12,
             col_size: 6,
-            check_box_true: formik.values.viewclient,
+            // check_box_true: formik.values.viewclient,
+            check_box_true: formik.values.userPermissions || formik.values.viewclient ? true : false,
+
         },
         {
             name: 'viewdetail',
@@ -166,7 +232,9 @@ const Staffpermission = () => {
             type: 'checkbox',
             label_size: 12,
             col_size: 6,
-            check_box_true: formik.values.viewdetail,
+            // check_box_true: formik.values.viewdetail,
+            check_box_true: formik.values.userPermissions || formik.values.viewdetail ? true : false,
+
         },
         {
             name: 'editclient',
@@ -174,7 +242,8 @@ const Staffpermission = () => {
             type: 'checkbox',
             label_size: 12,
             col_size: 6,
-            check_box_true: formik.values.editclient,
+            // check_box_true: formik.values.editclient,
+            check_box_true: formik.values.userPermissions || formik.values.editclient ? true : false,
         },
         {
             name: 'deleteclient',
@@ -182,7 +251,8 @@ const Staffpermission = () => {
             type: 'checkbox',
             label_size: 12,
             col_size: 6,
-            check_box_true: formik.values.deleteclient,
+            // check_box_true: formik.values.deleteclient,
+            check_box_true: formik.values.userPermissions || formik.values.deleteclient ? true : false,
         },
         {
             name: 'clientchangestatus',
@@ -190,31 +260,54 @@ const Staffpermission = () => {
             type: 'checkbox',
             label_size: 12,
             col_size: 6,
-            check_box_true: formik.values.clientchangestatus,
+            // check_box_true: formik.values.clientchangestatus,
+            check_box_true: formik.values.userPermissions || formik.values.clientchangestatus ? true : false,
         },
         {
-            name: 'staffPermissions',
-            label: 'User Permissions',
+            name: 'Servicepermission',
+            label: 'Service Permissions',
             type: 'checkbox',
             label_size: 12,
             col_size: 12,
+            check_box_true: formik.values.Servicepermission,
         },
         {
-            name: 'viewuser',
-            label: 'View Staff',
+            name: 'addservice',
+            label: 'Add Service',
             type: 'checkbox',
             label_size: 12,
             col_size: 6,
-            check_box_true: formik.values.viewuser,
+            // check_box_true: formik.values.addservice,
+            check_box_true: formik.values.Servicepermission || formik.values.addservice ? true : false,
+    
         },
-        // {
-        //     name: 'deleteservice',
-        //     label: 'Delete Service',
-        //     type: 'checkbox',
-        //     label_size: 12,
-        //     col_size: 6,
-        //     check_box_true: formik.values.deleteservice,
-        // },
+        {
+            name: 'viewservice',
+            label: 'View Service',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 6,
+            // check_box_true: formik.values.viewservice,
+            check_box_true: formik.values.Servicepermission || formik.values.viewservice ? true : false,
+        },
+        {
+            name: 'editservice',
+            label: 'Edit Service',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 6,
+            // check_box_true: formik.values.editservice,
+            check_box_true: formik.values.Servicepermission || formik.values.editservice ? true : false,
+        },
+        {
+            name: 'deleteservice',
+            label: 'Delete Service',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 6,
+            // check_box_true: formik.values.deleteservice,
+            check_box_true: formik.values.Servicepermission || formik.values.deleteservice ? true : false,
+        }
     ];
 
     return (

@@ -1,7 +1,32 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { getstaffperuser } from '../../Services/Admin';
+
 
 const Sidebar = ({ onToggleClick }) => {
+
+  const [permission, setPermission] = useState([]);
+
+    const token = localStorage.getItem('token');
+    const userid = localStorage.getItem('id');
+
+
+  const getpermissioninfo = async () => {
+    try {
+        const response = await getstaffperuser(userid, token);
+        if (response.status) {
+            setPermission(response.data.permissions);
+        }
+    } catch (error) {
+        console.log("error", error);
+    }
+};
+   
+
+useEffect(() => {
+  getpermissioninfo()
+}, []);
+
 
 
   return (
@@ -46,16 +71,18 @@ const Sidebar = ({ onToggleClick }) => {
                       </Link>
 
                     </li>
+      
+                    {permission.includes("viewclient") ?   
+                     <li>
+                     <Link to={'/staff/client'}>
+                       <div className="parent-icon">
+                         <i className="bx bx-user" />
+                       </div>
+                       <div className="menu-title">Client </div>
+                     </Link>
+                   </li>
+                     :""}
 
-
-                    <li>
-                      <Link to={'/staff/client'}>
-                        <div className="parent-icon">
-                          <i className="bx bx-user" />
-                        </div>
-                        <div className="menu-title">Client </div>
-                      </Link>
-                    </li>
                    
 
 

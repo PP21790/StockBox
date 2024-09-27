@@ -15,14 +15,17 @@ import Footer from '../layout/Staff/Footer';
 import Client from '../layout/Staff/StaffClient/Client';
 import Addclient from '../layout/Staff/StaffClient/Addclient';
 import EditClient from '../layout/Staff/StaffClient/Editclient';
-
+import { getstaffperuser } from '../Services/Admin';
 
 
 
 function Staff() {
-
-
-
+  
+    const token = localStorage.getItem('token');
+    const userid = localStorage.getItem('id');
+    
+    const [permission, setPermission] = useState([]);
+   
     const [isToggled, setIsToggled] = useState(false);
     const [isSidebarHovered, setIsSidebarHovered] = useState(false);
 
@@ -49,6 +52,26 @@ function Staff() {
         setIsToggled((prevState) => !prevState);
     };
 
+
+
+    
+    const getpermissioninfo = async () => {
+        try {
+            const response = await getstaffperuser(userid, token);
+            if (response.status) {
+                setPermission(response.data.permissions);
+            }
+        } catch (error) {
+            console.log("error", error);
+        }
+    };
+    
+
+    useEffect(()=>{
+        getpermissioninfo()
+    })
+
+
     return (
 
         <div
@@ -65,8 +88,11 @@ function Staff() {
             <div className="page-wrapper">
                 <Routes>
                     <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/client" element={<Client />} />
-                    <Route path="/addclient" element={<Addclient />} />
+                
+                {permission.includes("viewclient") ?    <Route path="/client" element={<Client />} /> :"   " }
+                {permission.includes("addclient") ?    <Route path="/addclient" element={<Addclient />} /> :"   " }
+                  
+                  
                     <Route path="/client/updateclient/:id" element={<EditClient />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/faq" element={<Faq />} />

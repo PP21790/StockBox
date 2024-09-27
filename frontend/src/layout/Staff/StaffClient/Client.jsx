@@ -269,7 +269,7 @@ const Client = () => {
                                     </span>
                                 </div>
                                 <div className="ms-auto">
-                                    {/* {permission.includes("addclient") ?  */}
+                                    {permission.includes("addclient") ? 
                                     <Link
                                         to="/staff/addclient"
                                         className="btn btn-primary"
@@ -280,7 +280,7 @@ const Client = () => {
                                         />
                                         Add Client
                                     </Link> 
-                                    {/* : "" } */}
+                                    : "" }
                                 </div>
                             </div>
 
