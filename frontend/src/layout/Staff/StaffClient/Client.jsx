@@ -214,15 +214,16 @@ const Client = () => {
             selector: row => new Date(row.updatedAt).toLocaleDateString(),
             sortable: true,
         },
+        
         {
             name: 'Actions',
             cell: row => (
                 <>
-                {permission.includes("edituser") ?  <div>
+                {permission.includes("editclient") ?  <div>
                  <Pencil onClick={() => updateClient(row)} />
                 </div> : ""}
                  
-                 {permission.includes("deleteuser") ?  <div>
+                 {permission.includes("deleteclient") ?  <div>
                <Trash2 onClick={() => DeleteClient(row._id)} />
                </div> : ""}
                

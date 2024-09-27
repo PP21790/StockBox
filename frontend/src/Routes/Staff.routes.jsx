@@ -2,11 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Dashboard from '../layout/Admin/Admin_dashboard/Dashboard';
 
-
-
 import Profile from '../layout/Admin/Admin_profile/Profile';
-
-
 import Faq from '../layout/Admin/Admin_faq/Faq';
 import Sidebar from '../layout/Staff/Sidebar'
 import Header from '../layout/Staff/Header';
@@ -20,14 +16,21 @@ import { getstaffperuser } from '../Services/Admin';
 
 
 function Staff() {
-  
+
     const token = localStorage.getItem('token');
     const userid = localStorage.getItem('id');
-    
+
     const [permission, setPermission] = useState([]);
-   
+
     const [isToggled, setIsToggled] = useState(false);
     const [isSidebarHovered, setIsSidebarHovered] = useState(false);
+  
+
+    useEffect(() => {
+        getpermissioninfo()
+    })
+
+
 
     useEffect(() => {
 
@@ -54,7 +57,7 @@ function Staff() {
 
 
 
-    
+
     const getpermissioninfo = async () => {
         try {
             const response = await getstaffperuser(userid, token);
@@ -65,12 +68,8 @@ function Staff() {
             console.log("error", error);
         }
     };
-    
 
-    useEffect(()=>{
-        getpermissioninfo()
-    })
-
+   
 
     return (
 
@@ -88,12 +87,12 @@ function Staff() {
             <div className="page-wrapper">
                 <Routes>
                     <Route path="/dashboard" element={<Dashboard />} />
-                
-                {permission.includes("viewclient") ?    <Route path="/client" element={<Client />} /> :"   " }
-                {permission.includes("addclient") ?    <Route path="/addclient" element={<Addclient />} /> :"   " }
-                  
-                  
-                    <Route path="/client/updateclient/:id" element={<EditClient />} />
+
+                    {permission.includes("viewclient") ? <Route path="/client" element={<Client />} /> : ""}
+                    {permission.includes("addclient") ? <Route path="/addclient" element={<Addclient />} /> : ""}
+                    {permission.includes("editclient") ?  <Route path="/client/updateclient/:id" element={<EditClient />}/> : ""}
+
+                   
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/faq" element={<Faq />} />
 
