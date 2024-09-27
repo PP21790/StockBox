@@ -14,12 +14,12 @@ const PERMISSIONS = {
   
 
   closeSignal
-router.post('/signal/add', checkPermission(PERMISSIONS.ADD), AddSignal);
-router.get('/signal/list',  checkPermission(PERMISSIONS.ALL_VIEW), getSignal);
-router.get('/signal/delete/:id',  checkPermission(PERMISSIONS.DELETE), deleteSignal);
-router.get('/signal/detail/:id',  checkPermission(PERMISSIONS.VIEW), detailSignal);
-router.post('/signal/closesignal', checkPermission(PERMISSIONS.CLOSE), closeSignal);
-router.post('/signal/targethitsignal', checkPermission(PERMISSIONS.HIT), targethitSignal);
+router.post('/signal/add', AddSignal);
+router.get('/signal/list', getSignal);
+router.get('/signal/delete/:id', deleteSignal);
+router.get('/signal/detail/:id', detailSignal);
+router.post('/signal/closesignal', closeSignal);
+router.post('/signal/targethitsignal', targethitSignal);
 
 
 module.exports = router;

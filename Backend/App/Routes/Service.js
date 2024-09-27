@@ -14,12 +14,12 @@ const PERMISSIONS = {
   
 
 
-router.post('/service/add', checkPermission(PERMISSIONS.ADD), AddService);
-router.get('/service/list',  checkPermission(PERMISSIONS.ALL_VIEW), getService);
-router.put('/service/update',  checkPermission(PERMISSIONS.UPDATE), updateService);
-router.get('/service/delete/:id',  checkPermission(PERMISSIONS.DELETE), deleteService);
-router.get('/service/detail/:id',  checkPermission(PERMISSIONS.VIEW), detailService);
-router.post('/service/change-status',  checkPermission(PERMISSIONS.CHANGE_STATUS), statusChange);
+router.post('/service/add', AddService);
+router.get('/service/list', getService);
+router.put('/service/update', updateService);
+router.get('/service/delete/:id', deleteService);
+router.get('/service/detail/:id', detailService);
+router.post('/service/change-status', statusChange);
 router.get('/service/activeservice',   activeService);
 
 

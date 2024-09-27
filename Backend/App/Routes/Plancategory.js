@@ -14,12 +14,12 @@ const PERMISSIONS = {
   
 
 
-router.post('/plancategory/add', checkPermission(PERMISSIONS.ADD), AddPlancategory);
-router.get('/plancategory/list',  checkPermission(PERMISSIONS.ALL_VIEW), getPlancategory);
-router.put('/plancategory/update',  checkPermission(PERMISSIONS.UPDATE), updatePlancategory);
-router.get('/plancategory/delete/:id',  checkPermission(PERMISSIONS.DELETE), deletePlancategory);
-router.get('/plancategory/detail/:id',  checkPermission(PERMISSIONS.VIEW), detailPlancategory);
-router.post('/plancategory/change-status',  checkPermission(PERMISSIONS.CHANGE_STATUS), statusChange);
+router.post('/plancategory/add', AddPlancategory);
+router.get('/plancategory/list', getPlancategory);
+router.put('/plancategory/update', updatePlancategory);
+router.get('/plancategory/delete/:id', deletePlancategory);
+router.get('/plancategory/detail/:id', detailPlancategory);
+router.post('/plancategory/change-status', statusChange);
 router.get('/plancategory/activeplancategory',   activePlancategory);
 
 

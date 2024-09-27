@@ -79,16 +79,45 @@ class Clients {
       if (!settings || !settings.smtp_status) {
         throw new Error('SMTP settings are not configured or are disabled');
       }
+
+
+      const templatePath = path.join(__dirname, '../../../template', 'mailtemplate.html');
+      
+    
+      fs.readFile(templatePath, 'utf8', async (err, htmlTemplate) => {
+        if (err) {
+            console.error('Error reading HTML template:', err);
+            return;
+        }
+    
+        
+
+        // Replace placeholders with actual values
+        const finalHtml = htmlTemplate
+            .replace('{{company_name}}', settings.website_title)
+            .replace('{{logo}}', 'https://stockboxpnp.pnpuniverse.com/uploads/basicsetting/logo-1723550994328-584049046.png')
+            .replace('{{resetToken}}', resetToken);
+    
         // Email options
         const mailOptions = {
-          to: result.Email,
-          from: `${settings.from_name} <${settings.from_mail}>`, // Include business name
-          subject: 'Password Reset',
-          text: `Your verification code is: ${resetToken}. This code is valid for 10 minutes. Please do not share this code with anyone.`,
+            to: result.Email,
+            from: `${settings.from_name} <${settings.from_mail}>`, // Include business name
+            subject: 'Password Reset',
+            html: finalHtml // Use the HTML template with dynamic variables
         };
     
         // Send email
         await sendEmail(mailOptions);
+    });
+
+        // const mailOptions = {
+        //   to: result.Email,
+        //   from: `${settings.from_name} <${settings.from_mail}>`, 
+        //   subject: 'Password Reset',
+        //   text: `Your verification code is: ${resetToken}. This code is valid for 10 minutes. Please do not share this code with anyone.`,
+        // };
+    
+        // await sendEmail(mailOptions);
 
 
       return res.json({

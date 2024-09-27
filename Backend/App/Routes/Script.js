@@ -12,10 +12,10 @@ const PERMISSIONS = {
   
 
 
-router.post('/script/add', checkPermission(PERMISSIONS.ADD), AddScript);
-router.get('/script/list',  checkPermission(PERMISSIONS.ALL_VIEW), getScript);
-router.get('/script/delete/:id',  checkPermission(PERMISSIONS.DELETE), deleteScript);
-router.get('/script/detail/:id',  checkPermission(PERMISSIONS.VIEW), detailScript);
+router.post('/script/add', AddScript);
+router.get('/script/list', getScript);
+router.get('/script/delete/:id', deleteScript);
+router.get('/script/detail/:id', detailScript);
 
 
 module.exports = router;

@@ -11,6 +11,7 @@ const path = require('path');
 const cors = require('cors');
 const bodyparser = require('body-parser');
 const db = require("./App/Models");
+require('./App/Controllers/Cron.js'); // Adjust the path based on your file structure
 const Clients_Modal = db.Clients;
 const BasicSetting_Modal = db.BasicSetting;
 const Blogs_Modal = db.Blogs;
@@ -30,6 +31,7 @@ const Plancategory_Modal = db.Plancategory;
 const PlanSubscription_Modal = db.PlanSubscription;
 const Content_Modal = db.Content;
 const BasketSubscription_Modal = db.BasketSubscription;
+const Mailtemplate_Modal = db.Mailtemplate;
 
 
 
@@ -59,6 +61,6 @@ require('./App/api/Routes/index')(app)
 //require('./App/api/Routes/index')(app)
 
 // httpsserver.listen(1001)
-server.listen(process.env.PORT,"192.168.0.11", () => {
+server.listen(process.env.PORT, () => {
   console.log(`Server is running on http://0.0.0.0:${process.env.PORT}`);
 });
