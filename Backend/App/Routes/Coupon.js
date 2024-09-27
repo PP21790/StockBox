@@ -16,12 +16,12 @@ const PERMISSIONS = {
     CHANGE_STATUS: 'couponchangestatus',
   };
 
-router.post('/coupon/add', checkPermission(PERMISSIONS.ADD), AddCoupon);
-router.get('/coupon/list', checkPermission(PERMISSIONS.ALL_VIEW), getCoupon);
-router.put('/coupon/update', checkPermission(PERMISSIONS.UPDATE), updateCoupon);
-router.get('/coupon/delete/:id', checkPermission(PERMISSIONS.DELETE), deleteCoupon);
-router.get('/coupon/detail/:id', checkPermission(PERMISSIONS.VIEW), detailCoupon);
-router.post('/coupon/change-status', checkPermission(PERMISSIONS.CHANGE_STATUS), statusChange);
+router.post('/coupon/add', AddCoupon);
+router.get('/coupon/list', getCoupon);
+router.put('/coupon/update', updateCoupon);
+router.get('/coupon/delete/:id', deleteCoupon);
+router.get('/coupon/detail/:id', detailCoupon);
+router.post('/coupon/change-status', statusChange);
 router.get('/coupon/activecoupon',   activeCoupon);
 
 

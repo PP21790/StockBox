@@ -22,7 +22,7 @@ module.exports = {
     Plancategory: require("./Plancategory"),
     Content: require("./Content"),
     BasketSubscription: require("./BasketSubscription"),
-
+    Mailtemplate: require("./Mailtemplate"),
 
 
 

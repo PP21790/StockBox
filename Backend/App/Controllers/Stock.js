@@ -5,8 +5,9 @@ const csv = require('csv-parser');
 const path = require('path');
 const axios = require('axios');
 const fs = require('fs');
-const dateTime = require('date-and-time'); 
+var dateTime = require('node-datetime');
 const Stock_Modal = db.Stock;
+
 
 
 class Stock {
@@ -346,5 +347,8 @@ class Stock {
 
 
 }
+
+  
+  
 
 module.exports = new Stock();

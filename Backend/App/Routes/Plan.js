@@ -14,14 +14,14 @@ const PERMISSIONS = {
   };
   
 
-router.post('/plan/add', checkPermission(PERMISSIONS.ADD), AddPlan);
-router.get('/plan/list', checkPermission(PERMISSIONS.ALL_VIEW), getPlan);
-router.put('/plan/update', checkPermission(PERMISSIONS.UPDATE), updatePlan);
-router.get('/plan/delete/:id', checkPermission(PERMISSIONS.DELETE), deletePlan);
-router.get('/plan/detail/:id', checkPermission(PERMISSIONS.VIEW), detailPlan);
-router.post('/plan/change-status', checkPermission(PERMISSIONS.CHANGE_STATUS), statusChange);
+router.post('/plan/add', AddPlan);
+router.get('/plan/list', getPlan);
+router.put('/plan/update', updatePlan);
+router.get('/plan/delete/:id', deletePlan);
+router.get('/plan/detail/:id', detailPlan);
+router.post('/plan/change-status', statusChange);
 router.get('/plan/activeplan',   activePlan);
-router.post('/plan/addplansubscription',  checkPermission(PERMISSIONS.addPlanSubscription), addPlanSubscription); 
+router.post('/plan/addplansubscription', addPlanSubscription); 
 
 
 

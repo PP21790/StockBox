@@ -17,6 +17,8 @@ module.exports = function (app) {
     app.use(require("./Banner"))
     app.use(require("./Plancategory"))
     app.use(require("./Content"))
+    app.use(require("./Mailtemplate"))
+
 
 
 

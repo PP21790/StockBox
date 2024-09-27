@@ -13,12 +13,12 @@ const PERMISSIONS = {
   };
   
 
-router.post('/basket/add', checkPermission(PERMISSIONS.ADD), AddBasket);
-router.get('/basket/list', checkPermission(PERMISSIONS.ALL_VIEW), getBasket);
-router.put('/basket/update', checkPermission(PERMISSIONS.UPDATE), updateBasket);
-router.get('/basket/delete/:id', checkPermission(PERMISSIONS.DELETE), deleteBasket);
-router.get('/basket/detail/:id', checkPermission(PERMISSIONS.VIEW), detailBasket);
-router.post('/basket/change-status', checkPermission(PERMISSIONS.CHANGE_STATUS), statusChange);
+router.post('/basket/add', AddBasket);
+router.get('/basket/list', getBasket);
+router.put('/basket/update', updateBasket);
+router.get('/basket/delete/:id', deleteBasket);
+router.get('/basket/detail/:id', detailBasket);
+router.post('/basket/change-status', statusChange);
 router.get('/basket/activebasket',   activeBasket);
 
 

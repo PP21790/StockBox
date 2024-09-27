@@ -13,12 +13,12 @@ const PERMISSIONS = {
   };
 
 
-router.post('/faq/add', checkPermission(PERMISSIONS.ADD), AddFaq);
-router.get('/faq/list', checkPermission(PERMISSIONS.ALL_VIEW), getFaq);
-router.put('/faq/update', checkPermission(PERMISSIONS.UPDATE), updateFaq);
-router.get('/faq/delete/:id', checkPermission(PERMISSIONS.DELETE), deleteFaq);
-router.get('/faq/detail/:id', checkPermission(PERMISSIONS.VIEW), detailFaq);
-router.post('/faq/change-status', checkPermission(PERMISSIONS.CHANGE_STATUS), statusChange);
+router.post('/faq/add', AddFaq);
+router.get('/faq/list', getFaq);
+router.put('/faq/update', updateFaq);
+router.get('/faq/delete/:id', deleteFaq);
+router.get('/faq/detail/:id', detailFaq);
+router.post('/faq/change-status', statusChange);
 router.get('/faq/activefaq',   activeFaq);
 
 module.exports = router;
