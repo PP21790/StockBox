@@ -290,7 +290,7 @@ const Signal = () => {
 
         {
             name: 'Symbol',
-            selector: row => row.stock.title,
+            selector: row => row.title,
             sortable: true,
             width: '132px',
         },

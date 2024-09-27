@@ -295,15 +295,113 @@ const News = () => {
             name: 'Actions',
             cell: row => (
                 <>
-                    <div>
-                        <SquarePen
-                            onClick={() => {
-                                setModel(true);
-                                setServiceid(row);
-                                setUpdatetitle({ title: row.title, id: row._id, description: row.description, image: row.image });
-                            }}
-                        />
-                    </div>
+                    <SquarePen
+                        onClick={() => {
+                            setModel(true);
+                            setServiceid(row);
+                            setUpdatetitle({
+                                title: row.title,
+                                id: row._id,
+                                description: row.description,
+                                image: row.image
+                            });
+                        }}
+                    />
+                    {model && (
+                        <>
+                            {/* Backdrop */}
+                            <div className="modal-backdrop fade show"></div>
+
+                            {/* Modal */}
+                            <div
+                                className="modal fade show"
+                                style={{ display: 'block' }}
+                                tabIndex={-1}
+                                aria-labelledby={`modalLabel-${row._id}`}
+                                aria-hidden="true"
+                                role="dialog"
+                            >
+                                <div className="modal-dialog">
+                                    <div className="modal-content">
+                                        <div className="modal-header">
+                                            <h5 className="modal-title" id={`modalLabel-${row._id}`}>
+                                                Update News
+                                            </h5>
+                                            <button
+                                                type="button"
+                                                className="btn-close"
+                                                onClick={() => setModel(false)} // Close modal on click
+                                            />
+                                        </div>
+                                        <div className="modal-body">
+                                            <form>
+                                                <div className="row">
+                                                    <div className="col-md-12">
+                                                        <label htmlFor="">Title</label>
+                                                        <input
+                                                            className="form-control mb-2"
+                                                            type="text"
+                                                            placeholder="Enter news Title"
+                                                            value={updatetitle.title}
+                                                            onChange={(e) => updateServiceTitle({ title: e.target.value })}
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div className="row">
+                                                    <div className="col-md-12">
+                                                        <label htmlFor="imageUpload">Image</label>
+                                                        <input
+                                                            className="form-control mb-3"
+                                                            type="file"
+                                                            accept="image/*"
+                                                            id="imageUpload"
+                                                            onChange={(e) => {
+                                                                const file = e.target.files[0];
+                                                                if (file) {
+                                                                    updateServiceTitle({ image: file });
+                                                                }
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div className="row">
+                                                    <div className="col-md-12">
+                                                        <label htmlFor="">Description</label>
+                                                        <input
+                                                            className="form-control mb-2"
+                                                            type="text"
+                                                            placeholder="Enter Description"
+                                                            value={updatetitle.description}
+                                                            onChange={(e) => updateServiceTitle({ description: e.target.value })}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div className="modal-footer">
+                                            <button
+                                                type="button"
+                                                className="btn btn-secondary"
+                                                onClick={() => setModel(false)} // Close modal on click
+                                            >
+                                                Close
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className="btn btn-primary"
+                                                onClick={updateNews} // Your update news function
+                                            >
+                                                Update News
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </>
+                    )}
+
                     <div>
                         <Trash2 onClick={() => DeleteService(row._id)} />
                     </div>
@@ -454,7 +552,7 @@ const News = () => {
                                 </div>
 
 
-                                {model && (
+                                {/* {model && (
                                     <div
                                         className="modal fade show"
                                         style={{ display: 'block' }}
@@ -541,7 +639,7 @@ const News = () => {
                                             </div>
                                         </div>
                                     </div>
-                                )}
+                                )} */}
 
                             </div>
                         </div>

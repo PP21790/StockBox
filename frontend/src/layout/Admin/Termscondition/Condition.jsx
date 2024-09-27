@@ -437,6 +437,8 @@ const Condition = () => {
                                     </div>
                                 </div>
                                 {model && (
+                                    <>
+                                        <div className="modal-backdrop fade show"></div>
                                     <div
                                         className="modal fade show"
                                         style={{ display: 'block' }}
@@ -504,6 +506,7 @@ const Condition = () => {
                                             </div>
                                         </div>
                                     </div>
+                                    </>
                                 )}
                             </div>
                         </div>

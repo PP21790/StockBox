@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
+import { Download, } from 'lucide-react';
 const Kyc = () => {
     return (
         // <div>
@@ -139,6 +139,7 @@ const Kyc = () => {
                                             <th>Email</th>
                                             <th>Phone No.</th>
                                             <th>Aadhar No.</th>
+                                            <th>Pan No.</th>
                                             <th>KYC Download</th>
                                             <th>Agreement Download</th>
                                         </tr>
@@ -153,11 +154,21 @@ const Kyc = () => {
                                             <td>hsdd@gmail.com</td>
                                             <td>7893216540</td>
                                             <td>387 654 32101</td>
-                                            <td>
-                                                yes
+                                            <td>AEFXK5837I</td>
+                                            <td >
+                                                <div className='d-flex justify-content-center'>
+                                                    <Download />
+                                                </div>
+
                                             </td>
 
-                                            <td>yes</td>
+                                            <td>
+                                                <div className='d-flex justify-content-center'>
+
+
+                                                    <Download />
+                                                </div>
+                                            </td>
 
 
 
@@ -171,11 +182,22 @@ const Kyc = () => {
                                             <td>hsdd@gmail.com</td>
                                             <td>7893216540</td>
                                             <td>387 654 32101</td>
-                                            <td>
-                                                yes
+                                            <td>AEFXK5837I</td>
+                                            <td >
+                                                <div className='d-flex justify-content-center'>
+                                                    <Download />
+                                                </div>
+
                                             </td>
 
-                                            <td>yes</td>
+                                            <td>
+                                                <div className='d-flex justify-content-center'>
+
+
+                                                    <Download />
+                                                </div>
+                                            </td>
+
 
 
 
@@ -189,11 +211,22 @@ const Kyc = () => {
                                             <td>hsdd@gmail.com</td>
                                             <td>7893216540</td>
                                             <td>387 654 32101</td>
-                                            <td>
-                                                yes
+                                            <td>AEFXK5837I</td>
+                                            <td >
+                                                <div className='d-flex justify-content-center'>
+                                                    <Download />
+                                                </div>
+
                                             </td>
 
-                                            <td>yes</td>
+                                            <td>
+                                                <div className='d-flex justify-content-center'>
+
+
+                                                    <Download />
+                                                </div>
+                                            </td>
+
 
 
 
@@ -207,11 +240,22 @@ const Kyc = () => {
                                             <td>hsdd@gmail.com</td>
                                             <td>7893216540</td>
                                             <td>387 654 32101</td>
-                                            <td>
-                                                yes
+                                            <td>AEFXK5837I</td>
+                                            <td >
+                                                <div className='d-flex justify-content-center'>
+                                                    <Download />
+                                                </div>
+
                                             </td>
 
-                                            <td>yes</td>
+                                            <td>
+                                                <div className='d-flex justify-content-center'>
+
+
+                                                    <Download />
+                                                </div>
+                                            </td>
+
 
 
 
@@ -225,11 +269,22 @@ const Kyc = () => {
                                             <td>hsdd@gmail.com</td>
                                             <td>7893216540</td>
                                             <td>387 654 32101</td>
-                                            <td>
-                                                yes
+                                            <td>AEFXK5837I</td>
+                                            <td >
+                                                <div className='d-flex justify-content-center'>
+                                                    <Download />
+                                                </div>
+
                                             </td>
 
-                                            <td>yes</td>
+                                            <td>
+                                                <div className='d-flex justify-content-center'>
+
+
+                                                    <Download />
+                                                </div>
+                                            </td>
+
 
 
 
@@ -239,15 +294,26 @@ const Kyc = () => {
                                                 6
                                             </td>
                                             <td>vsdv</td>
-                                           
+
                                             <td>hsdd@gmail.com</td>
                                             <td>7893216540</td>
                                             <td>387 654 32101</td>
-                                            <td>
-                                                yes
+                                            <td>AEFXK5837I</td>
+                                            <td >
+                                                <div className='d-flex justify-content-center'>
+                                                    <Download />
+                                                </div>
+
                                             </td>
 
-                                            <td>yes</td>
+                                            <td>
+                                                <div className='d-flex justify-content-center'>
+
+
+                                                    <Download />
+                                                </div>
+                                            </td>
+
 
 
 

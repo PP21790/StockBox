@@ -46,28 +46,18 @@ a {
 
 
 .sidebar-wrapper {
-
-	width: 250px;
-
+	border-radius: 19px;
+	width: 238px;
 	height: 100%;
-
 	position: fixed;
-
-	top: 0;
-
+	top: 0px;
 	bottom: 0;
-
-	left: 0;
-
+	left: 10px;
 	background: #fff;
-
 	border-right: 0 solid #e4e4e4;
-
 	z-index: 11;
-
 	box-shadow: 0 0 2rem 0 rgba(136, 152, 170, .15);
-
-	transition: all .2s ease-out
+	transition: all .2s ease-out;
 }
 
 
@@ -136,27 +126,17 @@ a {
 
 
 .topbar {
-
+	border-radius: 19px;
 	position: fixed;
-
 	top: 0;
-
-	left: 250px;
-
+	left: 257px;
 	right: 0;
-
 	height: 60px;
-
 	background: #fff;
-
 	border-bottom: 1px solid rgb(228 228 228 / 0%);
-
 	z-index: 10;
-
 	-webkit-box-shadow: 0 0 2rem 0 rgba(136, 152, 170, .15);
-
 	box-shadow: 0 0 2rem 0 rgba(136, 152, 170, .15);
-
 }
 
 
