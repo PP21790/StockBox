@@ -12,7 +12,7 @@ import Freeclient from '../layout/Staff/StaffClient/Freeclient';
 
 
 import Dashbord from '../layout/Staff/Dashboard/Dashboard';
- 
+
 
 import Profile from '../layout/Staff/Profile/Profile';
 import Service from '../layout/Staff/Service/Service.s';
@@ -68,11 +68,10 @@ function Staffrouting() {
 
     const [isToggled, setIsToggled] = useState(false);
     const [isSidebarHovered, setIsSidebarHovered] = useState(false);
-  
 
     useEffect(() => {
         getpermissioninfo()
-    })
+    }, [])
 
 
 
@@ -113,7 +112,7 @@ function Staffrouting() {
         }
     };
 
-   
+
 
     return (
 
@@ -134,91 +133,95 @@ function Staffrouting() {
 
                     {permission.includes("viewclient") ? <Route path="/client" element={<Client />} /> : ""}
                     {permission.includes("addclient") ? <Route path="/addclient" element={<Addclient />} /> : ""}
-                    {permission.includes("editclient") ?  <Route path="/client/updateclient/:id" element={<EditClient />}/> : ""}
+                    {permission.includes("editclient") ? <Route path="/client/updateclient/:id" element={<EditClient />} /> : ""}
 
-                     <Route path="/freeclient" element={<Freeclient />} />
-                   
-
-                    <Route path="/profile" element={<Profile/>} />
-                    <Route path="/faq" element={<Faq />} />
-                       
-
-                    <Route path="/dashboard" element={<Dashbord/>} />
-    
-                
-                    <Route path="/service" element={<Service/>} />
-                    <Route path="/kyc" element={<Kyc/>} />
-    
-                   
+                    {/* <Route path="/freeclient" element={<Freeclient />} /> */}
 
 
-                    <Route path="/staff" element={<Staff/>} />
-                    <Route path="/addstaff" element={<AddStaff/>} />
-                    <Route path="/staff/updatestaff/:id" element={<Update/>} />
-                    <Route path="/staff/staffpermission/:id" element={<Staffpermission/>} />
+                    <Route path="/profile" element={<Profile />} />
+
+                    {/* <Route path="/service" element={<Service />} /> */}
+                    {/* <Route path="/kyc" element={<Kyc />} /> */}
 
 
 
+                    {permission.includes("viewstaff") ? <Route path="/staff" element={<Staff />} /> : ""}
+                    {permission.includes("addstaff") ? <Route path="/addstaff" element={<AddStaff />} /> : ""}
+                    {permission.includes("editstaff") ? <Route path="/staff/updatestaff/:id" element={<Update />} /> : ""}
 
-                    <Route path="/faq" element={<Faq/>} />
-                    <Route path="/refer" element={<Refer />} />
-                    <Route path="/paymenthistory" element={<Paymenthistory />} />
+                    {/* {permission.includes("editstaff") ? <Route path="/staff/staffpermission/:id" element={<Staffpermission />} /> : ""} */}
+
                     
 
 
 
-                    <Route path="/signal" element={<Signal/>} />
-                    <Route path="/addsignal" element={<AddSignal/>} />
-                    <Route path="/signal/signaldetaile/:id" element={<Signaldetail/>} />
-                        
+                    {permission.includes("viewfaq") ? <Route path="/faq" element={<Faq />} /> : ""}
+
+                    {/* <Route path="/refer" element={<Refer />} /> */}
+                    {/* <Route path="/paymenthistory" element={<Paymenthistory />} /> */}
 
 
-                    <Route path="/basket" element={<Basket/>} />
-                    <Route path="/addbasket" element={<Addbasket/>} />
-                    <Route path="/basket/viewdetail/:id" element={<Viewbasketdetail/>} />
-                    <Route path="/basket/editbasket/:id" element={<Editbasket />} />
+
+                    {permission.includes("viewsignal") ? <Route path="/signal" element={<Signal />} /> : ""}
+                    {permission.includes("addsignal") ? <Route path="/addsignal" element={<AddSignal />} /> : ""}
+                    {permission.includes("editsignal") ? <Route path="/signal/signaldetaile/:id" element={<Signaldetail />} />
+                        : ""}
+
+
+
+
+
+                    {/* <Route path="/basket" element={<Basket />} />
+                    <Route path="/addbasket" element={<Addbasket />} />
+                    <Route path="/basket/viewdetail/:id" element={<Viewbasketdetail />} />
+                    <Route path="/basket/editbasket/:id" element={<Editbasket />} /> */}
+
+
+                    {permission.includes("viewplan") ?   <Route path="/plan" element={<Plan />} /> : ""}
+                    {permission.includes("addplane") ?  <Route path="/addplan" element={<Addplan />} /> : ""}
+                    {permission.includes("editplan") ? <Route path="/plan/editplan/:id" element={<Editplan />} /> : ""}
+
+                  
+                   
+                    
+
+                    
+                    {permission.includes("viewcategory") ?   <Route path="/category" element={<Category />} /> : ""}
+                   
+                    {/* <Route path="/stock" element={<Stock />} /> */}
+
+
+                    {permission.includes("viewblogs") ?   <Route path="/blogs" element={<Blogs />} /> : ""}
+                    {permission.includes("viewnews") ?  <Route path="/news" element={<News />} /> : ""}
+                   
+                    
+
+
+                    {permission.includes("viewcoupon") ?  <Route path="/coupon" element={<Coupon />} /> : ""}
+                    {permission.includes("addcoupon") ?    <Route path="/addcoupon" element={<Addcoupon />} /> : ""}
+                    {permission.includes("editcoupon") ?  <Route path="/coupon/updatecoupon/:id" element={<Updatecoupon />} /> : ""}
+
                      
                     
+                  
+                   
+                    {permission.includes("addcoupon") ?    <Route path="/banner" element={<Banner />} /> : ""}
+
+                  
+                    {/* <Route path="/termsandcondtion" element={<Condition />} /> */}
+                   
 
 
-                    <Route path="/plan" element={<Plan/>} />
-                    <Route path="/addplan" element={<Addplan/>} />
-                    <Route path="/plan/editplan/:id" element={<Editplan/>} />
-
-
-
-
-                    <Route path="/category" element={<Category/>} />
-                    <Route path="/stock" element={<Stock/>} />
-
-
-
-                    <Route path="/blogs" element={<Blogs/>} />
-                    <Route path="/news" element={<News/>} />
-                      
-
-
-
-                    <Route path="/coupon" element={<Coupon/>} />
-                    <Route path="/addcoupon" element={<Addcoupon/>} />
-                    <Route path="/coupon/updatecoupon/:id" element={<Updatecoupon/>} />
-
-
-
-                    <Route path="/termsandcondtion" element={<Condition/>} />
-                    <Route path="/banner" element={<Banner/>} />
-
-
-                    <Route path="/generalsettings" element={<Generalsettings/>} />
-                    <Route path="/Apiinfo" element={<Apiinfo/>} />
-                    <Route path="/paymentgeteway" element={<Payementgateway/>} />
-                    <Route path="/emailsetting" element={<Emailsettings/>} />
+                    {/* <Route path="/generalsettings" element={<Generalsettings />} />
+                    <Route path="/Apiinfo" element={<Apiinfo />} />
+                    <Route path="/paymentgeteway" element={<Payementgateway />} />
+                    <Route path="/emailsetting" element={<Emailsettings />} />
                     <Route path="/message" element={<Message />} />
-                    <Route path="/changepass" element={<Changepass />} />
-                    
+                    <Route path="/changepass" element={<Changepass />} /> */}
 
-                    
-    
+
+
+
 
 
                 </Routes>

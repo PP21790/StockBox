@@ -3,19 +3,16 @@ import { Link } from 'react-router-dom';
 import { getstaffperuser } from '../../Services/Admin';
 
 const Sidebar = ({ onToggleClick }) => {
+
   const token = localStorage.getItem('token');
   const userid = localStorage.getItem('id');
 
   const [permission, setPermission] = useState([]);
   const [activeDropdown, setActiveDropdown] = useState(null);
 
-
-
   useEffect(() => {
     getpermissioninfo();
   }, []);
-
-
 
   const getpermissioninfo = async () => {
     try {
@@ -28,55 +25,33 @@ const Sidebar = ({ onToggleClick }) => {
     }
   };
 
-
-
-
   const toggleDropdown = (dropdownName) => (e) => {
     e.preventDefault();
     setActiveDropdown(activeDropdown === dropdownName ? null : dropdownName);
   };
 
-
-  
   const menuItems = [
-    { title: 'Dashboard', icon: 'bx bx-home-alt', link: '/staff/dashboard' },
-    permission.includes('viewclient') && { title: 'Client', icon: 'bx bx-user', link: '/staff/client' },
-    { title: 'Free Trial Client', icon: 'bx bx-user', link: '/staff/freeclient' },
-    {
+     { title: 'Dashboard', icon: 'bx bx-home-alt', link: '/staff/dashboard' },
+     permission.includes('viewclient') && { title: 'Client', icon: 'bx bx-user', link: '/staff/client' },
+     permission.includes('freetrial') && { title: 'Free Trial Client', icon: 'bx bx-user', link: '/staff/freeclient' },
+     (permission.includes('viewplan') || permission.includes('viewcategory')) && {
       title: 'Plan',
       icon: 'bx bxl-redux',
       isDropdown: true,
       dropdownName: 'plan',
       subItems: [
-        { title: 'Plan', link: '/staff/plan' },
-        { title: 'Services', link: '/staff/service' },
-        { title: 'Category', link: '/staff/category' },
-      ],
+        ...(permission.includes('viewplan') ? [{ title: 'Plan', link: '/staff/plan' }] : []),
+        ...(permission.includes('viewcategory') ? [{ title: 'Category', link: '/staff/category' }] : []),
+      ].filter(Boolean), 
     },
-    { title: 'Staff', icon: 'bx bx-user-plus', link: '/staff/staff' },
-    { title: 'Signal', icon: 'bx bx-wifi-2', link: '/staff/signal' },
-    { title: 'Payment History', icon: 'bx bx-credit-card', link: '/staff/paymenthistory' },
-    { title: 'Blogs', icon: 'bx bx-comment-detail', link: '/staff/blogs' },
-    { title: 'News', icon: 'bx bx-news', link: '/staff/news' },
-    { title: 'Coupon', icon: 'bx bx-edit-alt', link: '/staff/coupon' },
-    { title: 'Banner', icon: 'bx bx-news', link: '/staff/banner' },
-    {
-      title: 'Basic Settings',
-      icon: 'bx bx-cog',
-      isDropdown: true,
-      dropdownName: 'Basic Settings',
-      subItems: [
-        { title: 'General Setting', link: '/staff/generalsettings' },
-        { title: 'Email Setting', link: '/staff/emailsetting' },
-        { title: 'Api Information', link: '/staff/Apiinfo' },
-        { title: 'Payment Gateway', link: '/staff/paymentgeteway' },
-      ],
-    },
-    { title: 'Broadcast SMS', icon: 'bx bx-conversation', link: '/staff/message' },
-    { title: 'KYC Agreement', icon: 'bx bxs-chevron-right', link: '/staff/kyc' },
-    { title: 'FAQ', icon: 'bx bx-help-circle', link: '/staff/faq' },
-    { title: 'Help Center', icon: 'bx bxs-chevron-right', link: '/staff/faq' },
-    { title: 'Terms And Condition', icon: 'bx bx-info-square', link: '/staff/termsandcondtion' },
+    permission.includes('viewstaff') && { title: 'Staff', icon: 'bx bx-user-plus', link: '/staff/staff' },
+    permission.includes('viewsignal') && { title: 'Signal', icon: 'bx bx-wifi-2', link: '/staff/signal' },
+    permission.includes('paymenthistory') && { title: 'Payment History', icon: 'bx bx-credit-card', link: '/staff/paymenthistory' },
+    permission.includes('viewblogs') && { title: 'Blogs', icon: 'bx bx-comment-detail', link: '/staff/blogs' },
+    permission.includes('viewnews') && { title: 'News', icon: 'bx bx-news', link: '/staff/news' },
+    permission.includes('viewcoupon') && { title: 'Coupon', icon: 'bx bx-edit-alt', link: '/staff/coupon' },
+    permission.includes('viewbanner') && { title: 'Banner', icon: 'bx bx-news', link: '/staff/banner' },
+    permission.includes('viewfaq') && { title: 'Faq', icon: 'bx bx-faq', link: '/staff/faq' },
   ].filter(Boolean);
 
   return (
@@ -93,9 +68,6 @@ const Sidebar = ({ onToggleClick }) => {
             <i className="bx bx-arrow-back" />
           </div>
         </div>
-
-
-
 
         <ul className="metismenu mm-show" id="menu">
           {menuItems.map((item, index) => (

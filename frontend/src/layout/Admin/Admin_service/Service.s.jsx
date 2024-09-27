@@ -269,28 +269,28 @@ const Service = () => {
             selector: row => new Date(row.updated_at).toLocaleDateString(),
             sortable: true,
         },
-        {
-            name: 'Actions',
-            cell: row => (
-                <>
-                    <div>
-                        <SquarePen
-                            onClick={() => {
-                                setModel(true);
-                                setServiceid(row);
-                                setUpdatetitle({ title: row.title, id: row._id });
-                            }}
-                        />
-                    </div>
-                    {/* <div>
-                        <Trash2 onClick={() => DeleteService(row._id)} />
-                    </div> */}
-                </>
-            ),
-            ignoreRowClick: true,
-            allowOverflow: true,
-            button: true,
-        }
+        // {
+        //     name: 'Actions',
+        //     cell: row => (
+        //         <>
+        //             <div>
+        //                 <SquarePen
+        //                     onClick={() => {
+        //                         setModel(true);
+        //                         setServiceid(row);
+        //                         setUpdatetitle({ title: row.title, id: row._id });
+        //                     }}
+        //                 />
+        //             </div>
+        //             {/* <div>
+        //                 <Trash2 onClick={() => DeleteService(row._id)} />
+        //             </div> */}
+        //         </>
+        //     ),
+        //     ignoreRowClick: true,
+        //     allowOverflow: true,
+        //     button: true,
+        // }
     ];
 
 

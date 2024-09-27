@@ -51,7 +51,7 @@ const Client = () => {
         }
     };
     
-    console.log("permission",permission)
+   
    
 
 

@@ -19,6 +19,7 @@ const Staffpermission = () => {
     useEffect(() => {
         getAdminclient();
     }, []);
+    
 
     const getAdminclient = async () => {
         try {

@@ -504,7 +504,7 @@ const DynamicForm = ({
                                                                                                 className="form-check-label "
                                                                                                 for={option.label}
                                                                                             >
-                                                                                                {option.label}
+                                                                                                <b>{option.label}</b>
                                                                                             </label>
                                                                                             {formik.errors[field.name] && (
                                                                                                 <div style={{ color: "red" }}>
@@ -520,7 +520,8 @@ const DynamicForm = ({
                                                             </>
                                                         ) : (
                                                             <>
-                                                                <div className={`col-lg-${field.col_size}`}>
+                                                         {field.bold   &&   <h5 style={{marginBottom:"1rem"}}><b>{field.label}</b></h5>}
+                                                                <div className={`col-lg-${field.col_size}`} style={{marginLeft:"2rem" ,display:"flex"}}>
                                                                     <div className="row d-flex justify-content-start">
                                                                         <div className="mb-4">
                                                                             <div className="form-check custom-checkbox ">
@@ -535,7 +536,7 @@ const DynamicForm = ({
                                                                                     className="form-check-label"
                                                                                     for={field.label}
                                                                                 >
-                                                                                    {field.label}
+                                                                                     <b>{field.label}</b>
                                                                                 </label>
                                                                             </div>
                                                                             {formik.errors[field.name] && (

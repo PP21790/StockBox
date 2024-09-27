@@ -272,7 +272,11 @@ const AddSignal = () => {
     },
 
   ];
+useEffect(() => {
 
+console.log("formik.values.service")
+
+}, [formik.values.service])
 
 
   
