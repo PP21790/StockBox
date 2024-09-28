@@ -130,7 +130,7 @@ const Emailsettings = () => {
                   <div className="row">
 
                     <div className="row mb-1 align-items-center">
-                      <label htmlFor="smtp_host" className="col-sm-3 col-form-label">SMTP Host</label>
+                      <label htmlFor="smtp_host" className="col-sm-3 col-form-label"><b>SMTP Host</b></label>
                       <div className="col-sm-9">
                         <Field name="smtp_host" type="text" className="form-control mb-2" />
                       </div>
@@ -139,7 +139,7 @@ const Emailsettings = () => {
                     </div>
 
                     <div className="row mb-1 align-items-center">
-                      <label htmlFor="smtp_port" className="col-sm-3 col-form-label">SMTP Port</label>
+                      <label htmlFor="smtp_port" className="col-sm-3 col-form-label"><b>SMTP Port</b></label>
                       <div className="col-sm-9">
                         <Field name="smtp_port" type="text" className="form-control" />
                       </div>
@@ -147,7 +147,7 @@ const Emailsettings = () => {
                     </div>
 
                     <div className="row mb-1 align-items-center">
-                      <label htmlFor="smtp_username" className="col-sm-3 col-form-label">SMTP Username</label>
+                      <label htmlFor="smtp_username" className="col-sm-3 col-form-label"><b>SMTP Username</b></label>
                       <div className="col-sm-9">
                         <Field name="smtp_username" type="text" className="form-control" />
                       </div>
@@ -155,7 +155,7 @@ const Emailsettings = () => {
                     </div>
 
                     <div className="row mb-1 align-items-center">
-                      <label htmlFor="to_mail" className="col-sm-3 col-form-label">To Email</label>
+                      <label htmlFor="to_mail" className="col-sm-3 col-form-label"><b>To Email</b></label>
                       <div className="col-sm-9">
                         <Field name="to_mail" type="email" className="form-control" />
                       </div>
@@ -163,7 +163,7 @@ const Emailsettings = () => {
                     </div>
 
                     <div className="row mb-1 align-items-center">
-                      <label htmlFor="encryption" className="col-sm-3 col-form-label">Encryption</label>
+                      <label htmlFor="encryption" className="col-sm-3 col-form-label"><b>Encryption</b></label>
                       <div className="col-sm-9">
                         <Field name="encryption" type="text" className="form-control" />
                       </div>
@@ -171,7 +171,7 @@ const Emailsettings = () => {
                     </div>
 
                     <div className="row mb-1 align-items-center password-group">
-                      <label htmlFor="smtp_password" className="col-sm-3 col-form-label">SMTP Password</label>
+                      <label htmlFor="smtp_password" className="col-sm-3 col-form-label"><b>SMTP Password</b></label>
                       <div style={{ position: 'relative' }} className="col-sm-9">
 
                         <Field

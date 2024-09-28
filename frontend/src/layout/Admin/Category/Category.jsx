@@ -282,6 +282,11 @@ const Category = () => {
             sortable: true,
         },
         {
+            name: 'Segment',
+            selector: row => row.segment,
+            sortable: true,
+        },
+        {
             name: 'Active Status',
             selector: row => (
                 <div className="form-check form-switch form-check-info">
