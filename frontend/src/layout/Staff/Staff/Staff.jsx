@@ -107,12 +107,12 @@ const Staff = () => {
 
 
     const updateStaff = async (row) => {
-        navigate("/admin/staff/updatestaff/" + row._id, { state: { row } })
+        navigate("/staff/staff/updatestaff/" + row._id, { state: { row } })
     }
 
 
     const updatepermission = async (row) => {
-        navigate("/admin/staff/staffpermission/" + row._id, { state: { row } })
+        navigate("/staff/staff/staffpermission/" + row._id, { state: { row } })
     }
 
 
@@ -263,7 +263,7 @@ const Staff = () => {
                                 <nav aria-label="breadcrumb">
                                     <ol className="breadcrumb mb-0 p-0">
                                         <li className="breadcrumb-item">
-                                            <Link to="/admin/dashboard">
+                                            <Link to="/staff/dashboard">
                                                 <i className="bx bx-home-alt" />
                                             </Link>
                                         </li>
@@ -287,7 +287,7 @@ const Staff = () => {
                                     </div>
                                     {permission.includes("addstaff") ? <div className="ms-auto">
                                         <Link
-                                            to="/admin/addstaff"
+                                            to="/staff/addstaff"
                                             className="btn btn-primary"
                                         >
                                             <i
