@@ -135,9 +135,9 @@ const Generalsettings = () => {
                                 <Form className="card-body p-4">
                                     <h5 className="mb-4">General Setting</h5>
 
-                                    <div className="row mb-3">
+                                    <div className="row mb-3 align-items-center">
                                         <label htmlFor="from_name" className="col-sm-3 col-form-label">
-                                            From Name
+                                            Company Name
                                         </label>
                                         <div className="col-sm-9">
                                             <div className="input-group">
@@ -150,7 +150,7 @@ const Generalsettings = () => {
                                         </div>
                                     </div>
 
-                                    <div className="row mb-3">
+                                    <div className="row mb-3 align-items-center">
                                         <label htmlFor="contact_number" className="col-sm-3 col-form-label">
                                             Phone No
                                         </label>
@@ -165,7 +165,7 @@ const Generalsettings = () => {
                                         </div>
                                     </div>
 
-                                    <div className="row mb-3">
+                                    <div className="row mb-3 align-items-center">
                                         <label htmlFor="email_address" className="col-sm-3 col-form-label">
                                             Email Address
                                         </label>
@@ -180,7 +180,7 @@ const Generalsettings = () => {
                                         </div>
                                     </div>
 
-                                    <div className="row mb-3">
+                                    <div className="row mb-3 align-items-center">
                                         <label htmlFor="favicon" className="col-sm-3 col-form-label">
                                             Favicon
                                         </label>
@@ -206,7 +206,7 @@ const Generalsettings = () => {
                                         </div>
                                     </div>
 
-                                    <div className="row mb-3">
+                                    <div className="row mb-3 align-items-center">
                                         <label htmlFor="logo" className="col-sm-3 col-form-label">
                                             Logo
                                         </label>

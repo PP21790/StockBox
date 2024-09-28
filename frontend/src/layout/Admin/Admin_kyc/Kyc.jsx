@@ -142,6 +142,7 @@ const Kyc = () => {
                                             <th>Pan No.</th>
                                             <th>KYC Download</th>
                                             <th>Agreement Download</th>
+                                            <th>Date</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -169,6 +170,7 @@ const Kyc = () => {
                                                     <Download />
                                                 </div>
                                             </td>
+                                            <td>29/03/2024</td>
 
 
 
@@ -197,6 +199,7 @@ const Kyc = () => {
                                                     <Download />
                                                 </div>
                                             </td>
+                                            <td>29/03/2024</td>
 
 
 
@@ -226,6 +229,7 @@ const Kyc = () => {
                                                     <Download />
                                                 </div>
                                             </td>
+                                            <td>29/03/2024</td>
 
 
 
@@ -255,6 +259,7 @@ const Kyc = () => {
                                                     <Download />
                                                 </div>
                                             </td>
+                                            <td>29/03/2024</td>
 
 
 
@@ -284,6 +289,7 @@ const Kyc = () => {
                                                     <Download />
                                                 </div>
                                             </td>
+                                            <td>29/03/2024</td>
 
 
 
@@ -313,6 +319,7 @@ const Kyc = () => {
                                                     <Download />
                                                 </div>
                                             </td>
+                                            <td>29/03/2024</td>
 
 
 

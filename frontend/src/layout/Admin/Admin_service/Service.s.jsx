@@ -269,6 +269,11 @@ const Service = () => {
             selector: row => new Date(row.updated_at).toLocaleDateString(),
             sortable: true,
         },
+        {
+            name: 'Date',
+            selector: row => new Date(row.updated_at).toLocaleDateString(),
+            sortable: true,
+        },
         // {
         //     name: 'Actions',
         //     cell: row => (

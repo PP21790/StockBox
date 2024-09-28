@@ -161,14 +161,14 @@ const Login = () => {
                                                         </button>
                                                     </div>
                                                 </div>
-                                                <div className="col-12">
+                                                {/* <div className="col-12">
                                                     <div className="text-center ">
                                                         <p className="mb-0">
                                                             Don't have an account yet?{" "}
                                                             <Link to="/register">Sign up here</Link>
                                                         </p>
                                                     </div>
-                                                </div>
+                                                </div> */}
                                             </form>
                                             {error && <div className="alert alert-danger mt-3">{error}</div>}
                                         </div>

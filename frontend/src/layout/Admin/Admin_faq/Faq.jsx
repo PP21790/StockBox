@@ -18,7 +18,7 @@ const Faq = () => {
         title: "",
         id: "",
         description: "",
-       
+
 
     });
 
@@ -105,7 +105,7 @@ const Faq = () => {
     // Add blogs
     const addfaqbyadmin = async () => {
         try {
-            const data = { title: title.title, description: title.description , add_by:userid};
+            const data = { title: title.title, description: title.description, add_by: userid };
             const response = await AddFaq(data, token);
             if (response && response.status) {
                 Swal.fire({
@@ -116,7 +116,7 @@ const Faq = () => {
                     timer: 2000,
                 });
 
-                setTitle({ title: "", add_by: "", description:"" });
+                setTitle({ title: "", add_by: "", description: "" });
                 getFaq();
 
                 const modal = document.getElementById('exampleModal');
@@ -283,6 +283,11 @@ const Faq = () => {
             sortable: true,
         },
         {
+            name: 'Date',
+            selector: row => new Date(row.updated_at).toLocaleDateString(),
+            sortable: true,
+        },
+        {
             name: 'Actions',
             cell: row => (
                 <>
@@ -405,7 +410,7 @@ const Faq = () => {
                                                             />
                                                         </div>
                                                     </div>
-                                        
+
                                                     <div className="row">
                                                         <div className="col-md-12">
                                                             <label htmlFor="">description</label>
@@ -444,75 +449,75 @@ const Faq = () => {
                                 {model && (
                                     <>
                                         <div className="modal-backdrop fade show"></div>
-                                    <div
-                                        className="modal fade show"
-                                        style={{ display: 'block' }}
-                                        tabIndex={-1}
-                                        aria-labelledby="exampleModalLabel"
-                                        aria-hidden="true"
-                                    >
-                                        <div className="modal-dialog">
-                                            <div className="modal-content">
-                                                <div className="modal-header">
-                                                    <h5 className="modal-title" id="exampleModalLabel">
-                                                        Update FAQ
-                                                    </h5>
-                                                    <button
-                                                        type="button"
-                                                        className="btn-close"
-                                                        onClick={() => setModel(false)}
-                                                    />
-                                                </div>
-                                                <div className="modal-body">
-                                                    <form>
-                                                        <div className="row">
-                                                            <div className="col-md-12">
-                                                                <label htmlFor="">Title</label>
-                                                                <input
-                                                                    className="form-control mb-2"
-                                                                    type="text"
-                                                                    placeholder='Enter blogs Title'
-                                                                    value={updatetitle.title}
-                                                                    onChange={(e) => updateServiceTitle({ title: e.target.value })}
-                                                                />
+                                        <div
+                                            className="modal fade show"
+                                            style={{ display: 'block' }}
+                                            tabIndex={-1}
+                                            aria-labelledby="exampleModalLabel"
+                                            aria-hidden="true"
+                                        >
+                                            <div className="modal-dialog">
+                                                <div className="modal-content">
+                                                    <div className="modal-header">
+                                                        <h5 className="modal-title" id="exampleModalLabel">
+                                                            Update FAQ
+                                                        </h5>
+                                                        <button
+                                                            type="button"
+                                                            className="btn-close"
+                                                            onClick={() => setModel(false)}
+                                                        />
+                                                    </div>
+                                                    <div className="modal-body">
+                                                        <form>
+                                                            <div className="row">
+                                                                <div className="col-md-12">
+                                                                    <label htmlFor="">Title</label>
+                                                                    <input
+                                                                        className="form-control mb-2"
+                                                                        type="text"
+                                                                        placeholder='Enter blogs Title'
+                                                                        value={updatetitle.title}
+                                                                        onChange={(e) => updateServiceTitle({ title: e.target.value })}
+                                                                    />
+                                                                </div>
                                                             </div>
-                                                        </div>
 
-                    
-                                                        <div className="row">
-                                                            <div className="col-md-12">
-                                                                <label htmlFor="">Description</label>
-                                                                <input
-                                                                    className="form-control mb-2"
-                                                                    type="text"
-                                                                    placeholder='Enter  Description'
-                                                                    value={updatetitle.description}
-                                                                    onChange={(e) => updateServiceTitle({ description: e.target.value })}
-                                                                />
+
+                                                            <div className="row">
+                                                                <div className="col-md-12">
+                                                                    <label htmlFor="">Description</label>
+                                                                    <input
+                                                                        className="form-control mb-2"
+                                                                        type="text"
+                                                                        placeholder='Enter  Description'
+                                                                        value={updatetitle.description}
+                                                                        onChange={(e) => updateServiceTitle({ description: e.target.value })}
+                                                                    />
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </form>
+                                                        </form>
 
-                                                </div>
-                                                <div className="modal-footer">
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-secondary"
-                                                        onClick={() => setModel(false)}
-                                                    >
-                                                        Close
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-primary"
-                                                        onClick={updateFaqbyadmin}
-                                                    >
-                                                        Update FAQ
-                                                    </button>
+                                                    </div>
+                                                    <div className="modal-footer">
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-secondary"
+                                                            onClick={() => setModel(false)}
+                                                        >
+                                                            Close
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-primary"
+                                                            onClick={updateFaqbyadmin}
+                                                        >
+                                                            Update FAQ
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
                                     </>
                                 )}
 

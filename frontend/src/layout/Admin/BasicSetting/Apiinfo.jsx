@@ -88,20 +88,20 @@ const Apiinfo = () => {
         <div>
             <div className="page-content">
 
-            <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                        <div className="breadcrumb-title pe-3">Api Information</div>
-                        <div className="ps-3">
-                            <nav aria-label="breadcrumb">
-                                <ol className="breadcrumb mb-0 p-0">
-                                    <li className="breadcrumb-item">
-                                        <Link to="/admin/dashboard">
-                                            <i className="bx bx-home-alt" />
-                                        </Link>
-                                    </li>
-                                </ol>
-                            </nav>
-                        </div>
+                <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+                    <div className="breadcrumb-title pe-3">Api Information</div>
+                    <div className="ps-3">
+                        <nav aria-label="breadcrumb">
+                            <ol className="breadcrumb mb-0 p-0">
+                                <li className="breadcrumb-item">
+                                    <Link to="/admin/dashboard">
+                                        <i className="bx bx-home-alt" />
+                                    </Link>
+                                </li>
+                            </ol>
+                        </nav>
                     </div>
+                </div>
 
                 <div className="row row-cols-1 row-cols-md-3 row-cols-lg-3 row-cols-xl-3 justify-content-center">
                     <div className="col">
@@ -112,6 +112,16 @@ const Apiinfo = () => {
                             <div className="card-body mt-2">
                                 <form className="row g-3 mt-2 mb-3">
                                     <div className="row">
+                                        <div className="col-md-12 mb-2">
+                                            <label htmlFor="digioClientId" className="form-label">
+                                                Template Name
+                                            </label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                            />
+                                        </div>
+
                                         <div className="col-md-12 mb-2">
                                             <label htmlFor="digioClientId" className="form-label">
                                                 Digio Client ID

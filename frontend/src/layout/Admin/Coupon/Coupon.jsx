@@ -147,7 +147,7 @@ const Coupon = () => {
             name: 'Code',
             selector: row => row.code,
             sortable: true,
-            
+
         },
         {
             name: 'Image',
@@ -206,6 +206,11 @@ const Coupon = () => {
         },
         {
             name: 'Enddate',
+            selector: row => new Date(row.enddate).toLocaleDateString(),
+            sortable: true,
+        },
+        {
+            name: 'date',
             selector: row => new Date(row.enddate).toLocaleDateString(),
             sortable: true,
         },

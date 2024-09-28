@@ -309,6 +309,12 @@ const Client = () => {
             sortable: true,
             width: '165px',
         },
+        {
+        name: 'Date',
+        selector: row => row.Status,
+        sortable: true,
+        width: '165px',
+        },
 
         {
             name: 'Active Status',

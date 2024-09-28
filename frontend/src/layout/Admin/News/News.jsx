@@ -276,10 +276,10 @@ const News = () => {
         },
         {
             name: 'Image',
-            cell: row => <img src={`${image_baseurl}uploads/news/${row.image}`}  alt={row.image} width="50" height="50"  />,
+            cell: row => <img src={`${image_baseurl}uploads/news/${row.image}`} alt={row.image} width="50" height="50" />,
             sortable: true,
         },
-        
+
 
         {
             name: 'Created At',
@@ -288,6 +288,11 @@ const News = () => {
         },
         {
             name: 'Updated At',
+            selector: row => new Date(row.updated_at).toLocaleDateString(),
+            sortable: true,
+        },
+        {
+            name: 'Date',
             selector: row => new Date(row.updated_at).toLocaleDateString(),
             sortable: true,
         },

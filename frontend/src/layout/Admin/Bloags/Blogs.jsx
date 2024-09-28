@@ -291,6 +291,11 @@ const Blogs = () => {
             sortable: true,
         },
         {
+            name: 'Date',
+            selector: row => new Date(row.updated_at).toLocaleDateString(),
+            sortable: true,
+        },
+        {
             name: 'Actions',
             cell: row => (
                 <>
@@ -464,92 +469,92 @@ const Blogs = () => {
                                 {model && (
                                     <>
                                         <div className="modal-backdrop fade show"></div>
-                                    <div
-                                        className="modal fade show"
-                                        style={{ display: 'block' }}
-                                        tabIndex={-1}
-                                        aria-labelledby="exampleModalLabel"
-                                        aria-hidden="true"
-                                    >
-                                        <div className="modal-dialog">
-                                            <div className="modal-content">
-                                                <div className="modal-header">
-                                                    <h5 className="modal-title" id="exampleModalLabel">
-                                                        Update Blogs
-                                                    </h5>
-                                                    <button
-                                                        type="button"
-                                                        className="btn-close"
-                                                        onClick={() => setModel(false)}
-                                                    />
-                                                </div>
-                                                <div className="modal-body">
-                                                    <form>
-                                                        <div className="row">
-                                                            <div className="col-md-12">
-                                                                <label htmlFor="">Title</label>
-                                                                <input
-                                                                    className="form-control mb-2"
-                                                                    type="text"
-                                                                    placeholder='Enter blogs Title'
-                                                                    value={updatetitle.title}
-                                                                    onChange={(e) => updateServiceTitle({ title: e.target.value })}
-                                                                />
+                                        <div
+                                            className="modal fade show"
+                                            style={{ display: 'block' }}
+                                            tabIndex={-1}
+                                            aria-labelledby="exampleModalLabel"
+                                            aria-hidden="true"
+                                        >
+                                            <div className="modal-dialog">
+                                                <div className="modal-content">
+                                                    <div className="modal-header">
+                                                        <h5 className="modal-title" id="exampleModalLabel">
+                                                            Update Blogs
+                                                        </h5>
+                                                        <button
+                                                            type="button"
+                                                            className="btn-close"
+                                                            onClick={() => setModel(false)}
+                                                        />
+                                                    </div>
+                                                    <div className="modal-body">
+                                                        <form>
+                                                            <div className="row">
+                                                                <div className="col-md-12">
+                                                                    <label htmlFor="">Title</label>
+                                                                    <input
+                                                                        className="form-control mb-2"
+                                                                        type="text"
+                                                                        placeholder='Enter blogs Title'
+                                                                        value={updatetitle.title}
+                                                                        onChange={(e) => updateServiceTitle({ title: e.target.value })}
+                                                                    />
+                                                                </div>
                                                             </div>
-                                                        </div>
 
-                                                        <div className="row">
-                                                            <div className="col-md-12">
-                                                                <label htmlFor="imageUpload">Image</label>
-                                                                <input
-                                                                    className="form-control mb-3"
-                                                                    type="file"
-                                                                    accept="image/*"
-                                                                    id="imageUpload"
-                                                                    onChange={(e) => {
-                                                                        const file = e.target.files[0];
-                                                                        if (file) {
-                                                                            updateServiceTitle({ image: file });
-                                                                        }
-                                                                    }}
-                                                                />
+                                                            <div className="row">
+                                                                <div className="col-md-12">
+                                                                    <label htmlFor="imageUpload">Image</label>
+                                                                    <input
+                                                                        className="form-control mb-3"
+                                                                        type="file"
+                                                                        accept="image/*"
+                                                                        id="imageUpload"
+                                                                        onChange={(e) => {
+                                                                            const file = e.target.files[0];
+                                                                            if (file) {
+                                                                                updateServiceTitle({ image: file });
+                                                                            }
+                                                                        }}
+                                                                    />
+                                                                </div>
                                                             </div>
-                                                        </div>
 
-                                                        <div className="row">
-                                                            <div className="col-md-12">
-                                                                <label htmlFor="">Description</label>
-                                                                <input
-                                                                    className="form-control mb-2"
-                                                                    type="text"
-                                                                    placeholder='Enter  Description'
-                                                                    value={updatetitle.description}
-                                                                    onChange={(e) => updateServiceTitle({ description: e.target.value })}
-                                                                />
+                                                            <div className="row">
+                                                                <div className="col-md-12">
+                                                                    <label htmlFor="">Description</label>
+                                                                    <input
+                                                                        className="form-control mb-2"
+                                                                        type="text"
+                                                                        placeholder='Enter  Description'
+                                                                        value={updatetitle.description}
+                                                                        onChange={(e) => updateServiceTitle({ description: e.target.value })}
+                                                                    />
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </form>
+                                                        </form>
 
-                                                </div>
-                                                <div className="modal-footer">
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-secondary"
-                                                        onClick={() => setModel(false)}
-                                                    >
-                                                        Close
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-primary"
-                                                        onClick={updateblogs}
-                                                    >
-                                                        Update Blogs
-                                                    </button>
+                                                    </div>
+                                                    <div className="modal-footer">
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-secondary"
+                                                            onClick={() => setModel(false)}
+                                                        >
+                                                            Close
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-primary"
+                                                            onClick={updateblogs}
+                                                        >
+                                                            Update Blogs
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
                                     </>
                                 )}
 

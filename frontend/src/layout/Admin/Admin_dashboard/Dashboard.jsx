@@ -302,9 +302,10 @@ const Dashbord = () => {
                                         <th>Client Name</th>
                                         <th>Phone No.</th>
                                         <th>Email</th>
-                                        <th>Signup Date</th>
+
                                         <th>SignupStatus</th>
                                         <th>Plan Purchased</th>
+                                        <th>Signup Date</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -315,11 +316,12 @@ const Dashbord = () => {
                                         </td>
                                         <td>9876541230</td>
                                         <td>28 Jul 2020</td>
-                                        <td>28 Jul 2020</td>
+
                                         <td>App</td>
                                         <td>
                                             case
                                         </td>
+                                        <td>28 Jul 2020</td>
                                     </tr>
                                     <tr>
                                         <td>2</td>
@@ -328,11 +330,12 @@ const Dashbord = () => {
                                         </td>
                                         <td>9876541230</td>
                                         <td>28 Jul 2020</td>
-                                        <td>28 Jul 2020</td>
+
                                         <td>App</td>
                                         <td>
                                             case
                                         </td>
+                                        <td>28 Jul 2020</td>
                                     </tr>
 
                                     <tr>
@@ -341,12 +344,13 @@ const Dashbord = () => {
                                             Arjun
                                         </td>
                                         <td>9876541230</td>
-                                        <td>28 Jul 2020</td>
+
                                         <td>28 Jul 2020</td>
                                         <td>App</td>
                                         <td>
                                             case
                                         </td>
+                                        <td>28 Jul 2020</td>
                                     </tr>
 
 
@@ -357,11 +361,12 @@ const Dashbord = () => {
                                         </td>
                                         <td>9876541230</td>
                                         <td>28 Jul 2020</td>
-                                        <td>28 Jul 2020</td>
+
                                         <td>App</td>
                                         <td>
                                             case
                                         </td>
+                                        <td>28 Jul 2020</td>
                                     </tr>
                                 </tbody>
                             </table>

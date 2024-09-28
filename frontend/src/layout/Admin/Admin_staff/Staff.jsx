@@ -202,6 +202,12 @@ const Staff = () => {
             width: '142px',
         },
         {
+            name: 'Date',
+            selector: row => new Date(row.updatedAt).toLocaleDateString(),
+            sortable: true,
+            width: '142px',
+        },
+        {
             name: 'Permission',
             cell: row => (
                 <>
