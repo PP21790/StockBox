@@ -551,7 +551,7 @@ const Client = () => {
                                 <div className="modal-body">
                                     <div className='card'>
                                         <div className='d-flex justify-content-center align-items-center card-body'>
-                                            {['Plan', 'Basket'].map((tab, index) => (
+                                            {['Plan'].map((tab, index) => (
                                                 <label key={index} className='labelfont'>
                                                     <input
                                                         className='ms-3'
@@ -592,7 +592,7 @@ const Client = () => {
                                             </form>
                                         )}
 
-                                        {checkedIndex === 1 && (
+                                        {/* {checkedIndex === 1 && (
                                             <form className='card-body'>
                                                 <div className="row">
                                                     {basketlist.map((item, index) => (
@@ -615,7 +615,7 @@ const Client = () => {
                                                     ))}
                                                 </div>
                                             </form>
-                                        )}
+                                        )} */}
 
 
                                     </div>

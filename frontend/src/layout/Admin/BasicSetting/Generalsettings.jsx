@@ -176,7 +176,7 @@ const Generalsettings = () => {
                                                 </span>
                                                 <Field name="email_address" type="email" className="form-control" placeholder="Email" />
                                             </div>
-                                            <ErrorMessage name="email_address" component="div" className="error" />
+                                          
                                         </div>
                                     </div>
 
@@ -192,7 +192,7 @@ const Generalsettings = () => {
                                                 onChange={(event) => setFieldValue("favicon", event.currentTarget.files[0])}
                                             />
 
-                                            <ErrorMessage name="favicon" component="div" className="error" />
+                                    
                                         </div>
                                         <div className="col-sm-1">
 
@@ -202,7 +202,7 @@ const Generalsettings = () => {
                                                     <img src={`/assets/uploads/basicsetting/${clients[0].favicon}`} alt="Favicon Preview" className="image-preview" />
                                                 </div>
                                             )}
-                                            <ErrorMessage name="favicon" component="div" className="error" />
+                                            
                                         </div>
                                     </div>
 
@@ -218,7 +218,7 @@ const Generalsettings = () => {
                                                 onChange={(event) => setFieldValue("logo", event.currentTarget.files[0])}
                                             />
 
-                                            <ErrorMessage name="logo" component="div" className="error" />
+                                
                                         </div>
                                         <div className="col-sm-1">
 
@@ -228,7 +228,7 @@ const Generalsettings = () => {
                                                     <img src={`/assets/uploads/basicsetting/${clients[0].logo}`} alt="Logo Preview" className="image-preview" />
                                                 </div>
                                             )}
-                                            <ErrorMessage name="logo" component="div" className="error" />
+                                           
                                         </div>
                                     </div>
 

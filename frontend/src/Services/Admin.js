@@ -1682,3 +1682,40 @@ export async function updatePayementgateway(data, token) {
         return err.response?.data || err.message;
     }
 }
+
+
+// get email template page
+
+export async function getemailtemplate(token) {
+
+    try {
+        const res = await axios.get(`${Config.base_url}mailtemplate/list`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
+
+//  update template 
+
+
+export async function UpdateTemplate(data, token) {
+    try {
+        const res = await axios.put(`${Config.base_url}mailtemplate/update`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}

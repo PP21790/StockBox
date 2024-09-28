@@ -47,6 +47,7 @@ import Freeclient from '../layout/Admin/Admin_client/Freeclient';
 import Message from '../layout/Admin/Broadcast/Message';
 import Changepass from '../layout/Admin/Password/Changepass';
 import Viewclientdetail from '../layout/Admin/Admin_client/Viewclient';
+import Emailtemplate from '../layout/Admin/BasicSetting/Emailtemplate';
 
 
 
@@ -164,6 +165,10 @@ function MainApp() {
                     <Route path="/Apiinfo" element={<Apiinfo/>} />
                     <Route path="/paymentgeteway" element={<Payementgateway/>} />
                     <Route path="/emailsetting" element={<Emailsettings/>} />
+                    <Route path="/emailtemplate" element={<Emailtemplate/>} />
+                    
+
+
                     <Route path="/message" element={<Message />} />
                     <Route path="/changepass" element={<Changepass />} />
                     

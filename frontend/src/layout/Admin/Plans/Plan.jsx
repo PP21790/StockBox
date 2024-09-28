@@ -335,7 +335,10 @@ const Plan = () => {
                                                         </div>
                                                         <div className="btn-primary btnprime">
                                                             <Link to={`editplan/${client._id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                                                            
                                                                 Edit
+                                                            
+                                                                
                                                             </Link>
                                                         </div>
                                                     </div>
