@@ -14,10 +14,15 @@ const AddSignal = () => {
 
   const [serviceList, setServiceList] = useState([]);
   const [stockList, setStockList] = useState([]);
+  const [searchItem, setSearchItem] = useState("");
 
+
+
+
+
+  const [showDropdown, setShowDropdown] = useState(true);
   useEffect(() => {
     fetchAdminServices();
-    fetchStockList();
   }, []);
 
 
@@ -34,16 +39,16 @@ const AddSignal = () => {
 
 
 
-  const fetchStockList = async () => {
-    try {
-      const response = await getstockbyservice(token);
-      if (response.status) {
-        setStockList(response.data);
-      }
-    } catch (error) {
-      console.log('Error fetching stock list:', error);
-    }
-  };
+  // const fetchStockList = async () => {
+  //   try {
+  //     const response = await getstockbyservice(token);
+  //     if (response.status) {
+  //       setStockList(response.data);
+  //     }
+  //   } catch (error) {
+  //     console.log('Error fetching stock list:', error);
+  //   }
+  // };
 
 
 
@@ -143,7 +148,7 @@ const AddSignal = () => {
         { label: 'Cash', value: 'C' },
         { label: 'Option', value: 'O' },
         { label: 'Future', value: 'F' },
-        
+
       ],
       label_size: 12,
       col_size: 6,
@@ -154,8 +159,8 @@ const AddSignal = () => {
       label: 'Select Stock',
       type: 'select',
       options: stockList.map((item) => ({
-        label: item.title,
-        value: item._id,
+        label: item.symbol,
+        value: item.symbol,
       })),
       label_size: 12,
       col_size: 6,
@@ -167,11 +172,11 @@ const AddSignal = () => {
       type: 'select',
       label_size: 12,
       col_size: 6,
-      options: [
-        { label: '01/02/24', value: '01/03/25' },
-        { label: '01/04/24', value: '01/05/25' },
-      ],
-      showWhen: (values) => values.service != "Cash",
+      options: stockList.map((item) => ({
+        label: item.expiry_str,
+        value: item.expiry_str,
+      })),
+      showWhen: (values) => values.service != "C",
 
       disable: false,
     },
@@ -199,7 +204,7 @@ const AddSignal = () => {
       name: 'callduration',
       label: 'Trade duration',
       type: 'select',
-      options: formik.values.service == "Cash" ? [
+      options: formik.values.service == "C" ? [
         { label: 'Long Term', value: 'Long Term' },
         { label: 'Medium Term', value: 'Medium Term' },
         { label: 'Short Term', value: 'Short Term' },
@@ -275,30 +280,29 @@ const AddSignal = () => {
 
   useEffect(() => {
     const fetchStockData = async () => {
-      if (formik.values.service) { // Ensure the service value is not null/undefined
+      if (formik.values.service) { 
         const data = { segment: formik.values.service };
 
-        console.log("data",data)
         try {
           const res = await getstockbyservice(data);
           if (res.status) {
-            console.log("res", res.data);
+            setStockList(res.data)
           } else {
-            console.error("Failed to fetch data", res);
+            console.log("Failed to fetch data", res);
           }
         } catch (error) {
-          console.error("Error fetching stock by service:", error);
+          console.log("Error fetching stock by service:", error);
         }
       }
     };
-  
-    fetchStockData(); 
+    console.log("formik.values.service", formik.values.service)
+    // fetchStockData();
   }, [formik.values.service]);
-  
+
 
   useEffect(() => {
-    formik.setFieldValue("expirydate" , "" )
-    formik.setFieldValue("callduration" , "" )
+    formik.setFieldValue("expirydate", "")
+    formik.setFieldValue("callduration", "")
   }, [formik.values])
 
 
@@ -313,7 +317,58 @@ const AddSignal = () => {
           formik={formik}
           sumit_btn={true}
           btn_name1_route="/admin/signal"
-          additional_field={<></>}
+          additional_field={
+          <>
+
+            {/* <div className="col-lg-4">
+              <div className="mb-3">
+                <div className="position-relative">
+                  <label className="form-label">
+                    Search Company
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder=" Search Company"
+                    name="SearchCompany"
+                    onChange={(e) =>
+                      setSearchItem(e.target.value)
+                    }
+                    value={searchItem}
+                    onClick={() => setShowDropdown(true)}
+                    style={{ cursor: "pointer" }}
+                  />
+                  {searchItem && stockList.length > 0 &&
+                    showDropdown ? (
+                    <div className="dropdown-list">
+                      {stockList &&
+                        stockList.map(
+                          (company, index) => (
+                            company.symbol.includes(searchItem.toUpperCase()) &&
+                            <div
+                              key={index}
+                              onClick={() => {
+                                setSearchItem();
+                                setShowDropdown(false);
+                              }}
+                              style={{
+                                cursor: "pointer",
+                                padding: "8px 0",
+                              }}
+                            >
+                              {company.symbol}
+                            </div>
+                          )
+                        )}
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              </div>
+            </div> */}
+          </>
+          }
         />
       </div>
     </div>
