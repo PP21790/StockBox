@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getplanlist, getcategoryplan, Deleteplan } from '../../../Services/Admin';
+import { getplanlist, getcategoryplan, Deleteplan, changeplanstatus } from '../../../Services/Admin';
 import { fDateTime } from '../../../Utils/Date_formate';
 import Swal from 'sweetalert2';
 
@@ -21,13 +21,15 @@ const Plan = () => {
             if (response.status) {
                 setCategory(response.data);
                 if (response.data.length > 0) {
-                    setSelectedCategoryId('all'); // Default to "All"
+                    setSelectedCategoryId('all');
                 }
             }
         } catch (error) {
             console.log("error");
         }
     };
+
+
 
     const getAdminclient = async () => {
         try {
@@ -39,6 +41,8 @@ const Plan = () => {
             console.log("Failed to fetch plans", error);
         }
     };
+
+
 
     const Deleteplanbyadmin = async (_id) => {
         try {
@@ -60,7 +64,7 @@ const Plan = () => {
                         icon: 'success',
                         confirmButtonText: 'OK',
                     });
-                    getAdminclient();
+                    getcategoryplanlist();
                 }
             } else {
                 Swal.fire({
@@ -79,6 +83,53 @@ const Plan = () => {
             });
         }
     };
+
+
+
+    const handleSwitchChange = async (event, id) => {
+        const originalChecked = event.target.checked;
+        const user_active_status = originalChecked ? "active" : "inactive";
+        const data = { id: id, status: user_active_status };
+    
+        const result = await Swal.fire({
+            title: "Do you want to save the changes?",
+            showCancelButton: true,
+            confirmButtonText: "Save",
+            cancelButtonText: "Cancel",
+            allowOutsideClick: false,
+        });
+    
+        if (result.isConfirmed) {
+            try {
+                const response = await changeplanstatus(data, token);
+                if (response.status) {
+                    Swal.fire({
+                        title: "Saved!",
+                        icon: "success",
+                        timer: 1000,
+                        timerProgressBar: true,
+                    });
+                    setTimeout(() => {
+                        Swal.close();
+                    }, 1000);
+                }
+                // Reload the plan list
+                getcategoryplanlist();
+            } catch (error) {
+                Swal.fire(
+                    "Error",
+                    "There was an error processing your request.",
+                    "error"
+                );
+            }
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            event.target.checked = !originalChecked;
+            getcategoryplanlist();
+        }
+    };
+    
+
+
 
     const filteredClients = selectedCategoryId === 'all'
         ? clients
@@ -147,14 +198,18 @@ const Plan = () => {
 
                                                     <div className="row justify-content-end mb-3">
                                                         <div className="col-md-6 d-flex justify-content-start">
-                                                            <div className="form-check form-switch">
+                                                            <div className="form-check form-switch form-check-info">
                                                                 <input
+                                                                    id={`rating_${client.status}`}
                                                                     className="form-check-input toggleswitch"
                                                                     type="checkbox"
-                                                                    role="switch"
-                                                                    id="flexSwitchCheckDefault1"
-                                                                    defaultChecked=""
+                                                                    defaultChecked={client.status === "active"}
+                                                                    onChange={(event) => handleSwitchChange(event, client._id)}
                                                                 />
+                                                                <label
+                                                                    htmlFor={`rating_${client.ActiveStatus}`}
+                                                                    className="checktoggle checkbox-bg"
+                                                                ></label>
                                                             </div>
                                                         </div>
                                                         <div className="col-md-6 d-flex justify-content-end">

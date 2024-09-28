@@ -10,9 +10,14 @@ const Sidebar = ({ onToggleClick }) => {
   const [permission, setPermission] = useState([]);
   const [activeDropdown, setActiveDropdown] = useState(null);
 
+
+
   useEffect(() => {
     getpermissioninfo();
   }, []);
+
+
+  
 
   const getpermissioninfo = async () => {
     try {
