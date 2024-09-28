@@ -7,7 +7,7 @@ import { Settings2, Eye, UserPen, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { deleteClient, UpdateClientStatus, PlanSubscription, getplanlist, BasketSubscription, BasketAllList } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
-
+import { fDateTime } from '../../../Utils/Date_formate';
 const Client = () => {
 
 
@@ -153,11 +153,13 @@ const Client = () => {
 
     // update status 
 
+  
+
     const handleSwitchChange = async (event, id) => {
+        const originalChecked = event.target.checked;
+        const user_active_status = originalChecked ? "1" : "0";
+        const data = { id: id, status: user_active_status };
 
-        const user_active_status = event.target.checked ? "1" : "0";
-
-        const data = { id: id, status: user_active_status }
         const result = await Swal.fire({
             title: "Do you want to save the changes?",
             showCancelButton: true,
@@ -168,7 +170,7 @@ const Client = () => {
 
         if (result.isConfirmed) {
             try {
-                const response = await UpdateClientStatus(data, token)
+                const response = await UpdateClientStatus(data, token);
                 if (response.status) {
                     Swal.fire({
                         title: "Saved!",
@@ -180,6 +182,7 @@ const Client = () => {
                         Swal.close();
                     }, 1000);
                 }
+                // Reload the plan list
                 getAdminclient();
             } catch (error) {
                 Swal.fire(
@@ -189,11 +192,10 @@ const Client = () => {
                 );
             }
         } else if (result.dismiss === Swal.DismissReason.cancel) {
+            event.target.checked = !originalChecked;
             getAdminclient();
         }
     };
-
-
 
 
 
@@ -302,7 +304,7 @@ const Client = () => {
         },
         {
             name: 'CreatedAt',
-            selector: row => row.createdAT,
+            selector: row => fDateTime(row.createdAt),
             sortable: true,
             width: '146px',
         },
