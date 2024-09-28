@@ -1719,3 +1719,23 @@ export async function UpdateTemplate(data, token) {
         return err.response?.data || err.message;
     }
 }
+
+
+
+/// get stock list by on service
+
+export async function getstockbyservice(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}stock/getstockbyservice`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}

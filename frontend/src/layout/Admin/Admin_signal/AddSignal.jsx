@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import DynamicForm from '../../../components/FormicForm';
-import { AddSignalByAdmin, GetService, GetStockDetail } from '../../../Services/Admin';
+import { AddSignalByAdmin, GetService, getstockbyservice } from '../../../Services/Admin';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 
@@ -36,7 +36,7 @@ const AddSignal = () => {
 
   const fetchStockList = async () => {
     try {
-      const response = await GetStockDetail(token);
+      const response = await getstockbyservice(token);
       if (response.status) {
         setStockList(response.data);
       }
@@ -49,21 +49,20 @@ const AddSignal = () => {
 
   const formik = useFormik({
     initialValues: {
-      add_by:user_id,
+      add_by: user_id,
       service: '',
-      price:'',
+      price: '',
       stock: '',
       tag1: '',
       tag2: '',
       tag3: '',
       stoploss: '',
       report: '',
-      description:'',
+      description: '',
       callduration: '',
       calltype: '',
-      // callperiod:''
     },
-    validate:(values) => {
+    validate: (values) => {
       const errors = {};
       if (!values.service) errors.service = 'Please select a service';
       if (!values.stock) errors.stock = 'Please select a stock';
@@ -77,11 +76,9 @@ const AddSignal = () => {
       if (!values.callperiod) errors.callperiod = 'Please enter call Period';
       return errors;
     },
-
-    
     onSubmit: async (values) => {
       const req = {
-        add_by:user_id,
+        add_by: user_id,
         service: values.service,
         stock: values.stock,
         price: values.price,
@@ -90,11 +87,10 @@ const AddSignal = () => {
         tag3: values.tag3,
         stoploss: values.stoploss,
         description: values.description,
-        report: values.report ,
+        report: values.report,
         calltype: values.calltype,
         callduration: values.callduration,
-        callperiod: values.callperiod
-  
+
       };
       try {
         const response = await AddSignalByAdmin(req, token);
@@ -108,7 +104,7 @@ const AddSignal = () => {
           });
           setTimeout(() => {
             navigate('/admin/signal');
-          },  2000);
+          }, 2000);
         } else {
           Swal.fire({
             title: 'Error',
@@ -131,18 +127,24 @@ const AddSignal = () => {
   });
 
 
-
+  // console.log("formik.values.service :", formik.values.service)
 
 
   const fields = [
-     {
+    {
       name: 'service',
       label: 'Select Service',
       type: 'select',
-      options: serviceList.map((item) => ({
-        label: item.title,
-        value: item._id,
-      })),
+      // options: serviceList.map((item) => ({
+      //   label: item.title,
+      //   value: item.title,
+      // })),
+      options: [
+        { label: 'Cash', value: 'C' },
+        { label: 'Option', value: 'O' },
+        { label: 'Future', value: 'F' },
+        
+      ],
       label_size: 12,
       col_size: 6,
       disable: false,
@@ -169,6 +171,8 @@ const AddSignal = () => {
         { label: '01/02/24', value: '01/03/25' },
         { label: '01/04/24', value: '01/05/25' },
       ],
+      showWhen: (values) => values.service != "Cash",
+
       disable: false,
     },
     {
@@ -195,29 +199,23 @@ const AddSignal = () => {
       name: 'callduration',
       label: 'Trade duration',
       type: 'select',
-      options: [
+      options: formik.values.service == "Cash" ? [
         { label: 'Long Term', value: 'Long Term' },
         { label: 'Medium Term', value: 'Medium Term' },
         { label: 'Short Term', value: 'Short Term' },
         { label: 'Intraday', value: 'Intraday' },
-      ],
-      options: [
-        { label: 'Interaday', value: 'Interaday' },
-        { label: 'Short Term', value: 'Short Term' },
-        { label: 'Still Expiry Date', value: 'Still Expiry Date' },
-       
-      ],
+      ] :
+        [
+          { label: 'Interaday', value: 'Interaday' },
+          { label: 'Short Term', value: 'Short Term' },
+          { label: 'Still Expiry Date', value: 'Still Expiry Date' },
+
+        ],
       label_size: 12,
       col_size: 6,
       disable: false,
     },
-    {
-     
-     
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-    },
+
     {
       name: 'tag1',
       label: 'Target-1',
@@ -250,7 +248,7 @@ const AddSignal = () => {
       col_size: 3,
       disable: false,
     },
-    
+
     {
       name: 'report',
       label: 'Report',
@@ -260,7 +258,7 @@ const AddSignal = () => {
       disable: false,
     },
 
-   
+
 
     {
       name: 'description',
@@ -272,19 +270,43 @@ const AddSignal = () => {
     },
 
   ];
-useEffect(() => {
-
-console.log("formik.values.service")
-
-}, [formik.values.service])
 
 
+
+  useEffect(() => {
+    const fetchStockData = async () => {
+      if (formik.values.service) { // Ensure the service value is not null/undefined
+        const data = { segment: formik.values.service };
+
+        console.log("data",data)
+        try {
+          const res = await getstockbyservice(data);
+          if (res.status) {
+            console.log("res", res.data);
+          } else {
+            console.error("Failed to fetch data", res);
+          }
+        } catch (error) {
+          console.error("Error fetching stock by service:", error);
+        }
+      }
+    };
   
+    fetchStockData(); 
+  }, [formik.values.service]);
+  
+
+  useEffect(() => {
+    formik.setFieldValue("expirydate" , "" )
+    formik.setFieldValue("callduration" , "" )
+  }, [formik.values])
+
+
   return (
     <div>
       <div style={{ marginTop: '100px' }}>
         <DynamicForm
-          fields={fields}
+          fields={fields.filter(field => !field.showWhen || field.showWhen(formik.values))}
           page_title="Add Signal"
           btn_name="Add Signal"
           btn_name1="Cancel"
