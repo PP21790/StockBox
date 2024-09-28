@@ -5,6 +5,8 @@ import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { image_baseurl } from '../../../Utils/config';
+import { getstaffperuser } from '../../../Services/Admin';
+
 
 const Blogs = () => {
 
@@ -23,6 +25,7 @@ const Blogs = () => {
 
     });
 
+    const [permission, setPermission] = useState([]);
 
 
 
@@ -56,8 +59,21 @@ const Blogs = () => {
         }
     };
 
+
+    const getpermissioninfo = async () => {
+        try {
+            const response = await getstaffperuser(userid, token);
+            if (response.status) {
+                setPermission(response.data.permissions);
+            }
+        } catch (error) {
+            console.log("error", error);
+        }
+    };
+
     useEffect(() => {
         getblogs();
+        getpermissioninfo()
     }, [searchInput]);
 
 
@@ -250,7 +266,7 @@ const Blogs = () => {
             selector: row => row.title,
             sortable: true,
         },
-        {
+        permission.includes("blogsstatus") ? {
             name: 'Active Status',
             selector: row => (
                 <div className="form-check form-switch form-check-info">
@@ -268,7 +284,7 @@ const Blogs = () => {
                 </div>
             ),
             sortable: true,
-        },
+        } : "",
         {
             name: 'Image',
             cell: row => <img src={`${image_baseurl}/uploads/blogs/${row.image}`} alt="Image" width="50" height="50" />,
@@ -290,11 +306,11 @@ const Blogs = () => {
             selector: row => new Date(row.updated_at).toLocaleDateString(),
             sortable: true,
         },
-        {
+        permission.includes("editblogs") || permission.includes("deleteblogs") ?{
             name: 'Actions',
             cell: row => (
                 <>
-                    <div>
+                   {permission.includes("editblogs") ?  <div>
                         <SquarePen
                             onClick={() => {
                                 setModel(true);
@@ -302,16 +318,16 @@ const Blogs = () => {
                                 setUpdatetitle({ title: row.title, id: row._id, description: row.description, image: row.image });
                             }}
                         />
-                    </div>
-                    <div>
+                    </div> : "" }
+                    {permission.includes("deleteblogs") ?  <div>
                         <Trash2 onClick={() => DeleteBlogs(row._id)} />
-                    </div>
+                    </div> :"" }
                 </>
             ),
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
-        }
+        }: ""
     ];
 
 
@@ -369,7 +385,7 @@ const Blogs = () => {
                                 </span>
                             </div>
                             <div className="ms-auto">
-                                <button
+                            {permission.includes("addblogs") ? <button
                                     type="button"
                                     className="btn btn-primary"
                                     data-bs-toggle="modal"
@@ -377,7 +393,7 @@ const Blogs = () => {
                                 >
                                     <i className="bx bxs-plus-square" />
                                     Add Blog
-                                </button>
+                                </button> : "" }
 
                                 <div
                                     className="modal fade"

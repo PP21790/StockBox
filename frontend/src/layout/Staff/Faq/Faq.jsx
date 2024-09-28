@@ -4,6 +4,8 @@ import { getFaqlist, AddFaq, UpdateFaq, changeFAQStatus, DeleteFAQ } from '../..
 import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
 import Swal from 'sweetalert2';
+import { getstaffperuser } from '../../../Services/Admin';
+
 
 const Faq = () => {
 
@@ -23,6 +25,7 @@ const Faq = () => {
     });
 
 
+    const [permission, setPermission] = useState([]);
 
 
     const [title, setTitle] = useState({
@@ -54,8 +57,25 @@ const Faq = () => {
         }
     };
 
+   
+
+    const getpermissioninfo = async () => {
+        try {
+            const response = await getstaffperuser(userid, token);
+            if (response.status) {
+                setPermission(response.data.permissions);
+            }
+        } catch (error) {
+            console.log("error", error);
+        }
+    };
+
+
+
+
     useEffect(() => {
         getFaq();
+        getpermissioninfo()
     }, [searchInput]);
 
 
@@ -247,7 +267,7 @@ const Faq = () => {
             selector: row => row.title,
             sortable: true,
         },
-        {
+        permission.includes("faqstatus") ? {
             name: 'Active Status',
             selector: row => (
                 <div className="form-check form-switch form-check-info">
@@ -265,7 +285,7 @@ const Faq = () => {
                 </div>
             ),
             sortable: true,
-        },
+        } :"",
         {
             name: 'Description',
             selector: row => row.description,
@@ -282,11 +302,11 @@ const Faq = () => {
             selector: row => new Date(row.updated_at).toLocaleDateString(),
             sortable: true,
         },
-        {
+        permission.includes("editfaq") ||  permission.includes("deletefaq") ?  {
             name: 'Actions',
             cell: row => (
                 <>
-                    <div>
+                     {permission.includes("editfaq") ? <div>
                         <SquarePen
                             onClick={() => {
                                 setModel(true);
@@ -294,16 +314,16 @@ const Faq = () => {
                                 setUpdatetitle({ title: row.title, id: row._id, description: row.description });
                             }}
                         />
-                    </div>
-                    <div>
+                    </div> : "" }
+                    {permission.includes("deletefaq") ? <div>
                         <Trash2 onClick={() => DeleteFaq(row._id)} />
-                    </div>
+                    </div> :"" }
                 </>
             ),
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
-        }
+        }: ""
     ];
 
 
@@ -361,7 +381,7 @@ const Faq = () => {
                                 </span>
                             </div>
                             <div className="ms-auto">
-                                <button
+                            {permission.includes("addfaq") ?  <button
                                     type="button"
                                     className="btn btn-primary"
                                     data-bs-toggle="modal"
@@ -369,7 +389,7 @@ const Faq = () => {
                                 >
                                     <i className="bx bxs-plus-square" />
                                     Add FAQ
-                                </button>
+                                </button> : "" }
 
                                 <div
                                     className="modal fade"

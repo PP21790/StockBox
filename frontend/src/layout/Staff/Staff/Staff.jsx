@@ -6,14 +6,20 @@ import Table from '../../../components/Table';
 import { Pencil, Trash2, UserPen } from 'lucide-react';
 import { deleteStaff, updateStaffstatus } from '../../../Services/Admin';
 import Swal from 'sweetalert2';
+import { getstaffperuser } from '../../../Services/Admin';
+
 
 const Staff = () => {
 
     const navigate = useNavigate();
-
+   
+   
+    const userid = localStorage.getItem('id');
 
 
     const [clients, setClients] = useState([]);
+    const [permission, setPermission] = useState([]);
+
 
     const token = localStorage.getItem('token');
 
@@ -29,8 +35,24 @@ const Staff = () => {
         }
     }
 
+
+  
+    const getpermissioninfo = async () => {
+        try {
+            const response = await getstaffperuser(userid, token);
+            if (response.status) {
+                setPermission(response.data.permissions);
+            }
+        } catch (error) {
+            console.log("error", error);
+        }
+    };
+
+
+
     useEffect(() => {
         getAdminclient();
+        getpermissioninfo() 
     }, []);
 
 
@@ -169,7 +191,7 @@ const Staff = () => {
             sortable: true,
             width: '142px',
         },
-        {
+        permission.includes("staffstatus") ? {
             name: 'Active Status',
             selector: row => (
                 <div className="form-check form-switch form-check-info">
@@ -188,7 +210,7 @@ const Staff = () => {
             ),
             sortable: true,
             width: '142px',
-        },
+        }:"",
         {
             name: 'Created At',
             selector: row => new Date(row.createdAt).toLocaleDateString(),
@@ -212,19 +234,19 @@ const Staff = () => {
             ),
             width: '142px',
         },
-        {
+        permission.includes("editstaff") || permission.includes("deletestaff")  ? {
             name: 'Actions',
             cell: row => (
                 <>
-                    <div>
+                     {permission.includes("editstaff") ? <div>
                         <Pencil onClick={() => updateStaff(row)} />
-                    </div>
-                    <div>
+                    </div> : "" }
+                    {permission.includes("deletestaff") ? <div>
                         <Trash2 onClick={() => DeleteStaff(row._id)} />
-                    </div>
+                    </div> :""}
                 </>
             ),
-        }
+        } : "" 
 
     ];
 
@@ -263,7 +285,7 @@ const Staff = () => {
                                             <i className="bx bx-search" />
                                         </span>
                                     </div>
-                                    <div className="ms-auto">
+                                    {permission.includes("addstaff") ? <div className="ms-auto">
                                         <Link
                                             to="/admin/addstaff"
                                             className="btn btn-primary"
@@ -274,7 +296,7 @@ const Staff = () => {
                                             />
                                             Add Staff
                                         </Link>
-                                    </div>
+                                    </div> :"" }
                                 </div>
 
                                 <Table

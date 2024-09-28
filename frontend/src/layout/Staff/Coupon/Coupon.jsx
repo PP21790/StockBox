@@ -7,15 +7,21 @@ import { Pencil, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { DeleteCoupon, UpdateClientStatus } from '../../../Services/Admin';
 import { image_baseurl } from '../../../Utils/config';
+import { getstaffperuser } from '../../../Services/Admin';
+
 
 const Coupon = () => {
+
+    const token = localStorage.getItem('token');
+    const userid = localStorage.getItem('id');
 
 
     const navigate = useNavigate();
 
     const [clients, setClients] = useState([]);
+    const [permission, setPermission] = useState([]);
 
-    const token = localStorage.getItem('token');
+
 
     const getcoupon = async () => {
         try {
@@ -28,15 +34,30 @@ const Coupon = () => {
         }
     }
 
+   
+    const getpermissioninfo = async () => {
+        try {
+            const response = await getstaffperuser(userid, token);
+            if (response.status) {
+                setPermission(response.data.permissions);
+            }
+        } catch (error) {
+            console.log("error", error);
+        }
+    };
+
+
+
     useEffect(() => {
         getcoupon();
+        getpermissioninfo()
     }, []);
 
 
 
 
     const updatecoupon = async (row) => {
-        navigate("/admin/coupon/updatecoupon/" + row._id, { state: { row } })
+        navigate("/staff/coupon/updatecoupon/" + row._id, { state: { row } })
     }
 
 
@@ -178,7 +199,7 @@ const Coupon = () => {
             sortable: true,
         },
 
-        {
+        permission.includes("couponstatus") ? {
             name: 'Active Status',
             selector: row => (
                 <div className="form-check form-switch form-check-info">
@@ -196,7 +217,7 @@ const Coupon = () => {
                 </div>
             ),
             sortable: true,
-        },
+        } : "",
 
 
         {
@@ -209,22 +230,22 @@ const Coupon = () => {
             selector: row => new Date(row.enddate).toLocaleDateString(),
             sortable: true,
         },
-        {
+        permission.includes("editcoupon") ||  permission.includes("deletecoupon") ? {
             name: 'Actions',
             cell: row => (
                 <>
-                    <div>
+                    {permission.includes("editcoupon") ? <div>
                         <Pencil onClick={() => updatecoupon(row)} />
-                    </div>
-                    <div>
+                    </div> : ""}
+                    {permission.includes("deletecoupon") ? <div>
                         <Trash2 onClick={() => DeleteCouponbyadmin(row._id)} />
-                    </div>
+                    </div> : "" }
                 </>
             ),
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
-        }
+        } : "" 
     ];
 
     return (
@@ -260,9 +281,9 @@ const Coupon = () => {
                                         <i className="bx bx-search" />
                                     </span>
                                 </div>
-                                <div className="ms-auto">
-                                    <Link
-                                        to="/admin/addcoupon"
+                                {permission.includes("addcoupon") ? <div className="ms-auto">
+                                 <Link
+                                        to="/staff/addcoupon"
                                         className="btn btn-primary"
                                     >
                                         <i
@@ -271,7 +292,7 @@ const Coupon = () => {
                                         />
                                         Add Coupon
                                     </Link>
-                                </div>
+                                </div> : "" }
                             </div>
 
                             <Table

@@ -5,10 +5,13 @@ import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { image_baseurl } from '../../../Utils/config';
+import { getstaffperuser } from '../../../Services/Admin';
 
 
 const News = () => {
-
+    
+    const token = localStorage.getItem('token');
+    const userid = localStorage.getItem('id');
 
 
     const navigate = useNavigate();
@@ -24,6 +27,7 @@ const News = () => {
 
     });
 
+    const [permission, setPermission] = useState([]);
 
 
 
@@ -34,8 +38,6 @@ const News = () => {
         add_by: "",
     });
 
-    const token = localStorage.getItem('token');
-    const userid = localStorage.getItem('id');
 
 
 
@@ -57,8 +59,25 @@ const News = () => {
         }
     };
 
+
+
+    const getpermissioninfo = async () => {
+        try {
+            const response = await getstaffperuser(userid, token);
+            if (response.status) {
+                setPermission(response.data.permissions);
+            }
+        } catch (error) {
+            console.log("error", error);
+        }
+    };
+
+  
+
+
     useEffect(() => {
         getNews();
+        getpermissioninfo()
     }, [searchInput]);
 
 
@@ -250,7 +269,7 @@ const News = () => {
             selector: row => row.title,
             sortable: true,
         },
-        {
+        permission.includes("newsstatus") ? {
             name: 'Active Status',
             selector: row => (
                 <div className="form-check form-switch form-check-info">
@@ -268,7 +287,7 @@ const News = () => {
                 </div>
             ),
             sortable: true,
-        },
+        } : "",
         {
             name: 'Description',
             selector: row => row.description,
@@ -291,11 +310,11 @@ const News = () => {
             selector: row => new Date(row.updated_at).toLocaleDateString(),
             sortable: true,
         },
-        {
+        permission.includes("editnews") || permission.includes("deletenews")  ? {
             name: 'Actions',
             cell: row => (
                 <>
-                    <div>
+                   {permission.includes("editnews") ? <div>
                         <SquarePen
                             onClick={() => {
                                 setModel(true);
@@ -303,16 +322,16 @@ const News = () => {
                                 setUpdatetitle({ title: row.title, id: row._id, description: row.description, image: row.image });
                             }}
                         />
-                    </div>
-                    <div>
+                    </div> : "" }
+                    {permission.includes("deletenews") ? <div>
                         <Trash2 onClick={() => DeleteService(row._id)} />
-                    </div>
+                    </div> : "" }
                 </>
             ),
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
-        }
+        } : ""
     ];
 
 
@@ -362,7 +381,7 @@ const News = () => {
                                 </span>
                             </div>
                             <div className="ms-auto">
-                                <button
+                            {permission.includes("addnews") ? <button
                                     type="button"
                                     className="btn btn-primary"
                                     data-bs-toggle="modal"
@@ -370,7 +389,7 @@ const News = () => {
                                 >
                                     <i className="bx bxs-plus-square" />
                                     Add News
-                                </button>
+                                </button> :""}
 
                                 <div
                                     className="modal fade"

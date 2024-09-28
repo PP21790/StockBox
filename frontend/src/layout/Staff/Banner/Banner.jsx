@@ -6,6 +6,8 @@ import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { fDateTime } from '../../../Utils/Date_formate';
 import { image_baseurl } from '../../../Utils/config';
+import { getstaffperuser } from '../../../Services/Admin';
+
 
 const Banner = () => {
 
@@ -25,6 +27,7 @@ const Banner = () => {
     });
 
 
+    const [permission, setPermission] = useState([]);
 
 
     const [title, setTitle] = useState({
@@ -57,8 +60,24 @@ const Banner = () => {
         }
     };
 
+
+
+    const getpermissioninfo = async () => {
+        try {
+            const response = await getstaffperuser(userid, token);
+            if (response.status) {
+                setPermission(response.data.permissions);
+            }
+        } catch (error) {
+            console.log("error", error);
+        }
+    };
+
+
+
     useEffect(() => {
         getBanner();
+        getpermissioninfo()
     }, [searchInput]);
 
 
@@ -254,7 +273,7 @@ const Banner = () => {
             cell: row => <img src={`${image_baseurl}/uploads/banner/${row.image}`} alt="image" width="50" height="50" />,
             sortable: true,
         },
-        {
+        permission.includes("bannerstatus") ? {
             name: 'Active Status',
             selector: row => (
                 <div className="form-check form-switch form-check-info">
@@ -272,7 +291,7 @@ const Banner = () => {
                 </div>
             ),
             sortable: true,
-        },
+        } : "",
         {
             name: 'Created At',
             selector: row => fDateTime(row.created_at),
@@ -283,11 +302,11 @@ const Banner = () => {
             selector: row => fDateTime(row.updated_at),
             sortable: true,
         },
-        {
+        permission.includes("editbanner") ||  permission.includes("deletebanner") ?{
             name: 'Actions',
             cell: row => (
                 <>
-                    <div>
+                    {permission.includes("editbanner") ?  <div>
                         <SquarePen
                             onClick={() => {
                                 setModel(true);
@@ -295,16 +314,16 @@ const Banner = () => {
                                 setUpdatetitle({ title: row.title, id: row._id, description: row.description, image: row.image });
                             }}
                         />
-                    </div>
-                    <div>
+                    </div> : "" }
+                    {permission.includes("deletebanner") ? <div>
                         <Trash2 onClick={() => Deletebannerlist(row._id)} />
-                    </div>
+                    </div> : "" }
                 </>
             ),
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
-        }
+        } : ""
     ];
 
 
@@ -362,7 +381,7 @@ const Banner = () => {
                                 </span>
                             </div>
                             <div className="ms-auto">
-                                <button
+                            {permission.includes("addbanner") ? <button
                                     type="button"
                                     className="btn btn-primary"
                                     data-bs-toggle="modal"
@@ -370,7 +389,7 @@ const Banner = () => {
                                 >
                                     <i className="bx bxs-plus-square" />
                                     Add Banner
-                                </button>
+                                </button> : "" }
 
                                 <div
                                     className="modal fade"
