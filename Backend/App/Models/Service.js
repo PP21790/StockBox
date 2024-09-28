@@ -8,6 +8,11 @@ const ServiceSchema = new Schema({
         required: true,
         trim: true
     },
+    segment: {
+        type: String,
+        trim: true,
+        default: null
+    },
     add_by: {
         type: String,
         required: true,

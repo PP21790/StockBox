@@ -32,7 +32,9 @@ const PlanSubscription_Modal = db.PlanSubscription;
 const Content_Modal = db.Content;
 const BasketSubscription_Modal = db.BasketSubscription;
 const Mailtemplate_Modal = db.Mailtemplate;
-
+const Refer_Modal = db.Refer;
+const Planmanage = db.Planmanage;
+const Payout_Modal = db.Payout;
 
 
 
@@ -61,6 +63,6 @@ require('./App/api/Routes/index')(app)
 //require('./App/api/Routes/index')(app)
 
 // httpsserver.listen(1001)
-server.listen(process.env.PORT, () => {
+server.listen(process.env.PORT,"192.168.0.11", () => {
   console.log(`Server is running on http://0.0.0.0:${process.env.PORT}`);
 });

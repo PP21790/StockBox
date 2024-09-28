@@ -31,7 +31,7 @@ const PlanSchema = new Schema({
     },
     category: {
         type: Schema.Types.ObjectId,
-        ref: 'Plancategoty', // Assuming there's a 'Service' model to reference
+        ref: 'Plancategory', // Assuming there's a 'Service' model to reference
         required: true
     },
     status: {

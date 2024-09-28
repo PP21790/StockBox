@@ -9,6 +9,10 @@ const puppeteer = require('puppeteer');
 const path = require('path');
 const fs = require('fs');
 const FormData = require('form-data');
+const Mailtemplate_Modal = db.Mailtemplate;
+const Refer_Modal = db.Refer;
+const Payout_Modal = db.Payout;
+
 class Clients {
 
 
@@ -16,7 +20,7 @@ class Clients {
 
   
     try {
-      const { FullName, Email, PhoneNo, password } = req.body;
+      const { FullName, Email, PhoneNo, password, token } = req.body;
 
       if (!FullName) {
         return res.status(400).json({ status: false, message: "Please enter fullname" });
@@ -58,6 +62,16 @@ class Clients {
       }
 
 
+
+      const settings = await BasicSetting_Modal.findOne();
+      if (!settings || !settings.smtp_status) {
+        throw new Error('SMTP settings are not configured or are disabled');
+      }
+
+
+
+
+
       const hashedPassword = await bcrypt.hash(password, 10);
       const refer_token = crypto.randomBytes(10).toString('hex'); // 10 bytes = 20 hex characters
       const result = new Clients_Modal({
@@ -72,14 +86,33 @@ class Clients {
       await result.save();
 
 
+
+      if(token) {
+        const refertoken = await Clients_Modal.findOne({ refer_token:token,del:0,ActiveStatus:1 });
+    
+        if (!refertoken) {
+            return res.status(400).json({ status: false, message: "refer token doesn't exists" });
+        }
+  
+        const results = new Refer_Modal({
+          token: token,
+          user_id: result._id,
+          senderearn: settings.sender_earn,
+          receiverearn: settings.receiver_earn
+          })
+          await results.save();
+        }
+  
+
+
+
     const resetToken = Math.floor(100000 + Math.random() * 900000); // Generates a 6-digit OTP
 
 
-      const settings = await BasicSetting_Modal.findOne();
-      if (!settings || !settings.smtp_status) {
-        throw new Error('SMTP settings are not configured or are disabled');
+      const mailtemplate = await Mailtemplate_Modal.findOne({ mail_type: 'client_verification_mail' }); // Use findOne if you expect a single document
+      if (!mailtemplate || !mailtemplate.mail_body) {
+          throw new Error('Mail template not found');
       }
-
 
       const templatePath = path.join(__dirname, '../../../template', 'mailtemplate.html');
       
@@ -89,20 +122,22 @@ class Clients {
             console.error('Error reading HTML template:', err);
             return;
         }
-    
-        
+
+        const finalMailBody = mailtemplate.mail_body.replace('{resetToken}', resetToken);
+        const logo =`http://${req.headers.host}/uploads/basicsetting/${settings.logo}`;
 
         // Replace placeholders with actual values
         const finalHtml = htmlTemplate
-            .replace('{{company_name}}', settings.website_title)
-            .replace('{{logo}}', 'https://stockboxpnp.pnpuniverse.com/uploads/basicsetting/logo-1723550994328-584049046.png')
-            .replace('{{resetToken}}', resetToken);
+            .replace(/{{company_name}}/g, settings.website_title)
+            .replace(/{{body}}/g, finalMailBody)
+            .replace(/{{logo}}/g, logo)
+            .replace(/{{resetToken}}/g, resetToken);
     
         // Email options
         const mailOptions = {
             to: result.Email,
             from: `${settings.from_name} <${settings.from_mail}>`, // Include business name
-            subject: 'Password Reset',
+            subject: `${mailtemplate.mail_subject}`,
             html: finalHtml // Use the HTML template with dynamic variables
         };
     
@@ -271,16 +306,45 @@ async forgotPassword(req, res) {
   if (!settings || !settings.smtp_status) {
     throw new Error('SMTP settings are not configured or are disabled');
   }
-    // Email options
-    const mailOptions = {
-      to: client.Email,
-      from: `${settings.from_name} <${settings.from_mail}>`, // Include business name
-      subject: 'Password Reset',
-      text: `Your verification code is: ${resetToken}. This code is valid for 10 minutes. Please do not share this code with anyone.`,
-    };
 
-    // Send email
-    await sendEmail(mailOptions);
+
+
+  const mailtemplate = await Mailtemplate_Modal.findOne({ mail_type: 'client_password_reset' }); // Use findOne if you expect a single document
+      if (!mailtemplate || !mailtemplate.mail_body) {
+          throw new Error('Mail template not found');
+      }
+
+      const templatePath = path.join(__dirname, '../../../template', 'mailtemplate.html');
+      
+    
+      fs.readFile(templatePath, 'utf8', async (err, htmlTemplate) => {
+        if (err) {
+            console.error('Error reading HTML template:', err);
+            return;
+        }
+
+        const finalMailBody = mailtemplate.mail_body.replace('{resetToken}', resetToken);
+        const logo =`http://${req.headers.host}/uploads/basicsetting/${settings.logo}`;
+
+        // Replace placeholders with actual values
+        const finalHtml = htmlTemplate
+            .replace(/{{company_name}}/g, settings.website_title)
+            .replace(/{{body}}/g, finalMailBody)
+            .replace(/{{logo}}/g, logo)
+            .replace(/{{resetToken}}/g, resetToken);
+    
+        // Email options
+        const mailOptions = {
+            to: client.Email,
+            from: `${settings.from_name} <${settings.from_mail}>`, // Include business name
+            subject: `${mailtemplate.mail_subject}`,
+            html: finalHtml // Use the HTML template with dynamic variables
+        };
+    
+        // Send email
+        await sendEmail(mailOptions);
+    });
+
 
     return res.json({
       status: true,
@@ -930,7 +994,7 @@ async uploadDocument(req, res) {
 
       // Define the redirect URL
       const baseUrl = "https://app.digio.in/#/gateway/login/";
-      const redirectUrl = encodeURIComponent("https://stockboxpnp.pnpuniverse.com");
+      const redirectUrl = encodeURIComponent(`http://${req.headers.host}`);
 
       const fullUrl = `${baseUrl}${doc_id}/${refid}/${email}?redirect_url=${redirectUrl}`;
 
@@ -1013,6 +1077,74 @@ async downloadDocument(req, res) {
       });
   }
 }
+
+async requestPayout(req, res) {
+  try {
+    const { clientId, amount } = req.body;
+
+    // Validate input
+    if (!clientId || amount <= 0) {
+      return res.status(400).json({ status: false, message: 'Invalid client ID or amount.' });
+    }
+
+    // Fetch the client record
+    const client = await Clients_Modal.findOne({ _id: clientId, del: 0, ActiveStatus: 1 });
+
+    if (!client) {
+      return res.status(404).json({ status: false, message: 'Client not found or inactive.' });
+    }
+
+    // Check if the requested amount is below the minimum withdrawal limit
+    const minimumWithdrawal = 500;
+    if (amount < minimumWithdrawal) {
+      return res.status(400).json({ status: false, message: `Minimum withdrawal amount is ${minimumWithdrawal}.` });
+    }
+
+    // Check if the client has enough wamount
+    if (client.wamount < amount) {
+      return res.status(400).json({ status: false, message: 'Insufficient funds in wamount.' });
+    }
+
+    // Deduct the amount from client's wamount
+    client.wamount -= amount;
+    await client.save();
+
+    // Create a new payout request
+    const payoutRequest = new Payout_Modal({
+      clientid: clientId,
+      amount: amount,
+    });
+
+    await payoutRequest.save();
+
+    return res.status(201).json({
+      status: true,
+      message: 'Payout request submitted successfully.',
+      data: payoutRequest,
+    });
+
+  } catch (error) {
+    console.error('Error processing payout request:', error);
+    return res.status(500).json({ status: false, message: 'Server error while processing payout request.' });
+  }
+}
+
+async payoutList(req, res) {
+  try {
+    const { id } = req.body;  // Extract the client ID from the request parameters
+    const result = await Payout_Modal.find({ clientid: id });  // Fetch payouts for the given client ID
+
+    return res.json({
+      status: true,
+      message: "get",
+      data: result  // Return the fetched payouts
+    });
+  } catch (error) {
+    return res.json({ status: false, message: "Server error", data: [] });  // Error handling
+  }
+}
+
+
 
 
 }

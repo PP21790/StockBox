@@ -1,7 +1,7 @@
 const db = require("../Models");
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
-
+const Payout_Modal = db.Payout;
 const Clients_Modal = db.Clients;
 
 
@@ -321,6 +321,77 @@ class Clients {
         });
     }
   }
+  async processPayoutRequest(req, res) {
+    try {
+      const { payoutRequestId, status, remark } = req.body;
   
+      // Validate input
+      if (!payoutRequestId || !['1', '2'].includes(status)) {
+        return res.status(400).json({ status: false, message: 'Invalid payout request ID or status.' });
+      }
+  
+      // Fetch the payout request record
+      const payoutRequest = await Payout_Modal.findById(payoutRequestId);
+      
+      if (!payoutRequest) {
+        return res.status(404).json({ status: false, message: 'Payout request not found.' });
+      }
+  
+      // Fetch the client record
+      const client = await Clients_Modal.findOne({ _id: payoutRequest.clientid, del: 0, ActiveStatus: 1 });
+  
+      if (!client) {
+        return res.status(404).json({ status: false, message: 'Client not found or inactive.' });
+      }
+  
+      if (status === '1') {
+        // Approve the payout request
+        payoutRequest.status = '1';
+      } else if (status === '2') {
+        // Logic to reject the payout request
+        payoutRequest.status = '2';
+        payoutRequest.remark = remark;
+        client.wamount += payoutRequest.amount; // Refund amount back to client's wamount
+        await client.save();
+      }
+  
+      await payoutRequest.save();
+      return res.status(200).json({
+        status: true,
+        message: 'Payout request updated successfully.',
+        data: payoutRequest,
+      });
+  
+    } catch (error) {
+      console.error('Error processing payout request:', error);
+      return res.status(500).json({ status: false, message: 'Server error while processing payout request.' });
+    }
+  }
+  
+  
+  async payoutList(req, res) {
+    try {
+
+      
+      const { } = req.body;
+
+    //  const result = await Clients_Modal.find()
+    const result = await Payout_Modal.find({ del: 0 });
+
+      return res.json({
+        status: true,
+        message: "get",
+        data:result
+      });
+
+    } catch (error) {
+      return res.json({ status: false, message: "Server error", data: [] });
+    }
+  }
+
+
+
+
+
 }
 module.exports = new Clients();

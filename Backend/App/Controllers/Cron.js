@@ -132,8 +132,6 @@ async function AddBulkStockCron(req, res) {
   }
   }
   
-
-  
 const DeleteTokenAliceToken = async () => {
     const pipeline = [
         {
@@ -227,7 +225,6 @@ const DeleteTokenAliceToken = async () => {
         };
     });
   }
-  
   async function insertData(dataArray) {
     //console.log("dataArray ",dataArray)
     try {
