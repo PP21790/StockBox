@@ -39,11 +39,17 @@ const menuItems = [
 ];
 
 const Sidebar = ({ onToggleClick }) => {
-  const [activeDropdown, setActiveDropdown] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(null); // Track the active li by index
+  const [activeDropdown, setActiveDropdown] = useState(null); // Track the active dropdown
 
-  const toggleDropdown = (dropdownName) => (e) => {
+  const handleItemClick = (index) => () => {
+    setActiveIndex(index); // Set the clicked li as active
+  };
+
+  const toggleDropdown = (dropdownName, index) => (e) => {
     e.preventDefault();
     setActiveDropdown(activeDropdown === dropdownName ? null : dropdownName);
+    setActiveIndex(index); // Also set the dropdown as active when clicked
   };
 
   return (
@@ -70,16 +76,29 @@ const Sidebar = ({ onToggleClick }) => {
             {/* Dynamic Navigation */}
             <ul className="metismenu mm-show" id="menu">
               {menuItems.map((item, index) => (
-                <li key={index} className={item.subMenu ? (activeDropdown === item.title ? 'mm-active' : '') : ''}>
+                <li
+                  key={index}
+                  className={
+                    activeIndex === index ? 'mm-active' : '' // Add mm-active if the item is active
+                  }
+                >
                   {item.subMenu ? (
                     <>
-                      <a href="#" onClick={toggleDropdown(item.title)} className="has-arrow" aria-expanded={activeDropdown === item.title}>
+                      <a
+                        href="#"
+                        onClick={toggleDropdown(item.title, index)}
+                        className="has-arrow"
+                        aria-expanded={activeDropdown === item.title}
+                      >
                         <div className="parent-icon">
                           <i className={`bx ${item.icon}`} />
                         </div>
                         <div className="menu-title">{item.title}</div>
                       </a>
-                      <ul className={`mm-collapse ${activeDropdown === item.title ? 'mm-show' : ''}`}>
+                      <ul
+                        className={`mm-collapse ${activeDropdown === item.title ? 'mm-show' : ''
+                          }`}
+                      >
                         {item.subMenu.map((subItem, subIndex) => (
                           <li key={subIndex}>
                             <Link to={subItem.link}>
@@ -93,7 +112,7 @@ const Sidebar = ({ onToggleClick }) => {
                       </ul>
                     </>
                   ) : (
-                    <Link to={item.link}>
+                    <Link to={item.link} onClick={handleItemClick(index)}>
                       <div className="parent-icon">
                         <i className={`bx ${item.icon}`} />
                       </div>
