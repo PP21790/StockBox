@@ -5,13 +5,27 @@ import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
 import Swal from 'sweetalert2';
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
+import { getstaffperuser } from '../../../Services/Admin';
+
+
+
+
 
 const Category = () => {
+
+  
+    
+    
+
+
+
     const navigate = useNavigate();
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
     const [servicedata, setServicedata] = useState([]);
+  
+    const [permission, setPermission] = useState([]);
 
 
 
@@ -66,12 +80,27 @@ const Category = () => {
         }
     };
 
+  
+ 
+    
+    const getpermissioninfo = async () => {
+        try {
+            const response = await getstaffperuser(userid, token);
+            if (response.status) {
+                setPermission(response.data.permissions);
+            }
+        } catch (error) {
+            console.log("error", error);
+        }
+    };
 
 
     useEffect(() => {
         getcategory();
         getservice()
+        getpermissioninfo()
     }, [searchInput]);
+
 
 
 
@@ -279,7 +308,7 @@ const Category = () => {
             selector: row => row.title,
             sortable: true,
         },
-        {
+        permission.includes("categorystatus")? {
             name: 'Active Status',
             selector: row => (
                 <div className="form-check form-switch form-check-info">
@@ -297,7 +326,7 @@ const Category = () => {
                 </div>
             ),
             sortable: true,
-        },
+        } : "",
         {
             name: 'Created At',
             selector: row => new Date(row.created_at).toLocaleDateString(),
@@ -312,7 +341,7 @@ const Category = () => {
             name: 'Actions',
             cell: row => (
                 <>
-                    <div>
+                   {permission.includes("editcategory") ? <div>
                         <SquarePen
                             onClick={() => {
                                 setModel(true);
@@ -320,10 +349,10 @@ const Category = () => {
                                 setUpdatetitle({ title: row.title, id: row._id });
                             }}
                         />
-                    </div>
-                    <div>
+                    </div>: ""}
+                    {permission.includes("deletecategory") ?   <div>
                         <Trash2 onClick={() => DeleteCategory(row._id)} />
-                    </div>
+                    </div> : "" }
                 </>
             ),
             ignoreRowClick: true,
@@ -353,7 +382,7 @@ const Category = () => {
                         <nav aria-label="breadcrumb">
                             <ol className="breadcrumb mb-0 p-0">
                                 <li className="breadcrumb-item">
-                                    <Link to="/admin/dashboard">
+                                    <Link to="/staff/dashboard">
                                         <i className="bx bx-home-alt" />
                                     </Link>
                                 </li>
@@ -378,7 +407,7 @@ const Category = () => {
                                 </span>
                             </div>
                             <div className="ms-auto">
-                                <button
+                            {permission.includes("addcategory") ? <button
                                     type="button"
                                     className="btn btn-primary"
                                     data-bs-toggle="modal"
@@ -386,7 +415,7 @@ const Category = () => {
                                 >
                                     <i className="bx bxs-plus-square" />
                                     Add Category
-                                </button>
+                                </button> : "" }
 
                                 <div
                                     className="modal fade"

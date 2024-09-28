@@ -46,6 +46,7 @@ import Emailsettings from '../layout/Admin/BasicSetting/Emailsettings';
 import Freeclient from '../layout/Admin/Admin_client/Freeclient';
 import Message from '../layout/Admin/Broadcast/Message';
 import Changepass from '../layout/Admin/Password/Changepass';
+import Viewclientdetail from '../layout/Admin/Admin_client/Viewclient';
 
 
 
@@ -100,6 +101,7 @@ function MainApp() {
                     <Route path="/freeclient" element={<Freeclient />} />
                     <Route path="/addclient" element={<AddUser/>} />
                     <Route path="/client/updateclient/:id" element={<EditClient/>} />
+                    <Route path="/client/clientdetail/:id" element={<Viewclientdetail/>} />
 
                     <Route path="/profile" element={<Profile/>} />
                     <Route path="/service" element={<Service/>} />

@@ -44,6 +44,22 @@ export async function AddStaffClient(data, token) {
 }
 
 
+// get client detail 
+
+export async function clientdetailbyid(_id, token) {
+    try {
+        const res = await axios.get(`${Config.base_url}client/detail/${_id}`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
+
 
 
 // get list for staaf
@@ -632,6 +648,26 @@ export async function deleteplancategory(_id, token) {
 export async function updatecategorydstatus(data, token) {
     try {
         const res = await axios.post(`${Config.base_url}plancategory/change-status`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// plan status 
+
+export async function changeplanstatus(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}plan/change-status`, data, {
             headers: {
                 data: {},
                 'Authorization': `${token}`,

@@ -1,26 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getplanlist, getcategoryplan, Deleteplan } from '../../../Services/Admin';
+import { getplanlist, getcategoryplan, Deleteplan, changeplanstatus } from '../../../Services/Admin';
 import { fDateTime } from '../../../Utils/Date_formate';
 import Swal from 'sweetalert2';
 
-
 const Plan = () => {
-
     const [clients, setClients] = useState([]);
     const [category, setCategory] = useState([]);
     const [selectedCategoryId, setSelectedCategoryId] = useState(null);
     const token = localStorage.getItem('token');
 
-
-
     useEffect(() => {
         getAdminclient();
         getcategoryplanlist();
     }, []);
-
-
-
 
     const getcategoryplanlist = async () => {
         try {
@@ -28,14 +21,13 @@ const Plan = () => {
             if (response.status) {
                 setCategory(response.data);
                 if (response.data.length > 0) {
-                    setSelectedCategoryId(response.data[0]._id);
+                    setSelectedCategoryId('all');
                 }
             }
         } catch (error) {
             console.log("error");
         }
     };
-
 
 
 
@@ -56,7 +48,7 @@ const Plan = () => {
         try {
             const result = await Swal.fire({
                 title: 'Are you sure?',
-                text: 'Do you want to delete this staff member? This action cannot be undone.',
+                text: 'Do you want to delete this plan? This action cannot be undone.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, delete it!',
@@ -68,18 +60,16 @@ const Plan = () => {
                 if (response.status) {
                     Swal.fire({
                         title: 'Deleted!',
-                        text: 'The staff has been successfully deleted.',
+                        text: 'The plan has been successfully deleted.',
                         icon: 'success',
                         confirmButtonText: 'OK',
                     });
-                    getAdminclient();
-
+                    getcategoryplanlist();
                 }
             } else {
-
                 Swal.fire({
                     title: 'Cancelled',
-                    text: 'The staff deletion was cancelled.',
+                    text: 'The plan deletion was cancelled.',
                     icon: 'info',
                     confirmButtonText: 'OK',
                 });
@@ -87,19 +77,66 @@ const Plan = () => {
         } catch (error) {
             Swal.fire({
                 title: 'Error!',
-                text: 'There was an error deleting the staff.',
+                text: 'There was an error deleting the plan.',
                 icon: 'error',
                 confirmButtonText: 'Try Again',
             });
-
         }
     };
 
-    const filteredClients = clients.filter(client => client.category === selectedCategoryId);
+
+
+    const handleSwitchChange = async (event, id) => {
+        const originalChecked = event.target.checked;
+        const user_active_status = originalChecked ? "active" : "inactive";
+        const data = { id: id, status: user_active_status };
+    
+        const result = await Swal.fire({
+            title: "Do you want to save the changes?",
+            showCancelButton: true,
+            confirmButtonText: "Save",
+            cancelButtonText: "Cancel",
+            allowOutsideClick: false,
+        });
+    
+        if (result.isConfirmed) {
+            try {
+                const response = await changeplanstatus(data, token);
+                if (response.status) {
+                    Swal.fire({
+                        title: "Saved!",
+                        icon: "success",
+                        timer: 1000,
+                        timerProgressBar: true,
+                    });
+                    setTimeout(() => {
+                        Swal.close();
+                    }, 1000);
+                }
+                // Reload the plan list
+                getcategoryplanlist();
+            } catch (error) {
+                Swal.fire(
+                    "Error",
+                    "There was an error processing your request.",
+                    "error"
+                );
+            }
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            event.target.checked = !originalChecked;
+            getcategoryplanlist();
+        }
+    };
+    
+
+
+
+    const filteredClients = selectedCategoryId === 'all'
+        ? clients
+        : clients.filter(client => client.category === selectedCategoryId);
 
     return (
         <div className="page-content">
-            {/* Breadcrumb */}
             <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
                 <div className="breadcrumb-title pe-3">Plan</div>
                 <div className="ms-auto">
@@ -113,59 +150,20 @@ const Plan = () => {
 
             <div className="card">
                 <div className="card-body">
-                    {/* <ul className="nav nav-pills mb-3" role="tablist">
-                        <li className="nav-item" role="presentation">
-                            <a
-                                className="nav-link"
-                                data-bs-toggle="pill"
-                                href="#primary-pills-home"
-                                role="tab"
-                                aria-selected="false"
-                                tabIndex={-1}
-                            >
-                                <div className="d-flex align-items-center">
-                                    <div className="tab-icon">
-                                        <i className="bx bx-home font-18 me-1" />
-                                    </div>
-                                    <div className="tab-title">Home</div>
-                                </div>
-                            </a>
-                        </li>
-                        <li className="nav-item" role="presentation">
-                            <a
-                                className="nav-link"
-                                data-bs-toggle="pill"
-                                href="#primary-pills-profile"
-                                role="tab"
-                                aria-selected="false"
-                                tabIndex={-1}
-                            >
-                                <div className="d-flex align-items-center">
-                                    <div className="tab-icon">
-                                        <i className="bx bx-user-pin font-18 me-1" />
-                                    </div>
-                                    <div className="tab-title">Profile</div>
-                                </div>
-                            </a>
-                        </li>
-                        <li className="nav-item" role="presentation">
-                            <a
-                                className="nav-link active"
-                                data-bs-toggle="pill"
-                                href="#primary-pills-contact"
-                                role="tab"
-                                aria-selected="true"
-                            >
-                                <div className="d-flex align-items-center">
-                                    <div className="tab-icon">
-                                        <i className="bx bx-microphone font-18 me-1" />
-                                    </div>
-                                    <div className="tab-title">Contact</div>
-                                </div>
-                            </a>
-                        </li>
-                    </ul> */}
                     <ul className="nav nav-pills mb-1" role="tablist">
+                        <li className="nav-item" role="presentation">
+                            <a
+                                className={`nav-link ${selectedCategoryId === 'all' ? 'active' : ''}`}
+                                onClick={() => setSelectedCategoryId('all')}
+                                role="tab"
+                                aria-selected={selectedCategoryId === 'all'}
+                                tabIndex={0}
+                            >
+                                <div className="d-flex align-items-center">
+                                    <div className="tab-title">All</div>
+                                </div>
+                            </a>
+                        </li>
                         {category.map((cat) => (
                             <li className="nav-item" role="presentation" key={cat._id}>
                                 <a
@@ -176,9 +174,6 @@ const Plan = () => {
                                     tabIndex={0}
                                 >
                                     <div className="d-flex align-items-center">
-                                        <div className="tab-icon">
-                                            <i className={`bx ${cat.icon} font-18 me-1`} />
-                                        </div>
                                         <div className="tab-title">{cat.title}</div>
                                     </div>
                                 </a>
@@ -191,39 +186,48 @@ const Plan = () => {
                         <div className="tab-pane fade active show">
                             <div className="pricing-section mt-5">
                                 <div className="card-container">
-                                    <div className='row'>
+                                    <div className="row">
                                         {filteredClients.map((client) => (
                                             <div className="col-md-6 mb-3" key={client._id}>
                                                 <div className="pricing-card">
-                                                    <div className='row justify-content-end mb-3'>
-                                                        <div className='col-md-6 d-flex justify-content-start'>
-                                                            <div className="form-check form-switch">
+                                                    <div className="category-name text-center mb-3">
+                                                        <span className="badge bg-primary">
+                                                            {category.find(cat => cat._id === client.category)?.title || 'Unknown'}
+                                                        </span>
+                                                    </div>
+
+                                                    <div className="row justify-content-end mb-3">
+                                                        <div className="col-md-6 d-flex justify-content-start">
+                                                            <div className="form-check form-switch form-check-info">
                                                                 <input
+                                                                    id={`rating_${client.status}`}
                                                                     className="form-check-input toggleswitch"
                                                                     type="checkbox"
-                                                                    role="switch"
-                                                                    id="flexSwitchCheckDefault1"
-                                                                    defaultChecked=""
+                                                                    defaultChecked={client.status === "active"}
+                                                                    onChange={(event) => handleSwitchChange(event, client._id)}
                                                                 />
-
+                                                                <label
+                                                                    htmlFor={`rating_${client.ActiveStatus}`}
+                                                                    className="checktoggle checkbox-bg"
+                                                                ></label>
                                                             </div>
-
                                                         </div>
-                                                        <div className='col-md-6 d-flex justify-content-end'>
+                                                        <div className="col-md-6 d-flex justify-content-end">
                                                             <div>
                                                                 <i className="bx bx-trash trashbtn ms-3" onClick={() => Deleteplanbyadmin(client._id)} />
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div className='row justify-content-between align-items-center'>
-                                                        <div className='col-md-6'>
-                                                            <h3 className='fonth3'>{client.title}</h3>
-                                                            <h2 className='fonth2'>{client.planType}</h2>
+
+                                                    <div className="row justify-content-between align-items-center">
+                                                        <div className="col-md-6">
+                                                            <h3 className="fonth3">{client.title}</h3>
+                                                            <h2 className="fonth2">{client.planType}</h2>
                                                         </div>
                                                         <div className="price-section col-md-6">
                                                             <span className="discount">{client.discount}</span>
                                                             <span className="original-price">INR {client.originalPrice}</span>
-                                                            <h3 className='ms-4 fnt'>INR {client.price}</h3>
+                                                            <h3 className="ms-4 fnt">INR {client.price}</h3>
                                                         </div>
                                                     </div>
                                                     <hr />
@@ -238,21 +242,21 @@ const Plan = () => {
                                                             type="button"
                                                             className="btnsecond"
                                                             data-bs-toggle="modal"
-                                                            data-bs-target={`#modal-${client.id}`}
+                                                            data-bs-target={`#modal-${client._id}`}
                                                         >
                                                             View More
                                                         </button>
                                                         <div
                                                             className="modal fade"
-                                                            id={`modal-${client.id}`}
+                                                            id={`modal-${client._id}`}
                                                             tabIndex={-1}
-                                                            aria-labelledby={`modalLabel-${client.id}`}
+                                                            aria-labelledby={`modalLabel-${client._id}`}
                                                             aria-hidden="true"
                                                         >
                                                             <div className="modal-dialog">
                                                                 <div className="modal-content">
                                                                     <div className="modal-header">
-                                                                        <h5 className="modal-title" id={`modalLabel-${client.id}`}>
+                                                                        <h5 className="modal-title" id={`modalLabel-${client._id}`}>
                                                                             {client.title}
                                                                         </h5>
                                                                         <button
@@ -294,44 +298,38 @@ const Plan = () => {
                                                                                     </div>
                                                                                 </div>
                                                                             </li>
-                                                                            <li><div className="row justify-content-between">
-                                                                                <div className="col-md-6">
-                                                                                    <b>Description</b>
+                                                                            <li>
+                                                                                <div className="row justify-content-between">
+                                                                                    <div className="col-md-6">
+                                                                                        <b>Description</b>
+                                                                                    </div>
+                                                                                    <div className="col-md-6">
+                                                                                        {client.description}
+                                                                                    </div>
                                                                                 </div>
-                                                                                <div className="col-md-6">
-                                                                                    {client.description}
-                                                                                </div>
-                                                                            </div>
                                                                             </li>
-                                                                            <li><div className="row justify-content-between">
-                                                                                <div className="col-md-6">
-                                                                                    <b>Created At</b>
+                                                                            <li>
+                                                                                <div className="row justify-content-between">
+                                                                                    <div className="col-md-6">
+                                                                                        <b>Created At</b>
+                                                                                    </div>
+                                                                                    <div className="col-md-6">
+                                                                                        {fDateTime(client.created_at)}
+                                                                                    </div>
                                                                                 </div>
-                                                                                <div className="col-md-6">
-                                                                                    {fDateTime(client.created_at)}
-                                                                                </div>
-                                                                            </div>
                                                                             </li>
-                                                                            <li><div className="row justify-content-between">
-                                                                                <div className="col-md-6">
-                                                                                    <b>Updated At</b>
+                                                                            <li>
+                                                                                <div className="row justify-content-between">
+                                                                                    <div className="col-md-6">
+                                                                                        <b>Updated At</b>
+                                                                                    </div>
+                                                                                    <div className="col-md-6">
+                                                                                        {fDateTime(client.updated_at)}
+                                                                                    </div>
                                                                                 </div>
-                                                                                <div className="col-md-6">
-                                                                                    {fDateTime(client.updated_at)}
-                                                                                </div>
-                                                                            </div>
                                                                             </li>
                                                                         </ul>
                                                                     </div>
-                                                                    {/* <div className="modal-footer">
-                                                                        <button
-                                                                            type="button"
-                                                                            className="btn btn-secondary"
-                                                                            data-bs-dismiss="modal"
-                                                                        >
-                                                                            Close
-                                                                        </button>
-                                                                    </div> */}
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -340,8 +338,6 @@ const Plan = () => {
                                                                 Edit
                                                             </Link>
                                                         </div>
-
-
                                                     </div>
                                                 </div>
                                             </div>
@@ -357,4 +353,4 @@ const Plan = () => {
     );
 };
 
-export default Plan;  
+export default Plan;

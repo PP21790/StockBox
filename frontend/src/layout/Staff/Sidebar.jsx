@@ -10,9 +10,14 @@ const Sidebar = ({ onToggleClick }) => {
   const [permission, setPermission] = useState([]);
   const [activeDropdown, setActiveDropdown] = useState(null);
 
+
+
   useEffect(() => {
     getpermissioninfo();
   }, []);
+
+
+  
 
   const getpermissioninfo = async () => {
     try {
@@ -51,7 +56,7 @@ const Sidebar = ({ onToggleClick }) => {
     permission.includes('viewnews') && { title: 'News', icon: 'bx bx-news', link: '/staff/news' },
     permission.includes('viewcoupon') && { title: 'Coupon', icon: 'bx bx-edit-alt', link: '/staff/coupon' },
     permission.includes('viewbanner') && { title: 'Banner', icon: 'bx bx-news', link: '/staff/banner' },
-    permission.includes('viewfaq') && { title: 'Faq', icon: 'bx bx-faq', link: '/staff/faq' },
+    permission.includes('viewfaq') && { title: 'Faq', icon: 'bx bx-news', link: '/staff/faq' },
   ].filter(Boolean);
 
   return (

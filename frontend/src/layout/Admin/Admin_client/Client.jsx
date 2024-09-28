@@ -99,6 +99,10 @@ const Client = () => {
     }
 
 
+    const Clientdetail = async (row) => {
+        navigate("/admin/client/clientdetail/" + row._id, { state: { row } })
+    }
+
 
 
 
@@ -349,8 +353,7 @@ const Client = () => {
                     <Tooltip title="view">
                         <Eye
 
-                            data-bs-toggle="modal"
-                            data-bs-target={`#modal-${client.id}`} />
+                            onClick={() => Clientdetail(row)} />
                     </Tooltip>
 
                     <div
@@ -527,7 +530,7 @@ const Client = () => {
                     <div className="modal-backdrop fade show"></div>
                     <div
                         className="modal fade show d-block"
-                       
+
                         tabIndex="-1"
                         aria-labelledby="exampleModalLabel"
                         aria-hidden="true"

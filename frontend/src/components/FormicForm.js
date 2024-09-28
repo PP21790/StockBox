@@ -520,8 +520,8 @@ const DynamicForm = ({
                                                             </>
                                                         ) : (
                                                             <>
-                                                         {field.bold   &&   <h5 style={{marginBottom:"1rem"}}><b>{field.label}</b></h5>}
-                                                                <div className={`col-lg-${field.col_size}`} style={{marginLeft:"2rem" ,display:"flex"}}>
+                                                         {field.bold   &&   <h5 style={{marginBottom:"1rem" , marginLeft:"2rem",marginTop:"1rem"}}><b>{field.label}</b></h5>}
+                                                                <div className={`col-lg-${field.col_size}`} style={{marginLeft:"4rem" ,display:"flex"}}>
                                                                     <div className="row d-flex justify-content-start">
                                                                         <div className="mb-4">
                                                                             <div className="form-check custom-checkbox ">
