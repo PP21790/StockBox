@@ -75,6 +75,28 @@ class Stock {
     }
   }
 
+  async getStockByService(req, res) {
+    try {
+
+     
+     
+      const { segment } = req.body;
+
+      const result = await Stock_Modal.find({ segment: segment });
+
+
+      return res.json({
+        status: true,
+        message: "get",
+        data:result
+      });
+
+    } catch (error) {
+      return res.json({ status: false, message: "Server error", data: [] });
+    }
+  }
+
+
   async activeStock(req, res) {
     try {
 

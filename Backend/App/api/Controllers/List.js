@@ -14,6 +14,9 @@ const Faq_Modal = db.Faq;
 const Content_Modal = db.Content;
 const Basket_Modal = db.Basket;
 const BasketSubscription_Modal = db.BasketSubscription;
+const Planmanage = db.Planmanage;
+const Refer_Modal = db.Refer;
+const Clients_Modal = db.Clients;
 
 
 mongoose  = require('mongoose');
@@ -266,71 +269,160 @@ class List {
   
       
    // Controller function to add a new plan subscription
-async  addPlanSubscription(req, res) {
-  try {
-    const { plan_id, client_id, price, discount} = req.body;
-    // Validate input
-    if (!plan_id || !client_id ) {
-      return res.status(400).json({ status: false, message: 'Missing required fields' });
-    }
-    const plan = await Plan_Modal.findById(plan_id).exec();
-
-    const validityMapping = {
-      '1 month': 1,
-      '3 months': 3,
-      '6 months': 6,
-      '9 months': 9,
-      '1 year': 12,
-      '2 years': 24,
-      '3 years': 36,
-      '4 years': 48,
-      '5 years': 60
-    };
-
-    const start = new Date();
-
-    const monthsToAdd = validityMapping[plan.validity];
+   async addPlanSubscription(req, res) {
+    try {
+      const { plan_id, client_id, price, discount } = req.body;
   
-    if (monthsToAdd === undefined) {
-      throw new Error('Invalid validity period');
-    }
+      // Validate input
+      if (!plan_id || !client_id) {
+        return res.status(400).json({ status: false, message: 'Missing required fields' });
+      }
   
-    const end = new Date(start);
-    end.setHours(23, 59, 59, 999);  // Set to end of the day
-        end.setMonth(start.getMonth() + monthsToAdd);
+      // Fetch the plan and populate the category
+      const plan = await Plan_Modal.findById(plan_id)
+        .populate('category')
+        .exec();
+  
+      if (!plan) {
+        return res.status(404).json({ status: false, message: 'Plan not found' });
+      }
+  
+      // Map plan validity to months
+      const validityMapping = {
+        '1 month': 1,
+        '3 months': 3,
+        '6 months': 6,
+        '9 months': 9,
+        '1 year': 12,
+        '2 years': 24,
+        '3 years': 36,
+        '4 years': 48,
+        '5 years': 60
+      };
+  
+      const monthsToAdd = validityMapping[plan.validity];
+      if (monthsToAdd === undefined) {
+        return res.status(400).json({ status: false, message: 'Invalid plan validity period' });
+      }
+  
+      const start = new Date();
+      const end = new Date(start);
+      end.setHours(23, 59, 59, 999);  // Set end date to the end of the day
+      end.setMonth(start.getMonth() + monthsToAdd);  // Add the plan validity duration
+  
+      // Split the services in the category if they exist
+      const planservice = plan.category.service;
+      const planservices = planservice ? planservice.split(',') : [];
+  
+      // Loop through each service ID and update or add the plan
+      for (const serviceId of planservices) {
+        const existingPlan = await Planmanage.findOne({ clientid: client_id, serviceid: serviceId }).exec();
 
+        if (existingPlan) {
+            // If the plan exists and the end date is still valid, extend it
+            if (existingPlan.enddate && existingPlan.enddate > new Date()) {
+               existingPlan.enddate.setMonth(existingPlan.enddate.getMonth() + monthsToAdd);
+            } else {
+                existingPlan.enddate = end;  // Set new end date if it has expired
+            }
+        
+            existingPlan.startdate = start;  // Update startdate
+        
+            try {
+              const savedPlan = await Planmanage.updateOne(
+                { _id: existingPlan._id },  // Filter: find the document by its ID
+                { $set: { 
+                    enddate: existingPlan.enddate,  // Set the new end date
+                    startdate: existingPlan.startdate // Set the new start date
+                } }  // Update fields
+            );
+              //  const savedPlan = await existingPlan.save();  
+                console.log("Plan updated successfully:", savedPlan);
+            } catch (error) {
+                console.error("Error saving updated plan:", error);
+            }
+        } else {
+            // If the plan does not exist, create a new one
+            const newPlanManage = new Planmanage({
+                clientid: client_id,
+                serviceid: serviceId,
+                startdate: start,
+                enddate: end,
+            });
+        
+            try {
+                await newPlanManage.save();  // Save the new plan
+                console.log(`Added new record for service ID: ${serviceId}`);
+            } catch (error) {
+                console.error("Error saving new plan:", error);
+            }
+        }
+        
+      }
+  
+      // Create a new plan subscription record
+      const newSubscription = new PlanSubscription_Modal({
+        plan_id,
+        client_id,
+        total: plan.price,
+        plan_price: price,
+        discount: discount,
+        plan_start: start,
+        plan_end: end,
+      });
+  
+      // Save the subscription
+      const savedSubscription = await newSubscription.save();
+  
+      const client = await Clients_Modal.findOne({ _id: client_id, del: 0, ActiveStatus: 1 });
 
+      if (!client) {
+          return console.error('Client not found or inactive.');
+      }
+      
+      const refertokens = await Refer_Modal.find({ user_id: client._id, status: 0 });
+      if (refertokens.length > 0) {
+          for (const refertoken of refertokens) {
+              const senderamount = (plan.price * refertoken.senderearn) / 100;
+              const receiveramount = (plan.price * refertoken.receiverearn) / 100;
+      
+              refertoken.senderamount = senderamount; 
+              refertoken.receiveramount = receiveramount; 
+              refertoken.status = 1; 
+      
+              await refertoken.save();
+      
+              // Update client's wallet amount
+              client.wamount += receiveramount; 
+              await client.save();
+      
+              // Update sender's wallet amount
+              const sender = await Clients_Modal.findOne({ refer_token: refertoken.token, del: 0, ActiveStatus: 1 });
+              
+              if (sender) {
+                  sender.wamount += senderamount; 
+                  await sender.save();
+              } else {
+                  console.error(`Sender not found or inactive for user_id: ${refertoken.user_id}`);
+              }
+          }
+      } else {
+          console.log('No referral tokens found.');
+      }
 
-
-
-    // Create a new subscription
-    const newSubscription = new PlanSubscription_Modal({
-      plan_id,
-      client_id,
-      total:plan.price,
-      plan_price:price,
-      discount:discount,
-      plan_start:start,
-      plan_end:end
-    });
-
-    // Save to the database
-    const savedSubscription = await newSubscription.save();
-
-    // Respond with the created subscription
-    return res.status(201).json({
-      status: true,
-      message: 'Subscription added successfully',
-      data: savedSubscription
-    });
-
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ status: false, message: 'Server error', data: [] });
+      // Return success response
+      return res.status(201).json({
+        status: true,
+        message: 'Subscription added successfully',
+        data: savedSubscription,
+      });
+  
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ status: false, message: 'Server error', data: [] });
+    }
   }
-}
-
-
+  
   
    // Controller function to add a new plan subscription
    async  addBasketSubscription(req, res) {

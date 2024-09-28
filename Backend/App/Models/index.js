@@ -23,6 +23,10 @@ module.exports = {
     Content: require("./Content"),
     BasketSubscription: require("./BasketSubscription"),
     Mailtemplate: require("./Mailtemplate"),
+    Planmanage: require("./Planmanage"),
+    Payout: require("./Payout"),
+
+
 
 
 

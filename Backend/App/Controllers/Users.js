@@ -4,6 +4,11 @@ const crypto = require('crypto');
 const Users_Modal = db.Users;
 const BasicSetting_Modal = db.BasicSetting;
 const { sendEmail } = require('../Utils/emailService');
+const Mailtemplate_Modal = db.Mailtemplate;
+const path = require('path');
+const fs = require('fs');
+
+
 
 class Users {
 
@@ -426,6 +431,7 @@ class Users {
   async forgotPassword(req, res) {
 
     try {
+     
       const { Email } = req.body;
 
       if (!Email) {
@@ -442,7 +448,7 @@ class Users {
           message: "User with this email does not exist",
         });
       }
-
+     
       // Generate a reset token
       const resetToken = crypto.randomBytes(20).toString('hex');
 
@@ -456,19 +462,48 @@ class Users {
       if (!settings || !settings.smtp_status) {
         throw new Error('SMTP settings are not configured or are disabled');
       }
-      // Email options
-      const mailOptions = {
-        to: user.Email,
-        from: `${settings.from_name} <${settings.from_mail}>`, // Include business name
-        subject: 'Password Reset',
-        text: `You are receiving this because you (or someone else) have requested to reset the password for your account.\n\n
-               Please click on the following link, or paste it into your browser to complete the process:\n\n
-               http://${req.headers.host}/reset-password/${resetToken}\n\n
-               If you did not request this, please ignore this email and your password will remain unchanged.\n`,
-      };
 
-      // Send email
-      await sendEmail(mailOptions);
+
+      
+      const mailtemplate = await Mailtemplate_Modal.findOne({ mail_type: 'staff_reset_password' }); // Use findOne if you expect a single document
+      if (!mailtemplate || !mailtemplate.mail_body) {
+          throw new Error('Mail template not found');
+      }
+     
+      const templatePath = path.join(__dirname, '../../template', 'mailtemplate.html');
+      
+      
+      fs.readFile(templatePath, 'utf8', async (err, htmlTemplate) => {
+        if (err) {
+            console.error('Error reading HTML template:', err);
+            return;
+        }
+        const url =`http://${req.headers.host}/reset-password/${resetToken}`;
+        
+        const logo =`http://${req.headers.host}/uploads/basicsetting/${settings.logo}`;
+
+
+        const finalMailBody = mailtemplate.mail_body.replace('{url}', url);
+        // Replace placeholders with actual values
+        const finalHtml = htmlTemplate
+            .replace(/{{company_name}}/g, settings.website_title)
+            .replace(/{{body}}/g, finalMailBody)
+            .replace(/{{logo}}/g, logo)
+            .replace(/{{resetToken}}/g, resetToken);
+    
+        // Email options
+        const mailOptions = {
+            to: user.Email,
+            from: `${settings.from_name} <${settings.from_mail}>`, // Include business name
+            subject: `${mailtemplate.mail_subject}`,
+            html: finalHtml // Use the HTML template with dynamic variables
+        };
+    
+        // Send email
+        await sendEmail(mailOptions);
+    });
+
+
 
       return res.json({
         status: true,

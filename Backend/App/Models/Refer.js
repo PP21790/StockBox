@@ -9,9 +9,9 @@ const ReferSchema = new Schema({
         trim: true
     },
     user_id: {
-        type: Schema.Types.ObjectId,
-        ref: 'User', // Assuming there's a 'User' model to reference
-        required: true
+        type: String,
+        required: true,
+        trim: true
     },
     senderearn: {
         type: Number,
@@ -22,6 +22,20 @@ const ReferSchema = new Schema({
         type: Number,
         default: 0,
         min: 0
+    },
+    senderamount: {
+        type: Number,
+        default: 0,
+        min: 0
+    },
+    receiveramount: {
+        type: Number,
+        default: 0,
+        min: 0
+    },
+    status: {
+        type: Number,
+        default: 0,
     },
     del: {
         type: Boolean,

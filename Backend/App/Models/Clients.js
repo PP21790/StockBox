@@ -62,6 +62,11 @@ const clientsModel = Schema({
         trim: true,
         default: null
     },
+    wamount: {
+        type: Number,
+        default: 0,
+        min: 0
+    },
     del: {
         type: String,
         enum: ['1', '0'],
