@@ -29,7 +29,6 @@ const signalModel = Schema({
     },
     callperiod: {
         type: String,
-        required: true,
         trim: true,
         default: null
     },

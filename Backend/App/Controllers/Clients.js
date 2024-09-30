@@ -52,8 +52,7 @@ class Clients {
       add_by: add_by,
       refer_token:refer_token,
       token:refer_token,
-      
-      
+      ActiveStatus:1
       })
      
 

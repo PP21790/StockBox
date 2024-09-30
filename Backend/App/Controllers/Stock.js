@@ -125,23 +125,46 @@ class Stock {
       }
 
       // Build query
-      const query = {
-          symbol: symbol,
-          segment: segment,
-          option_type:"PE",
-        //  expiry_date: { '$gte': currentDate.getDate() }, // Current day or greater
-          expiry_month_year: { '$in': expiryMonths } // Using dynamic expiry months
-      };
+    // Build aggregation pipeline
+    const pipeline = [
+      {
+          $match: {
+              symbol: symbol,
+              segment: segment,
+              option_type: "PE",
+              expiry_month_year: { $in: expiryMonths }
+          }
+      },
+      {
+          $group: {
+              _id: "$expiry", // Group by expiry date
+              stock: { $first: "$$ROOT" } // Get the first document for each expiry
+          }
+      },
+      {
+          $project: {
+              expiry: "$_id", // Rename _id to expiry
+              stock: 1, // Include the stock document
+              _id: 0 // Exclude the original _id field from the output
+          }
+      },
+      {
+          $sort: { expiry: 1 } // Optional: Sort by expiry date in ascending order
+      }
+  ];
 
-      // Execute the query
-      const result = await Stock_Modal.find(query);
+  // Execute the aggregation
+  const result = await Stock_Modal.aggregate(pipeline);
 
-      return res.json({
-          status: true,
-          message: "Stocks retrieved successfully",
-          data: result
-      });
+  // Log the result of aggregation for debugging
+  console.log("Aggregation Result:", JSON.stringify(result, null, 2));
 
+  return res.json({
+      status: true,
+      message: "Stocks retrieved successfully",
+      data: result
+  });
+    
   } catch (error) {
       console.error("Error executing query:", error);
       return res.json({ status: false, message: "Server error", data: [] });

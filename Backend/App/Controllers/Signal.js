@@ -20,11 +20,21 @@ class Signal {
         });
 
 
-            const { price,service,calltype,stock,tag1,tag2,tag3,stoploss,description,callduration,callperiod,add_by,expirydate,segment,optiontype } = req.body;
+            const { price,calltype,stock,tag1,tag2,tag3,stoploss,description,callduration,callperiod,add_by,expirydate,segment,optiontype } = req.body;
         
             const report = req.files['report'] ? req.files['report'][0].filename : null;
 
-
+if(segment=="C")
+{
+    service = "66d2c3bebf7e6dc53ed07626";
+}
+else if(segment=="O")
+{
+  service = "66dfeef84a88602fbbca9b79";
+}
+else{
+  service = "66dfede64a88602fbbca9b72";
+}
          
             const result = new Signal_Modal({
               price: price,
@@ -262,8 +272,18 @@ arr.push({...data._doc,Ttype:"0"});
 if(closetype==1)
 {
   close_status = true;
+  if(targetprice3) {
   closeprice = targetprice3;
-  closedate= new Date() ;
+  }
+  else if(targetprice2)
+  {
+    closeprice = targetprice2;
+  }
+  else
+  {
+    closeprice = targetprice1;
+  }
+    closedate= new Date() ;
 }
 if(closetype==2)
   {
