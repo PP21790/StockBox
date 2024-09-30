@@ -33,6 +33,9 @@ const AddSignal = () => {
     }
   };
 
+
+
+
   const formik = useFormik({
     initialValues: {
       add_by: user_id,
@@ -47,8 +50,9 @@ const AddSignal = () => {
       description: '',
       callduration: '',
       calltype: '',
-      expirydate: '',
+      expiry: '',
       optiontype: '',
+
     },
     validate: (values) => {
       console.log("values", values)
@@ -63,15 +67,15 @@ const AddSignal = () => {
       if (values.segment === "O" && !values.optiontype) {
         errors.optiontype = 'Please enter option type';
       };
-      if (values.segment === "O" || values.segment === "F"  && !values.expirydate) {
-        errors.expirydate = 'Please enter expirydate';
+      if (values.segment === "C" && !values.expiry) {
+        errors.expiry = 'Please enter expirydate';
       }
       return errors;
     },
     onSubmit: async (values) => {
       const req = {
         add_by: user_id,
-        stock: selectitem,
+        stock: values.stock,
         price: values.price,
         tag1: values.tag1,
         tag2: values.tag2,
@@ -81,7 +85,7 @@ const AddSignal = () => {
         report: values.report,
         calltype: values.calltype,
         callduration: values.callduration,
-        expirydate: values.expirydate,
+        expirydate: values.expiry,
         segment: values.segment,
         optiontype: values.optiontype,
       };
@@ -120,41 +124,68 @@ const AddSignal = () => {
     }
   });
 
+
+
+  useEffect(() => {
+    if (formik.values.segment) {
+      formik.setValues({
+        add_by: user_id,
+        segment: formik.values.segment,
+        price: '',
+        stock: '',
+        tag1: '',
+        tag2: '',
+        tag3: '',
+        stoploss: '',
+        report: '',
+        description: '',
+        callduration: '',
+        calltype: '',
+        expiry: '',
+        optiontype: '',
+       
+      });
+
+      setSearchItem("")
+    }
+  }, [formik.values.segment]);
+
+
+
   useEffect(() => {
     const fetchStockData = async () => {
       if (formik.values.segment && searchItem) {
         const data = { segment: formik.values.segment, symbol: searchItem };
 
         try {
-          const res = await getstockbyservice(data);
-          if (res.status) {
-            setStockList(res.data);
+          // Fetch stock data
+          const stockResponse = await getstockbyservice(data);
+          if (stockResponse.status) {
+            setStockList(stockResponse.data);
           } else {
-            console.log("Failed to fetch data", res);
+            console.log("Failed to fetch stock data", stockResponse);
           }
-        } catch (error) {
-          console.log("Error fetching stock by segment:", error);
-        }
-      }
 
-      if (formik.values.segment && searchItem) {
-        const data = { segment: formik.values.segment, symbol: searchItem };
-
-        try {
-          const res = await getexpirydate(data);
-          if (res.status) {
-            setExpirydate(res.data);
+          // Fetch expiry date
+          const expiryResponse = await getexpirydate(data);
+          if (expiryResponse.status) {
+            setExpirydate(expiryResponse.data);
+            console.log("Expiry date data:", expiryResponse.data);
           } else {
-            console.log("Failed to fetch data", res);
+            console.log("Failed to fetch expiry date", expiryResponse);
           }
+
         } catch (error) {
-          console.log("Error fetching expiry date:", error);
+          console.log("Error fetching stock or expiry date:", error);
         }
       }
     };
 
     fetchStockData();
   }, [formik.values.segment, searchItem]);
+
+
+
 
   const fields = [
     {
@@ -170,17 +201,18 @@ const AddSignal = () => {
       col_size: 8,
     },
     {
-      name: 'expiry_str',
+      name: 'expiry',
       label: 'Expiry Date',
       type: 'select',
       label_size: 12,
       col_size: 6,
       options: expirydate.map((item) => ({
-        label: item.expiry_str,
-        value: item.expiry_str,
+        label: item.expiry,
+        value: item.expiry,
       })),
       showWhen: (values) => values.segment !== "C",
     },
+
     formik.values.segment !== "O" ? {
       name: 'price',
       label: 'Price',
@@ -199,8 +231,8 @@ const AddSignal = () => {
       label: 'Option Type',
       type: 'select',
       options: [
-        { label: 'Put', value: 'put' },
-        { label: 'Call', value: 'call' },
+        { label: 'Put', value: 'PE' },
+        { label: 'Call', value: 'CE' },
       ],
       label_size: 12,
       col_size: 6,
@@ -350,8 +382,7 @@ const AddSignal = () => {
                         key={company._id}
                         onClick={() => {
                           setSearchItem(company._id);
-                          setSelectitem(company._id); 
-                          formik.setFieldValue("stock", company._id); 
+                          formik.setFieldValue("stock", company._id);
                           setShowDropdown(false);
                         }}
                         style={dropdownItemStyles}

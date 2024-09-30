@@ -20,7 +20,7 @@ class Signal {
       });
 
 
-      const { price, calltype, stock, tag1, tag2, tag3, stoploss, description, callduration, callperiod, add_by, expirydate, segment, optiontype } = req.body;
+      const { price, calltype, stock, tag1, tag2, tag3, stoploss, description, callduration, callperiod, add_by, expirydate, segment, optiontype,report } = req.body;
 
       var service
       if (segment == "C") {

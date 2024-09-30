@@ -156,9 +156,11 @@ class Stock {
   // Execute the aggregation
   const result = await Stock_Modal.aggregate(pipeline);
 
+  
   // Log the result of aggregation for debugging
-  console.log("Aggregation Result:", JSON.stringify(result, null, 2));
-
+  // console.log("Aggregation Result:", JSON.stringify(result, null, 2));
+ console.log("result",result)
+   
   return res.json({
       status: true,
       message: "Stocks retrieved successfully",

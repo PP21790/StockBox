@@ -1750,7 +1750,7 @@ export async function getexpirydate(data, token) {
                 'Authorization': `${token}`,
             },
         });
-
+console.log("data",res.data)
         return res?.data;
     } catch (err) {
 
