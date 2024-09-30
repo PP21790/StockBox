@@ -55,7 +55,7 @@ const AddSignal = () => {
 
     },
     validate: (values) => {
-      console.log("values", values)
+    
       const errors = {};
       if (!values.segment) errors.segment = 'Please select a segment';
       if (!values.stock) errors.stock = 'Please select a stock';
@@ -70,6 +70,7 @@ const AddSignal = () => {
       if (values.segment === "C" && !values.expiry) {
         errors.expiry = 'Please enter expirydate';
       }
+      console.log("errors", errors)
       return errors;
     },
     onSubmit: async (values) => {
@@ -143,7 +144,7 @@ const AddSignal = () => {
         calltype: '',
         expiry: '',
         optiontype: '',
-       
+
       });
 
       setSearchItem("")
@@ -158,7 +159,6 @@ const AddSignal = () => {
         const data = { segment: formik.values.segment, symbol: searchItem };
 
         try {
-          // Fetch stock data
           const stockResponse = await getstockbyservice(data);
           if (stockResponse.status) {
             setStockList(stockResponse.data);
@@ -166,7 +166,7 @@ const AddSignal = () => {
             console.log("Failed to fetch stock data", stockResponse);
           }
 
-          // Fetch expiry date
+       
           const expiryResponse = await getexpirydate(data);
           if (expiryResponse.status) {
             setExpirydate(expiryResponse.data);
@@ -382,7 +382,7 @@ const AddSignal = () => {
                         key={company._id}
                         onClick={() => {
                           setSearchItem(company._id);
-                          formik.setFieldValue("stock", company._id);
+                          formik.setFieldValue("stock",company._id);
                           setShowDropdown(false);
                         }}
                         style={dropdownItemStyles}
