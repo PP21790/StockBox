@@ -20,51 +20,59 @@ class Signal {
       });
 
 
-            const { price,service,calltype,stock,tag1,tag2,tag3,stoploss,description,callduration,callperiod,add_by,expirydate,segment,optiontype } = req.body;
-        
-            const report = req.files['report'] ? req.files['report'][0].filename : null;
+      const { price, calltype, stock, tag1, tag2, tag3, stoploss, description, callduration, callperiod, add_by, expirydate, segment, optiontype } = req.body;
 
+      const report = req.files['report'] ? req.files['report'][0].filename : null;
 
-         
-            const result = new Signal_Modal({
-              price: price,
-              service: service,
-              calltype: calltype,
-              callduration:callduration,
-              callperiod:callperiod,
-              stock: stock,
-              tag1: tag1,
-              tag2: tag2,
-              tag3:tag3,
-              stoploss: stoploss,
-              description: description,
-              report: report,
-              add_by:add_by,
-              expirydate: expirydate,
-              segment:segment,
-              optiontype: optiontype,
-          });
-    
-            await result.save();
-    
-            return res.json({
-                status: true,
-                message: "Signal added successfully",
-                data: result,
-            });
-    
-        } catch (error) {
-            // Enhanced error logging
-            console.error("Error adding Signal:", error);
-    
-            return res.status(500).json({
-                status: false,
-                message: "Server error",
-                error: error.message,
-            });
-        }
+      if (segment == "C") {
+        service = "66d2c3bebf7e6dc53ed07626";
+      }
+      else if (segment == "O") {
+        service = "66dfeef84a88602fbbca9b79";
+      }
+      else {
+        service = "66dfede64a88602fbbca9b72";
+      }
+
+      const result = new Signal_Modal({
+        price: price,
+        service: service,
+        calltype: calltype,
+        callduration: callduration,
+        callperiod: callperiod,
+        stock: stock,
+        tag1: tag1,
+        tag2: tag2,
+        tag3: tag3,
+        stoploss: stoploss,
+        description: description,
+        report: report,
+        add_by: add_by,
+        expirydate: expirydate,
+        segment: segment,
+        optiontype: optiontype,
+      });
+
+      await result.save();
+
+      return res.json({
+        status: true,
+        message: "Signal added successfully",
+        data: result,
+      });
+
+    } catch (error) {
+      // Enhanced error logging
+      console.error("Error adding Signal:", error);
+
+      return res.status(500).json({
+        status: false,
+        message: "Server error",
+        error: error.message,
+      });
     }
-  
+  }
+
 
 
   /*async getSignal(req, res) {
@@ -262,7 +270,15 @@ class Signal {
 
       if (closetype == 1) {
         close_status = true;
-        closeprice = targetprice3;
+        if (targetprice3) {
+          closeprice = targetprice3;
+        }
+        else if (targetprice2) {
+          closeprice = targetprice2;
+        }
+        else {
+          closeprice = targetprice1;
+        }
         closedate = new Date();
       }
       if (closetype == 2) {
@@ -271,66 +287,84 @@ class Signal {
         if (closestatus) {
           if (targetprice3) {
             closeprice = targetprice3;
-          } else if (targetprice2) {
-            closeprice = targetprice2;
-          } else {
-            closeprice = targetprice1;
+            closedate = new Date();
           }
-          closedate = new Date();
+          if (closetype == 2) {
+
+            close_status = closestatus;
+            if (closestatus) {
+              if (targetprice3) {
+                closeprice = targetprice3;
+              } else if (targetprice2) {
+                closeprice = targetprice2;
+              } else {
+                closeprice = targetprice1;
+              }
+              closedate = new Date();
+            }
+          }
+
+          if (closetype == 3) {
+            close_status = true;
+            closeprice = slprice;
+            closedate = new Date();
+          }
+          if (closetype == 4) {
+            close_status = true;
+            closeprice = exitprice;
+            closedate = new Date();
+          }
+
+          if (!id) {
+            return res.status(400).json({
+              status: false,
+              message: "Signal ID is required",
+            });
+          }
+
+
+          const updatedSignal = await Signal_Modal.findByIdAndUpdate(
+            id,
+            {
+              closeprice: closeprice,
+              close_status: close_status,
+              close_description,
+              targethit1,
+              targethit2,
+              targethit3,
+              targetprice1,
+              targetprice2,
+              targetprice3,
+              closedate: closedate
+            },
+            { signal: true, runValidators: true } // Options: return the updated document and run validators
+          );
+
+          if (!updatedSignal) {
+            return res.status(404).json({
+              status: false,
+              message: "Signal not found",
+            });
+          }
+
+          console.log("Close Signal:", updatedSignal);
+          return res.json({
+            status: true,
+            message: "Signal Closed successfully",
+            data: updatedSignal,
+          });
+
+        } catch (error) {
+          console.log("Error updating Signal:", error);
+          return res.status(500).json({
+            status: false,
+            message: "Server error",
+            error: error.message,
+          });
         }
       }
-
-      if (closetype == 3) {
-        close_status = true;
-        closeprice = slprice;
-        closedate = new Date();
-      }
-      if (closetype == 4) {
-        close_status = true;
-        closeprice = exitprice;
-        closedate = new Date();
-      }
-
-      if (!id) {
-        return res.status(400).json({
-          status: false,
-          message: "Signal ID is required",
-        });
-      }
-
-
-      const updatedSignal = await Signal_Modal.findByIdAndUpdate(
-        id,
-        {
-          closeprice: closeprice,
-          close_status: close_status,
-          close_description,
-          targethit1,
-          targethit2,
-          targethit3,
-          targetprice1,
-          targetprice2,
-          targetprice3,
-          closedate: closedate
-        },
-        { signal: true, runValidators: true } // Options: return the updated document and run validators
-      );
-
-      if (!updatedSignal) {
-        return res.status(404).json({
-          status: false,
-          message: "Signal not found",
-        });
-      }
-
-      console.log("Close Signal:", updatedSignal);
-      return res.json({
-        status: true,
-        message: "Signal Closed successfully",
-        data: updatedSignal,
-      });
-
-    } catch (error) {
+    }
+    catch (error) {
       console.log("Error updating Signal:", error);
       return res.status(500).json({
         status: false,
