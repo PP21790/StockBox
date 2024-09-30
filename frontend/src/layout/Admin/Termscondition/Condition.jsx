@@ -528,7 +528,92 @@ const Condition = () => {
                         </div>
                     </div>
                 </div>
+
+
+
+
+
+
+
+
+                <div className="row">
+                    <div className="col-lg-4">
+                        <div className="card">
+                            <div className="card-body">
+                                <div className='d-flex'>
+                                    <div className='mb-2'>
+                                        <h5 className="card-title text-primary">Terms & Condition</h5>
+                                    </div>
+                                    <div>
+                                        <Tooltip placement="top" overlay="Delete">
+                                            <Trash2 />
+                                        </Tooltip>
+                                    </div>
+                                </div>
+                                
+                                <hr />
+                               
+                                <div className='mb-2'>
+                                    <label htmlFor="">Description</label>
+                                    <textarea type="text" className='form-control' />
+                                </div>
+                                <hr />
+                                <a href="javascript:void();" className="btn btn-outline-primary">
+                                    Update
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-lg-4">
+                        <div className="card">
+                            <div className="card-body">
+                                <h5 className="card-title text-success">Privacy & Policy</h5>
+                                <hr />
+
+                                <div className='mb-2'>
+                                    <label htmlFor="">Title</label>
+                                    <input type="text" className='form-control' />
+                                </div>
+                                <div className='mb-2'>
+                                    <label htmlFor="">Description</label>
+                                    <textarea type="text" className='form-control' />
+                                </div>
+                                <hr />
+                                <a href="javascript:void();" className="btn btn-outline-success">
+                                    Update
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-lg-4">
+                        <div className="card">
+                            <div className="card-body">
+                                <h5 className="card-title text-danger">World</h5>
+                                <hr />
+                                <div className='mb-2'>
+                                    <label htmlFor="">Title</label>
+                                    <input type="text" className='form-control' />
+                                </div>
+                                <div className='mb-2'>
+                                    <label htmlFor="">Description</label>
+                                    <textarea type="text" className='form-control' />
+                                </div>
+                                <hr />
+                                <a href="javascript:void();" className="btn btn-outline-danger">
+                                    Update
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
+
+
+
+
+
+
         </div>
     );
 };
