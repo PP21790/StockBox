@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import DynamicForm from '../../../components/FormicForm';
-import { AddSignalByAdmin, GetService, getstockbyservice } from '../../../Services/Admin';
+import { AddSignalByAdmin, GetService, getstockbyservice, getexpirydate } from '../../../Services/Admin';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-
-
 
 const AddSignal = () => {
   const navigate = useNavigate();
@@ -14,17 +12,15 @@ const AddSignal = () => {
 
   const [serviceList, setServiceList] = useState([]);
   const [stockList, setStockList] = useState([]);
+  const [expirydate, setExpirydate] = useState([]);
+
   const [searchItem, setSearchItem] = useState("");
-
-
-
-
-
+  const [selectitem, setSelectitem] = useState("");
   const [showDropdown, setShowDropdown] = useState(true);
+
   useEffect(() => {
     fetchAdminServices();
   }, []);
-
 
   const fetchAdminServices = async () => {
     try {
@@ -36,21 +32,6 @@ const AddSignal = () => {
       console.log('Error fetching services:', error);
     }
   };
-
-console.log("searchItem",searchItem)
-
-  // const fetchStockList = async () => {
-  //   try {
-  //     const response = await getstockbyservice(token);
-  //     if (response.status) {
-  //       setStockList(response.data);
-  //     }
-  //   } catch (error) {
-  //     console.log('Error fetching stock list:', error);
-  //   }
-  // };
-
-
 
   const formik = useFormik({
     initialValues: {
@@ -70,26 +51,27 @@ console.log("searchItem",searchItem)
       optiontype: '',
     },
     validate: (values) => {
+      console.log("values", values)
       const errors = {};
       if (!values.segment) errors.segment = 'Please select a segment';
       if (!values.stock) errors.stock = 'Please select a stock';
       if (!values.price) errors.price = 'Please select a price';
       if (!values.tag1) errors.tag1 = 'Please enter Target-1';
-      // if (!values.tag2) errors.tag2 = 'Please enter Target-2';
-      // if (!values.tag3) errors.tag3 = 'Please enter Target-3';
-      // if (!values.stoploss) errors.stoploss = 'Please enter Stoploss';
       if (!values.callduration) errors.callduration = 'Please enter Trade duration';
       if (!values.calltype) errors.calltype = 'Please enter Call Calltype';
-      if (!values.callperiod) errors.callperiod = 'Please enter call Period';
       if (!values.description) errors.description = 'Please enter description';
-      if (!values.expirydate) errors.expirydate = 'Please enter expirydate';
-      if (!values.optiontype) errors.optiontype = 'Please enter optiontype';
+      if (values.segment === "O" && !values.optiontype) {
+        errors.optiontype = 'Please enter option type';
+      };
+      if (values.segment === "O" || values.segment === "F"  && !values.expirydate) {
+        errors.expirydate = 'Please enter expirydate';
+      }
       return errors;
     },
     onSubmit: async (values) => {
       const req = {
         add_by: user_id,
-        stock: values.stock,
+        stock: selectitem,
         price: values.price,
         tag1: values.tag1,
         tag2: values.tag2,
@@ -102,14 +84,10 @@ console.log("searchItem",searchItem)
         expirydate: values.expirydate,
         segment: values.segment,
         optiontype: values.optiontype,
-
       };
+
       try {
         const response = await AddSignalByAdmin(req, token);
-
-        console.log("response", response)
-
-        return
         if (response.status) {
           Swal.fire({
             title: 'Create Successful!',
@@ -142,65 +120,80 @@ console.log("searchItem",searchItem)
     }
   });
 
+  useEffect(() => {
+    const fetchStockData = async () => {
+      if (formik.values.segment && searchItem) {
+        const data = { segment: formik.values.segment, symbol: searchItem };
 
-  // console.log("formik.values.service :", formik.values.service)
+        try {
+          const res = await getstockbyservice(data);
+          if (res.status) {
+            setStockList(res.data);
+          } else {
+            console.log("Failed to fetch data", res);
+          }
+        } catch (error) {
+          console.log("Error fetching stock by segment:", error);
+        }
+      }
 
+      if (formik.values.segment && searchItem) {
+        const data = { segment: formik.values.segment, symbol: searchItem };
+
+        try {
+          const res = await getexpirydate(data);
+          if (res.status) {
+            setExpirydate(res.data);
+          } else {
+            console.log("Failed to fetch data", res);
+          }
+        } catch (error) {
+          console.log("Error fetching expiry date:", error);
+        }
+      }
+    };
+
+    fetchStockData();
+  }, [formik.values.segment, searchItem]);
 
   const fields = [
     {
       name: 'segment',
       label: 'Select Segment',
       type: 'select2',
-      // options: serviceList.map((item) => ({
-      //   label: item.title,
-      //   value: item._id ,
-      // })),
       options: [
         { label: 'Cash', value: 'C' },
         { label: 'Future', value: 'F' },
         { label: 'Option', value: 'O' },
-
       ],
       label_size: 12,
-      col_size: 6,
-      disable: false,
+      col_size: 8,
     },
-
-
-
     {
-      name: 'expirydate',
+      name: 'expiry_str',
       label: 'Expiry Date',
       type: 'select',
       label_size: 12,
       col_size: 6,
-      options: stockList.map((item) => ({
+      options: expirydate.map((item) => ({
         label: item.expiry_str,
         value: item.expiry_str,
       })),
-      showWhen: (values) => values.segment != "C",
-
-      disable: false,
+      showWhen: (values) => values.segment !== "C",
     },
-    formik.values.segment != "O" ? {
+    formik.values.segment !== "O" ? {
       name: 'price',
       label: 'Price',
       type: 'number',
       label_size: 12,
       col_size: 6,
-      showWhen: (values) => values.segment != "O",
-      disable: false,
-      optional: false
     } : {
       name: 'price',
       label: 'Strike Price',
       type: 'number',
       label_size: 12,
       col_size: 6,
-      disable: false,
-      optional: false
     },
-    ,
     {
       name: 'optiontype',
       label: 'Option Type',
@@ -212,7 +205,6 @@ console.log("searchItem",searchItem)
       label_size: 12,
       col_size: 6,
       showWhen: (values) => values.segment === "O",
-      disable: false,
     },
     {
       name: 'calltype',
@@ -224,7 +216,6 @@ console.log("searchItem",searchItem)
       ],
       label_size: 12,
       col_size: 6,
-      disable: false,
     },
     {
       name: 'callduration',
@@ -259,8 +250,6 @@ console.log("searchItem",searchItem)
       })(),
       label_size: 12,
       col_size: 6,
-      disable: false,
-
     },
     {
       name: 'tag1',
@@ -268,8 +257,6 @@ console.log("searchItem",searchItem)
       type: 'number',
       label_size: 6,
       col_size: 3,
-      disable: false,
-      optional: false
     },
     {
       name: 'tag2',
@@ -277,7 +264,6 @@ console.log("searchItem",searchItem)
       type: 'number',
       label_size: 12,
       col_size: 3,
-      disable: false,
     },
     {
       name: 'tag3',
@@ -285,7 +271,6 @@ console.log("searchItem",searchItem)
       type: 'number',
       label_size: 12,
       col_size: 3,
-      disable: false,
     },
     {
       name: 'stoploss',
@@ -293,61 +278,22 @@ console.log("searchItem",searchItem)
       type: 'number',
       label_size: 12,
       col_size: 3,
-      disable: false,
     },
-
     {
       name: 'report',
       label: 'Report',
       type: 'file2',
       label_size: 12,
       col_size: 6,
-      disable: false,
-
     },
-
     {
       name: 'description',
       label: 'Description',
       type: 'text5',
       label_size: 12,
       col_size: 12,
-      disable: false,
     },
-
   ];
-
-
-
-  useEffect(() => {
-    const fetchStockData = async () => {
-     
-
-      if (formik.values.segment && searchItem) {
-        const data = { segment: formik.values.segment, symbol: searchItem };
-
-        try {
-          const res = await getstockbyservice(data);
-          if (res.status) {
-            setStockList(res.data)
-          } else {
-            console.log("Failed to fetch data", res);
-          }
-        } catch (error) {
-          console.log("Error fetching stock by segment:", error);
-        }
-      }
-    };
-
-    fetchStockData();
-  }, [formik.values.segment, formik.values.stock,searchItem]);
-
-
-  useEffect(() => {
-    // formik.setFieldValue("expirydate", "")
-    // formik.setFieldValue("callduration", "")
-    // formik.setFieldValue("stock", "")
-  }, [formik.values])
 
   const dropdownStyles = {
     position: 'absolute',
@@ -361,73 +307,65 @@ console.log("searchItem",searchItem)
     overflowY: 'auto',
     zIndex: 1000,
   };
-  
+
   const dropdownItemStyles = {
     padding: '8px 16px',
     cursor: 'pointer',
     borderBottom: '1px solid #ddd',
   };
-  
-  
+
   return (
-    <div>
-      <div style={{ marginTop: '100px' }}>
-        <DynamicForm
-          fields={fields.filter(field => !field.showWhen || field.showWhen(formik.values))}
-          page_title="Add Signal"
-          btn_name="Add Signal"
-          btn_name1="Cancel"
-          formik={formik}
-          sumit_btn={true}
-          btn_name1_route="/admin/signal"
-          additional_field1={
-            <>
+    <div style={{ marginTop: '100px' }}>
+      <DynamicForm
+        fields={fields.filter(field => !field.showWhen || field.showWhen(formik.values))}
+        page_title="Add Signal"
+        btn_name="Add Signal"
+        btn_name1="Cancel"
+        formik={formik}
+        sumit_btn={true}
+        btn_name1_route="/admin/signal"
+        additional_field1={
+          <div className="mb-3">
+            <div className="position-relative">
+              <label className="form-label">Select Stock</label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search Company"
+                name="SearchCompany"
+                onChange={(e) => setSearchItem(e.target.value)}
+                value={searchItem}
+                onClick={() => setShowDropdown(true)}
+                style={{ cursor: "pointer" }}
+              />
 
-<div className="mb-3">
-  <div className="position-relative">
-    <label className="form-label">
-      Search Company
-    </label>
-    <input
-      type="text"
-      className="form-control"
-      placeholder="Search Company"
-      name="SearchCompany"
-      onChange={(e) => setSearchItem(e.target.value)}
-      value={searchItem}
-      onClick={() => setShowDropdown(true)}
-      style={{ cursor: "pointer" }}
-    />
-    
-    {/* Show dropdown if there are search results and the dropdown is visible */}
-    {searchItem && stockList.length > 0 && showDropdown ? (
-      <div className="dropdown-list" style={dropdownStyles}>
-        {stockList
-          .filter((company) => 
-            company.symbol.includes(searchItem.toUpperCase())
-          )
-          .map((company, index) => (
-            <div
-              key={index}
-              onClick={() => {
-                setSearchItem(company.symbol); // Update with the selected company's symbol
-                setShowDropdown(false); // Hide dropdown on selection
-              }}
-              style={dropdownItemStyles}
-            >
-              {company.symbol}
+              {searchItem && stockList.length > 0 && showDropdown ? (
+                <div className="dropdown-list" style={dropdownStyles}>
+                  {stockList
+                    .filter((company) =>
+                      company._id.includes(searchItem.toUpperCase())
+                    )
+                    .map((company) => (
+                      <div
+                        key={company._id}
+                        onClick={() => {
+                          setSearchItem(company._id);
+                          setSelectitem(company._id); 
+                          formik.setFieldValue("stock", company._id); 
+                          setShowDropdown(false);
+                        }}
+                        style={dropdownItemStyles}
+                      >
+                        {company._id}
+                      </div>
+                    ))
+                  }
+                </div>
+              ) : null}
             </div>
-          ))
+          </div>
         }
-      </div>
-    ) : null}
-  </div>
-</div>
-
-            </>
-          }
-        />
-      </div>
+      />
     </div>
   );
 };
