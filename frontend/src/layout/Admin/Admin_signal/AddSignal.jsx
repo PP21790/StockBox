@@ -316,7 +316,7 @@ const AddSignal = () => {
       label: 'Description',
       type: 'text5',
       label_size: 12,
-      col_size: 6,
+      col_size: 12,
       disable: false,
     },
 
