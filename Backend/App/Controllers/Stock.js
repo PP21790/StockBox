@@ -123,6 +123,14 @@ class Stock {
           const year = month < currentMonth ? (parseInt(currentYear) + 1) : currentYear; // Increment year if wrapped
           expiryMonths.push(`${String(month).padStart(2, '0')}${year}`);
       }
+let option_type;
+if(segment=="F")
+{
+  option_type= "UT";
+}else 
+{
+   option_type= "PE";
+}
 
       // Build query
     // Build aggregation pipeline
@@ -131,7 +139,7 @@ class Stock {
           $match: {
               symbol: symbol,
               segment: segment,
-              option_type: "PE",
+              option_type: option_type,
               expiry_month_year: { $in: expiryMonths }
           }
       },
@@ -152,6 +160,10 @@ class Stock {
           $sort: { expiry: 1 } // Optional: Sort by expiry date in ascending order
       }
   ];
+
+
+console.log(pipeline);
+
 
   // Execute the aggregation
   const result = await Stock_Modal.aggregate(pipeline);
