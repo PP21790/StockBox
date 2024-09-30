@@ -64,10 +64,10 @@ const AddSignal = () => {
       if (!values.callduration) errors.callduration = 'Please enter Trade duration';
       if (!values.calltype) errors.calltype = 'Please enter Call Calltype';
       if (!values.description) errors.description = 'Please enter description';
-      if (values.segment === "O" && !values.optiontype) {
+      if (values.segment === "O" && !values.optiontype) { 
         errors.optiontype = 'Please enter option type';
       };
-      if (values.segment === "C" && !values.expiry) {
+      if ((values.segment === "O" || values.segment === "F") && !values.expiry) {
         errors.expiry = 'Please enter expirydate';
       }
       console.log("errors", errors)
