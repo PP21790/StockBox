@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { MoveLeft, Plus, Eye, EyeOff } from "lucide-react";
-import Select from 'react-select';
+
 
 const DynamicForm = ({
     fields,
