@@ -481,7 +481,7 @@ export async function addStaffpermission(data, token) {
 // staff detail per id
 
 export async function getstaffperuser(_id, token) {
-  console.log("_id",_id)
+
     try {
         const res = await axios.get(`${Config.base_url}user/detail/${_id}`, {
             headers: {

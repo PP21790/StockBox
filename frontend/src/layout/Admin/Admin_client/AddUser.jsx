@@ -60,9 +60,9 @@ const AddUser = () => {
         }, 1500);
       } else {
         Swal.fire({
-          title: "Error",
+          title: "Alert",
           text: response.message,
-          icon: "error",
+          icon: "warning",
           timer: 1500,
           timerProgressBar: true,
         });

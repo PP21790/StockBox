@@ -66,6 +66,8 @@ const AddSignal = () => {
       description: '',
       callduration: '',
       calltype: '',
+      expirydate: '',
+      optiontype: '',
     },
     validate: (values) => {
       const errors = {};
@@ -73,12 +75,15 @@ const AddSignal = () => {
       if (!values.stock) errors.stock = 'Please select a stock';
       if (!values.price) errors.price = 'Please select a price';
       if (!values.tag1) errors.tag1 = 'Please enter Target-1';
-      if (!values.tag2) errors.tag2 = 'Please enter Target-2';
-      if (!values.tag3) errors.tag3 = 'Please enter Target-3';
-      if (!values.stoploss) errors.stoploss = 'Please enter Stoploss';
-      if (!values.callduration) errors.callduration = 'Please enter Call duration';
+      // if (!values.tag2) errors.tag2 = 'Please enter Target-2';
+      // if (!values.tag3) errors.tag3 = 'Please enter Target-3';
+      // if (!values.stoploss) errors.stoploss = 'Please enter Stoploss';
+      if (!values.callduration) errors.callduration = 'Please enter Trade duration';
       if (!values.calltype) errors.calltype = 'Please enter Call Calltype';
       if (!values.callperiod) errors.callperiod = 'Please enter call Period';
+      if (!values.description) errors.description = 'Please enter description';
+      if (!values.expirydate) errors.expirydate = 'Please enter expirydate';
+      if (!values.optiontype) errors.optiontype = 'Please enter optiontype';
       return errors;
     },
     onSubmit: async (values) => {
@@ -95,6 +100,8 @@ const AddSignal = () => {
         report: values.report,
         calltype: values.calltype,
         callduration: values.callduration,
+        expirydate: values.expirydate,
+        optiontype: values.optiontype,
 
       };
       try {
@@ -112,9 +119,9 @@ const AddSignal = () => {
           }, 2000);
         } else {
           Swal.fire({
-            title: 'Error',
+            title: 'Alert',
             text: response.message,
-            icon: 'error',
+            icon: 'warning',
             timer: 1500,
             timerProgressBar: true,
           });
@@ -138,16 +145,16 @@ const AddSignal = () => {
   const fields = [
     {
       name: 'service',
-      label: 'Select Service',
+      label: 'Select Segment',
       type: 'select',
       // options: serviceList.map((item) => ({
       //   label: item.title,
-      //   value: item.title,
+      //   value: item._id ,
       // })),
       options: [
         { label: 'Cash', value: 'C' },
-        { label: 'Option', value: 'O' },
         { label: 'Future', value: 'F' },
+        { label: 'Option', value: 'O' },
 
       ],
       label_size: 12,
@@ -180,17 +187,41 @@ const AddSignal = () => {
 
       disable: false,
     },
-    {
+    formik.values.service != "O" ? {
       name: 'price',
       label: 'Price',
-      type: 'text',
+      type: 'number',
       label_size: 12,
       col_size: 6,
+      showWhen: (values) => values.service != "O",
+      disable: false,
+      optional:false
+    } : {
+      name: 'price',
+      label: 'Strike Price',
+      type: 'number',
+      label_size: 12,
+      col_size: 6,
+      disable: false,
+      optional:false
+    },
+    ,
+    {
+      name: 'optiontype',
+      label: 'Option Type',
+      type: 'select',
+      options: [
+        { label: 'Put', value: 'put' },
+        { label: 'Call', value: 'call' },
+      ],
+      label_size: 12,
+      col_size: 6,
+      showWhen: (values) => values.service === "O",
       disable: false,
     },
     {
       name: 'calltype',
-      label: 'Type',
+      label: 'Call Type',
       type: 'select',
       options: [
         { label: 'Buy', value: 'buy' },
@@ -202,25 +233,40 @@ const AddSignal = () => {
     },
     {
       name: 'callduration',
-      label: 'Trade duration',
+      label: 'Trade Duration',
       type: 'select',
-      options: formik.values.service == "C" ? [
-        { label: 'Long Term', value: 'Long Term' },
-        { label: 'Medium Term', value: 'Medium Term' },
-        { label: 'Short Term', value: 'Short Term' },
-        { label: 'Intraday', value: 'Intraday' },
-      ] :
-        [
-          { label: 'Interaday', value: 'Interaday' },
-          { label: 'Short Term', value: 'Short Term' },
-          { label: 'Still Expiry Date', value: 'Still Expiry Date' },
-
-        ],
+      options: (() => {
+        if (formik.values.service === "C") {
+          return formik.values.calltype === "sell" ? [
+            { label: 'Intraday', value: 'Intraday' }
+          ] : [
+            { label: 'Long Term', value: 'Long Term' },
+            { label: 'Medium Term', value: 'Medium Term' },
+            { label: 'Short Term', value: 'Short Term' },
+            { label: 'Intraday', value: 'Intraday' }
+          ];
+        } else if (formik.values.service === "F") {
+          return formik.values.calltype === "sell" ? [
+            { label: 'Intraday', value: 'Intraday' }
+          ] : [
+            { label: 'Short Term', value: 'Short Term' },
+            { label: 'Intraday', value: 'Intraday' },
+            { label: 'Still Expiry Date', value: 'Still Expiry Date' }
+          ];
+        } else if (formik.values.service === "O") {
+          return [
+            { label: 'Short Term', value: 'Short Term' },
+            { label: 'Intraday', value: 'Intraday' },
+            { label: 'Still Expiry Date', value: 'Still Expiry Date' }
+          ];
+        }
+        return [];
+      })(),
       label_size: 12,
       col_size: 6,
       disable: false,
+     
     },
-
     {
       name: 'tag1',
       label: 'Target-1',
@@ -228,6 +274,7 @@ const AddSignal = () => {
       label_size: 6,
       col_size: 3,
       disable: false,
+      optional:false
     },
     {
       name: 'tag2',
@@ -261,9 +308,8 @@ const AddSignal = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
+     
     },
-
-
 
     {
       name: 'description',
@@ -280,7 +326,7 @@ const AddSignal = () => {
 
   useEffect(() => {
     const fetchStockData = async () => {
-      if (formik.values.service) { 
+      if (formik.values.service) {
         const data = { segment: formik.values.service };
 
         try {
@@ -302,7 +348,7 @@ const AddSignal = () => {
 
   useEffect(() => {
     formik.setFieldValue("expirydate", "")
-    formik.setFieldValue("callduration", "")
+    // formik.setFieldValue("callduration", "")
   }, [formik.values])
 
 
@@ -318,9 +364,9 @@ const AddSignal = () => {
           sumit_btn={true}
           btn_name1_route="/admin/signal"
           additional_field={
-          <>
+            <>
 
-            {/* <div className="col-lg-4">
+              {/* <div className="col-lg-4">
               <div className="mb-3">
                 <div className="position-relative">
                   <label className="form-label">
@@ -367,7 +413,7 @@ const AddSignal = () => {
                 </div>
               </div>
             </div> */}
-          </>
+            </>
           }
         />
       </div>
