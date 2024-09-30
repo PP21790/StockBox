@@ -77,7 +77,7 @@ const Editplan = () => {
                     timerProgressBar: true,
                 });
                 setTimeout(() => {
-                    navigate("/admin/plan");
+                    navigate("/staff/plan");
                 }, 1500);
             } else {
                 Swal.fire({
@@ -178,7 +178,7 @@ const Editplan = () => {
                 btn_name="Edit Plan"
                 btn_name1="Cancel"
                 sumit_btn={true}
-                btn_name1_route={"/admin/plan"}
+                btn_name1_route={"/staff/plan"}
                 additional_field={<></>}
             />
         </div>

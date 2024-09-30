@@ -107,7 +107,7 @@ const AddSignal = () => {
             timerProgressBar: true,
           });
           setTimeout(() => {
-            navigate('/admin/signal');
+            navigate('/staff/signal');
           },  2000);
         } else {
           Swal.fire({
@@ -286,7 +286,7 @@ const AddSignal = () => {
           btn_name1="Cancel"
           formik={formik}
           sumit_btn={true}
-          btn_name1_route="/admin/signal"
+          btn_name1_route="/staff/signal"
           additional_field={<></>}
         />
       </div>

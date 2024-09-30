@@ -138,7 +138,7 @@ const Viewbasketdetail = () => {
           timerProgressBar: true,
         });
         setTimeout(() => {
-          navigate("/admin/basket");
+          navigate("/staff/basket");
         }, 1500);
       } else {
         Swal.fire({
@@ -177,7 +177,7 @@ const Viewbasketdetail = () => {
             // sumit_btn={true}
             page_title="Edit Basket"
             btn_name1="Back"
-            btn_name1_route="/admin/basket"
+            btn_name1_route="/staff/basket"
             disable={true}
            
           />

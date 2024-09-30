@@ -63,7 +63,7 @@ const EditClient = () => {
           timerProgressBar: true,
         });
         setTimeout(() => {
-          navigate("/admin/client");
+          navigate("/staff/client");
         }, 1500);
       } else {
         Swal.fire({

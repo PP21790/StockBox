@@ -8,7 +8,7 @@ const Profile = () => {
             <div className="page-content">
                 {/*breadcrumb*/}
                 <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                    <div className="breadcrumb-title pe-3">Admin Profile</div>
+                    <div className="breadcrumb-title pe-3">Staff Profile</div>
                     <div className="ps-3">
                         <nav aria-label="breadcrumb">
                             <ol className="breadcrumb mb-0 p-0">
@@ -18,7 +18,7 @@ const Profile = () => {
                                     </a>
                                 </li>
                                 <li className="breadcrumb-item active" aria-current="page">
-                                    Admin Profile
+                                    Staff Profile
                                 </li>
                             </ol>
                         </nav>
@@ -56,12 +56,12 @@ const Profile = () => {
                                         <div className="d-flex flex-column align-items-center text-center">
                                             <img
                                                 src="/assets/images/avatars/avatar-2.png"
-                                                alt="Admin"
+                                                alt="staff"
                                                 className="rounded-circle p-1 bg-primary"
                                                 width={110}
                                             />
                                             <div className="mt-3">
-                                                <h4>Admin</h4>
+                                                <h4>Staff</h4>
           
                                             </div>
                                         </div>
@@ -197,7 +197,7 @@ const Profile = () => {
 
                                         <div className="row mb-3">
                                             <div className="col-sm-3">
-                                                <Link to="/admin/changepass" className="btn btn-primary mb-0" style={{fontSize:"14px"}}>Change Password</Link>
+                                                <Link to="/staff/changepass" className="btn btn-primary mb-0" style={{fontSize:"14px"}}>Change Password</Link>
                                             </div>
                                             <div className="col-sm-9 text-secondary">
 

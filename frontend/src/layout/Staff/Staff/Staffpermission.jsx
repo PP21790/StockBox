@@ -73,7 +73,7 @@ const Staffpermission = () => {
                     timerProgressBar: true,
                 });
                 setTimeout(() => {
-                    navigate('/admin/staff');
+                    navigate('/staff/staff');
                 }, 1500);
             } else {
                 Swal.fire({
@@ -320,7 +320,7 @@ const Staffpermission = () => {
                 btn_name1="Cancel"
                 sumit_btn={true}
                 formik={formik}
-                btn_name1_route={'/admin/staff'}
+                btn_name1_route={'/staff/staff'}
                 additional_field={<></>}
             />
         </div>

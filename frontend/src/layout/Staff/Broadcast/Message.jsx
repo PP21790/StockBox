@@ -11,7 +11,7 @@ const Message = () => {
                         <nav aria-label="breadcrumb">
                             <ol className="breadcrumb mb-0 p-0">
                                 <li className="breadcrumb-item">
-                                    <Link to="/admin/dashboard">
+                                    <Link to="/staff/dashboard">
                                         <i className="bx bx-home-alt" />
                                     </Link>
                                 </li>
@@ -89,7 +89,7 @@ const Message = () => {
 
                                                     <div className="col-md-6">
                                                         <label htmlFor="input2" className="form-label">
-                                                            Admin
+                                                            Staff
                                                         </label>
                                                         <input
                                                             type="text"
