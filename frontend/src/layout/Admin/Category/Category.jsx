@@ -5,6 +5,7 @@ import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
 import Swal from 'sweetalert2';
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
+import { Tooltip } from 'antd';
 
 const Category = () => {
     const navigate = useNavigate();
@@ -315,16 +316,13 @@ const Category = () => {
             selector: row => new Date(row.updated_at).toLocaleDateString(),
             sortable: true,
         },
-        {
-            name: 'Date',
-            selector: row => new Date(row.updated_at).toLocaleDateString(),
-            sortable: true,
-        },
+       
         {
             name: 'Actions',
             cell: row => (
                 <>
                     <div>
+                        <Tooltip placement="top" overlay="Update">
                         <SquarePen
                             onClick={() => {
                                 setModel(true);
@@ -332,9 +330,12 @@ const Category = () => {
                                 setUpdatetitle({ title: row.title, id: row._id });
                             }}
                         />
+                        </Tooltip>
                     </div>
                     <div>
+                        <Tooltip placement="top" overlay="Delete">
                         <Trash2 onClick={() => DeleteCategory(row._id)} />
+                        </Tooltip>
                     </div>
                 </>
             ),

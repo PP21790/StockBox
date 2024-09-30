@@ -7,6 +7,7 @@ import { Pencil, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { DeleteCoupon, UpdateClientStatus } from '../../../Services/Admin';
 import { image_baseurl } from '../../../Utils/config';
+import { Tooltip } from 'antd';
 
 const Coupon = () => {
 
@@ -219,10 +220,14 @@ const Coupon = () => {
             cell: row => (
                 <>
                     <div>
+                        <Tooltip placement="top" overlay="Edit">
                         <Pencil onClick={() => updatecoupon(row)} />
+                        </Tooltip>
                     </div>
                     <div>
+                        <Tooltip placement="top" overlay="Permision">
                         <Trash2 onClick={() => DeleteCouponbyadmin(row._id)} />
+                        </Tooltip>
                     </div>
                 </>
             ),

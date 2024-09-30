@@ -42,7 +42,7 @@ const Viewclientdetail = () => {
             FullName: '',
             Email: '',
             PhoneNo: '',
-           
+
         },
     });
 
@@ -52,7 +52,7 @@ const Viewclientdetail = () => {
             label: 'Full Name',
             type: 'text',
             label_size: 12,
-            col_size: 6,
+            col_size: 4,
             disable: true,
         },
         {
@@ -60,7 +60,7 @@ const Viewclientdetail = () => {
             label: 'Email',
             type: 'text',
             label_size: 12,
-            col_size: 6,
+            col_size: 4,
             disable: true,
         },
         {
@@ -68,10 +68,50 @@ const Viewclientdetail = () => {
             label: 'Phone Number',
             type: 'text',
             label_size: 12,
-            col_size: 6,
+            col_size: 4,
             disable: true,
         },
-       
+        {
+            name: 'SignupsStatus',
+            label: 'Signup Status',
+            type: 'text',
+            label_size: 12,
+            col_size: 4,
+            disable: true,
+        },
+        {
+            name: 'CraeatedAt',
+            label: 'Created At',
+            type: 'text',
+            label_size: 12,
+            col_size: 4,
+            disable: true,
+        },
+        {
+            name: 'PurchaseDate',
+            label: 'Purchase Date',
+            type: 'text',
+            label_size: 12,
+            col_size: 4,
+            disable: true,
+        },
+        {
+            name: 'ExpiryDate',
+            label: 'Expiry Date',
+            type: 'text',
+            label_size: 12,
+            col_size: 4,
+            disable: true,
+        },
+        {
+            name: 'Amount',
+            label: 'Amount',
+            type: 'text',
+            label_size: 12,
+            col_size: 4,
+            disable: true,
+        },
+
     ];
 
 
@@ -98,7 +138,7 @@ const Viewclientdetail = () => {
                 <div>
                     <DynamicForm
                         fields={fields}
-                        page_title="Signal Detail"
+                        page_title="Client Detail"
                         formik={formik}
                         sumit_btn={false}
                         additional_field={<></>}

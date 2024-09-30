@@ -5,6 +5,7 @@ import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { image_baseurl } from '../../../Utils/config';
+import { Tooltip } from 'antd';
 
 
 const News = () => {
@@ -300,18 +301,20 @@ const News = () => {
             name: 'Actions',
             cell: row => (
                 <>
-                    <SquarePen
-                        onClick={() => {
-                            setModel(true);
-                            setServiceid(row);
-                            setUpdatetitle({
-                                title: row.title,
-                                id: row._id,
-                                description: row.description,
-                                image: row.image
-                            });
-                        }}
-                    />
+                    <Tooltip placement="top" overlay="Updte">
+                        <SquarePen
+                            onClick={() => {
+                                setModel(true);
+                                setServiceid(row);
+                                setUpdatetitle({
+                                    title: row.title,
+                                    id: row._id,
+                                    description: row.description,
+                                    image: row.image
+                                });
+                            }}
+                        />
+                    </Tooltip>
                     {model && (
                         <>
                             {/* Backdrop */}
@@ -374,7 +377,7 @@ const News = () => {
                                                 <div className="row">
                                                     <div className="col-md-12">
                                                         <label htmlFor="">Description</label>
-                                                        <input
+                                                        <textarea
                                                             className="form-control mb-2"
                                                             type="text"
                                                             placeholder="Enter Description"
@@ -408,7 +411,9 @@ const News = () => {
                     )}
 
                     <div>
-                        <Trash2 onClick={() => DeleteService(row._id)} />
+                        <Tooltip placement="top" overlay="Delete">
+                            <Trash2 onClick={() => DeleteService(row._id)} />
+                        </Tooltip>
                     </div>
                 </>
             ),
@@ -525,7 +530,7 @@ const News = () => {
                                                     <div className="row">
                                                         <div className="col-md-12">
                                                             <label htmlFor="">description</label>
-                                                            <input
+                                                            <textarea
                                                                 className="form-control mb-3"
                                                                 type="text"
                                                                 placeholder='Enter description'

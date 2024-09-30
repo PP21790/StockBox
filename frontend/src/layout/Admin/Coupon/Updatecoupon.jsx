@@ -11,8 +11,8 @@ const Updatecoupon = () => {
   const { row } = location.state;
 
 
-  console.log("row",row)
-   
+  console.log("row", row)
+
 
   const token = localStorage.getItem("token");
 
@@ -118,11 +118,11 @@ const Updatecoupon = () => {
 
   const fields = [
     {
-      name: "name",
-      label: "Name",
+      name: "title",
+      label: "Title",
       type: "text",
       label_size: 6,
-      col_size: 6,
+      col_size: 4,
       disable: false,
     },
     {
@@ -130,7 +130,7 @@ const Updatecoupon = () => {
       label: "Code",
       type: "text",
       label_size: 12,
-      col_size: 6,
+      col_size: 4,
       disable: false,
     },
     {
@@ -138,7 +138,7 @@ const Updatecoupon = () => {
       label: "Type",
       type: "text",
       label_size: 12,
-      col_size: 6,
+      col_size: 4,
       disable: false,
     },
     {
@@ -146,7 +146,7 @@ const Updatecoupon = () => {
       label: "Value",
       type: "number",
       label_size: 12,
-      col_size: 6,
+      col_size: 4,
       disable: false,
     },
     {
@@ -154,15 +154,15 @@ const Updatecoupon = () => {
       label: "Min Purchase Value",
       type: "text",
       label_size: 12,
-      col_size: 6,
+      col_size: 4,
       disable: false,
     },
     {
       name: "mincouponvalue",
-      label: "Min Coupon Value",
+      label: "Min Discount Amount",
       type: "text",
       label_size: 12,
-      col_size: 6,
+      col_size: 4,
       disable: false,
     },
     {
@@ -170,7 +170,7 @@ const Updatecoupon = () => {
       label: "Start Date",
       type: "date",
       label_size: 12,
-      col_size: 6,
+      col_size: 4,
       disable: false,
     },
     {
@@ -178,7 +178,7 @@ const Updatecoupon = () => {
       label: "End Date",
       type: "date",
       label_size: 12,
-      col_size: 6,
+      col_size: 4,
       disable: false,
     },
     {
@@ -186,7 +186,7 @@ const Updatecoupon = () => {
       label: "Image",
       type: "file2",
       label_size: 12,
-      col_size: 6,
+      col_size: 4,
       disable: false,
       additional_content: row?.image ? (
         <img
@@ -199,7 +199,7 @@ const Updatecoupon = () => {
     {
       name: "description",
       label: "Description",
-      type: "text",
+      type: "text5",
       label_size: 12,
       col_size: 6,
       disable: false,
@@ -210,7 +210,7 @@ const Updatecoupon = () => {
     <div style={{ marginTop: "100px" }}>
       <DynamicForm
         fields={fields}
-        page_title="Update User"
+        page_title="Add Coupon Code"
         btn_name="Update User"
         btn_name1="Cancel"
         formik={formik}

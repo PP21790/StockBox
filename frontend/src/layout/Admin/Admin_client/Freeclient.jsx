@@ -314,12 +314,7 @@ const Freeclient = () => {
             sortable: true,
             width: '146px',
         },
-        {
-            name: 'CreatedAt',
-            selector: row => row.createdAT,
-            sortable: true,
-            width: '146px',
-        },
+
 
         {
             name: 'Signup Status',
@@ -327,13 +322,13 @@ const Freeclient = () => {
             sortable: true,
             width: '165px',
         },
-        {
+        // {
 
-        name: 'Date',
-        selector: row => row.Status,
-        sortable: true,
-        width: '165px',
-        },
+        // name: 'Date',
+        // selector: row => row.Status,
+        // sortable: true,
+        // width: '165px',
+        // },
 
         {
             name: 'Active Status',
@@ -354,6 +349,12 @@ const Freeclient = () => {
             ),
             sortable: true,
             width: '165px',
+        },
+        {
+            name: 'CreatedAt',
+            selector: row => row.createdAT,
+            sortable: true,
+            width: '146px',
         },
         {
             name: 'Actions',
@@ -541,128 +542,128 @@ const Freeclient = () => {
                 {isModalVisible && (
                     <>
                         <div className="modal-backdrop fade show"></div>
-                    <div
-                        className="modal fade show d-block"
-                        style={{ backdropFilter: 'blur(1px)' }}
-                        tabIndex="-1"
-                        aria-labelledby="exampleModalLabel"
-                        aria-hidden="true"
-                    >
-                        <div className="modal-dialog">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title" id="exampleModalLabel">Package Assign</h5>
-                                    <button
-                                        type="button"
-                                        className="btn-close"
-                                        onClick={handleCancel}
-                                        aria-label="Close"
-                                    ></button>
-                                </div>
-                                <div className="modal-body">
-                                    <div className='card'>
-                                        <div className='d-flex justify-content-center align-items-center card-body'>
-                                            {['Plan', 'Basket'].map((tab, index) => (
-                                                <label key={index} className='labelfont'>
-                                                    <input
-                                                        className='ms-3'
-                                                        type="radio"
-                                                        name="tab"
-                                                        checked={checkedIndex === index}
-                                                        onChange={() => handleTabChange(index)}
-                                                    />
-                                                    <span className='ps-2'>{tab}</span>
-                                                </label>
-                                            ))}
+                        <div
+                            className="modal fade show d-block"
+                            style={{ backdropFilter: 'blur(1px)' }}
+                            tabIndex="-1"
+                            aria-labelledby="exampleModalLabel"
+                            aria-hidden="true"
+                        >
+                            <div className="modal-dialog">
+                                <div className="modal-content">
+                                    <div className="modal-header">
+                                        <h5 className="modal-title" id="exampleModalLabel">Package Assign</h5>
+                                        <button
+                                            type="button"
+                                            className="btn-close"
+                                            onClick={handleCancel}
+                                            aria-label="Close"
+                                        ></button>
+                                    </div>
+                                    <div className="modal-body">
+                                        <div className='card'>
+                                            <div className='d-flex justify-content-center align-items-center card-body'>
+                                                {['Plan', 'Basket'].map((tab, index) => (
+                                                    <label key={index} className='labelfont'>
+                                                        <input
+                                                            className='ms-3'
+                                                            type="radio"
+                                                            name="tab"
+                                                            checked={checkedIndex === index}
+                                                            onChange={() => handleTabChange(index)}
+                                                        />
+                                                        <span className='ps-2'>{tab}</span>
+                                                    </label>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        <div className='card'>
+                                            {checkedIndex === 0 && (
+                                                <form className='card-body'>
+                                                    <div className="row">
+                                                        {planlist.map((item, index) => (
+                                                            <div className="col-md-6" key={index}>
+                                                                <div className="form-check mb-2">
+                                                                    <input
+                                                                        className="form-check-input"
+                                                                        type="radio"
+                                                                        name="planSelection"
+                                                                        id={`input-plan-${index}`}
+                                                                        onClick={() => {
+                                                                            setUpdatetitle({ plan_id: item._id, price: item.price, title: item.title });
+                                                                        }}
+                                                                    />
+                                                                    <label className="form-check-label" htmlFor={`input-plan-${index}`}>
+                                                                        {item.title}
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </form>
+                                            )}
+
+                                            {checkedIndex === 1 && (
+                                                <form className='card-body'>
+                                                    <div className="row">
+                                                        {basketlist.map((item, index) => (
+                                                            <div className="col-md-6" key={index}>
+                                                                <div className="form-check mb-2">
+                                                                    <input
+                                                                        className="form-check-input"
+                                                                        type="radio"
+                                                                        name="basketSelection"
+                                                                        id={`input-basket-${index}`}
+                                                                        onClick={() => {
+                                                                            setBasketdetail({ basket_id: item._id, price: item.price, title: item.title, discount: "0" });
+                                                                        }}
+                                                                    />
+                                                                    <label className="form-check-label" htmlFor={`input-basket-${index}`}>
+                                                                        {item.title}
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </form>
+                                            )}
+
+
                                         </div>
                                     </div>
+                                    <div className="modal-footer">
+                                        <button
+                                            type="button"
+                                            className="btn btn-secondary"
+                                            onClick={handleCancel}
+                                        >
+                                            Close
+                                        </button>
 
-                                    <div className='card'>
                                         {checkedIndex === 0 && (
-                                            <form className='card-body'>
-                                                <div className="row">
-                                                    {planlist.map((item, index) => (
-                                                        <div className="col-md-6" key={index}>
-                                                            <div className="form-check mb-2">
-                                                                <input
-                                                                    className="form-check-input"
-                                                                    type="radio"
-                                                                    name="planSelection"
-                                                                    id={`input-plan-${index}`}
-                                                                    onClick={() => {
-                                                                        setUpdatetitle({ plan_id: item._id, price: item.price, title: item.title });
-                                                                    }}
-                                                                />
-                                                                <label className="form-check-label" htmlFor={`input-plan-${index}`}>
-                                                                    {item.title}
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </form>
+                                            <button
+                                                type="button"
+                                                className="btn btn-primary"
+                                                onClick={(e) => Updateplansubscription()}
+                                            >
+                                                Save Plan
+                                            </button>
                                         )}
 
                                         {checkedIndex === 1 && (
-                                            <form className='card-body'>
-                                                <div className="row">
-                                                    {basketlist.map((item, index) => (
-                                                        <div className="col-md-6" key={index}>
-                                                            <div className="form-check mb-2">
-                                                                <input
-                                                                    className="form-check-input"
-                                                                    type="radio"
-                                                                    name="basketSelection"
-                                                                    id={`input-basket-${index}`}
-                                                                    onClick={() => {
-                                                                        setBasketdetail({ basket_id: item._id, price: item.price, title: item.title, discount: "0" });
-                                                                    }}
-                                                                />
-                                                                <label className="form-check-label" htmlFor={`input-basket-${index}`}>
-                                                                    {item.title}
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </form>
+                                            <button
+                                                type="button"
+                                                className="btn btn-primary"
+                                                onClick={(e) => UpdateBasketservice()}
+                                            >
+                                                Save Basket
+                                            </button>
                                         )}
-
-
                                     </div>
-                                </div>
-                                <div className="modal-footer">
-                                    <button
-                                        type="button"
-                                        className="btn btn-secondary"
-                                        onClick={handleCancel}
-                                    >
-                                        Close
-                                    </button>
-
-                                    {checkedIndex === 0 && (
-                                        <button
-                                            type="button"
-                                            className="btn btn-primary"
-                                            onClick={(e) => Updateplansubscription()}
-                                        >
-                                            Save Plan
-                                        </button>
-                                    )}
-
-                                    {checkedIndex === 1 && (
-                                        <button
-                                            type="button"
-                                            className="btn btn-primary"
-                                            onClick={(e) => UpdateBasketservice()}
-                                        >
-                                            Save Basket
-                                        </button>
-                                    )}
                                 </div>
                             </div>
                         </div>
-                    </div>
                     </>
                 )}
 
