@@ -324,9 +324,9 @@ class List {
                existingPlan.enddate.setMonth(existingPlan.enddate.getMonth() + monthsToAdd);
             } else {
                 existingPlan.enddate = end;  // Set new end date if it has expired
+                existingPlan.startdate = start; 
             }
         
-            existingPlan.startdate = start;  // Update startdate
         
             try {
               const savedPlan = await Planmanage.updateOne(

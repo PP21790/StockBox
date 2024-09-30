@@ -20,47 +20,51 @@ class Signal {
       });
 
 
-      const { price, service, calltype, stock, tag1, tag2, tag3, stoploss, description, callduration, callperiod, add_by } = req.body;
+            const { price,service,calltype,stock,tag1,tag2,tag3,stoploss,description,callduration,callperiod,add_by,expirydate,segment,optiontype } = req.body;
+        
+            const report = req.files['report'] ? req.files['report'][0].filename : null;
 
-      const report = req.files['report'] ? req.files['report'][0].filename : null;
 
-
-
-      const result = new Signal_Modal({
-        price: price,
-        service: service,
-        calltype: calltype,
-        callduration: callduration,
-        callperiod: callperiod,
-        stock: stock,
-        tag1: tag1,
-        tag2: tag2,
-        tag3: tag3,
-        stoploss: stoploss,
-        description: description,
-        report: report,
-        add_by: add_by,
-      });
-
-      await result.save();
-
-      return res.json({
-        status: true,
-        message: "Signal added successfully",
-        data: result,
-      });
-
-    } catch (error) {
-      // Enhanced error logging
-      console.log("Error adding Signal:", error);
-
-      return res.status(500).json({
-        status: false,
-        message: "Server error",
-        error: error.message,
-      });
+         
+            const result = new Signal_Modal({
+              price: price,
+              service: service,
+              calltype: calltype,
+              callduration:callduration,
+              callperiod:callperiod,
+              stock: stock,
+              tag1: tag1,
+              tag2: tag2,
+              tag3:tag3,
+              stoploss: stoploss,
+              description: description,
+              report: report,
+              add_by:add_by,
+              expirydate: expirydate,
+              segment:segment,
+              optiontype: optiontype,
+          });
+    
+            await result.save();
+    
+            return res.json({
+                status: true,
+                message: "Signal added successfully",
+                data: result,
+            });
+    
+        } catch (error) {
+            // Enhanced error logging
+            console.error("Error adding Signal:", error);
+    
+            return res.status(500).json({
+                status: false,
+                message: "Server error",
+                error: error.message,
+            });
+        }
     }
-  }
+  
 
 
   /*async getSignal(req, res) {

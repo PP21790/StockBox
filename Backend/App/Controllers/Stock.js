@@ -79,11 +79,22 @@ class Stock {
     try {
 
      
-     
-      const { segment } = req.body;
+   
+      const { segment,symbol } = req.body;
 
-      const result = await Stock_Modal.find({ segment: segment });
-
+      const result = await Stock_Modal.aggregate([
+        {
+          $match: { 
+            segment: segment,
+            symbol: { $regex: symbol, $options: 'i' }  // Like query for symbol
+          }
+        },
+        {
+          $group: {
+            _id: "$symbol",  
+          }
+        }
+      ]);
 
       return res.json({
         status: true,
@@ -96,7 +107,47 @@ class Stock {
     }
   }
 
+  async getStocksByExpiry(req, res) {
+    try {
+      const { segment,symbol } = req.body;
 
+      // Current date to get the month
+      const currentDate = new Date();
+      const currentMonth = String(currentDate.getMonth() + 1).padStart(2, '0'); // Get current month in 'MM' format
+      const currentYear = String(currentDate.getFullYear()); // Get last two digits of the current year
+
+      // Create the expiry months dynamically for the next two months
+      const expiryMonths = [];
+      for (let i = 0; i < 3; i++) { // Current month + next 2 months
+          const month = (parseInt(currentMonth) + i) % 12 || 12; // Adjust month to wrap around after December
+          const year = month < currentMonth ? (parseInt(currentYear) + 1) : currentYear; // Increment year if wrapped
+          expiryMonths.push(`${String(month).padStart(2, '0')}${year}`);
+      }
+
+      // Build query
+      const query = {
+          symbol: symbol,
+          segment: segment,
+          option_type:"PE",
+        //  expiry_date: { '$gte': currentDate.getDate() }, // Current day or greater
+          expiry_month_year: { '$in': expiryMonths } // Using dynamic expiry months
+      };
+
+      // Execute the query
+      const result = await Stock_Modal.find(query);
+
+      return res.json({
+          status: true,
+          message: "Stocks retrieved successfully",
+          data: result
+      });
+
+  } catch (error) {
+      console.error("Error executing query:", error);
+      return res.json({ status: false, message: "Server error", data: [] });
+  }
+}
+    
   async activeStock(req, res) {
     try {
 

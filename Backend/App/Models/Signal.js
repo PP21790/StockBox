@@ -118,6 +118,20 @@ const signalModel = Schema({
         trim: true,
         default: null
     },
+    expirydate: {
+        type: Date,
+        default: null // Date when the signal was closed
+    },
+    segment: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    optiontype: {
+        type: String,
+        trim: true,
+        default: null
+    },
     add_by: {
         type: String,
         trim: true,
