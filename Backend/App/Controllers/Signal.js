@@ -20,7 +20,7 @@ class Signal {
         });
 
 
-            const { price,service,calltype,stock,tag1,tag2,tag3,stoploss,description,callduration,callperiod,add_by } = req.body;
+            const { price,service,calltype,stock,tag1,tag2,tag3,stoploss,description,callduration,callperiod,add_by,expirydate,segment,optiontype } = req.body;
         
             const report = req.files['report'] ? req.files['report'][0].filename : null;
 
@@ -40,6 +40,9 @@ class Signal {
               description: description,
               report: report,
               add_by:add_by,
+              expirydate: expirydate,
+              segment:segment,
+              optiontype: optiontype,
           });
     
             await result.save();
