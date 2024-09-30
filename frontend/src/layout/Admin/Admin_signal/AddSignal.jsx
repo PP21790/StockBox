@@ -37,7 +37,7 @@ const AddSignal = () => {
     }
   };
 
-
+console.log("searchItem",searchItem)
 
   // const fetchStockList = async () => {
   //   try {
@@ -55,7 +55,7 @@ const AddSignal = () => {
   const formik = useFormik({
     initialValues: {
       add_by: user_id,
-      service: '',
+      segment: '',
       price: '',
       stock: '',
       tag1: '',
@@ -71,7 +71,7 @@ const AddSignal = () => {
     },
     validate: (values) => {
       const errors = {};
-      if (!values.service) errors.service = 'Please select a service';
+      if (!values.segment) errors.segment = 'Please select a segment';
       if (!values.stock) errors.stock = 'Please select a stock';
       if (!values.price) errors.price = 'Please select a price';
       if (!values.tag1) errors.tag1 = 'Please enter Target-1';
@@ -89,7 +89,6 @@ const AddSignal = () => {
     onSubmit: async (values) => {
       const req = {
         add_by: user_id,
-        service: values.service,
         stock: values.stock,
         price: values.price,
         tag1: values.tag1,
@@ -101,11 +100,16 @@ const AddSignal = () => {
         calltype: values.calltype,
         callduration: values.callduration,
         expirydate: values.expirydate,
+        segment: values.segment,
         optiontype: values.optiontype,
 
       };
       try {
         const response = await AddSignalByAdmin(req, token);
+
+        console.log("response", response)
+
+        return
         if (response.status) {
           Swal.fire({
             title: 'Create Successful!',
@@ -144,9 +148,9 @@ const AddSignal = () => {
 
   const fields = [
     {
-      name: 'service',
+      name: 'segment',
       label: 'Select Segment',
-      type: 'select',
+      type: 'select2',
       // options: serviceList.map((item) => ({
       //   label: item.title,
       //   value: item._id ,
@@ -161,18 +165,9 @@ const AddSignal = () => {
       col_size: 6,
       disable: false,
     },
-    {
-      name: 'stock',
-      label: 'Select Stock',
-      type: 'select',
-      options: stockList.map((item) => ({
-        label: item.symbol,
-        value: item.symbol,
-      })),
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-    },
+
+
+
     {
       name: 'expirydate',
       label: 'Expiry Date',
@@ -183,19 +178,19 @@ const AddSignal = () => {
         label: item.expiry_str,
         value: item.expiry_str,
       })),
-      showWhen: (values) => values.service != "C",
+      showWhen: (values) => values.segment != "C",
 
       disable: false,
     },
-    formik.values.service != "O" ? {
+    formik.values.segment != "O" ? {
       name: 'price',
       label: 'Price',
       type: 'number',
       label_size: 12,
       col_size: 6,
-      showWhen: (values) => values.service != "O",
+      showWhen: (values) => values.segment != "O",
       disable: false,
-      optional:false
+      optional: false
     } : {
       name: 'price',
       label: 'Strike Price',
@@ -203,7 +198,7 @@ const AddSignal = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
-      optional:false
+      optional: false
     },
     ,
     {
@@ -216,7 +211,7 @@ const AddSignal = () => {
       ],
       label_size: 12,
       col_size: 6,
-      showWhen: (values) => values.service === "O",
+      showWhen: (values) => values.segment === "O",
       disable: false,
     },
     {
@@ -236,7 +231,7 @@ const AddSignal = () => {
       label: 'Trade Duration',
       type: 'select',
       options: (() => {
-        if (formik.values.service === "C") {
+        if (formik.values.segment === "C") {
           return formik.values.calltype === "sell" ? [
             { label: 'Intraday', value: 'Intraday' }
           ] : [
@@ -245,7 +240,7 @@ const AddSignal = () => {
             { label: 'Short Term', value: 'Short Term' },
             { label: 'Intraday', value: 'Intraday' }
           ];
-        } else if (formik.values.service === "F") {
+        } else if (formik.values.segment === "F") {
           return formik.values.calltype === "sell" ? [
             { label: 'Intraday', value: 'Intraday' }
           ] : [
@@ -253,7 +248,7 @@ const AddSignal = () => {
             { label: 'Intraday', value: 'Intraday' },
             { label: 'Still Expiry Date', value: 'Still Expiry Date' }
           ];
-        } else if (formik.values.service === "O") {
+        } else if (formik.values.segment === "O") {
           return [
             { label: 'Short Term', value: 'Short Term' },
             { label: 'Intraday', value: 'Intraday' },
@@ -265,7 +260,7 @@ const AddSignal = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
-     
+
     },
     {
       name: 'tag1',
@@ -274,7 +269,7 @@ const AddSignal = () => {
       label_size: 6,
       col_size: 3,
       disable: false,
-      optional:false
+      optional: false
     },
     {
       name: 'tag2',
@@ -308,7 +303,7 @@ const AddSignal = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
-     
+
     },
 
     {
@@ -326,8 +321,10 @@ const AddSignal = () => {
 
   useEffect(() => {
     const fetchStockData = async () => {
-      if (formik.values.service) {
-        const data = { segment: formik.values.service };
+     
+
+      if (formik.values.segment && searchItem) {
+        const data = { segment: formik.values.segment, symbol: searchItem };
 
         try {
           const res = await getstockbyservice(data);
@@ -337,21 +334,41 @@ const AddSignal = () => {
             console.log("Failed to fetch data", res);
           }
         } catch (error) {
-          console.log("Error fetching stock by service:", error);
+          console.log("Error fetching stock by segment:", error);
         }
       }
     };
-    console.log("formik.values.service", formik.values.service)
-    // fetchStockData();
-  }, [formik.values.service]);
+
+    fetchStockData();
+  }, [formik.values.segment, formik.values.stock,searchItem]);
 
 
   useEffect(() => {
-    formik.setFieldValue("expirydate", "")
+    // formik.setFieldValue("expirydate", "")
     // formik.setFieldValue("callduration", "")
+    // formik.setFieldValue("stock", "")
   }, [formik.values])
 
-
+  const dropdownStyles = {
+    position: 'absolute',
+    top: '100%',
+    left: 0,
+    right: 0,
+    backgroundColor: '#fff',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+    maxHeight: '200px',
+    overflowY: 'auto',
+    zIndex: 1000,
+  };
+  
+  const dropdownItemStyles = {
+    padding: '8px 16px',
+    cursor: 'pointer',
+    borderBottom: '1px solid #ddd',
+  };
+  
+  
   return (
     <div>
       <div style={{ marginTop: '100px' }}>
@@ -363,56 +380,50 @@ const AddSignal = () => {
           formik={formik}
           sumit_btn={true}
           btn_name1_route="/admin/signal"
-          additional_field={
+          additional_field1={
             <>
 
-              {/* <div className="col-lg-4">
-              <div className="mb-3">
-                <div className="position-relative">
-                  <label className="form-label">
-                    Search Company
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder=" Search Company"
-                    name="SearchCompany"
-                    onChange={(e) =>
-                      setSearchItem(e.target.value)
-                    }
-                    value={searchItem}
-                    onClick={() => setShowDropdown(true)}
-                    style={{ cursor: "pointer" }}
-                  />
-                  {searchItem && stockList.length > 0 &&
-                    showDropdown ? (
-                    <div className="dropdown-list">
-                      {stockList &&
-                        stockList.map(
-                          (company, index) => (
-                            company.symbol.includes(searchItem.toUpperCase()) &&
-                            <div
-                              key={index}
-                              onClick={() => {
-                                setSearchItem();
-                                setShowDropdown(false);
-                              }}
-                              style={{
-                                cursor: "pointer",
-                                padding: "8px 0",
-                              }}
-                            >
-                              {company.symbol}
-                            </div>
-                          )
-                        )}
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                </div>
-              </div>
-            </div> */}
+<div className="mb-3">
+  <div className="position-relative">
+    <label className="form-label">
+      Search Company
+    </label>
+    <input
+      type="text"
+      className="form-control"
+      placeholder="Search Company"
+      name="SearchCompany"
+      onChange={(e) => setSearchItem(e.target.value)}
+      value={searchItem}
+      onClick={() => setShowDropdown(true)}
+      style={{ cursor: "pointer" }}
+    />
+    
+    {/* Show dropdown if there are search results and the dropdown is visible */}
+    {searchItem && stockList.length > 0 && showDropdown ? (
+      <div className="dropdown-list" style={dropdownStyles}>
+        {stockList
+          .filter((company) => 
+            company.symbol.includes(searchItem.toUpperCase())
+          )
+          .map((company, index) => (
+            <div
+              key={index}
+              onClick={() => {
+                setSearchItem(company.symbol); // Update with the selected company's symbol
+                setShowDropdown(false); // Hide dropdown on selection
+              }}
+              style={dropdownItemStyles}
+            >
+              {company.symbol}
+            </div>
+          ))
+        }
+      </div>
+    ) : null}
+  </div>
+</div>
+
             </>
           }
         />
