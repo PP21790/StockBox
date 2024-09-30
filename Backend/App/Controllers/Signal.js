@@ -354,13 +354,6 @@ class Signal {
             data: updatedSignal,
           });
 
-        } catch (error) {
-          console.log("Error updating Signal:", error);
-          return res.status(500).json({
-            status: false,
-            message: "Server error",
-            error: error.message,
-          });
         }
       }
     }
