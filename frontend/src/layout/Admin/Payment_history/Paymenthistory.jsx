@@ -50,9 +50,6 @@ const History = () => {
                                             <th>Amount</th>
                                             <th>Purchased By</th>
                                             <th>Purchase Date</th>
-                                            <th>Date</th>
-
-
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -70,7 +67,7 @@ const History = () => {
 
                                             <td>Admin</td>
                                             <td>05/05/2023</td>
-                                            <td>05/05/2023</td>
+                                          
 
 
                                         </tr>
@@ -88,7 +85,7 @@ const History = () => {
 
                                             <td>App</td>
                                             <td>05/05/2023</td>
-                                            <td>05/05/2023</td>
+                                            
 
                                         </tr>
                                         <tr>
@@ -105,7 +102,7 @@ const History = () => {
 
                                             <td>Admin</td>
                                             <td>05/05/2023</td>
-                                            <td>05/05/2023</td>
+                                            
 
 
                                         </tr>
@@ -123,7 +120,7 @@ const History = () => {
 
                                             <td>App</td>
                                             <td>05/05/2023</td>
-                                            <td>05/05/2023</td>
+                                          
 
 
                                         </tr>
@@ -141,7 +138,7 @@ const History = () => {
 
                                             <td>Admin</td>
                                             <td>05/05/2023</td>
-                                            <td>05/05/2023</td>
+                                           
 
 
                                         </tr>
@@ -159,7 +156,7 @@ const History = () => {
 
                                             <td>App</td>
                                             <td>05/05/2023</td>
-                                            <td>05/05/2023</td>
+                                         
 
 
                                         </tr>

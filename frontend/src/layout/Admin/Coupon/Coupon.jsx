@@ -159,24 +159,26 @@ const Coupon = () => {
             name: 'Min Purchase Value',
             selector: row => row.minpurchasevalue,
             sortable: true,
-            width: '230px',
+            width: '188px',
         },
         {
             name: 'Min Coupon Value',
             selector: row => row.mincouponvalue,
             sortable: true,
+            width: '180px',
         },
 
         {
             name: 'Description',
             selector: row => row.description,
             sortable: true,
-            width: '280px',
+            width: '180px',
         },
         {
             name: 'Type',
             selector: row => row.type,
             sortable: true,
+            width: '115px',
         },
 
         {
@@ -197,6 +199,7 @@ const Coupon = () => {
                 </div>
             ),
             sortable: true,
+            width: '142px',
         },
 
 
@@ -204,16 +207,19 @@ const Coupon = () => {
             name: 'Startdate',
             selector: row => new Date(row.startdate).toLocaleDateString(),
             sortable: true,
+            width: '142px',
         },
         {
             name: 'Enddate',
             selector: row => new Date(row.enddate).toLocaleDateString(),
             sortable: true,
+            width: '142px',
         },
         {
-            name: 'date',
+            name: 'Date',
             selector: row => new Date(row.enddate).toLocaleDateString(),
             sortable: true,
+            width: '142px',
         },
         {
             name: 'Actions',
@@ -221,12 +227,12 @@ const Coupon = () => {
                 <>
                     <div>
                         <Tooltip placement="top" overlay="Edit">
-                        <Pencil onClick={() => updatecoupon(row)} />
+                            <Pencil onClick={() => updatecoupon(row)} />
                         </Tooltip>
                     </div>
                     <div>
-                        <Tooltip placement="top" overlay="Permision">
-                        <Trash2 onClick={() => DeleteCouponbyadmin(row._id)} />
+                        <Tooltip placement="top" overlay="Delete">
+                            <Trash2 onClick={() => DeleteCouponbyadmin(row._id)} />
                         </Tooltip>
                     </div>
                 </>
