@@ -251,7 +251,7 @@ const Banner = () => {
         // },
         {
             name: 'Image',
-            cell: row => <img src={`${image_baseurl}${row.image}`} alt={row.image} title={row.image} width="50" height="50" />,
+            cell: row => <img src={`${image_baseurl}uploads/banner/${row.image}`} alt={row.image} title={row.image} width="50" height="50" />,
             sortable: true,
         },
         {

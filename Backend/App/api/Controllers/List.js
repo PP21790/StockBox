@@ -36,7 +36,7 @@ class List {
             const bannerWithImageUrls = banners.map(banner => {
                 return {
                     ...banner._doc, // Spread the original bannerss document
-                    image: banner.image ? `/uploads/banner/${banner.image}` : null // Append full image URL
+                    image: banner.image ? `${baseUrl}/uploads/banner/${banner.image}` : null // Append full image URL
                 };
             });
             

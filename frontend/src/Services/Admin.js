@@ -1444,7 +1444,7 @@ export async function Deleteplan(_id, token) {
 export async function getbannerlist(token) {
 
     try {
-        const res = await axios.get(`${Config.base_url}api/list/banner`, {
+        const res = await axios.get(`${Config.base_url}banner/list`, {
             headers: {
                 'Authorization': `${token}`
             },
