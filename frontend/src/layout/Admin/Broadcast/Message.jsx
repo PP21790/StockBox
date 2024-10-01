@@ -5,172 +5,186 @@ const Message = () => {
     return (
         <div>
             <div className="page-content">
-                <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                    <div className="breadcrumb-title pe-3">Message Broadcast</div>
-                    <div className="ps-3">
-                        <nav aria-label="breadcrumb">
-                            <ol className="breadcrumb mb-0 p-0">
-                                <li className="breadcrumb-item">
-                                    <Link to="/admin/dashboard">
-                                        <i className="bx bx-home-alt" />
-                                    </Link>
-                                </li>
-                            </ol>
-                        </nav>
-                    </div>
-                </div>
-
-                <div className="card">
-                    <div className="card-body">
-                        <ul className="nav nav-tabs nav-success" role="tablist">
-                            <li className="nav-item" role="presentation">
-                                <a
-                                    className="nav-link active"
-                                    data-bs-toggle="tab"
-                                    href="#successhome"
-                                    role="tab"
-                                    aria-selected="true"
-                                >
-                                    <div className="d-flex align-items-center">
-                                        <div className="tab-icon">
-                                            <i className="bx bx-home font-18 me-1" />
-                                        </div>
-                                        <div className="tab-title">Send</div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li className="nav-item" role="presentation">
-                                <a
-                                    className="nav-link"
-                                    data-bs-toggle="tab"
-                                    href="#successprofile"
-                                    role="tab"
-                                    aria-selected="false"
-                                    tabIndex={-1}
-                                >
-                                    <div className="d-flex align-items-center">
-                                        <div className="tab-icon">
-                                            <i className="bx bx-user-pin font-18 me-1" />
-                                        </div>
-                                        <div className="tab-title">Sent Messages</div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li className="nav-item" role="presentation">
-                                <a
-                                    className="nav-link"
-                                    data-bs-toggle="tab"
-                                    href="#successcontact"
-                                    role="tab"
-                                    aria-selected="false"
-                                    tabIndex={-1}
-                                >
-                                    <div className="d-flex align-items-center">
-                                        <div className="tab-icon">
-                                            <i className="bx bx-microphone font-18 me-1" />
-                                        </div>
-                                        <div className="tab-title">Received Messages</div>
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
-                        <div className="tab-content py-3">
-                            <div
-                                className="tab-pane fade active show"
-                                id="successhome"
-                                role="tabpanel"
-                            >
-                                <div className="row">
-                                    <div className="col-xl-6 mx-auto">
-                                        <div className="card">
-                                            <div className="card-body p-4">
-
-                                                <form className="row g-3">
-
-                                                    <div className="col-md-6">
-                                                        <label htmlFor="input2" className="form-label">
-                                                            Admin
-                                                        </label>
-                                                        <input
-                                                            type="text"
-                                                            className="form-control"
-                                                            id="input2"
-                                                            placeholder="Last Name"
-                                                        />
-                                                    </div>
-                                                    <div className="col-md-12">
-                                                        <label htmlFor="input3" className="form-label">
-                                                            Client
-                                                        </label>
-                                                        <input
-                                                            type="text"
-                                                            className="form-control"
-                                                            id="input3"
-                                                            placeholder="Phone"
-                                                        />
-                                                    </div>
-
-                                                    <div className="col-md-12">
-                                                        <label htmlFor="input11" className="form-label">
-                                                            Message
-                                                        </label>
-                                                        <textarea
-                                                            className="form-control"
-                                                            id="input11"
-                                                            placeholder="Address ..."
-                                                            rows={3}
-                                                            defaultValue={""}
-                                                        />
-                                                    </div>
-
-                                                    <div className="col-md-12">
-                                                        <div className="d-md-flex d-grid align-items-center gap-3">
-                                                            <button type="button" className="btn btn-primary px-4">
-                                                                Send
-                                                            </button>
-
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-
-                                    </div>
+                <div className="chat-wrapper">
+                    <div className="chat-content ps ps--active-y">
+                        <div className="chat-content-leftside">
+                            <div className="d-flex">
+                                <img
+                                    src="assets/images/avatars/avatar-3.png"
+                                    width={48}
+                                    height={48}
+                                    className="rounded-circle"
+                                    alt=""
+                                />
+                                <div className="flex-grow-1 ms-2">
+                                    <p className="mb-0 chat-time">Harvey, 2:35 PM</p>
+                                    <p className="chat-left-msg">
+                                        Hi, harvey where are you now a days?
+                                    </p>
                                 </div>
-
-                            </div>
-                            <div className="tab-pane fade" id="successprofile" role="tabpanel">
-                                <p>
-                                    Food truck fixie locavore, accusamus mcsweeney's marfa nulla
-                                    single-origin coffee squid. Exercitation +1 labore velit, blog
-                                    sartorial PBR leggings next level wes anderson artisan four loko
-                                    farm-to-table craft beer twee. Qui photo booth letterpress, commodo
-                                    enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum
-                                    PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus
-                                    mollit. Keytar helvetica VHS salvia yr, vero magna velit sapiente
-                                    labore stumptown. Vegan fanny pack odio cillum wes anderson 8-bit,
-                                    sustainable jean shorts beard ut DIY ethical culpa terry richardson
-                                    biodiesel. Art party scenester stumptown, tumblr butcher vero sint qui
-                                    sapiente accusamus tattooed echo park.
-                                </p>
-                            </div>
-                            <div className="tab-pane fade" id="successcontact" role="tabpanel">
-                                <p>
-                                    Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out
-                                    mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table
-                                    readymade. Messenger bag gentrify pitchfork tattooed craft beer,
-                                    iphone skateboard locavore carles etsy salvia banksy hoodie helvetica.
-                                    DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred
-                                    pitchfork. Williamsburg banh mi whatever gluten-free, carles pitchfork
-                                    biodiesel fixie etsy retro mlkshk vice blog. Scenester cred you
-                                    probably haven't heard of them, vinyl craft beer blog stumptown.
-                                    Pitchfork sustainable tofu synth chambray yr.
-                                </p>
                             </div>
                         </div>
+                        {/* <div className="chat-content-rightside">
+                            <div className="d-flex ms-auto">
+                                <div className="flex-grow-1 me-2">
+                                    <p className="mb-0 chat-time text-end">you, 2:37 PM</p>
+                                    <p className="chat-right-msg">I am in USA</p>
+                                </div>
+                            </div>
+                        </div> */}
+                        <div className="chat-content-leftside">
+                            <div className="d-flex">
+                                <img
+                                    src="assets/images/avatars/avatar-3.png"
+                                    width={48}
+                                    height={48}
+                                    className="rounded-circle"
+                                    alt=""
+                                />
+                                <div className="flex-grow-1 ms-2">
+                                    <p className="mb-0 chat-time">Harvey, 2:48 PM</p>
+                                    <p className="chat-left-msg">okk, what about admin template?</p>
+                                </div>
+                            </div>
+                        </div>
+                        {/* <div className="chat-content-rightside">
+                            <div className="d-flex">
+                                <div className="flex-grow-1 me-2">
+                                    <p className="mb-0 chat-time text-end">you, 2:49 PM</p>
+                                    <p className="chat-right-msg">
+                                        i have already purchased the admin template
+                                    </p>
+                                </div>
+                            </div>
+                        </div> */}
+                        <div className="chat-content-leftside">
+                            <div className="d-flex">
+                                <img
+                                    src="assets/images/avatars/avatar-3.png"
+                                    width={48}
+                                    height={48}
+                                    className="rounded-circle"
+                                    alt=""
+                                />
+                                <div className="flex-grow-1 ms-2">
+                                    <p className="mb-0 chat-time">Harvey, 3:12 PM</p>
+                                    <p className="chat-left-msg">
+                                        ohhk, great, which admin template you have purchased?
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        {/* <div className="chat-content-rightside">
+                            <div className="d-flex">
+                                <div className="flex-grow-1 me-2">
+                                    <p className="mb-0 chat-time text-end">you, 3:14 PM</p>
+                                    <p className="chat-right-msg">
+                                        i purchased dashtreme admin template from themeforest. it is very
+                                        good product for web application
+                                    </p>
+                                </div>
+                            </div>
+                        </div> */}
+                        {/* <div className="chat-content-leftside">
+                            <div className="d-flex">
+                                <img
+                                    src="assets/images/avatars/avatar-3.png"
+                                    width={48}
+                                    height={48}
+                                    className="rounded-circle"
+                                    alt=""
+                                />
+                                <div className="flex-grow-1 ms-2">
+                                    <p className="mb-0 chat-time">Harvey, 3:16 PM</p>
+                                    <p className="chat-left-msg">who is the author of this template?</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="chat-content-rightside">
+                            <div className="d-flex">
+                                <div className="flex-grow-1 me-2">
+                                    <p className="mb-0 chat-time text-end">you, 3:22 PM</p>
+                                    <p className="chat-right-msg">
+                                        codervent is the author of this admin template
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="chat-content-leftside">
+                            <div className="d-flex">
+                                <img
+                                    src="assets/images/avatars/avatar-3.png"
+                                    width={48}
+                                    height={48}
+                                    className="rounded-circle"
+                                    alt=""
+                                />
+                                <div className="flex-grow-1 ms-2">
+                                    <p className="mb-0 chat-time">Harvey, 3:16 PM</p>
+                                    <p className="chat-left-msg">
+                                        ohh i know about this author. he has good admin products in his
+                                        portfolio.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="chat-content-rightside">
+                            <div className="d-flex">
+                                <div className="flex-grow-1 me-2">
+                                    <p className="mb-0 chat-time text-end">you, 3:30 PM</p>
+                                    <p className="chat-right-msg">
+                                        yes, codervent has multiple admin templates. also he is very
+                                        supportive.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="chat-content-leftside">
+                            <div className="d-flex">
+                                <img
+                                    src="assets/images/avatars/avatar-3.png"
+                                    width={48}
+                                    height={48}
+                                    className="rounded-circle"
+                                    alt=""
+                                />
+                                <div className="flex-grow-1 ms-2">
+                                    <p className="mb-0 chat-time">Harvey, 3:33 PM</p>
+                                    <p className="chat-left-msg">
+                                        All the best for your target. thanks for giving your time.
+                                    </p>
+                                </div>
+                            </div>
+                        </div> */}
+                        {/* <div className="chat-content-rightside">
+                            <div className="d-flex">
+                                <div className="flex-grow-1 me-2">
+                                    <p className="mb-0 chat-time text-end">you, 3:35 PM</p>
+                                    <p className="chat-right-msg">thanks Harvey</p>
+                                </div>
+                            </div>
+                        </div> */}
+                        <div className="ps__rail-x" style={{ left: 0, bottom: 0 }}>
+                            <div
+                                className="ps__thumb-x"
+                                tabIndex={0}
+                                style={{ left: 0, width: 0 }}
+                            />
+                        </div>
+                        <div className="ps__rail-y" style={{ top: 0, height: 520, right: 0 }}>
+                            <div
+                                className="ps__thumb-y"
+                                tabIndex={0}
+                                style={{ top: 0, height: 235 }}
+                            />
+                        </div>
                     </div>
+                    {/*start chat overlay*/}
+                    <div className="overlay chat-toggle-btn-mobile" />
+                    {/*end chat overlay*/}
                 </div>
             </div>
+
         </div>
     );
 }

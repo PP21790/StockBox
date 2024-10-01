@@ -2212,7 +2212,7 @@ form select.error:focus {
 
 .chat-content {
 
-	margin-left: 340px;
+	/* margin-left: 340px; */
 
 	padding: 85px 15px 15px 15px
 }
