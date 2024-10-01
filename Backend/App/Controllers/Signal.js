@@ -168,6 +168,9 @@ console.log(query);
 
 
 
+async deleteSignal(req, res) {
+}
+
 
 
   async detailSignal(req, res) {
