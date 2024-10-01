@@ -1,6 +1,30 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { getDashboarddetail } from '../../../Services/Admin'
+
 
 const Dashbord = () => {
+
+    const token = localStorage.getItem('token');
+
+   
+
+
+    const getdetail = async () => {
+        try {
+            const response = await getDashboarddetail(token);
+            if (response.status) {
+                console.log(response.data)
+            }
+        } catch (error) {
+            console.log("Error fetching services:", error);
+        }
+    };
+
+
+    useEffect(()=>{
+        getdetail()
+    },[])
+
     return (
         <div>
 

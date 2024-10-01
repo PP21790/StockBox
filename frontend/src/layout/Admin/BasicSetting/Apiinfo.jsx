@@ -14,7 +14,8 @@ const Apiinfo = () => {
 
     const [updateapi, setUpdateapi] = useState({
         digio_client_id: "",
-        digio_client_secret: ""
+        digio_client_secret: "",
+        digio_template_name:""
     });
 
 
@@ -27,7 +28,8 @@ const Apiinfo = () => {
                 setClients(clientData);
                 setUpdateapi({
                     digio_client_id: clientData[0].digio_client_id || "",
-                    digio_client_secret: clientData[0].digio_client_secret || ""
+                    digio_client_secret: clientData[0].digio_client_secret || "",
+                    digio_template_name: clientData[0].digio_template_name || ""
                 });
             }
         } catch (error) {
@@ -58,7 +60,9 @@ const Apiinfo = () => {
             const data = {
                 id: user_id,
                 digio_client_id: updateapi.digio_client_id,
-                digio_client_secret: updateapi.digio_client_secret
+                digio_client_secret: updateapi.digio_client_secret,
+                digio_template_name: updateapi.digio_template_name,
+               
             };
 
             const response = await updateApiinfo(data, token);
@@ -119,6 +123,10 @@ const Apiinfo = () => {
                                             <input
                                                 type="text"
                                                 className="form-control"
+                                                id="digiotemplatename"
+                                                value={updateapi.digio_template_name}
+                                                onChange={(e) => setUpdateapi({ ...updateapi, digio_template_name: e.target.value })}
+                                                
                                             />
                                         </div>
 

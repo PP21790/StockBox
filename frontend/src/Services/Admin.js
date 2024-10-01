@@ -1750,10 +1750,65 @@ export async function getexpirydate(data, token) {
                 'Authorization': `${token}`,
             },
         });
-console.log("data",res.data)
+
         return res?.data;
     } catch (err) {
 
         return err.response?.data || err.message;
+    }
+}
+
+
+// get change password api 
+
+export async function ChangePassword(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}api/client/change-password`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+//  forget api 
+
+export async function ForgetPasswordApi(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}api/client/forgot-password`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+// get dasboard api 
+
+export async function getDashboarddetail(token) {
+
+    try {
+        const res = await axios.get(`${Config.base_url}dashboard/getcount`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
     }
 }

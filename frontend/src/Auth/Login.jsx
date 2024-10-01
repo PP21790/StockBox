@@ -150,7 +150,7 @@ const Login = () => {
                                                     </p> */}
                                                     <p className="mb-0">
 
-                                                        <Link to="/forgetpass">Forgot Password?</Link>
+                                                        <Link to="/forget">Forgot Password?</Link>
                                                     </p>
                                                 </div>
 

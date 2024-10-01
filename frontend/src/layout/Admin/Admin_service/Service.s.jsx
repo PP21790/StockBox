@@ -240,25 +240,25 @@ const Service = () => {
             selector: row => row.title,
             sortable: true,
         },
-        {
-            name: 'Active Status',
-            selector: row => (
-                <div className="form-check form-switch form-check-info">
-                    <input
-                        id={`rating_${row.status}`}
-                        className="form-check-input toggleswitch"
-                        type="checkbox"
-                        checked={row.status === true}
-                        onChange={(event) => handleSwitchChange(event, row._id)}
-                    />
-                    <label
-                        htmlFor={`rating_${row.status}`}
-                        className="checktoggle checkbox-bg"
-                    ></label>
-                </div>
-            ),
-            sortable: true,
-        },
+        // {
+        //     name: 'Active Status',
+        //     selector: row => (
+        //         <div className="form-check form-switch form-check-info">
+        //             <input
+        //                 id={`rating_${row.status}`}
+        //                 className="form-check-input toggleswitch"
+        //                 type="checkbox"
+        //                 checked={row.status === true}
+        //                 onChange={(event) => handleSwitchChange(event, row._id)}
+        //             />
+        //             <label
+        //                 htmlFor={`rating_${row.status}`}
+        //                 className="checktoggle checkbox-bg"
+        //             ></label>
+        //         </div>
+        //     ),
+        //     sortable: true,
+        // },
         {
             name: 'Created At',
             selector: row => new Date(row.created_at).toLocaleDateString(),

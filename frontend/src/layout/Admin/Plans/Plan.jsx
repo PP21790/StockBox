@@ -90,7 +90,7 @@ const Plan = () => {
         const originalChecked = event.target.checked;
         const user_active_status = originalChecked ? "active" : "inactive";
         const data = { id: id, status: user_active_status };
-    
+
         const result = await Swal.fire({
             title: "Do you want to save the changes?",
             showCancelButton: true,
@@ -98,7 +98,7 @@ const Plan = () => {
             cancelButtonText: "Cancel",
             allowOutsideClick: false,
         });
-    
+
         if (result.isConfirmed) {
             try {
                 const response = await changeplanstatus(data, token);
@@ -127,7 +127,7 @@ const Plan = () => {
             getcategoryplanlist();
         }
     };
-    
+
 
 
 
@@ -226,7 +226,7 @@ const Plan = () => {
                                                         </div>
                                                         <div className="price-section col-md-6">
                                                             <span className="discount">{client.discount}</span>
-                                                            <span className="original-price">INR {client.originalPrice}</span>
+                                                            {/* <span className="original-price">INR {client.originalPrice}</span> */}
                                                             <h3 className="ms-4 fnt">INR {client.price}</h3>
                                                         </div>
                                                     </div>
@@ -335,10 +335,10 @@ const Plan = () => {
                                                         </div>
                                                         <div className="btn-primary btnprime">
                                                             <Link to={`editplan/${client._id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
-                                                            
+
                                                                 Edit
-                                                            
-                                                                
+
+
                                                             </Link>
                                                         </div>
                                                     </div>
