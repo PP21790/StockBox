@@ -167,7 +167,6 @@ else if(segment=="C")
   ];
 
 
-console.log(pipeline);
 
 
   // Execute the aggregation

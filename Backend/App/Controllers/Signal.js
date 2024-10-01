@@ -125,16 +125,16 @@ class Signal {
 
 
     if (service) {
-      query.service = new mongoose.Types.ObjectId(service); // Convert service ID to ObjectId
+      query.service = service; // Convert service ID to ObjectId
     }
 
     if (stock) {
-      query.stock = new mongoose.Types.ObjectId(stock); // Convert stock ID to ObjectId
+      query.stock = stock; // Convert stock ID to ObjectId
     }
 
     // Log the query for debugging
 
-
+console.log(query);
     // Execute the query and populate service and stock details
     const result = await Signal_Modal.find(query)
       .populate({ path: 'service', select: 'title' }) // Populate only the title from service
