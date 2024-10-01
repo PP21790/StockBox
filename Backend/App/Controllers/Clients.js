@@ -46,6 +46,19 @@ class Clients {
         return res.status(400).json({ status: false, message: "Added by field is required" });
       }
 
+
+      const existingUser = await Clients_Modal.findOne({
+        $or: [{ Email }, { PhoneNo }]
+      });
+  
+      if (existingUser) {
+        if (existingUser.Email === Email) {
+          return res.status(400).json({ status: false, message: "Email already exists" });
+        } else if (existingUser.PhoneNo === PhoneNo) {
+          return res.status(400).json({ status: false, message: "Phone number already exists" });
+        }
+      }
+
       const refer_token = crypto.randomBytes(10).toString('hex'); 
 
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -60,6 +73,8 @@ class Clients {
       ActiveStatus:1
       })
      
+
+
 
       await result.save();
 
