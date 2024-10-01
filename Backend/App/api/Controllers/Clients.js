@@ -359,6 +359,8 @@ async forgotPassword(req, res) {
     });
   }
 }
+
+
 async resetPassword(req, res) {
   try {
     const { resetToken, newPassword, confirmPassword } = req.body;
