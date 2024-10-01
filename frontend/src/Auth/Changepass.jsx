@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import Swal from 'sweetalert2';
-import { ChangePassword } from '../../../Services/Admin';
+import { ChangePassword } from '../Services/Admin';
 
 const Changepass = () => {
     const token = localStorage.getItem('token');

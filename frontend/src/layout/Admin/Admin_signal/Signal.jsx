@@ -224,27 +224,33 @@ const Signal = () => {
     };
 
 
-
+console.log("closedata.targetprice1",closedata.targetprice1)
 
     // close signal
     const closeSignalperUser = async (index) => {
         try {
             const data = {
                 id: serviceid._id,
-                closestatus: closedata.closestatus,
-                closetype: index == 0 ? "1" : index == "1" ? "2" : index == "2" ? "3" : "4",
+                closestatus: index == 1 ? closedata.closestatus :"",
+                closetype: (index === 0) ? "1" : (index === 1) ? "2" : (index === 2) ? "3" : "4",
                 close_description: closedata.close_description,
-                targethit1: index == 1 ? checkedTargets1.target1 : "",
-                targethit2: index == 1 ? checkedTargets1.target1 : "",
-                targethit3: index == 1 ? checkedTargets1.target1 : "",
-                targetprice1: index == 0 || index == 1 ? closedata.targetprice1 : "",
-                targetprice2: index == 0 || index == 1 ? closedata.targetprice2 : "",
-                targetprice3: index == 0 || index == 1 ? closedata.targetprice3 : "",
-                slprice: index == 2 ? closedata.slprice : "",
-                exitprice: index == 3 ? closedata.exitprice : ""
+                targethit1: index === 1 ? checkedTargets1.target1 : "",
+                targethit2: index === 1 ? checkedTargets1.target2 : "", 
+                targethit3: index === 1 ? checkedTargets1.target3 : "", 
+                targetprice1: index === 0 ? targetvalue.tag1 : (index === 1 ? closedata.targetprice1 : ""),
+                targetprice2: index === 0 ? targetvalue.tag2 : (index === 1 ? closedata.targetprice2 : ""),
+                targetprice3: index === 0 ? targetvalue.tag3 : (index === 1 ? closedata.targetprice3 : ""),
+                slprice: index === 2 ? targetvalue.stoploss : "",
+                exitprice: index === 3 ? closedata.exitprice : ""
             };
+            
 
+            console.log("data",data)
+            console.log("closedata.slprice",closedata.slprice)
+     
             const response = await SignalCloseApi(data, token);
+             
+
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
@@ -290,7 +296,7 @@ const Signal = () => {
 
         {
             name: 'Symbol',
-            selector: row => row.title,
+            selector: row => row.stock,
             sortable: true,
             width: '132px',
         },

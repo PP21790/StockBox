@@ -390,6 +390,7 @@ export async function DeleteSignal(_id, token) {
 
 // for signal close api 
 export async function SignalCloseApi(data, token) {
+    console.log("data1",data)
     try {
         const res = await axios.post(`${Config.base_url}signal/closesignal`, data, {
             headers: {
@@ -397,7 +398,7 @@ export async function SignalCloseApi(data, token) {
                 'Authorization': `${token}`,
             },
         });
-
+          console.log("res",res)
         return res?.data;
     } catch (err) {
         return err.response?.data || err.message;
@@ -1443,7 +1444,7 @@ export async function Deleteplan(_id, token) {
 export async function getbannerlist(token) {
 
     try {
-        const res = await axios.get(`${Config.base_url}api/list/banner`, {
+        const res = await axios.get(`${Config.base_url}banner/list`, {
             headers: {
                 'Authorization': `${token}`
             },
@@ -1750,10 +1751,65 @@ export async function getexpirydate(data, token) {
                 'Authorization': `${token}`,
             },
         });
-console.log("data",res.data)
+
         return res?.data;
     } catch (err) {
 
         return err.response?.data || err.message;
+    }
+}
+
+
+// get change password api 
+
+export async function ChangePassword(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}api/client/change-password`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+//  forget api 
+
+export async function ForgetPasswordApi(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}api/client/forgot-password`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+// get dasboard api 
+
+export async function getDashboarddetail(token) {
+
+    try {
+        const res = await axios.get(`${Config.base_url}dashboard/getcount`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
     }
 }

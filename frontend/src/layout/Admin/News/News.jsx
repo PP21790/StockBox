@@ -338,7 +338,7 @@ const News = () => {
                                             <button
                                                 type="button"
                                                 className="btn-close"
-                                                onClick={() => setModel(false)} // Close modal on click
+                                                onClick={() => setModel(false)} 
                                             />
                                         </div>
                                         <div className="modal-body">

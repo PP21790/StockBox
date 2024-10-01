@@ -13,7 +13,7 @@ const PERMISSIONS = {
   };
   
 
-  closeSignal
+  
 router.post('/signal/add', AddSignal);
 router.get('/signal/list', getSignal);
 router.get('/signal/delete/:id', deleteSignal);

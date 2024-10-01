@@ -18,7 +18,6 @@ class Clients {
 
   async AddClient(req, res) {
 
-  
     try {
       const { FullName, Email, PhoneNo, password, token } = req.body;
 
@@ -73,7 +72,7 @@ class Clients {
 
 
       const hashedPassword = await bcrypt.hash(password, 10);
-      const refer_token = crypto.randomBytes(10).toString('hex'); // 10 bytes = 20 hex characters
+      const refer_token = crypto.randomBytes(10).toString('hex'); 
       const result = new Clients_Modal({
       FullName: FullName,
       Email: Email,
@@ -106,7 +105,7 @@ class Clients {
 
 
 
-    const resetToken = Math.floor(100000 + Math.random() * 900000); // Generates a 6-digit OTP
+    const resetToken = Math.floor(100000 + Math.random() * 900000); 
 
 
       const mailtemplate = await Mailtemplate_Modal.findOne({ mail_type: 'client_verification_mail' }); // Use findOne if you expect a single document
@@ -1144,6 +1143,78 @@ async payoutList(req, res) {
   }
 }
 
+
+
+async referEarn(req, res) {
+  try {
+    const { id } = req.body;  // Extract the client ID from the request parameters
+
+    const client = await Clients_Modal.findById(id);
+
+    // If client not found
+    if (!client) {
+        return res.status(404).json({
+            status: false,
+            message: "Client not found"
+        });
+    }
+
+
+
+    const result = await Refer_Modal.find({
+      $or: [
+        { user_id: id },      // Check if user_id matches
+        { token: client.refer_token }  // Check if token matches
+      ]
+    });
+    
+    // Process result to show receiveramount or senderamount based on the condition
+    const processedResult = result.map(entry => {
+      let amountType = null;
+    
+      // Check if user_id matched, show receiveramount
+      if (entry.user_id.toString() === id.toString()) {
+        amountType = {
+          type: 'receiver',
+          amount: entry.receiveramount
+        };
+      }
+      // Check if token matched, show senderamount
+      else if (entry.token === client.refer_token) {
+        amountType = {
+          type: 'sender',
+          amount: entry.senderamount
+        };
+      }
+    
+      // Return the entry along with the appropriate amount
+      return {
+        ...entry.toObject(),
+        amountType
+      };
+    });
+    
+    // Respond with the processed result
+    return res.json({
+      status: true,
+      message: "Data retrieved successfully",
+      data: processedResult
+    });
+
+   // const result = await Refer_Modal.find({ clientid: id }); 
+    
+    
+    // Fetch payouts for the given client ID
+
+    return res.json({
+      status: true,
+      message: "get",
+      data: result  // Return the fetched payouts
+    });
+  } catch (error) {
+    return res.json({ status: false, message: "Server error", data: [] });  // Error handling
+  }
+}
 
 
 

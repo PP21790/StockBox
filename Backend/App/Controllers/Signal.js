@@ -125,16 +125,16 @@ class Signal {
 
 
     if (service) {
-      query.service = new mongoose.Types.ObjectId(service); // Convert service ID to ObjectId
+      query.service = service; // Convert service ID to ObjectId
     }
 
     if (stock) {
-      query.stock = new mongoose.Types.ObjectId(stock); // Convert stock ID to ObjectId
+      query.stock = stock; // Convert stock ID to ObjectId
     }
 
     // Log the query for debugging
 
-
+console.log(query);
     // Execute the query and populate service and stock details
     const result = await Signal_Modal.find(query)
       .populate({ path: 'service', select: 'title' }) // Populate only the title from service
@@ -167,6 +167,9 @@ class Signal {
 }
 
 
+
+async deleteSignal(req, res) {
+}
 
 
 
@@ -209,109 +212,56 @@ class Signal {
 }
 
 
-
-  async deleteSignal(req, res) {
-  try {
-    const { id } = req.params; // Extract ID from URL params
-
-    if (!id) {
-      return res.status(400).json({
-        status: false,
-        message: "Signal ID is required",
-      });
-    }
-
-    // const deletedSignal = await Signal_Modal.findByIdAndDelete(id);
-
-    const deletedSignal = await Signal_Modal.findByIdAndUpdate(
-      id,
-      { del: 1 }, // Set del to true
-      { new: true }  // Return the updated document
-    );
-
-
-    if (!deletedSignal) {
-      return res.status(404).json({
-        status: false,
-        message: "Signal not found",
-      });
-    }
-
-    console.log("Deleted Signal:", deletedSignal);
-    return res.json({
-      status: true,
-      message: "Signal deleted successfully",
-      data: deletedSignal,
-    });
-  } catch (error) {
-    console.log("Error deleting Signal:", error);
-    return res.status(500).json({
-      status: false,
-      message: "Server error",
-      error: error.message,
-    });
-  }
-}
-
-
-
+  
   async closeSignal(req, res) {
-  try {
+    try {
 
+     
+      const { id, targethit1,targethit2,targethit3,targetprice1,targetprice2,targetprice3,slprice,exitprice,closestatus,closetype, close_description } = req.body;
+     
 
-    const { id, targethit1, targethit2, targethit3, targetprice1, targetprice2, targetprice3, slprice, exitprice, closestatus, closetype, close_description } = req.body;
-
-
-    let close_status = false;
-    let closeprice = null;
-    let closedate = null;
-
-    if (closetype == 1) {
-      close_status = true;
-      if (targetprice3) {
-        closeprice = targetprice3;
-      }
-      else if (targetprice2) {
-        closeprice = targetprice2;
-      }
-      else {
-        closeprice = targetprice1;
-      }
-      closedate = new Date();
-    }
-    if (closetype == 2) {
-
-      close_status = closestatus;
-      if (closestatus) {
-        if (targetprice3) {
-          closeprice = targetprice3;
+      let close_status = false;
+      let closeprice = null;
+      let closedate = null;
+     
+  
+      if (closetype === "1") {
+        // Close at target price
+        close_status = true;
+        closeprice = targetprice3 || targetprice2 || targetprice1;
+        closedate = new Date();
+      
+      } else if (closetype === "2") {
+        // Close based on closestatus and target price
+        close_status = closestatus;
+      
+        if (closestatus) {
+          closeprice = targetprice3 || targetprice2 || targetprice1;
           closedate = new Date();
         }
-        if (closetype == 2) {
+      
+      } else if (closetype === "3") {
+        // Close at stop-loss price
+        close_status = true;
+        closeprice = slprice;
+        closedate = new Date();
+      
+      } else if (closetype === "4") {
+        // Close at exit price
+        close_status = true;
+        closeprice = exitprice;
+        closedate = new Date();
+      }
+      
+      if (!id) {
+        return res.status(400).json({
+          status: false,
+          message: "Signal ID is required",
+        });
+      }
+  
 
-          close_status = closestatus;
-          if (closestatus) {
-            if (targetprice3) {
-              closeprice = targetprice3;
-            } else if (targetprice2) {
-              closeprice = targetprice2;
-            } else {
-              closeprice = targetprice1;
-            }
-            closedate = new Date();
-          }
-        }
-
-        if (closetype == 3) {
-          close_status = true;
-          closeprice = slprice;
-          closedate = new Date();
-        }
-        if (closetype == 4) {
-          close_status = true;
-          closeprice = exitprice;
-          closedate = new Date();
-        }
+      
 
         if (!id) {
           return res.status(400).json({
@@ -319,7 +269,6 @@ class Signal {
             message: "Signal ID is required",
           });
         }
-
 
         const updatedSignal = await Signal_Modal.findByIdAndUpdate(
           id,
@@ -335,7 +284,7 @@ class Signal {
             targetprice3,
             closedate: closedate
           },
-          { signal: true, runValidators: true } // Options: return the updated document and run validators
+          { signal: true, runValidators: true } 
         );
 
         if (!updatedSignal) {
@@ -345,7 +294,7 @@ class Signal {
           });
         }
 
-        console.log("Close Signal:", updatedSignal);
+       // console.log("Close Signal:", updatedSignal);
         return res.json({
           status: true,
           message: "Signal Closed successfully",
@@ -353,8 +302,7 @@ class Signal {
         });
 
       }
-    }
-  }
+   
   catch (error) {
     console.log("Error updating Signal:", error);
     return res.status(500).json({

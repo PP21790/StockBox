@@ -1,8 +1,13 @@
 const db = require("../Models");
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
+const { sendEmail } = require('../Utils/emailService');
+const path = require('path');
+const fs = require('fs');
 const Payout_Modal = db.Payout;
 const Clients_Modal = db.Clients;
+const Mailtemplate_Modal = db.Mailtemplate;
+const BasicSetting_Modal = db.BasicSetting;
 
 
 class Clients {
@@ -41,6 +46,19 @@ class Clients {
         return res.status(400).json({ status: false, message: "Added by field is required" });
       }
 
+
+      const existingUser = await Clients_Modal.findOne({
+        $or: [{ Email }, { PhoneNo }]
+      });
+  
+      if (existingUser) {
+        if (existingUser.Email === Email) {
+          return res.status(400).json({ status: false, message: "Email already exists" });
+        } else if (existingUser.PhoneNo === PhoneNo) {
+          return res.status(400).json({ status: false, message: "Phone number already exists" });
+        }
+      }
+
       const refer_token = crypto.randomBytes(10).toString('hex'); 
 
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -56,7 +74,64 @@ class Clients {
       })
      
 
+
+
       await result.save();
+
+
+    
+      const settings = await BasicSetting_Modal.findOne();
+      if (!settings || !settings.smtp_status) {
+        throw new Error('SMTP settings are not configured or are disabled');
+      }
+
+
+      const mailtemplate = await Mailtemplate_Modal.findOne({ mail_type: 'welcome_mail' }); // Use findOne if you expect a single document
+      if (!mailtemplate || !mailtemplate.mail_body) {
+          throw new Error('Mail template not found');
+      }
+
+ 
+
+      const templatePath = path.join(__dirname, '../../template', 'mailtemplate.html');
+    
+    
+      fs.readFile(templatePath, 'utf8', async (err, htmlTemplate) => {
+        if (err) {
+            console.error('Error reading HTML template:', err);
+            return;
+        }
+        
+        let finalMailBody = mailtemplate.mail_body
+        .replace('{username}', `${PhoneNo}/${Email}`)
+        .replace('{password}', password)
+        .replace(/{company_name}/g, settings.website_title);
+
+        const logo =`http://${req.headers.host}/uploads/basicsetting/${settings.logo}`;
+
+        // Replace placeholders with actual values
+        const finalHtml = htmlTemplate
+            .replace(/{{company_name}}/g, settings.website_title)
+            .replace(/{{body}}/g, finalMailBody)
+            .replace(/{{logo}}/g, logo);
+
+           console.log(finalHtml);  
+    
+        // Email options
+        const mailOptions = {
+            to: result.Email,
+            from: `${settings.from_name} <${settings.from_mail}>`, // Include business name
+            subject: `${mailtemplate.mail_subject}`,
+            html: finalHtml // Use the HTML template with dynamic variables
+        };
+    
+        // Send email
+        await sendEmail(mailOptions);
+    });
+
+
+
+
 
       // console.log("result", result)
       return res.json({

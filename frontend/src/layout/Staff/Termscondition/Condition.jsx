@@ -7,6 +7,8 @@ import Swal from 'sweetalert2';
 
 const Condition = () => {
 
+    const token = localStorage.getItem('token');
+    const userid = localStorage.getItem('id');
 
 
     const navigate = useNavigate();
@@ -24,8 +26,6 @@ const Condition = () => {
         add_by: "",
     });
 
-    const token = localStorage.getItem('token');
-    const userid = localStorage.getItem('id');
 
 
 
