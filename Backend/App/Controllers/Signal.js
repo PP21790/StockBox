@@ -209,92 +209,54 @@ console.log(query);
 }
 
 
-
-  async deleteSignal(req, res) {
-  try {
-    const { id } = req.params; // Extract ID from URL params
-
-    if (!id) {
-      return res.status(400).json({
-        status: false,
-        message: "Signal ID is required",
-      });
-    }
-
-    // const deletedSignal = await Signal_Modal.findByIdAndDelete(id);
-
-    const deletedSignal = await Signal_Modal.findByIdAndUpdate(
-      id,
-      { del: 1 }, // Set del to true
-      { new: true }  // Return the updated document
-    );
-
-
-    if (!deletedSignal) {
-      return res.status(404).json({
-        status: false,
-        message: "Signal not found",
-      });
-    }
-
-    console.log("Deleted Signal:", deletedSignal);
-    return res.json({
-      status: true,
-      message: "Signal deleted successfully",
-      data: deletedSignal,
-    });
-  } catch (error) {
-    console.log("Error deleting Signal:", error);
-    return res.status(500).json({
-      status: false,
-      message: "Server error",
-      error: error.message,
-    });
-  }
-}
-
-
-
+  
   async closeSignal(req, res) {
-  try {
+    try {
 
-
-    const { id, targethit1, targethit2, targethit3, targetprice1, targetprice2, targetprice3, slprice, exitprice, closestatus, closetype, close_description } = req.body;
      
-    
-    let close_status = false;
-    let closeprice = null;
-    let closedate = null;
-   
+      const { id, targethit1,targethit2,targethit3,targetprice1,targetprice2,targetprice3,slprice,exitprice,closestatus,closetype, close_description } = req.body;
+     
 
-    if (closetype === "1") {
-      // Close at target price
-      close_status = true;
-      closeprice = targetprice3 || targetprice2 || targetprice1;
-      closedate = new Date();
-    
-    } else if (closetype === "2") {
-      // Close based on closestatus and target price
-      close_status = closestatus;
-    
-      if (closestatus) {
+      let close_status = false;
+      let closeprice = null;
+      let closedate = null;
+     
+  
+      if (closetype === "1") {
+        // Close at target price
+        close_status = true;
         closeprice = targetprice3 || targetprice2 || targetprice1;
         closedate = new Date();
+      
+      } else if (closetype === "2") {
+        // Close based on closestatus and target price
+        close_status = closestatus;
+      
+        if (closestatus) {
+          closeprice = targetprice3 || targetprice2 || targetprice1;
+          closedate = new Date();
+        }
+      
+      } else if (closetype === "3") {
+        // Close at stop-loss price
+        close_status = true;
+        closeprice = slprice;
+        closedate = new Date();
+      
+      } else if (closetype === "4") {
+        // Close at exit price
+        close_status = true;
+        closeprice = exitprice;
+        closedate = new Date();
       }
-    
-    } else if (closetype === "3") {
-      // Close at stop-loss price
-      close_status = true;
-      closeprice = slprice;
-      closedate = new Date();
-    
-    } else if (closetype === "4") {
-      // Close at exit price
-      close_status = true;
-      closeprice = exitprice;
-      closedate = new Date();
-    }
-    
+      
+      if (!id) {
+        return res.status(400).json({
+          status: false,
+          message: "Signal ID is required",
+        });
+      }
+  
 
       
 
@@ -319,7 +281,7 @@ console.log(query);
             targetprice3,
             closedate: closedate
           },
-          { signal: true, runValidators: true } // Options: return the updated document and run validators
+          { signal: true, runValidators: true } 
         );
 
         if (!updatedSignal) {

@@ -474,63 +474,34 @@ async  myPlan(req, res) {
 
     
     // Fetch subscriptions based on client_id and del status
-    const result = await PlanSubscription_Modal.find({
+    const result = await PlanSubscription_Modal.aggregate([
+  {
+    $match: {
       del: false,
-      client_id: id
-    }).exec();
-
-    // Process the subscriptions to calculate months and years difference
-     // Define validity mapping
-     const validityMapping = {
-      '1 month': 1,
-      '3 months': 3,
-      '6 months': 6,
-      '9 months': 9,
-      '1 year': 12,
-      '2 years': 24,
-      '3 years': 36,
-      '4 years': 48,
-      '5 years': 60
-    };
-
-    // Process the subscriptions to calculate months and years difference
-    const processedResult = result.map(subscription => {
-      const startDate = new Date(subscription.plan_start);
-      const endDate = new Date(subscription.plan_end);
-
-      // Calculate months difference
-      let monthsDifference = (endDate.getFullYear() - startDate.getFullYear()) * 12;
-      monthsDifference -= startDate.getMonth();
-      monthsDifference += endDate.getMonth();
-      monthsDifference = monthsDifference <= 0 ? 0 : monthsDifference;
-
-      // Calculate years difference
-      let yearsDifference = endDate.getFullYear() - startDate.getFullYear();
-      if (startDate.getMonth() > endDate.getMonth() || 
-          (startDate.getMonth() === endDate.getMonth() && startDate.getDate() > endDate.getDate())) {
-        yearsDifference--;
-      }
-
-      // Determine validity in months and years
-      const planValidity = validityMapping[subscription.validity];
-
-      let differenceString = '';
-      if (yearsDifference > 0) {
-        differenceString = `${yearsDifference} year${yearsDifference === 1 ? '' : 's'}`;
-      } else {
-        differenceString = `${monthsDifference} month${monthsDifference === 1 ? '' : 's'}`;
-      }
-      return {
-        ...subscription.toObject(),  // Convert Mongoose document to plain object
-        differenceString: differenceString,
-       };
-    });
+      client_id: new mongoose.Types.ObjectId(id) // Convert id to ObjectId if necessary
+    }
+  },
+  {
+    $lookup: {
+      from: 'plans', // The name of the plans collection
+      localField: 'plan_id', // The field in PlanSubscription_Modal that references the plans
+      foreignField: '_id', // The field in the plans collection that is referenced
+      as: 'planDetails' // The name of the field in the result that will hold the joined data
+    }
+  },
+  {
+    $unwind: '$planDetails' // Optional: Unwind the result if you expect only one matching plan per subscription
+  }
+]);
+    console.log(result);
+  
+   
 
     // Respond with the retrieved subscriptions
     return res.json({
       status: true,
       message: "Subscriptions retrieved successfully",
-      data: processedResult
+      data: result
     });
 
   } catch (error) {
