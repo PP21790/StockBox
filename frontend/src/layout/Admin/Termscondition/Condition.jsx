@@ -540,8 +540,8 @@ const Condition = () => {
                     <div className="col-lg-4">
                         <div className="card">
                             <div className="card-body">
-                                <div className='d-flex'>
-                                    <div className='mb-2'>
+                                <div className='d-flex justify-content-between'>
+                                    <div >
                                         <h5 className="card-title text-primary">Terms & Condition</h5>
                                     </div>
                                     <div>
@@ -550,9 +550,13 @@ const Condition = () => {
                                         </Tooltip>
                                     </div>
                                 </div>
-                                
+
                                 <hr />
-                               
+                                <div className='mb-2'>
+                                    <label htmlFor="">Title</label>
+                                    <input type="text" className='form-control' />
+                                </div>
+
                                 <div className='mb-2'>
                                     <label htmlFor="">Description</label>
                                     <textarea type="text" className='form-control' />
@@ -567,7 +571,18 @@ const Condition = () => {
                     <div className="col-lg-4">
                         <div className="card">
                             <div className="card-body">
-                                <h5 className="card-title text-success">Privacy & Policy</h5>
+                                <div className="d-flex justify-content-between">
+                                    <div>
+                                        <h5 className="card-title text-success">Privacy & Policy</h5>
+                                    </div>
+
+                                    <div>
+                                        <Tooltip placement="top" overlay="Delete">
+                                            <Trash2 />
+                                        </Tooltip>
+                                    </div>
+
+                                </div>
                                 <hr />
 
                                 <div className='mb-2'>
@@ -588,7 +603,18 @@ const Condition = () => {
                     <div className="col-lg-4">
                         <div className="card">
                             <div className="card-body">
-                                <h5 className="card-title text-danger">World</h5>
+                                <div className="d-flex justify-content-between">
+                                    <div>
+                                        <h5 className="card-title text-danger">World</h5>
+                                    </div>
+
+                                    <div>
+                                        <Tooltip placement="top" overlay="Delete">
+                                            <Trash2 />
+                                        </Tooltip>
+                                    </div>
+
+                                </div>
                                 <hr />
                                 <div className='mb-2'>
                                     <label htmlFor="">Title</label>
