@@ -18,7 +18,6 @@ class Clients {
 
   async AddClient(req, res) {
 
-  
     try {
       const { FullName, Email, PhoneNo, password, token } = req.body;
 
