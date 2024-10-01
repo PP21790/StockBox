@@ -487,7 +487,7 @@ const Faq = () => {
                                                             <div className="row">
                                                                 <div className="col-md-12">
                                                                     <label htmlFor="">Description</label>
-                                                                    <input
+                                                                    <textarea
                                                                         className="form-control mb-2"
                                                                         type="text"
                                                                         placeholder='Enter  Description'

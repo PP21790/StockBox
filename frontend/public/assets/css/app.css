@@ -5190,11 +5190,25 @@ label {
 }
 
 .lucide-user-pen {
-	margin-left: 6px;
+	margin-right: 10px;
 }
 
 .lucide-user-pen:hover {
-	margin-left: 6px;
+
+	background: #000;
+	border-radius: 70%;
+	color: #FFF;
+	font-size: 5px;
+	text-align: center;
+	line-height: 100px;
+	font-family: sans-serif;
+	text-transform: uppercase;
+	animation: animate-pulse 3s linear infinite;
+	cursor: pointer
+}
+
+.lucide-square-pen:hover {
+
 	background: #000;
 	border-radius: 70%;
 	color: #FFF;

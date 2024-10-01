@@ -5,6 +5,7 @@ import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { image_baseurl } from '../../../Utils/config';
+import { Tooltip } from 'antd';
 
 const Blogs = () => {
 
@@ -290,26 +291,26 @@ const Blogs = () => {
             selector: row => new Date(row.updated_at).toLocaleDateString(),
             sortable: true,
         },
-        {
-            name: 'Date',
-            selector: row => new Date(row.updated_at).toLocaleDateString(),
-            sortable: true,
-        },
+
         {
             name: 'Actions',
             cell: row => (
                 <>
                     <div>
-                        <SquarePen
-                            onClick={() => {
-                                setModel(true);
-                                setServiceid(row);
-                                setUpdatetitle({ title: row.title, id: row._id, description: row.description, image: row.image });
-                            }}
-                        />
+                        <Tooltip placement="top" overlay="Update">
+                            <SquarePen
+                                onClick={() => {
+                                    setModel(true);
+                                    setServiceid(row);
+                                    setUpdatetitle({ title: row.title, id: row._id, description: row.description, image: row.image });
+                                }}
+                            />
+                        </Tooltip>
                     </div>
                     <div>
-                        <Trash2 onClick={() => DeleteBlogs(row._id)} />
+                        <Tooltip placement="top" overlay="Delete">
+                            <Trash2 onClick={() => DeleteBlogs(row._id)} />
+                        </Tooltip>
                     </div>
                 </>
             ),
@@ -434,7 +435,7 @@ const Blogs = () => {
                                                     <div className="row">
                                                         <div className="col-md-12">
                                                             <label htmlFor="">description</label>
-                                                            <input
+                                                            <textarea
                                                                 className="form-control mb-3"
                                                                 type="text"
                                                                 placeholder='Enter description'
@@ -524,7 +525,7 @@ const Blogs = () => {
                                                             <div className="row">
                                                                 <div className="col-md-12">
                                                                     <label htmlFor="">Description</label>
-                                                                    <input
+                                                                    <textarea
                                                                         className="form-control mb-2"
                                                                         type="text"
                                                                         placeholder='Enter  Description'

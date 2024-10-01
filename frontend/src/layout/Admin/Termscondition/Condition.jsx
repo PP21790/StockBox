@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getconsitionlist, Addtermscondition, UpdateCondition, changeconditionstatus, Deleteservices } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
+import { Tooltip } from 'antd';
 import Swal from 'sweetalert2';
 
 const Condition = () => {
@@ -280,26 +281,26 @@ const Condition = () => {
             selector: row => new Date(row.updated_at).toLocaleDateString(),
             sortable: true,
         },
-        {
-            name: 'Date',
-            selector: row => new Date(row.updated_at).toLocaleDateString(),
-            sortable: true,
-        },
+
         {
             name: 'Actions',
             cell: row => (
                 <>
                     <div>
-                        <SquarePen
-                            onClick={() => {
-                                setModel(true);
-                                setServiceid(row);
-                                setUpdatetitle({ title: row.title, id: row._id, description: row.description });
-                            }}
-                        />
+                        <Tooltip placement="top" overlay="Update">
+                            <SquarePen
+                                onClick={() => {
+                                    setModel(true);
+                                    setServiceid(row);
+                                    setUpdatetitle({ title: row.title, id: row._id, description: row.description });
+                                }}
+                            />
+                        </Tooltip>
                     </div>
                     <div>
-                        <Trash2 onClick={() => DeleteService(row._id)} />
+                        <Tooltip placement="top" overlay="Delete">
+                            <Trash2 onClick={() => DeleteService(row._id)} />
+                        </Tooltip>
                     </div>
                 </>
             ),
@@ -333,7 +334,7 @@ const Condition = () => {
             <div className="page-content">
 
                 <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                    <div className="breadcrumb-title pe-3">Service</div>
+                    <div className="breadcrumb-title pe-3">Terms & Condition</div>
                     <div className="ps-3">
                         <nav aria-label="breadcrumb">
                             <ol className="breadcrumb mb-0 p-0">
@@ -411,7 +412,7 @@ const Condition = () => {
                                                     <div className="row">
                                                         <div className="col-md-12">
                                                             <label htmlFor="">Description</label>
-                                                            <input
+                                                            <textarea
                                                                 className="form-control mb-3"
                                                                 type="text"
                                                                 placeholder='Enter description'
@@ -455,7 +456,7 @@ const Condition = () => {
                                                 <div className="modal-content">
                                                     <div className="modal-header">
                                                         <h5 className="modal-title" id="exampleModalLabel">
-                                                            Update News
+                                                            Update Terms & condition
                                                         </h5>
                                                         <button
                                                             type="button"
@@ -481,7 +482,7 @@ const Condition = () => {
                                                             <div className="row">
                                                                 <div className="col-md-12">
                                                                     <label htmlFor="">Description</label>
-                                                                    <input
+                                                                    <textarea
                                                                         className="form-control mb-2"
                                                                         type="text"
                                                                         placeholder="Enter Description"
@@ -527,7 +528,118 @@ const Condition = () => {
                         </div>
                     </div>
                 </div>
+
+
+
+
+
+
+
+
+                <div className="row">
+                    <div className="col-lg-4">
+                        <div className="card">
+                            <div className="card-body">
+                                <div className='d-flex justify-content-between'>
+                                    <div >
+                                        <h5 className="card-title text-primary">Terms & Condition</h5>
+                                    </div>
+                                    <div>
+                                        <Tooltip placement="top" overlay="Delete">
+                                            <Trash2 />
+                                        </Tooltip>
+                                    </div>
+                                </div>
+
+                                <hr />
+                                <div className='mb-2'>
+                                    <label htmlFor="">Title</label>
+                                    <input type="text" className='form-control' />
+                                </div>
+
+                                <div className='mb-2'>
+                                    <label htmlFor="">Description</label>
+                                    <textarea type="text" className='form-control' />
+                                </div>
+                                <hr />
+                                <a href="javascript:void();" className="btn btn-outline-primary">
+                                    Update
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-lg-4">
+                        <div className="card">
+                            <div className="card-body">
+                                <div className="d-flex justify-content-between">
+                                    <div>
+                                        <h5 className="card-title text-success">Privacy & Policy</h5>
+                                    </div>
+
+                                    <div>
+                                        <Tooltip placement="top" overlay="Delete">
+                                            <Trash2 />
+                                        </Tooltip>
+                                    </div>
+
+                                </div>
+                                <hr />
+
+                                <div className='mb-2'>
+                                    <label htmlFor="">Title</label>
+                                    <input type="text" className='form-control' />
+                                </div>
+                                <div className='mb-2'>
+                                    <label htmlFor="">Description</label>
+                                    <textarea type="text" className='form-control' />
+                                </div>
+                                <hr />
+                                <a href="javascript:void();" className="btn btn-outline-success">
+                                    Update
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-lg-4">
+                        <div className="card">
+                            <div className="card-body">
+                                <div className="d-flex justify-content-between">
+                                    <div>
+                                        <h5 className="card-title text-danger">World</h5>
+                                    </div>
+
+                                    <div>
+                                        <Tooltip placement="top" overlay="Delete">
+                                            <Trash2 />
+                                        </Tooltip>
+                                    </div>
+
+                                </div>
+                                <hr />
+                                <div className='mb-2'>
+                                    <label htmlFor="">Title</label>
+                                    <input type="text" className='form-control' />
+                                </div>
+                                <div className='mb-2'>
+                                    <label htmlFor="">Description</label>
+                                    <textarea type="text" className='form-control' />
+                                </div>
+                                <hr />
+                                <a href="javascript:void();" className="btn btn-outline-danger">
+                                    Update
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
+
+
+
+
+
+
         </div>
     );
 };

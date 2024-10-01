@@ -6,6 +6,7 @@ import Table from '../../../components/Table';
 import { Pencil, Trash2, UserPen } from 'lucide-react';
 import { deleteStaff, updateStaffstatus } from '../../../Services/Admin';
 import Swal from 'sweetalert2';
+import { Tooltip } from 'antd';
 
 const Staff = () => {
 
@@ -201,32 +202,37 @@ const Staff = () => {
             sortable: true,
             width: '142px',
         },
-        {
-            name: 'Date',
-            selector: row => new Date(row.updatedAt).toLocaleDateString(),
-            sortable: true,
-            width: '142px',
-        },
-        {
-            name: 'Permission',
-            cell: row => (
-                <>
-                    <div>
-                        <UserPen onClick={() => updatepermission(row)} />
-                    </div>
-                </>
-            ),
-            width: '142px',
-        },
+
+        // {
+        //     name: 'Permission',
+        //     cell: row => (
+        //         <>
+        //             <div>
+        //                 <UserPen onClick={() => updatepermission(row)} />
+        //             </div>
+        //         </>
+        //     ),
+        //     width: '142px',
+        // },
         {
             name: 'Actions',
             cell: row => (
                 <>
                     <div>
-                        <Pencil onClick={() => updateStaff(row)} />
+                        <Tooltip placement="top" overlay="Permision">
+                            <UserPen onClick={() => updatepermission(row)} />
+                        </Tooltip>
+                    </div>
+
+                    <div>
+                        <Tooltip placement="top" overlay="Edit">
+                            <Pencil onClick={() => updateStaff(row)} />
+                        </Tooltip>
                     </div>
                     <div>
-                        <Trash2 onClick={() => DeleteStaff(row._id)} />
+                        <Tooltip placement="top" overlay="Delete">
+                            <Trash2 onClick={() => DeleteStaff(row._id)} />
+                        </Tooltip>
                     </div>
                 </>
             ),

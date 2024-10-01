@@ -153,7 +153,7 @@ const Client = () => {
 
     // update status 
 
-  
+
 
     const handleSwitchChange = async (event, id) => {
         const originalChecked = event.target.checked;
@@ -295,19 +295,14 @@ const Client = () => {
             name: 'Email',
             selector: row => row.Email,
             sortable: true,
-            width: '243px',
+            width: '265px',
         },
         {
             name: 'Phone No',
             selector: row => row.PhoneNo,
             sortable: true,
         },
-        {
-            name: 'CreatedAt',
-            selector: row => fDateTime(row.createdAt),
-            sortable: true,
-            width: '146px',
-        },
+
 
         {
             name: 'Signup Status',
@@ -315,12 +310,12 @@ const Client = () => {
             sortable: true,
             width: '165px',
         },
-        {
-        name: 'Date',
-        selector: row => row.Status,
-        sortable: true,
-        width: '165px',
-        },
+        // {
+        // name: 'Date',
+        // selector: row => row.Status,
+        // sortable: true,
+        // width: '165px',
+        // },
 
         {
             name: 'Active Status',
@@ -339,6 +334,12 @@ const Client = () => {
                     ></label>
                 </div>
             ),
+            sortable: true,
+            width: '165px',
+        },
+        {
+            name: 'CreatedAt',
+            selector: row => fDateTime(row.createdAt),
             sortable: true,
             width: '165px',
         },
