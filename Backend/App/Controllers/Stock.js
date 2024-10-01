@@ -127,7 +127,12 @@ let option_type;
 if(segment=="F")
 {
   option_type= "UT";
-}else 
+}
+else if(segment=="C")
+  {
+    option_type= "EQ";
+  }
+  else
 {
    option_type= "PE";
 }
