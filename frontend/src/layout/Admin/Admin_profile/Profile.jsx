@@ -3,27 +3,28 @@ import { Link } from 'react-router-dom';
 import { getstaffperuser } from '../../../Services/Admin';
 
 const Profile = () => {
-   
+
     const token = localStorage.getItem('token');
     const userid = localStorage.getItem('id');
 
-    const [data,setData] = useState([])
-  
+    const [data, setData] = useState([])
+
     const getpermissioninfo = async () => {
         try {
-          const response = await getstaffperuser(userid, token);
-          if (response.status) {
-            setData(response.data.permissions);
-          }
+            const response = await getstaffperuser(userid, token);
+            if (response.status) {
+                setData([response.data]);
+
+            }
         } catch (error) {
-          console.log("error", error);
+            console.log("error", error);
         }
-      };
+    };
 
 
-      useEffect(()=>{
+    useEffect(() => {
         getpermissioninfo()
-      },[])
+    }, [])
 
     return (
         <div>
@@ -82,10 +83,12 @@ const Profile = () => {
                                                 className="rounded-circle p-1 bg-primary"
                                                 width={110}
                                             />
-                                            <div className="mt-3">
-                                                <h4>Admin</h4>
-          
-                                            </div>
+                                            {data.map((item) => (
+                                                <div className="mt-3" key={item.FullName}>
+                                                    <h4>{item.FullName}</h4>
+                                                </div>
+                                            ))}
+
                                         </div>
                                         <hr className="my-4" />
                                         <ul className="list-group list-group-flush">
@@ -181,46 +184,47 @@ const Profile = () => {
                             <div className="col-lg-8">
                                 <div className="card">
                                     <div className="card-body mt-5">
-                                        
-                                        <div className="row mb-3">
-                                            <div className="col-sm-3">
-                                                <h6 className="mb-0">Full Name</h6>
+
+                                        {data && data.map((item, index) => (
+                                            <div key={index}>
+                                                <div className="row mb-3">
+                                                    <div className="col-sm-3">
+                                                        <h6 className="mb-0">Full Name</h6>
+                                                    </div>
+                                                    <div className="col-sm-9 text-secondary">
+                                                        <p>{item.FullName}</p>
+                                                    </div>
+                                                </div>
+                                                <div className="row mb-3">
+                                                    <div className="col-sm-3">
+                                                        <h6 className="mb-0">Email</h6>
+                                                    </div>
+                                                    <div className="col-sm-9 text-secondary">
+                                                        <p>{item.Email}</p>
+                                                    </div>
+                                                </div>
+                                                <div className="row mb-3">
+                                                    <div className="col-sm-3">
+                                                        <h6 className="mb-0">Phone</h6>
+                                                    </div>
+                                                    <div className="col-sm-9 text-secondary">
+                                                        <p>{item.PhoneNo}</p>
+                                                    </div>
+                                                </div>
+                                                {/* <div className="row mb-3">
+                                                    <div className="col-sm-3">
+                                                        <h6 className="mb-0">Address</h6>
+                                                    </div>
+                                                    <div className="col-sm-9 text-secondary">
+                                                        <p>{item.address}</p>
+                                                    </div>
+                                                </div> */}
                                             </div>
-                                            <div className="col-sm-9 text-secondary">
-                                                <p>John Doe</p>
-                                            </div>
-                                        </div>
-                                        <div className="row mb-3">
-                                            <div className="col-sm-3">
-                                                <h6 className="mb-0">Email</h6>
-                                            </div>
-                                            <div className="col-sm-9 text-secondary">
-                                                <p>john@example.com</p>
-                                            </div>
-                                        </div>
-                                        <div className="row mb-3">
-                                            <div className="col-sm-3">
-                                                <h6 className="mb-0">Phone</h6>
-                                            </div>
-                                            <div className="col-sm-9 text-secondary">
-                                                <p>9876543210   </p>
-                                            </div>
-                                        </div>
+                                        ))}
 
                                         <div className="row mb-3">
                                             <div className="col-sm-3">
-                                                <h6 className="mb-0">Address</h6>
-                                            </div>
-                                            <div className="col-sm-9 text-secondary">
-                                                <p>
-                                                    Bay Area, San Francisco, CA
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <div className="row mb-3">
-                                            <div className="col-sm-3">
-                                                <Link to="/admin/changepass" className="btn btn-primary mb-0" style={{fontSize:"14px"}}>Change Password</Link>
+                                                <Link to="/admin/changepass" className="btn btn-primary mb-0" style={{ fontSize: "14px" }}>Change Password</Link>
                                             </div>
                                             <div className="col-sm-9 text-secondary">
 
@@ -229,7 +233,7 @@ const Profile = () => {
 
                                     </div>
                                 </div>
-                               
+
                             </div>
                         </div>
                     </div>
