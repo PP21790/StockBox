@@ -260,58 +260,43 @@ console.log(query);
 
 
     const { id, targethit1, targethit2, targethit3, targetprice1, targetprice2, targetprice3, slprice, exitprice, closestatus, closetype, close_description } = req.body;
-
-
+     
+    
     let close_status = false;
     let closeprice = null;
     let closedate = null;
+   
 
-    if (closetype == 1) {
+    if (closetype === "1") {
+      // Close at target price
       close_status = true;
-      if (targetprice3) {
-        closeprice = targetprice3;
+      closeprice = targetprice3 || targetprice2 || targetprice1;
+      closedate = new Date();
+    
+    } else if (closetype === "2") {
+      // Close based on closestatus and target price
+      close_status = closestatus;
+    
+      if (closestatus) {
+        closeprice = targetprice3 || targetprice2 || targetprice1;
+        closedate = new Date();
       }
-      else if (targetprice2) {
-        closeprice = targetprice2;
-      }
-      else {
-        closeprice = targetprice1;
-      }
+    
+    } else if (closetype === "3") {
+      // Close at stop-loss price
+      close_status = true;
+      closeprice = slprice;
+      closedate = new Date();
+    
+    } else if (closetype === "4") {
+      // Close at exit price
+      close_status = true;
+      closeprice = exitprice;
       closedate = new Date();
     }
-    if (closetype == 2) {
+    
 
-      close_status = closestatus;
-      if (closestatus) {
-        if (targetprice3) {
-          closeprice = targetprice3;
-          closedate = new Date();
-        }
-        if (closetype == 2) {
-
-          close_status = closestatus;
-          if (closestatus) {
-            if (targetprice3) {
-              closeprice = targetprice3;
-            } else if (targetprice2) {
-              closeprice = targetprice2;
-            } else {
-              closeprice = targetprice1;
-            }
-            closedate = new Date();
-          }
-        }
-
-        if (closetype == 3) {
-          close_status = true;
-          closeprice = slprice;
-          closedate = new Date();
-        }
-        if (closetype == 4) {
-          close_status = true;
-          closeprice = exitprice;
-          closedate = new Date();
-        }
+      
 
         if (!id) {
           return res.status(400).json({
@@ -319,7 +304,6 @@ console.log(query);
             message: "Signal ID is required",
           });
         }
-
 
         const updatedSignal = await Signal_Modal.findByIdAndUpdate(
           id,
@@ -345,7 +329,7 @@ console.log(query);
           });
         }
 
-        console.log("Close Signal:", updatedSignal);
+       // console.log("Close Signal:", updatedSignal);
         return res.json({
           status: true,
           message: "Signal Closed successfully",
@@ -353,8 +337,7 @@ console.log(query);
         });
 
       }
-    }
-  }
+   
   catch (error) {
     console.log("Error updating Signal:", error);
     return res.status(500).json({
