@@ -207,8 +207,8 @@ const Addcoupon = () => {
             <DynamicForm
                 fields={fields}
                 formik={formik}
-                page_title="Add New User"
-                btn_name="Add User"
+                page_title="Add Coupon Code"
+                btn_name="Add Coupon"
                 btn_name1="Cancel"
                 sumit_btn={true}
                 btn_name1_route={"/admin/coupon"}

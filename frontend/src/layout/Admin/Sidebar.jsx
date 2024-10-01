@@ -35,7 +35,7 @@ const menuItems = [
   { title: 'Broadcast SMS', icon: 'bx-conversation', link: '/admin/message' },
   { title: 'KYC Agreement', icon: 'bxs-chevron-right', link: '/admin/kyc' },
   { title: 'FAQ', icon: 'bx-help-circle', link: '/admin/faq' },
-  { title: 'Help Center', icon: 'bxs-chevron-right', link: '/admin/helpcenter' },
+  { title: 'Help Center', icon: 'bxs-chevron-right', link: '/admin/help' },
   { title: 'Terms And Condition', icon: 'bx-info-square', link: '/admin/termsandcondtion' }
 ];
 
