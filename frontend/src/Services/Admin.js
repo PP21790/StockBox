@@ -481,7 +481,7 @@ export async function addStaffpermission(data, token) {
 // staff detail per id
 
 export async function getstaffperuser(_id, token) {
-  console.log("_id",_id)
+
     try {
         const res = await axios.get(`${Config.base_url}user/detail/${_id}`, {
             headers: {
@@ -1733,6 +1733,24 @@ export async function getstockbyservice(data, token) {
             },
         });
 
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+// get stock expiry date
+
+export async function getexpirydate(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}stock/getstocksbyexpiry`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+console.log("data",res.data)
         return res?.data;
     } catch (err) {
 

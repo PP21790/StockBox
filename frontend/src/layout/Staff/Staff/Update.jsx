@@ -65,7 +65,7 @@ const Update = () => {
           timerProgressBar: true,
         });
         setTimeout(() => {
-          navigate("/admin/staff");
+          navigate("/staff/staff");
         }, 1500);
       } else {
         Swal.fire({
@@ -151,7 +151,7 @@ const Update = () => {
         btn_name1="Cancel"
         formik={formik}
         sumit_btn={true}
-        btn_name1_route={"/admin/staff"}
+        btn_name1_route={"/staff/staff"}
         additional_field={<></>}
       />
     </div>

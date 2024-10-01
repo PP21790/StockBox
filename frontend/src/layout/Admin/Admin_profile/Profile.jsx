@@ -1,7 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { getstaffperuser } from '../../../Services/Admin';
 
 const Profile = () => {
+   
+    const token = localStorage.getItem('token');
+    const userid = localStorage.getItem('id');
+
+    const [data,setData] = useState([])
+  
+    const getpermissioninfo = async () => {
+        try {
+          const response = await getstaffperuser(userid, token);
+          if (response.status) {
+            setData(response.data.permissions);
+          }
+        } catch (error) {
+          console.log("error", error);
+        }
+      };
+
+
+      useEffect(()=>{
+        getpermissioninfo()
+      },[])
 
     return (
         <div>
@@ -159,6 +181,7 @@ const Profile = () => {
                             <div className="col-lg-8">
                                 <div className="card">
                                     <div className="card-body mt-5">
+                                        
                                         <div className="row mb-3">
                                             <div className="col-sm-3">
                                                 <h6 className="mb-0">Full Name</h6>
@@ -206,72 +229,7 @@ const Profile = () => {
 
                                     </div>
                                 </div>
-                                {/* <div className="row">
-                                    <div className="col-sm-12">
-                                        <div className="card">
-                                            <div className="card-body">
-                                                <h5 className="d-flex align-items-center mb-3">
-                                                    Project Status
-                                                </h5>
-                                                <p>Web Design</p>
-                                                <div className="progress mb-3" style={{ height: 5 }}>
-                                                    <div
-                                                        className="progress-bar bg-primary"
-                                                        role="progressbar"
-                                                        style={{ width: "80%" }}
-                                                        aria-valuenow={80}
-                                                        aria-valuemin={0}
-                                                        aria-valuemax={100}
-                                                    />
-                                                </div>
-                                                <p>Website Markup</p>
-                                                <div className="progress mb-3" style={{ height: 5 }}>
-                                                    <div
-                                                        className="progress-bar bg-danger"
-                                                        role="progressbar"
-                                                        style={{ width: "72%" }}
-                                                        aria-valuenow={72}
-                                                        aria-valuemin={0}
-                                                        aria-valuemax={100}
-                                                    />
-                                                </div>
-                                                <p>One Page</p>
-                                                <div className="progress mb-3" style={{ height: 5 }}>
-                                                    <div
-                                                        className="progress-bar bg-success"
-                                                        role="progressbar"
-                                                        style={{ width: "89%" }}
-                                                        aria-valuenow={89}
-                                                        aria-valuemin={0}
-                                                        aria-valuemax={100}
-                                                    />
-                                                </div>
-                                                <p>Mobile Template</p>
-                                                <div className="progress mb-3" style={{ height: 5 }}>
-                                                    <div
-                                                        className="progress-bar bg-warning"
-                                                        role="progressbar"
-                                                        style={{ width: "55%" }}
-                                                        aria-valuenow={55}
-                                                        aria-valuemin={0}
-                                                        aria-valuemax={100}
-                                                    />
-                                                </div>
-                                                <p>Backend API</p>
-                                                <div className="progress" style={{ height: 5 }}>
-                                                    <div
-                                                        className="progress-bar bg-info"
-                                                        role="progressbar"
-                                                        style={{ width: "66%" }}
-                                                        aria-valuenow={66}
-                                                        aria-valuemin={0}
-                                                        aria-valuemax={100}
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> */}
+                               
                             </div>
                         </div>
                     </div>

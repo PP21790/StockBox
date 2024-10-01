@@ -324,9 +324,9 @@ class List {
                existingPlan.enddate.setMonth(existingPlan.enddate.getMonth() + monthsToAdd);
             } else {
                 existingPlan.enddate = end;  // Set new end date if it has expired
+                existingPlan.startdate = start; 
             }
         
-            existingPlan.startdate = start;  // Update startdate
         
             try {
               const savedPlan = await Planmanage.updateOne(
@@ -640,134 +640,98 @@ async applyCoupon (req, res) {
 }
 
 async showSignalsToClients(req, res) {
-  try {
-    const { client_id,service_id } = req.body;
-    const currentDate = new Date();
 
-    const activePlanPurchases = await PlanSubscription_Modal.find({
-      client_id: client_id,
-      status: 'active',
-      del: false,
-      plan_start: { $lte: currentDate },
-      plan_end: { $gte: currentDate }
-    });
 
-    let relevantSignals = [];
+    try {
+      const { service_id, client_id } = req.body;
 
-    for (let purchase of activePlanPurchases) {
-      const plan = await Plan_Modal.findById(new mongoose.Types.ObjectId(purchase.plan_id));
-      if (!plan) continue;
+      // Fetch the plan that matches the serviceId and clientId
+      const plans = await Planmanage.find({ serviceid: service_id, clientid: client_id });
 
-      const planCategory = await Plancategory_Modal.findById(plan.category);
-      if (!planCategory) continue;
+      if (plans.length === 0) {
+          return res.json({
+              status: false,
+              message: "No plans found for the given service and client IDs",
+              data: []
+          });
+      }
 
-      const serviceIds = planCategory.service.split(',').map(id => {
-        id = id.trim(); // Remove any extra whitespace
-        if (mongoose.Types.ObjectId.isValid(id)) {
-          return new mongoose.Types.ObjectId(id);
-        } else {
-          return null;
-        }
-      }).filter(id => id !== null);
-  
-      const serviceObjectId = new mongoose.Types.ObjectId(service_id);
+      // Get the start and end dates from the plans
+      const startDates = plans.map(plan => new Date(plan.startdate));
+      const endDates = plans.map(plan => new Date(plan.enddate));
      
+      const query = {
+        service: service_id,
+        close_status: false,
+        createdAt: {
+            $gte: startDates[0], // Assuming all plans have the same startdate
+            $lte: endDates[0] // Assuming all plans have the same enddate
+        }
+    };
 
-      // Step 4: Log comparisons and check for a match
-      serviceIds.forEach(id => {
-        const isEqual = id.equals(serviceObjectId);
+    // Print the query to the console
+    console.log("Query being executed:", query);
+
+    // Fetch signals where createdAt is between the plan's start and end dates
+    const signals = await Signal_Modal.find(query);
+   
+      return res.json({
+          status: true,
+          message: "Signals retrieved successfully",
+          data: signals
       });
 
-      const matchingId = serviceIds.some(id => id.equals(serviceObjectId));
-
-      // Step 5: If there's a match, find the matching signals
-      let matchingSignals = [];
-      if (matchingId) {
-       
-
-        matchingSignals = await Signal_Modal.find({ service: serviceObjectId })
-        .populate({
-          path: 'stock',
-          select: 'symbol' // Select only the symbol field from the stock collection
-        });
-    }
-
-      const protocol = req.protocol; // Will be 'http' or 'https'
-      const baseUrl = `${protocol}://${req.headers.host}`;
- matchingSignals.forEach(signal => {
-    signal.report = `${baseUrl}/uploads/report/${signal.report}`;
-  });
-
-      relevantSignals = relevantSignals.concat(matchingSignals);
-    }
-
-    relevantSignals = [...new Map(relevantSignals.map(signal => [signal._id.toString(), signal])).values()];
-
-    return res.status(200).json({
-      message: 'Relevant signals for the client',
-      signals: relevantSignals
-    });
   } catch (error) {
-    return res.status(500).json({ message: 'Server error', error: error.message });
+      console.error("Error fetching signals:", error);
+      return res.json({ status: false, message: "Server error", data: [] });
   }
 }
 
 
 async showSignalsToClientsClose(req, res) {
   try {
-    const { client_id,service_id } = req.body;
-    const currentDate = new Date();
+    const { service_id, client_id } = req.body;
 
-    const activePlanPurchases = await PlanSubscription_Modal.find({
-      client_id: client_id,
-      status: 'active',
-      del: false,
-      plan_start: { $lte: currentDate },
-      plan_end: { $gte: currentDate }
-    });
+    // Fetch the plan that matches the serviceId and clientId
+    const plans = await Planmanage.find({ serviceid: service_id, clientid: client_id });
 
-    let relevantSignals = [];
-
-    for (let purchase of activePlanPurchases) {
-      const plan = await Plan_Modal.findById(new mongoose.Types.ObjectId(purchase.plan_id));
-      if (!plan) continue;
-
-      const planCategory = await Plancategory_Modal.findById(plan.category);
-      if (!planCategory) continue;
-
-      const serviceIds = planCategory.service.split(',').map(id => {
-        id = id.trim(); // Remove any extra whitespace
-        if (mongoose.Types.ObjectId.isValid(id)) {
-          return new mongoose.Types.ObjectId(id);
-        } else {
-          return null;
-        }
-      }).filter(id => id !== null);
-
-      const matchingSignals = await Signal_Modal.find({  service: service_id,close_status:true, service: { $in: serviceIds } })
-      .populate({
-        path: 'stock',   // Populate the stock field
-        select: 'symbol' // Select only the symbol field from the stock collection
-      });
-
-      const protocol = req.protocol; // Will be 'http' or 'https'
-      const baseUrl = `${protocol}://${req.headers.host}`;
- matchingSignals.forEach(signal => {
-    signal.report = `${baseUrl}/uploads/report/${signal.report}`;
-  });
-
-      relevantSignals = relevantSignals.concat(matchingSignals);
+    if (plans.length === 0) {
+        return res.json({
+            status: false,
+            message: "No plans found for the given service and client IDs",
+            data: []
+        });
     }
 
-    relevantSignals = [...new Map(relevantSignals.map(signal => [signal._id.toString(), signal])).values()];
+    // Get the start and end dates from the plans
+    const startDates = plans.map(plan => new Date(plan.startdate));
+    const endDates = plans.map(plan => new Date(plan.enddate));
+   
+    const query = {
+      service: service_id,
+      close_status: true,
+      createdAt: {
+          $gte: startDates[0], // Assuming all plans have the same startdate
+          $lte: endDates[0] // Assuming all plans have the same enddate
+      }
+  };
 
-    return res.status(200).json({
-      message: 'Relevant signals for the client',
-      signals: relevantSignals
+  // Print the query to the console
+  console.log("Query being executed:", query);
+
+  // Fetch signals where createdAt is between the plan's start and end dates
+  const signals = await Signal_Modal.find(query);
+ 
+    return res.json({
+        status: true,
+        message: "Signals retrieved successfully",
+        data: signals
     });
-  } catch (error) {
-    return res.status(500).json({ message: 'Server error', error: error.message });
-  }
+
+} catch (error) {
+    console.error("Error fetching signals:", error);
+    return res.json({ status: false, message: "Server error", data: [] });
+}
 }
 
 

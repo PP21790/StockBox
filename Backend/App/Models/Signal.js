@@ -10,8 +10,7 @@ const signalModel = Schema({
         default: null
     },
     service: {
-        type: Types.ObjectId, // Use ObjectId for references
-        ref: 'Service', // Reference the Stock model
+        type: String,
         required: true,
         default: null
     },
@@ -29,7 +28,6 @@ const signalModel = Schema({
     },
     callperiod: {
         type: String,
-        required: true,
         trim: true,
         default: null
     },
@@ -39,8 +37,7 @@ const signalModel = Schema({
         default: null
     },
     stock: {
-        type: Types.ObjectId, // Use ObjectId for references
-        ref: 'Stock', // Reference the Stock model
+        type: String,
         required: true,
         default: null
     },
@@ -114,6 +111,21 @@ const signalModel = Schema({
         default: null
     },
     targetprice3: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    expirydate: {
+        type: String,
+        trim: true,
+        default: null // Date when the signal was closed
+    },
+    segment: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    optiontype: {
         type: String,
         trim: true,
         default: null

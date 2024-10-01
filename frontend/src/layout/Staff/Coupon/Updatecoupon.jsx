@@ -76,7 +76,7 @@ const Updatecoupon = () => {
           timerProgressBar: true,
         });
         setTimeout(() => {
-          navigate("/admin/coupon");
+          navigate("/staff/coupon");
         }, 1500);
       } else {
         Swal.fire({
@@ -215,7 +215,7 @@ const Updatecoupon = () => {
         btn_name1="Cancel"
         formik={formik}
         sumit_btn={true}
-        btn_name1_route={"/admin/coupon"}
+        btn_name1_route={"/staff/coupon"}
         additional_field={<></>}
       />
     </div>
