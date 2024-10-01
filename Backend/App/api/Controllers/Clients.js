@@ -72,7 +72,7 @@ class Clients {
 
 
       const hashedPassword = await bcrypt.hash(password, 10);
-      const refer_token = crypto.randomBytes(10).toString('hex'); // 10 bytes = 20 hex characters
+      const refer_token = crypto.randomBytes(10).toString('hex'); 
       const result = new Clients_Modal({
       FullName: FullName,
       Email: Email,
@@ -105,7 +105,7 @@ class Clients {
 
 
 
-    const resetToken = Math.floor(100000 + Math.random() * 900000); // Generates a 6-digit OTP
+    const resetToken = Math.floor(100000 + Math.random() * 900000); 
 
 
       const mailtemplate = await Mailtemplate_Modal.findOne({ mail_type: 'client_verification_mail' }); // Use findOne if you expect a single document
