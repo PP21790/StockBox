@@ -9,8 +9,8 @@ const menuItems = [
     title: 'Plan',
     icon: 'bxl-redux',
     subMenu: [
-      { title: 'Plan', icon: 'bx-radio-circle', link: '/admin/plan' },
-      { title: 'Services', icon: 'bx-radio-circle', link: '/admin/service' },
+      { title: 'Package', icon: 'bx-radio-circle', link: '/admin/plan' },
+      { title: 'Segment', icon: 'bx-radio-circle', link: '/admin/service' },
       { title: 'Category', icon: 'bx-radio-circle', link: '/admin/category' }
     ]
   },

@@ -35,7 +35,7 @@ const Help = () => {
 
                                         <div className="col-md-12">
                                             <label htmlFor="input3" className="form-label">
-                                                Name
+                                                Client Name
                                             </label>
                                             <input
                                                 type="text"
@@ -44,17 +44,7 @@ const Help = () => {
                                                 placeholder="Phone"
                                             />
                                         </div>
-                                        <div className="col-md-12">
-                                            <label htmlFor="input4" className="form-label">
-                                                Email
-                                            </label>
-                                            <input
-                                                type="email"
-                                                className="form-control"
-                                                id="input4"
-                                                placeholder="Email"
-                                            />
-                                        </div>
+                                       
                                         <div className="col-md-12">
                                             <label htmlFor="input6" className="form-label">
                                                 Date
@@ -66,17 +56,7 @@ const Help = () => {
                                                 placeholder="Date of Birth"
                                             />
                                         </div>
-                                        <div className="col-md-12">
-                                            <label htmlFor="input5" className="form-label">
-                                                Phone No.
-                                            </label>
-                                            <input
-                                                type="password"
-                                                className="form-control"
-                                                id="input5"
-                                                placeholder="Password"
-                                            />
-                                        </div>
+                                      
 
                                         <div className="col-md-12">
                                             <label htmlFor="input6" className="form-label">
