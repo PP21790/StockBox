@@ -264,54 +264,38 @@ arr.push({...data._doc,Ttype:"0"});
       const { id, targethit1,targethit2,targethit3,targetprice1,targetprice2,targetprice3,slprice,exitprice,closestatus,closetype, close_description } = req.body;
      
 
-      let close_status = false;  
+      let close_status = false;
       let closeprice = null;
       let closedate = null;
-
-if(closetype==1)
-{
-  close_status = true;
-  if(targetprice3) {
-  closeprice = targetprice3;
-  }
-  else if(targetprice2)
-  {
-    closeprice = targetprice2;
-  }
-  else
-  {
-    closeprice = targetprice1;
-  }
-    closedate= new Date() ;
-}
-if(closetype==2)
-  {
-    
-    close_status = closestatus;
-    if(closestatus){
-      if (targetprice3) {
-        closeprice = targetprice3;
-      } else if (targetprice2) {
-        closeprice = targetprice2;
-      } else {
-        closeprice = targetprice1;
+     
+  
+      if (closetype === "1") {
+        // Close at target price
+        close_status = true;
+        closeprice = targetprice3 || targetprice2 || targetprice1;
+        closedate = new Date();
+      
+      } else if (closetype === "2") {
+        // Close based on closestatus and target price
+        close_status = closestatus;
+      
+        if (closestatus) {
+          closeprice = targetprice3 || targetprice2 || targetprice1;
+          closedate = new Date();
+        }
+      
+      } else if (closetype === "3") {
+        // Close at stop-loss price
+        close_status = true;
+        closeprice = slprice;
+        closedate = new Date();
+      
+      } else if (closetype === "4") {
+        // Close at exit price
+        close_status = true;
+        closeprice = exitprice;
+        closedate = new Date();
       }
-    closedate= new Date() ;
-  }
-  }
-
-if(closetype==3)
-  {
-    close_status = true;
-    closeprice = slprice;
-    closedate= new Date() ;
-  }
-  if(closetype==4)
-    {
-      close_status = true;
-      closeprice = exitprice;
-      closedate= new Date() ;
-    }
       
       if (!id) {
         return res.status(400).json({
