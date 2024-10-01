@@ -88,6 +88,14 @@ const Viewclientdetail = () => {
             disable: true,
         },
         {
+            name: 'PlanName',
+            label: 'Plan Name',
+            type: 'text',
+            label_size: 12,
+            col_size: 4,
+            disable: true,
+        },
+        {
             name: 'PurchaseDate',
             label: 'Purchase Date',
             type: 'text',

@@ -5,6 +5,7 @@ const Message = () => {
     return (
         <div>
             <div className="page-content">
+
                 <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
                     <div className="breadcrumb-title pe-3">Message Broadcast</div>
                     <div className="ps-3">
@@ -19,158 +20,177 @@ const Message = () => {
                         </nav>
                     </div>
                 </div>
-
                 <div className="card">
                     <div className="card-body">
-                        <ul className="nav nav-tabs nav-success" role="tablist">
-                            <li className="nav-item" role="presentation">
-                                <a
-                                    className="nav-link active"
-                                    data-bs-toggle="tab"
-                                    href="#successhome"
-                                    role="tab"
-                                    aria-selected="true"
+
+                        <div className="d-flex justify-content-end">
+                            <div className='me-2'>
+                                <button
+                                    type="button"
+                                    className="btn btn-primary"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal"
                                 >
-                                    <div className="d-flex align-items-center">
-                                        <div className="tab-icon">
-                                            <i className="bx bx-home font-18 me-1" />
-                                        </div>
-                                        <div className="tab-title">Send</div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li className="nav-item" role="presentation">
-                                <a
-                                    className="nav-link"
-                                    data-bs-toggle="tab"
-                                    href="#successprofile"
-                                    role="tab"
-                                    aria-selected="false"
-                                    tabIndex={-1}
-                                >
-                                    <div className="d-flex align-items-center">
-                                        <div className="tab-icon">
-                                            <i className="bx bx-user-pin font-18 me-1" />
-                                        </div>
-                                        <div className="tab-title">Sent Messages</div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li className="nav-item" role="presentation">
-                                <a
-                                    className="nav-link"
-                                    data-bs-toggle="tab"
-                                    href="#successcontact"
-                                    role="tab"
-                                    aria-selected="false"
-                                    tabIndex={-1}
-                                >
-                                    <div className="d-flex align-items-center">
-                                        <div className="tab-icon">
-                                            <i className="bx bx-microphone font-18 me-1" />
-                                        </div>
-                                        <div className="tab-title">Received Messages</div>
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
-                        <div className="tab-content py-3">
+                                    <i className="bx bxs-plus-square" />
+                                    Add Broadcast
+                                </button>
+                            </div>
                             <div
-                                className="tab-pane fade active show"
-                                id="successhome"
-                                role="tabpanel"
+                                className="modal fade"
+                                id="exampleModal"
+                                tabIndex={-1}
+                                aria-labelledby="exampleModalLabel"
+                                aria-hidden="true"
                             >
-                                <div className="row">
-                                    <div className="col-xl-6 mx-auto">
-                                        <div className="card">
-                                            <div className="card-body p-4">
-
-                                                <form className="row g-3">
-
-                                                    <div className="col-md-6">
-                                                        <label htmlFor="input2" className="form-label">
-                                                            Admin
-                                                        </label>
-                                                        <input
-                                                            type="text"
-                                                            className="form-control"
-                                                            id="input2"
-                                                            placeholder="Last Name"
-                                                        />
-                                                    </div>
-                                                    <div className="col-md-12">
-                                                        <label htmlFor="input3" className="form-label">
-                                                            Client
-                                                        </label>
-                                                        <input
-                                                            type="text"
-                                                            className="form-control"
-                                                            id="input3"
-                                                            placeholder="Phone"
-                                                        />
-                                                    </div>
-
-                                                    <div className="col-md-12">
-                                                        <label htmlFor="input11" className="form-label">
-                                                            Message
-                                                        </label>
-                                                        <textarea
-                                                            className="form-control"
-                                                            id="input11"
-                                                            placeholder="Address ..."
-                                                            rows={3}
-                                                            defaultValue={""}
-                                                        />
-                                                    </div>
-
-                                                    <div className="col-md-12">
-                                                        <div className="d-md-flex d-grid align-items-center gap-3">
-                                                            <button type="button" className="btn btn-primary px-4">
-                                                                Send
-                                                            </button>
-
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
+                                <div className="modal-dialog">
+                                    <div className="modal-content">
+                                        <div className="modal-header">
+                                            <h5 className="modal-title" id="exampleModalLabel">
+                                                Add Broadcast
+                                            </h5>
+                                            <button
+                                                type="button"
+                                                className="btn-close"
+                                                data-bs-dismiss="modal"
+                                                aria-label="Close"
+                                            />
                                         </div>
+                                        <div className="modal-body">
+                                            <form>
+                                                <div className="col-md-12">
+                                                    <label htmlFor="service"></label>
+                                                    <select
+                                                        className="form-control mb-2"
+                                                        id="service"
 
+                                                    >
+                                                        <option value="">
+                                                            Select service
+                                                        </option>
+                                                        <option value="0">
+                                                            Stock
+                                                        </option>
+                                                        <option value="1">
+                                                            Cash
+                                                        </option>
+                                                        <option value="2">
+                                                            Future
+                                                        </option>
+
+                                                    </select>
+                                                </div>
+                                                <div className="row">
+                                                    <div className="col-md-12">
+                                                        <label htmlFor="">Subject</label>
+                                                        <input
+                                                            className="form-control mb-3"
+                                                            type="text"
+                                                            placeholder='Enter Subject'
+
+                                                        />
+                                                    </div>
+                                                </div>
+
+
+                                                <div className="row">
+                                                    <div className="col-md-12">
+                                                        <label htmlFor="">Measage</label>
+                                                        <textarea
+                                                            className="form-control mb-3"
+                                                            type="text"
+                                                            placeholder='Enter your Message'
+
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div className="modal-footer">
+                                            <button
+                                                type="button"
+                                                className="btn btn-secondary"
+                                                data-bs-dismiss="modal"
+                                            >
+                                                Close
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className="btn btn-primary"
+
+                                            >
+                                                Submit
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-
-                            </div>
-                            <div className="tab-pane fade" id="successprofile" role="tabpanel">
-                                <p>
-                                    Food truck fixie locavore, accusamus mcsweeney's marfa nulla
-                                    single-origin coffee squid. Exercitation +1 labore velit, blog
-                                    sartorial PBR leggings next level wes anderson artisan four loko
-                                    farm-to-table craft beer twee. Qui photo booth letterpress, commodo
-                                    enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum
-                                    PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus
-                                    mollit. Keytar helvetica VHS salvia yr, vero magna velit sapiente
-                                    labore stumptown. Vegan fanny pack odio cillum wes anderson 8-bit,
-                                    sustainable jean shorts beard ut DIY ethical culpa terry richardson
-                                    biodiesel. Art party scenester stumptown, tumblr butcher vero sint qui
-                                    sapiente accusamus tattooed echo park.
-                                </p>
-                            </div>
-                            <div className="tab-pane fade" id="successcontact" role="tabpanel">
-                                <p>
-                                    Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out
-                                    mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table
-                                    readymade. Messenger bag gentrify pitchfork tattooed craft beer,
-                                    iphone skateboard locavore carles etsy salvia banksy hoodie helvetica.
-                                    DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred
-                                    pitchfork. Williamsburg banh mi whatever gluten-free, carles pitchfork
-                                    biodiesel fixie etsy retro mlkshk vice blog. Scenester cred you
-                                    probably haven't heard of them, vinyl craft beer blog stumptown.
-                                    Pitchfork sustainable tofu synth chambray yr.
-                                </p>
                             </div>
                         </div>
+                        <section className="msger">
+
+                            <main className="msger-chat">
+                                <div className="msg left-msg">
+                                    <div
+                                        className="msg-img"
+                                        style={{
+                                            backgroundImage:
+                                                "url(https://image.flaticon.com/icons/svg/327/327779.svg)"
+                                        }}
+                                    />
+                                    <div className="msg-bubble">
+                                        <div className="msg-info">
+                                            <div className="msg-info-name">BOT</div>
+                                            <div className="msg-info-time">12:45</div>
+                                        </div>
+                                        <div className="msg-text">
+                                            Hi, welcome to SimpleChat! Go ahead and send me a message. 😄
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="msg left-msg">
+                                    <div
+                                        className="msg-img"
+                                        style={{
+                                            backgroundImage:
+                                                "url(https://image.flaticon.com/icons/svg/327/327779.svg)"
+                                        }}
+                                    />
+                                    <div className="msg-bubble">
+                                        <div className="msg-info">
+                                            <div className="msg-info-name">BOT</div>
+                                            <div className="msg-info-time">12:45</div>
+                                        </div>
+                                        <div className="msg-text">
+                                            Hi, welcome to SimpleChat! Go ahead and send me a message. 😄
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="msg left-msg">
+                                    <div
+                                        className="msg-img"
+                                        style={{
+                                            backgroundImage:
+                                                "url(https://image.flaticon.com/icons/svg/327/327779.svg)"
+                                        }}
+                                    />
+                                    <div className="msg-bubble">
+                                        <div className="msg-info">
+                                            <div className="msg-info-name">BOT</div>
+                                            <div className="msg-info-time">12:45</div>
+                                        </div>
+                                        <div className="msg-text">
+                                            Hi, welcome to SimpleChat! Go ahead and send me a message. 😄
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </main>
+
+                        </section>
                     </div>
                 </div>
+
             </div>
+
         </div>
     );
 }

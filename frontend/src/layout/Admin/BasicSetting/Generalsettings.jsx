@@ -70,9 +70,10 @@ const Generalsettings = () => {
                     </nav>
                 </div>
             </div>
+            <hr />
             <div className="row">
                 <div className="col-lg-8 mx-auto">
-                    <div className="card">
+                    <div className="card radius-15">
 
 
                         <Formik
@@ -133,115 +134,117 @@ const Generalsettings = () => {
 
 
                                 <Form className="card-body p-4">
-                                    <h5 className="mb-4">General Setting</h5>
 
-                                    <div className="row mb-3 align-items-center">
-                                        <label htmlFor="from_name" className="col-sm-3 col-form-label">
-                                          <b>  Company Name</b>
-                                        </label>
-                                        <div className="col-sm-9">
-                                            <div className="input-group">
-                                                <span className="input-group-text">
-                                                    <i className="bx bx-user" />
-                                                </span>
-                                                <Field name="from_name" type="text" className="form-control" placeholder="Your Name" />
-                                            </div>
-                                            <ErrorMessage name="from_name" component="div" className="error" />
-                                        </div>
-                                    </div>
+                                    <div className="p-4 border radius-15">
 
-                                    <div className="row mb-3 align-items-center">
-                                        <label htmlFor="contact_number" className="col-sm-3 col-form-label">
-                                           <b> Phone No</b>
-                                        </label>
-                                        <div className="col-sm-9">
-                                            <div className="input-group">
-                                                <span className="input-group-text">
-                                                    <i className="bx bx-microphone" />
-                                                </span>
-                                                <Field name="contact_number" type="text" className="form-control" placeholder="Phone No" />
-                                            </div>
-                                            <ErrorMessage name="contact_number" component="div" className="error" />
-                                        </div>
-                                    </div>
-
-                                    <div className="row mb-3 align-items-center">
-                                        <label htmlFor="email_address" className="col-sm-3 col-form-label">
-                                           <b> Email Address</b>
-                                        </label>
-                                        <div className="col-sm-9">
-                                            <div className="input-group">
-                                                <span className="input-group-text">
-                                                    <i className="bx bx-envelope" />
-                                                </span>
-                                                <Field name="email_address" type="email" className="form-control" placeholder="Email" />
-                                            </div>
-                                          
-                                        </div>
-                                    </div>
-
-                                    <div className="row mb-3 align-items-center">
-                                        <label htmlFor="favicon" className="col-sm-3 col-form-label">
-                                            <b>Favicon</b>
-                                        </label>
-                                        <div className="col-sm-8">
-                                            <input
-                                                name="favicon"
-                                                type="file"
-                                                className="form-control"
-                                                onChange={(event) => setFieldValue("favicon", event.currentTarget.files[0])}
-                                            />
-
-                                    
-                                        </div>
-                                        <div className="col-sm-1">
-
-                                            {clients[0].favicon && (
-                                                <div className="file-preview">
-
-                                                    <img src={`/assets/uploads/basicsetting/${clients[0].favicon}`} alt="Favicon Preview" className="image-preview" />
+                                        <div className="row mb-3 align-items-center">
+                                            <label htmlFor="from_name" className="col-sm-3 col-form-label">
+                                                <b>  Company Name</b>
+                                            </label>
+                                            <div className="col-sm-9">
+                                                <div className="input-group">
+                                                    <span className="input-group-text">
+                                                        <i className="bx bx-user" />
+                                                    </span>
+                                                    <Field name="from_name" type="text" className="form-control" placeholder="Your Name" />
                                                 </div>
-                                            )}
-                                            
+                                                <ErrorMessage name="from_name" component="div" className="error" />
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className="row mb-3 align-items-center">
-                                        <label htmlFor="logo" className="col-sm-3 col-form-label">
-                                          <b>  Logo</b>
-                                        </label>
-                                        <div className="col-sm-8">
-                                            <input
-                                                name="logo"
-                                                type="file"
-                                                className="form-control"
-                                                onChange={(event) => setFieldValue("logo", event.currentTarget.files[0])}
-                                            />
-
-                                
-                                        </div>
-                                        <div className="col-sm-1">
-
-                                            {clients[0].logo && (
-                                                <div className="file-preview">
-
-                                                    <img src={`/assets/uploads/basicsetting/${clients[0].logo}`} alt="Logo Preview" className="image-preview" />
+                                        <div className="row mb-3 align-items-center">
+                                            <label htmlFor="contact_number" className="col-sm-3 col-form-label">
+                                                <b> Phone No</b>
+                                            </label>
+                                            <div className="col-sm-9">
+                                                <div className="input-group">
+                                                    <span className="input-group-text">
+                                                        <i className="bx bx-microphone" />
+                                                    </span>
+                                                    <Field name="contact_number" type="text" className="form-control" placeholder="Phone No" />
                                                 </div>
-                                            )}
-                                           
+                                                <ErrorMessage name="contact_number" component="div" className="error" />
+                                            </div>
                                         </div>
-                                    </div>
+
+                                        <div className="row mb-3 align-items-center">
+                                            <label htmlFor="email_address" className="col-sm-3 col-form-label">
+                                                <b> Email Address</b>
+                                            </label>
+                                            <div className="col-sm-9">
+                                                <div className="input-group">
+                                                    <span className="input-group-text">
+                                                        <i className="bx bx-envelope" />
+                                                    </span>
+                                                    <Field name="email_address" type="email" className="form-control" placeholder="Email" />
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div className="row mb-3 align-items-center">
+                                            <label htmlFor="favicon" className="col-sm-3 col-form-label">
+                                                <b>Favicon</b>
+                                            </label>
+                                            <div className="col-sm-8">
+                                                <input
+                                                    name="favicon"
+                                                    type="file"
+                                                    className="form-control"
+                                                    onChange={(event) => setFieldValue("favicon", event.currentTarget.files[0])}
+                                                />
+
+
+                                            </div>
+                                            <div className="col-sm-1">
+
+                                                {clients[0].favicon && (
+                                                    <div className="file-preview">
+
+                                                        <img src={`/assets/uploads/basicsetting/${clients[0].favicon}`} alt="Favicon Preview" className="image-preview" />
+                                                    </div>
+                                                )}
+
+                                            </div>
+                                        </div>
+
+                                        <div className="row mb-3 align-items-center">
+                                            <label htmlFor="logo" className="col-sm-3 col-form-label">
+                                                <b>  Logo</b>
+                                            </label>
+                                            <div className="col-sm-8">
+                                                <input
+                                                    name="logo"
+                                                    type="file"
+                                                    className="form-control"
+                                                    onChange={(event) => setFieldValue("logo", event.currentTarget.files[0])}
+                                                />
+
+
+                                            </div>
+                                            <div className="col-sm-1">
+
+                                                {clients[0].logo && (
+                                                    <div className="file-preview">
+
+                                                        <img src={`/assets/uploads/basicsetting/${clients[0].logo}`} alt="Logo Preview" className="image-preview" />
+                                                    </div>
+                                                )}
+
+                                            </div>
+                                        </div>
 
 
 
-                                    <div className="row">
-                                        <label className="col-sm-3 col-form-label" />
-                                        <div className="col-sm-9">
-                                            <div className="d-md-flex d-grid align-items-center justify-content-end gap-3">
-                                                <button type="submit" className="btn btn-primary px-4">
-                                                    Update
-                                                </button>
+                                        <div className="row">
+                                            <label className="col-sm-3 col-form-label" />
+                                            <div className="col-sm-9">
+                                                <div className="d-md-flex d-grid align-items-center justify-content-end gap-3">
+                                                    <button type="submit" className="btn btn-primary px-4">
+                                                        Update
+                                                    </button>
 
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

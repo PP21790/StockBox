@@ -9,8 +9,8 @@ const menuItems = [
     title: 'Plan',
     icon: 'bxl-redux',
     subMenu: [
-      { title: 'Plan', icon: 'bx-radio-circle', link: '/admin/plan' },
-      { title: 'Services', icon: 'bx-radio-circle', link: '/admin/service' },
+      { title: 'Package', icon: 'bx-radio-circle', link: '/admin/plan' },
+      { title: 'Segment', icon: 'bx-radio-circle', link: '/admin/service' },
       { title: 'Category', icon: 'bx-radio-circle', link: '/admin/category' }
     ]
   },
@@ -35,7 +35,7 @@ const menuItems = [
   { title: 'Broadcast SMS', icon: 'bx-conversation', link: '/admin/message' },
   { title: 'KYC Agreement', icon: 'bxs-chevron-right', link: '/admin/kyc' },
   { title: 'FAQ', icon: 'bx-help-circle', link: '/admin/faq' },
-  { title: 'Help Center', icon: 'bxs-chevron-right', link: '/admin/helpcenter' },
+  { title: 'Help Center', icon: 'bxs-chevron-right', link: '/admin/help' },
   { title: 'Terms And Condition', icon: 'bx-info-square', link: '/admin/termsandcondtion' }
 ];
 

@@ -211,7 +211,7 @@ const Updatecoupon = () => {
       <DynamicForm
         fields={fields}
         page_title="Add Coupon Code"
-        btn_name="Update User"
+        btn_name="Update Coupon"
         btn_name1="Cancel"
         formik={formik}
         sumit_btn={true}
