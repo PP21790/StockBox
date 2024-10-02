@@ -618,7 +618,6 @@ async showSignalsToClients(req, res) {
 
       // Fetch the plan that matches the serviceId and clientId
       const plans = await Planmanage.find({ serviceid: service_id, clientid: client_id });
-
       if (plans.length === 0) {
           return res.json({
               status: false,
@@ -633,14 +632,11 @@ async showSignalsToClients(req, res) {
      
       const query = {
         service: service_id,
-        close_status: false,
         created_at: {
             $gte: startDates[0], // Assuming all plans have the same startdate
             $lte: endDates[0] // Assuming all plans have the same enddate
         }
     };
-
-
 
     const signals = await Signal_Modal.find(query);
 
