@@ -13,6 +13,7 @@ const AddSignal = () => {
   const [serviceList, setServiceList] = useState([]);
   const [stockList, setStockList] = useState([]);
   const [expirydate, setExpirydate] = useState([]);
+  const [strikePrice, setStrikePrice] = useState([]);
 
   const [searchItem, setSearchItem] = useState("");
   const [selectitem, setSelectitem] = useState("");
@@ -52,6 +53,7 @@ const AddSignal = () => {
       calltype: '',
       expiry: '',
       optiontype: '',
+      strikeprice: '',
 
     },
     validate: (values) => {
@@ -70,7 +72,10 @@ const AddSignal = () => {
       if ((values.segment === "O" || values.segment === "F") && !values.expiry) {
         errors.expiry = 'Please enter expirydate';
       }
-      console.log("errors", errors)
+      if (values.segment === "O" && !values.expiry) {
+        errors.expiry = 'Please Select Strick Price';
+      }
+    
       return errors;
     },
     onSubmit: async (values) => {
@@ -89,6 +94,7 @@ const AddSignal = () => {
         expirydate: values.expiry,
         segment: values.segment,
         optiontype: values.optiontype,
+        strikeprice: values.strikeprice,
       };
 
       try {
@@ -144,6 +150,7 @@ const AddSignal = () => {
         calltype: '',
         expiry: '',
         optiontype: '',
+        strikeprice: '',
 
       });
 
@@ -155,46 +162,40 @@ const AddSignal = () => {
 
   useEffect(() => {
     const fetchStockData = async () => {
-      if (formik.values.segment && searchItem) {
-        const data = { segment: formik.values.segment, symbol: searchItem };
-
-        try {
-          const stockResponse = await getstockbyservice(data);
-          if (stockResponse.status) {
-            setStockList(stockResponse.data);
-          } else {
-            console.log("Failed to fetch stock data", stockResponse);
-          }
-
-       
-          const expiryResponse = await getexpirydate(data);
-          if (expiryResponse.status) {
-            setExpirydate(expiryResponse.data);
-          } else {
-            console.log("Failed to fetch expiry date", expiryResponse);
-          }
-           
-          const data1 = { segment: formik.values.segment, symbol: searchItem , expiry : formik.values.expiry};
-          const getstirkeprice = await getstockStrickprice(data1);
-          if (getstirkeprice.status) {
-            console.log("getstirkeprice.data",getstirkeprice.data)
-            setExpirydate(getstirkeprice.data);
-          } else {
-            console.log("Failed to fetch expiry date", getstirkeprice);
-          }
-
-
-        } catch (error) {
-          console.log("Error fetching stock or expiry date:", error);
+      const data = { segment: formik.values.segment, symbol: searchItem };
+  
+      try {
+        const stockResponse = await getstockbyservice(data);
+        if (stockResponse.status) {
+          setStockList(stockResponse.data);
+        } else {
+          console.log("Failed to fetch stock data", stockResponse);
         }
+  
+        const expiryResponse = await getexpirydate(data);
+        if (expiryResponse.status) {
+          setExpirydate(expiryResponse.data);
+        } else {
+          console.log("Failed to fetch expiry date", expiryResponse);
+        }
+  
+
+        const data1 = { ...data, expiry: formik.values.expiry };
+        const strikePriceResponse = await getstockStrickprice(data1);
+        if (strikePriceResponse.status) {
+          console.log("strikePriceResponse.data", strikePriceResponse.data);
+          setStrikePrice(strikePriceResponse.data);
+        } else {
+          console.log("Failed to fetch strike price", strikePriceResponse);
+        }
+      } catch (error) {
+        console.log("Error fetching stock or expiry date:", error);
       }
-    
-      
     };
-
+  
     fetchStockData();
-  }, [formik.values.segment, searchItem ,formik.values.expiry ]);
-
+  }, [formik.values.segment, searchItem, formik.values.expiry]);
+  
 
 
 
@@ -234,9 +235,13 @@ const AddSignal = () => {
     {
       name: 'strikeprice',
       label: 'Strike Price',
-      type: 'number',
+      type: 'select',
       label_size: 12,
       col_size: 6,
+      options: strikePrice.map((item) => ({
+        label: item.expiry,
+        value: item.expiry,
+      })),
       showWhen: (values) => values.segment === "O"
     },
     {
