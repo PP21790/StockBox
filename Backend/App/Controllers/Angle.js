@@ -6,9 +6,8 @@ const db = require("../Models");
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 
-class Angel {
+class Angle {
 
-    // Get GetAccessToken ANGEL
     async GetAccessToken(req, res) {
         try {
 
