@@ -253,12 +253,11 @@ const Signal = () => {
                 exitprice: index === 3 ? closedata.exitprice : ""
             };
 
-            console.log("closedata.closestatus", closedata.closestatus)
 
+          
             const response = await SignalCloseApi(data, token);
-            console.log("data", data)
-            
-           
+
+
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
@@ -300,6 +299,12 @@ const Signal = () => {
             selector: (row, index) => index + 1,
             sortable: false,
             width: '70px',
+        },
+        {
+            name: 'Segment',
+            selector: row => row.stock,
+            sortable: true,
+            width: '132px',
         },
 
         {
@@ -366,14 +371,14 @@ const Signal = () => {
                 <>
                     <div>
                         <button
-                            className="btn btn-danger btnclose"
+                            className="btn btn-success btnclose"
                             onClick={() => {
                                 setModel(true);
                                 setServiceid(row);
                                 setTargetvalue(row);
                             }}
                         >
-                            Close
+                            Open
                         </button>
                     </div>
                 </>
@@ -407,6 +412,7 @@ const Signal = () => {
                             </nav>
                         </div>
                     </div>
+                    <hr />
                     <div className="card">
                         <div className="card-body">
                             <div className="d-lg-flex align-items-center mb-4 gap-3">

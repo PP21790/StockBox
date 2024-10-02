@@ -41,7 +41,7 @@ const Help = () => {
                                                 type="text"
                                                 className="form-control"
                                                 id="input3"
-                                                placeholder="Phone"
+                                                placeholder="Enter your name"
                                             />
                                         </div>
                                        

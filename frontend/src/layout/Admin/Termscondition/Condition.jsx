@@ -65,7 +65,7 @@ const Condition = () => {
                     timer: 2000,
                 });
 
-                setUpdatetitle({ title: "", id: "" , description:"" });
+                setUpdatetitle({ title: "", id: "", description: "" });
                 gettemplatelist();
                 setModel(false);
             } else {
@@ -136,23 +136,27 @@ const Condition = () => {
                         </nav>
                     </div>
                 </div>
+                <hr />
                 <div className="row">
                     {clients.map((client, index) => (
                         <div className="col-md-6 col-lg-4" key={index}>
                             <div className="card mb-4">
                                 <div className="card-body p-4 position-relative">
-                                    <button
-                                        style={buttonStyle}
-                                        onMouseOver={(e) => e.currentTarget.style.backgroundColor = buttonHoverStyle.backgroundColor}
-                                        onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-                                        onClick={() => {
-                                            setModel(true);
-                                            setTemplateid(client._id);
-                                            setUpdatetitle({ title: client.title, id: client._id, description: client.description });
-                                        }}
-                                    >
-                                        <SquarePen />
-                                    </button>
+                                    <div className='d-flex justify-content-between align-items-center'>
+                                        <div>
+                                            <h5 className="card-title text-primary">World</h5>
+                                        </div>
+                                        <div>
+                                           
+                                                <SquarePen onClick={() => {
+                                                    setModel(true);
+                                                    setTemplateid(client._id);
+                                                    setUpdatetitle({ title: client.title, id: client._id, description: client.description });
+                                                }} />
+                                            
+                                        </div>
+                                    </div>
+                                    <hr/>
                                     <form className="row g-3">
                                         <div className="col-md-12">
                                             <label htmlFor={`mailType${index}`} className="form-label">

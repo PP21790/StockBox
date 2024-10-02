@@ -327,6 +327,7 @@ const Service = () => {
                         </nav>
                     </div>
                 </div>
+                <hr/>
 
                 <div className="card">
                     <div className="card-body">

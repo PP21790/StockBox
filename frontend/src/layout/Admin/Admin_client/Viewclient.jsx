@@ -5,6 +5,7 @@ import { useFormik } from 'formik';
 import DynamicForm from '../../../components/FormicForm';
 import { clientdetailbyid } from '../../../Services/Admin';
 
+
 const Viewclientdetail = () => {
 
 
@@ -71,55 +72,64 @@ const Viewclientdetail = () => {
             col_size: 4,
             disable: true,
         },
+
+
+    ];
+    const columns = [
         {
-            name: 'SignupsStatus',
-            label: 'Signup Status',
-            type: 'text',
-            label_size: 12,
-            col_size: 4,
-            disable: true,
+            name: 'S.No',
+            selector: (row, index) => index + 1,
+            sortable: false,
+            width: '100px',
         },
         {
-            name: 'CraeatedAt',
-            label: 'Created At',
-            type: 'text',
-            label_size: 12,
-            col_size: 4,
-            disable: true,
-        },
-        {
-            name: 'PlanName',
-            label: 'Plan Name',
-            type: 'text',
-            label_size: 12,
-            col_size: 4,
-            disable: true,
-        },
-        {
-            name: 'PurchaseDate',
-            label: 'Purchase Date',
-            type: 'text',
-            label_size: 12,
-            col_size: 4,
-            disable: true,
-        },
-        {
-            name: 'ExpiryDate',
-            label: 'Expiry Date',
-            type: 'text',
-            label_size: 12,
-            col_size: 4,
-            disable: true,
+            name: 'Plan Name',
+            selector: row => row.fullName,
+            sortable: true,
+            width: '180px',
         },
         {
             name: 'Amount',
-            label: 'Amount',
-            type: 'text',
-            label_size: 12,
-            col_size: 4,
-            disable: true,
+            selector: row => row.email,
+            sortable: true,
+            width: '189px',
         },
+        {
+            name: 'Purchase Date',
+            selector: row => row.phoneNo,
+            sortable: true,
+            width: '180px',
+        },
+        {
+            name: 'Validity Date',
+            selector: row => row.phoneNo,
+            sortable: true,
+            width: '180px',
+        },
+        {
+            name: 'Expiry Date',
+            selector: row => row.phoneNo,
+            sortable: true,
+            width: '180px',
+        },
+    ];
 
+    const data = [
+        {
+            fullName: 'John Doe',
+            email: 'john@example.com',
+            phoneNo: '123-456-7890',
+        },
+        {
+            fullName: 'Jane Smith',
+            email: 'jane@example.com',
+            phoneNo: '987-654-3210',
+        },
+        {
+            fullName: 'Emily Johnson',
+            email: 'emily@example.com',
+            phoneNo: '555-123-4567',
+        },
     ];
 
 
@@ -143,14 +153,19 @@ const Viewclientdetail = () => {
                     </div>
                 </div>
 
-                <div>
+                <div className='card'>
+                    <div className="card-body">
                     <DynamicForm
                         fields={fields}
-                        page_title="Client Detail"
                         formik={formik}
                         sumit_btn={false}
                         additional_field={<></>}
                     />
+                        <Table
+                            columns={columns}
+                            data={data}
+                        />
+                    </div>
                 </div>
             </div>
         </div>

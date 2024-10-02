@@ -67,9 +67,10 @@ const Emailsettings = () => {
           </nav>
         </div>
       </div>
+      <hr/>
       <div className="row">
         <div className="col-lg-8 mx-auto">
-          <div className="card">
+          <div className="card radius-15">
 
             <Formik
               enableReinitialize={true}
@@ -126,77 +127,79 @@ const Emailsettings = () => {
             >
               {({ values }) => (
                 <Form className="card-body">
-                  <h5 className="mb-4">Email Setting</h5>
-                  <div className="row">
+                  <div className='p-4 border radius-15'>
 
-                    <div className="row mb-1 align-items-center">
-                      <label htmlFor="smtp_host" className="col-sm-3 col-form-label"><b>SMTP Host</b></label>
-                      <div className="col-sm-9">
-                        <Field name="smtp_host" type="text" className="form-control mb-2" />
+                    <div className="row">
+
+                      <div className="row mb-1 align-items-center">
+                        <label htmlFor="smtp_host" className="col-sm-3 col-form-label"><b>SMTP Host</b></label>
+                        <div className="col-sm-9">
+                          <Field name="smtp_host" type="text" className="form-control mb-2" />
+                        </div>
+                        <ErrorMessage name="smtp_host" component="div" className="error" />
+
                       </div>
-                      <ErrorMessage name="smtp_host" component="div" className="error" />
 
-                    </div>
-
-                    <div className="row mb-1 align-items-center">
-                      <label htmlFor="smtp_port" className="col-sm-3 col-form-label"><b>SMTP Port</b></label>
-                      <div className="col-sm-9">
-                        <Field name="smtp_port" type="text" className="form-control" />
+                      <div className="row mb-1 align-items-center">
+                        <label htmlFor="smtp_port" className="col-sm-3 col-form-label"><b>SMTP Port</b></label>
+                        <div className="col-sm-9">
+                          <Field name="smtp_port" type="text" className="form-control" />
+                        </div>
+                        <ErrorMessage name="smtp_port" component="div" className="error" />
                       </div>
-                      <ErrorMessage name="smtp_port" component="div" className="error" />
-                    </div>
 
-                    <div className="row mb-1 align-items-center">
-                      <label htmlFor="smtp_username" className="col-sm-3 col-form-label"><b>SMTP Username</b></label>
-                      <div className="col-sm-9">
-                        <Field name="smtp_username" type="text" className="form-control" />
+                      <div className="row mb-1 align-items-center">
+                        <label htmlFor="smtp_username" className="col-sm-3 col-form-label"><b>SMTP Username</b></label>
+                        <div className="col-sm-9">
+                          <Field name="smtp_username" type="text" className="form-control" />
+                        </div>
+                        <ErrorMessage name="smtp_username" component="div" className="error" />
                       </div>
-                      <ErrorMessage name="smtp_username" component="div" className="error" />
-                    </div>
 
-                    <div className="row mb-1 align-items-center">
-                      <label htmlFor="to_mail" className="col-sm-3 col-form-label"><b>To Email</b></label>
-                      <div className="col-sm-9">
-                        <Field name="to_mail" type="email" className="form-control" />
+                      <div className="row mb-1 align-items-center">
+                        <label htmlFor="to_mail" className="col-sm-3 col-form-label"><b>To Email</b></label>
+                        <div className="col-sm-9">
+                          <Field name="to_mail" type="email" className="form-control" />
+                        </div>
+                        <ErrorMessage name="to_mail" component="div" className="error" />
                       </div>
-                      <ErrorMessage name="to_mail" component="div" className="error" />
-                    </div>
 
-                    <div className="row mb-1 align-items-center">
-                      <label htmlFor="encryption" className="col-sm-3 col-form-label"><b>Encryption</b></label>
-                      <div className="col-sm-9">
-                        <Field name="encryption" type="text" className="form-control" />
+                      <div className="row mb-1 align-items-center">
+                        <label htmlFor="encryption" className="col-sm-3 col-form-label"><b>Encryption</b></label>
+                        <div className="col-sm-9">
+                          <Field name="encryption" type="text" className="form-control" />
+                        </div>
+                        <ErrorMessage name="encryption" component="div" className="error" />
                       </div>
-                      <ErrorMessage name="encryption" component="div" className="error" />
-                    </div>
 
-                    <div className="row mb-1 align-items-center password-group">
-                      <label htmlFor="smtp_password" className="col-sm-3 col-form-label"><b>SMTP Password</b></label>
-                      <div style={{ position: 'relative' }} className="col-sm-9">
+                      <div className="row mb-1 align-items-center password-group">
+                        <label htmlFor="smtp_password" className="col-sm-3 col-form-label"><b>SMTP Password</b></label>
+                        <div style={{ position: 'relative' }} className="col-sm-9">
 
-                        <Field
-                          name="smtp_password"
-                          type={passwordVisible ? 'text' : 'password'}
-                          className="form-control"
-                        />
-                        <span
-                          onClick={() => setPasswordVisible(!passwordVisible)}
-                          style={{ position: 'absolute', right: '18px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer' }}
-                        >
-                          <FontAwesomeIcon icon={passwordVisible ? faEye : faEyeSlash} />
-                        </span>
+                          <Field
+                            name="smtp_password"
+                            type={passwordVisible ? 'text' : 'password'}
+                            className="form-control"
+                          />
+                          <span
+                            onClick={() => setPasswordVisible(!passwordVisible)}
+                            style={{ position: 'absolute', right: '18px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer' }}
+                          >
+                            <FontAwesomeIcon icon={passwordVisible ? faEye : faEyeSlash} />
+                          </span>
+                        </div>
+                        <ErrorMessage name="smtp_password" component="div" className="error" />
                       </div>
-                      <ErrorMessage name="smtp_password" component="div" className="error" />
-                    </div>
 
-                    <div className="row mt-2">
-                      <label className="col-sm-3 col-form-label" />
-                      <div className="col-sm-9">
-                        <div className="d-md-flex d-grid align-items-center justify-content-end gap-3">
-                          <button type="submit" className="btn btn-primary px-4">
-                            Update
-                          </button>
+                      <div className="row mt-2">
+                        <label className="col-sm-3 col-form-label" />
+                        <div className="col-sm-9">
+                          <div className="d-md-flex d-grid align-items-center justify-content-end gap-3">
+                            <button type="submit" className="btn btn-primary px-4">
+                              Update
+                            </button>
 
+                          </div>
                         </div>
                       </div>
                     </div>
