@@ -29,4 +29,4 @@ class Angle {
 
 }
 
-module.exports = new Angel();
+module.exports = new Angle();
