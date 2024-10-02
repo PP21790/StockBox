@@ -390,7 +390,6 @@ export async function DeleteSignal(_id, token) {
 
 // for signal close api 
 export async function SignalCloseApi(data, token) {
-    console.log("data1", data)
     try {
         const res = await axios.post(`${Config.base_url}signal/closesignal`, data, {
             headers: {

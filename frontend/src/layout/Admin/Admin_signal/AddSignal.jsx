@@ -59,10 +59,51 @@ const AddSignal = () => {
     validate: (values) => {
     
       const errors = {};
+
       if (!values.segment) errors.segment = 'Please select a segment';
       if (!values.stock) errors.stock = 'Please select a stock';
       if (!values.price) errors.price = 'Please select a price';
-      if (!values.tag1) errors.tag1 = 'Please enter Target-1';
+       
+       if(values.calltype === "buy"){
+
+        if(!values.tag1) errors.tag1 = 'Please enter Traget1';
+        else if(values.price && values.tag1 && values.price >= values.tag1 ){
+           errors.tag1 = "Please Enter greater Than Entry Price"
+        }
+  
+        if(values.tag2 && values.tag1 >= values.tag2 ){
+           errors.tag2 = "Please Enter greater Than Target1"
+        }
+  
+        if(values.tag3 && values.tag2 && values.tag2 >= values.tag3 ){
+          errors.tag3 = "Please Enter greater Target2"
+       }
+       
+       if(values.price && values.price <= values.stoploss ){
+        errors.stoploss = "Please Enter Less Than Entry Price"
+     }
+    
+       }else if(values.calltype === "sell"){
+
+         if(!values.tag1) errors.tag1 = 'Please enter Traget1';
+        else if(values.price && values.tag1 && values.price <= values.tag1 ){
+           errors.tag1 = "Please Enter Less Than Entry Price"
+        }
+  
+        if(values.tag2 && values.tag1 <= values.tag2 ){
+           errors.tag2 = "Please Enter Less Than Target1"
+        }
+  
+        if(values.tag3 && values.tag2 && values.tag2 <= values.tag3 ){
+          errors.tag3 = "Please Enter Less Than Target2"
+       }
+       
+       if(values.price && values.price >= values.stoploss ){
+        errors.stoploss = "Please Enter greater Than Entry Price"
+     }
+       }
+
+     
       if (!values.callduration) errors.callduration = 'Please enter Trade duration';
       if (!values.calltype) errors.calltype = 'Please enter Call Calltype';
       if (!values.description) errors.description = 'Please enter description';
@@ -183,7 +224,6 @@ const AddSignal = () => {
         const data1 = { ...data, expiry: formik.values.expiry };
         const strikePriceResponse = await getstockStrickprice(data1);
         if (strikePriceResponse.status) {
-          console.log("strikePriceResponse.data", strikePriceResponse.data);
           setStrikePrice(strikePriceResponse.data);
         } else {
           console.log("Failed to fetch strike price", strikePriceResponse);
@@ -225,25 +265,7 @@ const AddSignal = () => {
       showWhen: (values) => values.segment !== "C",
     },
 
-    {
-      name: 'price',
-      label: 'Entry Price',
-      type: 'number',
-      label_size: 12,
-      col_size: 6,
-    } ,
-    {
-      name: 'strikeprice',
-      label: 'Strike Price',
-      type: 'select',
-      label_size: 12,
-      col_size: 6,
-      options: strikePrice.map((item) => ({
-        label: item.expiry,
-        value: item.expiry,
-      })),
-      showWhen: (values) => values.segment === "O"
-    },
+   
     {
       name: 'optiontype',
       label: 'Option Type',
@@ -266,6 +288,25 @@ const AddSignal = () => {
       ],
       label_size: 12,
       col_size: 6,
+    },
+    {
+      name: 'price',
+      label: 'Entry Price',
+      type: 'number',
+      label_size: 12,
+      col_size: 6,
+    } ,
+    {
+      name: 'strikeprice',
+      label: 'Strike Price',
+      type: 'select',
+      label_size: 12,
+      col_size: 6,
+      options: strikePrice.map((item) => ({
+        label: item.expiry,
+        value: item.expiry,
+      })),
+      showWhen: (values) => values.segment === "O"
     },
     {
       name: 'callduration',

@@ -44,6 +44,8 @@ const Signal = () => {
     });
 
 
+    console.log("checkedTargets", checkedTargets)
+
     const [checkedTargets1, setCheckedTargets1] = useState({
         target1: 0,
         target2: 0,
@@ -58,7 +60,11 @@ const Signal = () => {
             [target]: e.target.checked ? 1 : 0,
         }));
 
+
+
+
         setCheckedTargets((prev) => {
+
             const newCheckedTargets = { ...prev, [target]: !prev[target] };
             if (!newCheckedTargets[target]) {
                 setClosedata((prevData) => ({
@@ -112,10 +118,10 @@ const Signal = () => {
         try {
             const response = await GetSignallist(filters, token);
             if (response && response.status) {
-                 const filterdata = response.data.filter((item)=>{
+                const filterdata = response.data.filter((item) => {
                     return item.close_status == false
-                 })
-                
+                })
+
                 const searchInputMatch = filterdata.filter((item) => {
                     return (
                         searchInput === "" ||
@@ -124,7 +130,7 @@ const Signal = () => {
                         item.calltype.toLowerCase().includes(searchInput.toLowerCase())
                     );
                 });
-                
+
                 setClients(searchInput ? searchInputMatch : filterdata);
             }
         } catch (error) {
@@ -132,7 +138,7 @@ const Signal = () => {
         }
     };
 
- 
+
 
     const fetchAdminServices = async () => {
         try {
@@ -227,29 +233,32 @@ const Signal = () => {
         }
     };
 
-
+    const checkstatus = closedata.closestatus == true ? "true" : "false"
 
     // close signal
     const closeSignalperUser = async (index) => {
         try {
             const data = {
                 id: serviceid._id,
-                closestatus: index == 1 ? closedata.closestatus :"",
+                closestatus: index === 1 ? checkstatus  : "",
                 closetype: (index === 0) ? "1" : (index === 1) ? "2" : (index === 2) ? "3" : "4",
                 close_description: closedata.close_description,
                 targethit1: index === 1 ? checkedTargets1.target1 : "",
-                targethit2: index === 1 ? checkedTargets1.target2 : "", 
-                targethit3: index === 1 ? checkedTargets1.target3 : "", 
+                targethit2: index === 1 ? checkedTargets1.target2 : "",
+                targethit3: index === 1 ? checkedTargets1.target3 : "",
                 targetprice1: index === 0 ? targetvalue.tag1 : (index === 1 ? closedata.targetprice1 : ""),
                 targetprice2: index === 0 ? targetvalue.tag2 : (index === 1 ? closedata.targetprice2 : ""),
                 targetprice3: index === 0 ? targetvalue.tag3 : (index === 1 ? closedata.targetprice3 : ""),
-                slprice: index === 2 ? targetvalue.stoploss : "",
+                slprice: index === 2 ? closedata.slprice : targetvalue.stoploss,
                 exitprice: index === 3 ? closedata.exitprice : ""
             };
-            
+
+            console.log("closedata.closestatus", closedata.closestatus)
 
             const response = await SignalCloseApi(data, token);
-
+            console.log("data", data)
+            
+           
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
@@ -266,7 +275,7 @@ const Signal = () => {
             } else {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'There was an error  close signal.',
+                    text: response.message || 'There was an error  close signal.',
                     icon: 'error',
                     confirmButtonText: 'Try Again',
                 });
@@ -307,7 +316,7 @@ const Signal = () => {
         },
         {
             name: 'Entry Price',
-            selector: row =>  row.price ,
+            selector: row => row.price,
             sortable: true,
             width: '200px',
         },
@@ -321,7 +330,7 @@ const Signal = () => {
         // },
         {
             name: 'Entry Date',
-            selector: row =>  fDateTimeSuffix(row.created_at) ,
+            selector: row => fDateTimeSuffix(row.created_at),
             sortable: true,
             width: '250px',
         },
@@ -355,17 +364,17 @@ const Signal = () => {
             name: 'Status',
             cell: row => (
                 <>
-                   <div>
+                    <div>
                         <button
-                        className="btn btn-danger btnclose"
-                        onClick={() => {
-                            setModel(true);
-                            setServiceid(row);
-                            setTargetvalue(row);
-                        }}
-                    >
-                        Close
-                    </button>
+                            className="btn btn-danger btnclose"
+                            onClick={() => {
+                                setModel(true);
+                                setServiceid(row);
+                                setTargetvalue(row);
+                            }}
+                        >
+                            Close
+                        </button>
                     </div>
                 </>
             ),
@@ -373,7 +382,7 @@ const Signal = () => {
             allowOverflow: true,
             button: true,
         }
-        
+
 
     ];
 
@@ -633,7 +642,7 @@ const Signal = () => {
                                                             className="form-control"
                                                             type="number"
                                                             id="targethit1"
-                                                            value={closedata.targetprice1 || targetvalue.targetprice1}
+                                                            defaultValue={closedata.targetprice1 || targetvalue.targetprice1}
                                                             onChange={(e) => handleChange(e, 'targetprice1')}
                                                         />
                                                     </div>
@@ -646,7 +655,7 @@ const Signal = () => {
                                                         className="form-check-input"
                                                         type="checkbox"
                                                         id="target2"
-                                                        checked={checkedTargets.target2 || targetvalue.targetprice2}
+                                                        checked={checkedTargets.target2}
                                                         onChange={(e) => handleCheckboxChange(e, 'target2')}
                                                     />
                                                     <label className="form-check-label" htmlFor="target2">
@@ -660,7 +669,7 @@ const Signal = () => {
                                                             className="form-control"
                                                             type="number"
                                                             id="targethit2"
-                                                            value={closedata.targetprice2  || targetvalue.targetprice3}
+                                                            defaultValue={closedata.targetprice2 || targetvalue.targetprice2}
                                                             onChange={(e) => handleChange(e, 'targetprice2')}
                                                         />
                                                     </div>
@@ -687,7 +696,7 @@ const Signal = () => {
                                                             className="form-control"
                                                             type="number"
                                                             id="targethit3"
-                                                            value={closedata.targetprice3}
+                                                            defaultValue={closedata.targetprice3 || targetvalue.targetprice3}
                                                             onChange={(e) => handleChange(e, 'targetprice3')}
                                                         />
                                                     </div>
@@ -700,11 +709,11 @@ const Signal = () => {
                                                         className="form-check-input"
                                                         type="checkbox"
                                                         id="close_status"
-                                                        checked={closedata.closestatus === "true"}
+                                                        checked={closedata.closestatus === true}
                                                         onChange={(e) =>
                                                             setClosedata({
                                                                 ...closedata,
-                                                                closestatus: e.target.checked ? "true" : "false",
+                                                                closestatus: e.target.checked ,
                                                             })
                                                         }
                                                     />
@@ -713,6 +722,7 @@ const Signal = () => {
                                                     </label>
                                                 </div>
                                             </div>
+
 
                                             <div className="col-md-12">
                                                 <label className='mb-1'>Remark</label>
