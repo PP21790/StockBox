@@ -51,6 +51,7 @@ import Emailtemplate from '../layout/Admin/BasicSetting/Emailtemplate';
 import Changepass from '../Auth/Changepass';
 
 import Help from '../layout/Admin/Help_center/Help';
+import Closesignal from '../layout/Admin/Admin_signal/Closesignal';
 
 
 
@@ -128,7 +129,7 @@ function MainApp() {
 
                     <Route path="/signal" element={<Signal/>} />
                     <Route path="/addsignal" element={<AddSignal/>} />
-                    <Route path="/signal/signaldetaile/:id" element={<Signaldetail/>} />
+                    <Route path="/closesignal/signaldetaile/:id" element={<Signaldetail/>} />
                         
 
                     <Route path="/basket" element={<Basket/>} />
@@ -177,6 +178,7 @@ function MainApp() {
                   
                     {/* <Route path="/changepass" element={<Changepass />} /> */}
                     <Route path="/help" element={<Help />} />
+                    <Route path="/closesignal" element={<Closesignal/>} />
                     
 
                     

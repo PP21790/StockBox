@@ -112,7 +112,11 @@ const Signal = () => {
         try {
             const response = await GetSignallist(filters, token);
             if (response && response.status) {
-                const searchInputMatch = response.data.filter((item) => {
+                 const filterdata = response.data.filter((item)=>{
+                    return item.close_status == false
+                 })
+                
+                const searchInputMatch = filterdata.filter((item) => {
                     return (
                         searchInput === "" ||
                         item.stock.title.toLowerCase().includes(searchInput.toLowerCase())
@@ -120,15 +124,15 @@ const Signal = () => {
                         item.calltype.toLowerCase().includes(searchInput.toLowerCase())
                     );
                 });
-
-                setClients(searchInput ? searchInputMatch : response.data);
+                
+                setClients(searchInput ? searchInputMatch : filterdata);
             }
         } catch (error) {
             console.log("error", error);
         }
     };
 
-
+ 
 
     const fetchAdminServices = async () => {
         try {
@@ -224,7 +228,6 @@ const Signal = () => {
     };
 
 
-console.log("closedata.targetprice1",closedata.targetprice1)
 
     // close signal
     const closeSignalperUser = async (index) => {
@@ -245,11 +248,7 @@ console.log("closedata.targetprice1",closedata.targetprice1)
             };
             
 
-            console.log("data",data)
-            console.log("closedata.slprice",closedata.slprice)
-     
             const response = await SignalCloseApi(data, token);
-             
 
             if (response && response.status) {
                 Swal.fire({
@@ -298,100 +297,87 @@ console.log("closedata.targetprice1",closedata.targetprice1)
             name: 'Symbol',
             selector: row => row.stock,
             sortable: true,
-            width: '132px',
+            width: '200px',
         },
         {
             name: 'Entry Type',
             selector: row => row.calltype,
             sortable: true,
-            width: '132px',
+            width: '200px',
         },
         {
             name: 'Entry Price',
-            selector: row => row.Ttype == 0 ? row.price : "-",
+            selector: row =>  row.price ,
             sortable: true,
-            width: '132px',
+            width: '200px',
         },
 
-        {
-            name: 'Exit Price',
-            selector: row => row.Ttype == 1 ? row.closeprice : '-',
-            sortable: true,
-            width: '132px',
+        // {
+        //     name: 'Exit Price',
+        //     selector: row => row.Ttype == 1 ? row.closeprice : '-',
+        //     sortable: true,
+        //     width: '132px',
 
-        },
+        // },
         {
             name: 'Entry Date',
-            selector: row => row.Ttype == 0 ? fDateTimeSuffix(row.created_at) : "-",
+            selector: row =>  fDateTimeSuffix(row.created_at) ,
             sortable: true,
-            width: '160px',
+            width: '250px',
         },
-        {
-            name: 'Exit Date',
-            selector: row => row.Ttype == 1 ? fDateTimeSuffix(row.closedate) : "-",
-            sortable: true,
-            width: '160px',
-        },
+        // {
+        //     name: 'Exit Date',
+        //     selector: row => row.Ttype == 1 ? fDateTimeSuffix(row.closedate) : "-",
+        //     sortable: true,
+        //     width: '160px',
+        // },
 
 
 
-        {
-            name: 'Actions',
-            cell: row => (
-                <>
-                    <div>
-                        <Eye onClick={() => Signaldetail(row._id)} />
-                    </div>
-                    <div>
-                        <Trash2 onClick={() => DeleteSignals(row._id)} />
-                    </div>
-                </>
-            ),
-            ignoreRowClick: true,
-            allowOverflow: true,
-            button: true,
+        // {
+        //     name: 'Actions',
+        //     cell: row => (
+        //         <>
+        //             <div>
+        //                 <Eye onClick={() => Signaldetail(row._id)} />
+        //             </div>
+        //             <div>
+        //                 <Trash2 onClick={() => DeleteSignals(row._id)} />
+        //             </div>
+        //         </>
+        //     ),
+        //     ignoreRowClick: true,
+        //     allowOverflow: true,
+        //     button: true,
 
-        },
+        // },
         {
             name: 'Status',
             cell: row => (
                 <>
-                    {!row.close_status ? (
+                   <div>
                         <button
-                            className="btn btn-danger btnclose"
-                            onClick={() => {
-                                setModel(true);
-                                setServiceid(row);
-                                setTargetvalue(row);
-                            }}
-                        >
-                            Close
-                        </button>
-                    ) : (
-                        <button
-                            className="btn btn-danger btnclose"
-                            onClick={() => {
-                                setModel(true);
-                                setServiceid(row);
-                                setTargetvalue(row);
-                            }}
-                            disabled
-                        >
-                            Closed
-                        </button>
-                    )}
+                        className="btn btn-danger btnclose"
+                        onClick={() => {
+                            setModel(true);
+                            setServiceid(row);
+                            setTargetvalue(row);
+                        }}
+                    >
+                        Close
+                    </button>
+                    </div>
                 </>
             ),
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
         }
+        
 
     ];
 
 
-
-    
 
 
     return (
@@ -647,7 +633,7 @@ console.log("closedata.targetprice1",closedata.targetprice1)
                                                             className="form-control"
                                                             type="number"
                                                             id="targethit1"
-                                                            value={closedata.targetprice1}
+                                                            value={closedata.targetprice1 || targetvalue.targetprice1}
                                                             onChange={(e) => handleChange(e, 'targetprice1')}
                                                         />
                                                     </div>
@@ -660,7 +646,7 @@ console.log("closedata.targetprice1",closedata.targetprice1)
                                                         className="form-check-input"
                                                         type="checkbox"
                                                         id="target2"
-                                                        checked={checkedTargets.target2}
+                                                        checked={checkedTargets.target2 || targetvalue.targetprice2}
                                                         onChange={(e) => handleCheckboxChange(e, 'target2')}
                                                     />
                                                     <label className="form-check-label" htmlFor="target2">
@@ -674,7 +660,7 @@ console.log("closedata.targetprice1",closedata.targetprice1)
                                                             className="form-control"
                                                             type="number"
                                                             id="targethit2"
-                                                            value={closedata.targetprice2}
+                                                            value={closedata.targetprice2  || targetvalue.targetprice3}
                                                             onChange={(e) => handleChange(e, 'targetprice2')}
                                                         />
                                                     </div>
@@ -757,7 +743,6 @@ console.log("closedata.targetprice1",closedata.targetprice1)
                                                 <p>
                                                     Stoploss:  <input
                                                         type="number"
-                                                        disabled
                                                         value={closedata.slprice || targetvalue.stoploss}
                                                         onChange={(e) =>
                                                             setClosedata({

@@ -142,20 +142,20 @@ console.log(query);
 
 
 
-    const arr = [];
-    result.map((data) => {
-      if (data.close_status) {
-        arr.push({ ...data._doc, Ttype: "0" });
-        arr.push({ ...data._doc, Ttype: "1" });
-      } else {
-        arr.push({ ...data._doc, Ttype: "0" });
-      }
-    });
+    // const arr = [];
+    // result.map((data) => {
+    //   if (data.close_status) {
+    //     arr.push({ ...data._doc, Ttype: "0" });
+    //     arr.push({ ...data._doc, Ttype: "1" });
+    //   } else {
+    //     arr.push({ ...data._doc, Ttype: "0" });
+    //   }
+    // });
 
     return res.json({
       status: true,
       message: "Signals fetched successfully",
-      data: arr
+      data: result
     });
   } catch (error) {
     return res.json({

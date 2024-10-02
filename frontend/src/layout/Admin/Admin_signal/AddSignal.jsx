@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import DynamicForm from '../../../components/FormicForm';
-import { AddSignalByAdmin, GetService, getstockbyservice, getexpirydate } from '../../../Services/Admin';
+import { AddSignalByAdmin, GetService, getstockbyservice, getexpirydate , getstockStrickprice } from '../../../Services/Admin';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 
@@ -170,19 +170,30 @@ const AddSignal = () => {
           const expiryResponse = await getexpirydate(data);
           if (expiryResponse.status) {
             setExpirydate(expiryResponse.data);
-            console.log("Expiry date data:", expiryResponse.data);
           } else {
             console.log("Failed to fetch expiry date", expiryResponse);
           }
+           
+          const data1 = { segment: formik.values.segment, symbol: searchItem , expiry : formik.values.expiry};
+          const getstirkeprice = await getstockStrickprice(data1);
+          if (getstirkeprice.status) {
+            console.log("getstirkeprice.data",getstirkeprice.data)
+            setExpirydate(getstirkeprice.data);
+          } else {
+            console.log("Failed to fetch expiry date", getstirkeprice);
+          }
+
 
         } catch (error) {
           console.log("Error fetching stock or expiry date:", error);
         }
       }
+    
+      
     };
 
     fetchStockData();
-  }, [formik.values.segment, searchItem]);
+  }, [formik.values.segment, searchItem ,formik.values.expiry ]);
 
 
 
@@ -213,18 +224,20 @@ const AddSignal = () => {
       showWhen: (values) => values.segment !== "C",
     },
 
-    formik.values.segment !== "O" ? {
+    {
       name: 'price',
-      label: 'Price',
+      label: 'Entry Price',
       type: 'number',
       label_size: 12,
       col_size: 6,
-    } : {
-      name: 'price',
+    } ,
+    {
+      name: 'strikeprice',
       label: 'Strike Price',
       type: 'number',
       label_size: 12,
       col_size: 6,
+      showWhen: (values) => values.segment === "O"
     },
     {
       name: 'optiontype',
@@ -265,7 +278,9 @@ const AddSignal = () => {
           ];
         } else if (formik.values.segment === "F") {
           return formik.values.calltype === "sell" ? [
-            { label: 'Intraday', value: 'Intraday' }
+            { label: 'Short Term', value: 'Short Term' },
+            { label: 'Intraday', value: 'Intraday' },
+            { label: 'Still Expiry Date', value: 'Still Expiry Date' }
           ] : [
             { label: 'Short Term', value: 'Short Term' },
             { label: 'Intraday', value: 'Intraday' },
@@ -296,6 +311,7 @@ const AddSignal = () => {
       type: 'number',
       label_size: 12,
       col_size: 3,
+     
     },
     {
       name: 'tag3',

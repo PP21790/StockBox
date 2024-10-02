@@ -5,7 +5,7 @@ import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import { Settings2, Eye, UserPen, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { deleteClient, UpdateClientStatus, PlanSubscription, getplanlist, BasketSubscription, BasketAllList } from '../../../Services/Admin';
+import { deleteClient, UpdateClientStatus, PlanSubscription, getplanlist, BasketSubscription, BasketAllList, getcategoryplan } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
 import { fDateTime } from '../../../Utils/Date_formate';
 const Client = () => {
@@ -14,12 +14,18 @@ const Client = () => {
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
 
+    const [category, setCategory] = useState([]);
     const [checkedIndex, setCheckedIndex] = useState(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [clients, setClients] = useState([]);
     const [planlist, setPlanlist] = useState([]);
     const [basketlist, setBasketlist] = useState([]);
     const [client, setClientid] = useState({});
+    const [selectcategory, setSelectcategory] = useState("")
+
+
+    
+
     const [basketdetail, setBasketdetail] = useState({
         plan_id: "",
         client_id: "",
@@ -52,7 +58,20 @@ const Client = () => {
         getAdminclient();
         getplanlistbyadmin()
         getbasketlist()
+        getcategoryplanlist()
     }, []);
+
+    const getcategoryplanlist = async () => {
+        try {
+            const response = await getcategoryplan(token);
+            if (response.status) {
+                setCategory(response.data);
+
+            }
+        } catch (error) {
+            console.log("error");
+        }
+    };
 
     const getAdminclient = async () => {
         try {
@@ -64,6 +83,9 @@ const Client = () => {
             console.log("error");
         }
     }
+
+
+
 
     const getplanlistbyadmin = async () => {
         try {
@@ -88,8 +110,6 @@ const Client = () => {
             console.log("error");
         }
     }
-
-
 
 
 
@@ -569,58 +589,80 @@ const Client = () => {
 
                                     <div className='card'>
                                         {checkedIndex === 0 && (
-                                            <form className='card-body'>
-                                                <div className="row">
-                                                    {planlist.map((item, index) => (
-                                                        <div className="col-md-6" key={index}>
-                                                            <div className="form-check mb-2">
-                                                                <input
-                                                                    className="form-check-input"
-                                                                    type="radio"
-                                                                    name="planSelection"
-                                                                    id={`input-plan-${index}`}
-                                                                    onClick={() => {
-                                                                        setUpdatetitle({ plan_id: item._id, price: item.price, title: item.title });
-                                                                    }}
-                                                                />
-                                                                <label className="form-check-label" htmlFor={`input-plan-${index}`}>
-                                                                    {item.title}
-                                                                </label>
-                                                            </div>
+                                            <>
+                                                <div className='row'>
+                                                    {category && category.map((item, index) => (
+                                                        <div className='col-lg-4' key={index}>
+                                                            <input
+                                                                className="form-check-input mx-2"
+                                                                type="radio"
+                                                                name="planSelection"
+                                                                id={`proplus-${index}`}
+                                                                onClick={() =>  setSelectcategory(item._id )}
+                                                            />
+                                                            <label className="form-check-label" htmlFor={`proplus-${index}`}>
+                                                                {item.title}
+                                                            </label>
                                                         </div>
                                                     ))}
                                                 </div>
-                                            </form>
+
+                                                <form className='card-body'>
+                                                    <div className="row">
+                                                        {planlist
+                                                            .filter(item => item.category === selectcategory) // Filter plans by selected category
+                                                            .map((item, index) => (
+                                                                <div className="col-md-6" key={index}>
+                                                                    <div className="form-check mb-2">
+                                                                        <input
+                                                                            className="form-check-input"
+                                                                            type="radio"
+                                                                            name="planSelection"
+                                                                            id={`input-plan-${index}`}
+                                                                            onClick={() => {
+                                                                                setUpdatetitle({ plan_id: item._id, price: item.price, title: item.title });
+                                                                            }}
+                                                                        />
+                                                                        <label className="form-check-label" htmlFor={`input-plan-${index}`}>
+                                                                            {item.title}
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            ))}
+                                                    </div>
+                                                </form>
+                                            </>
                                         )}
 
+                                        {/* Uncomment and modify this section if you want to handle basket selection */}
                                         {/* {checkedIndex === 1 && (
-                                            <form className='card-body'>
-                                                <div className="row">
-                                                    {basketlist.map((item, index) => (
-                                                        <div className="col-md-6" key={index}>
-                                                            <div className="form-check mb-2">
-                                                                <input
-                                                                    className="form-check-input"
-                                                                    type="radio"
-                                                                    name="basketSelection"
-                                                                    id={`input-basket-${index}`}
-                                                                    onClick={() => {
-                                                                        setBasketdetail({ basket_id: item._id, price: item.price, title: item.title, discount: "0" });
-                                                                    }}
-                                                                />
-                                                                <label className="form-check-label" htmlFor={`input-basket-${index}`}>
-                                                                    {item.title}
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </form>
-                                        )} */}
-
-
-                                    </div>
+                <form className='card-body'>
+                    <div className="row">
+                        {basketlist.map((item, index) => (
+                            <div className="col-md-6" key={index}>
+                                <div className="form-check mb-2">
+                                    <input
+                                        className="form-check-input"
+                                        type="radio"
+                                        name="basketSelection"
+                                        id={`input-basket-${index}`}
+                                        onClick={() => {
+                                            setBasketdetail({ basket_id: item._id, price: item.price, title: item.title, discount: "0" });
+                                        }}
+                                    />
+                                    <label className="form-check-label" htmlFor={`input-basket-${index}`}>
+                                        {item.title}
+                                    </label>
                                 </div>
+                            </div>
+                        ))}
+                    </div>
+                </form>
+            )} */}
+                                    </div>
+
+                                </div>
+
                                 <div className="modal-footer">
                                     <button
                                         type="button"
