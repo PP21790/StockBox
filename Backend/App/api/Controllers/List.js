@@ -634,18 +634,16 @@ async showSignalsToClients(req, res) {
       const query = {
         service: service_id,
         close_status: false,
-        createdAt: {
+        created_at: {
             $gte: startDates[0], // Assuming all plans have the same startdate
             $lte: endDates[0] // Assuming all plans have the same enddate
         }
     };
 
-    // Print the query to the console
-    console.log("Query being executed:", query);
 
-    // Fetch signals where createdAt is between the plan's start and end dates
+
     const signals = await Signal_Modal.find(query);
-   
+
       return res.json({
           status: true,
           message: "Signals retrieved successfully",
@@ -681,14 +679,13 @@ async showSignalsToClientsClose(req, res) {
     const query = {
       service: service_id,
       close_status: true,
-      createdAt: {
+      created_at: {
           $gte: startDates[0], // Assuming all plans have the same startdate
           $lte: endDates[0] // Assuming all plans have the same enddate
       }
   };
 
   // Print the query to the console
-  console.log("Query being executed:", query);
 
   // Fetch signals where createdAt is between the plan's start and end dates
   const signals = await Signal_Modal.find(query);

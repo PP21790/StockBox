@@ -187,6 +187,72 @@ else if(segment=="C")
   }
 }
     
+
+async getStocksByExpiryByStrike(req, res) {
+  try {
+    const { segment,symbol,expiry } = req.body;
+
+let option_type;
+if(segment=="F")
+{
+option_type= "UT";
+}
+else if(segment=="C")
+{
+  option_type= "EQ";
+}
+else
+{
+ option_type= "PE";
+}
+
+    // Build query
+  // Build aggregation pipeline
+  const pipeline = [
+    {
+        $match: {
+            symbol: symbol,
+            segment: segment,
+            option_type: option_type,
+            expiry: expiry
+        }
+    },
+    {
+        $project: {
+            expiry: 1, // Include the expiry field
+            stock: "$$ROOT", // Include the entire stock document
+            _id: 0 // Exclude the _id field from the output
+        }
+    },
+    {
+        $sort: { expiry: 1 } // Optional: Sort by expiry date in ascending order
+    }
+];
+
+
+
+
+// Execute the aggregation
+const result = await Stock_Modal.aggregate(pipeline);
+
+// Log the result of aggregation for debugging
+console.log("Aggregation Result:", JSON.stringify(result, null, 2));
+
+return res.json({
+    status: true,
+    message: "Stocks retrieved successfully",
+    data: result
+});
+  
+} catch (error) {
+    console.error("Error executing query:", error);
+    return res.json({ status: false, message: "Server error", data: [] });
+}
+}
+  
+
+
+
   async activeStock(req, res) {
     try {
 
