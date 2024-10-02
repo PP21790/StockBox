@@ -11,7 +11,6 @@ const signalModel = Schema({
     },
     strikeprice: {
         type: String,
-        required: true,
         trim: true,
         default: null
     },

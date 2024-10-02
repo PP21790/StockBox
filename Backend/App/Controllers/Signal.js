@@ -20,7 +20,7 @@ class Signal {
         });
 
 
-            const { price,calltype,stock,tag1,tag2,tag3,stoploss,description,callduration,callperiod,add_by,expirydate,segment,optiontype } = req.body;
+            const { price,calltype,stock,tag1,tag2,tag3,stoploss,description,callduration,callperiod,add_by,expirydate,segment,optiontype,strikeprice } = req.body;
         
             const report = req.files['report'] ? req.files['report'][0].filename : null;
 
@@ -38,6 +38,7 @@ if (segment == "C") {
             const result = new Signal_Modal({
               price: price,
               service: service,
+              strikeprice: strikeprice,
               calltype: calltype,
               callduration:callduration,
               callperiod:callperiod,
