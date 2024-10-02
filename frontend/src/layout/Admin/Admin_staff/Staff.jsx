@@ -246,7 +246,7 @@ const Staff = () => {
             <div>
                 <div>
                     <div className="page-content">
-                        {/* breadcrumb */}
+                  
                         <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
                             <div className="breadcrumb-title pe-3">Staff</div>
                             <div className="ps-3">
@@ -261,7 +261,8 @@ const Staff = () => {
                                 </nav>
                             </div>
                         </div>
-                        {/* end breadcrumb */}
+                        <hr/>
+                    
                         <div className="card">
                             <div className="card-body">
                                 <div className="d-lg-flex align-items-center mb-4 gap-3">

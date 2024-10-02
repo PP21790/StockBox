@@ -5064,7 +5064,7 @@ input::placeholder {
 
 .lucide-trash2 {
 	color: red;
-	margin-left: 10px;
+
 
 	width: 18px;
 	height: 20px;
@@ -5188,11 +5188,12 @@ label {
 }
 
 .lucide-eye {
-	margin-left: 6px;
+	margin-left: 10px;
 }
 
 .lucide-user-pen {
 	margin-right: 10px;
+	margin-left: 10px;
 }
 
 .lucide-user-pen:hover {

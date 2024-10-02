@@ -224,32 +224,32 @@ const Signal = () => {
     };
 
 
-console.log("closedata.targetprice1",closedata.targetprice1)
+    console.log("closedata.targetprice1", closedata.targetprice1)
 
     // close signal
     const closeSignalperUser = async (index) => {
         try {
             const data = {
                 id: serviceid._id,
-                closestatus: index == 1 ? closedata.closestatus :"",
+                closestatus: index == 1 ? closedata.closestatus : "",
                 closetype: (index === 0) ? "1" : (index === 1) ? "2" : (index === 2) ? "3" : "4",
                 close_description: closedata.close_description,
                 targethit1: index === 1 ? checkedTargets1.target1 : "",
-                targethit2: index === 1 ? checkedTargets1.target2 : "", 
-                targethit3: index === 1 ? checkedTargets1.target3 : "", 
+                targethit2: index === 1 ? checkedTargets1.target2 : "",
+                targethit3: index === 1 ? checkedTargets1.target3 : "",
                 targetprice1: index === 0 ? targetvalue.tag1 : (index === 1 ? closedata.targetprice1 : ""),
                 targetprice2: index === 0 ? targetvalue.tag2 : (index === 1 ? closedata.targetprice2 : ""),
                 targetprice3: index === 0 ? targetvalue.tag3 : (index === 1 ? closedata.targetprice3 : ""),
                 slprice: index === 2 ? targetvalue.stoploss : "",
                 exitprice: index === 3 ? closedata.exitprice : ""
             };
-            
 
-            console.log("data",data)
-            console.log("closedata.slprice",closedata.slprice)
-     
+
+            console.log("data", data)
+            console.log("closedata.slprice", closedata.slprice)
+
             const response = await SignalCloseApi(data, token);
-             
+
 
             if (response && response.status) {
                 Swal.fire({
@@ -292,6 +292,12 @@ console.log("closedata.targetprice1",closedata.targetprice1)
             selector: (row, index) => index + 1,
             sortable: false,
             width: '70px',
+        },
+        {
+            name: 'Segment',
+            selector: row => row.stock,
+            sortable: true,
+            width: '132px',
         },
 
         {
@@ -358,14 +364,14 @@ console.log("closedata.targetprice1",closedata.targetprice1)
                 <>
                     {!row.close_status ? (
                         <button
-                            className="btn btn-danger btnclose"
+                            className="btn btn-success btnclose"
                             onClick={() => {
                                 setModel(true);
                                 setServiceid(row);
                                 setTargetvalue(row);
                             }}
                         >
-                            Close
+                            Open
                         </button>
                     ) : (
                         <button
@@ -391,7 +397,7 @@ console.log("closedata.targetprice1",closedata.targetprice1)
 
 
 
-    
+
 
 
     return (
@@ -412,6 +418,7 @@ console.log("closedata.targetprice1",closedata.targetprice1)
                             </nav>
                         </div>
                     </div>
+                    <hr />
                     <div className="card">
                         <div className="card-body">
                             <div className="d-lg-flex align-items-center mb-4 gap-3">

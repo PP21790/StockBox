@@ -9,15 +9,15 @@ const Dashbord = () => {
 
     const token = localStorage.getItem('token');
 
-   const [data,setData] = useState([])
-   const [clients, setClients] = useState([]);
-   
-  
+    const [data, setData] = useState([])
+    const [clients, setClients] = useState([]);
+
+
     const getdetail = async () => {
         try {
             const response = await getDashboarddetail(token);
             if (response.status) {
-                
+
                 setData(response.data)
             }
         } catch (error) {
@@ -31,22 +31,22 @@ const Dashbord = () => {
         try {
             const response = await GetClient(token);
             if (response.status) {
-                const topClients = response.data.slice(0, 5); 
+                const topClients = response.data.slice(0, 5);
                 setClients(topClients);
             }
         } catch (error) {
             console.log("error");
         }
     }
-    
 
-    
-    console.log("data",data)
 
-    useEffect(()=>{
+
+    console.log("data", data)
+
+    useEffect(() => {
         getdetail()
         getAdminclient()
-    },[])
+    }, [])
 
 
 
@@ -61,18 +61,20 @@ const Dashbord = () => {
             name: 'Full Name',
             selector: row => row.FullName,
             sortable: true,
-            width: '175px',
+            width: '180px',
         },
         {
             name: 'Email',
             selector: row => row.Email,
             sortable: true,
-           
+            width: '189px',
+
         },
         {
             name: 'Phone No',
             selector: row => row.PhoneNo,
             sortable: true,
+            width: '180px',
         },
 
 
@@ -113,7 +115,7 @@ const Dashbord = () => {
             name: 'CreatedAt',
             selector: row => fDateTime(row.createdAt),
             sortable: true,
-            width: '165px',
+            width: '180px',
         },
         // {
         //     name: 'Actions',
@@ -351,7 +353,7 @@ const Dashbord = () => {
                         <div className="card radius-10 bg-gradient-moonlit">
                             <div className="card-body">
                                 <div className="d-flex align-items-center">
-                                    <h5 className="mb-0 text-white">{data.userCountTotal && data.userCountTotal }</h5>
+                                    <h5 className="mb-0 text-white">{data.userCountTotal && data.userCountTotal}</h5>
                                     <div className="ms-auto">
                                         <i className="bx bx-user-plus fs-3 text-white" />
                                     </div>
@@ -385,7 +387,7 @@ const Dashbord = () => {
                         <div className="card radius-10 bg-gradient-deepblue">
                             <div className="card-body">
                                 <div className="d-flex align-items-center">
-                                    <h5 className="mb-0 text-white">{data.userCountActive && data.userCountActive }</h5>
+                                    <h5 className="mb-0 text-white">{data.userCountActive && data.userCountActive}</h5>
                                     <div className="ms-auto">
                                         <i className="bx bx-wifi-2 fs-3 text-white" />
                                     </div>
@@ -528,7 +530,7 @@ const Dashbord = () => {
                     <div className="card-body">
                         <div className="d-flex align-items-center">
                             <div>
-                                <h5 className="mb-0">New Client</h5>
+                                <h5 className="mb-0">Recent Client</h5>
                             </div>
 
                         </div>
@@ -536,9 +538,9 @@ const Dashbord = () => {
 
 
                         <Table
-                                columns={columns}
-                                data={clients}
-                            />
+                            columns={columns}
+                            data={clients}
+                        />
                     </div>
                 </div>
 

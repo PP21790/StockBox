@@ -49,6 +49,7 @@ import Message from '../layout/Admin/Broadcast/Message';
 import Viewclientdetail from '../layout/Admin/Admin_client/Viewclient';
 import Emailtemplate from '../layout/Admin/BasicSetting/Emailtemplate';
 import Changepass from '../Auth/Changepass';
+import Help from '../layout/Admin/Help_center/Help';
 
 
 
@@ -173,7 +174,7 @@ function MainApp() {
 
                     <Route path="/message" element={<Message />} />
                     <Route path="/changepass" element={<Changepass/>} />
-                  
+                    <Route path="/help" element={<Help />} />
                     
 
                     

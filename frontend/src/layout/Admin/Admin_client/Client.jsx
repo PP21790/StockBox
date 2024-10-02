@@ -489,6 +489,7 @@ const Client = () => {
                             </nav>
                         </div>
                     </div>
+                   <hr/>
                     {/* end breadcrumb */}
                     <div className="card">
                         <div className="card-body">

@@ -147,6 +147,7 @@ const Plan = () => {
                     </div>
                 </div>
             </div>
+            <hr/>
 
             <div className="card">
                 <div className="card-body">

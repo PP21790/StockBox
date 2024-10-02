@@ -134,6 +134,7 @@ const Emailtemplate = () => {
                         </nav>
                     </div>
                 </div>
+                <hr/>
                 <div className="row">
                     {clients.map((client, index) => (
                         <div className="col-md-6 col-lg-4" key={index}>
