@@ -44,7 +44,7 @@ const Signal = () => {
     });
 
 
-    console.log("checkedTargets", checkedTargets)
+    
 
     const [checkedTargets1, setCheckedTargets1] = useState({
         target1: 0,

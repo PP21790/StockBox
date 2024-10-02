@@ -45,7 +45,6 @@ const Closesignal = () => {
                  const filterdata = response.data.filter((item)=>{
                     return item.close_status == true
                  })
-               console.log("filterdata",filterdata)
                 const searchInputMatch = filterdata.filter((item) => {
                     return (
                         searchInput === "" ||
