@@ -18,6 +18,8 @@ module.exports = function (app) {
     app.use(require("./Plancategory"))
     app.use(require("./Content"))
     app.use(require("./Mailtemplate"))
+    app.use(require("./Angle"))
+
 
 
 

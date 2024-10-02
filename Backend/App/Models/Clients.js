@@ -62,6 +62,35 @@ const clientsModel = Schema({
         trim: true,
         default: null
     },
+    apikey: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    apisecret: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    brokerid: {
+        type: Number,
+        default: 0,
+    },
+    authtoken: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    dlinkstatus: {
+        type: String,
+        enum: ['1', '0'],
+        default: '0'
+    },
+    tradingstatus: {
+        type: String,
+        enum: ['1', '0'],
+        default: '0'
+    },
     wamount: {
         type: Number,
         default: 0,

@@ -9,6 +9,12 @@ const signalModel = Schema({
         trim: true,
         default: null
     },
+    strikeprice: {
+        type: String,
+        required: true,
+        trim: true,
+        default: null
+    },
     service: {
         type: String,
         required: true,
