@@ -25,17 +25,13 @@ const Signaldetail = () => {
             const response = await Signalperdetail(id, token);
             if (response.status) {
                 console.log("response",response.data)
-                setData(response.data)
+                setData([response.data])
             }
         } catch (error) {
             console.log("Error fetching signal details:", error);
         }
     };
 
-
-
-    
-  
 
 
 
@@ -67,60 +63,60 @@ const Signaldetail = () => {
                                         <div className="card-body col-md-6">
 
                                          {data && data.map((item)=>{
+                                              <ul className="list-group list-group-flush">
+                                              <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                  <h6 className="mb-0">
+                                                      {item.segment} 
 
+                                                  </h6>
+                                                  <span className="text-secondary">Cash</span>
+                                              </li>
+
+                                              <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                  <h6 className="mb-0">
+                                                      Type
+                                                  </h6>
+                                                  <span className="text-secondary">Buy</span>
+                                              </li>
+
+                                              <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                  <h6 className="mb-0">
+                                                      Entry Price
+                                                  </h6>
+                                                  <span className="text-secondary">10</span>
+                                              </li>
+                                              <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                  <h6 className="mb-0">
+                                                      Entry Date & Time
+                                                  </h6>
+                                                  <span className="text-secondary">20/03/2024<br />
+
+                                                  </span>
+                                              </li>
+
+                                              <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                  <h6 className="mb-0">
+                                                      Target-1
+                                                  </h6>
+                                                  <span className="text-secondary">97</span>
+                                              </li>
+
+                                              <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                  <h6 className="mb-0">
+                                                      Target-3
+                                                  </h6>
+                                                  <span className="text-secondary">93</span>
+                                              </li>
+
+                                              <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                  <h6 className="mb-0">
+                                                      Discription
+                                                  </h6>
+                                                  <span className="text-secondary">Lorem ipsum dolor sit amet.</span>
+                                              </li>
+                                          </ul>
                                          })}
-                                            <ul className="list-group list-group-flush">
-                                                <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                                    <h6 className="mb-0">
-                                                        Segment
-
-                                                    </h6>
-                                                    <span className="text-secondary">Cash</span>
-                                                </li>
-
-                                                <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                                    <h6 className="mb-0">
-                                                        Type
-                                                    </h6>
-                                                    <span className="text-secondary">Buy</span>
-                                                </li>
-
-                                                <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                                    <h6 className="mb-0">
-                                                        Entry Price
-                                                    </h6>
-                                                    <span className="text-secondary">10</span>
-                                                </li>
-                                                <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                                    <h6 className="mb-0">
-                                                        Entry Date & Time
-                                                    </h6>
-                                                    <span className="text-secondary">20/03/2024<br />
-
-                                                    </span>
-                                                </li>
-
-                                                <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                                    <h6 className="mb-0">
-                                                        Target-1
-                                                    </h6>
-                                                    <span className="text-secondary">97</span>
-                                                </li>
-
-                                                <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                                    <h6 className="mb-0">
-                                                        Target-3
-                                                    </h6>
-                                                    <span className="text-secondary">93</span>
-                                                </li>
-
-                                                <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                                    <h6 className="mb-0">
-                                                        Discription
-                                                    </h6>
-                                                    <span className="text-secondary">Lorem ipsum dolor sit amet.</span>
-                                                </li>
-                                            </ul>
+                                           
                                         </div>
 
 
