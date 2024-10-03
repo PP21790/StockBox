@@ -390,7 +390,6 @@ export async function DeleteSignal(_id, token) {
 
 // for signal close api 
 export async function SignalCloseApi(data, token) {
-    console.log("data1",data)
     try {
         const res = await axios.post(`${Config.base_url}signal/closesignal`, data, {
             headers: {
@@ -398,7 +397,7 @@ export async function SignalCloseApi(data, token) {
                 'Authorization': `${token}`,
             },
         });
-          console.log("res",res)
+        console.log("res", res)
         return res?.data;
     } catch (err) {
         return err.response?.data || err.message;
@@ -1436,9 +1435,6 @@ export async function Deleteplan(_id, token) {
 
 
 
-
-// banner  
-
 // get banner list
 
 export async function getbannerlist(token) {
@@ -1565,7 +1561,7 @@ export async function basicsettinglist(token) {
 
 export async function Updatebasicsettings(data, token) {
     const formData = new FormData();
-    
+
     formData.append('id', data.id);
     formData.append('from_name', data.from_name);
     formData.append('address', data.address);
@@ -1573,7 +1569,7 @@ export async function Updatebasicsettings(data, token) {
     formData.append('contact_number', data.contact_number);
     formData.append('favicon', data.favicon);
     formData.append('logo', data.logo);
-    
+
     try {
         const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
             headers: {
@@ -1596,7 +1592,7 @@ export async function Updatebasicsettings(data, token) {
 
 export async function UpdateEmailSettings(data, token) {
     const formData = new FormData();
-    
+
 
     // formData.append('from_mail', data.from_mail);
     // formData.append('receiver_earn', data.receiver_earn);
@@ -1764,7 +1760,7 @@ export async function getexpirydate(data, token) {
 
 export async function ChangePassword(data, token) {
     try {
-        const res = await axios.post(`${Config.base_url}api/client/change-password`, data, {
+        const res = await axios.post(`${Config.base_url}user/change-password`, data, {
             headers: {
                 data: {},
                 'Authorization': `${token}`,
@@ -1783,7 +1779,7 @@ export async function ChangePassword(data, token) {
 
 export async function ForgetPasswordApi(data, token) {
     try {
-        const res = await axios.post(`${Config.base_url}api/client/forgot-password`, data, {
+        const res = await axios.post(`${Config.base_url}user/forgot-password`, data, {
             headers: {
                 data: {},
                 'Authorization': `${token}`,
@@ -1811,5 +1807,26 @@ export async function getDashboarddetail(token) {
         return res?.data;
     } catch (err) {
         return { error: err.response?.data || err.message };
+    }
+}
+
+
+// get strike price
+
+// get stock expiry date
+
+export async function getstockStrickprice(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}stock/getstocksbyexpirybystrike`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
     }
 }

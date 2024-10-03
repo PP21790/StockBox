@@ -1,10 +1,12 @@
 import DataTable from 'react-data-table-component';
 import React from 'react';
 
-// Define columns for the DataTable
+
 
 
 const Table = ({columns,data}) => {
+
+    
     return (
         <div className="table-responsive">
             <DataTable
@@ -19,7 +21,7 @@ const Table = ({columns,data}) => {
     );
 };
 
-// Optional: Custom styles for DataTable
+
 const customStyles = {
     header: {
         style: {
