@@ -267,7 +267,82 @@ class List {
       }
     }
   
-      
+
+async getallPlan(req, res) {
+    try {
+        const plans = await Plan_Modal.aggregate([
+            {
+                $match: { del: false, status: "active" } // Match plans where 'del' is false and status is 'active'
+            },
+            {
+                $lookup: {
+                    from: 'plancategories', // Join with plancategories collection
+                    localField: 'category', // Field from the Plan_Modal
+                    foreignField: '_id', // Field from the plancategories
+                    as: 'category' // Name for the output array field
+                }
+            },
+            {
+                $unwind: {
+                    path: '$category',
+                    preserveNullAndEmptyArrays: true // If no matching category, keep the plan in the results
+                }
+            },
+            {
+                $lookup: {
+                    from: 'services', // Collection name for services
+                    let: { serviceIds: { $split: ['$category.service', ','] } }, // Split service string into array
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        {
+                                            $in: ['$_id', { $map: { input: '$$serviceIds', as: 'id', in: { $toObjectId: '$$id' } } }],
+                                        },
+                                        { $eq: ['$status', true] }, // Match only active services
+                                        { $eq: ['$del', false] }, // Match only non-deleted services
+                                    ],
+                                },
+                            },
+                        },
+                        {
+                            $project: {
+                                _id: 1, // Service ID
+                                title: 1, // Service title
+                            },
+                        },
+                    ],
+                    as: 'services' // Name of the new array field to hold the services
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    title: 1,
+                    validity: 1, 
+                    price:1,
+                    category: 1, // Include the category details
+                    services: 1 // Include the matched services
+                }
+            }
+        ]);
+
+        return res.json({
+            status: true,
+            message: "Plans fetched successfully",
+            data: plans
+        });
+    } catch (error) {
+        return res.json({
+            status: false,
+            message: "Server error",
+            data: []
+        });
+    }
+}
+
+
    // Controller function to add a new plan subscription
    async addPlanSubscription(req, res) {
     try {
@@ -509,6 +584,12 @@ async  myPlan(req, res) {
     return res.status(500).json({ status: false, message: 'Server error', data: [] });
   }
 }
+
+
+
+
+
+
 
 async Couponlist(req, res) {
   try {

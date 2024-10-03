@@ -72,6 +72,10 @@ const clientsModel = Schema({
         trim: true,
         default: null
     },
+    alice_userid: {
+        type: Number,
+        default: 0,
+    },
     brokerid: {
         type: Number,
         default: 0,
@@ -83,13 +87,13 @@ const clientsModel = Schema({
     },
     dlinkstatus: {
         type: Number,
-        enum: ['1', '0'],
-        default: '0'
+        enum: [1, 0],
+        default: 0
     },
     tradingstatus: {
         type: Number,
-        enum: ['1', '0'],
-        default: '0'
+        enum: [1, 0],
+        default: 0
     },
     wamount: {
         type: Number,
