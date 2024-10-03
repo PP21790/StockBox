@@ -82,12 +82,12 @@ const clientsModel = Schema({
         default: null
     },
     dlinkstatus: {
-        type: String,
+        type: Number,
         enum: ['1', '0'],
         default: '0'
     },
     tradingstatus: {
-        type: String,
+        type: Number,
         enum: ['1', '0'],
         default: '0'
     },

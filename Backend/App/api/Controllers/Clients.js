@@ -1219,6 +1219,55 @@ async referEarn(req, res) {
 }
 
 
+async brokerLink(req, res) {
+  try {
+    const { id, apikey, apisecret, brokerid } = req.body;
+
+    // Find client by ID
+    const client = await Clients_Modal.findById(id);
+
+    if (!client) {
+      return res.status(404).json({
+        status: false,
+        message: "Client not found",
+      });
+    }
+
+    // Update client details
+    client.apikey = apikey;
+    client.apisecret = apisecret;
+    client.brokerid = brokerid;
+    await client.save();
+
+    // Initialize the url variable
+    let url;
+
+    // Conditional URL assignment based on brokerid
+    if (brokerid == 1) {
+      url = `https://smartapi.angelone.in/publisher-login?api_key=${apikey}`;
+    } else {
+      url =  `https://ant.aliceblueonline.com/?appcode=${apikey}`; 
+    }
+
+    // Return the response
+    return res.json({
+      status: true,
+      url: url,
+      message: "Api Added successfully",
+    });
+
+  } catch (error) {
+    // Handle server errors
+    return res.status(500).json({
+      status: false,
+      message: "Server error",
+      error: error.message,
+    });
+  }
+}
+
+
+
 
 }
 module.exports = new Clients();
