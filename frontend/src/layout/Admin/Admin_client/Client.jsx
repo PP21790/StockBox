@@ -3,11 +3,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { Settings2, Eye, UserPen, Trash2 } from 'lucide-react';
+import { Settings2, Eye, UserPen, Trash2, Download } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { deleteClient, UpdateClientStatus, PlanSubscription, getplanlist, BasketSubscription, BasketAllList, getcategoryplan } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
 import { fDateTime } from '../../../Utils/Date_formate';
+import { image_baseurl } from '../../../Utils/config';
+
+
 const Client = () => {
 
 
@@ -23,8 +26,24 @@ const Client = () => {
     const [client, setClientid] = useState({});
     const [selectcategory, setSelectcategory] = useState("")
 
+    const handleDownload = (row) => {
 
+        console.log("pdf",row.pdf)
+
+        
+        const url = `${image_baseurl}uploads/pdf/${row.pdf}`; 
+        
+        console.log("url",url)
+        const link = document.createElement('a');
+        link.href = url; 
+        link.download = 'kyc-agreement-9123123123.pdf'; 
     
+        document.body.appendChild(link);
+        link.click(); 
+        document.body.removeChild(link); 
+      };
+
+
 
     const [basketdetail, setBasketdetail] = useState({
         plan_id: "",
@@ -51,6 +70,7 @@ const Client = () => {
     };
     const handleCancel = () => {
         setIsModalVisible(false);
+        setSelectcategory("")
     };
 
 
@@ -358,6 +378,15 @@ const Client = () => {
             width: '165px',
         },
         {
+            name: 'pdf',
+            selector: row => (
+                <Download onClick={() => handleDownload(row)} />
+                
+            ),
+            sortable: true,
+        },
+
+        {
             name: 'CreatedAt',
             selector: row => fDateTime(row.createdAt),
             sortable: true,
@@ -509,7 +538,7 @@ const Client = () => {
                             </nav>
                         </div>
                     </div>
-                   <hr/>
+                    <hr />
                     {/* end breadcrumb */}
                     <div className="card">
                         <div className="card-body">
@@ -554,7 +583,6 @@ const Client = () => {
                     <div className="modal-backdrop fade show"></div>
                     <div
                         className="modal fade show d-block"
-
                         tabIndex="-1"
                         aria-labelledby="exampleModalLabel"
                         aria-hidden="true"
@@ -591,6 +619,7 @@ const Client = () => {
                                     <div className='card'>
                                         {checkedIndex === 0 && (
                                             <>
+
                                                 <div className='row'>
                                                     {category && category.map((item, index) => (
                                                         <div className='col-lg-4' key={index}>
@@ -599,7 +628,7 @@ const Client = () => {
                                                                 type="radio"
                                                                 name="planSelection"
                                                                 id={`proplus-${index}`}
-                                                                onClick={() =>  setSelectcategory(item._id )}
+                                                                onClick={() => setSelectcategory(item._id)}
                                                             />
                                                             <label className="form-check-label" htmlFor={`proplus-${index}`}>
                                                                 {item.title}
@@ -608,60 +637,36 @@ const Client = () => {
                                                     ))}
                                                 </div>
 
-                                                <form className='card-body'>
-                                                    <div className="row">
-                                                        {planlist
-                                                            .filter(item => item.category === selectcategory) // Filter plans by selected category
-                                                            .map((item, index) => (
-                                                                <div className="col-md-6" key={index}>
-                                                                    <div className="form-check mb-2">
-                                                                        <input
-                                                                            className="form-check-input"
-                                                                            type="radio"
-                                                                            name="planSelection"
-                                                                            id={`input-plan-${index}`}
-                                                                            onClick={() => {
-                                                                                setUpdatetitle({ plan_id: item._id, price: item.price, title: item.title });
-                                                                            }}
-                                                                        />
-                                                                        <label className="form-check-label" htmlFor={`input-plan-${index}`}>
-                                                                            {item.title}
-                                                                        </label>
+
+                                                {selectcategory && (
+                                                    <form className='card-body'>
+                                                        <div className="row">
+                                                            {planlist
+                                                                .filter(item => item.category === selectcategory)
+                                                                .map((item, index) => (
+                                                                    <div className="col-md-6" key={index}>
+                                                                        <div className="form-check mb-2">
+                                                                            <input
+                                                                                className="form-check-input"
+                                                                                type="radio"
+                                                                                name="planSelection"
+                                                                                id={`input-plan-${index}`}
+                                                                                onClick={() => {
+                                                                                    setUpdatetitle({ plan_id: item._id, price: item.price, title: item.title });
+                                                                                }}
+                                                                            />
+                                                                            <label className="form-check-label" htmlFor={`input-plan-${index}`}>
+                                                                                {item.title}
+                                                                            </label>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            ))}
-                                                    </div>
-                                                </form>
+                                                                ))}
+                                                        </div>
+                                                    </form>
+                                                )}
                                             </>
                                         )}
-
-                                        {/* Uncomment and modify this section if you want to handle basket selection */}
-                                        {/* {checkedIndex === 1 && (
-                <form className='card-body'>
-                    <div className="row">
-                        {basketlist.map((item, index) => (
-                            <div className="col-md-6" key={index}>
-                                <div className="form-check mb-2">
-                                    <input
-                                        className="form-check-input"
-                                        type="radio"
-                                        name="basketSelection"
-                                        id={`input-basket-${index}`}
-                                        onClick={() => {
-                                            setBasketdetail({ basket_id: item._id, price: item.price, title: item.title, discount: "0" });
-                                        }}
-                                    />
-                                    <label className="form-check-label" htmlFor={`input-basket-${index}`}>
-                                        {item.title}
-                                    </label>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </form>
-            )} */}
                                     </div>
-
                                 </div>
 
                                 <div className="modal-footer">
@@ -669,6 +674,7 @@ const Client = () => {
                                         type="button"
                                         className="btn btn-secondary"
                                         onClick={handleCancel}
+
                                     >
                                         Close
                                     </button>
@@ -677,19 +683,9 @@ const Client = () => {
                                         <button
                                             type="button"
                                             className="btn btn-primary"
-                                            onClick={(e) => Updateplansubscription()}
+                                            onClick={() => Updateplansubscription()}
                                         >
                                             Save Plan
-                                        </button>
-                                    )}
-
-                                    {checkedIndex === 1 && (
-                                        <button
-                                            type="button"
-                                            className="btn btn-primary"
-                                            onClick={(e) => UpdateBasketservice()}
-                                        >
-                                            Save Basket
                                         </button>
                                     )}
                                 </div>
@@ -698,6 +694,7 @@ const Client = () => {
                     </div>
                 </>
             )}
+
 
 
 

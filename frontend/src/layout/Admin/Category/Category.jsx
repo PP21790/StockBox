@@ -15,8 +15,8 @@ const Category = () => {
     const [servicedata, setServicedata] = useState([]);
 
 
-    console.log("servicedata", servicedata)
-
+  
+  
 
     const [searchInput, setSearchInput] = useState("");
 
@@ -62,7 +62,7 @@ const Category = () => {
             const response = await GetService(token);
             if (response.status) {
                 setServicedata(response.data)
-
+               
             }
         } catch (error) {
             console.log("Error fetching services:", error);
@@ -123,8 +123,6 @@ const Category = () => {
         try {
 
             const data = { title: title.title, add_by: userid, service: title.service };
-
-            console.log("data", data)
             const response = await Addplancategory(data, token);
             if (response && response.status) {
                 Swal.fire({
@@ -260,10 +258,8 @@ const Category = () => {
     const handleCheckboxChange = (serviceId) => {
         setSelectedServices((prevSelected) => {
             if (prevSelected.includes(serviceId)) {
-                // If already selected, remove it
                 return prevSelected.filter((id) => id !== serviceId);
             } else {
-                // Otherwise, add it
                 return [...prevSelected, serviceId];
             }
         });
@@ -282,11 +278,11 @@ const Category = () => {
             selector: row => row.title,
             sortable: true,
         },
-        {
-            name: 'Segment',
-            selector: row => row.segment,
-            sortable: true,
-        },
+        // {
+        //     name: 'Segment',
+        //     selector: row => row.segment,
+        //     sortable: true,
+        // },
         {
             name: 'Active Status',
             selector: row => (

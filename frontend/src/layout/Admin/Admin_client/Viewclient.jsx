@@ -1,51 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import Table from '../../../components/Table';
-import { useFormik } from 'formik';
 import DynamicForm from '../../../components/FormicForm';
+import { useFormik } from 'formik';
 import { clientdetailbyid } from '../../../Services/Admin';
 
-
 const Viewclientdetail = () => {
-
-
-
     const { id } = useParams();
     const token = localStorage?.getItem('token');
-
-
+    
+    const [data, setData] = useState(null);
 
     useEffect(() => {
         getsignaldetail();
     }, []);
 
-
     const getsignaldetail = async () => {
         try {
             const response = await clientdetailbyid(id, token);
             if (response.status) {
-                const clientData = response.data;
-                Object.keys(clientData).forEach(key => {
-                    if (formik.values.hasOwnProperty(key)) {
-                        formik.setFieldValue(key, clientData[key], false);
-                    }
-                });
+                console.log("data", response.data);
+                setData(response.data); 
             }
         } catch (error) {
             console.log("Error fetching signal details:", error);
         }
     };
 
-
-
     const formik = useFormik({
         initialValues: {
-            FullName: '',
-            Email: '',
-            PhoneNo: '',
-
+            FullName: data?.FullName || '',
+            Email: data?.Email ||  '',
+            PhoneNo: data?.PhoneNo || '',
+            wamount:  data?.wamount || '',
+        },
+        enableReinitialize: true,
+        onSubmit: (values) => {
         },
     });
+
+   
 
     const fields = [
         {
@@ -72,69 +65,17 @@ const Viewclientdetail = () => {
             col_size: 4,
             disable: true,
         },
-
-
-    ];
-    const columns = [
         {
-            name: 'S.No',
-            selector: (row, index) => index + 1,
-            sortable: false,
-            width: '100px',
-        },
-        {
-            name: 'Plan Name',
-            selector: row => row.fullName,
-            sortable: true,
-            width: '180px',
-        },
-        {
-            name: 'Amount',
-            selector: row => row.email,
-            sortable: true,
-            width: '189px',
-        },
-        {
-            name: 'Purchase Date',
-            selector: row => row.phoneNo,
-            sortable: true,
-            width: '180px',
-        },
-        {
-            name: 'Validity Date',
-            selector: row => row.phoneNo,
-            sortable: true,
-            width: '180px',
-        },
-        {
-            name: 'Expiry Date',
-            selector: row => row.phoneNo,
-            sortable: true,
-            width: '180px',
+            name: 'wamount',
+            label: 'Amount',
+            type: 'text',
+            label_size: 12,
+            col_size: 4,
+            disable: true,
         },
     ];
 
-    const data = [
-        {
-            fullName: 'John Doe',
-            email: 'john@example.com',
-            phoneNo: '123-456-7890',
-        },
-        {
-            fullName: 'Jane Smith',
-            email: 'jane@example.com',
-            phoneNo: '987-654-3210',
-        },
-        {
-            fullName: 'Emily Johnson',
-            email: 'emily@example.com',
-            phoneNo: '555-123-4567',
-        },
-    ];
-
-
-
-
+    
     return (
         <div>
             <div className="page-content">
@@ -155,15 +96,11 @@ const Viewclientdetail = () => {
 
                 <div className='card'>
                     <div className="card-body">
-                    <DynamicForm
-                        fields={fields}
-                        formik={formik}
-                        sumit_btn={false}
-                        additional_field={<></>}
-                    />
-                        <Table
-                            columns={columns}
-                            data={data}
+                        <DynamicForm
+                            fields={fields}
+                            formik={formik}
+                            sumit_btn={false}
+                            additional_field={<></>}
                         />
                     </div>
                 </div>

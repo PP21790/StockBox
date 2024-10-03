@@ -34,25 +34,6 @@ const Staffpermission = () => {
 
 
 
-    const validate = (values) => {
-        let errors = {};
-
-        if (!values.FullName) {
-            errors.FullName = 'Please enter Full Name';
-        }
-        if (!values.Email) {
-            errors.Email = 'Please enter Email';
-        }
-        if (!values.UserName) {
-            errors.UserName = 'Please enter Username';
-        }
-        if (!values.PhoneNo) {
-            errors.PhoneNo = 'Please enter Phone Number';
-        }
-
-        return errors;
-    };
-
     const onSubmit = async (values) => {
         const permissions = Object.keys(values).filter(key => values[key] === true);
 
@@ -181,7 +162,6 @@ const Staffpermission = () => {
 
 
         },
-        validate,
         onSubmit,
     });
 
@@ -1029,9 +1009,6 @@ const Staffpermission = () => {
             // check_box_true: formik.values.deleteservice,
             check_box_true: formik.values.faqpermission || formik.values.faqstatus ? true : false,
         },
-
-      
-
         {
             name: 'categorypermission',
             label: 'All category',

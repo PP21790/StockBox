@@ -103,7 +103,6 @@ const AddSignal = () => {
      }
        }
 
-     
       if (!values.callduration) errors.callduration = 'Please enter Trade duration';
       if (!values.calltype) errors.calltype = 'Please enter Call Calltype';
       if (!values.description) errors.description = 'Please enter description';
@@ -385,7 +384,7 @@ const AddSignal = () => {
       label: 'Description',
       type: 'text5',
       label_size: 12,
-      col_size: 6,
+      col_size: 12,
     },
   ];
 
