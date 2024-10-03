@@ -306,21 +306,19 @@ const Closesignal = () => {
                                     </select>
                                 </div>
 
-                                <div className="col-md-3">
-                                    <select
-                                        name="stock"
-                                        className="form-control radius-10"
-                                        value={filters.stock}
-                                        onChange={handleFilterChange}
-                                    >
-                                        <option value="">Select Stock</option>
-                                        {stockList.map((stock) => (
-                                            <option key={stock._id} value={stock._id}>
-                                                {stock.title}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
+                                {/* <div className="col-md-3">
+                                    <div className="col-md-10">
+                                        <input
+                                            type="text"
+                                            name="stock"
+                                            className="form-control radius-10"
+                                            value={filters.stock}
+                                            onChange={handleFilterChange}
+                                            placeholder="Enter Stock"
+                                        />
+                                    </div>
+
+                                </div> */}
 
                             </div>
 

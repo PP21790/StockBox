@@ -25,18 +25,20 @@ const Client = () => {
     const [basketlist, setBasketlist] = useState([]);
     const [client, setClientid] = useState({});
     const [selectcategory, setSelectcategory] = useState("")
+    const [searchInput, setSearchInput] = useState("");
+
 
     const handleDownload = (row) => {
 
         console.log("pdf",row.pdf)
 
         
-        const url = `${image_baseurl}uploads/pdf/${row.pdf}`; 
+        const url = `${image_baseurl}/uploads/pdf/${row.pdf}`; 
         
         console.log("url",url)
         const link = document.createElement('a');
         link.href = url; 
-        link.download = 'kyc-agreement-9123123123.pdf'; 
+        link.download = url; 
     
         document.body.appendChild(link);
         link.click(); 
@@ -79,7 +81,7 @@ const Client = () => {
         getplanlistbyadmin()
         getbasketlist()
         getcategoryplanlist()
-    }, []);
+    }, [searchInput]);
 
     const getcategoryplanlist = async () => {
         try {
@@ -97,7 +99,14 @@ const Client = () => {
         try {
             const response = await GetClient(token);
             if (response.status) {
-                setClients(response.data);
+                const filterdata = response.data.filter((item) =>
+                    searchInput === "" ||
+                    item.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
+                    item.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
+                    item.PhoneNo.toLowerCase().includes(searchInput.toLowerCase()) 
+
+                );
+                setClients( searchInput ? filterdata :response.data);
             }
         } catch (error) {
             console.log("error");
@@ -111,6 +120,7 @@ const Client = () => {
         try {
             const response = await getplanlist(token);
             if (response.status) {
+               
                 setPlanlist(response.data);
             }
         } catch (error) {
@@ -548,6 +558,8 @@ const Client = () => {
                                         type="text"
                                         className="form-control ps-5 radius-10"
                                         placeholder="Search Order"
+                                        onChange={(e) => setSearchInput(e.target.value)}
+                                        value={searchInput}
                                     />
                                     <span className="position-absolute top-50 product-show translate-middle-y">
                                         <i className="bx bx-search" />
