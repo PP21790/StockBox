@@ -513,6 +513,8 @@ const Signal = () => {
 
 
             {model && (
+                <>
+                    <div className="modal-backdrop fade show"></div>
                 <div
                     className="modal fade show"
                     style={{ display: 'block' }}
@@ -841,6 +843,7 @@ const Signal = () => {
                         </div>
                     </div>
                 </div>
+                </>
             )}
 
 
