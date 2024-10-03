@@ -1109,6 +1109,7 @@ const Staffpermission = () => {
             />
         </div>
     );
+    
 };
 
 export default Staffpermission;  
