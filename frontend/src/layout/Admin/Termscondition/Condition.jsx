@@ -140,48 +140,50 @@ const Condition = () => {
                 <div className="row">
                     {clients.map((client, index) => (
                         <div className="col-md-6 col-lg-4" key={index}>
-                            <div className="card mb-4">
+                            <div className="mb-4 card radius-15">
                                 <div className="card-body p-4 position-relative">
-                                    <div className='d-flex justify-content-between align-items-center'>
-                                        <div>
-                                            <h5 className="card-title text-primary">World</h5>
-                                        </div>
-                                        <div>
-                                           
+                                    <div className='p-4 border radius-15'>
+                                        <div className='d-flex justify-content-between align-items-center'>
+                                            <div>
+
+                                            </div>
+                                            <div>
+
                                                 <SquarePen onClick={() => {
                                                     setModel(true);
                                                     setTemplateid(client._id);
                                                     setUpdatetitle({ title: client.title, id: client._id, description: client.description });
                                                 }} />
-                                            
-                                        </div>
-                                    </div>
-                                    <hr/>
-                                    <form className="row g-3">
-                                        <div className="col-md-12">
-                                            <label htmlFor={`mailType${index}`} className="form-label">
-                                                Title
-                                            </label>
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                id={`mailType${index}`}
-                                                value={client.title}
-                                            />
+
+                                            </div>
                                         </div>
 
-                                        <div className="col-md-12">
-                                            <label htmlFor={`mailContent${index}`} className="form-label">
-                                                Description
-                                            </label>
-                                            <textarea
-                                                className="form-control"
-                                                id={`mailContent${index}`}
-                                                value={client.description}
-                                                rows={3}
-                                            />
-                                        </div>
-                                    </form>
+                                        <form className="row g-3 mt-3">
+                                            <div className="col-md-12">
+                                                <label htmlFor={`mailType${index}`} className="form-label">
+                                                    Title
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    id={`mailType${index}`}
+                                                    value={client.title}
+                                                />
+                                            </div>
+
+                                            <div className="col-md-12">
+                                                <label htmlFor={`mailContent${index}`} className="form-label">
+                                                    Description
+                                                </label>
+                                                <textarea
+                                                    className="form-control"
+                                                    id={`mailContent${index}`}
+                                                    value={client.description}
+                                                    rows={3}
+                                                />
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
