@@ -31,9 +31,7 @@ const Client = () => {
     const handleDownload = (row) => {
 
         console.log("pdf",row.pdf)
-
-        
-        const url = `${image_baseurl}/uploads/pdf/${row.pdf}`; 
+        const url = `${image_baseurl}uploads/pdf/${row.pdf}`; 
         
         console.log("url",url)
         const link = document.createElement('a');
@@ -388,10 +386,13 @@ const Client = () => {
             width: '165px',
         },
         {
-            name: 'pdf',
+            name: 'Kyc Agreement',
             selector: row => (
-                <Download onClick={() => handleDownload(row)} />
-                
+                row.kyc_verification === "1" ? (
+                    <Download onClick={() => handleDownload(row)} />
+                ) : (
+                    "-"
+                )
             ),
             sortable: true,
         },
