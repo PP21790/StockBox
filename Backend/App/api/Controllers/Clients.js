@@ -223,6 +223,7 @@ async loginClient(req, res) {
       return res.status(400).json({ status: false, message: "Please enter password" });
     }
    
+
    
     const client = await Clients_Modal.findOne({
       $or: [{ Email: UserName }, { PhoneNo : UserName }],  // Check for email or mobile
@@ -1221,7 +1222,7 @@ async referEarn(req, res) {
 
 async brokerLink(req, res) {
   try {
-    const { id, apikey, apisecret, brokerid } = req.body;
+    const { id, apikey, apisecret, alice_userid, brokerid } = req.body;
 
     // Find client by ID
     const client = await Clients_Modal.findById(id);
@@ -1237,6 +1238,7 @@ async brokerLink(req, res) {
     client.apikey = apikey;
     client.apisecret = apisecret;
     client.brokerid = brokerid;
+    client.alice_userid = alice_userid;
     await client.save();
 
     // Initialize the url variable
