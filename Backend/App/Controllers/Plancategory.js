@@ -63,7 +63,40 @@ class Plancategory {
       const { } = req.body;
 
     //  const result = await Plancategory_Modal.find()
-      const result = await Plancategory_Modal.find({ del: false });
+    const result = await Plancategory_Modal.aggregate([
+      {
+        $match: { del: false }
+      },
+      {
+        $addFields: {
+          serviceIds: {
+            $map: {
+              input: { $split: ['$service', ','] },
+              as: 'serviceId',
+              in: { $toObjectId: '$$serviceId' } // Convert strings to ObjectId
+            }
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: 'services', // The collection that holds the service details
+          localField: 'serviceIds', // The split and converted service IDs
+          foreignField: '_id', // The field in the services collection containing the IDs
+          as: 'servicesDetails'
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          servicesDetails: {
+            title: 1 // Only show the service titles
+          }
+        }
+      }
+    ]);
+    
 
 
       return res.json({
@@ -158,6 +191,8 @@ class Plancategory {
           message: "Plan category ID is required",
         });
       }
+
+
       let services;
       if (Array.isArray(service)) {
           services = service.join(',');  // Convert array to comma-separated string

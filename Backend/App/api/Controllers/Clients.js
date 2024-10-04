@@ -1272,7 +1272,44 @@ async brokerLink(req, res) {
   }
 }
 
+async deleteBrokerLink(req, res) {
+  try {
+    const { id } = req.body;
+    // Find client by ID
+    const client = await Clients_Modal.findById(id);
 
+    if (!client) {
+      return res.status(404).json({
+        status: false,
+        message: "Client not found",
+      });
+    }
+
+    // Update client details
+    client.apikey = "";
+    client.apisecret = "";
+    client.brokerid = 0;
+    client.alice_userid = "";
+    client.authtoken = "";
+    client.dlinkstatus = 0;
+    client.tradingstatus = 0;
+   
+    await client.save();
+
+    return res.json({
+      status: true,
+      message: "Broker Deleted successfully",
+    });
+
+  } catch (error) {
+    // Handle server errors
+    return res.status(500).json({
+      status: false,
+      message: "Server error",
+      error: error.message,
+    });
+  }
+}
 
 
 }
