@@ -7,14 +7,20 @@ import { fDateTime } from '../../../Utils/Date_formate';
 
 
 const Signaldetail = () => {
+
+
     const { id } = useParams();
     const token = localStorage?.getItem('token');
     const [data, setData] = useState([]);
+
+
 
     useEffect(() => {
         getsignaldetail();
     }, []);
 
+
+    
     const getsignaldetail = async () => {
         try {
             const response = await Signalperdetail(id, token);

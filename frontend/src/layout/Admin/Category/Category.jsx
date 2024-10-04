@@ -35,7 +35,7 @@ const Category = () => {
     const userid = localStorage.getItem('id');
 
 
-
+    console.log("updatetitle", updatetitle)
 
     // Getting services
     const getcategory = async () => {
@@ -82,11 +82,13 @@ const Category = () => {
         try {
 
             const data = { title: updatetitle.title, id: serviceid._id, service: updatetitle.service };
+
+            
             const response = await UpdateCategoryplan(data, token);
-
+            
             console.log("data", data)
+          
 
-            return
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
@@ -325,7 +327,11 @@ const Category = () => {
                                 onClick={() => {
                                     setModel(true);
                                     setServiceid(row);
-                                    setUpdatetitle({ title: row.title, id: row._id, service: row.service });
+                                    setUpdatetitle({
+                                        title: row.title, id: row._id, service: row.servicesDetails.map((item) => {
+                                            return item.title, item._id
+                                        })
+                                    });
                                 }}
                             />
                         </Tooltip>
@@ -351,6 +357,22 @@ const Category = () => {
             [key]: value
         }));
     };
+
+    const handleServiceChange = (serviceId, isChecked) => {
+        if (isChecked) {
+            setUpdatetitle({
+                ...updatetitle,
+                service: [...updatetitle.service, serviceId],
+            });
+        } else {
+            setUpdatetitle({
+                ...updatetitle,
+                service: updatetitle.service.filter((id) => id !== serviceId),
+            });
+        }
+    };
+    
+
 
 
 
@@ -541,35 +563,35 @@ const Category = () => {
                                                                 </div>
                                                             </div> */}
 
-
-
                                                             <div className="row">
                                                                 <div className="col-md-12">
-                                                                    <label>Service Options</label>
-
-                                                                    {servicedata &&
-                                                                        servicedata.map((item) => (
-                                                                            <div key={item._id} className="form-check">
-                                                                                <input
-                                                                                    className="form-check-input"
-                                                                                    type="checkbox"
-                                                                                    id={`service-checkbox-${item._id}`}
-                                                                                    checked={updatetitle.service.includes(item.title)}
-                                                                                    onChange={(e) => {
-                                                                                        if (e.target.checked) {
-                                                                                            updateServiceTitle("service", [...updatetitle.service, item._id]);
-                                                                                        } else {
-                                                                                            updateServiceTitle("service", updatetitle.service.filter((service) => service !== item.title));
-                                                                                        }
-                                                                                    }}
-                                                                                />
-                                                                                <label className="form-check-label" htmlFor={`service-checkbox-${item._id}`}>
-                                                                                    {item.title}
-                                                                                </label>
-                                                                            </div>
-                                                                        ))}
+                                                                    <label htmlFor="service">Service</label>
+                                                                    {servicedata.length > 0 && (
+                                                                        <div className="form-group">
+                                                                            {servicedata.map((item) => (
+                                                                                <div key={item._id} className="form-check">
+                                                                                    <input
+                                                                                        className="form-check-input"
+                                                                                        type="checkbox"
+                                                                                        id={`service_${item._id}`}
+                                                                                        value={item._id}
+                                                                                        checked={updatetitle.service.includes(item._id)}
+                                                                                        onChange={(e) => handleServiceChange(item._id, e.target.checked)}
+                                                                                    />
+                                                                                    <label className="form-check-label" htmlFor={`service_${item._id}`}>
+                                                                                        {item.title}
+                                                                                    </label>
+                                                                                </div>
+                                                                            ))}
+                                                                        </div>
+                                                                    )}
                                                                 </div>
                                                             </div>
+
+
+
+
+
 
 
 
