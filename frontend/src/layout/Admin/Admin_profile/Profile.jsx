@@ -110,9 +110,9 @@ const Profile = () => {
                                                         <line x1={2} y1={12} x2={22} y2={12} />
                                                         <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
                                                     </svg>
-                                                    Website
+                                                    Company Name
                                                 </h6>
-                                                <span className="text-secondary">https://codervent.com</span>
+                                                <span className="text-secondary">P&P</span>
                                             </li>
 
                                             <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
@@ -133,7 +133,7 @@ const Profile = () => {
                                                     </svg>
                                                     Twitter
                                                 </h6>
-                                                <span className="text-secondary">@codervent</span>
+                                                <span className="text-secondary">@P&P</span>
                                             </li>
                                             <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                 <h6 className="mb-0">
@@ -188,6 +188,14 @@ const Profile = () => {
                                         {data && data.map((item, index) => (
                                             <div key={index}>
                                                 <div className="row mb-3">
+                                                    <div className="col-sm-12 d-flex justify-content-end">
+                                                        <Link to="/admin/changepass" className="btn btn-primary mb-0" style={{ fontSize: "14px" }}>Change Password</Link>
+                                                    </div>
+                                                    <div className="col-sm-9 text-secondary">
+
+                                                    </div>
+                                                </div>
+                                                <div className="row mb-3">
                                                     <div className="col-sm-3">
                                                         <h6 className="mb-0">Full Name</h6>
                                                     </div>
@@ -222,14 +230,14 @@ const Profile = () => {
                                             </div>
                                         ))}
 
-                                        <div className="row mb-3">
+                                        {/* <div className="row mb-3">
                                             <div className="col-sm-3">
                                                 <Link to="/admin/changepass" className="btn btn-primary mb-0" style={{ fontSize: "14px" }}>Change Password</Link>
                                             </div>
                                             <div className="col-sm-9 text-secondary">
 
                                             </div>
-                                        </div>
+                                        </div> */}
 
                                     </div>
                                 </div>
