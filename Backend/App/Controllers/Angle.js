@@ -66,7 +66,7 @@ class Angle {
     async placeOrder(req, res) {
         
         try {
-            const { id, signalid, quantity } = req.body;
+            const { id, signalid, quantity, price } = req.body;
     
             const client = await Clients_Modal.findById(id);
             if (!client) {
@@ -96,7 +96,13 @@ class Angle {
    
 
         const stock = await Stock_Modal.findOne({ symbol: signal.stock, segment: signal.segment, expiry: signal.expirydate,option_type:signal.optiontype,strike:signal.strikeprice });
-        
+        if (!stock) {
+            return res.status(404).json({
+                status: false,
+                message: "Stock not found"
+            });
+        }
+
 
 
              const authToken = client.authtoken;
@@ -130,18 +136,26 @@ class Angle {
             var data = JSON.stringify({
                 "variety":"NORMAL",
                 "tradingsymbol":signal.stock,
-                "symboltoken":"3045",
+                "symboltoken":stock.instrument_token,
                 "transactiontype":signal.calltype,
                 "exchange":exchange,
                 "ordertype":"MARKET",
                 "producttype":producttype,
                 "duration":"DAY",
-                "price":"194.50",
+                "price":price,
                 "squareoff":"0",
                 "stoploss":"0",
                 "quantity":quantity
                 });
-    
+
+
+
+            console.log(data);
+            return res.status(500).json({ 
+                status: false, 
+            });
+
+
             const config = {
                 method: 'get',
                 url: 'https://apiconnect.angelone.in/rest/secure/angelbroking/order/v1/placeOrder',
