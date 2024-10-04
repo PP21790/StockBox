@@ -6,6 +6,7 @@ import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
 import Swal from 'sweetalert2';
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 import { Tooltip } from 'antd';
+import styled from 'styled-components';
 
 const Category = () => {
     const navigate = useNavigate();
@@ -18,7 +19,7 @@ const Category = () => {
     const [updatetitle, setUpdatetitle] = useState({
         title: "",
         id: "",
-        service:""
+        service: ""
     });
 
 
@@ -80,7 +81,7 @@ const Category = () => {
 
             const data = { title: updatetitle.title, id: serviceid._id, service: updatetitle.service };
             const response = await UpdateCategoryplan(data, token);
-    
+
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
@@ -272,11 +273,13 @@ const Category = () => {
             selector: row => row.title,
             sortable: true,
         },
-        // {
-        //     name: 'Segment',
-        //     selector: row => row.segment,
-        //     sortable: true,
-        // },
+        {
+            name: 'Segment',
+
+            selector: row => row.servicesDetails.map(item => item.title).join(', '),
+
+            sortable: true,
+        },
         {
             name: 'Active Status',
             selector: row => (
@@ -285,7 +288,7 @@ const Category = () => {
                         id={`rating_${row.status}`}
                         className="form-check-input toggleswitch"
                         type="checkbox"
-                        checked={row.status === true}
+                        checked={row.status == true}
                         onChange={(event) => handleSwitchChange(event, row._id)}
                     />
                     <label
@@ -317,7 +320,7 @@ const Category = () => {
                                 onClick={() => {
                                     setModel(true);
                                     setServiceid(row);
-                                    setUpdatetitle({ title: row.title, id: row._id , service: row.service});
+                                    setUpdatetitle({ title: row.title, id: row._id, service: row.service });
                                 }}
                             />
                         </Tooltip>
@@ -344,7 +347,7 @@ const Category = () => {
         }));
     };
 
-   
+
 
     return (
         <div>

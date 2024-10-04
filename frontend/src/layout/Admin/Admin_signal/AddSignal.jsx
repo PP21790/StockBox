@@ -282,8 +282,8 @@ const AddSignal = () => {
       label: 'Call Type',
       type: 'select',
       options: [
-        { label: 'Buy', value: 'buy' },
-        { label: 'Sell', value: 'sell' },
+        { label: 'Buy', value: 'BUY' },
+        { label: 'Sell', value: 'SELL' },
       ],
       label_size: 12,
       col_size: 6,
