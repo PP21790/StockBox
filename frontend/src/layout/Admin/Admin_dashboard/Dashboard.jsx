@@ -67,7 +67,7 @@ const Dashbord = () => {
             name: 'Email',
             selector: row => row.Email,
             sortable: true,
-            width: '189px',
+            width: '284px',
 
         },
         {

@@ -15,18 +15,18 @@ const menuItems = [
     ]
   },
   { title: 'Staff', icon: 'bx-user-plus', link: '/admin/staff' },
-  
+
   {
     title: 'Signal',
-    icon: 'bxl-redux',
+    icon: 'bx-wifi-2',
     subMenu: [
-       { title: 'Open Signal', icon: 'bx-wifi-2', link: '/admin/signal' },
-       { title: 'Close Signal', icon: 'bx-radio-circle', link: '/admin/closesignal' },
-     
+      { title: 'Open Signal', icon: 'bx-radio-circle', link: '/admin/signal' },
+      { title: 'Close Signal', icon: 'bx-radio-circle', link: '/admin/closesignal' },
+
     ]
   },
 
-  
+
   { title: 'Payment History', icon: 'bx-credit-card', link: '/admin/paymenthistory' },
   { title: 'Blogs', icon: 'bx-comment-detail', link: '/admin/blogs' },
   { title: 'News', icon: 'bx-news', link: '/admin/news' },

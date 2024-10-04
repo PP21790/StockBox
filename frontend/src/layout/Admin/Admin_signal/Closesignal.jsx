@@ -270,7 +270,7 @@ const Closesignal = () => {
 
                             <div className="row">
 
-                                <div className="col-md-3">
+                                <div className="col-md-4">
                                     <input
                                         type="date"
                                         name="from"
@@ -280,7 +280,7 @@ const Closesignal = () => {
                                         onChange={handleFilterChange}
                                     />
                                 </div>
-                                <div className="col-md-3">
+                                <div className="col-md-4">
                                     <input
                                         type="date"
                                         name="to"
@@ -290,7 +290,7 @@ const Closesignal = () => {
                                         onChange={handleFilterChange}
                                     />
                                 </div>
-                                <div className="col-md-3">
+                                <div className="col-md-4">
                                     <select
                                         name="service"
                                         className="form-control radius-10"

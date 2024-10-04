@@ -101,7 +101,7 @@ const Viewclientdetail = () => {
                         <div className="p-4 border radius-15">
                             <div className="row justify-content-center align-items-center">
                                 {data && data.map((item) => (
-                                    <div key={item.id} className="row mb-3">
+                                    <div key={item.id} className="row">
                                         <div className="col-md-4 d-flex align-items-center">
                                             <div>
                                                 <strong>Full Name</strong>

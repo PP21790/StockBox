@@ -340,7 +340,7 @@ const Client = () => {
             name: 'Email',
             selector: row => row.Email,
             sortable: true,
-            width: '265px',
+            width: '284px',
         },
         {
             name: 'Phone No',
@@ -394,6 +394,7 @@ const Client = () => {
                 )
             ),
             sortable: true,
+            width: '160px',
         },
 
         {
