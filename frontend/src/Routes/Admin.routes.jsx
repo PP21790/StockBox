@@ -129,7 +129,7 @@ function MainApp() {
 
                     <Route path="/signal" element={<Signal/>} />
                     <Route path="/addsignal" element={<AddSignal/>} />
-                    <Route path="/closesignal/signaldetaile/:id" element={<Signaldetail/>} />
+                    <Route path="/signaldetaile/:id" element={<Signaldetail/>} />
                         
 
                     <Route path="/basket" element={<Basket/>} />

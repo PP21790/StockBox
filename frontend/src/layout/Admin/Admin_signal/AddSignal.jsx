@@ -282,8 +282,8 @@ const AddSignal = () => {
       label: 'Call Type',
       type: 'select',
       options: [
-        { label: 'Buy', value: 'buy' },
-        { label: 'Sell', value: 'sell' },
+        { label: 'Buy', value: 'BUY' },
+        { label: 'Sell', value: 'SELL' },
       ],
       label_size: 12,
       col_size: 6,
@@ -302,8 +302,8 @@ const AddSignal = () => {
       label_size: 12,
       col_size: 6,
       options: strikePrice.map((item) => ({
-        label: item.expiry,
-        value: item.expiry,
+        label: item.stock.strike,
+        value: item.stock.strike,
       })),
       showWhen: (values) => values.segment === "O"
     },

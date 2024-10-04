@@ -1,81 +1,84 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import DynamicForm from '../../../components/FormicForm';
+import Table from '../../../components/Table';
 import { useFormik } from 'formik';
+import DynamicForm from '../../../components/FormicForm';
 import { clientdetailbyid } from '../../../Services/Admin';
 
+
 const Viewclientdetail = () => {
+
+
+
     const { id } = useParams();
     const token = localStorage?.getItem('token');
-    
-    const [data, setData] = useState(null);
+
+    const [data, setData] = useState([])
+
 
     useEffect(() => {
         getsignaldetail();
     }, []);
 
+
     const getsignaldetail = async () => {
         try {
             const response = await clientdetailbyid(id, token);
             if (response.status) {
-                console.log("data", response.data);
-                setData(response.data); 
+                setData([response.data])
+
+
             }
         } catch (error) {
             console.log("Error fetching signal details:", error);
         }
     };
 
-    const formik = useFormik({
-        initialValues: {
-            FullName: data?.FullName || '',
-            Email: data?.Email ||  '',
-            PhoneNo: data?.PhoneNo || '',
-            wamount:  data?.wamount || '',
-        },
-        enableReinitialize: true,
-        onSubmit: (values) => {
-        },
-    });
 
-   
 
-    const fields = [
+
+
+    const columns = [
         {
-            name: 'FullName',
-            label: 'Full Name',
-            type: 'text',
-            label_size: 12,
-            col_size: 4,
-            disable: true,
+            name: 'S.No',
+            selector: (row, index) => index + 1,
+            sortable: false,
+            width: '100px',
         },
         {
-            name: 'Email',
-            label: 'Email',
-            type: 'text',
-            label_size: 12,
-            col_size: 4,
-            disable: true,
+            name: 'Plan Name',
+            selector: row => row.fullName,
+            sortable: true,
+            width: '180px',
         },
         {
-            name: 'PhoneNo',
-            label: 'Phone Number',
-            type: 'text',
-            label_size: 12,
-            col_size: 4,
-            disable: true,
+            name: 'Amount',
+            selector: row => row.wamount,
+            sortable: true,
+            width: '189px',
         },
         {
-            name: 'wamount',
-            label: 'Amount',
-            type: 'text',
-            label_size: 12,
-            col_size: 4,
-            disable: true,
+            name: 'Purchase Date',
+            selector: row => row.phoneNo,
+            sortable: true,
+            width: '180px',
+        },
+        {
+            name: 'Validity Date',
+            selector: row => row.phoneNo,
+            sortable: true,
+            width: '180px',
+        },
+        {
+            name: 'Expiry Date',
+            selector: row => row.phoneNo,
+            sortable: true,
+            width: '180px',
         },
     ];
 
-    
+
+
     return (
         <div>
             <div className="page-content">
@@ -97,30 +100,35 @@ const Viewclientdetail = () => {
                     <div className="card-body">
                         <div className="p-4 border radius-15">
                             <div className="row justify-content-center align-items-center">
-                                <div className="col-md-4 d-flex align-items-center">
-                                    <div>
-                                        <strong>Full Name</strong>
+                                {data && data.map((item) => (
+                                    <div key={item.id} className="row mb-3">
+                                        <div className="col-md-4 d-flex align-items-center">
+                                            <div>
+                                                <strong>Full Name</strong>
+                                            </div>
+                                            <div>
+                                                <p className='my-0 ms-4'>{item.FullName}</p>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-4 d-flex align-items-center">
+                                            <div>
+                                                <strong>Email</strong>
+                                            </div>
+                                            <div>
+                                                <p className='my-0 ms-4'>{item.Email}</p>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-4 d-flex align-items-center">
+                                            <div>
+                                                <strong>Phone No</strong>
+                                            </div>
+                                            <div>
+                                                <p className='my-0 ms-4'>{item.PhoneNo}</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p className='my-0 ms-4'>qdwqdf</p>
-                                    </div>
-                                </div>
-                                <div className="col-md-4 d-flex  align-items-center">
-                                    <div>
-                                        <strong>Email</strong>
-                                    </div>
-                                    <div>
-                                        <p className='my-0 ms-4'>fff@gmail.com</p>
-                                    </div>
-                                </div>
-                                <div className="col-md-4 d-flex align-items-center">
-                                    <div>
-                                        <strong>Phone No</strong>
-                                    </div>
-                                    <div>
-                                        <p className='my-0 ms-4'>7894563210</p>
-                                    </div>
-                                </div>
+                                ))}
+
                             </div>
                         </div>
                     </div>
@@ -128,11 +136,10 @@ const Viewclientdetail = () => {
 
                 <div className='card'>
                     <div className="card-body">
-                        <DynamicForm
-                            fields={fields}
-                            formik={formik}
-                            sumit_btn={false}
-                            additional_field={<></>}
+
+                        <Table
+                            columns={columns}
+                            data={data}
                         />
                     </div>
                 </div>

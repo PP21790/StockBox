@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const Clients_Modal = db.Clients;
 const Signal_Modal = db.Signal;
+const Stock_Modal = db.Stock;
 
 
 class Angle {
@@ -65,7 +66,7 @@ class Angle {
     async placeOrder(req, res) {
         
         try {
-            const { id, signalid } = req.body;
+            const { id, signalid, quantity, price } = req.body;
     
             const client = await Clients_Modal.findById(id);
             if (!client) {
@@ -74,6 +75,16 @@ class Angle {
                     message: "Client not found"
                 });
             }
+
+
+            if(client.tradingstatus == 0)
+            {
+                return res.status(404).json({
+                    status: false,
+                    message: "Client Broker Not Login, Please Login With Broker"
+                });
+            }
+            
     
             const signal = await Signal_Modal.findById(signalid);
             if (!signal) {
@@ -83,58 +94,72 @@ class Angle {
                 });
             }
    
+
+        const stock = await Stock_Modal.findOne({ symbol: signal.stock, segment: signal.segment, expiry: signal.expirydate,option_type:signal.optiontype,strike:signal.strikeprice });
+        if (!stock) {
+            return res.status(404).json({
+                status: false,
+                message: "Stock not found"
+            });
+        }
+
+
+
              const authToken = client.authtoken;
 
-            // var config = {
-            //     method: 'get',
-            //     url: 'https://apiconnect.angelone.in/rest/secure/angelbroking/user/v1/getProfile',
-              
-            //     headers : {
-            //       'Authorization': `Bearer ${authToken}`,
-            //       'Content-Type': 'application/json',
-            //       'Accept': 'application/json',
-            //       'X-UserType': 'USER',
-            //       'X-SourceID': 'WEB',
-            //       'X-ClientLocalIP': 'CLIENT_LOCAL_IP',
-            //       'X-ClientPublicIP': 'CLIENT_PUBLIC_IP',
-            //       'X-MACAddress': 'MAC_ADDRESS',
-            //       'X-PrivateKey': client.apikey
-            //     }
-            //   };
-              
-            //   axios(config)
-            //   .then(function (response) {
-            //     console.log(JSON.stringify(response.data));
-            //   })
-            //   .catch(function (error) {
-            //     console.log(error);
-            //   });
+                    if(signal.segment == "C")
+                    {
+                        exchange="NSE";
+                    }
+                    else {
+                        exchange="NFO";
+                    }
+                  if(signal.callduration == "Intraday")  
+                  {
+                    producttype ="INTRADAY";
+                  }
+                  else
+                  {
+                    if(signal.segment == "C")
+                        {
+                    producttype ="DELIVERY";
+                        }
+                        else{
+                            producttype ="CARRYFORWARD";
+                        }
+                  }
+
+
+
 
        
-
-           
             var data = JSON.stringify({
                 "variety":"NORMAL",
-                "tradingsymbol":"SBIN-EQ",
-                "symboltoken":"3045",
-                "transactiontype":"BUY",
-                "exchange":"NSE",
+                "tradingsymbol":signal.stock,
+                "symboltoken":stock.instrument_token,
+                "transactiontype":signal.calltype,
+                "exchange":exchange,
                 "ordertype":"MARKET",
-                "producttype":"INTRADAY",
+                "producttype":producttype,
                 "duration":"DAY",
-                "price":"194.50",
+                "price":price,
                 "squareoff":"0",
                 "stoploss":"0",
-                "quantity":"1"
+                "quantity":quantity
                 });
-    
-    
-    
+
+
+
+            console.log(data);
+            return res.status(500).json({ 
+                status: false, 
+            });
+
 
             const config = {
                 method: 'get',
-            //    url: 'https://apiconnect.angelone.in/rest/secure/angelbroking/order/v1/placeOrder',
-                url: 'https://apiconnect.angelone.in/rest/secure/angelbroking/order/v1/getOrderBook',
+                url: 'https://apiconnect.angelone.in/rest/secure/angelbroking/order/v1/placeOrder',
+              //  url: 'https://apiconnect.angelone.in/rest/secure/angelbroking/order/v1/getOrderBook',
               
                 headers: { 
                     'Authorization': `Bearer ${authToken}`,
@@ -150,16 +175,25 @@ class Angle {
                 data: data
             };
 
-            console.log(config);
-
-    
             const response = await axios(config);
             console.log(JSON.stringify(response.data)); // Log the response data
-    
+            if (response.data.message == 'SUCCESS') {
             return res.json({
                 status: true,
                 data: response.data // Include response data
             });
+        }
+        else{
+            let url;
+            if(response.data.message=="Invalid Token") {
+              url = `https://smartapi.angelone.in/publisher-login?api_key=${client.apikey}`;
+            }
+               return res.status(500).json({ 
+                status: false, 
+                url: url, 
+                message: response.data.message 
+            });
+        }
     
         } catch (error) {
             console.error("Error placing order:", error); // Log the error
