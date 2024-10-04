@@ -388,8 +388,8 @@ const Client = () => {
                 row.kyc_verification === "1" ? (
                     <Download onClick={() => handleDownload(row)} />
                 ) : (
-                    <div style={{color:"red"}}>
-                    Not Verfied
+                    <div style={{ color: "red" }}>
+                        Not Verfied
                     </div>
                 )
             ),
