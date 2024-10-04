@@ -564,7 +564,7 @@ const Freeclient = () => {
                                     <div className="modal-body">
                                         <div className='card'>
                                             <div className='d-flex justify-content-center align-items-center card-body'>
-                                                {['Plan', 'Basket'].map((tab, index) => (
+                                                {['Plan'].map((tab, index) => (
                                                     <label key={index} className='labelfont'>
                                                         <input
                                                             className='ms-3'

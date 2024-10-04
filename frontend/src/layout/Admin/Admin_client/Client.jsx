@@ -30,18 +30,18 @@ const Client = () => {
 
     const handleDownload = (row) => {
 
-        console.log("pdf",row.pdf)
-        const url = `${image_baseurl}uploads/pdf/${row.pdf}`; 
-        
-        console.log("url",url)
+        console.log("pdf", row.pdf)
+        const url = `${image_baseurl}uploads/pdf/${row.pdf}`;
+
+        console.log("url", url)
         const link = document.createElement('a');
-        link.href = url; 
-        link.download = url; 
-    
+        link.href = url;
+        link.download = url;
+
         document.body.appendChild(link);
-        link.click(); 
-        document.body.removeChild(link); 
-      };
+        link.click();
+        document.body.removeChild(link);
+    };
 
 
 
@@ -101,10 +101,10 @@ const Client = () => {
                     searchInput === "" ||
                     item.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
                     item.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
-                    item.PhoneNo.toLowerCase().includes(searchInput.toLowerCase()) 
+                    item.PhoneNo.toLowerCase().includes(searchInput.toLowerCase())
 
                 );
-                setClients( searchInput ? filterdata :response.data);
+                setClients(searchInput ? filterdata : response.data);
             }
         } catch (error) {
             console.log("error");
@@ -118,7 +118,7 @@ const Client = () => {
         try {
             const response = await getplanlist(token);
             if (response.status) {
-               
+
                 setPlanlist(response.data);
             }
         } catch (error) {
@@ -343,7 +343,7 @@ const Client = () => {
             name: 'Email',
             selector: row => row.Email,
             sortable: true,
-            width: '265px',
+            width: '284px',
         },
         {
             name: 'Phone No',
@@ -395,6 +395,7 @@ const Client = () => {
                 )
             ),
             sortable: true,
+            width: '160px',
         },
 
         {
