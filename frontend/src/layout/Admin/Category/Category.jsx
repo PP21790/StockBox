@@ -13,17 +13,12 @@ const Category = () => {
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
     const [servicedata, setServicedata] = useState([]);
-
-
-  
-  
-
     const [searchInput, setSearchInput] = useState("");
-
+    const [selectedServices, setSelectedServices] = useState([]);
     const [updatetitle, setUpdatetitle] = useState({
         title: "",
         id: "",
-        service: ""
+        service:""
     });
 
 
@@ -62,7 +57,7 @@ const Category = () => {
             const response = await GetService(token);
             if (response.status) {
                 setServicedata(response.data)
-               
+
             }
         } catch (error) {
             console.log("Error fetching services:", error);
@@ -82,10 +77,10 @@ const Category = () => {
     // Update service
     const Updatecategory = async () => {
         try {
+
             const data = { title: updatetitle.title, id: serviceid._id, service: updatetitle.service };
-
             const response = await UpdateCategoryplan(data, token);
-
+    
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
@@ -252,7 +247,6 @@ const Category = () => {
 
 
 
-    const [selectedServices, setSelectedServices] = useState([]);
 
 
     const handleCheckboxChange = (serviceId) => {
@@ -312,25 +306,25 @@ const Category = () => {
             selector: row => new Date(row.updated_at).toLocaleDateString(),
             sortable: true,
         },
-       
+
         {
             name: 'Actions',
             cell: row => (
                 <>
                     <div>
                         <Tooltip placement="top" overlay="Update">
-                        <SquarePen
-                            onClick={() => {
-                                setModel(true);
-                                setServiceid(row);
-                                setUpdatetitle({ title: row.title, id: row._id });
-                            }}
-                        />
+                            <SquarePen
+                                onClick={() => {
+                                    setModel(true);
+                                    setServiceid(row);
+                                    setUpdatetitle({ title: row.title, id: row._id , service: row.service});
+                                }}
+                            />
                         </Tooltip>
                     </div>
                     <div>
                         <Tooltip placement="top" overlay="Delete">
-                        <Trash2 onClick={() => DeleteCategory(row._id)} />
+                            <Trash2 onClick={() => DeleteCategory(row._id)} />
                         </Tooltip>
                     </div>
                 </>
@@ -350,7 +344,7 @@ const Category = () => {
         }));
     };
 
-
+   
 
     return (
         <div>
@@ -370,7 +364,7 @@ const Category = () => {
                         </nav>
                     </div>
                 </div>
-                <hr/>
+                <hr />
 
                 <div className="card">
                     <div className="card-body">
@@ -516,30 +510,33 @@ const Category = () => {
                                                                     />
                                                                 </div>
                                                             </div>
+
+
+
                                                             <div className="row">
                                                                 <div className="col-md-12">
                                                                     <label htmlFor="service">Service</label>
-                                                                    <select
-                                                                        className="form-control mb-2"
-                                                                        id="service"
-                                                                        value={updatetitle.service}
-                                                                        onChange={(e) =>
-                                                                            updateServiceTitle('service', e.target.value)
-                                                                        }
-                                                                        required
-                                                                    >
-                                                                        <option value="" disabled>
-                                                                            Select a service
-                                                                        </option>
-                                                                        {servicedata &&
-                                                                            servicedata.map((item) => (
-                                                                                <option key={item._id} value={item._id}>
-                                                                                    {item.title}
-                                                                                </option>
-                                                                            ))}
-                                                                    </select>
+                                                                    {servicedata.length > 0 && (
+                                                                        <DropdownMultiselect
+                                                                            options={servicedata.map((item) => ({
+                                                                                key: item._id,
+                                                                                label: item.title,
+                                                                            }))}
+                                                                            name="service"
+                                                                            handleOnChange={(selected) => {
+                                                                                setUpdatetitle({ ...updatetitle, service: selected });
+                                                                            }}
+                                                                            placeholder="Select services"
+                                                                            required
+                                                                        />
+                                                                    )}
                                                                 </div>
                                                             </div>
+
+
+
+
+
                                                         </form>
                                                     </div>
                                                     <div className="modal-footer">

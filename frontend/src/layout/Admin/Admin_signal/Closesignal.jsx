@@ -108,7 +108,7 @@ const Closesignal = () => {
 
 
     const Signaldetail = async (_id) => {
-        navigate(`signaldetaile/${_id}`)
+        navigate(`/admin/signaldetaile/${_id}`)
     }
 
 

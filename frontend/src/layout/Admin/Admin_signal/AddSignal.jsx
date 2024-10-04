@@ -302,8 +302,8 @@ const AddSignal = () => {
       label_size: 12,
       col_size: 6,
       options: strikePrice.map((item) => ({
-        label: item.expiry,
-        value: item.expiry,
+        label: item.stock.strike,
+        value: item.stock.strike,
       })),
       showWhen: (values) => values.segment === "O"
     },

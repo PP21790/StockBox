@@ -184,7 +184,7 @@ const Signal = () => {
 
 
     const Signaldetail = async (_id) => {
-        navigate(`signaldetaile/${_id}`)
+        navigate(`/admin/signaldetaile/${_id}`)
     }
 
 
@@ -348,23 +348,23 @@ const Signal = () => {
 
 
 
-        // {
-        //     name: 'Actions',
-        //     cell: row => (
-        //         <>
-        //             <div>
-        //                 <Eye onClick={() => Signaldetail(row._id)} />
-        //             </div>
-        //             <div>
-        //                 <Trash2 onClick={() => DeleteSignals(row._id)} />
-        //             </div>
-        //         </>
-        //     ),
-        //     ignoreRowClick: true,
-        //     allowOverflow: true,
-        //     button: true,
+        {
+            name: 'Actions',
+            cell: row => (
+                <>
+                    <div>
+                        <Eye onClick={() => Signaldetail(row._id)} />
+                    </div>
+                    {/* <div>
+                        <Trash2 onClick={() => DeleteSignals(row._id)} />
+                    </div> */}
+                </>
+            ),
+            ignoreRowClick: true,
+            allowOverflow: true,
+            button: true,
 
-        // },
+        },
         {
             name: 'Status',
             cell: row => (
