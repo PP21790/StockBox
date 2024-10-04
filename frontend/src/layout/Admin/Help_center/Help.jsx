@@ -27,7 +27,7 @@ const Help = () => {
                     <div className="col">
                         <div className="card radius-15 helpcard">
                             <div className="card-body">
-                                <h5 class="mb-4 text-center">Help Center</h5>
+                             
 
                                 <div className="p-4 border radius-15">
 
