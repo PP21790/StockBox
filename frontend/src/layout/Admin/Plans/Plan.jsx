@@ -147,7 +147,7 @@ const Plan = () => {
                     </div>
                 </div>
             </div>
-            <hr/>
+            <hr />
 
             <div className="card">
                 <div className="card-body">
@@ -244,6 +244,7 @@ const Plan = () => {
                                                             className="btnsecond"
                                                             data-bs-toggle="modal"
                                                             data-bs-target={`#modal-${client._id}`}
+
                                                         >
                                                             View More
                                                         </button>
@@ -334,14 +335,13 @@ const Plan = () => {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div className="btn-primary btnprime">
-                                                            <Link to={`editplan/${client._id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                                                        <Link to={`editplan/${client._id}`}  className="btn-primary btnprime" style={{ color: 'inherit', textDecoration: 'none' }}>
+                                                            <div >
 
                                                                 Edit
 
-
-                                                            </Link>
-                                                        </div>
+                                                            </div>
+                                                        </Link>
                                                     </div>
                                                 </div>
                                             </div>

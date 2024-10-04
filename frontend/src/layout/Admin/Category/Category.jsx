@@ -23,6 +23,8 @@ const Category = () => {
     });
 
 
+
+
     const [title, setTitle] = useState({
         title: "",
         add_by: "",
@@ -82,6 +84,9 @@ const Category = () => {
             const data = { title: updatetitle.title, id: serviceid._id, service: updatetitle.service };
             const response = await UpdateCategoryplan(data, token);
 
+            console.log("data", data)
+
+            return
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
@@ -442,7 +447,7 @@ const Category = () => {
                                                                 id="categoryTitle"
                                                                 className="form-control mb-3"
                                                                 type="text"
-                                                                placeholder="Enter Service Title"
+                                                                placeholder="Enter Category Title"
                                                                 value={title.title}
                                                                 onChange={(e) => setTitle({ ...title, title: e.target.value })}
                                                             />
@@ -516,7 +521,7 @@ const Category = () => {
 
 
 
-                                                            <div className="row">
+                                                            {/* <div className="row">
                                                                 <div className="col-md-12">
                                                                     <label htmlFor="service">Service</label>
                                                                     {servicedata.length > 0 && (
@@ -534,9 +539,37 @@ const Category = () => {
                                                                         />
                                                                     )}
                                                                 </div>
+                                                            </div> */}
+
+
+
+                                                            <div className="row">
+                                                                <div className="col-md-12">
+                                                                    <label>Service Options</label>
+
+                                                                    {servicedata &&
+                                                                        servicedata.map((item) => (
+                                                                            <div key={item._id} className="form-check">
+                                                                                <input
+                                                                                    className="form-check-input"
+                                                                                    type="checkbox"
+                                                                                    id={`service-checkbox-${item._id}`}
+                                                                                    checked={updatetitle.service.includes(item.title)}
+                                                                                    onChange={(e) => {
+                                                                                        if (e.target.checked) {
+                                                                                            updateServiceTitle("service", [...updatetitle.service, item._id]);
+                                                                                        } else {
+                                                                                            updateServiceTitle("service", updatetitle.service.filter((service) => service !== item.title));
+                                                                                        }
+                                                                                    }}
+                                                                                />
+                                                                                <label className="form-check-label" htmlFor={`service-checkbox-${item._id}`}>
+                                                                                    {item.title}
+                                                                                </label>
+                                                                            </div>
+                                                                        ))}
+                                                                </div>
                                                             </div>
-
-
 
 
 

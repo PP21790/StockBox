@@ -29,11 +29,8 @@ import Footer from '../layout/Staff/Footer';
 import Staff from '../layout/Staff/Staff/Staff';
 import AddStaff from '../layout/Staff/Staff/AddStaff';
 import Update from '../layout/Staff/Staff/Update';
-import Refer from '../layout/Staff/Refer/Refer';
-import Paymenthistory from '../layout/Staff/Payment_history/Paymenthistory';
 import AddSignal from '../layout/Staff/Signal/AddSignal';
 import Signaldetail from '../layout/Staff/Signal/Signaldetail';
-import Addbasket from '../layout/Staff/Basket/Addbasket';
 import Staffpermission from '../layout/Staff/Staff/Staffpermission';
 import Plan from '../layout/Staff/Plans/Plan';
 import Addplan from '../layout/Staff/Plans/Addplan';
@@ -44,17 +41,8 @@ import News from '../layout/Staff/News/News';
 import Coupon from '../layout/Staff/Coupon/Coupon';
 import Addcoupon from '../layout/Staff/Coupon/Addcoupon';
 import Updatecoupon from '../layout/Staff/Coupon/Updatecoupon';
-import Condition from '../layout/Staff/Termscondition/Condition';
-import Editbasket from '../layout/Staff/Basket/Editbasket';
-import Viewbasketdetail from '../layout/Staff/Basket/Viewbasketdetail';
 import Editplan from '../layout/Staff/Plans/Editplan';
 import Banner from '../layout/Staff/Banner/Banner';
-import Generalsettings from '../layout/Staff/BasicSetting/Generalsettings';
-import Apiinfo from '../layout/Staff/BasicSetting/Apiinfo';
-import Payementgateway from '../layout/Staff/BasicSetting/Payementgateway';
-import Emailsettings from '../layout/Staff/BasicSetting/Emailsettings';
-import Message from '../layout/Staff/Broadcast/Message';
-import Changepass from '../layout/Staff/Password/Changepass';
 
 
 
@@ -129,7 +117,7 @@ function Staffrouting() {
             <Header />
             <div className="page-wrapper">
                 <Routes>
-                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/dashboard" element={<Dashbord/>} />
 
                     {permission.includes("viewclient") ? <Route path="/client" element={<Client />} /> : ""}
                     {permission.includes("addclient") ? <Route path="/addclient" element={<Addclient />} /> : ""}

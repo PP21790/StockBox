@@ -58,8 +58,7 @@ class Plancategory {
   async getPlancategory(req, res) {
     try {
 
-     
-     
+    
       const { } = req.body;
 
     //  const result = await Plancategory_Modal.find()
@@ -102,7 +101,6 @@ class Plancategory {
     ]);
     
 
-
       return res.json({
         status: true,
         message: "get",
@@ -110,6 +108,7 @@ class Plancategory {
       });
 
     } catch (error) {
+      console.log("error",error)
       return res.json({ status: false, message: "Server error", data: [] });
     }
   }
