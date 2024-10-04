@@ -12,7 +12,7 @@ const Table = ({columns,data}) => {
             <DataTable
                 columns={columns}
                 data={data}
-                pagination  
+                pagination    
                 highlightOnHover  
                 striped  
                 customStyles={customStyles}
