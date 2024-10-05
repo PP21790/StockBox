@@ -677,7 +677,7 @@ const Client = () => {
                                                                             </label>
                                                                             <div className="row mt-3">
                                                                                 <div className="col-12">
-                                                                                    <div className="card radius-10 border-4 border-start border-0 border-primary" style={{ width: '315px' }}>
+                                                                                    <div className="card radius-10 border-4 border-start border-0 border-primary" style={{ width: '391px' }}>
                                                                                         <div className="card-body">
                                                                                             <div className="d-flex align-items-center justify-content-between">
                                                                                                 <div>
