@@ -41,7 +41,7 @@ const Dashbord = () => {
 
 
 
-    console.log("data", data)
+
 
     useEffect(() => {
         getdetail()

@@ -35,7 +35,7 @@ const Category = () => {
     const userid = localStorage.getItem('id');
 
 
-    console.log("updatetitle", updatetitle)
+    
 
     // Getting services
     const getcategory = async () => {
@@ -86,7 +86,7 @@ const Category = () => {
             
             const response = await UpdateCategoryplan(data, token);
             
-            console.log("data", data)
+            
           
 
             if (response && response.status) {

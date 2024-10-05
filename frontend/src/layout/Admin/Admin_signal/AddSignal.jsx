@@ -5,16 +5,23 @@ import { AddSignalByAdmin, GetService, getstockbyservice, getexpirydate , getsto
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 
+
+
+
 const AddSignal = () => {
+
+
   const navigate = useNavigate();
   const user_id = localStorage.getItem('id');
   const token = localStorage.getItem('token');
+
+
+
 
   const [serviceList, setServiceList] = useState([]);
   const [stockList, setStockList] = useState([]);
   const [expirydate, setExpirydate] = useState([]);
   const [strikePrice, setStrikePrice] = useState([]);
-
   const [searchItem, setSearchItem] = useState("");
   const [selectitem, setSelectitem] = useState("");
   const [showDropdown, setShowDropdown] = useState(true);
