@@ -72,29 +72,32 @@ const History = () => {
         },
         {
             name: 'Title',
-            selector: row => row.title,
+            selector: row => row.planDetails.title,
             sortable: true,
         },
         {
-            name: 'Description',
-            selector: row => row.description,
+            name: 'Total',
+            selector: row => row.total,
             sortable: true,
         },
         {
-            name: 'Image',
-            cell: row => <img src={`${image_baseurl}uploads/news/${row.image}`} alt={row.image} width="50" height="50" />,
-            sortable: true,
-        },
-
-
-        {
-            name: 'Created At',
-            selector: row => new Date(row.created_at).toLocaleDateString(),
+            name: 'Plan Price',
+            selector: row => row.plan_price,
             sortable: true,
         },
         {
-            name: 'Updated At',
-            selector: row => new Date(row.updated_at).toLocaleDateString(),
+            name: 'Discount',
+            selector: row => row.plan_price,
+            sortable: true,
+        },
+        {
+            name: 'Plan Start',
+            selector: row => new Date(row.plan_start).toLocaleDateString(),
+            sortable: true,
+        },
+        {
+            name: 'Plan End',
+            selector: row => new Date(row.plan_end).toLocaleDateString(),
             sortable: true,
         },
         {

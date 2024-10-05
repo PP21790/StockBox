@@ -77,7 +77,7 @@ const AddSignal = () => {
       if (!values.stock) errors.stock = 'Please select a stock';
       if (!values.price) errors.price = 'Please select a price';
        
-       if(values.calltype === "buy"){
+       if(values.calltype === "BUY"){
 
         if(!values.tag1) errors.tag1 = 'Please enter Traget1';
         else if(values.price && values.tag1 && values.price >= values.tag1 ){
@@ -96,7 +96,7 @@ const AddSignal = () => {
         errors.stoploss = "Please Enter Less Than Entry Price"
      }
     
-       }else if(values.calltype === "sell"){
+       }else if(values.calltype === "SELL"){
 
          if(!values.tag1) errors.tag1 = 'Please enter Traget1';
         else if(values.price && values.tag1 && values.price <= values.tag1 ){

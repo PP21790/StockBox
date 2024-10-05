@@ -64,7 +64,7 @@ const Plan = () => {
                         icon: 'success',
                         confirmButtonText: 'OK',
                     });
-                    getcategoryplanlist();
+                    getAdminclient();
                 }
             } else {
                 Swal.fire({
