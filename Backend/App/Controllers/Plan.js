@@ -3,6 +3,8 @@ const mongoose = require('mongoose'); // Import mongoose
 const Plan_Modal = db.Plan;
 const Service_Modal = db.Service;
 const PlanSubscription_Modal = db.PlanSubscription;
+const Planmanage = db.Planmanage;
+const Clients_Modal = db.Clients;
 
 
 class Plan {
@@ -317,6 +319,8 @@ async  statusChange(req, res) {
   }
 }
 
+
+/*
 async  addPlanSubscription(req, res) {
     try {
       const { plan_id, client_id, price} = req.body;
@@ -379,7 +383,164 @@ async  addPlanSubscription(req, res) {
       return res.status(500).json({ status: false, message: 'Server error', data: [] });
     }
   }
+  */
+
+  async addPlanSubscription(req, res) {
+    try {
+      const { plan_id, client_id, price } = req.body;
   
+      // Validate input
+      if (!plan_id || !client_id) {
+        return res.status(400).json({ status: false, message: 'Missing required fields' });
+      }
+  
+      // Fetch the plan and populate the category
+      const plan = await Plan_Modal.findById(plan_id)
+        .populate('category')
+        .exec();
+  
+      if (!plan) {
+        return res.status(404).json({ status: false, message: 'Plan not found' });
+      }
+  
+      // Map plan validity to months
+      const validityMapping = {
+        '1 month': 1,
+        '3 months': 3,
+        '6 months': 6,
+        '9 months': 9,
+        '1 year': 12,
+        '2 years': 24,
+        '3 years': 36,
+        '4 years': 48,
+        '5 years': 60
+      };
+  
+      const monthsToAdd = validityMapping[plan.validity];
+      if (monthsToAdd === undefined) {
+        return res.status(400).json({ status: false, message: 'Invalid plan validity period' });
+      }
+  
+      const start = new Date();
+      const end = new Date(start);
+      end.setHours(23, 59, 59, 999);  // Set end date to the end of the day
+      end.setMonth(start.getMonth() + monthsToAdd);  // Add the plan validity duration
+  
+      // Split the services in the category if they exist
+      const planservice = plan.category.service;
+      const planservices = planservice ? planservice.split(',') : [];
+  
+      // Loop through each service ID and update or add the plan
+      for (const serviceId of planservices) {
+        const existingPlan = await Planmanage.findOne({ clientid: client_id, serviceid: serviceId }).exec();
+
+        if (existingPlan) {
+            // If the plan exists and the end date is still valid, extend it
+            if (existingPlan.enddate && existingPlan.enddate > new Date()) {
+               existingPlan.enddate.setMonth(existingPlan.enddate.getMonth() + monthsToAdd);
+            } else {
+                existingPlan.enddate = end;  // Set new end date if it has expired
+                existingPlan.startdate = start; 
+            }
+        
+        
+            try {
+              const savedPlan = await Planmanage.updateOne(
+                { _id: existingPlan._id },  // Filter: find the document by its ID
+                { $set: { 
+                    enddate: existingPlan.enddate,  // Set the new end date
+                    startdate: existingPlan.startdate // Set the new start date
+                } }  // Update fields
+            );
+              //  const savedPlan = await existingPlan.save();  
+                console.log("Plan updated successfully:", savedPlan);
+            } catch (error) {
+                console.error("Error saving updated plan:", error);
+            }
+        } else {
+            // If the plan does not exist, create a new one
+            const newPlanManage = new Planmanage({
+                clientid: client_id,
+                serviceid: serviceId,
+                startdate: start,
+                enddate: end,
+            });
+        
+            try {
+                await newPlanManage.save();  // Save the new plan
+                console.log(`Added new record for service ID: ${serviceId}`);
+            } catch (error) {
+                console.error("Error saving new plan:", error);
+            }
+        }
+        
+      }
+  
+      // Create a new plan subscription record
+      const newSubscription = new PlanSubscription_Modal({
+        plan_id,
+        client_id,
+        total: plan.price,
+        plan_price: price,
+        plan_start: start,
+        plan_end: end,
+      });
+  
+      // Save the subscription
+      const savedSubscription = await newSubscription.save();
+      // Return success response
+      return res.status(201).json({
+        status: true,
+        message: 'Subscription added successfully',
+        data: savedSubscription,
+      });
+  
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ status: false, message: 'Server error', data: [] });
+    }
+  }
+
+
+
+  async  paymentHistory(req, res) {
+    try {
+      
+      
+      const result = await PlanSubscription_Modal.aggregate([
+    {
+      $match: {
+        del: false,
+      }
+    },
+    {
+      $lookup: {
+        from: 'plans', // The name of the plans collection
+        localField: 'plan_id', // The field in PlanSubscription_Modal that references the plans
+        foreignField: '_id', // The field in the plans collection that is referenced
+        as: 'planDetails' // The name of the field in the result that will hold the joined data
+      }
+    },
+    {
+      $unwind: '$planDetails' // Optional: Unwind the result if you expect only one matching plan per subscription
+    }
+  ]);
+  
+  
+      // Respond with the retrieved subscriptions
+      return res.json({
+        status: true,
+        message: "Subscriptions retrieved successfully",
+        data: result
+      });
+  
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ status: false, message: 'Server error', data: [] });
+    }
+  }
+  
+
 
 
 

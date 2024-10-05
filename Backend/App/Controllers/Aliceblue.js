@@ -8,6 +8,7 @@ const ObjectId = mongoose.Types.ObjectId;
 const Clients_Modal = db.Clients;
 const Signal_Modal = db.Signal;
 const Stock_Modal = db.Stock;
+const Order_Modal = db.Order;
 
 class Aliceblue {
 
@@ -236,12 +237,37 @@ class Aliceblue {
 
     
             const response = await axios(config);
-            console.log(JSON.stringify(response.data)); // Log the response data
+            const responseData = response.data;
     
-            return res.json({
-                status: true,
-                data: response.data // Include response data
-            });
+
+            if (responseData[0].stat == 'Ok') {
+
+                const order = new Order_Modal({
+                    clientid: client._id,
+                    signalid:signal._id,
+                    orderid:responseData[0].NOrdNo,
+                    borkerid:2,
+                });
+
+
+               await order.save();
+                
+                return res.json({
+                    status: true,
+                    data: response.data // Include response data
+                });
+            }
+            else{
+                // let url;
+                // if(response.data.message=="Invalid Token") {
+                //     url =  `https://ant.aliceblueonline.com/?appcode=${apikey}`; 
+                // }
+                   return res.status(500).json({ 
+                    status: false, 
+                  //  url: url, 
+                    message: response.data 
+                });
+            }
     
         } catch (error) {
             console.error("Error placing order:", error); // Log the error
