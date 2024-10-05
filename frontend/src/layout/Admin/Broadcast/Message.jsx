@@ -20,11 +20,11 @@ const Message = () => {
                         </nav>
                     </div>
                 </div>
-                <hr/>
+                <hr />
                 <div className="card">
                     <div className="card-body">
 
-                        <div className="d-flex justify-content-end">
+                        <div className="d-flex justify-content-start">
                             <div className='me-2'>
                                 <button
                                     type="button"
@@ -59,7 +59,7 @@ const Message = () => {
                                         <div className="modal-body">
                                             <form>
                                                 <div className="col-md-12">
-                                                    <label htmlFor="service"></label>
+                                                    <label htmlFor="service">Select Service</label>
                                                     <select
                                                         className="form-control mb-2"
                                                         id="service"
@@ -126,67 +126,60 @@ const Message = () => {
                                 </div>
                             </div>
                         </div>
-                        <section className="msger">
+                        <div className="container mt-3">
 
-                            <main className="msger-chat">
-                                <div className="msg left-msg">
-                                    <div
-                                        className="msg-img"
-                                        style={{
-                                            backgroundImage:
-                                                "url(https://image.flaticon.com/icons/svg/327/327779.svg)"
-                                        }}
-                                    />
-                                    <div className="msg-bubble">
-                                        <div className="msg-info">
-                                            <div className="msg-info-name">BOT</div>
-                                            <div className="msg-info-time">12:45</div>
+                            <div className="row">
+                                <div className="col-md-12">
+                                    <div className="main-timeline">
+                                        <div className="timeline">
+                                            <a href="#" className="timeline-content">
+                                                <div className='d-flex justify-content-between'>
+                                                    <div className="timeline-year">Cash</div>
+                                                    <div>29/08/2024</div>
+                                                </div>
+                                                <h3 className="title">Message for Cash payment</h3>
+                                                <p className="description">
+                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
+                                                    males uada tellus lorem, et condimentum neque commodo Integer
+                                                    males uada tellus lorem, et condimentum neque commodo
+                                                </p>
+                                            </a>
                                         </div>
-                                        <div className="msg-text">
-                                            Hi, welcome to SimpleChat! Go ahead and send me a message. 😄
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="msg left-msg">
-                                    <div
-                                        className="msg-img"
-                                        style={{
-                                            backgroundImage:
-                                                "url(https://image.flaticon.com/icons/svg/327/327779.svg)"
-                                        }}
-                                    />
-                                    <div className="msg-bubble">
-                                        <div className="msg-info">
-                                            <div className="msg-info-name">BOT</div>
-                                            <div className="msg-info-time">12:45</div>
-                                        </div>
-                                        <div className="msg-text">
-                                            Hi, welcome to SimpleChat! Go ahead and send me a message. 😄
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="msg left-msg">
-                                    <div
-                                        className="msg-img"
-                                        style={{
-                                            backgroundImage:
-                                                "url(https://image.flaticon.com/icons/svg/327/327779.svg)"
-                                        }}
-                                    />
-                                    <div className="msg-bubble">
-                                        <div className="msg-info">
-                                            <div className="msg-info-name">BOT</div>
-                                            <div className="msg-info-time">12:45</div>
-                                        </div>
-                                        <div className="msg-text">
-                                            Hi, welcome to SimpleChat! Go ahead and send me a message. 😄
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                            </main>
+                                        <div className="timeline">
+                                            <a href="#" className="timeline-content">
+                                                <div className='d-flex justify-content-between'>
+                                                    <div>29/08/2024</div>
+                                                    <div className="timeline-year">Future</div>
 
-                        </section>
+                                                </div>
+                                                <h3 className="title">Web Development</h3>
+                                                <p className="description">
+                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
+                                                    males uada tellus lorem, et condimentum neque commodo Integer
+                                                    males uada tellus lorem, et condimentum neque commodo
+                                                </p>
+                                            </a>
+                                        </div>
+                                        <div className="timeline">
+                                            <a href="#" className="timeline-content">
+                                                <div className='d-flex justify-content-between'>
+                                                    <div className="timeline-year">Option</div>
+                                                    <div>29/08/2024</div>
+                                                </div>
+                                                <h3 className="title">Java Script</h3>
+                                                <p className="description">
+                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
+                                                    males uada tellus lorem, et condimentum neque commodo Integer
+                                                    males uada tellus lorem, et condimentum neque commodo
+                                                </p>
+                                            </a>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 

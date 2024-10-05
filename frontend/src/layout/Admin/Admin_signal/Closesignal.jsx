@@ -31,20 +31,20 @@ const Closesignal = () => {
     const [serviceList, setServiceList] = useState([]);
     const [stockList, setStockList] = useState([]);
 
-   
+
 
     const navigate = useNavigate();
     const [clients, setClients] = useState([]);
-  
+
 
 
     const getAllSignal = async () => {
         try {
             const response = await GetSignallist(filters, token);
             if (response && response.status) {
-                 const filterdata = response.data.filter((item)=>{
+                const filterdata = response.data.filter((item) => {
                     return item.close_status == true
-                 })
+                })
                 const searchInputMatch = filterdata.filter((item) => {
                     return (
                         searchInput === "" ||
@@ -112,7 +112,7 @@ const Closesignal = () => {
     }
 
 
- 
+
     let columns = [
         {
             name: 'S.No',
@@ -129,33 +129,33 @@ const Closesignal = () => {
         },
         {
             name: 'Entry Type',
-            selector: row => row.close_status == true ? "sell" :"buy",
+            selector: row => row.close_status == true ? "sell" : "buy",
             sortable: true,
             width: '132px',
         },
         {
             name: 'Entry Price',
-            selector: row =>  row.price ,
+            selector: row => row.price,
             sortable: true,
             width: '132px',
         },
 
         {
             name: 'Exit Price',
-            selector: row =>  row.closeprice ? row.closeprice : "-" ,
+            selector: row => row.closeprice ? row.closeprice : "-",
             sortable: true,
             width: '132px',
 
         },
         {
             name: 'Entry Date',
-            selector: row => fDateTimeSuffix(row.created_at) ,
+            selector: row => fDateTimeSuffix(row.created_at),
             sortable: true,
             width: '190px',
         },
         {
             name: 'Exit Date',
-            selector: row =>  fDateTimeSuffix(row.closedate) ,
+            selector: row => fDateTimeSuffix(row.closedate),
             sortable: true,
             width: '180px',
         },
@@ -243,6 +243,7 @@ const Closesignal = () => {
                                 <div className="position-relative">
                                     <input
                                         type="text"
+
                                         className="form-control ps-5 radius-10"
                                         placeholder="Search Order"
                                         value={searchInput}
@@ -271,6 +272,7 @@ const Closesignal = () => {
                             <div className="row">
 
                                 <div className="col-md-4">
+                                    <label>From Date</label>
                                     <input
                                         type="date"
                                         name="from"
@@ -281,6 +283,7 @@ const Closesignal = () => {
                                     />
                                 </div>
                                 <div className="col-md-4">
+                                    <label>To Date</label>
                                     <input
                                         type="date"
                                         name="to"
@@ -291,6 +294,7 @@ const Closesignal = () => {
                                     />
                                 </div>
                                 <div className="col-md-4">
+                                    <label>Select Service</label>
                                     <select
                                         name="service"
                                         className="form-control radius-10"

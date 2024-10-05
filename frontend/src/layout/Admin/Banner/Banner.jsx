@@ -283,11 +283,7 @@ const Banner = () => {
             selector: row => fDateTime(row.updated_at),
             sortable: true,
         },
-        {
-            name: 'Date',
-            selector: row => fDateTime(row.updated_at),
-            sortable: true,
-        },
+
 
         {
             name: 'Actions',
@@ -351,7 +347,7 @@ const Banner = () => {
                         </nav>
                     </div>
                 </div>
-                <hr/>
+                <hr />
 
                 <div className="card">
                     <div className="card-body">
@@ -450,7 +446,7 @@ const Banner = () => {
                                                 <div className="modal-content">
                                                     <div className="modal-header">
                                                         <h5 className="modal-title" id="exampleModalLabel">
-                                                            Update News
+                                                            Update Banner
                                                         </h5>
                                                         <button
                                                             type="button"
@@ -469,6 +465,23 @@ const Banner = () => {
                                                                         type="file"
                                                                         accept="image/*"
                                                                         id="imageUpload"
+                                                                        onChange={(e) => {
+                                                                            const file = e.target.files[0];
+                                                                            if (file) {
+                                                                                updateServiceTitle({ image: file });
+                                                                            }
+                                                                        }}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div className="row">
+                                                                <div className="col-md-12">
+                                                                    <label htmlFor="imageUpload">HyperLink</label>
+                                                                    <input
+                                                                        className="form-control mb-3"
+                                                                        type="text"
+                                                                      
+                                                                      
                                                                         onChange={(e) => {
                                                                             const file = e.target.files[0];
                                                                             if (file) {

@@ -5599,6 +5599,122 @@ ul li {
 	width: 500px;
 }
 
-.nav-item{
+.nav-item {
 	cursor: pointer !important;
+}
+
+
+
+
+.main-timeline {
+	font-family: 'Poppins', sans-serif;
+}
+
+.main-timeline:after {
+	content: '';
+	display: block;
+	clear: both;
+}
+
+.main-timeline .timeline {
+	width: 50%;
+	margin: 0 0 10px 5px;
+	float: right;
+}
+
+.main-timeline .timeline-content {
+	color: #666;
+	background: linear-gradient(to right, #f1f1f1, transparent);
+	min-height: 120px;
+	padding: 15px;
+	border-radius: 20px;
+	display: block;
+}
+
+.main-timeline .timeline-content:hover {
+	text-decoration: none;
+}
+
+.main-timeline .timeline-year {
+	color: #DC8C3E;
+	font-size: 32px;
+	line-height: 45px;
+	font-weight: 600;
+}
+
+.main-timeline .title {
+	color: #fff;
+	background: linear-gradient(to right, #FC424A, #DC8C3E);
+	font-size: 20px;
+	font-weight: 600;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	padding: 5px 10px;
+	margin: 0 0 5px;
+	border-radius: 10px;
+	display: inline-block;
+}
+
+.main-timeline .description {
+	font-size: 13px;
+	letter-spacing: 1px;
+	line-height: 20px;
+	margin: 0;
+}
+
+.main-timeline .timeline:nth-child(even) {
+	margin: 0 5px 10px 0;
+	float: left;
+}
+
+.main-timeline .timeline:nth-child(even) .timeline-content {
+	background: linear-gradient(to left, #f1f1f1, transparent);
+	text-align: right;
+}
+
+.main-timeline .timeline:nth-child(even) .description {
+	text-align: left;
+}
+
+.main-timeline .timeline:nth-child(4n+2) .timeline-year {
+	color: #3BCD59;
+}
+
+.main-timeline .timeline:nth-child(4n+2) .title {
+	background: linear-gradient(to right, #3BCD59, #8BD33B);
+}
+
+.main-timeline .timeline:nth-child(4n+3) .timeline-year {
+	color: #10A5D7;
+}
+
+.main-timeline .timeline:nth-child(4n+3) .title {
+	background: linear-gradient(to right, #10A5D7, #69D4D7);
+}
+
+.main-timeline .timeline:nth-child(4n+4) .timeline-year {
+	color: #E31F9A;
+}
+
+.main-timeline .timeline:nth-child(4n+4) .title {
+	background: linear-gradient(to right, #E31F9A, #CF21C2);
+}
+
+@media screen and (max-width:767px) {
+	.main-timeline .timeline {
+		width: 100%;
+	}
+}
+
+@media screen and (max-width:576px) {
+
+	.main-timeline .timeline-content,
+	.main-timeline .timeline:nth-child(even) .timeline-content {
+		background: linear-gradient(#f1f1f1, transparent);
+		text-align: center;
+	}
+
+	.main-timeline .timeline:nth-child(even) .description {
+		text-align: center;
+	}
 }

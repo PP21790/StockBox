@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import DynamicForm from '../../../components/FormicForm';
-import { AddSignalByAdmin, GetService, getstockbyservice, getexpirydate , getstockStrickprice } from '../../../Services/Admin';
+import { AddSignalByAdmin, GetService, getstockbyservice, getexpirydate, getstockStrickprice } from '../../../Services/Admin';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 
@@ -57,56 +57,56 @@ const AddSignal = () => {
 
     },
     validate: (values) => {
-    
+
       const errors = {};
 
       if (!values.segment) errors.segment = 'Please select a segment';
       if (!values.stock) errors.stock = 'Please select a stock';
       if (!values.price) errors.price = 'Please select a price';
-       
-       if(values.calltype === "buy"){
 
-        if(!values.tag1) errors.tag1 = 'Please enter Traget1';
-        else if(values.price && values.tag1 && values.price >= values.tag1 ){
-           errors.tag1 = "Please Enter greater Than Entry Price"
+      if (values.calltype === "buy") {
+
+        if (!values.tag1) errors.tag1 = 'Please enter Traget1';
+        else if (values.price && values.tag1 && values.price >= values.tag1) {
+          errors.tag1 = "Please Enter greater Than Entry Price"
         }
-  
-        if(values.tag2 && values.tag1 >= values.tag2 ){
-           errors.tag2 = "Please Enter greater Than Target1"
+
+        if (values.tag2 && values.tag1 >= values.tag2) {
+          errors.tag2 = "Please Enter greater Than Target1"
         }
-  
-        if(values.tag3 && values.tag2 && values.tag2 >= values.tag3 ){
+
+        if (values.tag3 && values.tag2 && values.tag2 >= values.tag3) {
           errors.tag3 = "Please Enter greater Target2"
-       }
-       
-       if(values.price && values.price <= values.stoploss ){
-        errors.stoploss = "Please Enter Less Than Entry Price"
-     }
-    
-       }else if(values.calltype === "sell"){
+        }
 
-         if(!values.tag1) errors.tag1 = 'Please enter Traget1';
-        else if(values.price && values.tag1 && values.price <= values.tag1 ){
-           errors.tag1 = "Please Enter Less Than Entry Price"
+        if (values.price && values.price <= values.stoploss) {
+          errors.stoploss = "Please Enter Less Than Entry Price"
         }
-  
-        if(values.tag2 && values.tag1 <= values.tag2 ){
-           errors.tag2 = "Please Enter Less Than Target1"
+
+      } else if (values.calltype === "sell") {
+
+        if (!values.tag1) errors.tag1 = 'Please enter Traget1';
+        else if (values.price && values.tag1 && values.price <= values.tag1) {
+          errors.tag1 = "Please Enter Less Than Entry Price"
         }
-  
-        if(values.tag3 && values.tag2 && values.tag2 <= values.tag3 ){
+
+        if (values.tag2 && values.tag1 <= values.tag2) {
+          errors.tag2 = "Please Enter Less Than Target1"
+        }
+
+        if (values.tag3 && values.tag2 && values.tag2 <= values.tag3) {
           errors.tag3 = "Please Enter Less Than Target2"
-       }
-       
-       if(values.price && values.price >= values.stoploss ){
-        errors.stoploss = "Please Enter greater Than Entry Price"
-     }
-       }
+        }
+
+        if (values.price && values.price >= values.stoploss) {
+          errors.stoploss = "Please Enter greater Than Entry Price"
+        }
+      }
 
       if (!values.callduration) errors.callduration = 'Please enter Trade duration';
       if (!values.calltype) errors.calltype = 'Please enter Call Calltype';
       if (!values.description) errors.description = 'Please enter description';
-      if (values.segment === "O" && !values.optiontype) { 
+      if (values.segment === "O" && !values.optiontype) {
         errors.optiontype = 'Please enter option type';
       };
       if ((values.segment === "O" || values.segment === "F") && !values.expiry) {
@@ -115,7 +115,7 @@ const AddSignal = () => {
       if (values.segment === "O" && !values.expiry) {
         errors.expiry = 'Please Select Strick Price';
       }
-    
+
       return errors;
     },
     onSubmit: async (values) => {
@@ -203,7 +203,7 @@ const AddSignal = () => {
   useEffect(() => {
     const fetchStockData = async () => {
       const data = { segment: formik.values.segment, symbol: searchItem };
-  
+
       try {
         const stockResponse = await getstockbyservice(data);
         if (stockResponse.status) {
@@ -211,14 +211,14 @@ const AddSignal = () => {
         } else {
           console.log("Failed to fetch stock data", stockResponse);
         }
-  
+
         const expiryResponse = await getexpirydate(data);
         if (expiryResponse.status) {
           setExpirydate(expiryResponse.data);
         } else {
           console.log("Failed to fetch expiry date", expiryResponse);
         }
-  
+
 
         const data1 = { ...data, expiry: formik.values.expiry };
         const strikePriceResponse = await getstockStrickprice(data1);
@@ -231,10 +231,10 @@ const AddSignal = () => {
         console.log("Error fetching stock or expiry date:", error);
       }
     };
-  
+
     fetchStockData();
   }, [formik.values.segment, searchItem, formik.values.expiry]);
-  
+
 
 
 
@@ -264,7 +264,7 @@ const AddSignal = () => {
       showWhen: (values) => values.segment !== "C",
     },
 
-   
+
     {
       name: 'optiontype',
       label: 'Option Type',
@@ -294,7 +294,7 @@ const AddSignal = () => {
       type: 'number',
       label_size: 12,
       col_size: 6,
-    } ,
+    },
     {
       name: 'strikeprice',
       label: 'Strike Price',
@@ -356,7 +356,7 @@ const AddSignal = () => {
       type: 'number',
       label_size: 12,
       col_size: 3,
-     
+
     },
     {
       name: 'tag3',
@@ -384,7 +384,7 @@ const AddSignal = () => {
       label: 'Description',
       type: 'text5',
       label_size: 12,
-      col_size: 12,
+      col_size: 6,
     },
   ];
 
@@ -443,7 +443,7 @@ const AddSignal = () => {
                         key={company._id}
                         onClick={() => {
                           setSearchItem(company._id);
-                          formik.setFieldValue("stock",company._id);
+                          formik.setFieldValue("stock", company._id);
                           setShowDropdown(false);
                         }}
                         style={dropdownItemStyles}

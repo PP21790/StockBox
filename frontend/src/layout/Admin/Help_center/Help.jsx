@@ -23,11 +23,11 @@ const Help = () => {
                 {/*end breadcrumb*/}
 
                 <hr />
-                <div className="row row-cols-1 row-cols-lg-2 row-cols-xl-4">
+                {/* <div className="row row-cols-1 row-cols-lg-2 row-cols-xl-4">
                     <div className="col">
                         <div className="card radius-15 helpcard">
                             <div className="card-body">
-                             
+
 
                                 <div className="p-4 border radius-15">
 
@@ -44,7 +44,7 @@ const Help = () => {
                                                 placeholder="Enter your name"
                                             />
                                         </div>
-                                       
+
                                         <div className="col-md-12">
                                             <label htmlFor="input6" className="form-label">
                                                 Date
@@ -56,7 +56,7 @@ const Help = () => {
                                                 placeholder="Date of Birth"
                                             />
                                         </div>
-                                      
+
 
                                         <div className="col-md-12">
                                             <label htmlFor="input6" className="form-label">
@@ -101,11 +101,156 @@ const Help = () => {
                         </div>
                     </div>
 
-                </div>
+                </div> */}
                 {/*end row*/}
 
-            </div>
 
+                <div className="row">
+                    <div className="col-lg-4">
+                        <div className="card radius-15">
+                            <div className="card-body">
+                                <div className='p-0 border radius-15'>
+
+                                    <div className="row">
+                                        <div className="card-body col-md-6">
+                                            <ul className="list-group list-group-flush">
+                                                <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                    <h6 className="mb-0">Client</h6>
+                                                    <span className="text-secondary">
+                                                        dffgdg
+                                                    </span>
+                                                </li>
+
+                                                <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                    <h6 className="mb-0">Phone No</h6>
+                                                    <span className="text-secondary">987653240</span>
+                                                </li>
+                                                <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                    <h6 className="mb-0">Email</h6>
+                                                    <span className="text-secondary">dsfffd@gmail.com</span>
+                                                </li>
+
+                                                <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                    <h6 className="mb-0">Description</h6>
+                                                    <span className="text-secondary">Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni iste itaque quidem consequatur. Voluptatem unde, animi reiciendis officia corporis error.</span>
+                                                </li>
+
+
+                                            </ul>
+                                        </div>
+
+
+                                    </div>
+
+
+
+
+
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-lg-4">
+                        <div className="card radius-15">
+                            <div className="card-body">
+                                <div className='p-0 border radius-15'>
+
+                                    <div className="row">
+                                        <div className="card-body col-md-6">
+                                            <ul className="list-group list-group-flush">
+                                                <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                    <h6 className="mb-0">Client</h6>
+                                                    <span className="text-secondary">
+                                                        dffgdg
+                                                    </span>
+                                                </li>
+
+                                                <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                    <h6 className="mb-0">Phone No</h6>
+                                                    <span className="text-secondary">987653240</span>
+                                                </li>
+                                                <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                    <h6 className="mb-0">Email</h6>
+                                                    <span className="text-secondary">dsfffd@gmail.com</span>
+                                                </li>
+
+                                                <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                    <h6 className="mb-0">Description</h6>
+                                                    <span className="text-secondary">Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni iste itaque quidem consequatur. Voluptatem unde, animi reiciendis officia corporis error.</span>
+                                                </li>
+
+
+                                            </ul>
+                                        </div>
+
+
+                                    </div>
+
+
+
+
+
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-lg-4">
+                        <div className="card radius-15">
+                            <div className="card-body">
+                                <div className='p-0 border radius-15'>
+
+                                    <div className="row">
+                                        <div className="card-body col-md-6">
+                                            <ul className="list-group list-group-flush">
+                                                <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                    <h6 className="mb-0">Client Name</h6>
+                                                    <span className="text-secondary">
+                                                        dffgdg
+                                                    </span>
+                                                </li>
+
+                                                <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                    <h6 className="mb-0">Phone No</h6>
+                                                    <span className="text-secondary">987653240</span>
+                                                </li>
+                                                <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                    <h6 className="mb-0">Email</h6>
+                                                    <span className="text-secondary">dsfffd@gmail.com</span>
+                                                </li>
+
+                                                <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                    <h6 className="mb-0">Description</h6>
+                                                    <span className="text-secondary">Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni iste itaque quidem consequatur. Voluptatem unde, animi reiciendis officia corporis error.</span>
+                                                </li>
+
+
+                                            </ul>
+                                        </div>
+
+
+                                    </div>
+
+
+
+
+
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
         </div>
     );
 }
