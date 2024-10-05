@@ -543,7 +543,7 @@ const Client = () => {
         <div>
             <div>
                 <div className="page-content">
-                    {/* breadcrumb */}
+        
                     <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
                         <div className="breadcrumb-title pe-3">Client</div>
                         <div className="ps-3">
@@ -559,7 +559,7 @@ const Client = () => {
                         </div>
                     </div>
                     <hr />
-                    {/* end breadcrumb */}
+        
                     <div className="card">
                         <div className="card-body">
                             <div className="d-lg-flex align-items-center mb-4 gap-3">
@@ -588,7 +588,8 @@ const Client = () => {
                                     </Link>
                                 </div>
                             </div>
-
+                            
+                            
                             <Table
                                 columns={columns}
                                 data={clients}

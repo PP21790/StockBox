@@ -43,7 +43,7 @@ const History = () => {
 
 
     // Getting services
-    const getNews = async () => {
+    const gethistory = async () => {
         try {
             const response = await getPayementhistory(token);
             if (response.status) {
@@ -59,7 +59,7 @@ const History = () => {
     };
 
     useEffect(() => {
-        getNews();
+        gethistory();
     }, [searchInput]);
 
 
@@ -70,6 +70,12 @@ const History = () => {
             sortable: false,
             width: '70px',
         },
+        {
+            name: 'Name',
+            selector: row => row.planDetails.FullName,
+            sortable: true,
+        },
+
         {
             name: 'Title',
             selector: row => row.planDetails.title,

@@ -3,10 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { Eye, Trash2 } from 'lucide-react';
+import { Eye, RefreshCcw ,Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { GetSignallist, DeleteSignal, SignalCloseApi, GetService, GetStockDetail } from '../../../Services/Admin';
 import { fDateTimeSuffix } from '../../../Utils/Date_formate'
+
 
 
 
@@ -95,11 +96,13 @@ const Closesignal = () => {
 
 
 
-
     useEffect(() => {
         fetchAdminServices()
         fetchStockList()
     }, []);
+
+
+
 
     useEffect(() => {
         getAllSignal();
@@ -125,7 +128,12 @@ const Closesignal = () => {
             sortable: false,
             width: '70px',
         },
-
+        {
+            name: 'Segment',
+            selector: row => row.segment == "C" ? "CASH" :row.segment == "O" ? "OPTION" : "FUTURE" ,
+            sortable: true,
+            width: '132px',
+        },
         {
             name: 'Symbol',
             selector: row => row.stock,
@@ -224,6 +232,23 @@ const Closesignal = () => {
 
 
 
+    const resethandle=()=>{
+        setFilters({
+            from: '',
+            to: '',
+            service: '',
+            stock: '',
+        });
+        setSearchstock("")
+        setSearchInput("")
+        fetchAdminServices()
+        fetchStockList()
+        getAllSignal();
+        
+    }
+
+
+
     return (
         <div>
             <div>
@@ -276,7 +301,7 @@ const Closesignal = () => {
 
                             <div className="row">
 
-                                <div className="col-md-4">
+                                <div className="col-md-3">
                                     <label>From Date</label>
                                     <input
                                         type="date"
@@ -287,7 +312,7 @@ const Closesignal = () => {
                                         onChange={handleFilterChange}
                                     />
                                 </div>
-                                <div className="col-md-4">
+                                <div className="col-md-3">
                                     <label>To Date</label>
                                     <input
                                         type="date"
@@ -298,7 +323,7 @@ const Closesignal = () => {
                                         onChange={handleFilterChange}
                                     />
                                 </div>
-                                <div className="col-md-4">
+                                <div className="col-md-3">
                                     <label>Select Service</label>
                                     <select
                                         name="service"
@@ -313,9 +338,12 @@ const Closesignal = () => {
                                             </option>
                                         ))}
                                     </select>
+                                     
                                 </div>
 
-                                <div className="col-md-3 position-relative">
+                                <div className="col-md-3 d-flex">
+                                    <div style={{width:"80%"}}>
+                                <label>Select Stock</label>
                                     <select
                                         className="form-control radius-10"
                                         value={searchstock}
@@ -328,6 +356,10 @@ const Closesignal = () => {
                                             </option>
                                         ))}
                                     </select>
+                                    </div>
+                                    <div className='rfreshicon'>
+                                    <RefreshCcw onClick={resethandle}/>
+                                    </div>
 
                                 </div>
 
