@@ -35,6 +35,7 @@ const Mailtemplate_Modal = db.Mailtemplate;
 const Refer_Modal = db.Refer;
 const Planmanage = db.Planmanage;
 const Payout_Modal = db.Payout;
+const Order_Modal = db.Order;
 
 
 

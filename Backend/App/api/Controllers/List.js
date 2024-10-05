@@ -568,9 +568,7 @@ async  myPlan(req, res) {
     $unwind: '$planDetails' // Optional: Unwind the result if you expect only one matching plan per subscription
   }
 ]);
-    console.log(result);
-  
-   
+
 
     // Respond with the retrieved subscriptions
     return res.json({

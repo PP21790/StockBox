@@ -7,6 +7,7 @@ const ObjectId = mongoose.Types.ObjectId;
 const Clients_Modal = db.Clients;
 const Signal_Modal = db.Signal;
 const Stock_Modal = db.Stock;
+const Order_Modal = db.Order;
 
 
 class Angle {
@@ -147,9 +148,11 @@ class Angle {
                 });
             }
 
+
+
             var data = JSON.stringify({
                 "variety":"NORMAL",
-                "tradingsymbol":signal.stock,
+                "tradingsymbol":stock.tradesymbol,
                 "symboltoken":stock.instrument_token,
                 "transactiontype":signal.calltype,
                 "exchange":exchange,
@@ -162,8 +165,8 @@ class Angle {
                 "quantity":quantity
                 });
 
-
-
+             console.log("data",data);
+              
                 // var config = {
                 //     method: 'get',
                 //     url: 'https://apiconnect.angelone.in/rest/secure/angelbroking/portfolio/v1/getAllHolding',
@@ -184,8 +187,10 @@ class Angle {
 
 
           
+
+
             const config = {
-                method: 'get',
+                method: 'post',
                 url: 'https://apiconnect.angelone.in/rest/secure/angelbroking/order/v1/placeOrder',
               //  url: 'https://apiconnect.angelone.in/rest/secure/angelbroking/order/v1/getOrderBook',
               
@@ -204,8 +209,20 @@ class Angle {
             };
 
             const response = await axios(config);
-            console.log(JSON.stringify(response.data)); // Log the response data
+       
             if (response.data.message == 'SUCCESS') {
+
+
+                const order = new Order_Modal({
+                    clientid: client._id,
+                    signalid:signal._id,
+                    orderid:response.data.data.orderid,
+                    borkerid:1,
+                });
+
+
+               await order.save();
+
             return res.json({
                 status: true,
                 data: response.data // Include response data
