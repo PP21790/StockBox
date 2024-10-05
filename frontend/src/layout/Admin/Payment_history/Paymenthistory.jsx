@@ -72,7 +72,7 @@ const History = () => {
         },
         {
             name: 'Name',
-            selector: row => row.planDetails.FullName,
+            selector: row => row.clientName,
             sortable: true,
         },
 
@@ -83,32 +83,32 @@ const History = () => {
         },
         {
             name: 'Total',
-            selector: row => row.total,
+            selector: row => row.planDetails.price,
             sortable: true,
         },
+        // {
+        //     name: 'Plan Price',
+        //     selector: row => row.planDetails.plan_price,
+        //     sortable: true,
+        // },
         {
-            name: 'Plan Price',
-            selector: row => row.plan_price,
-            sortable: true,
-        },
-        {
-            name: 'Discount',
-            selector: row => row.plan_price,
+            name: 'Validity',
+            selector: row => row.planDetails.validity,
             sortable: true,
         },
         {
             name: 'Plan Start',
-            selector: row => new Date(row.plan_start).toLocaleDateString(),
+            selector: row => new Date(row.planDetails.created_at).toLocaleDateString(),
             sortable: true,
         },
-        {
-            name: 'Plan End',
-            selector: row => new Date(row.plan_end).toLocaleDateString(),
-            sortable: true,
-        },
+        // {
+        //     name: 'Plan End',
+        //     selector: row => new Date(row.planDetails.plan_end).toLocaleDateString(),
+        //     sortable: true,
+        // },
         {
             name: 'Date',
-            selector: row => new Date(row.updated_at).toLocaleDateString(),
+            selector: row => new Date(row.planDetails.created_at).toLocaleDateString(),
             sortable: true,
         },
        
