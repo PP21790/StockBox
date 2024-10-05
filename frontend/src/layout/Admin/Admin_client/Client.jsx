@@ -642,7 +642,7 @@ const Client = () => {
                                         {checkedIndex === 0 && (
                                             <>
 
-                                                <div className='row'>
+                                                <div className='row mt-3'>
                                                     {category && category.map((item, index) => (
                                                         <div className='col-lg-4' key={index}>
                                                             <input
@@ -654,8 +654,11 @@ const Client = () => {
                                                             />
                                                             <label className="form-check-label" htmlFor={`proplus-${index}`}>
                                                                 {item.title}
+
                                                             </label>
+
                                                         </div>
+
                                                     ))}
                                                 </div>
 
@@ -680,6 +683,38 @@ const Client = () => {
                                                                             <label className="form-check-label" htmlFor={`input-plan-${index}`}>
                                                                                 {item.title}
                                                                             </label>
+                                                                            <div className="row mt-3">
+                                                                                <div className="col-12">
+                                                                                    <div className="card radius-10 border-4 border-start border-0 border-primary" style={{ width: '391px' }}>
+                                                                                        <div className="card-body">
+                                                                                            <div className="d-flex align-items-center justify-content-between">
+                                                                                                <div>
+                                                                                                    <strong className="mb-0 text-secondary">Hini</strong>
+                                                                                                    <p>4000</p>
+                                                                                                </div>
+                                                                                                <div>
+                                                                                                    <strong className="mb-0 text-secondary">Validity</strong>
+                                                                                                    <p>3 months</p>
+
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div className="d-flex align-items-center justify-content-between">
+                                                                                                <div>
+                                                                                                    <strong className="mb-0 text-secondary">created At</strong>
+                                                                                                    <p>29/05/2024</p>
+                                                                                                </div>
+                                                                                                <div>
+                                                                                                    <strong className="mb-0 text-secondary">Updated At</strong>
+                                                                                                    <p>29/05/2024</p>
+
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+
+
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 ))}
@@ -715,12 +750,13 @@ const Client = () => {
                         </div>
                     </div>
                 </>
-            )}
+            )
+            }
 
 
 
 
-        </div>
+        </div >
 
 
     );

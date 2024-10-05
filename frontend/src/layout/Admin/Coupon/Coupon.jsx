@@ -215,12 +215,7 @@ const Coupon = () => {
             sortable: true,
             width: '142px',
         },
-        {
-            name: 'Date',
-            selector: row => new Date(row.enddate).toLocaleDateString(),
-            sortable: true,
-            width: '142px',
-        },
+
         {
             name: 'Actions',
             cell: row => (
@@ -262,7 +257,7 @@ const Coupon = () => {
                             </nav>
                         </div>
                     </div>
-                   <hr/>
+                    <hr />
                     {/* end breadcrumb */}
                     <div className="card">
                         <div className="card-body">

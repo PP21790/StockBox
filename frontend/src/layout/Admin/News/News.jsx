@@ -292,11 +292,7 @@ const News = () => {
             selector: row => new Date(row.updated_at).toLocaleDateString(),
             sortable: true,
         },
-        {
-            name: 'Date',
-            selector: row => new Date(row.updated_at).toLocaleDateString(),
-            sortable: true,
-        },
+
         {
             name: 'Actions',
             cell: row => (
@@ -338,7 +334,7 @@ const News = () => {
                                             <button
                                                 type="button"
                                                 className="btn-close"
-                                                onClick={() => setModel(false)} 
+                                                onClick={() => setModel(false)}
                                             />
                                         </div>
                                         <div className="modal-body">
@@ -453,7 +449,7 @@ const News = () => {
                         </nav>
                     </div>
                 </div>
-                 <hr/>
+                <hr />
                 <div className="card">
                     <div className="card-body">
                         <div className="d-lg-flex align-items-center mb-4 gap-3">

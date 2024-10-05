@@ -144,7 +144,7 @@ const Generalsettings = () => {
                                             <div className="col-sm-9">
                                                 <div className="input-group">
                                                     <span className="input-group-text">
-                                                        <i className="bx bx-user" />
+                                                        <i className="fadeIn animated bx bx-building" />
                                                     </span>
                                                     <Field name="from_name" type="text" className="form-control" placeholder="Your Name" />
                                                 </div>
@@ -159,7 +159,7 @@ const Generalsettings = () => {
                                             <div className="col-sm-9">
                                                 <div className="input-group">
                                                     <span className="input-group-text">
-                                                        <i className="bx bx-microphone" />
+                                                        <i className="fadeIn animated bx bx-phone" />
                                                     </span>
                                                     <Field name="contact_number" type="text" className="form-control" placeholder="Phone No" />
                                                 </div>

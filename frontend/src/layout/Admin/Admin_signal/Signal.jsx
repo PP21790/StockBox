@@ -453,6 +453,7 @@ const Signal = () => {
                             <div className="row">
 
                                 <div className="col-md-3">
+                                    <label>Form Date</label>
                                     <input
                                         type="date"
                                         name="from"
@@ -463,6 +464,7 @@ const Signal = () => {
                                     />
                                 </div>
                                 <div className="col-md-3">
+                                    <label>To Date</label>
                                     <input
                                         type="date"
                                         name="to"
@@ -473,6 +475,7 @@ const Signal = () => {
                                     />
                                 </div>
                                 <div className="col-md-3">
+                                    <label>Select Service</label>
                                     <select
                                         name="service"
                                         className="form-control radius-10"
@@ -568,6 +571,8 @@ const Signal = () => {
                                                     Target 1 :
                                                     <input
                                                         type="number"
+                                                        className='form-control'
+                                                        style={{ width: "50%" }}
                                                         disabled
                                                         value={closedata.targetprice1 || targetvalue.tag1}
                                                         onChange={(e) =>
@@ -585,6 +590,8 @@ const Signal = () => {
                                                     Target 2 :
                                                     <input
                                                         type="number"
+                                                        style={{ width: "50%" }}
+                                                        className='form-control'
                                                         disabled
                                                         value={closedata.targetprice2 || targetvalue.tag2}
                                                         onChange={(e) =>
@@ -600,6 +607,8 @@ const Signal = () => {
                                                     Target 3 :
                                                     <input
                                                         type="number"
+                                                        style={{ width: "50%" }}
+                                                        className='form-control'
                                                         disabled
                                                         value={closedata.targetprice3 || targetvalue.tag3}
                                                         onChange={(e) =>
@@ -617,6 +626,7 @@ const Signal = () => {
                                                     </label>
                                                     <textarea
                                                         className="form-control"
+
                                                         id="input11"
                                                         placeholder="Remark ..."
                                                         rows={3}
@@ -655,6 +665,7 @@ const Signal = () => {
                                                         <div className="form-check mb-2">
                                                             <input
                                                                 className="form-control"
+                                                                style={{ width: "50%" }}
                                                                 type="number"
                                                                 id="targethit1"
                                                                 defaultValue={closedata.targetprice1 || targetvalue.targetprice1}
@@ -683,6 +694,7 @@ const Signal = () => {
                                                             <input
                                                                 className="form-control"
                                                                 type="number"
+                                                                style={{ width: "50%" }}
                                                                 id="targethit2"
                                                                 defaultValue={closedata.targetprice2 || targetvalue.targetprice2}
                                                                 onChange={(e) => handleChange(e, 'targetprice2')}
@@ -710,6 +722,7 @@ const Signal = () => {
                                                             <input
                                                                 className="form-control"
                                                                 type="number"
+                                                                style={{ width: "50%" }}
                                                                 id="targethit3"
                                                                 defaultValue={closedata.targetprice3 || targetvalue.targetprice3}
                                                                 onChange={(e) => handleChange(e, 'targetprice3')}
@@ -768,6 +781,8 @@ const Signal = () => {
                                                     <p>
                                                         Stoploss:  <input
                                                             type="number"
+                                                            className='form-control'
+                                                            style={{ width: "50%" }}
                                                             value={closedata.slprice || targetvalue.stoploss}
                                                             onChange={(e) =>
                                                                 setClosedata({
@@ -812,6 +827,8 @@ const Signal = () => {
                                                     <label>Exit price</label>
                                                     <input
                                                         type="number"
+                                                        className='form-control'
+                                                        style={{ width: "50%" }}
                                                         value={closedata.exitprice}
                                                         onChange={(e) =>
                                                             setClosedata({

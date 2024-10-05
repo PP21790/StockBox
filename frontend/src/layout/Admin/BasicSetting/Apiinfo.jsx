@@ -15,7 +15,7 @@ const Apiinfo = () => {
     const [updateapi, setUpdateapi] = useState({
         digio_client_id: "",
         digio_client_secret: "",
-        digio_template_name:""
+        digio_template_name: ""
     });
 
 
@@ -62,7 +62,7 @@ const Apiinfo = () => {
                 digio_client_id: updateapi.digio_client_id,
                 digio_client_secret: updateapi.digio_client_secret,
                 digio_template_name: updateapi.digio_template_name,
-               
+
             };
 
             const response = await updateApiinfo(data, token);
@@ -106,13 +106,13 @@ const Apiinfo = () => {
                         </nav>
                     </div>
                 </div>
-                <hr/>
+                <hr />
 
                 <div className="row row-cols-1 row-cols-md-3 row-cols-lg-3 row-cols-xl-3 justify-content-center">
-                    <div className="col">
+                    <div className="col" style={{ width: "50%" }}>
                         <div className="card">
                             <div className="card-header mt-2">
-                                <h5>Digio</h5>
+                                <h5>Digio API Key</h5>
                             </div>
                             <div className="card-body mt-2">
                                 <form className="row g-3 mt-2 mb-3">
@@ -127,7 +127,7 @@ const Apiinfo = () => {
                                                 id="digiotemplatename"
                                                 value={updateapi.digio_template_name}
                                                 onChange={(e) => setUpdateapi({ ...updateapi, digio_template_name: e.target.value })}
-                                                
+
                                             />
                                         </div>
 

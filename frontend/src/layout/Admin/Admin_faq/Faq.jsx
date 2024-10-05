@@ -246,6 +246,7 @@ const Faq = () => {
             name: 'Title',
             selector: row => row.title,
             sortable: true,
+
         },
         {
             name: 'Active Status',
@@ -265,6 +266,8 @@ const Faq = () => {
                 </div>
             ),
             sortable: true,
+
+
         },
         {
             name: 'Description',
@@ -282,11 +285,7 @@ const Faq = () => {
             selector: row => new Date(row.updated_at).toLocaleDateString(),
             sortable: true,
         },
-        {
-            name: 'Date',
-            selector: row => new Date(row.updated_at).toLocaleDateString(),
-            sortable: true,
-        },
+
         {
             name: 'Actions',
             cell: row => (
@@ -349,7 +348,7 @@ const Faq = () => {
                         </nav>
                     </div>
                 </div>
-                <hr/>
+                <hr />
 
                 <div className="card">
                     <div className="card-body">
@@ -415,7 +414,7 @@ const Faq = () => {
                                                     <div className="row">
                                                         <div className="col-md-12">
                                                             <label htmlFor="">description</label>
-                                                            <input
+                                                            <textarea
                                                                 className="form-control mb-3"
                                                                 type="text"
                                                                 placeholder='Enter description'
