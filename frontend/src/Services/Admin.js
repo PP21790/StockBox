@@ -1830,3 +1830,20 @@ export async function getstockStrickprice(data, token) {
         return err.response?.data || err.message;
     }
 }
+
+
+
+// get plan payment history 
+
+export async function getPayementhistory(token) {
+    try {
+        const res = await axios.get(`${Config.base_url}plan/paymenthistory`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}

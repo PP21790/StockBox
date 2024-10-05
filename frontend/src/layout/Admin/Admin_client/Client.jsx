@@ -38,6 +38,7 @@ const Client = () => {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+
     };
 
 
@@ -383,10 +384,12 @@ const Client = () => {
             width: '165px',
         },
         {
-            name: 'Kyc Agreement',
+            name: 'Kyc',
             selector: row => (
                 row.kyc_verification === "1" ? (
-                    <Download onClick={() => handleDownload(row)} />
+                    <div style={{ color: "green" }}>
+                        Verfied
+                    </div>
                 ) : (
                     <div style={{ color: "red" }}>
                         Not Verfied
@@ -407,6 +410,12 @@ const Client = () => {
             name: 'Actions',
             selector: (row) => (
                 <>
+                    <Tooltip placement="top" overlay="Kyc Agreement">
+
+                        {row.kyc_verification === "1" ? <Download onClick={() => handleDownload(row)} /> : ""}
+
+                    </Tooltip>
+
                     <Tooltip placement="top" overlay="Package Assign">
                         <span onClick={(e) => { showModal(true); setClientid(row); }} style={{ cursor: 'pointer' }}>
                             <Settings2 />

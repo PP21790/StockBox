@@ -30,7 +30,8 @@ const Closesignal = () => {
 
     const [serviceList, setServiceList] = useState([]);
     const [stockList, setStockList] = useState([]);
-
+    const [searchstock, setSearchstock] = useState("");
+  
    
 
     const navigate = useNavigate();
@@ -45,17 +46,21 @@ const Closesignal = () => {
                  const filterdata = response.data.filter((item)=>{
                     return item.close_status == true
                  })
-                const searchInputMatch = filterdata.filter((item) => {
-                    return (
+                 const searchInputMatch = filterdata.filter((item) => {
+                    const searchInputMatch =
                         searchInput === "" ||
-                        item.stock.title.toLowerCase().includes(searchInput.toLowerCase())
-                        ||
-                        item.calltype.toLowerCase().includes(searchInput.toLowerCase())
-                    );
-                });
+                        item.stock.toLowerCase().includes(searchInput.toLowerCase()) ||
+                        item.calltype.toLowerCase().includes(searchInput.toLowerCase());
 
-                setClients(searchInput ? searchInputMatch : filterdata);
-            }
+                    const searchstockMatch =
+                        searchstock === "" ||
+                        item.stock.toLowerCase().includes(searchstock.toLowerCase());
+
+                    return searchstockMatch && searchInputMatch;
+                });
+   
+                setClients(searchInput || searchstock ? searchInputMatch : filterdata);     
+        }
         } catch (error) {
             console.log("error", error);
         }
@@ -98,7 +103,7 @@ const Closesignal = () => {
 
     useEffect(() => {
         getAllSignal();
-    }, [filters, searchInput]);
+    }, [filters, searchInput ,searchstock]);
 
 
     const handleFilterChange = (e) => {
@@ -306,19 +311,22 @@ const Closesignal = () => {
                                     </select>
                                 </div>
 
-                                {/* <div className="col-md-3">
-                                    <div className="col-md-10">
-                                        <input
-                                            type="text"
-                                            name="stock"
-                                            className="form-control radius-10"
-                                            value={filters.stock}
-                                            onChange={handleFilterChange}
-                                            placeholder="Enter Stock"
-                                        />
-                                    </div>
+                                <div className="col-md-3 position-relative">
+                                    <select
+                                        className="form-control radius-10"
+                                        value={searchstock}
+                                        onChange={(e) => setSearchstock(e.target.value)}
+                                    >
+                                        <option value="">Select Stock</option>
+                                        {clients.map((item) => (
+                                            <option key={item._id} value={item.stock}>
+                                                {item.stock}
+                                            </option>
+                                        ))}
+                                    </select>
 
-                                </div> */}
+                                </div>
+
 
                             </div>
 
