@@ -717,12 +717,26 @@ async showSignalsToClients(req, res) {
         }
     };
 
-    const signals = await Signal_Modal.find(query);
+   // const signals = await Signal_Modal.find(query);
+
+   const protocol = req.protocol; // Will be 'http' or 'https'
+
+   const baseUrl = `${protocol}://${req.headers.host}`; // Construct the base URL
+
+   const signals = await Signal_Modal.find(query).lean(); // Use lean() to return plain JavaScript objects
+
+// Add full URL for the report in each signal result
+const signalsWithReportUrls = signals.map(signal => {
+    return {
+        ...signal, // Spread the original signal document
+        report_full_path: signal.report ? `${baseUrl}/uploads/report/${signal.report}` : null // Append full report URL
+    };
+});
 
       return res.json({
           status: true,
           message: "Signals retrieved successfully",
-          data: signals
+          data: signalsWithReportUrls
       });
 
   } catch (error) {

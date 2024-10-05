@@ -165,7 +165,6 @@ class Angle {
                 "quantity":quantity
                 });
 
-             console.log("data",data);
               
                 // var config = {
                 //     method: 'get',
@@ -184,9 +183,6 @@ class Angle {
                 //     },
                 // };
 
-
-
-          
 
 
             const config = {
@@ -225,7 +221,8 @@ class Angle {
 
             return res.json({
                 status: true,
-                data: response.data // Include response data
+                data: response.data ,
+                message: "Order Placed Successfully" 
             });
         }
         else{
