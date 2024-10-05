@@ -508,24 +508,41 @@ async  addPlanSubscription(req, res) {
       
       
       const result = await PlanSubscription_Modal.aggregate([
-    {
-      $match: {
-        del: false,
-      }
-    },
-    {
-      $lookup: {
-        from: 'plans', // The name of the plans collection
-        localField: 'plan_id', // The field in PlanSubscription_Modal that references the plans
-        foreignField: '_id', // The field in the plans collection that is referenced
-        as: 'planDetails' // The name of the field in the result that will hold the joined data
-      }
-    },
-    {
-      $unwind: '$planDetails' // Optional: Unwind the result if you expect only one matching plan per subscription
-    }
-  ]);
-  
+        {
+          $match: {
+            del: false,
+          }
+        },
+        {
+          $lookup: {
+            from: 'plans', // The name of the plans collection
+            localField: 'plan_id', // The field in PlanSubscription_Modal that references the plans
+            foreignField: '_id', // The field in the plans collection that is referenced
+            as: 'planDetails' // The name of the field in the result that will hold the joined data
+          }
+        },
+        {
+          $unwind: '$planDetails' // Optional: Unwind the result if you expect only one matching plan per subscription
+        },
+        {
+          $lookup: {
+            from: 'clients', // The name of the clients collection
+            localField: 'client_id', // The field in PlanSubscription_Modal that references the client
+            foreignField: '_id', // The field in the clients collection that is referenced
+            as: 'clientDetails' // The name of the field in the result that will hold the joined client data
+          }
+        },
+        {
+          $unwind: '$clientDetails' // Optional: Unwind the result if you expect only one matching client per subscription
+        },
+        {
+          $project: {
+            planDetails: 1,
+            clientName: '$clientDetails.FullName', // Assuming the client's name is stored in the 'name' field
+            // Include other fields you want in the result
+          }
+        }
+      ]);
   
       // Respond with the retrieved subscriptions
       return res.json({

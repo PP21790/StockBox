@@ -182,7 +182,7 @@ class Aliceblue {
                       "qty": quantity,
                       "ret": "DAY",
                       "symbol_id": stock.instrument_token,
-                      "trading_symbol": signal.stock,
+                      "trading_symbol": stock.tradesymbol,
                       "transtype": signal.calltype,
                       "trigPrice": "00.00",
                       "orderTag": "order1"
