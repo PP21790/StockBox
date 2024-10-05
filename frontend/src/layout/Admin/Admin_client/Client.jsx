@@ -634,7 +634,7 @@ const Client = () => {
                                         {checkedIndex === 0 && (
                                             <>
 
-                                                <div className='row'>
+                                                <div className='row mt-3'>
                                                     {category && category.map((item, index) => (
                                                         <div className='col-lg-4' key={index}>
                                                             <input
