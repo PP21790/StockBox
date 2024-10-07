@@ -1846,3 +1846,18 @@ export async function getPayementhistory(token) {
         return err;
     }
 }
+
+// get freelist client 
+
+export async function FreeClientList(token) {
+    try {
+        const res = await axios.get(`${Config.base_url}client/freetriallist`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}

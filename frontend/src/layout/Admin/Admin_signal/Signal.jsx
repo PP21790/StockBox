@@ -68,7 +68,7 @@ const Signal = () => {
         target3: 0,
     });
 
-   
+
     const handleCheckboxChange = (e, target) => {
 
         setCheckedTargets1((prevState) => ({
