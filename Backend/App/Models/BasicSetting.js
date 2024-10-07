@@ -130,6 +130,11 @@ const BasicSettingSchema = new Schema({
         type: String,
         trim: true,
         default: null
+    },
+    freetrial: {
+        type: String,
+        trim: true,
+        default: 0
     }
 
 }, {

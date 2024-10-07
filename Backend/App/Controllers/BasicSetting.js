@@ -37,7 +37,8 @@ class BasicSetting {
                     digio_client_secret,
                     razorpay_key,
                     razorpay_secret,
-                    digio_template_name
+                    digio_template_name,
+                    freetrial
 
                 } = req.body;
 
@@ -76,7 +77,8 @@ class BasicSetting {
                     digio_client_secret,
                     razorpay_key,
                     razorpay_secret,
-                    digio_template_name
+                    digio_template_name,
+                    freetrial
                 };
 
                 // Upsert the setting

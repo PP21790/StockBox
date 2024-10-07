@@ -110,6 +110,11 @@ const clientsModel = Schema({
         enum: ['1', '0'],
         default: '0'
     },
+    freetrial: {
+        type: String,
+        enum: ['1', '0'],
+        default: '0'
+    },
     createdAt: {
         type: Date,
         default: Date.now
