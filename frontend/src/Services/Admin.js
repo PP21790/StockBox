@@ -1861,3 +1861,44 @@ export async function FreeClientList(token) {
         return err;
     }
 }
+
+
+// delete free client 
+
+export async function DeleteFreeClient(_id, token) {
+    try {
+        const res = await axios.get(`${Config.base_url}client/freetrialdelete/${_id}`, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+
+//add broadcast messsage 
+
+export async function SendBroadCast(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}broadcast/add`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}

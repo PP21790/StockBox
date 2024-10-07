@@ -35,7 +35,7 @@ const Category = () => {
     const userid = localStorage.getItem('id');
 
 
-    
+
 
     // Getting services
     const getcategory = async () => {
@@ -83,12 +83,7 @@ const Category = () => {
 
             const data = { title: updatetitle.title, id: serviceid._id, service: updatetitle.service };
 
-            
             const response = await UpdateCategoryplan(data, token);
-            
-            
-          
-
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
@@ -371,7 +366,7 @@ const Category = () => {
             });
         }
     };
-    
+
 
 
 

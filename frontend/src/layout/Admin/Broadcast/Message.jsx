@@ -1,7 +1,86 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { SendBroadCast, GetService } from '../../../Services/Admin';
+import Swal from 'sweetalert2';
+
 
 const Message = () => {
+    
+    useEffect(() => {
+        getservice()
+    }, [])
+
+
+    const token = localStorage.getItem('token');
+    const userid = localStorage.getItem('id');
+
+
+    const [servicedata, setServicedata] = useState([]);
+   
+    const [message, setMessage] = useState({
+        service: "",
+        subject: "",
+        message: ""
+    });
+
+
+    const getservice = async () => {
+        try {
+            const response = await GetService(token);
+            if (response.status) {
+                setServicedata(response.data)
+
+            }
+        } catch (error) {
+            console.log("Error fetching services:", error);
+        }
+    };
+
+
+     
+
+    const SendMessage = async () => {
+        try {
+
+            const data = { service: message.service, subject: message.subject, message: message.message };
+            const response = await SendBroadCast(data, token);
+            if (response && response.status) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Service added successfully.',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    timer: 2000,
+                });
+
+                setMessage({ service: "", subject: "", message: "" });
+               
+                const modal = document.getElementById('exampleModal');
+                const bootstrapModal = window.bootstrap.Modal.getInstance(modal);
+                if (bootstrapModal) {
+                    bootstrapModal.hide();
+                }
+            } else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'There was an error adding the service.',
+                    icon: 'error',
+                    confirmButtonText: 'Try Again',
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'There was an error adding the service.',
+                icon: 'error',
+                confirmButtonText: 'Try Again',
+            });
+        }
+    };
+
+
+
+
     return (
         <div>
             <div className="page-content">
@@ -60,26 +139,15 @@ const Message = () => {
                                             <form>
                                                 <div className="col-md-12">
                                                     <label htmlFor="service">Select Service</label>
-                                                    <select
-                                                        className="form-control mb-2"
-                                                        id="service"
-
-                                                    >
-                                                        <option value="">
-                                                            Select service
-                                                        </option>
-                                                        <option value="0">
-                                                            Stock
-                                                        </option>
-                                                        <option value="1">
-                                                            Cash
-                                                        </option>
-                                                        <option value="2">
-                                                            Future
-                                                        </option>
-
+                                                    <select className="form-control mb-2" id="service">
+                                                        {servicedata && servicedata.map((item) => (
+                                                            <option value={item._id} key={item._id}>
+                                                                {item.title}
+                                                            </option>
+                                                        ))}
                                                     </select>
                                                 </div>
+
                                                 <div className="row">
                                                     <div className="col-md-12">
                                                         <label htmlFor="">Subject</label>
@@ -87,7 +155,8 @@ const Message = () => {
                                                             className="form-control mb-3"
                                                             type="text"
                                                             placeholder='Enter Subject'
-
+                                                             value={message.service}
+                                                             onChange={(e)=>{setMessage({...message,service:e.target.value})}}
                                                         />
                                                     </div>
                                                 </div>
@@ -100,6 +169,8 @@ const Message = () => {
                                                             className="form-control mb-3"
                                                             type="text"
                                                             placeholder='Enter your Message'
+                                                            value={message.message}
+                                                            onChange={(e)=>{setMessage({...message,message:e.target.value})}}
 
                                                         />
                                                     </div>
@@ -117,7 +188,7 @@ const Message = () => {
                                             <button
                                                 type="button"
                                                 className="btn btn-primary"
-
+                                                onClick={SendMessage}
                                             >
                                                 Submit
                                             </button>
