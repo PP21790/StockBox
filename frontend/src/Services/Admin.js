@@ -1631,15 +1631,12 @@ export async function UpdateEmailSettings(data, token) {
 
 // api information 
 
-
 export async function updateApiinfo(data, token) {
     const formData = new FormData();
-
+  
     formData.append('digio_client_id', data.digio_client_id);
     formData.append('digio_client_secret', data.digio_client_secret);
-    // formData.append('razorpay_key', data.razorpay_key);
-    // formData.append('razorpay_secret', data.razorpay_secret);
-
+    formData.append('digio_template_name', data.digio_template_name);
     try {
         const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
             headers: {
@@ -1811,8 +1808,8 @@ export async function getDashboarddetail(token) {
 }
 
 
-// get strike price
 
+// get strike price
 // get stock expiry date
 
 export async function getstockStrickprice(data, token) {
@@ -1834,6 +1831,8 @@ export async function getstockStrickprice(data, token) {
 
 
 // get plan payment history 
+
+
 
 export async function getPayementhistory(token) {
     try {

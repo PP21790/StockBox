@@ -10,7 +10,7 @@ const Apiinfo = () => {
 
     const [clients, setClients] = useState("");
 
-    // Store initial API data to compare changes
+
     const [initialApiData, setInitialApiData] = useState({
         digio_client_id: "",
         digio_client_secret: "",
@@ -58,8 +58,11 @@ const Apiinfo = () => {
             updateapi.digio_client_secret !== initialApiData.digio_client_secret ||
             updateapi.digio_template_name !== initialApiData.digio_template_name;
 
-        setIsButtonDisabled(!isDataChanged); // Disable button if data hasn't changed
+        setIsButtonDisabled(!isDataChanged); 
     }, [updateapi, initialApiData]);
+
+
+
 
     const UpdateApi = async () => {
         try {
@@ -80,7 +83,9 @@ const Apiinfo = () => {
                 digio_template_name: updateapi.digio_template_name,
             };
 
+           
             const response = await updateApiinfo(data, token);
+            
             if (response?.status) {
                 Swal.fire({
                     icon: 'success',
@@ -101,6 +106,8 @@ const Apiinfo = () => {
         }
     };
 
+
+    
     return (
         <div>
             <div className="page-content">

@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { Eye, Trash2 , RefreshCcw } from 'lucide-react';
+import { Eye, Trash2, RefreshCcw } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { GetSignallist, DeleteSignal, SignalCloseApi, GetService, GetStockDetail } from '../../../Services/Admin';
 import { fDateTimeSuffix } from '../../../Utils/Date_formate'
@@ -33,7 +33,7 @@ const Signal = () => {
 
 
 
-   
+
 
     const [serviceList, setServiceList] = useState([]);
     const [stockList, setStockList] = useState([]);
@@ -52,6 +52,14 @@ const Signal = () => {
     });
 
 
+    const unchecked = () => {
+        setCheckedTargets({
+            target1: false,
+            target2: false,
+            target3: false
+        })
+    }
+
 
 
     const [checkedTargets1, setCheckedTargets1] = useState({
@@ -60,7 +68,7 @@ const Signal = () => {
         target3: 0,
     });
 
-
+   
     const handleCheckboxChange = (e, target) => {
 
         setCheckedTargets1((prevState) => ({
@@ -96,8 +104,8 @@ const Signal = () => {
 
 
 
-  
- 
+
+
 
     const [closedata, setClosedata] = useState({
         id: "",
@@ -115,7 +123,7 @@ const Signal = () => {
     })
 
 
-    console.log("closedata",closedata)
+
 
     const getAllSignal = async () => {
         try {
@@ -137,7 +145,7 @@ const Signal = () => {
 
                     return searchstockMatch && searchInputMatch;
                 });
-   
+
                 setClients(searchInput || searchstock ? searchInputMatch : filterdata);
 
             }
@@ -298,7 +306,7 @@ const Signal = () => {
     //     }
     // };
 
-   
+
     const closeSignalperUser = async (index) => {
         try {
             if (index == 1) {
@@ -311,7 +319,7 @@ const Signal = () => {
                     });
                     return;
                 }
-    
+
                 if (closedata.targetprice3 && (!closedata.targetprice1 || !closedata.targetprice2)) {
                     Swal.fire({
                         title: 'Validation Error!',
@@ -321,7 +329,7 @@ const Signal = () => {
                     });
                     return;
                 }
-    
+
                 if (closedata.targetprice1 && closedata.targetprice2 && closedata.targetprice1 >= closedata.targetprice2) {
                     Swal.fire({
                         title: 'Validation Error!',
@@ -329,9 +337,9 @@ const Signal = () => {
                         icon: 'warning',
                         confirmButtonText: 'OK'
                     });
-                    return;  
+                    return;
                 }
-    
+
                 if (closedata.targetprice3 && closedata.targetprice2 >= closedata.targetprice3) {
                     Swal.fire({
                         title: 'Validation Error!',
@@ -339,10 +347,10 @@ const Signal = () => {
                         icon: 'warning',
                         confirmButtonText: 'OK'
                     });
-                    return;  
+                    return;
                 }
             }
-    
+
             const data = {
                 id: serviceid._id,
                 closestatus: index === 1 ? checkstatus : "",
@@ -357,11 +365,9 @@ const Signal = () => {
                 slprice: index === 2 ? closedata.slprice : closedata.stoploss,
                 exitprice: index === 3 ? closedata.exitprice : ""
             };
-    
-            // Call the API
+
             const response = await SignalCloseApi(data, token);
-    
-            // Handle success or failure responses
+
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
@@ -370,9 +376,11 @@ const Signal = () => {
                     confirmButtonText: 'OK',
                     timer: 2000,
                 });
-    
-                // Reset form and close the modal
-                setClosedata({ closeprice: "", close_description: "" });
+
+                setClosedata({
+                    closeprice: "", close_description: "", targetprice1: "", targetprice1: "", targetprice2: "",
+                    targetprice3: "", targethit1: "", targethit2: "", targethit3: ""
+                });
                 getAllSignal();
                 setModel(!model);
             } else {
@@ -392,7 +400,7 @@ const Signal = () => {
             });
         }
     };
-    
+
 
 
     // colums
@@ -406,7 +414,7 @@ const Signal = () => {
         },
         {
             name: 'Segment',
-            selector: row => row.segment == "C" ? "CASH" :row.segment == "O" ? "OPTION" : "FUTURE" ,
+            selector: row => row.segment == "C" ? "CASH" : row.segment == "O" ? "OPTION" : "FUTURE",
             sortable: true,
             width: '132px',
         },
@@ -495,8 +503,8 @@ const Signal = () => {
 
     ];
 
-  
-    const resethandle=()=>{
+
+    const resethandle = () => {
         setFilters({
             from: '',
             to: '',
@@ -508,7 +516,7 @@ const Signal = () => {
         fetchAdminServices()
         fetchStockList()
         getAllSignal();
-        
+
     }
 
 
@@ -605,27 +613,27 @@ const Signal = () => {
                                 </div>
 
                                 <div className="col-md-3 d-flex">
-                                <div style={{width:"80%"}}>
-                                <label>Select Stock</label>
-                                    <select
-                                        className="form-control radius-10"
-                                        value={searchstock}
-                                        onChange={(e) => setSearchstock(e.target.value)}
-                                    >
-                                        <option value="">Select Stock</option>
-                                        {clients.map((item) => (
-                                            <option key={item._id} value={item.stock}>
-                                                {item.stock}
-                                            </option>
-                                        ))}
-                                    </select>
+                                    <div style={{ width: "80%" }}>
+                                        <label>Select Stock</label>
+                                        <select
+                                            className="form-control radius-10"
+                                            value={searchstock}
+                                            onChange={(e) => setSearchstock(e.target.value)}
+                                        >
+                                            <option value="">Select Stock</option>
+                                            {clients.map((item) => (
+                                                <option key={item._id} value={item.stock}>
+                                                    {item.stock}
+                                                </option>
+                                            ))}
+                                        </select>
                                     </div>
                                     <div className='rfreshicon'>
-                                    <RefreshCcw onClick={resethandle}/>
+                                        <RefreshCcw onClick={resethandle} />
                                     </div>
-                                   
+
                                 </div>
-                                
+
 
                             </div>
 
@@ -660,7 +668,7 @@ const Signal = () => {
                                     <button
                                         type="button"
                                         className="btn-close"
-                                        onClick={() => setModel(false)}
+                                        onClick={() => setModel(false) || unchecked()}
                                     />
                                 </div>
                                 <div className="modal-body">
@@ -772,7 +780,7 @@ const Signal = () => {
                                                             className="form-check-input"
                                                             type="checkbox"
                                                             id="target1"
-                                                            checked={checkedTargets.target1}
+                                                            checked={checkedTargets.target1 || !!closedata.targetprice1}
                                                             onChange={(e) => handleCheckboxChange(e, 'target1')}
                                                         />
                                                         <label className="form-check-label" htmlFor="target1">
@@ -787,7 +795,7 @@ const Signal = () => {
                                                                 style={{ width: "50%" }}
                                                                 type="number"
                                                                 id="targethit1"
-                                                                defaultValue={closedata.targetprice1 && closedata.targetprice1}
+                                                                defaultValue={closedata.targetprice1 || ''}
                                                                 onChange={(e) => handleChange(e, 'targetprice1')}
                                                             />
                                                         </div>
@@ -800,7 +808,7 @@ const Signal = () => {
                                                             className="form-check-input"
                                                             type="checkbox"
                                                             id="target2"
-                                                            checked={checkedTargets.target2}
+                                                            checked={checkedTargets.target2 || !!closedata.targetprice2}
                                                             onChange={(e) => handleCheckboxChange(e, 'target2')}
                                                         />
                                                         <label className="form-check-label" htmlFor="target2">
@@ -815,20 +823,20 @@ const Signal = () => {
                                                                 type="number"
                                                                 style={{ width: "50%" }}
                                                                 id="targethit2"
-                                                                defaultValue={closedata.targetprice2 && closedata.targetprice2}
+                                                                defaultValue={closedata.targetprice2 || ''}
                                                                 onChange={(e) => handleChange(e, 'targetprice2')}
                                                             />
                                                         </div>
                                                     )}
                                                 </div>
-                                                
+
                                                 <div className="col-md-12">
                                                     <div className="form-check mb-2">
                                                         <input
                                                             className="form-check-input"
                                                             type="checkbox"
                                                             id="target3"
-                                                            checked={checkedTargets.target3}
+                                                            checked={checkedTargets.target3 || !!closedata.targetprice3}
                                                             onChange={(e) => handleCheckboxChange(e, 'target3')}
                                                         />
                                                         <label className="form-check-label" htmlFor="target3">
@@ -843,7 +851,7 @@ const Signal = () => {
                                                                 type="number"
                                                                 style={{ width: "50%" }}
                                                                 id="targethit3"
-                                                                defaultValue={closedata.targetprice3 && closedata.targetprice3}
+                                                                defaultValue={closedata.targetprice3 || ''}
                                                                 onChange={(e) => handleChange(e, 'targetprice3')}
                                                             />
                                                         </div>
@@ -870,7 +878,6 @@ const Signal = () => {
                                                     </div>
                                                 </div>
 
-
                                                 <div className="col-md-12">
                                                     <label className='mb-1'>Remark</label>
                                                     <textarea
@@ -891,6 +898,7 @@ const Signal = () => {
                                                 <button type="submit" className='btn btn-danger mt-2'>Submit</button>
                                             </form>
 
+
                                         )}
                                         {checkedIndex === 2 && (
                                             <form className='card-body'>
@@ -902,7 +910,7 @@ const Signal = () => {
                                                             type="number"
                                                             className='form-control'
                                                             style={{ width: "50%" }}
-                                                            value={closedata.slprice || closedata.stoploss}
+                                                            defaultValue={closedata.slprice || closedata.stoploss}
                                                             onChange={(e) =>
                                                                 setClosedata({
                                                                     ...closedata,
@@ -912,7 +920,7 @@ const Signal = () => {
 
                                                         />
                                                     </p>
-                                            
+
 
                                                 </div>
 

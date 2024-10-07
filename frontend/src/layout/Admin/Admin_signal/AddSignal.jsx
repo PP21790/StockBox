@@ -65,8 +65,8 @@ const AddSignal = () => {
       callduration: '',
       calltype: '',
       expiry: '',
-      optiontype: '',
-      strikeprice: '',
+      optiontype:'',
+      strikeprice:'',
 
     },
     validate: (values) => {
@@ -407,6 +407,8 @@ const AddSignal = () => {
     },
   ];
 
+
+
   const dropdownStyles = {
     position: 'absolute',
     top: '100%',
@@ -419,6 +421,7 @@ const AddSignal = () => {
     overflowY: 'auto',
     zIndex: 1000,
   };
+
 
   const dropdownItemStyles = {
     padding: '8px 16px',
