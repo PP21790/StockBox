@@ -19,6 +19,10 @@ const BroadcastSchema = new Schema({
         trim: true,
         default: null
     },
+    status: {
+        type: Boolean,
+        default: true // assuming true means active and false means inactive
+    },
     del: {
         type: Boolean,
         default: false // assuming false means not deleted
