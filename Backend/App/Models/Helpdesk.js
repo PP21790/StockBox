@@ -3,7 +3,11 @@
 const { Schema, model } = require('mongoose');
 
 const HelpdeskSchema = new Schema({
-   
+    client_id: {
+        type: String,
+        trim: true,
+        default: null
+    },
     subject: {
         type: String,
         trim: true,

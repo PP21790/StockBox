@@ -12,6 +12,7 @@ const FormData = require('form-data');
 const Mailtemplate_Modal = db.Mailtemplate;
 const Refer_Modal = db.Refer;
 const Payout_Modal = db.Payout;
+const Helpdesk_Modal = db.Helpdesk;
 
 class Clients {
 
@@ -1290,6 +1291,52 @@ async deleteBrokerLink(req, res) {
     });
   }
 }
+
+
+async addHelpDesk(req, res) {
+
+  
+  try {
+    const { client_id, subject, message } = req.body;
+
+    if (!subject) {
+      return res.status(400).json({ status: false, message: "Please enter subject" });
+    }
+   
+    if (!message) {
+      return res.status(400).json({ status: false, message: "Please enter message" });
+    }
+
+
+    const client = await Clients_Modal.findOne({ _id: client_id, del: 0, ActiveStatus: 1 });
+
+    if (!client) {
+      return res.status(404).json({ status: false, message: 'Client not found or inactive.' });
+    }
+    
+    const result = new Helpdesk_Modal({
+      subject: subject,
+      message: message,
+      client_id: client_id,
+    })
+   
+    await result.save();    
+
+    return res.json({
+      status: true,
+      message: "Data add successfully.",
+    });
+
+  } catch (error) {
+    return res.json({
+      status: false,
+      message: "Server error",
+      data: [],
+    });
+  }
+}
+
+
 
 
 }

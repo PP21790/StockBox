@@ -18,6 +18,7 @@ const Planmanage = db.Planmanage;
 const Refer_Modal = db.Refer;
 const Clients_Modal = db.Clients;
 const Freetrial_Modal = db.Freetrial;
+const Broadcast_Modal = db.Broadcast;
 
 
 mongoose  = require('mongoose');
@@ -1152,6 +1153,25 @@ async addFreeTrail(req, res) {
 }
 
 
+async BroadcastList(req, res) {
+  try {
+    const { id } = req.params;
+      const Broadcast = await Broadcast_Modal.find({ del: false,status: true });
+
+      return res.status(200).json({
+          status: true,
+          message: "Broadcast retrieved successfully",
+          data: Broadcast
+      });
+  } catch (error) {
+      console.error("Error retrieving Broadcast:", error);
+      return res.status(500).json({
+          status: false,
+          message: "Server error",
+          error: error.message
+      });
+  }
+}
 
 
 
