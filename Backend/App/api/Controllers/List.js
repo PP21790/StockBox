@@ -17,6 +17,7 @@ const BasketSubscription_Modal = db.BasketSubscription;
 const Planmanage = db.Planmanage;
 const Refer_Modal = db.Refer;
 const Clients_Modal = db.Clients;
+const Freetrial_Modal = db.Freetrial;
 
 
 mongoose  = require('mongoose');
@@ -1070,6 +1071,89 @@ async pastPerformance(req, res) {
     });
   }
 }
+
+
+async addFreeTrail(req, res) {
+  try {
+    const { client_id } = req.body;
+    // Validate input
+
+
+
+    if (!client_id) {
+      return res.status(400).json({ status: false, message: 'Missing required fields' });
+    }
+   const client = await Clients_Modal.findOne({ _id: client_id, del: 0, ActiveStatus: 1 });
+
+      if (!client) {
+          return console.error('Client not found or inactive.');
+      }
+
+    
+    const settings = await BasicSetting_Modal.findOne();
+    if (!settings || !settings.freetrial) {
+      throw new Error('SMTP settings are not configured or are disabled');
+    }
+
+
+
+    const start = new Date();
+    const end = new Date(start);
+    end.setDate(start.getDate() + settings.freetrial);  // Add 7 days to the start date
+    end.setHours(23, 59, 59, 999); 
+
+
+
+    const existingPlan = await Planmanage.findOne({ clientid: client_id }).exec();
+
+      if (existingPlan) {
+        return res.status(500).json({ status: false, message: 'Sorry, you are not eligible for a free trial', data: [] });
+      } else {
+
+        const service = await Service_Modal.find({ del: false });
+        // Create an array to hold promises for saving the plans
+    const savePromises = service.map(async (svc) => {
+      // Create a new plan management record
+      const newPlanManage = new Planmanage({
+          clientid: client_id,
+          serviceid: svc._id,
+          startdate: start,
+          enddate: end,
+      });
+
+      // Save the new plan management record to the database
+      return newPlanManage.save(); // Return the promise from save
+  });
+
+       // Create a new plan subscription record
+
+      }
+      
+      const newSubscription = new Freetrial_Modal({
+        clientid:client_id,
+        startdate: start,
+        enddate: end,
+      });
+
+      const savedSubscription = await newSubscription.save();
+    // Save the subscription
+              client.freetrial = 1; 
+              await client.save();
+      
+    return res.status(201).json({
+      status: true,
+      message: 'Free trail Actived successfully',
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ status: false, message: 'Server error', data: [] });
+  }
+}
+
+
+
+
 
 
 }

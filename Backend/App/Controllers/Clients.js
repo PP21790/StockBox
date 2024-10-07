@@ -8,6 +8,7 @@ const Payout_Modal = db.Payout;
 const Clients_Modal = db.Clients;
 const Mailtemplate_Modal = db.Mailtemplate;
 const BasicSetting_Modal = db.BasicSetting;
+const Freetrial_Modal = db.Freetrial;
 
 
 class Clients {
@@ -463,7 +464,85 @@ class Clients {
     }
   }
 
+  async freetrialList(req, res) {
+    try {
+        const result = await Freetrial_Modal.aggregate([
+            {
+                $match: { del: false } // Match documents where del is false
+            },
+            {
+                $addFields: {
+                    clientid: { $toObjectId: "$clientid" } // Convert clientid to ObjectId
+                }
+            },
+            {
+                $lookup: {
+                    from: 'clients', // Name of the clients collection
+                    localField: 'clientid', // Field from Freetrial_Modal
+                    foreignField: '_id', // Field from the clients collection
+                    as: 'clientDetails' // Name of the new array field
+                }
+            },
+            {
+                $unwind: {
+                    path: '$clientDetails',
+                    preserveNullAndEmptyArrays: true // Optional
+                }
+            }
+        ]);
 
+        return res.json({
+            status: true,
+            message: "get",
+            data: result
+        });
+
+    } catch (error) {
+        console.error("Error fetching free trials:", error); // Log the error for debugging
+        return res.json({ status: false, message: "Server error", data: [] });
+    }
+}
+
+
+async deleteFreetrial(req, res) {
+  try {
+    const { id } = req.params; // Extract ID from URL params
+
+    if (!id) {
+      return res.status(400).json({
+        status: false,
+        message: "Freetrial ID is required",
+      });
+    }
+
+  //  const deletedClient = await Clients_Modal.findByIdAndDelete(id);
+  const deletedFreetrial = await Freetrial_Modal.findByIdAndUpdate(
+    id, 
+    { del: true }, // Set del to true
+    { new: true }  // Return the updated document
+  );
+    if (!deletedFreetrial) {
+      return res.status(404).json({
+        status: false,
+        message: "Freetrial not found",
+      });
+    }
+
+    console.log("Deleted Freetrial:", deletedFreetrial);
+    return res.json({
+      status: true,
+      message: "Freetrial deleted successfully",
+      data: deletedFreetrial,
+    });
+  } catch (error) {
+    console.error("Error deleting freetrial:", error);
+    return res.status(500).json({
+      status: false,
+      message: "Server error",
+      error: error.message,
+    });
+  }
+}
 
 
 
