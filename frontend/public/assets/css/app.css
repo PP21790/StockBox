@@ -5725,3 +5725,8 @@ ul li {
 	left: 18px;
 	top: 30px;
 }
+
+.custom-accordion-button {
+    padding: 3px !important;
+    font-size: 0.9rem !important;
+}

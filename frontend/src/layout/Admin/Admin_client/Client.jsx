@@ -7,7 +7,7 @@ import { Settings2, Eye, UserPen, Trash2, Download } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { deleteClient, UpdateClientStatus, PlanSubscription, getplanlist, BasketSubscription, BasketAllList, getcategoryplan } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
-import { fDateTime } from '../../../Utils/Date_formate';
+import { fDateTime, fDate } from '../../../Utils/Date_formate';
 import { image_baseurl } from '../../../Utils/config';
 
 
@@ -26,7 +26,7 @@ const Client = () => {
     const [client, setClientid] = useState({});
     const [selectcategory, setSelectcategory] = useState("")
     const [searchInput, setSearchInput] = useState("");
-
+    const [selectedPlanId, setSelectedPlanId] = useState(null)
 
     const handleDownload = (row) => {
 
@@ -543,7 +543,7 @@ const Client = () => {
         <div>
             <div>
                 <div className="page-content">
-        
+
                     <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
                         <div className="breadcrumb-title pe-3">Client</div>
                         <div className="ps-3">
@@ -559,7 +559,7 @@ const Client = () => {
                         </div>
                     </div>
                     <hr />
-        
+
                     <div className="card">
                         <div className="card-body">
                             <div className="d-lg-flex align-items-center mb-4 gap-3">
@@ -588,8 +588,8 @@ const Client = () => {
                                     </Link>
                                 </div>
                             </div>
-                            
-                            
+
+
                             <Table
                                 columns={columns}
                                 data={clients}
@@ -610,7 +610,7 @@ const Client = () => {
                         aria-labelledby="exampleModalLabel"
                         aria-hidden="true"
                     >
-                        <div className="modal-dialog">
+                        <div className="modal-dialog modal-lg">
                             <div className="modal-content">
                                 <div className="modal-header">
                                     <h5 className="modal-title" id="exampleModalLabel">Package Assign</h5>
@@ -640,28 +640,10 @@ const Client = () => {
                                     </div>
 
                                     <div className='card'>
-                                        <div className="card-body">
-                                            {checkedIndex === 0 && (
-                                                <>
-
-                                                    <div className='row mt-3'>
-                                                        <div className="col-md-6">
-                                                            <select className="form-select mb-3" aria-label="Default select example">
-                                                                <option selected="">Open this select menu</option>
-                                                                <option value={1}>Pro</option>
-                                                                <option value={2}>Pro Lite</option>
-                                                                <option value={3}>Pro Saas</option>
-                                                            </select>
-                                                        </div>
-                                                        <div className="col-md-6">
-                                                            <select className="form-select mb-3" aria-label="Default select example">
-                                                                <option selected="">Open this select menu</option>
-                                                                <option value={1}>Pro</option>
-                                                                <option value={2}>Pro Lite</option>
-                                                                <option value={3}>Pro Saas</option>
-                                                            </select>
-                                                        </div>
-                                                        {/* {category && category.map((item, index) => (
+                                        {checkedIndex === 0 && (
+                                            <>
+                                                <div className='row mt-3'>
+                                                    {category && category.map((item, index) => (
                                                         <div className='col-lg-4' key={index}>
                                                             <input
                                                                 className="form-check-input mx-2"
@@ -672,106 +654,88 @@ const Client = () => {
                                                             />
                                                             <label className="form-check-label" htmlFor={`proplus-${index}`}>
                                                                 {item.title}
-
                                                             </label>
-
                                                         </div>
+                                                    ))}
+                                                </div>
 
-                                                    ))} */}
-                                                    </div>
-
-                                                    <div className="row">
-                                                        <div className="col-12">
-                                                            <div className="card radius-15">
-                                                                <div className="p-0 border radius-15">
-                                                                    <div className="card-body">
-
-                                                                        <h5 className="card-title">Hini</h5>
-                                                                    </div>
-
-                                                                    <ul className="list-group list-group-flush list shadow-none">
-                                                                        <li className="list-group-item d-flex justify-content-between align-items-center border-top">
-                                                                            Cras justo odio{" "}
-                                                                            <span className="badge bg-dark rounded-pill">4000</span>
-                                                                        </li>
-                                                                        <li className="list-group-item d-flex justify-content-between align-items-center">
-                                                                            Dapibus ac facilisis in{" "}
-                                                                            <span className="badge bg-success rounded-pill">10/09/2024</span>
-                                                                        </li>
-                                                                        <li className="list-group-item d-flex justify-content-between align-items-center">
-                                                                            Vestibulum at eros{" "}
-                                                                            <span className="badge bg-danger rounded-pill">1</span>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                {selectcategory && (
+                                                    <form className='card-body mt-3'style={{ height: "40vh", overflowY: "scroll" }} >
+                                                        <div className="row">
+                                                            {planlist
+                                                                .filter(item => item.category === selectcategory)
+                                                                .map((item, index) => (
+                                                                    <div className="col-md-6 " key={index}>
+                                                                        <div className="card mb-0 my-2" >
+                                                                            <div className="card-body p-1">
+                                                                                <h5 className="card-title">
+                                                                                    <input
+                                                                                        style={{ height: "13px", width: "13px", marginTop: "0.52rem" }}
+                                                                                        className="form-check-input "
+                                                                                        type="radio"
+                                                                                        name="planSelection"
+                                                                                        id={`input-plan-${index}`}
+                                                                                        onClick={() => {
+                                                                                            setUpdatetitle({ plan_id: item._id, price: item.price, title: item.title });
+                                                                                            setSelectedPlanId(item._id);
+                                                                                        }}
+                                                                                    />
+                                                                                    <label className="form-check-label mx-1" style={{ fontSize: "13px", fontWeight: "800" }} htmlFor={`input-plan-${index}`}>
+                                                                                        {item.title}
+                                                                                    </label>
+                                                                                </h5>
 
 
-
-                                                    {selectcategory && (
-                                                        <form className='card-body'>
-                                                            <div className="row">
-                                                                {planlist
-                                                                    .filter(item => item.category === selectcategory)
-                                                                    .map((item, index) => (
-                                                                        <div className="col-md-6" key={index}>
-                                                                            <div className="form-check mb-2">
-                                                                                <input
-                                                                                    className="form-check-input"
-                                                                                    type="radio"
-                                                                                    name="planSelection"
-                                                                                    id={`input-plan-${index}`}
-                                                                                    onClick={() => {
-                                                                                        setUpdatetitle({ plan_id: item._id, price: item.price, title: item.title });
-                                                                                    }}
-                                                                                />
-                                                                                <label className="form-check-label" htmlFor={`input-plan-${index}`}>
-                                                                                    {item.title}
-                                                                                </label>
-                                                                                <div className="row mt-3">
-                                                                                    <div className="col-12">
-                                                                                        <div className="card radius-10 border-4 border-start border-0 border-primary" style={{ width: '391px' }}>
-                                                                                            <div className="card-body">
-                                                                                                <div className="d-flex align-items-center justify-content-between">
-                                                                                                    <div>
-                                                                                                        <strong className="mb-0 text-secondary">Hini</strong>
-                                                                                                        <p>4000</p>
-                                                                                                    </div>
-                                                                                                    <div>
-                                                                                                        <strong className="mb-0 text-secondary">Validity</strong>
-                                                                                                        <p>3 months</p>
-
-                                                                                                    </div>
+                                                                                <div className="accordion" id={`accordion-${selectcategory}`}>
+                                                                                    <div className="accordion-item">
+                                                                                        <h2 className="accordion-header" id={`heading-${item._id}`}>
+                                                                                            <button
+                                                                                                className={`accordion-button ${selectedPlanId === item._id ? '' : 'collapsed'} custom-accordion-button`}
+                                                                                                type="button"
+                                                                                                data-bs-toggle="collapse"
+                                                                                                data-bs-target={`#collapse-${item._id}`}
+                                                                                                aria-expanded={selectedPlanId === item._id}
+                                                                                                aria-controls={`collapse-${item._id}`}
+                                                                                            >
+                                                                                                <strong className="text-secondary">Validaty : {item.validity}</strong>
+                                                                                            </button>
+                                                                                        </h2>
+                                                                                        <div
+                                                                                            id={`collapse-${item._id}`}
+                                                                                            className={`accordion-collapse collapse ${selectedPlanId === item._id ? 'show' : ''}`}
+                                                                                            aria-labelledby={`heading-${item._id}`}
+                                                                                            data-bs-parent={`#accordion-${selectcategory}`}
+                                                                                        >
+                                                                                            <div className="accordion-body">
+                                                                                                <div className="d-flex justify-content-between">
+                                                                                                    <strong>Price:</strong>
+                                                                                                    <span>{item.price}</span>
                                                                                                 </div>
-                                                                                                <div className="d-flex align-items-center justify-content-between">
-                                                                                                    <div>
-                                                                                                        <strong className="mb-0 text-secondary">created At</strong>
-                                                                                                        <p>29/05/2024</p>
-                                                                                                    </div>
-                                                                                                    <div>
-                                                                                                        <strong className="mb-0 text-secondary">Updated At</strong>
-                                                                                                        <p>29/05/2024</p>
-
-                                                                                                    </div>
+                                                                                                <div className="d-flex justify-content-between">
+                                                                                                    <strong>Validity:</strong>
+                                                                                                    <span>{item.validity}</span>
+                                                                                                </div>
+                                                                                                <div className="d-flex justify-content-between">
+                                                                                                    <strong>Created At:</strong>
+                                                                                                    <span>{fDate(item.created_at)}</span>
+                                                                                                </div>
+                                                                                                <div className="d-flex justify-content-between">
+                                                                                                    <strong>Updated At:</strong>
+                                                                                                    <span>{fDate(item.updated_at)}</span>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
-
-
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                    ))}
-                                                            </div>
-                                                        </form>
-                                                    )}
-                                                </>
-                                            )}
-                                        </div>
+                                                                    </div>
+                                                                ))}
+                                                        </div>
+                                                    </form>
+                                                )}
+                                            </>
+                                        )}
                                     </div>
                                 </div>
 
@@ -780,7 +744,6 @@ const Client = () => {
                                         type="button"
                                         className="btn btn-secondary"
                                         onClick={handleCancel}
-
                                     >
                                         Close
                                     </button>
@@ -799,8 +762,8 @@ const Client = () => {
                         </div>
                     </div>
                 </>
-            )
-            }
+            )}
+
 
 
 
