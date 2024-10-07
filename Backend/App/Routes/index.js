@@ -20,6 +20,7 @@ module.exports = function (app) {
     app.use(require("./Mailtemplate"))
     app.use(require("./Angle"))
     app.use(require("./Aliceblue"))
+    app.use(require("./Broadcast"))
 
 
 
