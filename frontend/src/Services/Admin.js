@@ -2021,3 +2021,22 @@ export async function ChangePaymentStatus(data, token) {
         return err.response?.data || err.message;
     }
 }
+
+
+
+// get help message 
+
+// get broadcast message 
+
+export async function getHelpMessagelist(token) {
+    try {
+        const res = await axios.get(`${Config.base_url}client/helpdesklist`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}

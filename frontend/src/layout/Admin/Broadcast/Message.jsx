@@ -26,7 +26,6 @@ const Message = () => {
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
 
-    console.log("servicedata", servicedata)
 
     const [updatetitle, setUpdatetitle] = useState({
         service: "",
