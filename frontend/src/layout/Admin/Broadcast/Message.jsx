@@ -27,7 +27,6 @@ const Message = () => {
     const [serviceid, setServiceid] = useState({});
 
 
-
     const [updatetitle, setUpdatetitle] = useState({
         service: "",
         subject: "",
@@ -146,8 +145,7 @@ const Message = () => {
                         icon: 'success',
                         confirmButtonText: 'OK',
                     });
-                    chatMessages();
-
+                    sendmessagedetail()
                 }
             } else {
 
@@ -215,13 +213,17 @@ const Message = () => {
 
 
     // Update service
-    const Updatebroadcastmessage = async () => {
+    // Update service
+    const updateBroadcastMessage = async () => {
         try {
-
-            const data = { message: updatetitle.message, id: serviceid._id, subject: updatetitle.subject, service: updatetitle.service };
-
+            const data = {
+                message: updatetitle.message,
+                id: serviceid._id,
+                subject: updatetitle.subject,
+                service: updatetitle.service
+            };
             const response = await UpdateCastmessage(data, token);
-            if (response && response.status) {
+            if (response.status) {
                 Swal.fire({
                     title: 'Success!',
                     text: 'Service updated successfully.',
@@ -230,8 +232,8 @@ const Message = () => {
                     timer: 2000,
                 });
 
-                setUpdatetitle({ service: "", subject: "", message: "", id: "", });
-                chatMessages();
+                setUpdatetitle({ service: "", subject: "", message: "", id: "" });
+                sendmessagedetail()
                 setModel(false);
             } else {
                 Swal.fire({
@@ -242,14 +244,16 @@ const Message = () => {
                 });
             }
         } catch (error) {
+            console.log("Update Error:", error);
             Swal.fire({
                 title: 'Error!',
-                text: 'There was an error updating the service.',
+                text: 'server error ',
                 icon: 'error',
                 confirmButtonText: 'Try Again',
             });
         }
     };
+
 
 
 
@@ -509,39 +513,42 @@ const Message = () => {
                                             >
                                                 <option value="" disabled>Select a service</option>
                                                 {servicedata && servicedata.map((item) => (
+
                                                     <option key={item._id} value={item._id}>{item.title}</option>
+
                                                 ))}
+
                                             </select>
                                         </div>
 
                                         <div className="col-md-12">
-                                                <label htmlFor="category">Service</label>
-                                                <input
-                                                    className="form-control mb-2"
-                                                    type="text"
-                                                    placeholder="Enter Category Title"
-                                                    id="category"
-                                                    value={updatetitle.subject}
-                                                    onChange={(e) =>
-                                                        updateServiceTitle('subject', e.target.value)
-                                                    }
-                                                    required
-                                                />
-                                            </div> 
-                                            <div className="col-md-12">
-                                                <label htmlFor="category">Service</label>
-                                                <input
-                                                    className="form-control mb-2"
-                                                    type="text"
-                                                    placeholder="Enter Category Title"
-                                                    id="category"
-                                                    value={updatetitle.message}
-                                                    onChange={(e) =>
-                                                        updateServiceTitle('message', e.target.value)
-                                                    }
-                                                    required
-                                                />
-                                            </div> 
+                                            <label htmlFor="category">Subject</label>
+                                            <input
+                                                className="form-control mb-2"
+                                                type="text"
+                                                placeholder="Enter Category Title"
+                                                id="category"
+                                                value={updatetitle.subject}
+                                                onChange={(e) =>
+                                                    updateServiceTitle('subject', e.target.value)
+                                                }
+                                                required
+                                            />
+                                        </div>
+                                        <div className="col-md-12">
+                                            <label htmlFor="category">Message</label>
+                                            <input
+                                                className="form-control mb-2"
+                                                type="text"
+                                                placeholder="Enter Category Title"
+                                                id="category"
+                                                value={updatetitle.message}
+                                                onChange={(e) =>
+                                                    updateServiceTitle('message', e.target.value)
+                                                }
+                                                required
+                                            />
+                                        </div>
 
 
 
@@ -558,7 +565,7 @@ const Message = () => {
                                     <button
                                         type="button"
                                         className="btn btn-primary"
-                                        onClick={Updatebroadcastmessage}
+                                        onClick={updateBroadcastMessage}
                                     // disabled={!updatetitle.title || !updatetitle.service}
                                     >
                                         Update Service

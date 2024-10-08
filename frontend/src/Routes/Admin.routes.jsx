@@ -52,6 +52,8 @@ import Changepass from '../Auth/Changepass';
 
 import Help from '../layout/Admin/Help_center/Help';
 import Closesignal from '../layout/Admin/Admin_signal/Closesignal';
+import PaymentRequest from '../layout/Admin/PaymentRequest/PaymentRequest';
+import FreetrialStatus from '../layout/Admin/Freetrialstatus/FreetrialStatus';
 
 
 
@@ -179,8 +181,10 @@ function MainApp() {
                     {/* <Route path="/changepass" element={<Changepass />} /> */}
                     <Route path="/help" element={<Help />} />
                     <Route path="/closesignal" element={<Closesignal/>} />
+                    <Route path="/paymentrequest" element={<PaymentRequest/>} />
+                    <Route path="/freetrialstatus" element={<FreetrialStatus/>} />
                     
-
+                    
                     
                     
                     
