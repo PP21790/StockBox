@@ -183,7 +183,7 @@ const Profile = () => {
                             </div>
                             <div className="col-lg-8">
                                 <div className="card">
-                                    <div className="card-body mt-5">
+                                    <div className="card-body mt-1">
 
                                         {data && data.map((item, index) => (
                                             <div key={index}>

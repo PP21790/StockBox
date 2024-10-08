@@ -42,7 +42,7 @@ const Addcoupon = () => {
         if (!values.mincouponvalue) {
             errors.mincouponvalue = "Please enter Min Coupon value";
         }
-       
+
 
         return errors;
     };
@@ -147,7 +147,7 @@ const Addcoupon = () => {
             col_size: 6,
             disable: false,
         },
-        
+
         {
             name: "minpurchasevalue",
             label: "Min Purchase Value",
@@ -198,7 +198,7 @@ const Addcoupon = () => {
             col_size: 6,
             disable: false,
         },
-        
+
     ];
 
     return (

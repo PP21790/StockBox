@@ -3,7 +3,7 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetStaff } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { Pencil, Trash2, UserPen } from 'lucide-react';
+import { Pencil, Trash2, UserCog } from 'lucide-react';
 import { deleteStaff, updateStaffstatus } from '../../../Services/Admin';
 import Swal from 'sweetalert2';
 import { Tooltip } from 'antd';
@@ -220,7 +220,7 @@ const Staff = () => {
                 <>
                     <div>
                         <Tooltip placement="top" overlay="Permision">
-                            <UserPen onClick={() => updatepermission(row)} />
+                            <UserCog onClick={() => updatepermission(row)} />
                         </Tooltip>
                     </div>
 

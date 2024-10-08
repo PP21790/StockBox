@@ -5212,6 +5212,24 @@ label {
 	cursor: pointer
 }
 
+.lucide-user-cog {
+	margin-right: 10px;
+	margin-left: 10px;
+}
+
+.lucide-user-cog:hover {
+
+	background: #000;
+	border-radius: 70%;
+	color: #FFF;
+	font-size: 5px;
+	text-align: center;
+	line-height: 100px;
+	font-family: sans-serif;
+	text-transform: uppercase;
+	animation: animate-pulse 3s linear infinite;
+	cursor: pointer
+}
 .lucide-square-pen:hover {
 
 	background: #000;
