@@ -129,7 +129,7 @@ const Help = () => {
                                 <div className="col">&nbsp;</div>
                             </div>
                             <h5 className="m-2">
-                                <span className="badge rounded-pill bg-light border">&nbsp;</span>
+                                <span className="badge rounded-pill bg-primary border">&nbsp;</span>
                             </h5>
                             <div className="row h-50">
                                 <div className="col border-end">&nbsp;</div>
@@ -172,11 +172,6 @@ const Help = () => {
 
 
                                         </div>
-
-
-
-
-
 
 
 
@@ -244,7 +239,7 @@ const Help = () => {
                                 <div className="col">&nbsp;</div>
                             </div>
                             <h5 className="m-2">
-                                <span className="badge rounded-pill bg-light border">&nbsp;</span>
+                                <span className="badge rounded-pill bg-primary border">&nbsp;</span>
                             </h5>
                             <div className="row h-50">
                                 <div className="col border-end">&nbsp;</div>
@@ -255,7 +250,6 @@ const Help = () => {
                             <div className="card radius-15">
                                 <div className="card-body">
                                     <div className='p-0 border radius-15'>
-
                                         <div className="row">
                                             <div className="card-body col-md-6">
                                                 <ul className="list-group list-group-flush">
@@ -279,21 +273,9 @@ const Help = () => {
                                                         <h6 className="mb-0">Description</h6>
                                                         <span className="text-secondary">Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni iste itaque quidem consequatur. Voluptatem unde, animi reiciendis officia corporis error.</span>
                                                     </li>
-
-
                                                 </ul>
                                             </div>
-
-
                                         </div>
-
-
-
-
-
-
-
-
                                     </div>
                                 </div>
                             </div>
@@ -340,7 +322,7 @@ const Help = () => {
                                 <div className="col">&nbsp;</div>
                             </div>
                             <h5 className="m-2">
-                                <span className="badge rounded-pill bg-light border">&nbsp;</span>
+                                <span className="badge rounded-pill bg-primary border">&nbsp;</span>
                             </h5>
                             <div className="row h-50">
                                 <div className="col">&nbsp;</div>
