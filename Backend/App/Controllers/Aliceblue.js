@@ -7,6 +7,8 @@ const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const Clients_Modal = db.Clients;
 const Signal_Modal = db.Signal;
+const Stock_Modal = db.Stock;
+const Order_Modal = db.Order;
 
 class Aliceblue {
 
@@ -83,7 +85,7 @@ class Aliceblue {
     async placeOrder(req, res) {
         
         try {
-            const { id, signalid } = req.body;
+            const { id, signalid, quantity, price } = req.body;
     
             const client = await Clients_Modal.findById(id);
             if (!client) {
@@ -92,6 +94,16 @@ class Aliceblue {
                     message: "Client not found"
                 });
             }
+
+
+            if(client.tradingstatus == 0)
+            {
+                return res.status(404).json({
+                    status: false,
+                    message: "Client Broker Not Login, Please Login With Broker"
+                });
+            }
+            
     
             const signal = await Signal_Modal.findById(signalid);
             if (!signal) {
@@ -100,24 +112,78 @@ class Aliceblue {
                     message: "Signal not found"
                 });
             }
-   
+
+    
+    
              const authToken = client.authtoken;
              const userId = client.alice_userid;
+
+
+             let optiontype, exchange, producttype;
+
+             if (signal.segment === "C") {
+                 optiontype = "EQ";
+                 exchange = "NSE";
+             } else {
+                 optiontype = signal.segment === "F" ? "UT" : signal.optiontype;
+                 exchange = "NFO";
+             }
+             
+             // Determine product type based on segment and call duration
+             if (signal.callduration === "Intraday") {
+                 producttype = "MIS";
+             } else {
+                 producttype = signal.segment === "C" ? "CNC" : "NRML";
+             }
+             
+             // Query Stock_Modal based on segment type
+             let stock;
+             if (signal.segment === "C") {
+                 stock = await Stock_Modal.findOne({ 
+                     symbol: signal.stock, 
+                     segment: signal.segment, 
+                     option_type: optiontype 
+                 });
+             } else if (signal.segment === "F") {
+                 stock = await Stock_Modal.findOne({ 
+                     symbol: signal.stock, 
+                     segment: signal.segment, 
+                     expiry: signal.expirydate, 
+                     option_type: optiontype 
+                 });
+             } else {
+                 stock = await Stock_Modal.findOne({ 
+                     symbol: signal.stock, 
+                     segment: signal.segment, 
+                     expiry: signal.expirydate, 
+                     option_type: optiontype, 
+                     strike: signal.strikeprice 
+                 });
+             }
+
+
+             if (!stock) {
+                return res.status(404).json({
+                    status: false,
+                    message: "Stock not found"
+                });
+            }
+
 
            
                 var data = JSON.stringify([
                     {
                       "complexty": "regular",
                       "discqty": "0",
-                      "exch": "NSE",
-                      "pCode": "MIS",
-                      "prctyp": "L",
-                      "price": "3550.00",
-                      "qty": 1,
+                      "exch": exchange,
+                      "pCode": producttype,
+                      "prctyp": "MKT",
+                      "price": price,
+                      "qty": quantity,
                       "ret": "DAY",
-                      "symbol_id": "212",
-                      "trading_symbol": "ASHOKLEY-EQ",
-                      "transtype": "BUY",
+                      "symbol_id": stock.instrument_token,
+                      "trading_symbol": stock.tradesymbol,
+                      "transtype": signal.calltype,
                       "trigPrice": "00.00",
                       "orderTag": "order1"
                     }
@@ -125,6 +191,20 @@ class Aliceblue {
 
 
                  
+
+
+                //   var data_possition = {
+                //     "ret": "DAY"
+                //     }
+                // var config = {
+                //     method: 'post',
+                //     url: 'https://ant.aliceblueonline.com/rest/AliceBlueAPIService/api/positionAndHoldings/positionBook',
+                //     headers: {
+                //         'Authorization': 'Bearer ' + userId + ' ' + authToken,
+                //         'Content-Type': 'application/json'
+                //     },
+                //     data: JSON.stringify(data_possition)
+                // };
 
     
                 //   let config = {
@@ -141,28 +221,53 @@ class Aliceblue {
 
     
 
-                // let config = {
-                //     method: 'post',
-                //     maxBodyLength: Infinity,
-                //     url: 'https://ant.aliceblueonline.com/rest/AliceBlueAPIService/api/placeOrder/executePlaceOrder',
-                //     headers: {
-                //         'Authorization': 'Bearer ' + userId + ' ' + authToken,
+                let config = {
+                    method: 'post',
+                    maxBodyLength: Infinity,
+                    url: 'https://ant.aliceblueonline.com/rest/AliceBlueAPIService/api/placeOrder/executePlaceOrder',
+                    headers: {
+                        'Authorization': 'Bearer ' + userId + ' ' + authToken,
             
-                //         'Content-Type': 'application/json',
-                //     },
-                //     data: data
+                        'Content-Type': 'application/json',
+                    },
+                    data: data
             
-                // };
+                };
 
 
     
             const response = await axios(config);
-            console.log(JSON.stringify(response.data)); // Log the response data
+            const responseData = response.data;
     
-            return res.json({
-                status: true,
-                data: response.data // Include response data
-            });
+
+            if (responseData[0].stat == 'Ok') {
+
+                const order = new Order_Modal({
+                    clientid: client._id,
+                    signalid:signal._id,
+                    orderid:responseData[0].NOrdNo,
+                    borkerid:2,
+                });
+
+
+               await order.save();
+                
+                return res.json({
+                    status: true,
+                    data: response.data // Include response data
+                });
+            }
+            else{
+                // let url;
+                // if(response.data.message=="Invalid Token") {
+                //     url =  `https://ant.aliceblueonline.com/?appcode=${apikey}`; 
+                // }
+                   return res.status(500).json({ 
+                    status: false, 
+                  //  url: url, 
+                    message: response.data 
+                });
+            }
     
         } catch (error) {
             console.error("Error placing order:", error); // Log the error

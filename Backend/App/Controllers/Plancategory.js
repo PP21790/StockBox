@@ -58,8 +58,7 @@ class Plancategory {
   async getPlancategory(req, res) {
     try {
 
-     
-     
+    
       const { } = req.body;
 
     //  const result = await Plancategory_Modal.find()
@@ -73,7 +72,13 @@ class Plancategory {
             $map: {
               input: { $split: ['$service', ','] },
               as: 'serviceId',
-              in: { $toObjectId: '$$serviceId' } // Convert strings to ObjectId
+              in: {
+                $cond: {
+                  if: { $eq: [ { $strLenCP: '$$serviceId' }, 24 ] }, // Check if the length is 24 characters
+                  then: { $toObjectId: '$$serviceId' }, // Convert to ObjectId if valid
+                  else: null // Return null for invalid ObjectIds
+                }
+              }
             }
           }
         }
@@ -81,7 +86,7 @@ class Plancategory {
       {
         $lookup: {
           from: 'services', // The collection that holds the service details
-          localField: 'serviceIds', // The split and converted service IDs
+          localField: 'serviceIds', // The split and filtered service IDs
           foreignField: '_id', // The field in the services collection containing the IDs
           as: 'servicesDetails'
         }
@@ -95,13 +100,12 @@ class Plancategory {
           created_at: 1,
           updated_at: 1,
           servicesDetails: {
+            _id: 1,
             title: 1 // Only show the service titles
           }
         }
       }
     ]);
-    
-
 
       return res.json({
         status: true,
@@ -110,6 +114,7 @@ class Plancategory {
       });
 
     } catch (error) {
+      console.log("error",error)
       return res.json({ status: false, message: "Server error", data: [] });
     }
   }

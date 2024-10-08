@@ -9,29 +9,45 @@ import { DeleteCoupon, UpdateClientStatus } from '../../../Services/Admin';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
 
+
+
+
 const Coupon = () => {
 
 
     const navigate = useNavigate();
 
     const [clients, setClients] = useState([]);
-
+    const [searchInput, setSearchInput] = useState("");
+   
     const token = localStorage.getItem('token');
 
+
+    
     const getcoupon = async () => {
         try {
             const response = await getcouponlist(token);
             if (response.status) {
-                setClients(response.data);
+                const filterdata = response.data.filter((item) =>
+                    searchInput === "" ||
+                    item.name.toLowerCase().includes(searchInput.toLowerCase())||
+                    item.code.toLowerCase().includes(searchInput.toLowerCase()) ||
+                    item.description.toLowerCase().includes(searchInput.toLowerCase()) 
+                );
+                setClients(searchInput ? filterdata : response.data);
+                // setClients(response.data);
             }
         } catch (error) {
             console.log("error");
         }
     }
 
+
+
+
     useEffect(() => {
         getcoupon();
-    }, []);
+    }, [searchInput]);
 
 
 
@@ -83,6 +99,8 @@ const Coupon = () => {
 
         }
     };
+
+
 
 
 
@@ -242,7 +260,6 @@ const Coupon = () => {
         <div>
             <div>
                 <div className="page-content">
-                    {/* breadcrumb */}
                     <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
                         <div className="breadcrumb-title pe-3">Coupon</div>
                         <div className="ps-3">
@@ -258,16 +275,17 @@ const Coupon = () => {
                         </div>
                     </div>
                     <hr />
-                    {/* end breadcrumb */}
                     <div className="card">
                         <div className="card-body">
                             <div className="d-lg-flex align-items-center mb-4 gap-3">
                                 <div className="position-relative">
-                                    <input
-                                        type="text"
-                                        className="form-control ps-5 radius-10"
-                                        placeholder="Search Order"
-                                    />
+                                <input
+                                    type="text"
+                                    className="form-control ps-5 radius-10"
+                                    placeholder="Search Order"
+                                    onChange={(e) => setSearchInput(e.target.value)}
+                                    value={searchInput}
+                                />
                                     <span className="position-absolute top-50 product-show translate-middle-y">
                                         <i className="bx bx-search" />
                                     </span>

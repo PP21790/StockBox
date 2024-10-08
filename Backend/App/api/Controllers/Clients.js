@@ -12,6 +12,7 @@ const FormData = require('form-data');
 const Mailtemplate_Modal = db.Mailtemplate;
 const Refer_Modal = db.Refer;
 const Payout_Modal = db.Payout;
+const Helpdesk_Modal = db.Helpdesk;
 
 class Clients {
 
@@ -768,97 +769,84 @@ async  clientKycAndAgreement(req, res) {
 
     const refid = Math.floor(10000 + Math.random() * 90000); // Generate a random reference ID
 
-    const client = await Clients_Modal.findOne({
-      _id: id
-    });
-
+    const client = await Clients_Modal.findOne({ _id: id });
 
     if (!client) {
-      return res.status(400).json({
-        status: false,
-        message: "Something went wrong",
-      });
+        return res.status(400).json({
+            status: false,
+            message: "Client not found",
+        });
     }
-    const settings = await BasicSetting_Modal.findOne();
 
+    const settings = await BasicSetting_Modal.findOne();
     if (!settings || !settings.digio_client_id || !settings.digio_client_secret) {
-      throw new Error('Digio settings are not configured or are disabled');
-    }   
+        return res.status(500).json({ error: 'Digio settings are not configured or are disabled' });
+    }
 
     const company_name = settings.website_title;
     const company_address = settings.address;
 
     const now = new Date();
-    
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-based
     const day = String(now.getDate()).padStart(2, '0');
-    
     const hours = String(now.getHours() % 12 || 12).padStart(2, '0'); // 12-hour format
     const minutes = String(now.getMinutes()).padStart(2, '0');
     const seconds = String(now.getSeconds()).padStart(2, '0');
-    
     const ampm = now.getHours() >= 12 ? 'pm' : 'am';
+    const datetime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}${ampm}`;
+
+    // PDF generation section
+    const templatePath = path.join(__dirname, '../../../template', 'kyc-agreement-template.html');
+    let htmlContent = fs.readFileSync(templatePath, 'utf8');
+
+    // Replace placeholders with actual values
+    htmlContent = htmlContent
+        .replace(/{{name}}/g, name)
+        .replace(/{{email}}/g, email)
+        .replace(/{{phone}}/g, phone)
+        .replace(/{{panno}}/g, panno)
+        .replace(/{{datetime}}/g, datetime)
+        .replace(/{{company_name}}/g, company_name)
+        .replace(/{{company_address}}/g, company_address)
+        .replace(/{{aadhaarno}}/g, aadhaarno);
+
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.setContent(htmlContent);
+
+    // Define the path to save the PDF
+    const pdfDir = path.join(__dirname, '../../../../stockboxpnp.pnpuniverse.com/uploads', 'pdf');
+    const pdfPath = path.join(pdfDir, `kyc-agreement-${phone}.pdf`);
     
-    const datetime =  `${year}-${month}-${day} ${hours}:${minutes}:${seconds}${ampm}`;
-
-
-      // PDF generation section
-      const templatePath = path.join(__dirname, '../../../template', 'kyc-agreement-template.html');
-      let htmlContent = fs.readFileSync(templatePath, 'utf8');
-  
-      // Replace placeholders with actual values
-      htmlContent = htmlContent
-      .replace(/{{name}}/g, name)
-      .replace(/{{email}}/g, email)
-      .replace(/{{phone}}/g, phone)
-      .replace(/{{panno}}/g, panno)
-      .replace(/{{datetime}}/g, datetime)
-      .replace(/{{company_name}}/g, company_name)
-      .replace(/{{company_address}}/g, company_address)
-      .replace(/{{aadhaarno}}/g, aadhaarno);
-
-      const browser = await puppeteer.launch();
-      const page = await browser.newPage();
-      await page.setContent(htmlContent);
-      
-      // Define the path to save the PDF
-      const pdfDir = path.join(__dirname, '../../../../stockboxpnp.pnpuniverse.com/uploads', 'pdf'); // Adjust this as needed
-      const pdfPath = path.join(pdfDir, `kyc-agreement-${phone}.pdf`);
-      // Generate PDF and save to the specified path
-      await page.pdf({
+    // Generate PDF and save to the specified path
+    await page.pdf({
         path: pdfPath,
         format: 'A4',
         printBackground: true,
         margin: {
-          top: '20mm',
-          right: '10mm',
-          bottom: '50mm', // Adjust to create space for the footer
-          left: '10mm',
-      },
-      });
+            top: '20mm',
+            right: '10mm',
+            bottom: '50mm',
+            left: '10mm',
+        },
+    });
 
-      await browser.close();
+    await browser.close();
 
-    
-
+    // Update client with new information
     client.panno = panno;
     client.aadhaarno = aadhaarno;
-    client.pdf = `kyc-agreement-${phone}.pdf`;  
-   await client.save();
+    client.pdf = `kyc-agreement-${phone}.pdf`;
+    await client.save();
 
+    // Aadhaar verification API token
+    const digio_client_id = settings.digio_client_id;
+    const digio_client_secret = settings.digio_client_secret;
+    const digio_template_name = settings.digio_template_name;
+    const authToken = Buffer.from(`${digio_client_id}:${digio_client_secret}`).toString('base64');
 
-    
-
-  // Aadhaar verification API token
-  const digio_client_id = settings.digio_client_id;
-  const digio_client_secret = settings.digio_client_secret;
-  const digio_template_name = settings.digio_template_name;
-
-  const authToken = Buffer.from(`${digio_client_id}:${digio_client_secret}`).toString('base64');
-  
-
-    const payload = {
+    const payload = JSON.stringify({   
         customer_identifier: email,
         customer_name: name,
         reference_id: refid,
@@ -867,27 +855,24 @@ async  clientKycAndAgreement(req, res) {
         request_details: {},
         transaction_id: refid,
         generate_access_token: true
-    };
-
-
-
+    });
 
     // Make the POST request to Digio API using Axios
- 
     const response = await axios.post(
         'https://api.digio.in/client/kyc/v2/request/with_template',
         payload,
         {
             headers: {
-              'Authorization': `Basic ${authToken}`,
-              'Content-Type': 'application/json'
+                'Authorization': `Basic ${authToken}`,
+                'Content-Type': 'application/json'
             },
-            timeout: 300000, // 300 seconds
+            timeout: 300000,
         }
     );
 
 
-     const resData = response.data;
+
+    const resData = response.data;
 
     if (resData && resData.status === 'requested') {
         const kid = resData.id;
@@ -899,16 +884,16 @@ async  clientKycAndAgreement(req, res) {
             customer_identifier,
             gid
         };
-        res.json(data); 
-        
+        return res.json(data); // Ensure only one response is sent
     } else {
-        res.status(400).json({ error: 'Digio status is not "requested"' });
+        return res.status(400).json({ error: 'Digio status is not requested' });
     }
-         
+
 } catch (error) {
     console.error('Error in submitting KYC:', error.message);
-    res.status(500).json({ error: 'CURL request failed', details: error.message });
+    return res.status(500).json({ error: 'CURL request failed', details: error.message });
 }
+
 }
 
 async uploadDocument(req, res) {
@@ -1001,7 +986,7 @@ async uploadDocument(req, res) {
       const fullUrl = `${baseUrl}${doc_id}/${refid}/${email}?redirect_url=${redirectUrl}`;
 
       // Respond with the redirect URL or use it on the frontend
-      res.json({
+      return res.json({
           status: true,
           message: 'Document uploaded successfully',
           redirectUrl: fullUrl
@@ -1009,7 +994,7 @@ async uploadDocument(req, res) {
 
   } catch (error) {
       console.error('Error uploading document:', error.response ? error.response.data : error.message);
-      res.status(400).json({ error: 'Error uploading document to Digio' });
+      return res.status(400).json({ error: 'Error uploading document to Digio' });
   }
 }
 async downloadDocument(req, res) {
@@ -1306,6 +1291,73 @@ async deleteBrokerLink(req, res) {
     });
   }
 }
+
+
+async addHelpDesk(req, res) {
+
+  
+  try {
+    const { client_id, subject, message } = req.body;
+
+    if (!subject) {
+      return res.status(400).json({ status: false, message: "Please enter subject" });
+    }
+   
+    if (!message) {
+      return res.status(400).json({ status: false, message: "Please enter message" });
+    }
+
+
+    const client = await Clients_Modal.findOne({ _id: client_id, del: 0, ActiveStatus: 1 });
+
+    if (!client) {
+      return res.status(404).json({ status: false, message: 'Client not found or inactive.' });
+    }
+    
+    const result = new Helpdesk_Modal({
+      subject: subject,
+      message: message,
+      client_id: client_id,
+    })
+   
+    await result.save();    
+
+    return res.json({
+      status: true,
+      message: "Data add successfully.",
+    });
+
+  } catch (error) {
+    return res.json({
+      status: false,
+      message: "Server error",
+      data: [],
+    });
+  }
+}
+
+
+async helpdeskList(req, res) {
+  try {
+    const { id } = req.params; // Extract client_id from query parameters
+    console.log("Client ID:", id); // Log the client_id for debugging
+
+    // Step 1: Fetch helpdesk entries for the specified client_id
+    const result = await Helpdesk_Modal.find({ client_id: id });
+
+    // Step 2: Return the fetched helpdesk data
+    return res.json({
+      status: true,
+      message: "Data retrieved successfully",
+      data: result
+    });
+
+  } catch (error) {
+    console.error("Error fetching helpdesk:", error); // Log the error for debugging
+    return res.json({ status: false, message: "Server error", data: [] });
+  }
+}
+
 
 
 }

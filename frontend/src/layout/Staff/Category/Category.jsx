@@ -150,7 +150,7 @@ const Category = () => {
 
             const data = { title: title.title, add_by: userid, service: title.service };
 
-            console.log("data", data)
+           
             const response = await Addplancategory(data, token);
             if (response && response.status) {
                 Swal.fire({

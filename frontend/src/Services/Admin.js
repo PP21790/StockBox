@@ -1631,15 +1631,12 @@ export async function UpdateEmailSettings(data, token) {
 
 // api information 
 
-
 export async function updateApiinfo(data, token) {
     const formData = new FormData();
-
+  
     formData.append('digio_client_id', data.digio_client_id);
     formData.append('digio_client_secret', data.digio_client_secret);
-    // formData.append('razorpay_key', data.razorpay_key);
-    // formData.append('razorpay_secret', data.razorpay_secret);
-
+    formData.append('digio_template_name', data.digio_template_name);
     try {
         const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
             headers: {
@@ -1811,13 +1808,165 @@ export async function getDashboarddetail(token) {
 }
 
 
-// get strike price
 
+// get strike price
 // get stock expiry date
 
 export async function getstockStrickprice(data, token) {
     try {
         const res = await axios.post(`${Config.base_url}stock/getstocksbyexpirybystrike`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// get plan payment history 
+
+
+
+export async function getPayementhistory(token) {
+    try {
+        const res = await axios.get(`${Config.base_url}plan/paymenthistory`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}
+
+// get freelist client 
+
+export async function FreeClientList(token) {
+    try {
+        const res = await axios.get(`${Config.base_url}client/freetriallist`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}
+
+
+// delete free client 
+
+export async function DeleteFreeClient(_id, token) {
+    try {
+        const res = await axios.get(`${Config.base_url}client/freetrialdelete/${_id}`, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+
+//add broadcast messsage 
+
+export async function SendBroadCast(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}broadcast/add`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+// get broadcast message 
+
+export async function getBroadCastmessage(token) {
+    try {
+        const res = await axios.get(`${Config.base_url}broadcast/list`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}
+
+
+// change broacast status 
+
+export async function ChangeBroadCastStatus(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}broadcast/change-status`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// delete broadcastmessage 
+export async function DeleteBroadCastmessage(_id, token) {
+    try {
+        const res = await axios.get(`${Config.base_url}broadcast/delete/${_id}`, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// update broadcast message 
+
+// update plan 
+
+export async function UpdateCastmessage(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}broadcast/update`, data, {
             headers: {
                 data: {},
                 'Authorization': `${token}`,

@@ -35,6 +35,10 @@ const Mailtemplate_Modal = db.Mailtemplate;
 const Refer_Modal = db.Refer;
 const Planmanage = db.Planmanage;
 const Payout_Modal = db.Payout;
+const Order_Modal = db.Order;
+const Freetrial_Modal = db.Freetrial;
+const Helpdesk_Modal = db.Helpdesk;
+const Broadcast_Modal = db.Broadcast;
 
 
 

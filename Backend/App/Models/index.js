@@ -25,6 +25,12 @@ module.exports = {
     Mailtemplate: require("./Mailtemplate"),
     Planmanage: require("./Planmanage"),
     Payout: require("./Payout"),
+    Order: require("./Order"),
+    Freetrial: require("./Freetrial"),
+    Helpdesk: require("./Helpdesk"),
+    Broadcast: require("./Broadcast"),
+
+
 
 
 

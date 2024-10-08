@@ -7,7 +7,7 @@ const { sendEmail } = require('../Utils/emailService');
 const Mailtemplate_Modal = db.Mailtemplate;
 const path = require('path');
 const fs = require('fs');
-
+const nodemailer = require('nodemailer');
 
 
 class Users {
@@ -736,9 +736,47 @@ class Users {
     }
   }
 
+   
 
+  async  sendMessage(req, res) {
+    try {
+      const { to, subject, text } = req.body;
+  
+      const transporter = nodemailer.createTransport({
+        host: 'mail.fincapex.com',
+        port: 465,
+        secure: true,
+        auth: {
+          user: 'info@fincapex.com',
+          pass: 'Fincapexw12',
+        },
+        logger: true,   // Enable logging
+        debug: true,    // Enable debugging output
+      });
+  
+      
+      const mailOptions = {
+        from: "shakirpnp@gmail.com", 
+        to ,                        
+        subject                  
+                          
+      };
+  
+      
+      const info = await transporter.sendMail(mailOptions);
+  
+      
+      return res.send({ success: true, message: 'Email sent successfully', info });
+      
+    } catch (error) {
+      console.error('Error sending email:', error);
+      return res.status(500).send({ success: false, message: 'Error sending email', error: error.message });
+    }
+  }  
+
+  
+  
 }
-
 
 
 module.exports = new Users();

@@ -139,8 +139,8 @@ const AddUser = () => {
       <DynamicForm
         fields={fields}
         formik={formik}
-        page_title="Add New User"
-        btn_name="Add User"
+        page_title="Add New Client"
+        btn_name="Add Client"
         btn_name1="Cancel"
         sumit_btn={true}
         btn_name1_route={"/admin/client"}

@@ -17,6 +17,8 @@ const BasketSubscription_Modal = db.BasketSubscription;
 const Planmanage = db.Planmanage;
 const Refer_Modal = db.Refer;
 const Clients_Modal = db.Clients;
+const Freetrial_Modal = db.Freetrial;
+const Broadcast_Modal = db.Broadcast;
 
 
 mongoose  = require('mongoose');
@@ -568,9 +570,7 @@ async  myPlan(req, res) {
     $unwind: '$planDetails' // Optional: Unwind the result if you expect only one matching plan per subscription
   }
 ]);
-    console.log(result);
-  
-   
+
 
     // Respond with the retrieved subscriptions
     return res.json({
@@ -719,12 +719,26 @@ async showSignalsToClients(req, res) {
         }
     };
 
-    const signals = await Signal_Modal.find(query);
+   // const signals = await Signal_Modal.find(query);
+
+   const protocol = req.protocol; // Will be 'http' or 'https'
+
+   const baseUrl = `${protocol}://${req.headers.host}`; // Construct the base URL
+
+   const signals = await Signal_Modal.find(query).lean(); // Use lean() to return plain JavaScript objects
+
+// Add full URL for the report in each signal result
+const signalsWithReportUrls = signals.map(signal => {
+    return {
+        ...signal, // Spread the original signal document
+        report_full_path: signal.report ? `${baseUrl}/uploads/report/${signal.report}` : null // Append full report URL
+    };
+});
 
       return res.json({
           status: true,
           message: "Signals retrieved successfully",
-          data: signals
+          data: signalsWithReportUrls
       });
 
   } catch (error) {
@@ -1058,6 +1072,144 @@ async pastPerformance(req, res) {
     });
   }
 }
+
+
+async addFreeTrail(req, res) {
+  try {
+    const { client_id } = req.body;
+    // Validate input
+
+
+
+    if (!client_id) {
+      return res.status(400).json({ status: false, message: 'Missing required fields' });
+    }
+   const client = await Clients_Modal.findOne({ _id: client_id, del: 0, ActiveStatus: 1 });
+
+      if (!client) {
+          return console.error('Client not found or inactive.');
+      }
+
+    
+    const settings = await BasicSetting_Modal.findOne();
+    if (!settings || !settings.freetrial) {
+      throw new Error('SMTP settings are not configured or are disabled');
+    }
+
+
+
+    const start = new Date();
+    const end = new Date(start);
+    end.setDate(start.getDate() + settings.freetrial);  // Add 7 days to the start date
+    end.setHours(23, 59, 59, 999); 
+
+
+
+    const existingPlan = await Planmanage.findOne({ clientid: client_id }).exec();
+
+      if (existingPlan) {
+        return res.status(500).json({ status: false, message: 'Sorry, you are not eligible for a free trial', data: [] });
+      } else {
+
+        const service = await Service_Modal.find({ del: false });
+        // Create an array to hold promises for saving the plans
+    const savePromises = service.map(async (svc) => {
+      // Create a new plan management record
+      const newPlanManage = new Planmanage({
+          clientid: client_id,
+          serviceid: svc._id,
+          startdate: start,
+          enddate: end,
+      });
+
+      // Save the new plan management record to the database
+      return newPlanManage.save(); // Return the promise from save
+  });
+
+       // Create a new plan subscription record
+
+      }
+      
+      const newSubscription = new Freetrial_Modal({
+        clientid:client_id,
+        startdate: start,
+        enddate: end,
+      });
+
+      const savedSubscription = await newSubscription.save();
+    // Save the subscription
+              client.freetrial = 1; 
+              await client.save();
+      
+    return res.status(201).json({
+      status: true,
+      message: 'Free trail Actived successfully',
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ status: false, message: 'Server error', data: [] });
+  }
+}
+
+
+async  BroadcastList(req, res) {
+  try {
+    const { id } = req.body; // Extract id from request body
+    const currentDate = new Date();
+
+    // Step 1: Find services from Planmanage for the client
+    const plans = await Planmanage.find({
+      clientid: id,
+      startdate: { $lte: currentDate },
+      enddate: { $gte: currentDate }
+    }, 'serviceid'); // Only fetch the 'serviceid' field
+
+    if (!plans.length) {
+      return res.status(404).json({ status: false, message: "No plans found for this client." });
+    }
+
+    // Extract service IDs from plans
+    const serviceIds = plans.map(plan => plan.serviceid); // Use serviceid
+
+    if (!serviceIds.length) {
+      return res.status(404).json({ status: false, message: "No services associated with the client's plans." });
+    }    
+
+    // Create a regex pattern to match any of the service IDs
+    const regexPattern = serviceIds.join('|'); // Join IDs with '|'
+
+    // Step 2: Find broadcasts matching any of the service IDs
+    const query = {
+      del: false,
+      status: true,
+      service: { $regex: new RegExp(regexPattern, 'i') } // Case-insensitive regex match
+    };
+
+    // Execute the query to find matching broadcasts
+    const broadcasts = await Broadcast_Modal.find(query);
+
+    // Remove duplicates from the broadcasts array
+    const uniqueBroadcasts = Array.from(new Set(broadcasts.map(b => b._id))).map(id => {
+      return broadcasts.find(b => b._id === id);
+    });
+
+    console.log("Unique Broadcasts found:", uniqueBroadcasts); // Log unique matching broadcasts
+
+    if (!uniqueBroadcasts.length) {
+      return res.status(404).json({ status: false, message: "No matching broadcasts found." });
+    }
+
+    // Return the matching broadcasts
+    return res.status(200).json({ status: true, data: uniqueBroadcasts });
+  
+  } catch (error) {
+    console.error("Error fetching broadcasts:", error);
+    return res.status(500).json({ status: false, message: "Internal server error" });
+  }
+}
+
+
 
 
 }

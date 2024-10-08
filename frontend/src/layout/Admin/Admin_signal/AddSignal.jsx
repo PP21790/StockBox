@@ -5,23 +5,35 @@ import { AddSignalByAdmin, GetService, getstockbyservice, getexpirydate, getstoc
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 
+
+
+
 const AddSignal = () => {
+
+
   const navigate = useNavigate();
   const user_id = localStorage.getItem('id');
   const token = localStorage.getItem('token');
+
+
+
 
   const [serviceList, setServiceList] = useState([]);
   const [stockList, setStockList] = useState([]);
   const [expirydate, setExpirydate] = useState([]);
   const [strikePrice, setStrikePrice] = useState([]);
-
   const [searchItem, setSearchItem] = useState("");
   const [selectitem, setSelectitem] = useState("");
   const [showDropdown, setShowDropdown] = useState(true);
 
+
+
   useEffect(() => {
     fetchAdminServices();
   }, []);
+
+
+
 
   const fetchAdminServices = async () => {
     try {
@@ -36,6 +48,7 @@ const AddSignal = () => {
 
 
 
+  
 
   const formik = useFormik({
     initialValues: {
@@ -52,8 +65,8 @@ const AddSignal = () => {
       callduration: '',
       calltype: '',
       expiry: '',
-      optiontype: '',
-      strikeprice: '',
+      optiontype:'',
+      strikeprice:'',
 
     },
     validate: (values) => {
@@ -63,8 +76,8 @@ const AddSignal = () => {
       if (!values.segment) errors.segment = 'Please select a segment';
       if (!values.stock) errors.stock = 'Please select a stock';
       if (!values.price) errors.price = 'Please select a price';
-
-      if (values.calltype === "buy") {
+       
+       if(values.calltype === "BUY"){
 
         if (!values.tag1) errors.tag1 = 'Please enter Traget1';
         else if (values.price && values.tag1 && values.price >= values.tag1) {
@@ -77,7 +90,13 @@ const AddSignal = () => {
 
         if (values.tag3 && values.tag2 && values.tag2 >= values.tag3) {
           errors.tag3 = "Please Enter greater Target2"
-        }
+       }
+       
+       if(values.price && values.price <= values.stoploss ){
+        errors.stoploss = "Please Enter Less Than Entry Price"
+     }
+    
+       }else if(values.calltype === "SELL"){
 
         if (values.price && values.price <= values.stoploss) {
           errors.stoploss = "Please Enter Less Than Entry Price"
@@ -388,6 +407,8 @@ const AddSignal = () => {
     },
   ];
 
+
+
   const dropdownStyles = {
     position: 'absolute',
     top: '100%',
@@ -400,6 +421,7 @@ const AddSignal = () => {
     overflowY: 'auto',
     zIndex: 1000,
   };
+
 
   const dropdownItemStyles = {
     padding: '8px 16px',

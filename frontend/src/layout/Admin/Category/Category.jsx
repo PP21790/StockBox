@@ -16,11 +16,15 @@ const Category = () => {
     const [servicedata, setServicedata] = useState([]);
     const [searchInput, setSearchInput] = useState("");
     const [selectedServices, setSelectedServices] = useState([]);
+
+    
     const [updatetitle, setUpdatetitle] = useState({
         title: "",
         id: "",
         service: ""
     });
+
+
 
 
     const [title, setTitle] = useState({
@@ -80,8 +84,8 @@ const Category = () => {
         try {
 
             const data = { title: updatetitle.title, id: serviceid._id, service: updatetitle.service };
-            const response = await UpdateCategoryplan(data, token);
 
+            const response = await UpdateCategoryplan(data, token);
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
@@ -320,7 +324,11 @@ const Category = () => {
                                 onClick={() => {
                                     setModel(true);
                                     setServiceid(row);
-                                    setUpdatetitle({ title: row.title, id: row._id, service: row.service });
+                                    setUpdatetitle({
+                                        title: row.title, id: row._id, service: row.servicesDetails.map((item) => {
+                                            return item.title, item._id
+                                        })
+                                    });
                                 }}
                             />
                         </Tooltip>
@@ -346,6 +354,22 @@ const Category = () => {
             [key]: value
         }));
     };
+
+    const handleServiceChange = (serviceId, isChecked) => {
+        if (isChecked) {
+            setUpdatetitle({
+                ...updatetitle,
+                service: [...updatetitle.service, serviceId],
+            });
+        } else {
+            setUpdatetitle({
+                ...updatetitle,
+                service: updatetitle.service.filter((id) => id !== serviceId),
+            });
+        }
+    };
+
+
 
 
 
@@ -442,7 +466,7 @@ const Category = () => {
                                                                 id="categoryTitle"
                                                                 className="form-control mb-3"
                                                                 type="text"
-                                                                placeholder="Enter Service Title"
+                                                                placeholder="Enter Category Title"
                                                                 value={title.title}
                                                                 onChange={(e) => setTitle({ ...title, title: e.target.value })}
                                                             />
@@ -516,7 +540,7 @@ const Category = () => {
 
 
 
-                                                            <div className="row">
+                                                            {/* <div className="row">
                                                                 <div className="col-md-12">
                                                                     <label htmlFor="service">Service</label>
                                                                     {servicedata.length > 0 && (
@@ -534,7 +558,35 @@ const Category = () => {
                                                                         />
                                                                     )}
                                                                 </div>
+                                                            </div> */}
+
+                                                            <div className="row">
+                                                                <div className="col-md-12">
+                                                                    <label htmlFor="service">Service</label>
+                                                                    {servicedata.length > 0 && (
+                                                                        <div className="form-group">
+                                                                            {servicedata.map((item) => (
+                                                                                <div key={item._id} className="form-check">
+                                                                                    <input
+                                                                                        className="form-check-input"
+                                                                                        type="checkbox"
+                                                                                        id={`service_${item._id}`}
+                                                                                        value={item._id}
+                                                                                        checked={updatetitle.service.includes(item._id)}
+                                                                                        onChange={(e) => handleServiceChange(item._id, e.target.checked)}
+                                                                                    />
+                                                                                    <label className="form-check-label" htmlFor={`service_${item._id}`}>
+                                                                                        {item.title}
+                                                                                    </label>
+                                                                                </div>
+                                                                            ))}
+                                                                        </div>
+                                                                    )}
+                                                                </div>
                                                             </div>
+
+
+
 
 
 

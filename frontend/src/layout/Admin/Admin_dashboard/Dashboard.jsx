@@ -41,7 +41,7 @@ const Dashbord = () => {
 
 
 
-    console.log("data", data)
+
 
     useEffect(() => {
         getdetail()
@@ -387,7 +387,7 @@ const Dashbord = () => {
                         <div className="card radius-10 bg-gradient-deepblue">
                             <div className="card-body">
                                 <div className="d-flex align-items-center">
-                                    <h5 className="mb-0 text-white">{data.userCountActive && data.userCountActive}</h5>
+                                    <h5 className="mb-0 text-white">{data.OpensignalCountTotal && data.OpensignalCountTotal}</h5>
                                     <div className="ms-auto">
                                         <i className="bx bx-wifi-2 fs-3 text-white" />
                                     </div>
@@ -406,7 +406,7 @@ const Dashbord = () => {
                                     />
                                 </div>
                                 <div className="d-flex align-items-center text-white">
-                                    <p className="mb-0">Total Active Staff</p>
+                                    <p className="mb-0">Total Open Signal</p>
                                     <p className="mb-0 ms-auto">
 
                                         <span>
@@ -421,7 +421,7 @@ const Dashbord = () => {
                         <div className="card radius-10 bg-gradient-ohhappiness">
                             <div className="card-body">
                                 <div className="d-flex align-items-center">
-                                    <h5 className="mb-0 text-white">{data.userCountTotal - data.userCountActive}</h5>
+                                    <h5 className="mb-0 text-white">{data.CloseSignalCountTotal && data.CloseSignalCountTotal}</h5>
                                     <div className="ms-auto">
                                         <i className="bx bx-wifi-2 fs-3 text-white" />
                                     </div>
@@ -440,7 +440,76 @@ const Dashbord = () => {
                                     />
                                 </div>
                                 <div className="d-flex align-items-center text-white">
-                                    <p className="mb-0">Total Deactive Staff</p>
+                                    <p className="mb-0">Total Close Signal</p>
+                                    <p className="mb-0 ms-auto">
+
+                                        <span>
+                                            <i className="bx bx-up-arrow-alt" />
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="col-md-4">
+                        <div className="card radius-10 bg-gradient-ohhappiness">
+                            <div className="card-body">
+                                <div className="d-flex align-items-center">
+                                    <h5 className="mb-0 text-white">{data.PlanCountTotal && data.PlanCountTotal}</h5>
+                                    <div className="ms-auto">
+                                        <i className="bx bx-wifi-2 fs-3 text-white" />
+                                    </div>
+                                </div>
+                                <div
+                                    className="progress my-2 bg-opacity-25 bg-white"
+                                    style={{ height: 4 }}
+                                >
+                                    <div
+                                        className="progress-bar bg-white"
+                                        role="progressbar"
+                                        style={{ width: "55%" }}
+                                        aria-valuenow={25}
+                                        aria-valuemin={0}
+                                        aria-valuemax={100}
+                                    />
+                                </div>
+                                <div className="d-flex align-items-center text-white">
+                                    <p className="mb-0">Total Plan</p>
+                                    <p className="mb-0 ms-auto">
+
+                                        <span>
+                                            <i className="bx bx-up-arrow-alt" />
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-4">
+                        <div className="card radius-10 bg-gradient-ohhappiness">
+                            <div className="card-body">
+                                <div className="d-flex align-items-center">
+                                    <h5 className="mb-0 text-white">{data.PlanCountActive && data.PlanCountActive}</h5>
+                                    <div className="ms-auto">
+                                        <i className="bx bx-wifi-2 fs-3 text-white" />
+                                    </div>
+                                </div>
+                                <div
+                                    className="progress my-2 bg-opacity-25 bg-white"
+                                    style={{ height: 4 }}
+                                >
+                                    <div
+                                        className="progress-bar bg-white"
+                                        role="progressbar"
+                                        style={{ width: "55%" }}
+                                        aria-valuenow={25}
+                                        aria-valuemin={0}
+                                        aria-valuemax={100}
+                                    />
+                                </div>
+                                <div className="d-flex align-items-center text-white">
+                                    <p className="mb-0">Total Active Plan</p>
                                     <p className="mb-0 ms-auto">
 
                                         <span>
@@ -520,8 +589,8 @@ const Dashbord = () => {
                             </div>
                         </div>
                     </div>
-                </div> */}
-                {/*End Row*/}
+                </div>  */}
+                {/*End Row
 
 
 

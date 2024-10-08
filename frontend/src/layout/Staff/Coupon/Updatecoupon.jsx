@@ -11,8 +11,7 @@ const Updatecoupon = () => {
   const { row } = location.state;
 
 
-  console.log("row",row)
-   
+  
 
   const token = localStorage.getItem("token");
 

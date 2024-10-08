@@ -3,10 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { Eye, Trash2 } from 'lucide-react';
+import { Eye, RefreshCcw ,Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { GetSignallist, DeleteSignal, SignalCloseApi, GetService, GetStockDetail } from '../../../Services/Admin';
 import { fDateTimeSuffix } from '../../../Utils/Date_formate'
+
 
 
 
@@ -30,8 +31,9 @@ const Closesignal = () => {
 
     const [serviceList, setServiceList] = useState([]);
     const [stockList, setStockList] = useState([]);
-
-
+    const [searchstock, setSearchstock] = useState("");
+  
+   
 
     const navigate = useNavigate();
     const [clients, setClients] = useState([]);
@@ -44,18 +46,22 @@ const Closesignal = () => {
             if (response && response.status) {
                 const filterdata = response.data.filter((item) => {
                     return item.close_status == true
-                })
-                const searchInputMatch = filterdata.filter((item) => {
-                    return (
+                 })
+                 const searchInputMatch = filterdata.filter((item) => {
+                    const searchInputMatch =
                         searchInput === "" ||
-                        item.stock.title.toLowerCase().includes(searchInput.toLowerCase())
-                        ||
-                        item.calltype.toLowerCase().includes(searchInput.toLowerCase())
-                    );
-                });
+                        item.stock.toLowerCase().includes(searchInput.toLowerCase()) ||
+                        item.calltype.toLowerCase().includes(searchInput.toLowerCase());
 
-                setClients(searchInput ? searchInputMatch : filterdata);
-            }
+                    const searchstockMatch =
+                        searchstock === "" ||
+                        item.stock.toLowerCase().includes(searchstock.toLowerCase());
+
+                    return searchstockMatch && searchInputMatch;
+                });
+   
+                setClients(searchInput || searchstock ? searchInputMatch : filterdata);     
+        }
         } catch (error) {
             console.log("error", error);
         }
@@ -90,15 +96,17 @@ const Closesignal = () => {
 
 
 
-
     useEffect(() => {
         fetchAdminServices()
         fetchStockList()
     }, []);
 
+
+
+
     useEffect(() => {
         getAllSignal();
-    }, [filters, searchInput]);
+    }, [filters, searchInput ,searchstock]);
 
 
     const handleFilterChange = (e) => {
@@ -120,7 +128,12 @@ const Closesignal = () => {
             sortable: false,
             width: '70px',
         },
-
+        {
+            name: 'Segment',
+            selector: row => row.segment == "C" ? "CASH" :row.segment == "O" ? "OPTION" : "FUTURE" ,
+            sortable: true,
+            width: '132px',
+        },
         {
             name: 'Symbol',
             selector: row => row.stock,
@@ -219,6 +232,23 @@ const Closesignal = () => {
 
 
 
+    const resethandle=()=>{
+        setFilters({
+            from: '',
+            to: '',
+            service: '',
+            stock: '',
+        });
+        setSearchstock("")
+        setSearchInput("")
+        fetchAdminServices()
+        fetchStockList()
+        getAllSignal();
+        
+    }
+
+
+
     return (
         <div>
             <div>
@@ -271,7 +301,7 @@ const Closesignal = () => {
 
                             <div className="row">
 
-                                <div className="col-md-4">
+                                <div className="col-md-3">
                                     <label>From Date</label>
                                     <input
                                         type="date"
@@ -282,7 +312,7 @@ const Closesignal = () => {
                                         onChange={handleFilterChange}
                                     />
                                 </div>
-                                <div className="col-md-4">
+                                <div className="col-md-3">
                                     <label>To Date</label>
                                     <input
                                         type="date"
@@ -293,7 +323,7 @@ const Closesignal = () => {
                                         onChange={handleFilterChange}
                                     />
                                 </div>
-                                <div className="col-md-4">
+                                <div className="col-md-3">
                                     <label>Select Service</label>
                                     <select
                                         name="service"
@@ -308,21 +338,31 @@ const Closesignal = () => {
                                             </option>
                                         ))}
                                     </select>
+                                     
                                 </div>
 
-                                {/* <div className="col-md-3">
-                                    <div className="col-md-10">
-                                        <input
-                                            type="text"
-                                            name="stock"
-                                            className="form-control radius-10"
-                                            value={filters.stock}
-                                            onChange={handleFilterChange}
-                                            placeholder="Enter Stock"
-                                        />
+                                <div className="col-md-3 d-flex">
+                                    <div style={{width:"80%"}}>
+                                <label>Select Stock</label>
+                                    <select
+                                        className="form-control radius-10"
+                                        value={searchstock}
+                                        onChange={(e) => setSearchstock(e.target.value)}
+                                    >
+                                        <option value="">Select Stock</option>
+                                        {clients.map((item) => (
+                                            <option key={item._id} value={item.stock}>
+                                                {item.stock}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    </div>
+                                    <div className='rfreshicon'>
+                                    <RefreshCcw onClick={resethandle}/>
                                     </div>
 
-                                </div> */}
+                                </div>
+
 
                             </div>
 

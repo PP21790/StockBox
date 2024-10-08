@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { basicsettinglist, updateApiinfo } from '../../../Services/Admin';
 import Swal from 'sweetalert2';
 
-
 const Apiinfo = () => {
     const token = localStorage.getItem('token');
     const user_id = localStorage.getItem('id');
@@ -12,13 +11,19 @@ const Apiinfo = () => {
     const [clients, setClients] = useState("");
 
 
+    const [initialApiData, setInitialApiData] = useState({
+        digio_client_id: "",
+        digio_client_secret: "",
+        digio_template_name: ""
+    });
+
     const [updateapi, setUpdateapi] = useState({
         digio_client_id: "",
         digio_client_secret: "",
         digio_template_name: ""
     });
 
-
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
     const getApidetail = async () => {
         try {
@@ -27,6 +32,11 @@ const Apiinfo = () => {
                 const clientData = response.data;
                 setClients(clientData);
                 setUpdateapi({
+                    digio_client_id: clientData[0].digio_client_id || "",
+                    digio_client_secret: clientData[0].digio_client_secret || "",
+                    digio_template_name: clientData[0].digio_template_name || ""
+                });
+                setInitialApiData({
                     digio_client_id: clientData[0].digio_client_id || "",
                     digio_client_secret: clientData[0].digio_client_secret || "",
                     digio_template_name: clientData[0].digio_template_name || ""
@@ -41,6 +51,15 @@ const Apiinfo = () => {
         getApidetail();
     }, []);
 
+    // Use effect to check if the data has changed
+    useEffect(() => {
+        const isDataChanged =
+            updateapi.digio_client_id !== initialApiData.digio_client_id ||
+            updateapi.digio_client_secret !== initialApiData.digio_client_secret ||
+            updateapi.digio_template_name !== initialApiData.digio_template_name;
+
+        setIsButtonDisabled(!isDataChanged); 
+    }, [updateapi, initialApiData]);
 
 
 
@@ -62,10 +81,11 @@ const Apiinfo = () => {
                 digio_client_id: updateapi.digio_client_id,
                 digio_client_secret: updateapi.digio_client_secret,
                 digio_template_name: updateapi.digio_template_name,
-
             };
 
+           
             const response = await updateApiinfo(data, token);
+            
             if (response?.status) {
                 Swal.fire({
                     icon: 'success',
@@ -87,11 +107,10 @@ const Apiinfo = () => {
     };
 
 
-
+    
     return (
         <div>
             <div className="page-content">
-
                 <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
                     <div className="breadcrumb-title pe-3">Api Information</div>
                     <div className="ps-3">
@@ -127,7 +146,6 @@ const Apiinfo = () => {
                                                 id="digiotemplatename"
                                                 value={updateapi.digio_template_name}
                                                 onChange={(e) => setUpdateapi({ ...updateapi, digio_template_name: e.target.value })}
-
                                             />
                                         </div>
 
@@ -160,7 +178,12 @@ const Apiinfo = () => {
                                 </form>
                             </div>
                             <div className="card-footer text-center">
-                                <button type="button" className="btn btn-primary mb-2" onClick={(e) => UpdateApi()}>
+                                <button
+                                    type="button"
+                                    className="btn btn-primary mb-2"
+                                    onClick={UpdateApi}
+                                    disabled={isButtonDisabled} 
+                                >
                                     Update
                                 </button>
                             </div>
