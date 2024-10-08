@@ -28,7 +28,7 @@ router.get('/api/list/faq', Faqlist);
 router.get('/api/list/content/:id', detailContent);
 router.get('/api/list/basket/:clientId', BasketList);
 router.get('/api/list/past-performance/:id', pastPerformance);
-router.get('/api/list/broadcast/:id', BroadcastList);
+router.post('/api/list/broadcast', BroadcastList);
 
 
 

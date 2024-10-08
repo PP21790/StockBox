@@ -1337,6 +1337,27 @@ async addHelpDesk(req, res) {
 }
 
 
+async helpdeskList(req, res) {
+  try {
+    const { id } = req.params; // Extract client_id from query parameters
+    console.log("Client ID:", id); // Log the client_id for debugging
+
+    // Step 1: Fetch helpdesk entries for the specified client_id
+    const result = await Helpdesk_Modal.find({ client_id: id });
+
+    // Step 2: Return the fetched helpdesk data
+    return res.json({
+      status: true,
+      message: "Data retrieved successfully",
+      data: result
+    });
+
+  } catch (error) {
+    console.error("Error fetching helpdesk:", error); // Log the error for debugging
+    return res.json({ status: false, message: "Server error", data: [] });
+  }
+}
+
 
 
 }

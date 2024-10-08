@@ -1,6 +1,6 @@
 const router = require("express").Router()
 
-const {AddClient,detailClient,loginClient,forgotPassword,resetPassword,changePassword,updateProfile,deleteClient,otpSubmit,aadhaarVerification,aadhaarOtpSubmit,clientKycAndAgreement,uploadDocument,downloadDocument,requestPayout,payoutList,referEarn,brokerLink,deleteBrokerLink,addHelpDesk} = require('../Controllers/Clients')
+const {AddClient,detailClient,loginClient,forgotPassword,resetPassword,changePassword,updateProfile,deleteClient,otpSubmit,aadhaarVerification,aadhaarOtpSubmit,clientKycAndAgreement,uploadDocument,downloadDocument,requestPayout,payoutList,referEarn,brokerLink,deleteBrokerLink,addHelpDesk,helpdeskList} = require('../Controllers/Clients')
 
 
 router.post('/api/client/add',AddClient);
@@ -23,6 +23,7 @@ router.post('/api/client/referearn', referEarn);
 router.post('/api/client/brokerlink', brokerLink);
 router.post('/api/client/deletebrokerlink', deleteBrokerLink);
 router.post('/api/client/addhelpdesk',addHelpDesk);
+router.get('/api/client/helpdesk/:id', helpdeskList);
 
 
 
