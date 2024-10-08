@@ -12,7 +12,7 @@ const Header = () => {
               <div className="mobile-toggle-menu">
                 <i className="bx bx-menu" />
               </div>
-              <div
+              {/* <div
                 className="position-relative search-bar d-lg-block d-none"
                 data-bs-toggle="modal"
                 data-bs-target="#SearchModal"
@@ -25,7 +25,7 @@ const Header = () => {
                 <span className="position-absolute top-50 search-show ms-3 translate-middle-y start-0 top-50 fs-5">
                   <i className="bx bx-search" />
                 </span>
-              </div>
+              </div> */}
               <div className="top-menu ms-auto">
                 <ul className="navbar-nav align-items-center gap-1">
                   <li

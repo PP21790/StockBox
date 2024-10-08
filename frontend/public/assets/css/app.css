@@ -5193,12 +5193,12 @@ label {
 	margin-left: 10px;
 }
 
-.lucide-user-pen {
+.lucide-user-cog {
 	margin-right: 10px;
 	margin-left: 10px;
 }
 
-.lucide-user-pen:hover {
+.lucide-user-cog:hover {
 
 	background: #000;
 	border-radius: 70%;
@@ -5718,3 +5718,10 @@ ul li {
 		text-align: center;
 	}
 }
+
+
+
+
+
+
+
