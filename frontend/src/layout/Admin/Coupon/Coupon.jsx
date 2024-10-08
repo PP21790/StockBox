@@ -108,7 +108,7 @@ const Coupon = () => {
 
     const handleSwitchChange = async (event, id) => {
 
-        const user_active_status = event.target.checked ? "1" : "0";
+        const user_active_status = event.target.checked ? "1" : "0"
 
         const data = { id: id, status: user_active_status }
         const result = await Swal.fire({
@@ -204,14 +204,14 @@ const Coupon = () => {
             selector: row => (
                 <div className="form-check form-switch form-check-info">
                     <input
-                        id={`rating_${row.ActiveStatus}`}
+                        id={`rating_${row.status}`}
                         className="form-check-input toggleswitch"
                         type="checkbox"
-                        defaultChecked={row.ActiveStatus == 1}
+                        defaultChecked={row.status == true}
                         onChange={(event) => handleSwitchChange(event, row._id)}
                     />
                     <label
-                        htmlFor={`rating_${row.ActiveStatus}`}
+                        htmlFor={`rating_${row.status}`}
                         className="checktoggle checkbox-bg"
                     ></label>
                 </div>

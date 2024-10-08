@@ -359,7 +359,7 @@ class Clients {
     try {
         const { id, status } = req.body;
   
-        // Validate status
+       
         const validStatuses = ['1', '0'];
         if (!validStatuses.includes(status)) {
             return res.status(400).json({
@@ -372,7 +372,7 @@ class Clients {
         const result = await Clients_Modal.findByIdAndUpdate(
             id,
             { ActiveStatus: status },
-            { new: true } // Return the updated document
+            { new: true } 
         );
   
         if (!result) {

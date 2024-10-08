@@ -2,10 +2,11 @@ const db = require("../Models");
 const upload = require('../Utils/multerHelper'); 
 const News_Modal = db.News;
 class NewsController {
-    // Create a new blog post
+  
     async AddNews(req, res) {
         try {
-            // Handle the image upload
+           
+
             await new Promise((resolve, reject) => {
                 upload('news').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
                     if (err) {
@@ -20,7 +21,7 @@ class NewsController {
                 });
             });
     
-            // After the upload is successful, proceed with the rest of the logic
+          
             const { title, description,add_by } = req.body;
 
 
@@ -38,7 +39,7 @@ class NewsController {
 
             const image = req.files['image'] ? req.files['image'][0].filename : null;
     
-            // Create a new News record
+           
             const result = new News_Modal({
                 title: title,
                 description: description,
@@ -46,7 +47,7 @@ class NewsController {
                 add_by:add_by,
             });
             
-            // Save the result to the database
+            
             await result.save();
     
             console.log("result", result);
@@ -61,13 +62,16 @@ class NewsController {
         }
     }
     
-    // Get all blog posts
+   
+
+
+
     async getNews(req, res) {
         try {
 
 
         
-           // const news = await News_Modal.find();
+          
             const news = await News_Modal.find({ del: false });
 
             return res.status(200).json({
