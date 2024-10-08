@@ -12,7 +12,7 @@ const menuItems = [
       { title: 'Package', icon: 'bx-radio-circle', link: '/admin/plan' },
       { title: 'Segment', icon: 'bx-radio-circle', link: '/admin/service' },
       { title: 'Category', icon: 'bx-radio-circle', link: '/admin/category' },
-      { title: 'Category', icon: 'bx-radio-circle', link: '/admin/category' }
+      { title: 'Free Trial Status', icon: 'bx-radio-circle', link: '/admin/freetrialstatus' }
     ]
   },
   { title: 'Staff', icon: 'bx-user-plus', link: '/admin/staff' },
