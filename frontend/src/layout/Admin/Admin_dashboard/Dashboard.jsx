@@ -39,10 +39,6 @@ const Dashbord = () => {
         }
     }
 
-
-
-
-
     useEffect(() => {
         getdetail()
         getAdminclient()
@@ -247,7 +243,7 @@ const Dashbord = () => {
 
             <div className="page-content">
                 <div className="row">
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                         <div className="card radius-10 bg-gradient-deepblue">
                             <div className="card-body">
                                 <div className="d-flex align-items-center">
@@ -281,7 +277,7 @@ const Dashbord = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                         <div className="card radius-10 bg-gradient-ohhappiness">
                             <div className="card-body">
                                 <div className="d-flex align-items-center">
@@ -315,7 +311,7 @@ const Dashbord = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                         <div className="card radius-10 bg-gradient-ibiza">
                             <div className="card-body">
                                 <div className="d-flex align-items-center">
@@ -349,7 +345,7 @@ const Dashbord = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                         <div className="card radius-10 bg-gradient-moonlit">
                             <div className="card-body">
                                 <div className="d-flex align-items-center">
@@ -383,8 +379,8 @@ const Dashbord = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="col-md-4">
-                        <div className="card radius-10 bg-gradient-deepblue">
+                    <div className="col-md-3">
+                        <div className="card radius-10 bg-gradient-moonlit ">
                             <div className="card-body">
                                 <div className="d-flex align-items-center">
                                     <h5 className="mb-0 text-white">{data.OpensignalCountTotal && data.OpensignalCountTotal}</h5>
@@ -417,8 +413,8 @@ const Dashbord = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="col-md-4">
-                        <div className="card radius-10 bg-gradient-ohhappiness">
+                    <div className="col-md-3">
+                        <div className="card radius-10 bg-gradient-ibiza ">
                             <div className="card-body">
                                 <div className="d-flex align-items-center">
                                     <h5 className="mb-0 text-white">{data.CloseSignalCountTotal && data.CloseSignalCountTotal}</h5>
@@ -452,7 +448,7 @@ const Dashbord = () => {
                         </div>
                     </div>
 
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                         <div className="card radius-10 bg-gradient-ohhappiness">
                             <div className="card-body">
                                 <div className="d-flex align-items-center">
@@ -486,8 +482,8 @@ const Dashbord = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="col-md-4">
-                        <div className="card radius-10 bg-gradient-ohhappiness">
+                    <div className="col-md-3">
+                        <div className="card radius-10 bg-gradient-deepblue">
                             <div className="card-body">
                                 <div className="d-flex align-items-center">
                                     <h5 className="mb-0 text-white">{data.PlanCountActive && data.PlanCountActive}</h5>
