@@ -18,6 +18,7 @@ const Planmanage = db.Planmanage;
 const Refer_Modal = db.Refer;
 const Clients_Modal = db.Clients;
 const Freetrial_Modal = db.Freetrial;
+const Broadcast_Modal = db.Broadcast;
 
 
 mongoose  = require('mongoose');
@@ -1152,6 +1153,61 @@ async addFreeTrail(req, res) {
 }
 
 
+async  BroadcastList(req, res) {
+  try {
+    const { id } = req.body; // Extract id from request body
+    const currentDate = new Date();
+
+    // Step 1: Find services from Planmanage for the client
+    const plans = await Planmanage.find({
+      clientid: id,
+      startdate: { $lte: currentDate },
+      enddate: { $gte: currentDate }
+    }, 'serviceid'); // Only fetch the 'serviceid' field
+
+    if (!plans.length) {
+      return res.status(404).json({ status: false, message: "No plans found for this client." });
+    }
+
+    // Extract service IDs from plans
+    const serviceIds = plans.map(plan => plan.serviceid); // Use serviceid
+
+    if (!serviceIds.length) {
+      return res.status(404).json({ status: false, message: "No services associated with the client's plans." });
+    }    
+
+    // Create a regex pattern to match any of the service IDs
+    const regexPattern = serviceIds.join('|'); // Join IDs with '|'
+
+    // Step 2: Find broadcasts matching any of the service IDs
+    const query = {
+      del: false,
+      status: true,
+      service: { $regex: new RegExp(regexPattern, 'i') } // Case-insensitive regex match
+    };
+
+    // Execute the query to find matching broadcasts
+    const broadcasts = await Broadcast_Modal.find(query);
+
+    // Remove duplicates from the broadcasts array
+    const uniqueBroadcasts = Array.from(new Set(broadcasts.map(b => b._id))).map(id => {
+      return broadcasts.find(b => b._id === id);
+    });
+
+    console.log("Unique Broadcasts found:", uniqueBroadcasts); // Log unique matching broadcasts
+
+    if (!uniqueBroadcasts.length) {
+      return res.status(404).json({ status: false, message: "No matching broadcasts found." });
+    }
+
+    // Return the matching broadcasts
+    return res.status(200).json({ status: true, data: uniqueBroadcasts });
+  
+  } catch (error) {
+    console.error("Error fetching broadcasts:", error);
+    return res.status(500).json({ status: false, message: "Internal server error" });
+  }
+}
 
 
 

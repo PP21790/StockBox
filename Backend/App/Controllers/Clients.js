@@ -9,6 +9,7 @@ const Clients_Modal = db.Clients;
 const Mailtemplate_Modal = db.Mailtemplate;
 const BasicSetting_Modal = db.BasicSetting;
 const Freetrial_Modal = db.Freetrial;
+const Helpdesk_Modal = db.Helpdesk;
 
 
 class Clients {
@@ -543,6 +544,94 @@ async deleteFreetrial(req, res) {
     });
   }
 }
+
+
+
+
+async helpdeskList(req, res) {
+  try {
+      const result = await Helpdesk_Modal.aggregate([
+          {
+              $match: { del: false } // Match documents where del is false
+          },
+          {
+              $addFields: {
+                  client_id: { $toObjectId: "$client_id" } // Convert clientid to ObjectId
+              }
+          },
+          {
+              $lookup: {
+                  from: 'clients', // Name of the clients collection
+                  localField: 'client_id', // Field from Freetrial_Modal
+                  foreignField: '_id', // Field from the clients collection
+                  as: 'clientDetails' // Name of the new array field
+              }
+          },
+          {
+              $unwind: {
+                  path: '$clientDetails',
+                  preserveNullAndEmptyArrays: true // Optional
+              }
+          }
+      ]);
+
+      return res.json({
+          status: true,
+          message: "get",
+          data: result
+      });
+
+  } catch (error) {
+      console.error("Error fetching helpdesk:", error); // Log the error for debugging
+      return res.json({ status: false, message: "Server error", data: [] });
+  }
+}
+
+
+async deleteHelpdesk(req, res) {
+try {
+  const { id } = req.params; // Extract ID from URL params
+
+  if (!id) {
+    return res.status(400).json({
+      status: false,
+      message: "Helpdesk ID is required",
+    });
+  }
+
+//  const deletedClient = await Clients_Modal.findByIdAndDelete(id);
+const deletedHelpdesk = await Helpdesk_Modal.findByIdAndUpdate(
+  id, 
+  { del: true }, // Set del to true
+  { new: true }  // Return the updated document
+);
+  if (!deletedHelpdesk) {
+    return res.status(404).json({
+      status: false,
+      message: "Helpdesk not found",
+    });
+  }
+
+  console.log("Deleted Helpdesk:", deletedHelpdesk);
+  return res.json({
+    status: true,
+    message: "Helpdesk deleted successfully",
+    data: deletedHelpdesk,
+  });
+} catch (error) {
+  console.error("Error deleting Helpdesk:", error);
+  return res.status(500).json({
+    status: false,
+    message: "Server error",
+    error: error.message,
+  });
+}
+}
+
+
+
+
+
 
 
 
