@@ -397,7 +397,6 @@ export async function SignalCloseApi(data, token) {
                 'Authorization': `${token}`,
             },
         });
-        console.log("res", res)
         return res?.data;
     } catch (err) {
         return err.response?.data || err.message;

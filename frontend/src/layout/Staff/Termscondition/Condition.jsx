@@ -126,7 +126,6 @@ const Condition = () => {
                 });
             }
         } catch (error) {
-            console.log("Error adding service:", error);
             Swal.fire({
                 title: 'Error!',
                 text: 'There was an error adding the service.',
@@ -186,7 +185,6 @@ const Condition = () => {
     // delete plan cartegory 
 
     const DeleteService = async (_id) => {
-        // console.log("_id",_id)
         try {
             const result = await Swal.fire({
                 title: 'Are you sure?',

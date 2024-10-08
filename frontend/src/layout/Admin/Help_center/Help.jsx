@@ -22,15 +22,18 @@ const Help = () => {
         try {
             const response = await getHelpMessagelist(token);
             if (response.status) {
+
                 const filterdata =  response.data.filter((item) =>
                     searchInput === "" ||
-                    item.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
-                    item.Email.toLowerCase().includes(searchInput.toLowerCase())
+                    item.clientDetails.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
+                    item.clientDetails.Email.toLowerCase().includes(searchInput.toLowerCase()) || 
+                    item.message.toLowerCase().includes(searchInput.toLowerCase()) ||
+                    item.subject.toLowerCase().includes(searchInput.toLowerCase()) 
                 );
                 setClients(searchInput ? filterdata : response.data);
             }
         } catch (error) {
-            console.log("error");
+            console.log("error", error);
         }
     }
 
