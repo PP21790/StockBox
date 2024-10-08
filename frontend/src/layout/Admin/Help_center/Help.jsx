@@ -374,11 +374,6 @@ const Help = () => {
 
 
 
-
-
-
-
-
                                     </div>
                                 </div>
                             </div>
