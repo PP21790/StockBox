@@ -16,6 +16,8 @@ const Category = () => {
     const [servicedata, setServicedata] = useState([]);
     const [searchInput, setSearchInput] = useState("");
     const [selectedServices, setSelectedServices] = useState([]);
+
+    
     const [updatetitle, setUpdatetitle] = useState({
         title: "",
         id: "",

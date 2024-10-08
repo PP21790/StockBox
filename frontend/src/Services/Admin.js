@@ -1902,3 +1902,80 @@ export async function SendBroadCast(data, token) {
         return err.response?.data || err.message;
     }
 }
+
+
+// get broadcast message 
+
+export async function getBroadCastmessage(token) {
+    try {
+        const res = await axios.get(`${Config.base_url}broadcast/list`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}
+
+
+// change broacast status 
+
+export async function ChangeBroadCastStatus(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}broadcast/change-status`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// delete broadcastmessage 
+export async function DeleteBroadCastmessage(_id, token) {
+    try {
+        const res = await axios.get(`${Config.base_url}broadcast/delete/${_id}`, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// update broadcast message 
+
+// update plan 
+
+export async function UpdateCastmessage(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}broadcast/update`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
