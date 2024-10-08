@@ -1979,3 +1979,45 @@ export async function UpdateCastmessage(data, token) {
         return err.response?.data || err.message;
     }
 }
+
+
+
+// get payment request 
+
+// get broadcast message 
+
+export async function PaymentRequestlist(token) {
+    try {
+        const res = await axios.get(`${Config.base_url}client/payoutlist`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}
+
+
+// change status on payment request
+
+
+
+// change broacast status 
+
+export async function ChangePaymentStatus(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}client/process-payout-request`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}

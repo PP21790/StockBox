@@ -11,11 +11,12 @@ const menuItems = [
     subMenu: [
       { title: 'Package', icon: 'bx-radio-circle', link: '/admin/plan' },
       { title: 'Segment', icon: 'bx-radio-circle', link: '/admin/service' },
+      { title: 'Category', icon: 'bx-radio-circle', link: '/admin/category' },
       { title: 'Category', icon: 'bx-radio-circle', link: '/admin/category' }
     ]
   },
   { title: 'Staff', icon: 'bx-user-plus', link: '/admin/staff' },
-
+  
   {
     title: 'Signal',
     icon: 'bx-wifi-2',
@@ -28,6 +29,7 @@ const menuItems = [
 
 
   { title: 'Payment History', icon: 'bx-credit-card', link: '/admin/paymenthistory' },
+  { title: 'Payment Request', icon: 'bx-credit-card', link: '/admin/paymentrequest' },
   { title: 'Blogs', icon: 'bx-comment-detail', link: '/admin/blogs' },
   { title: 'News', icon: 'bx-news', link: '/admin/news' },
   { title: 'Coupon', icon: 'bx-edit-alt', link: '/admin/coupon' },
@@ -50,18 +52,22 @@ const menuItems = [
   { title: 'Terms And Condition', icon: 'bx-info-square', link: '/admin/termsandcondtion' }
 ];
 
+
+
+
+
 const Sidebar = ({ onToggleClick }) => {
-  const [activeIndex, setActiveIndex] = useState(null); // Track the active li by index
-  const [activeDropdown, setActiveDropdown] = useState(null); // Track the active dropdown
+  const [activeIndex, setActiveIndex] = useState(null); 
+  const [activeDropdown, setActiveDropdown] = useState(null);
 
   const handleItemClick = (index) => () => {
-    setActiveIndex(index); // Set the clicked li as active
+    setActiveIndex(index); 
   };
 
   const toggleDropdown = (dropdownName, index) => (e) => {
     e.preventDefault();
     setActiveDropdown(activeDropdown === dropdownName ? null : dropdownName);
-    setActiveIndex(index); // Also set the dropdown as active when clicked
+    setActiveIndex(index); 
   };
 
   return (
