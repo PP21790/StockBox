@@ -3,6 +3,7 @@ import { PaymentRequestlist, ChangePaymentStatus } from '../../../Services/Admin
 import Table from '../../../components/Table';
 import Swal from 'sweetalert2';
 import { fDateTime } from '../../../Utils/Date_formate';
+import { Link } from 'react-router-dom';
 
 const PaymentRequest = () => {
     const token = localStorage.getItem('token');
@@ -188,74 +189,97 @@ const PaymentRequest = () => {
 
 
 
-    
+
     return (
         <div>
-            <div className='row'>
-                <div className='demo-view'>
-                    <div className='container-fluid'>
-                        <div className='row'>
-                            <div className="col-xl-12">
-                                <div className="card dz-card" id="nav-pills">
-                                    <div className="card-header flex-wrap border-0">
+            <div className='page-content'>
+
+                <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+                    <div className="breadcrumb-title pe-3">Payment History</div>
+                    <div className="ps-3">
+                        <nav aria-label="breadcrumb">
+                            <ol className="breadcrumb mb-0 p-0">
+                                <li className="breadcrumb-item">
+                                    <Link to="/admin/dashboard">
+                                        <i className="bx bx-home-alt" />
+                                    </Link>
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+
+                <div className='card'>
+                    <div className='card-body'>
+
+
+
+                        {/* <div className="card-header flex-wrap border-0">
                                         <h4 className="card-title">Payment Request</h4>
+                                    </div> */}
+
+
+                        <div className="tab-content" id="myTabContent3">
+                            <div className="tab-pane fade show active" id="NavPills">
+                                <div className="card-body pt-0">
+                                    <div className="d-lg-flex align-items-center mb-4 gap-3">
+                                        <div className="position-relative">
+                                            <input
+                                                type="text"
+                                                className="form-control ps-5 radius-10"
+                                                placeholder="Search Order"
+                                                defaultValue=""
+                                            />
+                                            <span className="position-absolute top-50 product-show translate-middle-y">
+                                                <i className="bx bx-search" />
+                                            </span>
+                                        </div>
+                                        
                                     </div>
 
-                                    <div className='mb-2'>
-                                        Search:{" "}
-                                        <input
-                                            className="ml-2 input-search form-control"
-                                            value={searchInput}
-                                            onChange={(e) => setSearchInput(e.target.value)}
-                                            style={{ width: "20%" }}
-                                        />
-                                    </div>
-                                    <div className="tab-content" id="myTabContent3">
-                                        <div className="tab-pane fade show active" id="NavPills">
-                                            <div className="card-body pt-0">
-                                                <ul className="nav nav-pills nav-pills1 mb-4 light">
-                                                    <li className="nav-item">
-                                                        <a
-                                                            className={`nav-link navlink ${activeTab === 'Pending' ? 'active' : ''}`}
-                                                            onClick={() => handleTabClick('Pending')}
-                                                        >
-                                                            Pending
-                                                        </a>
-                                                    </li>
-                                                    <li className="nav-item">
-                                                        <a
-                                                            className={`nav-link navlink ${activeTab === 'Complete' ? 'active' : ''}`}
-                                                            onClick={() => handleTabClick('Complete')}
-                                                        >
-                                                            Complete
-                                                        </a>
-                                                    </li>
-                                                    <li className="nav-item">
-                                                        <a
-                                                            className={`nav-link navlink ${activeTab === 'Reject' ? 'active' : ''}`}
-                                                            onClick={() => handleTabClick('Reject')}
-                                                        >
-                                                            Reject
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                                <div className="tab-content">
-                                                    <div id="navpills-1" className={`tab-pane ${activeTab === 'Pending' ? 'active' : ''}`}>
-                                                        {renderTable(0)}
-                                                    </div>
-                                                    <div id="navpills-2" className={`tab-pane ${activeTab === 'Complete' ? 'active' : ''}`}>
-                                                        {renderTable(1)}
-                                                    </div>
-                                                    <div id="navpills-3" className={`tab-pane ${activeTab === 'Reject' ? 'active' : ''}`}>
-                                                        {renderTable(2)}
-                                                    </div>
-                                                </div>
-                                            </div>
+                                    <ul className="nav nav-pills nav-pills1 mb-4 light">
+                                        <li className="nav-item">
+                                            <a
+                                                className={`nav-link navlink ${activeTab === 'Pending' ? 'active' : ''}`}
+                                                onClick={() => handleTabClick('Pending')}
+                                            >
+                                                Pending
+                                            </a>
+                                        </li>
+                                        <li className="nav-item">
+                                            <a
+                                                className={`nav-link navlink ${activeTab === 'Complete' ? 'active' : ''}`}
+                                                onClick={() => handleTabClick('Complete')}
+                                            >
+                                                Complete
+                                            </a>
+                                        </li>
+                                        <li className="nav-item">
+                                            <a
+                                                className={`nav-link navlink ${activeTab === 'Reject' ? 'active' : ''}`}
+                                                onClick={() => handleTabClick('Reject')}
+                                            >
+                                                Reject
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <div className="tab-content">
+                                        <div id="navpills-1" className={`tab-pane ${activeTab === 'Pending' ? 'active' : ''}`}>
+                                            {renderTable(0)}
+                                        </div>
+                                        <div id="navpills-2" className={`tab-pane ${activeTab === 'Complete' ? 'active' : ''}`}>
+                                            {renderTable(1)}
+                                        </div>
+                                        <div id="navpills-3" className={`tab-pane ${activeTab === 'Reject' ? 'active' : ''}`}>
+                                            {renderTable(2)}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+
+
                     </div>
                 </div>
             </div>
