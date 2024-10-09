@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { getHelpMessagelist } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import { Tooltip } from 'antd';
+import { Eye } from 'lucide-react';
 
 
 
@@ -94,6 +95,23 @@ const Help = () => {
             sortable: true,
             width: '146px',
         },
+        {
+            name: 'Actions',
+            cell: row => (
+                <>
+                    <div>
+                        <Tooltip placement="top" overlay="View">
+                            <Eye style={{ marginRight: "10px" }} />
+                        </Tooltip>
+                    </div>
+                   
+                  
+                </>
+            ),
+            ignoreRowClick: true,
+            allowOverflow: true,
+            button: true,
+        }
 
     ];
 

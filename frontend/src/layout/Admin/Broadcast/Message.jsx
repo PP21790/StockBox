@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { SendBroadCast, GetService, getBroadCastmessage, ChangeBroadCastStatus, DeleteBroadCastmessage, UpdateCastmessage } from '../../../Services/Admin';
 import Swal from 'sweetalert2';
 import Table from '../../../components/Table';
-import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
+import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import { Tooltip } from 'antd';
 
 
@@ -309,6 +309,11 @@ const Message = () => {
             cell: row => (
                 <>
                     <div>
+                        <Tooltip placement="top" overlay="View">
+                            <Eye style={{ marginRight: "10px" }} />
+                        </Tooltip>
+                    </div>
+                    <div>
                         <Tooltip placement="top" overlay="Update">
                             <SquarePen
                                 onClick={() => {
@@ -370,8 +375,8 @@ const Message = () => {
                     <hr />
                     <div className="card">
                         <div className="card-body">
-                            <div className="d-flex justify-content-start">
-                                <div className='me-2'>
+                            <div className="d-flex justify-content-end">
+                                <div className='me-2 mb-3'>
                                     <button
                                         type="button"
                                         className="btn btn-primary"

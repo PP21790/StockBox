@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getFaqlist, AddFaq, UpdateFaq, changeFAQStatus, DeleteFAQ } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
+import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import Swal from 'sweetalert2';
+import { Tooltip } from 'antd';
 
 const Faq = () => {
 
@@ -291,16 +292,25 @@ const Faq = () => {
             cell: row => (
                 <>
                     <div>
-                        <SquarePen
-                            onClick={() => {
-                                setModel(true);
-                                setServiceid(row);
-                                setUpdatetitle({ title: row.title, id: row._id, description: row.description });
-                            }}
-                        />
+                        <Tooltip placement="top" overlay="View">
+                            <Eye style={{ marginRight: "10px" }} />
+                        </Tooltip>
                     </div>
                     <div>
+                        <Tooltip placement="top" overlay="Update">
+                            <SquarePen
+                                onClick={() => {
+                                    setModel(true);
+                                    setServiceid(row);
+                                    setUpdatetitle({ title: row.title, id: row._id, description: row.description });
+                                }}
+                            />
+                        </Tooltip>
+                    </div>
+                    <div>
+                        <Tooltip placement="top" overlay="Delete">
                         <Trash2 onClick={() => DeleteFaq(row._id)} />
+                        </Tooltip>
                     </div>
                 </>
             ),

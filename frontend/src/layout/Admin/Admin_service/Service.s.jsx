@@ -233,7 +233,7 @@ const Service = () => {
             name: 'S.No',
             selector: (row, index) => index + 1,
             sortable: false,
-            width: '70px',
+
         },
         {
             name: 'Title',
@@ -269,11 +269,7 @@ const Service = () => {
             selector: row => new Date(row.updated_at).toLocaleDateString(),
             sortable: true,
         },
-        {
-            name: 'Date',
-            selector: row => new Date(row.updated_at).toLocaleDateString(),
-            sortable: true,
-        },
+
         // {
         //     name: 'Actions',
         //     cell: row => (
@@ -327,7 +323,7 @@ const Service = () => {
                         </nav>
                     </div>
                 </div>
-                <hr/>
+                <hr />
 
                 <div className="card">
                     <div className="card-body">

@@ -186,7 +186,7 @@ const Updatecoupon = () => {
       label: "Image",
       type: "file2",
       label_size: 12,
-      col_size: 4,
+      col_size: 3,
       disable: false,
       additional_content: row?.image ? (
         <img
