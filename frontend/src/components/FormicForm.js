@@ -157,7 +157,7 @@ const DynamicForm = ({
                             <div>
                                 {/*  form  */}
                                 <div className="row d-flex ">
-                                    
+
                                     {fields.map((field, index) => (
                                         <React.Fragment key={index}>
 
@@ -309,8 +309,8 @@ const DynamicForm = ({
                                                     <>
 
                                                         <div className={`col-lg-${field.col_size}`}>
-                                                            <div className="input-block mb-3 flex-column">
-                                                                <label className={`col-lg-${field.label_size}`}>
+                                                            <div className="input-block mb-3">
+                                                                <label>
                                                                     {field.label}
                                                                     {field.optional === false ? <span className="text-danger">*</span> : ""}
                                                                 </label>
@@ -322,15 +322,16 @@ const DynamicForm = ({
                                                                     onChange={(e) => handleFileChange2(e, index, field.name)}
                                                                     name={field.name}
                                                                 />
+                                                                            </div>
+                                                                        </div>
 
                                                                 {/* Additional content for image preview */}
                                                                 {field.additional_content && (
-                                                                    <div style={{ marginTop: "10px" }}>
+                                                                    <div className={`col-lg-${field.col_size}`}>
                                                                         {field.additional_content}
                                                                     </div>
                                                                 )}
-                                                            </div>
-                                                        </div>
+                                                       
 
 
                                                     </>
@@ -484,55 +485,55 @@ const DynamicForm = ({
                                                     </>
                                                 ) : field.type === "select2" ? (
                                                     <>
-                                                    <div className="row">
-                                                      {/* First Column for Select Input */}
-                                                      <div className={`col-lg-6`}>
-                                                        <div className="input-block row">
-                                                          <label
-                                                            className={`col-lg-${title === "forlogin"
-                                                              ? 3
-                                                              : title === "update_theme"
-                                                                ? 12
-                                                                : 7
-                                                              } col-form-label p-0 mx-3`}
-                                                            htmlFor={field.name}
-                                                          >
-                                                            {field.label}
-                                                          </label>
-                                                          <div className={`col-lg-${title === "addgroup" ? 12 : 12}`}>
-                                                            <select
-                                                              className="default-select wide form-control"
-                                                              aria-describedby="basic-addon1"
-                                                              disabled={field.disable}
-                                                              id={field.name}
-                                                              {...formik.getFieldProps(field.name)}
-                                                            >
-                                                              <option value="" selected>
-                                                                Select {field.label}
-                                                              </option>
-                                                              {field.options.map((option) => (
-                                                                <option key={option.value} value={option.value}>
-                                                                  {option.label}
-                                                                </option>
-                                                              ))}
-                                                            </select>
-                                                            {/* Formik Validation Errors */}
-                                                            {formik.touched[field.name] && formik.errors[field.name] ? (
-                                                              <div style={{ color: "red" }}>
-                                                                {formik.errors[field.name]}
-                                                              </div>
-                                                            ) : null}
-                                                          </div>
+                                                        <div className="row">
+                                                            {/* First Column for Select Input */}
+                                                            <div className={`col-lg-6`}>
+                                                                <div className="input-block row">
+                                                                    <label
+                                                                        className={`col-lg-${title === "forlogin"
+                                                                            ? 3
+                                                                            : title === "update_theme"
+                                                                                ? 12
+                                                                                : 7
+                                                                            } col-form-label p-0 mx-3`}
+                                                                        htmlFor={field.name}
+                                                                    >
+                                                                        {field.label}
+                                                                    </label>
+                                                                    <div className={`col-lg-${title === "addgroup" ? 12 : 12}`}>
+                                                                        <select
+                                                                            className="default-select wide form-control"
+                                                                            aria-describedby="basic-addon1"
+                                                                            disabled={field.disable}
+                                                                            id={field.name}
+                                                                            {...formik.getFieldProps(field.name)}
+                                                                        >
+                                                                            <option value="" selected>
+                                                                                Select {field.label}
+                                                                            </option>
+                                                                            {field.options.map((option) => (
+                                                                                <option key={option.value} value={option.value}>
+                                                                                    {option.label}
+                                                                                </option>
+                                                                            ))}
+                                                                        </select>
+                                                                        {/* Formik Validation Errors */}
+                                                                        {formik.touched[field.name] && formik.errors[field.name] ? (
+                                                                            <div style={{ color: "red" }}>
+                                                                                {formik.errors[field.name]}
+                                                                            </div>
+                                                                        ) : null}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            {/* Second Column for Additional Field */}
+                                                            <div className="col-lg-6">
+                                                                {additional_field1}
+                                                            </div>
                                                         </div>
-                                                      </div>
-                                                  
-                                                      {/* Second Column for Additional Field */}
-                                                      <div className="col-lg-6">
-                                                        {additional_field1}
-                                                      </div>
-                                                    </div>
-                                                  </>
-                                                  
+                                                    </>
+
                                                 ) : field.type === "checkbox" ? (
                                                     <>
                                                         {field.options && field.options.length > 0 ? (
@@ -578,9 +579,9 @@ const DynamicForm = ({
                                                         ) : (
                                                             <>
                                                                 {field.bold && <h5 style={{ marginBottom: "1rem", marginLeft: "2rem", marginTop: "1rem" }}><b>{field.label}</b>
-                                                                <hr/></h5>}
+                                                                    <hr /></h5>}
 
-                                                                  <div className={`col-lg-${field.col_size}`} style={{ marginLeft: "4rem", display: "flex" }}>
+                                                                <div className={`col-lg-${field.col_size}`} style={{ marginLeft: "4rem", display: "flex" }}>
                                                                     <div className="row d-flex justify-content-start">
                                                                         <div className="mb-4">
                                                                             <div className="form-check custom-checkbox ">
@@ -605,9 +606,9 @@ const DynamicForm = ({
                                                                             )}
                                                                         </div>
                                                                     </div>
-                                                                 
+
                                                                 </div>
-                                                                    
+
                                                             </>
                                                         )}
                                                     </>
@@ -746,7 +747,7 @@ const DynamicForm = ({
                                                         <div className="col-lg-3">
                                                             <div className="row d-flex">
                                                                 <div className="col-lg-12 ">
-                                                                    <div className="form-check custom-checkbox input-block  mb-3">
+                                                                    <div className="form-check custom-checkbox input-block ps-0 mb-3">
                                                                         <label className="col-lg-6 " for={field.name}>
                                                                             {field.name}
                                                                         </label>

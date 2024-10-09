@@ -11,7 +11,7 @@ const Updatecoupon = () => {
   const { row } = location.state;
 
 
-  
+
 
 
   const token = localStorage.getItem("token");
@@ -192,7 +192,7 @@ const Updatecoupon = () => {
         <img
           src={`${imageBaseUrl}${row.image}`}
           alt="Uploaded"
-          style={{ width: "100px", marginTop: "10px" }}
+          style={{ width: "47px", marginTop: "13px" }}
         />
       ) : null,
     },
