@@ -10,9 +10,9 @@ import { Tooltip } from 'antd';
 
 const News = () => {
 
+     const navigate = useNavigate();
 
-
-    const navigate = useNavigate();
+     
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
@@ -75,7 +75,7 @@ const News = () => {
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
-                    text: response.message ||'Service updated successfully.',
+                    text: response.message || 'Service updated successfully.',
                     icon: 'success',
                     confirmButtonText: 'OK',
                     timer: 2000,
@@ -87,7 +87,7 @@ const News = () => {
             } else {
                 Swal.fire({
                     title: 'Error!',
-                    text:  response.message ||'There was an error updating the News.',
+                    text: response.message || 'There was an error updating the News.',
                     icon: 'error',
                     confirmButtonText: 'Try Again',
                 });
@@ -313,10 +313,7 @@ const News = () => {
                     </Tooltip>
                     {model && (
                         <>
-                            {/* Backdrop */}
                             <div className="modal-backdrop fade show"></div>
-
-                            {/* Modal */}
                             <div
                                 className="modal fade show"
                                 style={{ display: 'block' }}
@@ -388,14 +385,14 @@ const News = () => {
                                             <button
                                                 type="button"
                                                 className="btn btn-secondary"
-                                                onClick={() => setModel(false)} // Close modal on click
+                                                onClick={() => setModel(false)}
                                             >
                                                 Close
                                             </button>
                                             <button
                                                 type="button"
                                                 className="btn btn-primary"
-                                                onClick={updateNews} // Your update news function
+                                                onClick={updateNews}
                                             >
                                                 Update News
                                             </button>

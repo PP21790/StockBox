@@ -89,7 +89,7 @@ const Category = () => {
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
-                    text:  response.message|| 'Category updated successfully.',
+                    text:  response.message || 'Category updated successfully.',
                     icon: 'success',
                     confirmButtonText: 'OK',
                     timer: 2000,
@@ -357,7 +357,7 @@ const Category = () => {
 
 
 
-    
+
     const handleServiceChange = (serviceId, isChecked) => {
         if (isChecked) {
             setUpdatetitle({
