@@ -4,6 +4,9 @@ const { checkPermission } = require('../Middleware/permissionMiddleware');
 const {AddClient,getClient,updateClient,deleteClient,detailClient,statusChange,activeClient,processPayoutRequest,payoutList,freetrialList,deleteFreetrial,helpdeskList,deleteHelpdesk} = require('../Controllers/Clients')
 
 
+
+
+
 const PERMISSIONS = {
     ADD: 'addclient',
     VIEW: 'viewclient',
@@ -25,8 +28,9 @@ router.get('/client/freetriallist', freetrialList);
 router.get('/client/freetrialdelete/:id', deleteFreetrial);
 router.get('/client/helpdesklist', helpdeskList);
 router.get('/client/helpdeskdelete/:id', deleteHelpdesk);
-
 router.post('/client/process-payout-request', processPayoutRequest);
+
+
 
 
 module.exports = router;
