@@ -192,7 +192,7 @@ const Updatecoupon = () => {
         <img
           src={`${imageBaseUrl}${row.image}`}
           alt="Uploaded"
-          style={{ width: "47px", marginTop: "13  px" }}
+          style={{ width: "47px", marginTop: "13px" }}
         />
       ) : null,
     },

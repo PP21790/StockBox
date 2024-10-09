@@ -262,7 +262,7 @@ const DynamicForm = ({
                                                     </>
                                                 ) : field.type === "file" ? (
                                                     <>
-                                                        <div className='col-lg-4'>
+                                                        <div className={`col-lg-${field.col_size}`}>
                                                             <div className="profile-picture">
                                                                 <div className="upload-profile">
                                                                     <div className="profile-img">
@@ -308,7 +308,7 @@ const DynamicForm = ({
                                                 ) : field.type === "file2" ? (
                                                     <>
 
-                                                        <div className='col-lg-3'>
+                                                        <div className={`col-lg-${field.col_size}`}>
                                                             <div className="input-block mb-3">
                                                                 <label>
                                                                     {field.label}
@@ -322,16 +322,16 @@ const DynamicForm = ({
                                                                     onChange={(e) => handleFileChange2(e, index, field.name)}
                                                                     name={field.name}
                                                                 />
-                                                            </div>
-                                                        </div>
+                                                                            </div>
+                                                                        </div>
 
-                                                        {/* Additional content for image preview */}
-                                                        {field.additional_content && (
-                                                            <div className='col-lg-1'>
-                                                                {field.additional_content}
-                                                            </div>
-                                                        )}
-
+                                                                {/* Additional content for image preview */}
+                                                                {field.additional_content && (
+                                                                    <div className={`col-lg-${field.col_size}`}>
+                                                                        {field.additional_content}
+                                                                    </div>
+                                                                )}
+                                                       
 
 
                                                     </>
@@ -744,7 +744,7 @@ const DynamicForm = ({
                                                     </>
                                                 ) : field.type === "date" ? (
                                                     <>
-                                                        <div className="col-lg-4">
+                                                        <div className="col-lg-3">
                                                             <div className="row d-flex">
                                                                 <div className="col-lg-12 ">
                                                                     <div className="form-check custom-checkbox input-block ps-0 mb-3">
