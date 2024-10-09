@@ -646,6 +646,7 @@ const Client = () => {
                                                     {category && category.map((item, index) => (
                                                         <div className='col-lg-4' key={index}>
                                                             <input
+                                                              style={{ border: "1px solid black" }}
                                                                 className="form-check-input mx-2"
                                                                 type="radio"
                                                                 name="planSelection"
@@ -670,7 +671,8 @@ const Client = () => {
                                                                             <div className="card-body p-1">
                                                                                 <h5 className="card-title">
                                                                                     <input
-                                                                                        style={{ height: "13px", width: "13px", marginTop: "0.52rem" }}
+                                                                                        style={{ height: "13px", width: "13px", marginTop: "0.52rem" ,  border: "1px solid black"}}
+                                                                                       
                                                                                         className="form-check-input "
                                                                                         type="radio"
                                                                                         name="planSelection"
