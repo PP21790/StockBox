@@ -75,7 +75,7 @@ const News = () => {
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
-                    text: 'Service updated successfully.',
+                    text: response.message ||'Service updated successfully.',
                     icon: 'success',
                     confirmButtonText: 'OK',
                     timer: 2000,
@@ -87,7 +87,7 @@ const News = () => {
             } else {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'There was an error updating the service.',
+                    text:  response.message ||'There was an error updating the News.',
                     icon: 'error',
                     confirmButtonText: 'Try Again',
                 });
@@ -95,7 +95,7 @@ const News = () => {
         } catch (error) {
             Swal.fire({
                 title: 'Error!',
-                text: 'There was an error updating the service.',
+                text: 'There was an error updating the News.',
                 icon: 'error',
                 confirmButtonText: 'Try Again',
             });

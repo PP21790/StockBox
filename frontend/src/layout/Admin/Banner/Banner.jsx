@@ -74,7 +74,7 @@ const Banner = () => {
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
-                    text: 'Service updated successfully.',
+                    text: response.message || 'Banner updated successfully.',
                     icon: 'success',
                     confirmButtonText: 'OK',
                     timer: 2000,
@@ -86,7 +86,7 @@ const Banner = () => {
             } else {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'There was an error updating the service.',
+                    text: response.message || 'There was an error updating the Banner.',
                     icon: 'error',
                     confirmButtonText: 'Try Again',
                 });
@@ -94,7 +94,7 @@ const Banner = () => {
         } catch (error) {
             Swal.fire({
                 title: 'Error!',
-                text: 'There was an error updating the service.',
+                text: 'server error',
                 icon: 'error',
                 confirmButtonText: 'Try Again',
             });
@@ -113,7 +113,7 @@ const Banner = () => {
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
-                    text: 'blogs added successfully.',
+                    text: response.message || 'Banner added successfully.',
                     icon: 'success',
                     confirmButtonText: 'OK',
                     timer: 2000,
@@ -130,7 +130,7 @@ const Banner = () => {
             } else {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'There was an error adding.',
+                    text: response.message || 'There was an error adding.',
                     icon: 'error',
                     confirmButtonText: 'Try Again',
                 });
@@ -138,7 +138,7 @@ const Banner = () => {
         } catch (error) {
             Swal.fire({
                 title: 'Error!',
-                text: 'There was an error adding',
+                text: 'server error',
                 icon: 'error',
                 confirmButtonText: 'Try Again',
             });
@@ -480,8 +480,8 @@ const Banner = () => {
                                                                     <input
                                                                         className="form-control mb-3"
                                                                         type="text"
-                                                                      
-                                                                      
+
+
                                                                         onChange={(e) => {
                                                                             const file = e.target.files[0];
                                                                             if (file) {

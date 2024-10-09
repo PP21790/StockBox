@@ -2,6 +2,8 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 const Header = () => {
+
+
   return (
     <div>
       <>
@@ -52,7 +54,7 @@ const Header = () => {
                     <div className="dropdown-menu dropdown-menu-end">
                       <a href="javascript:;">
                         <div className="msg-header">
-                          <p className="msg-header-title">Notifications</p>
+                          <p className="msg-header-title">Notifications11</p>
                           <p className="msg-header-badge">8 New</p>
                         </div>
                       </a>

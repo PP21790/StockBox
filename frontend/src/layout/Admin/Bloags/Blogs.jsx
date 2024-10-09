@@ -74,7 +74,7 @@ const Blogs = () => {
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
-                    text: 'bolgs updated successfully.',
+                    text: response.message || 'bolgs updated successfully.',
                     icon: 'success',
                     confirmButtonText: 'OK',
                     timer: 2000,
@@ -86,7 +86,7 @@ const Blogs = () => {
             } else {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'There was an error updating the blogs.',
+                    text:  response.message || 'There was an error updating the blogs.',
                     icon: 'error',
                     confirmButtonText: 'Try Again',
                 });
@@ -94,7 +94,7 @@ const Blogs = () => {
         } catch (error) {
             Swal.fire({
                 title: 'Error!',
-                text: 'There was an error updating the blogs.',
+                text: 'server error',
                 icon: 'error',
                 confirmButtonText: 'Try Again',
             });
@@ -113,7 +113,7 @@ const Blogs = () => {
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
-                    text: 'blogs added successfully.',
+                    text:  response.message || 'blogs added successfully.',
                     icon: 'success',
                     confirmButtonText: 'OK',
                     timer: 2000,
@@ -130,7 +130,7 @@ const Blogs = () => {
             } else {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'There was an error adding.',
+                    text: response.message|| 'There was an error adding.',
                     icon: 'error',
                     confirmButtonText: 'Try Again',
                 });
@@ -138,7 +138,7 @@ const Blogs = () => {
         } catch (error) {
             Swal.fire({
                 title: 'Error!',
-                text: 'There was an error adding',
+                text: 'internal error',
                 icon: 'error',
                 confirmButtonText: 'Try Again',
             });
