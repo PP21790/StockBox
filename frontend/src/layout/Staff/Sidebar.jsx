@@ -17,7 +17,7 @@ const Sidebar = ({ onToggleClick }) => {
   }, []);
 
 
-  
+
 
   const getpermissioninfo = async () => {
     try {
@@ -35,11 +35,14 @@ const Sidebar = ({ onToggleClick }) => {
     setActiveDropdown(activeDropdown === dropdownName ? null : dropdownName);
   };
 
+
+
+
   const menuItems = [
-     { title: 'Dashboard', icon: 'bx bx-home-alt', link: '/staff/dashboard' },
-     permission.includes('viewclient') && { title: 'Client', icon: 'bx bx-user', link: '/staff/client' },
-     permission.includes('freetrial') && { title: 'Free Trial Client', icon: 'bx bx-user', link: '/staff/freeclient' },
-     (permission.includes('viewplan') || permission.includes('viewcategory')) && {
+    { title: 'Dashboard', icon: 'bx bx-home-alt', link: '/staff/dashboard' },
+    permission.includes('viewclient') && { title: 'Client', icon: 'bx bx-user', link: '/staff/client' },
+    permission.includes('freetrial') && { title: 'Free Trial Client', icon: 'bx bx-user', link: '/staff/freeclient' },
+    (permission.includes('viewplan') || permission.includes('viewcategory')) && {
       title: 'Plan',
       icon: 'bx bxl-redux',
       isDropdown: true,
@@ -47,16 +50,30 @@ const Sidebar = ({ onToggleClick }) => {
       subItems: [
         ...(permission.includes('viewplan') ? [{ title: 'Plan', link: '/staff/plan' }] : []),
         ...(permission.includes('viewcategory') ? [{ title: 'Category', link: '/staff/category' }] : []),
-      ].filter(Boolean), 
+      ].filter(Boolean),
     },
     permission.includes('viewstaff') && { title: 'Staff', icon: 'bx bx-user-plus', link: '/staff/staff' },
-    permission.includes('viewsignal') && { title: 'Signal', icon: 'bx bx-wifi-2', link: '/staff/signal' },
+    permission.includes('viewsignal') &&
+    {
+      title: 'Signal',
+      icon: 'bx-wifi-2',
+      isDropdown: true,
+      dropdownName: 'Signal',
+      subItems: [
+        { title: 'Open Signal', icon: 'bx-radio-circle', link: '/staff/signal' },
+        { title: 'Close Signal', icon: 'bx-radio-circle', link: '/staff/closesignal' },
+
+      ]
+    },
+
+
     permission.includes('paymenthistory') && { title: 'Payment History', icon: 'bx bx-credit-card', link: '/staff/paymenthistory' },
     permission.includes('viewblogs') && { title: 'Blogs', icon: 'bx bx-comment-detail', link: '/staff/blogs' },
     permission.includes('viewnews') && { title: 'News', icon: 'bx bx-news', link: '/staff/news' },
     permission.includes('viewcoupon') && { title: 'Coupon', icon: 'bx bx-edit-alt', link: '/staff/coupon' },
     permission.includes('viewbanner') && { title: 'Banner', icon: 'bx bx-news', link: '/staff/banner' },
     permission.includes('viewfaq') && { title: 'Faq', icon: 'bx bx-news', link: '/staff/faq' },
+    // permission.includes('viewfaq') && { title: 'Payment Request', icon: 'bx bx-news', link: '/staff/paymentrequest' },
   ].filter(Boolean);
 
   return (

@@ -518,79 +518,8 @@ const Dashbord = () => {
                     </div>
                 </div>
 
-                {/* <div className="row row-cols-1 row-cols-lg-3">
-                    <div className="col">
-                        <div className="card radius-10">
-                            <div className="card-body">
-                                <div className="d-flex align-items-center">
-                                    <div className="w_chart easy-dash-chart1" data-percent={60}>
-                                        <span className="w_percent">60</span>
-                                        <canvas height={110} width={110} />
-                                    </div>
-                                    <div className="ms-3">
-                                        <h6 className="mb-0">Facebook Followers</h6>
-                                        <small className="mb-0">
-                                            22.14% <i className="bx bxs-up-arrow align-middle me-1" />
-                                            Since Last Week
-                                        </small>
-                                    </div>
-                                    <div className="ms-auto fs-1 text-facebook">
-                                        <i className="bx bxl-facebook" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col">
-                        <div className="card radius-10">
-                            <div className="card-body">
-                                <div className="d-flex align-items-center">
-                                    <div className="w_chart easy-dash-chart2" data-percent={65}>
-                                        <span className="w_percent">65</span>
-                                        <canvas height={110} width={110} />
-                                    </div>
-                                    <div className="ms-3">
-                                        <h6 className="mb-0">Twitter Tweets</h6>
-                                        <small className="mb-0">
-                                            32.15% <i className="bx bxs-up-arrow align-middle me-1" />
-                                            Since Last Week
-                                        </small>
-                                    </div>
-                                    <div className="ms-auto fs-1 text-twitter">
-                                        <i className="bx bxl-twitter" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col">
-                        <div className="card radius-10">
-                            <div className="card-body">
-                                <div className="d-flex align-items-center">
-                                    <div className="w_chart easy-dash-chart3" data-percent={75}>
-                                        <span className="w_percent">75</span>
-                                        <canvas height={110} width={110} />
-                                    </div>
-                                    <div className="ms-3">
-                                        <h6 className="mb-0">Youtube Subscribers</h6>
-                                        <small className="mb-0">
-                                            58.24% <i className="bx bxs-up-arrow align-middle me-1" />
-                                            Since Last Week
-                                        </small>
-                                    </div>
-                                    <div className="ms-auto fs-1 text-youtube">
-                                        <i className="bx bxl-youtube" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>  */}
-                {/*End Row
 
 
-
-                {/*End Row*/}
                 <div className="card radius-10">
                     <div className="card-body">
                         <div className="d-flex align-items-center">

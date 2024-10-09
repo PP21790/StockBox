@@ -2039,3 +2039,41 @@ export async function getHelpMessagelist(token) {
         return err;
     }
 }
+
+
+// // add freetrial client 
+
+// export async function addfreeClient(data, token) {
+//     try {
+//         const res = await axios.post(`${Config.base_url}basicsetting/add`, data, {
+//             headers: {
+//                 data: {},
+//                 'Authorization': `${token}`,
+//             },
+//         });
+
+//         return res?.data;
+//     } catch (err) {
+
+//         return err.response?.data || err.message;
+//     }
+// }
+
+
+export async function addfreeClient(data, token) {
+    const formData = new FormData();
+    formData.append('freetrial', data.freetrial);
+    try {
+        const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}

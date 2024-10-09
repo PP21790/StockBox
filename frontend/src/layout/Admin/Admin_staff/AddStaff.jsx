@@ -104,14 +104,14 @@ const AddStaff = () => {
       col_size: 6,
       disable: false,
     },
-    // {
-    //   name: "UserName",
-    //   label: "User Name",
-    //   type: "text",
-    //   label_size: 12,
-    //   col_size: 6,
-    //   disable: false,
-    // },
+    {
+      name: "UserName",
+      label: "User Name",
+      type: "text",
+      label_size: 12,
+      col_size: 6,
+      disable: false,
+    },
     {
       name: "Email",
       label: "Email",
@@ -123,7 +123,7 @@ const AddStaff = () => {
     {
       name: "PhoneNo",
       label: "Phone Number",
-      type: "text3", // Ensure this is handled correctly in DynamicForm
+      type: "text3", 
       label_size: 12,
       col_size: 6,
       disable: false,

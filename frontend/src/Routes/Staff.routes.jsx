@@ -43,6 +43,8 @@ import Addcoupon from '../layout/Staff/Coupon/Addcoupon';
 import Updatecoupon from '../layout/Staff/Coupon/Updatecoupon';
 import Editplan from '../layout/Staff/Plans/Editplan';
 import Banner from '../layout/Staff/Banner/Banner';
+import Closesignal from '../layout/Staff/Signal/Closesignal';
+import PaymentRequest from '../layout/Staff/PaymentRequest/PaymentRequest';
 
 
 
@@ -152,11 +154,13 @@ function Staffrouting() {
 
                     {permission.includes("viewsignal") ? <Route path="/signal" element={<Signal />} /> : ""}
                     {permission.includes("addsignal") ? <Route path="/addsignal" element={<AddSignal />} /> : ""}
-                    {permission.includes("editsignal") ? <Route path="/signal/signaldetaile/:id" element={<Signaldetail />} />
+                    {permission.includes("editsignal") ? <Route path="/signaldetaile/:id" element={<Signaldetail />} />
                         : ""}
-
-
-
+                    {/* <Route path="/signaldetaile/:id" element={<Signaldetail/>} /> */}
+                     
+                    <Route path="/closesignal" element={<Closesignal/>} />
+                    
+  
 
 
                     {/* <Route path="/basket" element={<Basket />} />
@@ -206,7 +210,10 @@ function Staffrouting() {
                     <Route path="/emailsetting" element={<Emailsettings />} />
                     <Route path="/message" element={<Message />} />
                     <Route path="/changepass" element={<Changepass />} /> */}
+                   
 
+                   <Route path="/paymentrequest" element={<PaymentRequest/>} />
+                    
 
 
 

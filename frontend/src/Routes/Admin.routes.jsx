@@ -132,7 +132,8 @@ function MainApp() {
                     <Route path="/signal" element={<Signal/>} />
                     <Route path="/addsignal" element={<AddSignal/>} />
                     <Route path="/signaldetaile/:id" element={<Signaldetail/>} />
-                        
+                    <Route path="/closesignal" element={<Closesignal/>} />
+                     
 
                     <Route path="/basket" element={<Basket/>} />
                     <Route path="/addbasket" element={<Addbasket/>} />
@@ -180,7 +181,6 @@ function MainApp() {
                   
                     {/* <Route path="/changepass" element={<Changepass />} /> */}
                     <Route path="/help" element={<Help />} />
-                    <Route path="/closesignal" element={<Closesignal/>} />
                     <Route path="/paymentrequest" element={<PaymentRequest/>} />
                     <Route path="/freetrialstatus" element={<FreetrialStatus/>} />
                     

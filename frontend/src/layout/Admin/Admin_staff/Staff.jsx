@@ -152,12 +152,12 @@ const Staff = () => {
             sortable: true,
             width: '142px',
         },
-        // {
-        //     name: 'User Name',
-        //     selector: row => row.UserName   ,
-        //     sortable: true,
-        //     width: '180px',
-        // },
+        {
+            name: 'User Name',
+            selector: row => row.UserName   ,
+            sortable: true,
+            width: '180px',
+        },
         {
             name: 'Email',
             selector: row => row.Email,
