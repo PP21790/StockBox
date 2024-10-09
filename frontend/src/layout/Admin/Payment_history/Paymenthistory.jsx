@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getnewslist, AddNewsbyadmin, UpdateNewsbyadmin, changeNewsStatus, DeleteNews ,getPayementhistory} from '../../../Services/Admin';
+import { getnewslist, AddNewsbyadmin, UpdateNewsbyadmin, changeNewsStatus, DeleteNews, getPayementhistory } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
+import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
@@ -111,7 +111,23 @@ const History = () => {
             selector: row => new Date(row.planDetails.created_at).toLocaleDateString(),
             sortable: true,
         },
-       
+        {
+            name: 'Actions',
+            cell: row => (
+                <>
+                    <div>
+                        <Tooltip placement="top" overlay="View">
+                            <Eye />
+                        </Tooltip>
+                    </div>
+
+
+                </>
+            ),
+            ignoreRowClick: true,
+            allowOverflow: true,
+            button: true,
+        }
     ];
 
 
@@ -136,7 +152,7 @@ const History = () => {
                         </nav>
                     </div>
                 </div>
-                 <hr/>
+                <hr />
                 <div className="card">
                     <div className="card-body">
                         <div className="d-lg-flex align-items-center mb-4 gap-3">

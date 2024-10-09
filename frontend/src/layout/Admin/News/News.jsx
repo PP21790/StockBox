@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getnewslist, AddNewsbyadmin, UpdateNewsbyadmin, changeNewsStatus, DeleteNews } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
+import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
@@ -297,6 +297,11 @@ const News = () => {
             name: 'Actions',
             cell: row => (
                 <>
+                    <div>
+                        <Tooltip placement="top" overlay="View">
+                            <Eye style={{ marginRight: "10px" }} />
+                        </Tooltip>
+                    </div>
                     <Tooltip placement="top" overlay="Updte">
                         <SquarePen
                             onClick={() => {

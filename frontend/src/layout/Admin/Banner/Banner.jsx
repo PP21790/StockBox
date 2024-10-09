@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getbannerlist, Addbanner, UpdateBanner, changeBannerStatus, DeleteBanner } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
+import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { fDateTime } from '../../../Utils/Date_formate';
 import { image_baseurl } from '../../../Utils/config';
+import { Tooltip } from 'antd';
 
 const Banner = () => {
 
@@ -290,16 +291,25 @@ const Banner = () => {
             cell: row => (
                 <>
                     <div>
-                        <SquarePen
-                            onClick={() => {
-                                setModel(true);
-                                setServiceid(row);
-                                setUpdatetitle({ title: row.title, id: row._id, description: row.description, image: row.image });
-                            }}
-                        />
+                        <Tooltip placement="top" overlay="View">
+                            <Eye style={{ marginRight: "10px" }} />
+                        </Tooltip>
                     </div>
                     <div>
-                        <Trash2 onClick={() => Deletebannerlist(row._id)} />
+                        <Tooltip placement="top" overlay="Updaate">
+                            <SquarePen
+                                onClick={() => {
+                                    setModel(true);
+                                    setServiceid(row);
+                                    setUpdatetitle({ title: row.title, id: row._id, description: row.description, image: row.image });
+                                }}
+                            />
+                        </Tooltip>
+                    </div>
+                    <div>
+                        <Tooltip placement="top" overlay="Delete">
+                            <Trash2 onClick={() => Deletebannerlist(row._id)} />
+                        </Tooltip>
                     </div>
                 </>
             ),
@@ -480,8 +490,8 @@ const Banner = () => {
                                                                     <input
                                                                         className="form-control mb-3"
                                                                         type="text"
-                                                                      
-                                                                      
+
+
                                                                         onChange={(e) => {
                                                                             const file = e.target.files[0];
                                                                             if (file) {

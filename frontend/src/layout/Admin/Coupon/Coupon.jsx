@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getcouponlist } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { Pencil, Trash2 } from 'lucide-react';
+import { Eye, Pencil, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { DeleteCoupon, UpdateClientStatus } from '../../../Services/Admin';
 import { image_baseurl } from '../../../Utils/config';
@@ -19,20 +19,20 @@ const Coupon = () => {
 
     const [clients, setClients] = useState([]);
     const [searchInput, setSearchInput] = useState("");
-   
+
     const token = localStorage.getItem('token');
 
 
-    
+
     const getcoupon = async () => {
         try {
             const response = await getcouponlist(token);
             if (response.status) {
                 const filterdata = response.data.filter((item) =>
                     searchInput === "" ||
-                    item.name.toLowerCase().includes(searchInput.toLowerCase())||
+                    item.name.toLowerCase().includes(searchInput.toLowerCase()) ||
                     item.code.toLowerCase().includes(searchInput.toLowerCase()) ||
-                    item.description.toLowerCase().includes(searchInput.toLowerCase()) 
+                    item.description.toLowerCase().includes(searchInput.toLowerCase())
                 );
                 setClients(searchInput ? filterdata : response.data);
                 // setClients(response.data);
@@ -239,6 +239,11 @@ const Coupon = () => {
             cell: row => (
                 <>
                     <div>
+                        <Tooltip placement="top" overlay="View">
+                            <Eye style={{ marginRight: "10px" }} />
+                        </Tooltip>
+                    </div>
+                    <div>
                         <Tooltip placement="top" overlay="Edit">
                             <Pencil onClick={() => updatecoupon(row)} />
                         </Tooltip>
@@ -279,13 +284,13 @@ const Coupon = () => {
                         <div className="card-body">
                             <div className="d-lg-flex align-items-center mb-4 gap-3">
                                 <div className="position-relative">
-                                <input
-                                    type="text"
-                                    className="form-control ps-5 radius-10"
-                                    placeholder="Search Order"
-                                    onChange={(e) => setSearchInput(e.target.value)}
-                                    value={searchInput}
-                                />
+                                    <input
+                                        type="text"
+                                        className="form-control ps-5 radius-10"
+                                        placeholder="Search Order"
+                                        onChange={(e) => setSearchInput(e.target.value)}
+                                        value={searchInput}
+                                    />
                                     <span className="position-absolute top-50 product-show translate-middle-y">
                                         <i className="bx bx-search" />
                                     </span>

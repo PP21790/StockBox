@@ -3,7 +3,7 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetStaff } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { Pencil, Trash2, UserCog } from 'lucide-react';
+import { Eye, Pencil, Trash2, UserCog } from 'lucide-react';
 import { deleteStaff, updateStaffstatus } from '../../../Services/Admin';
 import Swal from 'sweetalert2';
 import { Tooltip } from 'antd';
@@ -217,7 +217,13 @@ const Staff = () => {
         {
             name: 'Actions',
             cell: row => (
-                <>
+                < >
+                
+                    <div>
+                        <Tooltip placement="top" overlay="View">
+                            <Eye />
+                        </Tooltip>
+                    </div>
                     <div>
                         <Tooltip placement="top" overlay="Permision">
                             <UserCog onClick={() => updatepermission(row)} />
@@ -246,7 +252,7 @@ const Staff = () => {
             <div>
                 <div>
                     <div className="page-content">
-                  
+
                         <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
                             <div className="breadcrumb-title pe-3">Staff</div>
                             <div className="ps-3">
@@ -261,8 +267,8 @@ const Staff = () => {
                                 </nav>
                             </div>
                         </div>
-                        <hr/>
-                    
+                        <hr />
+
                         <div className="card">
                             <div className="card-body">
                                 <div className="d-lg-flex align-items-center mb-4 gap-3">
