@@ -24,7 +24,7 @@ const Emailtemplate = () => {
         mail_subject: "",
         id: "",
         mail_body: "",
-       
+
 
     });
 
@@ -50,8 +50,8 @@ const Emailtemplate = () => {
 
     const updateemaitemplate = async () => {
         try {
-            const data = { mail_subject: updatetitle.mail_subject, id: templateid,  mail_body: updatetitle.mail_body };
-          
+            const data = { mail_subject: updatetitle.mail_subject, id: templateid, mail_body: updatetitle.mail_body };
+
             const response = await UpdateTemplate(data, token);
 
             if (response && response.status) {
@@ -134,7 +134,7 @@ const Emailtemplate = () => {
                         </nav>
                     </div>
                 </div>
-                <hr/>
+                <hr />
                 <div className="row">
                     {clients.map((client, index) => (
                         <div className="col-md-6 col-lg-4" key={index}>
@@ -147,7 +147,7 @@ const Emailtemplate = () => {
                                         onClick={() => {
                                             setModel(true);
                                             setTemplateid(client._id);
-                                            setUpdatetitle({ mail_subject: client.mail_subject, id: client._id, mail_body: client.mail_body,});
+                                            setUpdatetitle({ mail_subject: client.mail_subject, id: client._id, mail_body: client.mail_body, });
                                         }}
                                     >
                                         <SquarePen />
@@ -219,19 +219,7 @@ const Emailtemplate = () => {
                                 </div>
                                 <div className="modal-body">
                                     <form className="row g-3">
-                                        {/* <div className="col-md-12">
-                                            <label htmlFor="mailType" className="form-label">
-                                                Mail Type
-                                            </label>
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                id="mailType"
-                                                value={updatetitle.title}
-                                                onChange={(e) => updateServiceTitle({ title: e.target.value })}
-                                                
-                                            />
-                                        </div> */}
+
                                         <div className="col-md-12">
                                             <label htmlFor="subject" className="form-label">
                                                 Subject
@@ -242,7 +230,7 @@ const Emailtemplate = () => {
                                                 id="subject"
                                                 value={updatetitle.mail_subject}
                                                 onChange={(e) => updateServiceTitle({ mail_subject: e.target.value })}
-                                                
+
                                             />
                                         </div>
 

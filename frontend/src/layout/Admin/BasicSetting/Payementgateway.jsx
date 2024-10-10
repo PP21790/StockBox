@@ -3,31 +3,33 @@ import { basicsettinglist, updatePayementgateway } from '../../../Services/Admin
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 
-
-
 const Payementgateway = () => {
-
-
     const token = localStorage.getItem('token');
     const user_id = localStorage.getItem('id');
 
-
     const [clients, setClients] = useState(null);
+    const [initialValues, setInitialValues] = useState({
+        razorpay_secret: "",
+        razorpay_key: ""
+    });
     const [updateapi, setUpdateapi] = useState({
         razorpay_secret: "",
         razorpay_key: ""
     });
 
-
     const getApidetail = async () => {
         try {
             const response = await basicsettinglist(token);
             if (response?.status && response?.data) {
-                const clientData = response.data;
+                const clientData = response.data[0];
                 setClients(clientData);
+                setInitialValues({
+                    razorpay_key: clientData.razorpay_key || "",
+                    razorpay_secret: clientData.razorpay_secret || ""
+                });
                 setUpdateapi({
-                    razorpay_key: clientData[0].razorpay_key || "",
-                    razorpay_secret: clientData[0].razorpay_secret || ""
+                    razorpay_key: clientData.razorpay_key || "",
+                    razorpay_secret: clientData.razorpay_secret || ""
                 });
             }
         } catch (error) {
@@ -35,14 +37,16 @@ const Payementgateway = () => {
         }
     };
 
-
-
     useEffect(() => {
         getApidetail();
     }, []);
 
-
-
+    const hasChanges = () => {
+        return (
+            initialValues.razorpay_key !== updateapi.razorpay_key ||
+            initialValues.razorpay_secret !== updateapi.razorpay_secret
+        );
+    };
 
     const UpdateApi = async () => {
         try {
@@ -56,9 +60,10 @@ const Payementgateway = () => {
                 });
                 return;
             }
+
             const data = {
                 id: user_id,
-                razorpay_key: updateapi.razorpay_secret,
+                razorpay_key: updateapi.razorpay_key,
                 razorpay_secret: updateapi.razorpay_secret
             };
 
@@ -71,6 +76,7 @@ const Payementgateway = () => {
                     timer: 1500,
                     timerProgressBar: true,
                 });
+                setInitialValues(updateapi); // Reset the initial values after a successful update
             }
         } catch (error) {
             Swal.fire({
@@ -83,12 +89,9 @@ const Payementgateway = () => {
         }
     };
 
-
-
     return (
         <div>
             <div className="page-content">
-
                 <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
                     <div className="breadcrumb-title pe-3">Payment Gateway Detail</div>
                     <div className="ps-3">
@@ -105,7 +108,6 @@ const Payementgateway = () => {
                 </div>
                 <hr />
                 <div className="row row-cols-1 row-cols-md-3 row-cols-lg-3 row-cols-xl-3 justify-content-center">
-
                     <div className="col" style={{ width: "50%" }}>
                         <div className="card">
                             <div className="card-header mt-2">
@@ -113,8 +115,6 @@ const Payementgateway = () => {
                             <div className="card-body mt-2">
                                 <form className="row g-3 mt-2 mb-3">
                                     <div className="row">
-
-
                                         <div className="col-md-12 mb-2">
                                             <label htmlFor="input3" className="form-label">
                                                 Razorpay Key
@@ -125,10 +125,8 @@ const Payementgateway = () => {
                                                 id="input3"
                                                 value={updateapi.razorpay_key}
                                                 onChange={(e) => setUpdateapi({ ...updateapi, razorpay_key: e.target.value })}
-
                                             />
                                         </div>
-
                                         <div className="col-md-12 mb-2">
                                             <label htmlFor="input3" className="form-label">
                                                 Razorpay Secret Key
@@ -139,27 +137,27 @@ const Payementgateway = () => {
                                                 id="input3"
                                                 value={updateapi.razorpay_secret}
                                                 onChange={(e) => setUpdateapi({ ...updateapi, razorpay_secret: e.target.value })}
-
                                             />
                                         </div>
                                     </div>
                                 </form>
                             </div>
                             <div className="card-footer text-center">
-
-                                <button type="button" className="btn btn-primary mb-2"
-                                    onClick={(e) => UpdateApi()}
+                                <button
+                                    type="button"
+                                    className="btn btn-primary mb-2"
+                                    onClick={UpdateApi}
+                                    disabled={!hasChanges()} // Disable the button if no changes
                                 >
                                     Update
-                                </button></div>
+                                </button>
+                            </div>
                         </div>
                     </div>
-
                 </div>
-
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default Payementgateway
+export default Payementgateway;
