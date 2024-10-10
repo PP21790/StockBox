@@ -11,7 +11,8 @@ const path = require('path');
 const cors = require('cors');
 const bodyparser = require('body-parser');
 const db = require("./App/Models");
-require('./App/Controllers/Cron.js'); // Adjust the path based on your file structure
+//const { AddBulkStockCron } = require('./App/Controllers/Cron.js'); 
+require('./App/Controllers/Cron.js'); 
 const Clients_Modal = db.Clients;
 const BasicSetting_Modal = db.BasicSetting;
 const Blogs_Modal = db.Blogs;
@@ -61,10 +62,21 @@ app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 const server = http.createServer(app);
 
+
+
+// app.get('/cron', (req, res) => {
+//   AddBulkStockCron()
+//   res.json("done")
+// })
+
+
+
 // Importing routes
 require('./App/Routes/index')(app)
 require('./App/api/Routes/index')(app)
 //require('./App/api/Routes/index')(app)
+
+
 
 // httpsserver.listen(1001)
 server.listen(process.env.PORT, () => {

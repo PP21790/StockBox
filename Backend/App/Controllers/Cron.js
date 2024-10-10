@@ -15,12 +15,12 @@ cron.schedule('0 1 * * *', async () => {
 });
 cron.schedule('0 2 * * *', async () => {
         await AddBulkStockCron();
+
   });
 
 
 async function AddBulkStockCron(req, res) {
     try {
-     
       const config = {
           method: 'get',
           url: 'https://margincalculator.angelbroking.com/OpenAPI_File/files/OpenAPIScripMaster.json',
@@ -52,7 +52,7 @@ async function AddBulkStockCron(req, res) {
           //     element.instrumenttype === 'FUTCUR' && element.name != ""
           // );
           const filteredDataC = response.data.filter(element =>
-              element.symbol.slice(-3) === '-EQ' && element.name != ""
+              (element.symbol.slice(-3) === '-EQ' || element.symbol.slice(-3) === '-BE') && element.name != ""
           );
   
           // const filteredDataBO = response.data.filter(element =>
@@ -240,4 +240,4 @@ const DeleteTokenAliceToken = async () => {
   
   }
   
-    
+  module.exports = { AddBulkStockCron,DeleteTokenAliceToken };
