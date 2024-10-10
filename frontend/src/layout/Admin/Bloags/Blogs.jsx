@@ -86,7 +86,7 @@ const Blogs = () => {
             } else {
                 Swal.fire({
                     title: 'Error!',
-                    text:  response.message || 'There was an error updating the blogs.',
+                    text: response.message || 'There was an error updating the blogs.',
                     icon: 'error',
                     confirmButtonText: 'Try Again',
                 });
@@ -113,7 +113,7 @@ const Blogs = () => {
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
-                    text:  response.message || 'blogs added successfully.',
+                    text: response.message || 'blogs added successfully.',
                     icon: 'success',
                     confirmButtonText: 'OK',
                     timer: 2000,
@@ -130,7 +130,7 @@ const Blogs = () => {
             } else {
                 Swal.fire({
                     title: 'Error!',
-                    text: response.message|| 'There was an error adding.',
+                    text: response.message || 'There was an error adding.',
                     icon: 'error',
                     confirmButtonText: 'Try Again',
                 });
@@ -244,7 +244,7 @@ const Blogs = () => {
             name: 'S.No',
             selector: (row, index) => index + 1,
             sortable: false,
-            width: '70px',
+            width: '78px',
         },
         {
             name: 'Title',
@@ -298,7 +298,7 @@ const Blogs = () => {
                 <>
                     <div>
                         <Tooltip placement="top" overlay="View">
-                            <Eye style={{marginRight:"10px"}}/>
+                            <Eye style={{ marginRight: "10px" }} />
                         </Tooltip>
                     </div>
                     <div>
@@ -329,7 +329,7 @@ const Blogs = () => {
 
     // const updateServiceTitle = (value) => {
     //     setUpdatetitle(prev => ({
-    //         ...prev,
+    //         ...prev,`
     //         title: value
     //     }));
     // };

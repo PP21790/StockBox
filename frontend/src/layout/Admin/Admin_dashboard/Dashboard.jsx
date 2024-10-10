@@ -283,7 +283,7 @@ const Dashbord = () => {
                                 <div className="d-flex align-items-center">
                                     <h5 className="mb-0 text-white">{data.clientCountActive && data.clientCountActive}</h5>
                                     <div className="ms-auto">
-                                        <i className="bx bx-basket fs-3 text-white" />
+                                        <i className="fadeIn animated bx bx-user-circle fs-3 text-white" />
                                     </div>
                                 </div>
                                 <div
@@ -317,7 +317,7 @@ const Dashbord = () => {
                                 <div className="d-flex align-items-center">
                                     <h5 className="mb-0 text-white">{data.clientCountTotal - data.clientCountActive}</h5>
                                     <div className="ms-auto">
-                                        <i className="bx bxl-redux fs-3 text-white" />
+                                        <i className="fadeIn animated bx bx-user-x fs-3 text-white" />
                                     </div>
                                 </div>
                                 <div
@@ -419,7 +419,7 @@ const Dashbord = () => {
                                 <div className="d-flex align-items-center">
                                     <h5 className="mb-0 text-white">{data.CloseSignalCountTotal && data.CloseSignalCountTotal}</h5>
                                     <div className="ms-auto">
-                                        <i className="bx bx-wifi-2 fs-3 text-white" />
+                                        <i className="fadeIn animated bx bx-wifi-off fs-3 text-white" />
                                     </div>
                                 </div>
                                 <div
@@ -454,7 +454,7 @@ const Dashbord = () => {
                                 <div className="d-flex align-items-center">
                                     <h5 className="mb-0 text-white">{data.PlanCountTotal && data.PlanCountTotal}</h5>
                                     <div className="ms-auto">
-                                        <i className="bx bx-wifi-2 fs-3 text-white" />
+                                        <i className="bx bxl-redux fs-3 text-white" />
                                     </div>
                                 </div>
                                 <div

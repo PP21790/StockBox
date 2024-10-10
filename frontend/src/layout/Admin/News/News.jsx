@@ -10,9 +10,9 @@ import { Tooltip } from 'antd';
 
 const News = () => {
 
-     const navigate = useNavigate();
+    const navigate = useNavigate();
 
-     
+
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
@@ -244,7 +244,7 @@ const News = () => {
             name: 'S.No',
             selector: (row, index) => index + 1,
             sortable: false,
-            width: '70px',
+            width: '78px',
         },
         {
             name: 'Title',
