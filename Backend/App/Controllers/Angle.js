@@ -362,7 +362,13 @@ class Angle {
                 });
 
               
-    
+                let positionData=0;
+                try {
+                  const positionData = await CheckPosition(client.apikey, authToken, stock.segment,stock.instrument_token,producttype,signal.calltype,stock.tradesymbol);
+              } catch (error) {
+                  console.error('Error in CheckPosition:', error.message);
+                
+              }
 
                 let holdingData=0;
                 if(stock.segment=="C") {
@@ -375,7 +381,7 @@ class Angle {
                     }
 
 
-          /*  const config = {
+           const config = {
                 method: 'post',
                 url: 'https://apiconnect.angelone.in/rest/secure/angelbroking/order/v1/placeOrder',
               
@@ -435,12 +441,10 @@ class Angle {
                 });
     
             });
-            */
+        
 
 
-            return res.status(500).json({ 
-                status: false, 
-            });
+           
        
         } catch (error) {
             console.error("Error placing order:", error); // Log the error
@@ -458,6 +462,80 @@ class Angle {
 
 
 
+
+async function CheckPosition(userId, authToken , segment, instrument_token, producttype, calltype, trading_symbol) {
+    
+
+    var config = {
+        method: 'get',
+        url: 'https://apiconnect.angelbroking.com/rest/secure/angelbroking/order/v1/getPosition',
+        headers: {
+            'Authorization': 'Bearer ' + authToken,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-UserType': 'USER',
+            'X-SourceID': 'WEB',
+            'X-ClientLocalIP': 'CLIENT_LOCAL_IP',
+            'X-ClientPublicIP': 'CLIENT_PUBLIC_IP',
+            'X-MACAddress': 'MAC_ADDRESS',
+            'X-PrivateKey': userId
+        },
+    };
+
+    axios(config)
+    .then(async (response) => {
+
+        if (response.data.data != null && response.data.message == "SUCCESS") {
+            const Exist_entry_order = response.data.data.find(item1 => item1.symboltoken === instrument_token);
+
+            if (Exist_entry_order !== undefined) {
+                let possition_qty;
+                if (segment.toUpperCase() === 'C') {
+                    possition_qty = parseInt(Exist_entry_order.buyqty) - parseInt(Exist_entry_order.sellqty);
+                } else {
+                    possition_qty = Exist_entry_order.netqty;
+                }
+
+                if (possition_qty === 0) {
+                    return {
+                        status: false,
+                        qty: 0,
+                    };
+                 
+                } else {
+
+                    if ((possition_qty > 0 && type === 'LX') || (possition_qty < 0 && type === 'SX')) {
+                       
+                        return {
+                            status: true,
+                            qty: possition_qty,
+                        };
+                    }
+                }
+            } else {
+
+                return {
+                    status: false,
+                    qty: 0,
+                };
+            }
+        } else {
+            return {
+                status: false,
+                qty: 0,
+            };
+
+        }
+    })
+    .catch(async (error) => {
+        return {
+            status: false,
+            qty: 0,
+        };
+          
+    });
+
+}
 
 
 

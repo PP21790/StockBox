@@ -10,6 +10,7 @@ const Mailtemplate_Modal = db.Mailtemplate;
 const BasicSetting_Modal = db.BasicSetting;
 const Freetrial_Modal = db.Freetrial;
 const Helpdesk_Modal = db.Helpdesk;
+const PlanSubscription_Modal = db.PlanSubscription;
 
 
 class Clients {
@@ -626,6 +627,48 @@ const deletedHelpdesk = await Helpdesk_Modal.findByIdAndUpdate(
     error: error.message,
   });
 }
+}
+
+
+async  myPlan(req, res) {
+  try {
+    const { id } = req.params; 
+    console.log(id);
+
+    if (!id) {
+      return res.status(400).json({ status: false, message: 'Client ID is required' });
+    }
+    
+    const result = await PlanSubscription_Modal.aggregate([
+  {
+    $match: {
+      del: false,
+      client_id: new mongoose.Types.ObjectId(id) // Convert id to ObjectId if necessary
+    }
+  },
+  {
+    $lookup: {
+      from: 'plans', // The name of the plans collection
+      localField: 'plan_id', // The field in PlanSubscription_Modal that references the plans
+      foreignField: '_id', // The field in the plans collection that is referenced
+      as: 'planDetails' // The name of the field in the result that will hold the joined data
+    }
+  },
+  {
+    $unwind: '$planDetails' // Optional: Unwind the result if you expect only one matching plan per subscription
+  }
+]);
+
+    return res.json({
+      status: true,
+      message: "Subscriptions retrieved successfully",
+      data: result
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ status: false, message: 'Server error', data: [] });
+  }
 }
 
 

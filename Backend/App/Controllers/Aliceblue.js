@@ -399,21 +399,19 @@ class Aliceblue {
 
                 
                                
+              let positionData=0;
+                  try {
+                    const positionData = await CheckPosition(userId, authToken, stock.segment,stock.instrument_token,producttype,signal.calltype,stock.tradesymbol);
+                } catch (error) {
+                    console.error('Error in CheckPosition:', error.message);
                   
-                //   try {
-                //     const positionData = await CheckPosition(userId, authToken);
-                //     console.log('Position Data:', positionData); 
-                   
-                // } catch (error) {
-                //     console.error('Error in CheckPosition:', error.message);
-                  
-                // }
+                }
 
 
           let holdingData=0;
         if(stock.segment=="C") {
                 try {
-                    const holdingData = await CheckHolding(userId, authToken , stock.segment,stock.instrument_token,producttype,signal.calltype);
+                    const holdingData = await CheckHolding(userId, authToken, stock.segment,stock.instrument_token,producttype,signal.calltype);
                 } catch (error) {
                     console.error('Error in CheckHolding:', error.message);
                 }
@@ -421,72 +419,65 @@ class Aliceblue {
             }
 
                 
-    
 
-                // let config = {
-                //     method: 'post',
-                //     maxBodyLength: Infinity,
-                //     url: 'https://ant.aliceblueonline.com/rest/AliceBlueAPIService/api/placeOrder/executePlaceOrder',
-                //     headers: {
-                //         'Authorization': 'Bearer ' + userId + ' ' + authToken,
-                //         'Content-Type': 'application/json',
-                //     },
-                //     data: data
-                // };
+                let config = {
+                    method: 'post',
+                    maxBodyLength: Infinity,
+                    url: 'https://ant.aliceblueonline.com/rest/AliceBlueAPIService/api/placeOrder/executePlaceOrder',
+                    headers: {
+                        'Authorization': 'Bearer ' + userId + ' ' + authToken,
+                        'Content-Type': 'application/json',
+                    },
+                    data: data
+                };
 
-                // axios(config)
-                // .then(async (response) => {
+                axios(config)
+                .then(async (response) => {
                   
-                //     const responseData = response.data;
+                    const responseData = response.data;
     
     
-                // if (responseData[0].stat == 'Ok') {
+                if (responseData[0].stat == 'Ok') {
     
-                //     const order = new Order_Modal({
-                //         clientid: client._id,
-                //         signalid:signal._id,
-                //         orderid:responseData[0].NOrdNo,
-                //         borkerid:2,
-                //     });
+                    const order = new Order_Modal({
+                        clientid: client._id,
+                        signalid:signal._id,
+                        orderid:responseData[0].NOrdNo,
+                        borkerid:2,
+                    });
     
     
-                //    await order.save();
-                //     return res.json({
-                //         status: true,
-                //         data: response.data 
-                //     });
-                // }
-                // else{
+                   await order.save();
+                    return res.json({
+                        status: true,
+                        data: response.data 
+                    });
+                }
+                else{
                    
-                //        return res.status(500).json({ 
-                //         status: false, 
-                //         message: response.data 
-                //     });
-                // }
+                       return res.status(500).json({ 
+                        status: false, 
+                        message: response.data 
+                    });
+                }
         
-                // })
-                // .catch(async (error) => {
-                //     const message = (JSON.stringify(error.response.data)).replace(/["',]/g, '');
+                })
+                .catch(async (error) => {
+                    const message = (JSON.stringify(error.response.data)).replace(/["',]/g, '');
 
-                //     let url;
-                //     if(message=="") {
-                //         url =  `https://ant.aliceblueonline.com/?appcode=${client.apikey}`; 
-                //     }
+                    let url;
+                    if(message=="") {
+                        url =  `https://ant.aliceblueonline.com/?appcode=${client.apikey}`; 
+                    }
 
-                //     return res.status(500).json({ 
-                //         status: false, 
-                //         url: url, 
-                //         message: message 
-                //     });
+                    return res.status(500).json({ 
+                        status: false, 
+                        url: url, 
+                        message: message 
+                    });
         
-                // });
-
-
-
-                return res.status(500).json({ 
-                    status: false, 
                 });
-            
+
         } catch (error) {
             return res.status(500).json({ 
                 status: false, 
@@ -500,32 +491,108 @@ class Aliceblue {
 }
 
 
-async function CheckPosition(userId, authToken) {
-    var data = JSON.stringify(
-        {
-          "ret": "DAY"
-        }
-      );
-
+async function CheckPosition(userId, authToken , segment, instrument_token, producttype, calltype, trading_symbol) {
     
-    const config = {
+
+    var data_possition = {
+        "ret": "NET"
+    }
+    var config = {
         method: 'post',
         url: 'https://ant.aliceblueonline.com/rest/AliceBlueAPIService/api/positionAndHoldings/positionBook',
         headers: {
             'Authorization': 'Bearer ' + userId + ' ' + authToken,
             'Content-Type': 'application/json'
         },
-        data: data
+        data: JSON.stringify(data_possition)
     };
+    axios(config)
+        .then(async (response) => {
+ 
+            if (Array.isArray(response.data)) {
 
-    try {
-        const response = await axios(config); // Await the response
-        
-        return response.data; 
-    } catch (error) {
-        console.error('Error fetching position:', error.response ? error.response.data : error.message);
-        return 0; 
-    }
+                const Exist_entry_order = response.data.find(item1 => item1.Token === instrument_token && item1.Pcode == producttype);
+
+                if(Exist_entry_order != undefined){
+                    if (segment.toUpperCase() == 'C') {
+
+                        const possition_qty = parseInt(Exist_entry_order.Bqty) - parseInt(Exist_entry_order.Sqty);
+                     
+                        if (possition_qty == 0) {
+                            return {
+                                status: false,
+                                qty: 0,
+                            };
+
+                        } else {
+
+                            if (possition_qty > 0 && type == 'LX') {
+     
+                                return {
+                                    status: true,
+                                    qty: possition_qty,
+                                };
+
+                            } else if (possition_qty < 0 && type == 'SX') {
+                              
+                                return {
+                                    status: true,
+                                    qty: possition_qty,
+                                };
+                            }
+                        }
+
+
+                    } else {
+                        item.postdata.trading_symbol = Exist_entry_order.Tsym;
+                        const possition_qty = Exist_entry_order.Netqty;                         
+                        if (possition_qty == 0) {
+                            return {
+                                status: false,
+                                qty: 0,
+                            };
+                        } else {
+
+                            if (possition_qty > 0 && type == 'LX') {
+                                ExitPlaceOrder(item, filePath, possition_qty, signals, signal_req)
+                            } else if (possition_qty < 0 && type == 'SX') {
+                                ExitPlaceOrder(item, filePath, possition_qty, signals, signal_req)
+                            }
+
+                        }
+
+                    }
+                }else{
+                    return {
+                        status: false,
+                        qty: 0,
+                    };
+                }
+
+               
+            } else {
+
+                return {
+                    status: false,
+                    qty: 0,
+                };
+
+            }
+
+
+
+
+        })
+        .catch(async (error) => {
+            
+            return {
+                status: false,
+                message:err,
+                qty: 0,
+            };
+
+            });
+
 }
 
 async function CheckHolding(userId, authToken, segment, instrument_token, producttype, calltype) {
