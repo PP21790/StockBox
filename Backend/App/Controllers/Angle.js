@@ -345,31 +345,14 @@ class Angle {
             }
 
 
-
-            var data = JSON.stringify({
-                "variety":"NORMAL",
-                "tradingsymbol":stock.tradesymbol,
-                "symboltoken":stock.instrument_token,
-                "transactiontype":signal.calltype,
-                "exchange":exchange,
-                "ordertype":"MARKET",
-                "producttype":producttype,
-                "duration":"DAY",
-                "price":price,
-                "squareoff":"0",
-                "stoploss":"0",
-                "quantity":quantity
-                });
-
-              
                 let positionData=0;
                 try {
                   const positionData = await CheckPosition(client.apikey, authToken, stock.segment,stock.instrument_token,producttype,signal.calltype,stock.tradesymbol);
-              } catch (error) {
+                } catch (error) {
                   console.error('Error in CheckPosition:', error.message);
                 
               }
-
+              let totalValue=0;
                 let holdingData=0;
                 if(stock.segment=="C") {
                         try {
@@ -377,8 +360,37 @@ class Angle {
                         } catch (error) {
                             console.error('Error in CheckHolding:', error.message);
                         }
-        
+                        totalValue = Math.abs(positionData)+holdingData;
                     }
+                    else
+                    {
+                        totalValue = Math.abs(positionData)
+                    }
+
+                    let calltypes;
+                    if(signal.calltype === 'BUY')
+                    {
+                        calltypes = "SELL";
+                    }
+                    else {
+                        calltypes = "BUY";
+                    }
+        
+                    if(totalValue>=quantity) { 
+                    var data = JSON.stringify({
+                        "variety":"NORMAL",
+                        "tradingsymbol":stock.tradesymbol,
+                        "symboltoken":stock.instrument_token,
+                        "transactiontype":calltypes,
+                        "exchange":exchange,
+                        "ordertype":"MARKET",
+                        "producttype":producttype,
+                        "duration":"DAY",
+                        "price":price,
+                        "squareoff":"0",
+                        "stoploss":"0",
+                        "quantity":quantity
+                        });
 
 
            const config = {
@@ -442,10 +454,16 @@ class Angle {
     
             });
         
+        }
+        else{
 
+            return res.status(500).json({ 
+                status: false, 
+                message: "Sorry, the requested quantity is not available." 
+            });
 
-           
-       
+        }
+
         } catch (error) {
             console.error("Error placing order:", error); // Log the error
             return res.status(500).json({ 
@@ -485,6 +503,7 @@ async function CheckPosition(userId, authToken , segment, instrument_token, prod
     axios(config)
     .then(async (response) => {
 
+
         if (response.data.data != null && response.data.message == "SUCCESS") {
             const Exist_entry_order = response.data.data.find(item1 => item1.symboltoken === instrument_token);
 
@@ -503,14 +522,10 @@ async function CheckPosition(userId, authToken , segment, instrument_token, prod
                     };
                  
                 } else {
-
-                    if ((possition_qty > 0 && type === 'LX') || (possition_qty < 0 && type === 'SX')) {
-                       
-                        return {
+                           return {
                             status: true,
                             qty: possition_qty,
                         };
-                    }
                 }
             } else {
 
