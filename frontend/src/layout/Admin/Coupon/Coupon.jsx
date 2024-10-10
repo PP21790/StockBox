@@ -155,12 +155,13 @@ const Coupon = () => {
             name: 'S.No',
             selector: (row, index) => index + 1,
             sortable: false,
-            width: '70px',
+            width: '78px',
         },
         {
             name: 'Name',
             selector: row => row.name,
             sortable: true,
+            width: '105px',
         },
         {
             name: 'Code',
@@ -172,18 +173,19 @@ const Coupon = () => {
             name: 'Image',
             cell: row => <img src={`${image_baseurl}/uploads/coupon/${row.image}`} alt="Image" width="50" height="50" />,
             sortable: true,
+            width: '110px',
         },
         {
             name: 'Min Purchase Value',
             selector: row => row.minpurchasevalue,
             sortable: true,
-            width: '188px',
+            width: '206px',
         },
         {
             name: 'Min Coupon Value',
             selector: row => row.mincouponvalue,
             sortable: true,
-            width: '180px',
+            width: '206px',
         },
 
         {
@@ -217,7 +219,7 @@ const Coupon = () => {
                 </div>
             ),
             sortable: true,
-            width: '142px',
+            width: '156px',
         },
 
 
