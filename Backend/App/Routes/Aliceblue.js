@@ -2,9 +2,11 @@ const router = require("express").Router()
 const multer = require('multer');
 const path = require('path');
 
-const {GetAccessToken,placeOrder} = require('../Controllers/Aliceblue')
+const {GetAccessToken,placeOrder,ExitplaceOrder} = require('../Controllers/Aliceblue')
 
 router.get('/aliceblue/getaccesstoken', GetAccessToken);
 router.post('/aliceblue/placeorder', placeOrder);
+router.post('/aliceblue/exitplaceorder', ExitplaceOrder);
+
 
 module.exports = router;

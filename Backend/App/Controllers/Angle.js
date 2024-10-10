@@ -121,21 +121,21 @@ class Angle {
                  stock = await Stock_Modal.findOne({ 
                      symbol: signal.stock, 
                      segment: signal.segment, 
-                     option_type: optiontype 
+                 //    option_type: optiontype 
                  });
              } else if (signal.segment === "F") {
                  stock = await Stock_Modal.findOne({ 
                      symbol: signal.stock, 
                      segment: signal.segment, 
                      expiry: signal.expirydate, 
-                     option_type: optiontype 
+                  //   option_type: optiontype 
                  });
              } else {
                  stock = await Stock_Modal.findOne({ 
                      symbol: signal.stock, 
                      segment: signal.segment, 
                      expiry: signal.expirydate, 
-                     option_type: optiontype, 
+                  //   option_type: optiontype, 
                      strike: signal.strikeprice 
                  });
              }
@@ -204,39 +204,51 @@ class Angle {
                 data: data
             };
 
-            const response = await axios(config);
-       
-            if (response.data.message == 'SUCCESS') {
+          //  const response = await axios(config);
+
+            axios(config)
+            .then(async (response) => {
+              
+                if (response.data.message == 'SUCCESS') {
 
 
-                const order = new Order_Modal({
-                    clientid: client._id,
-                    signalid:signal._id,
-                    orderid:response.data.data.orderid,
-                    borkerid:1,
-                });
-
-
-               await order.save();
-
-            return res.json({
-                status: true,
-                data: response.data ,
-                message: "Order Placed Successfully" 
-            });
-        }
-        else{
-            let url;
-            if(response.data.message=="Invalid Token") {
-              url = `https://smartapi.angelone.in/publisher-login?api_key=${client.apikey}`;
-            }
-               return res.status(500).json({ 
-                status: false, 
-                url: url, 
-                message: response.data.message 
-            });
-        }
+                    const order = new Order_Modal({
+                        clientid: client._id,
+                        signalid:signal._id,
+                        orderid:response.data.data.orderid,
+                        borkerid:1,
+                    });
     
+    
+                   await order.save();
+    
+                return res.json({
+                    status: true,
+                    data: response.data ,
+                    message: "Order Placed Successfully" 
+                });
+            }
+            else{
+                let url;
+                if(response.data.message=="Invalid Token") {
+                  url = `https://smartapi.angelone.in/publisher-login?api_key=${client.apikey}`;
+                }
+                   return res.status(500).json({ 
+                    status: false, 
+                    url: url, 
+                    message: response.data.message 
+                });
+            }
+    
+            })
+            .catch(async (error) => {
+                return res.status(500).json({ 
+                    status: false, 
+                    message: response.data.message 
+                });
+    
+            });
+       
         } catch (error) {
             console.error("Error placing order:", error); // Log the error
             return res.status(500).json({ 
@@ -245,7 +257,337 @@ class Angle {
             });
         }
     }
+
+
+
+    async ExitplaceOrder(req, res) {
+        
+        try {
+            const { id, signalid, quantity, price } = req.body;
     
+            const client = await Clients_Modal.findById(id);
+            if (!client) {
+                return res.status(404).json({
+                    status: false,
+                    message: "Client not found"
+                });
+            }
+
+
+            if(client.tradingstatus == 0)
+            {
+                return res.status(404).json({
+                    status: false,
+                    message: "Client Broker Not Login, Please Login With Broker"
+                });
+            }
+            
+    
+            const signal = await Signal_Modal.findById(signalid);
+            if (!signal) {
+                return res.status(404).json({
+                    status: false,
+                    message: "Signal not found"
+                });
+            }
+
+    
+    
+             const authToken = client.authtoken;
+             let optiontype, exchange, producttype;
+
+             if (signal.segment === "C") {
+                 optiontype = "EQ";
+                 exchange = "NSE";
+             } else {
+                 optiontype = signal.segment === "F" ? "UT" : signal.optiontype;
+                 exchange = "NFO";
+             }
+             
+             // Determine product type based on segment and call duration
+             if (signal.callduration === "Intraday") {
+                 producttype = "INTRADAY";
+             } else {
+                 producttype = signal.segment === "C" ? "DELIVERY" : "CARRYFORWARD";
+             }
+             
+             // Query Stock_Modal based on segment type
+             let stock;
+             if (signal.segment === "C") {
+                 stock = await Stock_Modal.findOne({ 
+                     symbol: signal.stock, 
+                     segment: signal.segment, 
+                 //    option_type: optiontype 
+                 });
+             } else if (signal.segment === "F") {
+                 stock = await Stock_Modal.findOne({ 
+                     symbol: signal.stock, 
+                     segment: signal.segment, 
+                     expiry: signal.expirydate, 
+                  //   option_type: optiontype 
+                 });
+             } else {
+                 stock = await Stock_Modal.findOne({ 
+                     symbol: signal.stock, 
+                     segment: signal.segment, 
+                     expiry: signal.expirydate, 
+                  //   option_type: optiontype, 
+                     strike: signal.strikeprice 
+                 });
+             }
+
+
+             if (!stock) {
+                return res.status(404).json({
+                    status: false,
+                    message: "Stock not found"
+                });
+            }
+
+
+
+            var data = JSON.stringify({
+                "variety":"NORMAL",
+                "tradingsymbol":stock.tradesymbol,
+                "symboltoken":stock.instrument_token,
+                "transactiontype":signal.calltype,
+                "exchange":exchange,
+                "ordertype":"MARKET",
+                "producttype":producttype,
+                "duration":"DAY",
+                "price":price,
+                "squareoff":"0",
+                "stoploss":"0",
+                "quantity":quantity
+                });
+
+              
+                let positionData=0;
+                try {
+                  const positionData = await CheckPosition(client.apikey, authToken, stock.segment,stock.instrument_token,producttype,signal.calltype,stock.tradesymbol);
+              } catch (error) {
+                  console.error('Error in CheckPosition:', error.message);
+                
+              }
+
+                let holdingData=0;
+                if(stock.segment=="C") {
+                        try {
+                            const holdingData = await CheckHolding(client.apikey, authToken , stock.segment,stock.instrument_token,producttype,signal.calltype);
+                        } catch (error) {
+                            console.error('Error in CheckHolding:', error.message);
+                        }
+        
+                    }
+
+
+           const config = {
+                method: 'post',
+                url: 'https://apiconnect.angelone.in/rest/secure/angelbroking/order/v1/placeOrder',
+              
+                headers: { 
+                    'Authorization': `Bearer ${authToken}`,
+                    'Content-Type': 'application/json', 
+                    'Accept': 'application/json', 
+                    'X-UserType': 'USER', 
+                    'X-SourceID': 'WEB', 
+                    'X-ClientLocalIP': 'CLIENT_LOCAL_IP', 
+                    'X-ClientPublicIP': 'CLIENT_PUBLIC_IP', 
+                    'X-MACAddress': 'MAC_ADDRESS',
+                    'X-PrivateKey': client.apikey 
+                },
+                data: data
+            };
+
+            axios(config)
+            .then(async (response) => {
+              
+                if (response.data.message == 'SUCCESS') {
+
+
+                    const order = new Order_Modal({
+                        clientid: client._id,
+                        signalid:signal._id,
+                        orderid:response.data.data.orderid,
+                        borkerid:1,
+                    });
+    
+    
+                   await order.save();
+    
+                return res.json({
+                    status: true,
+                    data: response.data ,
+                    message: "Order Placed Successfully" 
+                });
+            }
+            else{
+                let url;
+                if(response.data.message=="Invalid Token") {
+                  url = `https://smartapi.angelone.in/publisher-login?api_key=${client.apikey}`;
+                }
+                   return res.status(500).json({ 
+                    status: false, 
+                    url: url, 
+                    message: response.data.message 
+                });
+            }
+    
+            })
+            .catch(async (error) => {
+                return res.status(500).json({ 
+                    status: false, 
+                    message: response.data.message 
+                });
+    
+            });
+        
+
+
+           
+       
+        } catch (error) {
+            console.error("Error placing order:", error); // Log the error
+            return res.status(500).json({ 
+                status: false, 
+                message: error.response ? error.response.data : "An error occurred while placing the order" 
+            });
+        }
+    }
+
+
+
+    
+}
+
+
+
+
+async function CheckPosition(userId, authToken , segment, instrument_token, producttype, calltype, trading_symbol) {
+    
+
+    var config = {
+        method: 'get',
+        url: 'https://apiconnect.angelbroking.com/rest/secure/angelbroking/order/v1/getPosition',
+        headers: {
+            'Authorization': 'Bearer ' + authToken,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-UserType': 'USER',
+            'X-SourceID': 'WEB',
+            'X-ClientLocalIP': 'CLIENT_LOCAL_IP',
+            'X-ClientPublicIP': 'CLIENT_PUBLIC_IP',
+            'X-MACAddress': 'MAC_ADDRESS',
+            'X-PrivateKey': userId
+        },
+    };
+
+    axios(config)
+    .then(async (response) => {
+
+        if (response.data.data != null && response.data.message == "SUCCESS") {
+            const Exist_entry_order = response.data.data.find(item1 => item1.symboltoken === instrument_token);
+
+            if (Exist_entry_order !== undefined) {
+                let possition_qty;
+                if (segment.toUpperCase() === 'C') {
+                    possition_qty = parseInt(Exist_entry_order.buyqty) - parseInt(Exist_entry_order.sellqty);
+                } else {
+                    possition_qty = Exist_entry_order.netqty;
+                }
+
+                if (possition_qty === 0) {
+                    return {
+                        status: false,
+                        qty: 0,
+                    };
+                 
+                } else {
+
+                    if ((possition_qty > 0 && type === 'LX') || (possition_qty < 0 && type === 'SX')) {
+                       
+                        return {
+                            status: true,
+                            qty: possition_qty,
+                        };
+                    }
+                }
+            } else {
+
+                return {
+                    status: false,
+                    qty: 0,
+                };
+            }
+        } else {
+            return {
+                status: false,
+                qty: 0,
+            };
+
+        }
+    })
+    .catch(async (error) => {
+        return {
+            status: false,
+            qty: 0,
+        };
+          
+    });
+
+}
+
+
+
+async function CheckHolding(userId, authToken, segment, instrument_token, producttype, calltype) {
+   
+   
+     var config = {
+                    method: 'get',
+                    url: 'https://apiconnect.angelone.in/rest/secure/angelbroking/portfolio/v1/getAllHolding',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-UserType': 'USER',
+                        'X-SourceID': 'WEB',
+                        'X-ClientLocalIP': 'CLIENT_LOCAL_IP',
+                        'X-ClientPublicIP': 'CLIENT_PUBLIC_IP',
+                        'X-MACAddress': 'MAC_ADDRESS',
+                        'X-PrivateKey': userId
+                    },
+                };
+   
+    try {
+        const response = await axios(config);
+
+
+        if (response.data.message == "SUCCESS") {
+
+            const existEntryOrder = response.data.data.holdings.find(item1 => item1.symboltoken === instrument_token && item1.product === producttype);
+let possition_qty = 0;
+            if (existEntryOrder != undefined) {
+                if (segment.toUpperCase() == 'C') {
+                     possition_qty = parseInt(existEntryOrder.quantity);
+                } 
+            }
+            return {
+                status: true,
+                qty: possition_qty,
+            };
+        } else {
+            return {
+                    status: false,
+                    qty: 0,
+                };
+        }
+    } catch (error) {
+        console.error('Error fetching position:', error.response ? error.response.data : error.message);
+        return {
+            status: false,
+            qty: 0,
+        };
+    }
 }
 
 module.exports = new Angle();
