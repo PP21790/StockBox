@@ -48,6 +48,22 @@ export async function AddStaffClient(data, token) {
 
 export async function clientdetailbyid(_id, token) {
     try {
+        const res = await axios.get(`${Config.base_url}client/detail/${_id}`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
+// get client plan data 
+
+
+export async function clientplandatabyid(_id, token) {
+    try {
         const res = await axios.get(`${Config.base_url}client/myplan/${_id}`, {
             headers: {
                 'Authorization': `${token}`

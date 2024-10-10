@@ -35,7 +35,7 @@ const EditClient = () => {
       errors.PhoneNo = "Please enter Phone Number";
     }
     if (!values.password) {
-      errors.password = "Please enter Phone Number";
+      errors.password = "Please enter password";
     }
 
 

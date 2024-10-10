@@ -95,7 +95,12 @@ const Header = () => {
                       href="#"
                       data-bs-toggle="dropdown"
                     >
-                      <span className="alert-count">{clients.length}</span>
+                      {clients.length ?
+                        <>
+                          <span className="alert-count">{clients.length}</span>
+
+                        </>
+                        : ""}
                       <i className="bx bx-bell" />
                     </a>
                     <div className="dropdown-menu dropdown-menu-end">
@@ -111,7 +116,7 @@ const Header = () => {
                             <div className="d-flex align-items-center">
 
                               <div className="notify bg-light-danger text-danger">
-                                {notification.clientDetails.FullName  .split(' ').map(word => word.charAt(0)).join('')}
+                                {notification.clientDetails.FullName.split(' ').map(word => word.charAt(0)).join('')}
                               </div>
 
                               <div className="flex-grow-1">

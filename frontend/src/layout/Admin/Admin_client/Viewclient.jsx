@@ -3,8 +3,8 @@ import { Link, useParams } from 'react-router-dom';
 import Table from '../../../components/Table';
 import { useFormik } from 'formik';
 import DynamicForm from '../../../components/FormicForm';
-import { clientdetailbyid } from '../../../Services/Admin';
-
+import { clientdetailbyid, clientplandatabyid } from '../../../Services/Admin';
+import { fDateTime, fDate } from '../../../Utils/Date_formate';
 
 const Viewclientdetail = () => {
 
@@ -14,20 +14,35 @@ const Viewclientdetail = () => {
     const token = localStorage?.getItem('token');
 
     const [data, setData] = useState([])
+    const [client,setClient] = useState([])
 
 
     useEffect(() => {
         getsignaldetail();
+        getplandetail()
     }, []);
+
+
+    const getplandetail = async () => {
+        try {
+            const response = await clientplandatabyid(id, token);
+            if (response.status) {
+                setData(response.data)
+
+
+            }
+        } catch (error) {
+            console.log("Error fetching signal details:", error);
+        }
+    };
+
 
 
     const getsignaldetail = async () => {
         try {
             const response = await clientdetailbyid(id, token);
             if (response.status) {
-                setData([response.data])
-
-
+                setClient([response.data])
             }
         } catch (error) {
             console.log("Error fetching signal details:", error);
@@ -47,31 +62,32 @@ const Viewclientdetail = () => {
         },
         {
             name: 'Plan Name',
-            selector: row => row.fullName,
+            selector: row => row.planDetails.title,
             sortable: true,
             width: '180px',
         },
         {
             name: 'Amount',
-            selector: row => row.wamount,
+            selector: row => row.plan_price,
             sortable: true,
             width: '189px',
         },
         {
-            name: 'Purchase Date',
-            selector: row => row.phoneNo,
+            name: 'Validity Date',
+            selector: row => row.planDetails.validity,
             sortable: true,
             width: '180px',
         },
         {
-            name: 'Validity Date',
-            selector: row => row.phoneNo,
+            name: 'Purchase Date',
+            selector: row => fDate(row.plan_start),
             sortable: true,
             width: '180px',
         },
+
         {
             name: 'Expiry Date',
-            selector: row => row.phoneNo,
+            selector: row => fDate(row.plan_end),
             sortable: true,
             width: '180px',
         },
@@ -100,7 +116,7 @@ const Viewclientdetail = () => {
                     <div className="card-body">
                         <div className="p-4 border radius-15">
                             <div className="row justify-content-center align-items-center">
-                                {data && data.map((item) => (
+                                {client && client.map((item) => (
                                     <div key={item.id} className="row">
                                         <div className="col-md-4 d-flex align-items-center">
                                             <div>

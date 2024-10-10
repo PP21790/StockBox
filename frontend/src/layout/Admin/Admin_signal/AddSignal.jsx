@@ -335,9 +335,9 @@ const AddSignal = () => {
           return formik.values.calltype === "sell" ? [
             { label: 'Intraday', value: 'Intraday' }
           ] : [
-            { label: 'Long Term', value: 'Long Term' },
-            { label: 'Medium Term', value: 'Medium Term' },
-            { label: 'Short Term', value: 'Short Term' },
+            { label: 'Short Term (15-30 Days)', value: 'Short Term' },
+            { label: 'Medium Term (Above 3 Month)', value: 'Medium Term' },
+            { label: 'Long Term (Above 1 year)', value: 'Long Term' },
             { label: 'Intraday', value: 'Intraday' }
           ];
         } else if (formik.values.segment === "F") {
