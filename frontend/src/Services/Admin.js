@@ -48,7 +48,7 @@ export async function AddStaffClient(data, token) {
 
 export async function clientdetailbyid(_id, token) {
     try {
-        const res = await axios.get(`${Config.base_url}client/detail/${_id}`, {
+        const res = await axios.get(`${Config.base_url}client/myplan/${_id}`, {
             headers: {
                 'Authorization': `${token}`
             },
