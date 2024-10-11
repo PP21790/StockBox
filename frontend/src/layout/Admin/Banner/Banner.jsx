@@ -243,7 +243,7 @@ const Banner = () => {
             name: 'S.No',
             selector: (row, index) => index + 1,
             sortable: false,
-            width: '70px',
+            width: '78px',
         },
         // {
         //     name: 'Title',

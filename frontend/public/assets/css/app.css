@@ -5286,17 +5286,13 @@ label {
 	margin-bottom: 20px;
 }
 
-.card-container {
-	display: flex;
-	justify-content: center;
-	gap: 20px;
-}
+
 
 .pricing-card {
 	background-color: white;
 	border: 1px solid #ccc;
 	border-radius: 8px;
-	width: 471px;
+	
 	padding: 20px;
 	position: relative;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
