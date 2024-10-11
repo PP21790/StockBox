@@ -243,7 +243,7 @@ const Banner = () => {
             name: 'S.No',
             selector: (row, index) => index + 1,
             sortable: false,
-            width: '70px',
+            width: '100px',
         },
         // {
         //     name: 'Title',
@@ -254,6 +254,7 @@ const Banner = () => {
             name: 'Image',
             cell: row => <img src={`${image_baseurl}uploads/banner/${row.image}`} alt={row.image} title={row.image} width="50" height="50" />,
             sortable: true,
+            width: '200px',
         },
         {
             name: 'Active Status',
@@ -273,17 +274,19 @@ const Banner = () => {
                 </div>
             ),
             sortable: true,
+            width: '200px',
         },
         {
             name: 'Created At',
             selector: row => fDateTime(row.created_at),
             sortable: true,
+            width: '200px',
         },
-        {
-            name: 'Updated At',
-            selector: row => fDateTime(row.updated_at),
-            sortable: true,
-        },
+        // {
+        //     name: 'Updated At',
+        //     selector: row => fDateTime(row.updated_at),
+        //     sortable: true,
+        // },
 
 
         {
@@ -316,6 +319,8 @@ const Banner = () => {
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
+            width: '200px',
+
         }
     ];
 
@@ -366,7 +371,7 @@ const Banner = () => {
                                 <input
                                     type="text"
                                     className="form-control ps-5 radius-10"
-                                    placeholder="Search Order"
+                                    placeholder="Search Banner"
                                     onChange={(e) => setSearchInput(e.target.value)}
                                     value={searchInput}
                                 />

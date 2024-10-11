@@ -503,7 +503,7 @@ const Signal = () => {
                                     <input
                                         type="text"
                                         className="form-control ps-5 radius-10"
-                                        placeholder="Search Order"
+                                        placeholder="Search Signal"
                                         value={searchInput}
                                         onChange={(e) => setSearchInput(e.target.value)}
 

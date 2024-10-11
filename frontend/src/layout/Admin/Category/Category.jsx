@@ -281,7 +281,7 @@ const Category = () => {
             name: 'Segment',
 
             selector: row => row.servicesDetails.map(item => item.title).join(', '),
-
+            width: '200px',
             sortable: true,
         },
         {
@@ -302,6 +302,7 @@ const Category = () => {
                 </div>
             ),
             sortable: true,
+            width: '200px',
         },
         {
             name: 'Created At',
@@ -403,7 +404,7 @@ const Category = () => {
                                 <input
                                     type="text"
                                     className="form-control ps-5 radius-10"
-                                    placeholder="Search Order"
+                                    placeholder="Search Category"
                                     onChange={(e) => setSearchInput(e.target.value)}
                                     value={searchInput}
                                 />
@@ -446,7 +447,7 @@ const Category = () => {
                                                 <form>
                                                     <div className="row">
                                                         <div className="col-md-12">
-                                                            <label htmlFor="service">Service</label>
+                                                            <label htmlFor="service">Segment</label>
                                                             {servicedata.length > 0 && (
                                                                 <DropdownMultiselect
                                                                     options={servicedata.map((item) => ({
@@ -565,7 +566,7 @@ const Category = () => {
 
                                                             <div className="row">
                                                                 <div className="col-md-12">
-                                                                    <label htmlFor="service">Service</label>
+                                                                    <label htmlFor="service">Segment</label>
                                                                     {servicedata.length > 0 && (
                                                                         <div className="form-group">
                                                                             {servicedata.map((item) => (

@@ -402,7 +402,7 @@ const Dashbord = () => {
                                     />
                                 </div>
                                 <div className="d-flex align-items-center text-white">
-                                    <p className="mb-0">Total Open Signal</p>
+                                    <p className="mb-0">Todays Open Signal</p>
                                     <p className="mb-0 ms-auto">
 
                                         <span>
@@ -436,7 +436,7 @@ const Dashbord = () => {
                                     />
                                 </div>
                                 <div className="d-flex align-items-center text-white">
-                                    <p className="mb-0">Total Close Signal</p>
+                                    <p className="mb-0">Todays Close Signal</p>
                                     <p className="mb-0 ms-auto">
 
                                         <span>

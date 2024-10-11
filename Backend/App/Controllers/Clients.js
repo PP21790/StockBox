@@ -508,7 +508,8 @@ class Clients {
 
 async deleteFreetrial(req, res) {
   try {
-    const { id } = req.params; // Extract ID from URL params
+    const { id } = req.params; 
+   
 
     if (!id) {
       return res.status(400).json({
@@ -520,17 +521,18 @@ async deleteFreetrial(req, res) {
   //  const deletedClient = await Clients_Modal.findByIdAndDelete(id);
   const deletedFreetrial = await Freetrial_Modal.findByIdAndUpdate(
     id, 
-    { del: true }, // Set del to true
-    { new: true }  // Return the updated document
+    { del: true }, 
+    { new: true } 
   );
+  
     if (!deletedFreetrial) {
       return res.status(404).json({
         status: false,
         message: "Freetrial not found",
       });
     }
-
-    console.log("Deleted Freetrial:", deletedFreetrial);
+    
+  
     return res.json({
       status: true,
       message: "Freetrial deleted successfully",

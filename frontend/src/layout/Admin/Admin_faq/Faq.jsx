@@ -241,12 +241,13 @@ const Faq = () => {
             name: 'S.No',
             selector: (row, index) => index + 1,
             sortable: false,
-            width: '70px',
+            width: '100px',
         },
         {
             name: 'Title',
             selector: row => row.title,
             sortable: true,
+            width: '200px',
 
         },
         {
@@ -267,6 +268,7 @@ const Faq = () => {
                 </div>
             ),
             sortable: true,
+            width: '200px',
 
 
         },
@@ -274,6 +276,7 @@ const Faq = () => {
             name: 'Description',
             selector: row => row.description,
             sortable: true,
+            width: '200px',
         },
 
         {
@@ -281,11 +284,11 @@ const Faq = () => {
             selector: row => new Date(row.created_at).toLocaleDateString(),
             sortable: true,
         },
-        {
-            name: 'Updated At',
-            selector: row => new Date(row.updated_at).toLocaleDateString(),
-            sortable: true,
-        },
+        // {
+        //     name: 'Updated At',
+        //     selector: row => new Date(row.updated_at).toLocaleDateString(),
+        //     sortable: true,
+        // },
 
         {
             name: 'Actions',
@@ -367,7 +370,7 @@ const Faq = () => {
                                 <input
                                     type="text"
                                     className="form-control ps-5 radius-10"
-                                    placeholder="Search Order"
+                                    placeholder="Search Faq"
                                     onChange={(e) => setSearchInput(e.target.value)}
                                     value={searchInput}
                                 />

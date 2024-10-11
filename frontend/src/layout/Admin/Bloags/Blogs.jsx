@@ -244,12 +244,13 @@ const Blogs = () => {
             name: 'S.No',
             selector: (row, index) => index + 1,
             sortable: false,
-            width: '78px',
+            width: '100px',
         },
         {
             name: 'Title',
             selector: row => row.title,
             sortable: true,
+            width: '200px',
         },
         {
             name: 'Active Status',
@@ -269,28 +270,32 @@ const Blogs = () => {
                 </div>
             ),
             sortable: true,
+            width: '200px',
         },
         {
             name: 'Image',
             cell: row => <img src={`${image_baseurl}/uploads/blogs/${row.image}`} alt="Image" width="50" height="50" />,
             sortable: true,
+            width: '200px',
         },
         {
             name: 'Description',
             selector: row => row.description,
             sortable: true,
+            width: '200px',
         },
 
         {
             name: 'Created At',
             selector: row => new Date(row.created_at).toLocaleDateString(),
             sortable: true,
+            width: '200px',
         },
-        {
-            name: 'Updated At',
-            selector: row => new Date(row.updated_at).toLocaleDateString(),
-            sortable: true,
-        },
+        // {
+        //     name: 'Updated At',
+        //     selector: row => new Date(row.updated_at).toLocaleDateString(),
+        //     sortable: true,
+        // },
 
         {
             name: 'Actions',
@@ -372,7 +377,7 @@ const Blogs = () => {
                                 <input
                                     type="text"
                                     className="form-control ps-5 radius-10"
-                                    placeholder="Search Order"
+                                    placeholder="Search Blogs"
                                     onChange={(e) => setSearchInput(e.target.value)}
                                     value={searchInput}
                                 />

@@ -59,7 +59,7 @@ const Freeclient = () => {
         try {
             const result = await Swal.fire({
                 title: 'Are you sure?',
-                text: 'Do you want to delete this staff member? This action cannot be undone.',
+                text: 'Do you want to delete this member? This action cannot be undone.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, delete it!',
@@ -82,7 +82,7 @@ const Freeclient = () => {
 
                 Swal.fire({
                     title: 'Cancelled',
-                    text: 'The Client deletion was cancelled.',
+                    text: 'The  deletion was cancelled.',
                     icon: 'info',
                     confirmButtonText: 'OK',
                 });
@@ -90,7 +90,7 @@ const Freeclient = () => {
         } catch (error) {
             Swal.fire({
                 title: 'Error!',
-                text: 'There was an error deleting the staff.',
+                text: 'There was an error deleting the Member.',
                 icon: 'error',
                 confirmButtonText: 'Try Again',
             });
@@ -237,7 +237,8 @@ const Freeclient = () => {
 
                     </Tooltip>
                     <Tooltip title="delete">
-                        <Trash2 onClick={() => DeleteClient(row.clientDetails._id)} />
+                        <Trash2 onClick={() => DeleteClient(row._id)} />
+                          
                     </Tooltip>
                 </>
             ),

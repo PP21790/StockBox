@@ -54,7 +54,7 @@ const Help = () => {
             name: 'S.No',
             selector: (row, index) => index + 1,
             sortable: false,
-            width: '70px',
+            width: '100px',
         },
         {
             name: 'Full Name',
@@ -66,7 +66,7 @@ const Help = () => {
             name: 'Email',
             selector: row => row.clientDetails.Email,
             sortable: true,
-            width: '243px',
+            width: '300px',
         },
         {
             name: 'Subject',
@@ -146,7 +146,7 @@ const Help = () => {
                                             <input
                                                 type="text"
                                                 className="form-control ps-5 radius-10"
-                                                placeholder="Search Order"
+                                                placeholder="Search message"
                                                 onChange={(e) => setSearchInput(e.target.value)}
                                                 value={searchInput}
                                             />

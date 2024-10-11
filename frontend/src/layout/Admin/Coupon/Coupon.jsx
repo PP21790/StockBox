@@ -155,13 +155,13 @@ const Coupon = () => {
             name: 'S.No',
             selector: (row, index) => index + 1,
             sortable: false,
-            width: '78px',
+            width: '100px',
         },
         {
             name: 'Name',
             selector: row => row.name,
             sortable: true,
-            width: '105px',
+            width: '150px',
         },
         {
             name: 'Code',
@@ -289,7 +289,7 @@ const Coupon = () => {
                                     <input
                                         type="text"
                                         className="form-control ps-5 radius-10"
-                                        placeholder="Search Order"
+                                        placeholder="Search Coupon"
                                         onChange={(e) => setSearchInput(e.target.value)}
                                         value={searchInput}
                                     />

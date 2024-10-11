@@ -244,12 +244,13 @@ const News = () => {
             name: 'S.No',
             selector: (row, index) => index + 1,
             sortable: false,
-            width: '78px',
+            width: '100px',
         },
         {
             name: 'Title',
             selector: row => row.title,
             sortable: true,
+            width: '200px',
         },
         {
             name: 'Active Status',
@@ -269,16 +270,19 @@ const News = () => {
                 </div>
             ),
             sortable: true,
+            width: '200px',
         },
         {
             name: 'Description',
             selector: row => row.description,
             sortable: true,
+            width: '200px',
         },
         {
             name: 'Image',
             cell: row => <img src={`${image_baseurl}uploads/news/${row.image}`} alt={row.image} width="50" height="50" />,
             sortable: true,
+            width: '100px',
         },
 
 
@@ -287,11 +291,11 @@ const News = () => {
             selector: row => new Date(row.created_at).toLocaleDateString(),
             sortable: true,
         },
-        {
-            name: 'Updated At',
-            selector: row => new Date(row.updated_at).toLocaleDateString(),
-            sortable: true,
-        },
+        // {
+        //     name: 'Updated At',
+        //     selector: row => new Date(row.updated_at).toLocaleDateString(),
+        //     sortable: true,
+        // },
 
         {
             name: 'Actions',
@@ -459,7 +463,7 @@ const News = () => {
                                 <input
                                     type="text"
                                     className="form-control ps-5 radius-10"
-                                    placeholder="Search Order"
+                                    placeholder="Search News"
                                     onChange={(e) => setSearchInput(e.target.value)}
                                     value={searchInput}
                                 />

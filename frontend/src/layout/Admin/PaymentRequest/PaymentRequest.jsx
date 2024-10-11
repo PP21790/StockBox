@@ -227,7 +227,7 @@ const PaymentRequest = () => {
                                             <input
                                                 type="text"
                                                 className="form-control ps-5 radius-10"
-                                                placeholder="Search Order"
+                                                placeholder="Search Payment Request"
                                                 defaultValue=""
                                             />
                                             <span className="position-absolute top-50 product-show translate-middle-y">

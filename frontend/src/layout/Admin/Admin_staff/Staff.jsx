@@ -144,7 +144,7 @@ const Staff = () => {
             name: 'S.No',
             selector: (row, index) => index + 1,
             sortable: false,
-            width: '70px',
+            width: '100px',
         },
         {
             name: 'Full Name',
@@ -156,13 +156,13 @@ const Staff = () => {
             name: 'User Name',
             selector: row => row.UserName   ,
             sortable: true,
-            width: '180px',
+            width: '200px',
         },
         {
             name: 'Email',
             selector: row => row.Email,
             sortable: true,
-            width: '185px',
+            width: '200px',
         },
         {
             name: 'Phone No',

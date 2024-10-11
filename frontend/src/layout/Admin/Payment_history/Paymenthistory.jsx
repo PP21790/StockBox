@@ -160,7 +160,7 @@ const History = () => {
                                 <input
                                     type="text"
                                     className="form-control ps-5 radius-10"
-                                    placeholder="Search Order"
+                                    placeholder="Search Payment History"
                                     onChange={(e) => setSearchInput(e.target.value)}
                                     value={searchInput}
                                 />

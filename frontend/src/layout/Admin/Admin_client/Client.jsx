@@ -18,13 +18,13 @@ const Client = () => {
     const navigate = useNavigate();
 
     const [category, setCategory] = useState([]);
-    const [checkedIndex, setCheckedIndex] = useState(null);
+    const [checkedIndex, setCheckedIndex] = useState(0);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [clients, setClients] = useState([]);
     const [planlist, setPlanlist] = useState([]);
     const [basketlist, setBasketlist] = useState([]);
     const [client, setClientid] = useState({});
-    const [selectcategory, setSelectcategory] = useState("")
+    const [selectcategory, setSelectcategory] = useState(null)
     const [searchInput, setSearchInput] = useState("");
     const [selectedPlanId, setSelectedPlanId] = useState(null)
 
@@ -69,6 +69,12 @@ const Client = () => {
     const handleCancel = () => {
         setIsModalVisible(false);
         setSelectcategory("")
+    };
+
+
+    const handleCategoryChange = (categoryId) => {
+        setSelectcategory(categoryId);
+        setSelectedPlanId(null);
     };
 
 
@@ -156,7 +162,7 @@ const Client = () => {
         try {
             const result = await Swal.fire({
                 title: 'Are you sure?',
-                text: 'Do you want to delete this staff member? This action cannot be undone.',
+                text: 'Do you want to delete this Client member? This action cannot be undone.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, delete it!',
@@ -168,7 +174,7 @@ const Client = () => {
                 if (response.status) {
                     Swal.fire({
                         title: 'Deleted!',
-                        text: 'The staff has been successfully deleted.',
+                        text: 'The Client has been successfully deleted.',
                         icon: 'success',
                         confirmButtonText: 'OK',
                     });
@@ -179,7 +185,7 @@ const Client = () => {
 
                 Swal.fire({
                     title: 'Cancelled',
-                    text: 'The staff deletion was cancelled.',
+                    text: 'The Client deletion was cancelled.',
                     icon: 'info',
                     confirmButtonText: 'OK',
                 });
@@ -187,7 +193,7 @@ const Client = () => {
         } catch (error) {
             Swal.fire({
                 title: 'Error!',
-                text: 'There was an error deleting the staff.',
+                text: 'There was an error deleting the Client.',
                 icon: 'error',
                 confirmButtonText: 'Try Again',
             });
@@ -256,7 +262,7 @@ const Client = () => {
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
-                    text: 'Plan updated successfully.',
+                    text:  response.message || 'Plan updated successfully.',
                     icon: 'success',
                     confirmButtonText: 'OK',
                     timer: 2000,
@@ -268,7 +274,7 @@ const Client = () => {
             } else {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'There was an error updating the Plan.',
+                    text:   response.message || 'There was an error updating the Plan.',
                     icon: 'error',
                     confirmButtonText: 'Try Again',
                 });
@@ -276,7 +282,7 @@ const Client = () => {
         } catch (error) {
             Swal.fire({
                 title: 'Error!',
-                text: 'There was an error updating the Plan.',
+                text: 'Server error',
                 icon: 'error',
                 confirmButtonText: 'Try Again',
             });
@@ -567,7 +573,7 @@ const Client = () => {
                                     <input
                                         type="text"
                                         className="form-control ps-5 radius-10"
-                                        placeholder="Search Order"
+                                        placeholder="Search Client"
                                         onChange={(e) => setSearchInput(e.target.value)}
                                         value={searchInput}
                                     />
@@ -646,12 +652,12 @@ const Client = () => {
                                                     {category && category.map((item, index) => (
                                                         <div className='col-lg-4' key={index}>
                                                             <input
-                                                              style={{ border: "1px solid black" }}
+                                                                style={{ border: "1px solid black" }}
                                                                 className="form-check-input mx-2"
                                                                 type="radio"
                                                                 name="planSelection"
                                                                 id={`proplus-${index}`}
-                                                                onClick={() => setSelectcategory(item._id)}
+                                                                onClick={() => handleCategoryChange(item._id)} // Handle category change
                                                             />
                                                             <label className="form-check-label" htmlFor={`proplus-${index}`}>
                                                                 {item.title}
@@ -661,32 +667,28 @@ const Client = () => {
                                                 </div>
 
                                                 {selectcategory && (
-                                                    <form className='card-body mt-3'style={{ height: "40vh", overflowY: "scroll" }} >
+                                                    <form className='card-body mt-3' style={{ height: "40vh", overflowY: "scroll" }} >
                                                         <div className="row">
                                                             {planlist
                                                                 .filter(item => item.category === selectcategory)
                                                                 .map((item, index) => (
-                                                                    <div className="col-md-6 " key={index}>
-                                                                        <div className="card mb-0 my-2" >
+                                                                    <div className="col-md-6" key={index}>
+                                                                        <div className="card mb-0 my-2">
                                                                             <div className="card-body p-1">
                                                                                 <h5 className="card-title">
                                                                                     <input
-                                                                                        style={{ height: "13px", width: "13px", marginTop: "0.52rem" ,  border: "1px solid black"}}
-                                                                                       
-                                                                                        className="form-check-input "
+                                                                                        style={{ height: "13px", width: "13px", marginTop: "0.52rem", border: "1px solid black" }}
+                                                                                        className="form-check-input"
                                                                                         type="radio"
                                                                                         name="planSelection"
                                                                                         id={`input-plan-${index}`}
-                                                                                        onClick={() => {
-                                                                                            setUpdatetitle({ plan_id: item._id, price: item.price, title: item.title });
-                                                                                            setSelectedPlanId(item._id);
-                                                                                        }}
+                                                                                        checked={selectedPlanId === item._id} // Bind the selected plan state
+                                                                                        onClick={() => setSelectedPlanId(item._id)}
                                                                                     />
                                                                                     <label className="form-check-label mx-1" style={{ fontSize: "13px", fontWeight: "800" }} htmlFor={`input-plan-${index}`}>
                                                                                         {item.title}
                                                                                     </label>
                                                                                 </h5>
-
 
                                                                                 <div className="accordion" id={`accordion-${selectcategory}`}>
                                                                                     <div className="accordion-item">
@@ -699,7 +701,7 @@ const Client = () => {
                                                                                                 aria-expanded={selectedPlanId === item._id}
                                                                                                 aria-controls={`collapse-${item._id}`}
                                                                                             >
-                                                                                                <strong className="text-secondary">Validaty : {item.validity}</strong>
+                                                                                                <strong className="text-secondary">Validity: {item.validity}</strong>
                                                                                             </button>
                                                                                         </h2>
                                                                                         <div

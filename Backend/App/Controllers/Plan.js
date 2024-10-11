@@ -391,7 +391,7 @@ async  addPlanSubscription(req, res) {
   
       // Validate input
       if (!plan_id || !client_id) {
-        return res.status(400).json({ status: false, message: 'Missing required fields' });
+        return res.status(400).json({ status: false, message: 'Please Select the Plan' });
       }
   
       // Fetch the plan and populate the category

@@ -170,7 +170,7 @@ const DynamicForm = ({
                                                             <div className="input-block mb-3 flex-column">
                                                                 <label className={`col-lg-${field.label_size}`}>
                                                                     {field.label}
-                                                                    {field.optional === false ? <span className="text-danger">*</span> : ""}
+                                                                    {field.star == true ? <span className="text-danger">*</span> : ""}
                                                                 </label>
 
                                                                 <input
