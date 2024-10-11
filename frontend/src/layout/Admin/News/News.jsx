@@ -347,7 +347,7 @@ const News = () => {
                                             <form>
                                                 <div className="row">
                                                     <div className="col-md-12">
-                                                        <label htmlFor="">Title</label>
+                                                        <label htmlFor="" style={{ float: "left" }}>Title</label>
                                                         <input
                                                             className="form-control mb-2"
                                                             type="text"
@@ -360,7 +360,7 @@ const News = () => {
 
                                                 <div className="row">
                                                     <div className="col-md-12">
-                                                        <label htmlFor="imageUpload">Image</label>
+                                                        <label htmlFor="imageUpload" style={{ float: "left" }}>Image</label>
                                                         <input
                                                             className="form-control mb-3"
                                                             type="file"
@@ -378,7 +378,7 @@ const News = () => {
 
                                                 <div className="row">
                                                     <div className="col-md-12">
-                                                        <label htmlFor="">Description</label>
+                                                        <label htmlFor="" style={{ float: "left" }}>Description</label>
                                                         <textarea
                                                             className="form-control mb-2"
                                                             type="text"

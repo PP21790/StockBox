@@ -234,7 +234,8 @@ const Plan = () => {
                                                     <hr />
                                                     <ul>
                                                         <li><b>Validity</b>: {client.validity}</li>
-                                                        <li><b>Description</b>: {client.description}</li>
+                                                        <li><b className='mb-1'>Description</b>:<textarea className='form-control' >{client.description}</textarea></li>
+
                                                         <li><b>Created At</b>: {fDateTime(client.created_at)}</li>
                                                         <li><b>Updated At</b>: {fDateTime(client.updated_at)}</li>
                                                     </ul>
@@ -335,7 +336,7 @@ const Plan = () => {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <Link to={`editplan/${client._id}`}  className="btn-primary btnprime" style={{ color: 'inherit', textDecoration: 'none' }}>
+                                                        <Link to={`editplan/${client._id}`} className="btn-primary btnprime" style={{ color: 'inherit', textDecoration: 'none' }}>
                                                             <div >
 
                                                                 Edit
