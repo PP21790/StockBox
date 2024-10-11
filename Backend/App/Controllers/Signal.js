@@ -269,6 +269,8 @@ console.log(query);
         closedate = new Date();
       
       } else if (closetype === "2") {
+
+        
         // Close based on closestatus and target price
         close_status = closestatus;
       
