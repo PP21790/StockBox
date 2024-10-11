@@ -70,7 +70,7 @@ const Dashbord = () => {
             name: 'Phone No',
             selector: row => row.PhoneNo,
             sortable: true,
-            width: '180px',
+            width: '200px',
         },
 
 
@@ -111,7 +111,7 @@ const Dashbord = () => {
             name: 'CreatedAt',
             selector: row => fDateTime(row.createdAt),
             sortable: true,
-            width: '180px',
+            width: '200px',
         },
         // {
         //     name: 'Actions',
