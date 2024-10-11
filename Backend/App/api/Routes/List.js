@@ -1,6 +1,6 @@
 const router = require("express").Router()
 
-const {Blogslist,Newslist,Bannerlist,Plancategorysist,getPlansByPlancategoryId,addPlanSubscription,myPlan,Couponlist,Signallist,applyCoupon,showSignalsToClients,Servicelist,Faqlist,detailContent,showSignalsToClientsClose,BasketList,pastPerformance,addBasketSubscription,getallPlan,addFreeTrail,BroadcastList} = require('../Controllers/List')
+const {Blogslist,Newslist,Bannerlist,Plancategorysist,getPlansByPlancategoryId,addPlanSubscription,myPlan,Couponlist,Signallist,applyCoupon,showSignalsToClients,Servicelist,Faqlist,detailContent,showSignalsToClientsClose,BasketList,pastPerformance,addBasketSubscription,getallPlan,addFreeTrail,BroadcastList,myFreetrial,basicSetting} = require('../Controllers/List')
 
 
 router.get('/api/list/blogs',Blogslist);
@@ -29,6 +29,8 @@ router.get('/api/list/content/:id', detailContent);
 router.get('/api/list/basket/:clientId', BasketList);
 router.get('/api/list/past-performance/:id', pastPerformance);
 router.post('/api/list/broadcast', BroadcastList);
+router.get('/api/list/myfreetrial/:id', myFreetrial); 
+router.get('/api/list/basicsetting', basicSetting); 
 
 
 

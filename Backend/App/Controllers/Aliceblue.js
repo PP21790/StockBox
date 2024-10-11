@@ -189,39 +189,6 @@ class Aliceblue {
                     }
                   ]);
 
-
-
-                           
-
-
-                //   var data_possition = {
-                //     "ret": "DAY"
-                //     }
-                // var config = {
-                //     method: 'post',
-                //     url: 'https://ant.aliceblueonline.com/rest/AliceBlueAPIService/api/positionAndHoldings/positionBook',
-                //     headers: {
-                //         'Authorization': 'Bearer ' + userId + ' ' + authToken,
-                //         'Content-Type': 'application/json'
-                //     },
-                //     data: JSON.stringify(data_possition)
-                // };
-
-    
-                //   let config = {
-                //     method: 'get',
-                //     url: 'https://ant.aliceblueonline.com/rest/AliceBlueAPIService/api/placeOrder/fetchOrderBook',
-                //     headers: {
-                //         'Authorization': 'Bearer ' + userId + ' ' + authToken,
-            
-                //         'Content-Type': 'application/json',
-                //     },
-                //     data: ""
-            
-                // };
-
-    
-
                 let config = {
                     method: 'post',
                     maxBodyLength: Infinity,
@@ -379,35 +346,18 @@ class Aliceblue {
 
 
            
-                var data = JSON.stringify([
-                    {
-                      "complexty": "regular",
-                      "discqty": "0",
-                      "exch": exchange,
-                      "pCode": producttype,
-                      "prctyp": "MKT",
-                      "price": price,
-                      "qty": quantity,
-                      "ret": "DAY",
-                      "symbol_id": stock.instrument_token,
-                      "trading_symbol": stock.tradesymbol,
-                      "transtype": signal.calltype,
-                      "trigPrice": "00.00",
-                      "orderTag": "order1"
-                    }
-                  ]);
-
+             
                 
                                
               let positionData=0;
                   try {
                     const positionData = await CheckPosition(userId, authToken, stock.segment,stock.instrument_token,producttype,signal.calltype,stock.tradesymbol);
+                  
                 } catch (error) {
                     console.error('Error in CheckPosition:', error.message);
-                  
                 }
 
-
+                let totalValue=0;
           let holdingData=0;
         if(stock.segment=="C") {
                 try {
@@ -415,10 +365,45 @@ class Aliceblue {
                 } catch (error) {
                     console.error('Error in CheckHolding:', error.message);
                 }
-
+                totalValue = Math.abs(positionData)+holdingData;
+            }
+            else
+            {
+                totalValue = Math.abs(positionData)
             }
 
-                
+
+            let calltypes;
+                if(signal.calltype === 'BUY')
+                {
+                    calltypes = "SELL";
+                }
+                else {
+                    calltypes = "BUY";
+                }
+          
+
+         if(totalValue>=quantity) {
+
+            var data = JSON.stringify([
+                {
+                  "complexty": "regular",
+                  "discqty": "0",
+                  "exch": exchange,
+                  "pCode": producttype,
+                  "prctyp": "MKT",
+                  "price": price,
+                  "qty": quantity,
+                  "ret": "DAY",
+                  "symbol_id": stock.instrument_token,
+                  "trading_symbol": stock.tradesymbol,
+                  "transtype": calltypes,
+                  "trigPrice": "00.00",
+                  "orderTag": "order1"
+                }
+              ]);
+
+
 
                 let config = {
                     method: 'post',
@@ -477,6 +462,15 @@ class Aliceblue {
                     });
         
                 });
+            }
+            else{
+
+                return res.status(500).json({ 
+                    status: false, 
+                    message: "Sorry, the requested quantity is not available." 
+                });
+
+            }
 
         } catch (error) {
             return res.status(500).json({ 
@@ -526,25 +520,13 @@ async function CheckPosition(userId, authToken , segment, instrument_token, prod
 
                         } else {
 
-                            if (possition_qty > 0 && type == 'LX') {
-     
-                                return {
-                                    status: true,
-                                    qty: possition_qty,
-                                };
-
-                            } else if (possition_qty < 0 && type == 'SX') {
-                              
-                                return {
-                                    status: true,
-                                    qty: possition_qty,
-                                };
-                            }
+                            return {
+                                status: true,
+                                qty: possition_qty,
+                            };                          
                         }
 
-
                     } else {
-                        item.postdata.trading_symbol = Exist_entry_order.Tsym;
                         const possition_qty = Exist_entry_order.Netqty;                         
                         if (possition_qty == 0) {
                             return {
@@ -553,11 +535,10 @@ async function CheckPosition(userId, authToken , segment, instrument_token, prod
                             };
                         } else {
 
-                            if (possition_qty > 0 && type == 'LX') {
-                                ExitPlaceOrder(item, filePath, possition_qty, signals, signal_req)
-                            } else if (possition_qty < 0 && type == 'SX') {
-                                ExitPlaceOrder(item, filePath, possition_qty, signals, signal_req)
-                            }
+                            return {
+                                status: true,
+                                qty: possition_qty,
+                            };
 
                         }
 

@@ -61,7 +61,6 @@ class BannerController {
     // Get all Banner posts
     async getBanner(req, res) {
         try {
-
             const Banner = await Banner_Modal.find({ del: false });
 
             return res.status(200).json({

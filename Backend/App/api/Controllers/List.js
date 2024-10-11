@@ -19,6 +19,7 @@ const Refer_Modal = db.Refer;
 const Clients_Modal = db.Clients;
 const Freetrial_Modal = db.Freetrial;
 const Broadcast_Modal = db.Broadcast;
+const Order_Modal = db.Order;
 
 
 mongoose  = require('mongoose');
@@ -727,13 +728,32 @@ async showSignalsToClients(req, res) {
 
    const signals = await Signal_Modal.find(query).lean(); // Use lean() to return plain JavaScript objects
 
-// Add full URL for the report in each signal result
-const signalsWithReportUrls = signals.map(signal => {
+/*
+   const signalsWithReportUrls = signals.map(signal => {
+
     return {
-        ...signal, // Spread the original signal document
-        report_full_path: signal.report ? `${baseUrl}/uploads/report/${signal.report}` : null // Append full report URL
+        ...signal,
+        report_full_path: signal.report ? `${baseUrl}/uploads/report/${signal.report}` : null 
     };
 });
+*/
+
+const signalsWithReportUrls = await Promise.all(signals.map(async (signal) => {
+  // Check if the signal was bought by the client
+  const order = await Order_Modal.findOne({
+    clientid: client_id,
+    signalid: signal._id
+  }).lean();
+
+  return {
+    ...signal,
+    report_full_path: signal.report ? `${baseUrl}/uploads/report/${signal.report}` : null, // Append full report URL
+    purchased: order ? true : false // Add a 'purchased' flag to indicate if the client has bought this signal
+  };
+}));
+
+
+
 
       return res.json({
           status: true,
@@ -1209,6 +1229,53 @@ async  BroadcastList(req, res) {
   }
 }
 
+
+async myFreetrial(req, res) {
+  try {
+    const { id } = req.params;
+
+    // Validate input
+    if (!id) {
+      return res.status(400).json({ status: false, message: 'Client ID is required' });
+    }
+  
+
+    const result = await Freetrial_Modal.find({ clientid: id }).exec();
+
+    // Respond with the retrieved subscriptions and client details
+    return res.json({
+      status: true,
+      message: "Subscriptions and client details retrieved successfully",
+      data: result
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ status: false, message: 'Server error', data: [] });
+  }
+}
+
+
+
+
+async basicSetting(req, res) {
+  try {
+   
+    const result = await BasicSetting_Modal.find({ _id: "66bb3c19542b26b6357bbf4f" })
+    .select('freetrial website_title logo contact_number address') // Space-separated field names
+    .exec();
+
+    return res.json({
+      status: true,
+      message: "details retrieved successfully",
+      data: result
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ status: false, message: 'Server error', data: [] });
+  }
+}
 
 
 
