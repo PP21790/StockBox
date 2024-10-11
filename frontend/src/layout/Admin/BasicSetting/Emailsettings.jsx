@@ -101,7 +101,7 @@ const Emailsettings = () => {
                     Swal.fire({
                       title: "Update Successful!",
                       text: response.message,
-                      icon: "success",
+                      icon: "success",    
                       timer: 1500,
                       timerProgressBar: true,
                     });
