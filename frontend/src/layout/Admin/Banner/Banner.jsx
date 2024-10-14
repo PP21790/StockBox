@@ -209,7 +209,7 @@ const Banner = () => {
                 if (response.status) {
                     Swal.fire({
                         title: 'Deleted!',
-                        text: 'The staff has been successfully deleted.',
+                        text: 'The Banner has been successfully deleted.',
                         icon: 'success',
                         confirmButtonText: 'OK',
                     });
@@ -220,7 +220,7 @@ const Banner = () => {
 
                 Swal.fire({
                     title: 'Cancelled',
-                    text: 'The staff deletion was cancelled.',
+                    text: 'The Banner deletion was cancelled.',
                     icon: 'info',
                     confirmButtonText: 'OK',
                 });
@@ -228,7 +228,7 @@ const Banner = () => {
         } catch (error) {
             Swal.fire({
                 title: 'Error!',
-                text: 'There was an error deleting the staff.',
+                text: 'There was an error deleting the Banner.',
                 icon: 'error',
                 confirmButtonText: 'Try Again',
             });
@@ -243,7 +243,7 @@ const Banner = () => {
             name: 'S.No',
             selector: (row, index) => index + 1,
             sortable: false,
-            width: '100px',
+            width: '150px',
         },
         // {
         //     name: 'Title',
@@ -254,7 +254,7 @@ const Banner = () => {
             name: 'Image',
             cell: row => <img src={`${image_baseurl}uploads/banner/${row.image}`} alt={row.image} title={row.image} width="50" height="50" />,
             sortable: true,
-            width: '200px',
+            width: '240px',
         },
         {
             name: 'Active Status',
@@ -274,13 +274,13 @@ const Banner = () => {
                 </div>
             ),
             sortable: true,
-            width: '200px',
+            width: '240px',
         },
         {
             name: 'Created At',
             selector: row => fDateTime(row.created_at),
             sortable: true,
-            width: '200px',
+            width: '240px',
         },
         // {
         //     name: 'Updated At',
