@@ -543,7 +543,7 @@ async  addPlanSubscription(req, res) {
           }
         },
         {
-          $sort: { created_at: -1 } // Sort by created_at in descending order
+          $sort: { createdAt: -1 } // Sort by created_at in descending order
         }
       ]);
   
