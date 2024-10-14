@@ -198,7 +198,7 @@ const Blogs = () => {
         try {
             const result = await Swal.fire({
                 title: 'Are you sure?',
-                text: 'Do you want to delete this ? This action cannot be undone.',
+                text: 'Do you want to delete this blogs ? This action cannot be undone.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, delete it!',

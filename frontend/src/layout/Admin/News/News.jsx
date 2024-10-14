@@ -198,7 +198,7 @@ const News = () => {
         try {
             const result = await Swal.fire({
                 title: 'Are you sure?',
-                text: 'Do you want to delete this ? This action cannot be undone.',
+                text: 'Do you want to delete this News ? This action cannot be undone.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, delete it!',

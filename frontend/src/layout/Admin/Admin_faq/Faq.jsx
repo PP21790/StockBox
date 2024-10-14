@@ -195,7 +195,7 @@ const Faq = () => {
         try {
             const result = await Swal.fire({
                 title: 'Are you sure?',
-                text: 'Do you want to delete this ? This action cannot be undone.',
+                text: 'Do you want to delete this Faq ? This action cannot be undone.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, delete it!',
@@ -207,7 +207,7 @@ const Faq = () => {
                 if (response.status) {
                     Swal.fire({
                         title: 'Deleted!',
-                        text: 'The staff has been successfully deleted.',
+                        text: 'The Faq has been successfully deleted.',
                         icon: 'success',
                         confirmButtonText: 'OK',
                     });
@@ -218,7 +218,7 @@ const Faq = () => {
 
                 Swal.fire({
                     title: 'Cancelled',
-                    text: 'The staff deletion was cancelled.',
+                    text: 'The Faq deletion was cancelled.',
                     icon: 'info',
                     confirmButtonText: 'OK',
                 });
