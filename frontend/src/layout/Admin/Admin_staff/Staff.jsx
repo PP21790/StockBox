@@ -276,7 +276,7 @@ const Staff = () => {
                                         <input
                                             type="text"
                                             className="form-control ps-5 radius-10"
-                                            placeholder="Search Order"
+                                            placeholder="Search Staff"
                                         />
                                         <span className="position-absolute top-50 product-show translate-middle-y">
                                             <i className="bx bx-search" />

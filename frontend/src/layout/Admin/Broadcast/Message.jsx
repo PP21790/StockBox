@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import { Tooltip } from 'antd';
+import { fDateTime, fDate } from '../../../Utils/Date_formate';
 
 
 const Message = () => {
@@ -27,12 +28,15 @@ const Message = () => {
     const [serviceid, setServiceid] = useState({});
 
 
+
+
     const [updatetitle, setUpdatetitle] = useState({
         service: "",
         subject: "",
         message: "",
         id: "",
     });
+
 
 
     const [message, setMessage] = useState({
@@ -51,6 +55,9 @@ const Message = () => {
             message: ""
         });
     };
+
+
+
 
 
 
@@ -81,46 +88,46 @@ const Message = () => {
     };
 
 
-    const handleSwitchChange = async (event, id) => {
-        const originalChecked = event.target.checked;
-        const user_active_status = originalChecked;
-        const data = { id: id, status: user_active_status };
+    // const handleSwitchChange = async (event, id) => {
+    //     const originalChecked = event.target.checked;
+    //     const user_active_status = originalChecked;
+    //     const data = { id: id, status: user_active_status };
 
-        const result = await Swal.fire({
-            title: "Do you want to save the changes?",
-            showCancelButton: true,
-            confirmButtonText: "Save",
-            cancelButtonText: "Cancel",
-            allowOutsideClick: false,
-        });
+    //     const result = await Swal.fire({
+    //         title: "Do you want to save the changes?",
+    //         showCancelButton: true,
+    //         confirmButtonText: "Save",
+    //         cancelButtonText: "Cancel",
+    //         allowOutsideClick: false,
+    //     });
 
-        if (result.isConfirmed) {
-            try {
-                const response = await ChangeBroadCastStatus(data, token);
-                if (response.status) {
-                    Swal.fire({
-                        title: "Saved!",
-                        icon: "success",
-                        timer: 1000,
-                        timerProgressBar: true,
-                    });
-                    setTimeout(() => {
-                        Swal.close();
-                    }, 1000);
-                }
-                sendmessagedetail();
-            } catch (error) {
-                Swal.fire(
-                    "Error",
-                    "There was an error processing your request.",
-                    "error"
-                );
-            }
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-            event.target.checked = !originalChecked;
-            sendmessagedetail();
-        }
-    };
+    //     if (result.isConfirmed) {
+    //         try {
+    //             const response = await ChangeBroadCastStatus(data, token);
+    //             if (response.status) {
+    //                 Swal.fire({
+    //                     title: "Saved!",
+    //                     icon: "success",
+    //                     timer: 1000,
+    //                     timerProgressBar: true,
+    //                 });
+    //                 setTimeout(() => {
+    //                     Swal.close();
+    //                 }, 1000);
+    //             }
+    //             sendmessagedetail();
+    //         } catch (error) {
+    //             Swal.fire(
+    //                 "Error",
+    //                 "There was an error processing your request.",
+    //                 "error"
+    //             );
+    //         }
+    //     } else if (result.dismiss === Swal.DismissReason.cancel) {
+    //         event.target.checked = !originalChecked;
+    //         sendmessagedetail();
+    //     }
+    // };
 
 
 
@@ -186,7 +193,7 @@ const Message = () => {
                 setChatMessages([...chatMessages, message]);
 
                 setMessage({ service: "", subject: "", message: "" });
-
+                getservice()
                 const modal = document.getElementById('exampleModal');
                 const bootstrapModal = window.bootstrap.Modal.getInstance(modal);
                 if (bootstrapModal) {
@@ -212,7 +219,7 @@ const Message = () => {
 
 
 
-    // Update service
+
     // Update service
     const updateBroadcastMessage = async () => {
         try {
@@ -257,92 +264,6 @@ const Message = () => {
 
 
 
-    const columns = [
-        {
-            name: 'S.No',
-            selector: (row, index) => index + 1,
-            sortable: false,
-            width: '70px',
-        },
-        {
-            name: 'Service',
-            selector: row => {
-                const service = servicedata.find(item => item._id === row.service);
-                return service ? service.title : "";
-            },
-            sortable: true,
-            width: '165px',
-        }, ,
-        {
-            name: 'Subject',
-            selector: row => row.subject,
-            sortable: true,
-            width: '284px',
-        },
-        {
-            name: 'Message',
-            selector: row => row.message,
-            sortable: true,
-        },
-        {
-            name: 'Active Status',
-            selector: row => (
-                <div className="form-check form-switch form-check-info">
-                    <input
-                        id={`rating_${row.status}`}
-                        className="form-check-input toggleswitch"
-                        type="checkbox"
-                        defaultChecked={row.status === true}
-                        onChange={(event) => handleSwitchChange(event, row._id)}
-                    />
-                    <label
-                        htmlFor={`rating_${row.status}`}
-                        className="checktoggle checkbox-bg"
-                    ></label>
-                </div>
-            ),
-            sortable: true,
-            width: '165px',
-        },
-        {
-            name: 'Actions',
-            cell: row => (
-                <>
-                    <div>
-                        <Tooltip placement="top" overlay="View">
-                            <Eye style={{ marginRight: "10px" }} />
-                        </Tooltip>
-                    </div>
-                    <div>
-                        <Tooltip placement="top" overlay="Update">
-                            <SquarePen
-                                onClick={() => {
-                                    setModel(true);
-                                    setServiceid(row);
-                                    setUpdatetitle({
-                                        message: row.message, id: row._id, service: row.service, subject: row.subject
-                                    });
-                                }}
-                            />
-                        </Tooltip>
-                    </div>
-                    <div>
-                        <Tooltip placement="top" overlay="Delete">
-                            <Trash2 onClick={() => DeleteMessage(row._id)} />
-                        </Tooltip>
-                    </div>
-                </>
-            ),
-            ignoreRowClick: true,
-            allowOverflow: true,
-            button: true,
-        }
-
-
-    ];
-
-
-
     const updateServiceTitle = (key, value) => {
         setUpdatetitle(prev => ({
             ...prev,
@@ -356,6 +277,7 @@ const Message = () => {
 
     return (
         <>
+
             <div>
                 <div className="page-content">
                     <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
@@ -469,10 +391,113 @@ const Message = () => {
                                     </div>
                                 </div>
                             </div>
-                            <Table
-                                columns={columns}
-                                data={chatMessages}
-                            />
+                            <div className="page-content">
+                                <div className="">
+                                    <div className="">
+                                        <div className="container py-2">
+
+                                            {/* <h2 className="font-weight-light text-center text-muted py-3">
+                                                BroadCast Message
+                                            </h2> */}
+
+                                            {chatMessages.map((item, index) => {
+                                                const matchedService = servicedata?.find((service) => service._id === item.service);
+
+                                                return (
+                                                    <div className="row" key={index}>
+                                                        <div
+                                                            className="col-auto text-center flex-column d-none d-sm-flex"
+                                                            style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+                                                        >
+                                                            <div className="row h-50" style={{ height: "50%" }}>
+                                                                <div className="col">&nbsp;</div>
+                                                                <div className="col">&nbsp;</div>
+                                                            </div>
+                                                            <h5 className="m-2">
+                                                                <span
+                                                                    className="badge rounded-pill bg-light border"
+                                                                    style={{
+                                                                        backgroundColor: "#f8f9fa",
+                                                                        border: "1px solid #dee2e6",
+                                                                        padding: "10px",
+                                                                    }}
+                                                                >
+                                                                    {item.badgeContent || "\u00A0"}
+                                                                </span>
+                                                            </h5>
+                                                            <div className="row h-50" style={{ height: "50%" }}>
+                                                                <div className="col border-end" style={{ borderRight: "1px solid #dee2e6" }}>
+                                                                    &nbsp;
+                                                                </div>
+                                                                <div className="col">&nbsp;</div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="col py-2">
+                                                            <div className="card" style={{ borderRadius: "10px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
+                                                                <div className="card-body">
+
+                                                                    <div className="float-end text-muted">
+                                                                        <Tooltip placement="top" overlay="Update">
+                                                                            <SquarePen
+                                                                                onClick={() => {
+                                                                                    setModel(true);
+                                                                                    setServiceid(item);
+                                                                                    setUpdatetitle({
+                                                                                        message: item.message, id: item._id, service: item.service, subject: item.subject
+                                                                                    });
+                                                                                }}
+                                                                            />
+                                                                        </Tooltip>
+                                                                        <Tooltip placement="top" overlay="Delete">
+                                                                            <Trash2 onClick={() => DeleteMessage(item._id)} />
+                                                                        </Tooltip>
+                                                                    </div>
+                                                                    <h4 className="card-title text-muted">
+
+                                                                        <span>
+                                                                            {matchedService?.segment === "C" ? " CASH" :
+                                                                                matchedService?.segment === "O" ? " OPTION" :
+                                                                                    matchedService?.segment === "F" ? " FUTURE" : ""}
+                                                                        </span>
+                                                                    </h4>
+
+                                                                    <span> Subject: {item.subject}</span>
+                                                                    <p className="card-text" title={item.message}>
+                                                                        Message: {item.message.length > 30 ? `${item.message.substring(0, 30)}...` : item.message}
+                                                                    </p>
+                                                                    <button
+                                                                        className="btn btn-sm btn-primary"
+                                                                        type="button"
+                                                                        data-bs-target={`#${item._id}`}
+                                                                        data-bs-toggle="collapse"
+                                                                    >
+                                                                        Show Details <i className="bi bi-chevron-down"></i>
+                                                                    </button>
+                                                                    <div className="collapse border" id={item._id} style={{ borderTop: "1px solid #dee2e6" }}>
+                                                                        <div className="p-2 text-monospace">
+
+                                                                            <div>Segment: {matchedService?.segment === "C" ? " CASH" :
+                                                                                matchedService?.segment === "O" ? " OPTION" :
+                                                                                    matchedService?.segment === "F" ? " FUTURE" : ""}</div>
+                                                                            <div>Subject : {item.subject}</div>
+                                                                            <div>Mesaage : {item.message}</div>
+                                                                            <div>Created At: {fDate(item.created_at)}</div>
+                                                                            <div>Updated At: {fDate(item.updated_at)}</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                         </div>
                     </div>
@@ -583,84 +608,6 @@ const Message = () => {
 
             )}
 
-            <div className="page-content">
-                <div className="">
-                    <div className="">
-                        <div className="container py-2">
-
-                            {/* timeline item 1 */}
-                            <div className="row">
-                                {/* timeline item 1 left dot */}
-                                <div className="col-auto text-center flex-column d-none d-sm-flex">
-                                    <div className="row h-50">
-                                        <div className="col">&nbsp;</div>
-                                        <div className="col">&nbsp;</div>
-                                    </div>
-                                    <h5 className="m-2">
-                                        <span className="badge rounded-pill bg-light border">&nbsp;</span>
-                                    </h5>
-                                    <div className="row h-50">
-                                        <div className="col border-end">&nbsp;</div>
-                                        <div className="col">&nbsp;</div>
-                                    </div>
-                                </div>
-                                {/* timeline item 1 event content */}
-                                <div className="col py-2">
-                                    <div className="card radius-15">
-                                        <div className="card-body">
-                                            <div className="float-end text-muted">
-                                                Jan 9th 2020
-                                            </div>
-                                            <h4 className="card-title text-muted">Cash </h4>
-                                            <h5 className="card-title text-muted">Message for cash</h5>
-                                            <p className="card-text">
-                                                Welcome to the campus, introduction and get started with the
-                                                tour.
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {/*/row*/}
-                            {/* timeline item 2 */}
-                            <div className="row">
-                                <div className="col-auto text-center flex-column d-none d-sm-flex">
-                                    <div className="row h-50">
-                                        <div className="col border-end">&nbsp;</div>
-                                        <div className="col">&nbsp;</div>
-                                    </div>
-                                    <h5 className="m-2">
-                                        <span className="badge rounded-pill bg-primary">&nbsp;</span>
-                                    </h5>
-                                    <div className="row h-50">
-                                        <div className="col border-end">&nbsp;</div>
-                                        <div className="col">&nbsp;</div>
-                                    </div>
-                                </div>
-                                <div className="col py-2">
-                                    <div className="card border-primary shadow radius-15">
-                                        <div className="card-body">
-                                            <div className="float-end text-muted">
-                                                Jan 9th 2020
-                                            </div>
-                                            <h4 className="card-title text-muted">Future </h4>
-                                            <h5 className="card-title text-muted">Message for Future</h5>
-                                            <p className="card-text">
-                                                Welcome to the campus, introduction and get started with the
-                                                tour.
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                           
-                        </div>
-
-
-
-                    </div>
-                </div>
-            </div>
 
         </>
     );
