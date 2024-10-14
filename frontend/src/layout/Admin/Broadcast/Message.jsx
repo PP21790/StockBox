@@ -583,168 +583,83 @@ const Message = () => {
 
             )}
 
-             <div className="page-content">
-            <div className="">
+            <div className="page-content">
                 <div className="">
-                    <div className="container py-2">
-                        <h2 className="font-weight-light text-center text-muted py-3">
-                            Timeline Example 1
-                        </h2>
-                        {/* timeline item 1 */}
-                        <div className="row">
-                            {/* timeline item 1 left dot */}
-                            <div className="col-auto text-center flex-column d-none d-sm-flex">
-                                <div className="row h-50">
-                                    <div className="col">&nbsp;</div>
-                                    <div className="col">&nbsp;</div>
-                                </div>
-                                <h5 className="m-2">
-                                    <span className="badge rounded-pill bg-light border">&nbsp;</span>
-                                </h5>
-                                <div className="row h-50">
-                                    <div className="col border-end">&nbsp;</div>
-                                    <div className="col">&nbsp;</div>
-                                </div>
-                            </div>
-                            {/* timeline item 1 event content */}
-                            <div className="col py-2">
-                                <div className="card radius-15">
-                                    <div className="card-body">
-                                        <div className="float-end text-muted">
-                                            Mon, Jan 9th 2020 7:00 AM
-                                        </div>
-                                        <h4 className="card-title text-muted">Day 1 Orientation</h4>
-                                        <p className="card-text">
-                                            Welcome to the campus, introduction and get started with the
-                                            tour.
-                                        </p>
+                    <div className="">
+                        <div className="container py-2">
+
+                            {/* timeline item 1 */}
+                            <div className="row">
+                                {/* timeline item 1 left dot */}
+                                <div className="col-auto text-center flex-column d-none d-sm-flex">
+                                    <div className="row h-50">
+                                        <div className="col">&nbsp;</div>
+                                        <div className="col">&nbsp;</div>
+                                    </div>
+                                    <h5 className="m-2">
+                                        <span className="badge rounded-pill bg-light border">&nbsp;</span>
+                                    </h5>
+                                    <div className="row h-50">
+                                        <div className="col border-end">&nbsp;</div>
+                                        <div className="col">&nbsp;</div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        {/*/row*/}
-                        {/* timeline item 2 */}
-                        <div className="row">
-                            <div className="col-auto text-center flex-column d-none d-sm-flex">
-                                <div className="row h-50">
-                                    <div className="col border-end">&nbsp;</div>
-                                    <div className="col">&nbsp;</div>
-                                </div>
-                                <h5 className="m-2">
-                                    <span className="badge rounded-pill bg-primary">&nbsp;</span>
-                                </h5>
-                                <div className="row h-50">
-                                    <div className="col border-end">&nbsp;</div>
-                                    <div className="col">&nbsp;</div>
-                                </div>
-                            </div>
-                            <div className="col py-2">
-                                <div className="card border-primary shadow radius-15">
-                                    <div className="card-body">
-                                        <div className="float-end text-primary">
-                                            Tue, Jan 10th 2019 8:30 AM
-                                        </div>
-                                        <h4 className="card-title text-primary">Day 2 Sessions</h4>
-                                        <p className="card-text">
-                                            Sign-up for the lessons and speakers that coincide with your
-                                            course syllabus. Meet and greet with instructors.
-                                        </p>
-                                        <button
-                                            className="btn btn-sm btn-outline-secondary"
-                                            type="button"
-                                            data-bs-target="#t2_details"
-                                            data-bs-toggle="collapse"
-                                        >
-                                            Show Details ▼
-                                        </button>
-                                        <div className="collapse border" id="t2_details">
-                                            <div className="p-2 text-monospace">
-                                                <div>08:30 - 09:00 Breakfast in CR 2A</div>
-                                                <div>09:00 - 10:30 Live sessions in CR 3</div>
-                                                <div>10:30 - 10:45 Break</div>
-                                                <div>10:45 - 12:00 Live sessions in CR 3</div>
+                                {/* timeline item 1 event content */}
+                                <div className="col py-2">
+                                    <div className="card radius-15">
+                                        <div className="card-body">
+                                            <div className="float-end text-muted">
+                                                Jan 9th 2020
                                             </div>
+                                            <h4 className="card-title text-muted">Cash </h4>
+                                            <h5 className="card-title text-muted">Message for cash</h5>
+                                            <p className="card-text">
+                                                Welcome to the campus, introduction and get started with the
+                                                tour.
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        {/*/row*/}
-                        {/* timeline item 3 */}
-                        <div className="row">
-                            <div className="col-auto text-center flex-column d-none d-sm-flex">
-                                <div className="row h-50">
-                                    <div className="col border-end">&nbsp;</div>
-                                    <div className="col">&nbsp;</div>
+                            {/*/row*/}
+                            {/* timeline item 2 */}
+                            <div className="row">
+                                <div className="col-auto text-center flex-column d-none d-sm-flex">
+                                    <div className="row h-50">
+                                        <div className="col border-end">&nbsp;</div>
+                                        <div className="col">&nbsp;</div>
+                                    </div>
+                                    <h5 className="m-2">
+                                        <span className="badge rounded-pill bg-primary">&nbsp;</span>
+                                    </h5>
+                                    <div className="row h-50">
+                                        <div className="col border-end">&nbsp;</div>
+                                        <div className="col">&nbsp;</div>
+                                    </div>
                                 </div>
-                                <h5 className="m-2">
-                                    <span className="badge rounded-pill bg-light border">&nbsp;</span>
-                                </h5>
-                                <div className="row h-50">
-                                    <div className="col border-end">&nbsp;</div>
-                                    <div className="col">&nbsp;</div>
-                                </div>
-                            </div>
-                            <div className="col py-2">
-                                <div className="card radius-15">
-                                    <div className="card-body">
-                                        <div className="float-end text-muted">
-                                            Wed, Jan 11th 2019 8:30 AM
+                                <div className="col py-2">
+                                    <div className="card border-primary shadow radius-15">
+                                        <div className="card-body">
+                                            <div className="float-end text-muted">
+                                                Jan 9th 2020
+                                            </div>
+                                            <h4 className="card-title text-muted">Future </h4>
+                                            <h5 className="card-title text-muted">Message for Future</h5>
+                                            <p className="card-text">
+                                                Welcome to the campus, introduction and get started with the
+                                                tour.
+                                            </p>
                                         </div>
-                                        <h4 className="card-title">Day 3 Sessions</h4>
-                                        <p>
-                                            Shoreditch vegan artisan Helvetica. Tattooed Codeply Echo Park
-                                            Godard kogi, next level irony ennui twee squid fap selvage.
-                                            Meggings flannel Brooklyn literally small batch, mumblecore PBR
-                                            try-hard kale chips. Brooklyn vinyl lumbersexual bicycle rights,
-                                            viral fap cronut leggings squid chillwave pickled gentrify
-                                            mustache. 3 wolf moon hashtag church-key Odd Future. Austin
-                                            messenger bag normcore, Helvetica Williamsburg sartorial tote
-                                            bag distillery Portland before they sold out gastropub taxidermy
-                                            Vice.
-                                        </p>
                                     </div>
                                 </div>
                             </div>
+                           
                         </div>
-                        {/*/row*/}
-                        {/* timeline item 4 */}
-                        <div className="row">
-                            <div className="col-auto text-center flex-column d-none d-sm-flex">
-                                <div className="row h-50">
-                                    <div className="col border-end">&nbsp;</div>
-                                    <div className="col">&nbsp;</div>
-                                </div>
-                                <h5 className="m-2">
-                                    <span className="badge rounded-pill bg-light border">&nbsp;</span>
-                                </h5>
-                                <div className="row h-50">
-                                    <div className="col">&nbsp;</div>
-                                    <div className="col">&nbsp;</div>
-                                </div>
-                            </div>
-                            <div className="col py-2">
-                                <div className="card radius-15">
-                                    <div className="card-body">
-                                        <div className="float-end text-muted">
-                                            Thu, Jan 12th 2019 11:30 AM
-                                        </div>
-                                        <h4 className="card-title">Day 4 Wrap-up</h4>
-                                        <p>
-                                            Join us for lunch in Bootsy's cafe across from the Campus
-                                            Center.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {/*/row*/}
+
+
+
                     </div>
-            
-                    
-                
                 </div>
-            </div>
             </div>
 
         </>

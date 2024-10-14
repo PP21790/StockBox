@@ -4,7 +4,7 @@ import Table from '../../../components/Table';
 import { Signalperdetail } from '../../../Services/Admin';
 import { image_baseurl } from '../../../Utils/config';
 import { fDateTime } from '../../../Utils/Date_formate';
-
+import { Tooltip } from 'antd';
 
 const Signaldetail = () => {
 
@@ -20,7 +20,7 @@ const Signaldetail = () => {
     }, []);
 
 
-    
+
     const getsignaldetail = async () => {
         try {
             const response = await Signalperdetail(id, token);
@@ -38,20 +38,33 @@ const Signaldetail = () => {
     return (
         <div>
             <div className="page-content">
-                <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                    <div className="breadcrumb-title pe-3">Signal Detail</div>
-                    <div className="ps-3">
-                        <nav aria-label="breadcrumb">
-                            <ol className="breadcrumb mb-0 p-0">
-                                <li className="breadcrumb-item">
-                                    <Link to="/admin/dashboard">
-                                        <i className="bx bx-home-alt" />
-                                    </Link>
-                                </li>
-                            </ol>
-                        </nav>
+                <div className="row">
+                    <div className="col-md-6">
+                        <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+                            <div className="breadcrumb-title pe-3">Signal Detail</div>
+                            <div className="ps-3">
+                                <nav aria-label="breadcrumb">
+                                    <ol className="breadcrumb mb-0 p-0">
+                                        <li className="breadcrumb-item">
+                                            <Link to="/admin/dashboard">
+                                                <i className="bx bx-home-alt" />
+                                            </Link>
+                                        </li>
+                                    </ol>
+                                </nav>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div className="col-md-6 d-flex justify-content-end">
+                        <Link to="/admin/client">
+                            <Tooltip title="Back">
+                                <i className="lni lni-arrow-left-circle" style={{ fontSize: "2rem" }} />
+                            </Tooltip>
+                        </Link>
                     </div>
                 </div>
+
 
                 <hr />
 
@@ -63,9 +76,9 @@ const Signaldetail = () => {
                                     {data.map((item, index) => (
                                         <React.Fragment key={index}>
                                             <div className="row">
-                                            <h6> {item.stock} {item.segment === 'O'? item.strikeprice :item.price} {item.segment === 'O'? item.optiontype :item.calltype}</h6>
+                                                <h6> {item.stock} {item.segment === 'O' ? item.strikeprice : item.price} {item.segment === 'O' ? item.optiontype : item.calltype}</h6>
                                                 <div className="card-body col-md-6">
-                                                              
+
                                                     <ul className="list-group list-group-flush">
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="mb-0">Segment</h6>
