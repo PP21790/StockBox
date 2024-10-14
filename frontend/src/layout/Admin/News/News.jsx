@@ -379,6 +379,9 @@ const News = () => {
                                     </div>
                                 </div>
                                 {model && (
+                                    <>
+                                    <div className="modal-backdrop fade show"></div>
+                                 
                                     <div
                                         className="modal fade show"
                                         style={{ display: 'block' }}
@@ -434,7 +437,7 @@ const News = () => {
                                                         <div className="row">
                                                             <div className="col-md-12">
                                                                 <label htmlFor="">Description</label>
-                                                                <input
+                                                                <textarea
                                                                     className="form-control mb-2"
                                                                     type="text"
                                                                     placeholder='Enter  Description'
@@ -465,6 +468,7 @@ const News = () => {
                                             </div>
                                         </div>
                                     </div>
+                                    </>
                                 )}
 
                             </div>
@@ -476,15 +480,10 @@ const News = () => {
                                     {/* Conditional spacer */}
                                     {index % 2 === 0 ? <div className="col-sm">{/*spacer*/}</div> : null}
 
-                                    {/* Timeline center dot */}
-                                    <div className="col-sm-1 text-center flex-column d-none d-sm-flex">
-                                        <div className="row h-50">
-                                            <div className="col">&nbsp;</div>
-                                            <div className="col">&nbsp;</div>
-                                        </div>
-                                    </div>
 
-                                    {/* Timeline item content */}
+
+
+
                                     <div className="col-sm py-2">
 
                                         <div className={`card ${client.borderClass || 'radius-15'}`}>
@@ -504,7 +503,7 @@ const News = () => {
                                                         />
                                                     </div>
 
-            
+
                                                     <div className="col-md-8">
 
                                                         <div className="d-flex justify-content-between align-items-start mb-2">
@@ -539,7 +538,7 @@ const News = () => {
                                         </div>
                                     </div>
 
-                                    {index % 2 === 1 ? <div className="col-sm">{}</div> : null}
+                                    {index % 2 === 1 ? <div className="col-sm">{ }</div> : null}
                                 </div>
                             ))}
 

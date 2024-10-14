@@ -391,7 +391,7 @@ const Message = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="page-content"> 
+                            <div className="page-content">
                                 <div className="">
                                     <div className="">
                                         <div className="container py-2">
@@ -405,7 +405,7 @@ const Message = () => {
 
                                                 return (
                                                     <div className="row" key={index}>
-                                                        
+
                                                         <div className="col py-2">
                                                             <div className="card" style={{ borderRadius: "10px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
                                                                 <div className="card-body">
@@ -436,8 +436,8 @@ const Message = () => {
                                                                     </h4>
 
                                                                     <span><strong> Subject:</strong> {item.subject}</span>
-                                                                    <p className="card-text" title={item.message}>
-                                                                        <strong> Message: </strong> {item.message.length > 30 ? `${item.message.substring(0, 30)}...` : item.message}
+                                                                    <p className="card-text" >
+                                                                        <strong> Message: </strong> {item.message}
                                                                     </p>
                                                                     <button
                                                                         className="btn btn-sm btn-primary"
