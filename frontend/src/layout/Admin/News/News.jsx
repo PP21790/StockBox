@@ -123,7 +123,7 @@ const News = () => {
                     timer: 2000,
                 });
 
-                setTitle({ title: "", add_by: "" });
+                setTitle({ title: "", add_by: "" , description:""});
                 getNews();
 
                 const modal = document.getElementById('exampleModal');
