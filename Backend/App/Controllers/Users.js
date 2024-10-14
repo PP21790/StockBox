@@ -7,7 +7,7 @@ const { sendEmail } = require('../Utils/emailService');
 const Mailtemplate_Modal = db.Mailtemplate;
 const path = require('path');
 const fs = require('fs');
-
+const nodemailer = require('nodemailer');
 
 
 class Users {
@@ -68,7 +68,7 @@ class Users {
       });
 
     } catch (error) {
-      console.error("Error adding user:", error); // Log the full error
+      console.log("Error adding user:", error); // Log the full error
       return res.status(500).json({ status: false, message: "Server error", error: error.message });
     }
   }
@@ -150,7 +150,7 @@ class Users {
       });
 
     } catch (error) {
-      console.error("Error fetching user details:", error);
+      console.log("Error fetching user details:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -227,7 +227,7 @@ class Users {
       });
 
     } catch (error) {
-      console.error("Error updating User:", error);
+      console.log("Error updating User:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -270,7 +270,7 @@ class Users {
         data: deletedUser,
       });
     } catch (error) {
-      console.error("Error deleting User:", error);
+      console.log("Error deleting User:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -374,7 +374,7 @@ class Users {
       });
 
     } catch (error) {
-      console.error("Error updating status:", error);
+      console.log("Error updating status:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -419,7 +419,7 @@ class Users {
       });
 
     } catch (error) {
-      console.error("Error updating User permissions:", error);
+      console.log("Error updating User permissions:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -511,7 +511,7 @@ class Users {
       });
 
     } catch (error) {
-      console.error("Error in forgotPassword:", error);
+      console.log("Error in forgotPassword:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -560,7 +560,7 @@ class Users {
       });
 
     } catch (error) {
-      console.error("Error in resetPassword:", error);
+      console.log("Error in resetPassword:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -608,7 +608,7 @@ class Users {
 
 
     } catch (error) {
-      console.error("Error in changePassword:", error);
+      console.log("Error in changePassword:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -674,7 +674,7 @@ class Users {
       });
 
     } catch (error) {
-      console.error("Error in updateProfile:", error);
+      console.log("Error in updateProfile:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -727,7 +727,7 @@ class Users {
       });
 
     } catch (error) {
-      console.error("Error in updateProfile:", error);
+      console.log("Error in updateProfile:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -736,9 +736,47 @@ class Users {
     }
   }
 
+   
 
+  async  sendMessage(req, res) {
+    try {
+      const { to, subject, text } = req.body;
+  
+      const transporter = nodemailer.createTransport({
+        host: 'mail.fincapex.com',
+        port: 465,
+        secure: true,
+        auth: {
+          user: 'info@fincapex.com',
+          pass: 'Fincapexw12',
+        },
+        logger: true,   // Enable logging
+        debug: true,    // Enable debugging output
+      });
+  
+      
+      const mailOptions = {
+        from: "shakirpnp@gmail.com", 
+        to ,                        
+        subject                  
+                          
+      };
+  
+      
+      const info = await transporter.sendMail(mailOptions);
+  
+      
+      return res.send({ success: true, message: 'Email sent successfully', info });
+      
+    } catch (error) {
+      console.error('Error sending email:', error);
+      return res.status(500).send({ success: false, message: 'Error sending email', error: error.message });
+    }
+  }  
+
+  
+  
 }
-
 
 
 module.exports = new Users();

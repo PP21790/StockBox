@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getFaqlist, AddFaq, UpdateFaq, changeFAQStatus, DeleteFAQ } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
+import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import Swal from 'sweetalert2';
+import { Tooltip } from 'antd';
 
 const Faq = () => {
 
@@ -18,7 +19,7 @@ const Faq = () => {
         title: "",
         id: "",
         description: "",
-       
+
 
     });
 
@@ -105,7 +106,7 @@ const Faq = () => {
     // Add blogs
     const addfaqbyadmin = async () => {
         try {
-            const data = { title: title.title, description: title.description , add_by:userid};
+            const data = { title: title.title, description: title.description, add_by: userid };
             const response = await AddFaq(data, token);
             if (response && response.status) {
                 Swal.fire({
@@ -116,7 +117,7 @@ const Faq = () => {
                     timer: 2000,
                 });
 
-                setTitle({ title: "", add_by: "", description:"" });
+                setTitle({ title: "", add_by: "", description: "" });
                 getFaq();
 
                 const modal = document.getElementById('exampleModal');
@@ -133,7 +134,6 @@ const Faq = () => {
                 });
             }
         } catch (error) {
-            console.error("Error adding service:", error);
             Swal.fire({
                 title: 'Error!',
                 text: 'There was an error adding',
@@ -241,12 +241,14 @@ const Faq = () => {
             name: 'S.No',
             selector: (row, index) => index + 1,
             sortable: false,
-            width: '70px',
+            width: '100px',
         },
         {
             name: 'Title',
             selector: row => row.title,
             sortable: true,
+            width: '200px',
+
         },
         {
             name: 'Active Status',
@@ -266,11 +268,15 @@ const Faq = () => {
                 </div>
             ),
             sortable: true,
+            width: '200px',
+
+
         },
         {
             name: 'Description',
             selector: row => row.description,
             sortable: true,
+            width: '200px',
         },
 
         {
@@ -278,26 +284,36 @@ const Faq = () => {
             selector: row => new Date(row.created_at).toLocaleDateString(),
             sortable: true,
         },
-        {
-            name: 'Updated At',
-            selector: row => new Date(row.updated_at).toLocaleDateString(),
-            sortable: true,
-        },
+        // {
+        //     name: 'Updated At',
+        //     selector: row => new Date(row.updated_at).toLocaleDateString(),
+        //     sortable: true,
+        // },
+
         {
             name: 'Actions',
             cell: row => (
                 <>
                     <div>
-                        <SquarePen
-                            onClick={() => {
-                                setModel(true);
-                                setServiceid(row);
-                                setUpdatetitle({ title: row.title, id: row._id, description: row.description });
-                            }}
-                        />
+                        <Tooltip placement="top" overlay="View">
+                            <Eye style={{ marginRight: "10px" }} />
+                        </Tooltip>
                     </div>
                     <div>
+                        <Tooltip placement="top" overlay="Update">
+                            <SquarePen
+                                onClick={() => {
+                                    setModel(true);
+                                    setServiceid(row);
+                                    setUpdatetitle({ title: row.title, id: row._id, description: row.description });
+                                }}
+                            />
+                        </Tooltip>
+                    </div>
+                    <div>
+                        <Tooltip placement="top" overlay="Delete">
                         <Trash2 onClick={() => DeleteFaq(row._id)} />
+                        </Tooltip>
                     </div>
                 </>
             ),
@@ -345,6 +361,7 @@ const Faq = () => {
                         </nav>
                     </div>
                 </div>
+                <hr />
 
                 <div className="card">
                     <div className="card-body">
@@ -353,7 +370,7 @@ const Faq = () => {
                                 <input
                                     type="text"
                                     className="form-control ps-5 radius-10"
-                                    placeholder="Search Order"
+                                    placeholder="Search Faq"
                                     onChange={(e) => setSearchInput(e.target.value)}
                                     value={searchInput}
                                 />
@@ -406,11 +423,11 @@ const Faq = () => {
                                                             />
                                                         </div>
                                                     </div>
-                                        
+
                                                     <div className="row">
                                                         <div className="col-md-12">
                                                             <label htmlFor="">description</label>
-                                                            <input
+                                                            <textarea
                                                                 className="form-control mb-3"
                                                                 type="text"
                                                                 placeholder='Enter description'
@@ -443,75 +460,78 @@ const Faq = () => {
 
 
                                 {model && (
-                                    <div
-                                        className="modal fade show"
-                                        style={{ display: 'block' }}
-                                        tabIndex={-1}
-                                        aria-labelledby="exampleModalLabel"
-                                        aria-hidden="true"
-                                    >
-                                        <div className="modal-dialog">
-                                            <div className="modal-content">
-                                                <div className="modal-header">
-                                                    <h5 className="modal-title" id="exampleModalLabel">
-                                                        Update FAQ
-                                                    </h5>
-                                                    <button
-                                                        type="button"
-                                                        className="btn-close"
-                                                        onClick={() => setModel(false)}
-                                                    />
-                                                </div>
-                                                <div className="modal-body">
-                                                    <form>
-                                                        <div className="row">
-                                                            <div className="col-md-12">
-                                                                <label htmlFor="">Title</label>
-                                                                <input
-                                                                    className="form-control mb-2"
-                                                                    type="text"
-                                                                    placeholder='Enter blogs Title'
-                                                                    value={updatetitle.title}
-                                                                    onChange={(e) => updateServiceTitle({ title: e.target.value })}
-                                                                />
+                                    <>
+                                        <div className="modal-backdrop fade show"></div>
+                                        <div
+                                            className="modal fade show"
+                                            style={{ display: 'block' }}
+                                            tabIndex={-1}
+                                            aria-labelledby="exampleModalLabel"
+                                            aria-hidden="true"
+                                        >
+                                            <div className="modal-dialog">
+                                                <div className="modal-content">
+                                                    <div className="modal-header">
+                                                        <h5 className="modal-title" id="exampleModalLabel">
+                                                            Update FAQ
+                                                        </h5>
+                                                        <button
+                                                            type="button"
+                                                            className="btn-close"
+                                                            onClick={() => setModel(false)}
+                                                        />
+                                                    </div>
+                                                    <div className="modal-body">
+                                                        <form>
+                                                            <div className="row">
+                                                                <div className="col-md-12">
+                                                                    <label htmlFor="">Title</label>
+                                                                    <input
+                                                                        className="form-control mb-2"
+                                                                        type="text"
+                                                                        placeholder='Enter blogs Title'
+                                                                        value={updatetitle.title}
+                                                                        onChange={(e) => updateServiceTitle({ title: e.target.value })}
+                                                                    />
+                                                                </div>
                                                             </div>
-                                                        </div>
 
-                    
-                                                        <div className="row">
-                                                            <div className="col-md-12">
-                                                                <label htmlFor="">Description</label>
-                                                                <input
-                                                                    className="form-control mb-2"
-                                                                    type="text"
-                                                                    placeholder='Enter  Description'
-                                                                    value={updatetitle.description}
-                                                                    onChange={(e) => updateServiceTitle({ description: e.target.value })}
-                                                                />
+
+                                                            <div className="row">
+                                                                <div className="col-md-12">
+                                                                    <label htmlFor="">Description</label>
+                                                                    <textarea
+                                                                        className="form-control mb-2"
+                                                                        type="text"
+                                                                        placeholder='Enter  Description'
+                                                                        value={updatetitle.description}
+                                                                        onChange={(e) => updateServiceTitle({ description: e.target.value })}
+                                                                    />
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </form>
+                                                        </form>
 
-                                                </div>
-                                                <div className="modal-footer">
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-secondary"
-                                                        onClick={() => setModel(false)}
-                                                    >
-                                                        Close
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-primary"
-                                                        onClick={updateFaqbyadmin}
-                                                    >
-                                                        Update FAQ
-                                                    </button>
+                                                    </div>
+                                                    <div className="modal-footer">
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-secondary"
+                                                            onClick={() => setModel(false)}
+                                                        >
+                                                            Close
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-primary"
+                                                            onClick={updateFaqbyadmin}
+                                                        >
+                                                            Update FAQ
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </>
                                 )}
 
                             </div>

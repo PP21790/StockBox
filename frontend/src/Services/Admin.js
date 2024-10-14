@@ -1,5 +1,7 @@
 import axios from 'axios';
 import * as Config from "../Utils/config";
+const qs = require('qs');
+
 
 
 
@@ -15,15 +17,13 @@ export async function GetClient(token) {
     } catch (err) {
 
 
-        if ("Forbidden" == err.response?.data || err.message) {
-            localStorage.clear()
-            window.location.reload()
-        }
+        // if ("Forbidden" == err.response?.data || err.message) {
+        //     localStorage.clear()
+        //     window.location.reload()
+        // }
         return err;
     }
 }
-
-
 
 
 
@@ -39,15 +39,46 @@ export async function AddStaffClient(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }
 
 
+// get client detail 
+
+export async function clientdetailbyid(_id, token) {
+    try {
+        const res = await axios.get(`${Config.base_url}client/detail/${_id}`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
+// get client plan data 
+
+
+export async function clientplandatabyid(_id, token) {
+    try {
+        const res = await axios.get(`${Config.base_url}client/myplan/${_id}`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
+
+
 
 // get list for staaf
-
 export async function GetStaff(token) {
     try {
         const res = await axios.get(`${Config.base_url}user/list`, {
@@ -64,7 +95,6 @@ export async function GetStaff(token) {
 
 
 // delete staaf
-
 
 export async function deleteStaff(_id, token) {
     try {
@@ -147,7 +177,6 @@ export async function AddClient(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }
@@ -175,7 +204,6 @@ export async function AddSignalByAdmin(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }
@@ -214,7 +242,6 @@ export async function AddService(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }
@@ -235,7 +262,6 @@ export async function UpdateService(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }
@@ -255,7 +281,6 @@ export async function UpdateServiceStatus(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }
@@ -274,7 +299,6 @@ export async function UpdateClientStatus(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }
@@ -295,7 +319,6 @@ export async function updateStaffstatus(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }
@@ -310,6 +333,7 @@ export async function GetStockDetail(token) {
     try {
         const res = await axios.get(`${Config.base_url}stock/list`, {
             headers: {
+
                 'Authorization': `${token}`
             },
         });
@@ -320,25 +344,34 @@ export async function GetStockDetail(token) {
 }
 
 
-// get signal list 
 
-
-export async function GetSignallist(token) {
+export async function GetSignallist(data, token) {
     try {
         const res = await axios.get(`${Config.base_url}signal/list`, {
             headers: {
-                'Authorization': `${token}`
+                'Authorization': token,
+                'Content-Type': 'application/x-www-form-urlencoded'
             },
+            params: {
+                from: data.from,
+                to: data.to,
+                service: data.service,
+                stock: data.stock
+            }
         });
+
         return res?.data;
-    } catch (err) {
-        return err;
+    } catch (error) {
+        console.log("Error fetching signals:", error.response ? error.response.data : error.message);
     }
+
 }
 
 
-// get signal detailperuser
 
+
+
+// get signal detailperuser
 export async function Signalperdetail(_id, token) {
 
     try {
@@ -356,7 +389,6 @@ export async function Signalperdetail(_id, token) {
 
 
 // delete signal 
-
 export async function DeleteSignal(_id, token) {
     try {
         const res = await axios.get(`${Config.base_url}signal/delete/${_id}`, {
@@ -373,8 +405,6 @@ export async function DeleteSignal(_id, token) {
 
 
 // for signal close api 
-
-
 export async function SignalCloseApi(data, token) {
     try {
         const res = await axios.post(`${Config.base_url}signal/closesignal`, data, {
@@ -383,10 +413,8 @@ export async function SignalCloseApi(data, token) {
                 'Authorization': `${token}`,
             },
         });
-
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }
@@ -394,8 +422,6 @@ export async function SignalCloseApi(data, token) {
 
 
 // basket list 
-
-
 export async function BasketAllList(token) {
     try {
         const res = await axios.get(`${Config.base_url}basket/list`, {
@@ -408,6 +434,43 @@ export async function BasketAllList(token) {
         return err;
     }
 }
+
+
+
+
+// get basket detail per stock
+
+export async function Viewbasket(_id, token) {
+    try {
+        const res = await axios.get(`${Config.base_url}basket/detail/${_id}`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
+
+
+// get delete basket 
+
+export async function deletebasket(_id, token) {
+    try {
+        const res = await axios.get(`${Config.base_url}basket/delete/${_id}`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
+
 
 
 
@@ -424,7 +487,6 @@ export async function addStaffpermission(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }
@@ -448,7 +510,6 @@ export async function getstaffperuser(_id, token) {
 }
 
 
-
 // basket
 // add basket 
 
@@ -463,11 +524,27 @@ export async function Addbasketplan(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }
 
+
+// update basket 
+
+export async function Updatebasket(data, token) {
+    try {
+        const res = await axios.put(`${Config.base_url}basket/update`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        return err.response?.data || err.message;
+    }
+}
 
 
 // plan list 
@@ -504,7 +581,6 @@ export async function Addplanbyadmin(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }
@@ -542,7 +618,7 @@ export async function Addplancategory(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -595,7 +671,27 @@ export async function updatecategorydstatus(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// plan status 
+
+export async function changeplanstatus(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}plan/change-status`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
         return err.response?.data || err.message;
     }
 }
@@ -614,7 +710,6 @@ export async function Deleteservices(_id, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }
@@ -652,7 +747,7 @@ export async function AddstockbyAdmin(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -671,7 +766,7 @@ export async function Updatestock(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -691,7 +786,7 @@ export async function DeleteStock(_id, token) {
         return res?.data;
 
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -712,7 +807,7 @@ export async function Stockstatus(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -736,7 +831,7 @@ export async function Setstockinbulk(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error uploading CSV:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -781,7 +876,7 @@ export async function Addblogsbyadmin(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error uploading CSV:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -805,7 +900,7 @@ export async function Updateblogsbyadmin(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error uploading CSV:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -825,7 +920,7 @@ export async function changeblogsstatus(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -846,7 +941,7 @@ export async function DeleteBlogs(_id, token) {
         return res?.data;
 
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -892,7 +987,7 @@ export async function AddNewsbyadmin(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error uploading CSV:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -917,7 +1012,7 @@ export async function UpdateNewsbyadmin(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error uploading CSV:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -937,7 +1032,7 @@ export async function changeNewsStatus(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -958,7 +1053,7 @@ export async function DeleteNews(_id, token) {
         return res?.data;
 
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -1001,7 +1096,7 @@ export async function AddFaq(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -1022,7 +1117,7 @@ export async function UpdateFaq(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -1044,7 +1139,7 @@ export async function DeleteFAQ(_id, token) {
         return res?.data;
 
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -1066,7 +1161,7 @@ export async function changeFAQStatus(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -1077,18 +1172,18 @@ export async function changeFAQStatus(data, token) {
 
 export async function Addcouponbyadmin(data, token) {
     const formData = new FormData();
-   
+
     formData.append('add_by', data.add_by);
     formData.append('image', data.image);
-    formData.append('name',data.name );
-    formData.append('code',data.code );
-    formData.append('type',data.type );
-    formData.append('value',data.value );
-    formData.append('startdate',data.startdate );
-    formData.append('enddate',data.enddate );
-    formData.append('minpurchasevalue',data.minpurchasevalue );
-    formData.append('mincouponvalue',data.mincouponvalue );
-    formData.append('description',data.description);
+    formData.append('name', data.name);
+    formData.append('code', data.code);
+    formData.append('type', data.type);
+    formData.append('value', data.value);
+    formData.append('startdate', data.startdate);
+    formData.append('enddate', data.enddate);
+    formData.append('minpurchasevalue', data.minpurchasevalue);
+    formData.append('mincouponvalue', data.mincouponvalue);
+    formData.append('description', data.description);
 
     try {
         const res = await axios.post(`${Config.base_url}coupon/add`, formData, {
@@ -1100,7 +1195,7 @@ export async function Addcouponbyadmin(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error uploading CSV:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -1128,18 +1223,18 @@ export async function getcouponlist(token) {
 
 export async function updateCouponbyadmin(data, token) {
     const formData = new FormData();
-   
+
     formData.append('id', data.id);
     formData.append('image', data.image);
-    formData.append('name',data.name );
-    formData.append('code',data.code );
-    formData.append('type',data.type );
-    formData.append('value',data.value );
-    formData.append('startdate',data.startdate );
-    formData.append('enddate',data.enddate );
-    formData.append('minpurchasevalue',data.minpurchasevalue );
-    formData.append('mincouponvalue',data.mincouponvalue );
-    formData.append('description',data.description);
+    formData.append('name', data.name);
+    formData.append('code', data.code);
+    formData.append('type', data.type);
+    formData.append('value', data.value);
+    formData.append('startdate', data.startdate);
+    formData.append('enddate', data.enddate);
+    formData.append('minpurchasevalue', data.minpurchasevalue);
+    formData.append('mincouponvalue', data.mincouponvalue);
+    formData.append('description', data.description);
 
     try {
         const res = await axios.put(`${Config.base_url}coupon/update`, formData, {
@@ -1151,7 +1246,7 @@ export async function updateCouponbyadmin(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error uploading CSV:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -1171,7 +1266,7 @@ export async function DeleteCoupon(_id, token) {
         return res?.data;
 
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -1209,7 +1304,7 @@ export async function Addtermscondition(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -1228,7 +1323,7 @@ export async function changeconditionstatus(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
         return err.response?.data || err.message;
     }
 }
@@ -1248,7 +1343,753 @@ export async function UpdateCondition(data, token) {
 
         return res?.data;
     } catch (err) {
-        console.error('Error adding client:', err.response?.data || err.message);
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+//  assign subscription 
+
+
+export async function PlanSubscription(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}plan/addplansubscription`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+// basket service assign 
+
+export async function BasketSubscription(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}api/list/addbasketsubscription`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// update plan 
+
+export async function Updateplan(data, token) {
+    try {
+        const res = await axios.put(`${Config.base_url}plan/update`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// getby id detail of plan 
+
+export async function getbyidplan(_id, token) {
+    try {
+        const res = await axios.get(`${Config.base_url}plan/detail/${_id}`, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+
+    } catch (err) {
+        return err.response?.data || err.message;
+    }
+}
+
+
+// delete plan
+
+export async function Deleteplan(_id, token) {
+    try {
+        const res = await axios.get(`${Config.base_url}plan/delete/${_id}`, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+
+    } catch (err) {
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+
+// get banner list
+
+export async function getbannerlist(token) {
+
+    try {
+        const res = await axios.get(`${Config.base_url}banner/list`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
+
+// add banner by admin 
+
+
+export async function Addbanner(data, token) {
+    const formData = new FormData();
+    formData.append('image', data.image);
+    formData.append('add_by', data.add_by);
+    try {
+        const res = await axios.post(`${Config.base_url}banner/add`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// update  banner
+
+export async function UpdateBanner(data, token) {
+    const formData = new FormData();
+    formData.append('image', data.image);
+    formData.append('id', data.id);
+    try {
+        const res = await axios.post(`${Config.base_url}banner/update`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// banner status
+
+export async function changeBannerStatus(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}banner/change-status`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// banner delete
+
+export async function DeleteBanner(_id, token) {
+    try {
+        const res = await axios.get(`${Config.base_url}banner/delete/${_id}`, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+// basic setting 
+
+export async function basicsettinglist(token) {
+
+    try {
+        const res = await axios.get(`${Config.base_url}basicsetting/detail`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
+
+
+// add or update basic setting 
+
+export async function Updatebasicsettings(data, token) {
+    const formData = new FormData();
+
+    formData.append('id', data.id);
+    formData.append('from_name', data.from_name);
+    formData.append('address', data.address);
+    formData.append('email_address', data.email_address);
+    formData.append('contact_number', data.contact_number);
+    formData.append('favicon', data.favicon);
+    formData.append('logo', data.logo);
+
+    try {
+        const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// update email setting
+
+
+export async function UpdateEmailSettings(data, token) {
+    const formData = new FormData();
+
+
+    // formData.append('from_mail', data.from_mail);
+    // formData.append('receiver_earn', data.receiver_earn);
+    // formData.append('refer_description', data.refer_description);
+    // formData.append('refer_title', data.refer_title);
+    // formData.append('sender_earn', data.sender_earn);
+    formData.append('smtp_host', data.smtp_host);
+    formData.append('smtp_password', data.smtp_password);
+    formData.append('smtp_port', data.smtp_port);
+    // formData.append('smtp_status', data.smtp_status);
+    formData.append('smtp_username', data.smtp_username);
+    formData.append('to_mail', data.to_mail);
+    formData.append('encryption', data.encryption);
+    // formData.append('refer_image', data.refer_image);
+    // formData.append('surepass_token', data.surepass_token);
+    // formData.append('digio_client_id', data.digio_client_id);
+    // formData.append('digio_client_secret', data.digio_client_secret);
+    // formData.append('razorpay_key', data.razorpay_key);
+    // formData.append('razorpay_secret', data.razorpay_secret);
+
+    try {
+        const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+// api information 
+
+export async function updateApiinfo(data, token) {
+    const formData = new FormData();
+  
+    formData.append('digio_client_id', data.digio_client_id);
+    formData.append('digio_client_secret', data.digio_client_secret);
+    formData.append('digio_template_name', data.digio_template_name);
+    try {
+        const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+// update payment gateway 
+
+
+export async function updatePayementgateway(data, token) {
+    const formData = new FormData();
+
+    formData.append('razorpay_key', data.razorpay_key);
+    formData.append('razorpay_secret', data.razorpay_secret);
+
+    try {
+        const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+// get email template page
+
+export async function getemailtemplate(token) {
+
+    try {
+        const res = await axios.get(`${Config.base_url}mailtemplate/list`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
+
+//  update template 
+
+
+export async function UpdateTemplate(data, token) {
+    try {
+        const res = await axios.put(`${Config.base_url}mailtemplate/update`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+/// get stock list by on service
+
+export async function getstockbyservice(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}stock/getstockbyservice`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+// get stock expiry date
+
+export async function getexpirydate(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}stock/getstocksbyexpiry`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+// get change password api 
+
+export async function ChangePassword(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}user/change-password`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+//  forget api 
+
+export async function ForgetPasswordApi(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}user/forgot-password`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+// get dasboard api 
+
+export async function getDashboarddetail(token) {
+
+    try {
+        const res = await axios.get(`${Config.base_url}dashboard/getcount`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
+
+
+// get strike price
+// get stock expiry date
+
+export async function getstockStrickprice(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}stock/getstocksbyexpirybystrike`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// get plan payment history 
+
+
+
+export async function getPayementhistory(token) {
+    try {
+        const res = await axios.get(`${Config.base_url}plan/paymenthistory`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}
+
+// get freelist client 
+
+export async function FreeClientList(token) {
+    try {
+        const res = await axios.get(`${Config.base_url}client/freetriallist`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}
+
+
+// delete free client 
+
+export async function DeleteFreeClient(_id, token) {
+    try {
+        const res = await axios.get(`${Config.base_url}client/freetrialdelete/${_id}`, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+
+//add broadcast messsage 
+
+export async function SendBroadCast(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}broadcast/add`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+// get broadcast message 
+
+export async function getBroadCastmessage(token) {
+    try {
+        const res = await axios.get(`${Config.base_url}broadcast/list`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}
+
+
+// change broacast status 
+
+export async function ChangeBroadCastStatus(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}broadcast/change-status`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// delete broadcastmessage 
+export async function DeleteBroadCastmessage(_id, token) {
+    try {
+        const res = await axios.get(`${Config.base_url}broadcast/delete/${_id}`, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// update broadcast message 
+
+// update plan 
+
+export async function UpdateCastmessage(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}broadcast/update`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// get payment request 
+
+// get broadcast message 
+
+export async function PaymentRequestlist(token) {
+    try {
+        const res = await axios.get(`${Config.base_url}client/payoutlist`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}
+
+
+// change status on payment request
+
+
+
+// change broacast status 
+
+export async function ChangePaymentStatus(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}client/process-payout-request`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// get help message 
+
+// get broadcast message 
+
+export async function getHelpMessagelist(token) {
+    try {
+        const res = await axios.get(`${Config.base_url}client/helpdesklist`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}
+
+
+// // add freetrial client 
+
+// export async function addfreeClient(data, token) {
+//     try {
+//         const res = await axios.post(`${Config.base_url}basicsetting/add`, data, {
+//             headers: {
+//                 data: {},
+//                 'Authorization': `${token}`,
+//             },
+//         });
+
+//         return res?.data;
+//     } catch (err) {
+
+//         return err.response?.data || err.message;
+//     }
+// }
+
+
+export async function addfreeClient(data, token) {
+    const formData = new FormData();
+    formData.append('freetrial', data.freetrial);
+    try {
+        const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
         return err.response?.data || err.message;
     }
 }

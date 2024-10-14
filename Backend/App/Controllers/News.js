@@ -2,14 +2,15 @@ const db = require("../Models");
 const upload = require('../Utils/multerHelper'); 
 const News_Modal = db.News;
 class NewsController {
-    // Create a new blog post
+  
     async AddNews(req, res) {
         try {
-            // Handle the image upload
+           
+
             await new Promise((resolve, reject) => {
                 upload('news').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
                     if (err) {
-                        console.error('File upload error:', err);
+                        console.log('File upload error:', err);
                         return reject(err);
                     }
                     if (!req.files || !req.files['image']) {
@@ -20,7 +21,7 @@ class NewsController {
                 });
             });
     
-            // After the upload is successful, proceed with the rest of the logic
+          
             const { title, description,add_by } = req.body;
 
 
@@ -38,7 +39,7 @@ class NewsController {
 
             const image = req.files['image'] ? req.files['image'][0].filename : null;
     
-            // Create a new News record
+           
             const result = new News_Modal({
                 title: title,
                 description: description,
@@ -46,7 +47,7 @@ class NewsController {
                 add_by:add_by,
             });
             
-            // Save the result to the database
+            
             await result.save();
     
             console.log("result", result);
@@ -56,12 +57,15 @@ class NewsController {
             });
     
         } catch (error) {
-            console.error("Server error:", error);
+            console.log("Server error:", error);
             return res.status(500).json({ status: false, message: "Server error", data: [] });
         }
     }
     
-    // Get all blog posts
+   
+
+
+
     async getNews(req, res) {
         try {
 
@@ -76,7 +80,7 @@ class NewsController {
                 data: news
             });
         } catch (error) {
-            console.error("Error retrieving news:", error);
+            console.log("Error retrieving news:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -99,7 +103,7 @@ class NewsController {
                 data: news
             });
         } catch (error) {
-            console.error("Error retrieving news:", error);
+            console.log("Error retrieving news:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -129,7 +133,7 @@ class NewsController {
                 data: news
             });
         } catch (error) {
-            console.error("Error retrieving news:", error);
+            console.log("Error retrieving news:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -145,7 +149,7 @@ class NewsController {
             await new Promise((resolve, reject) => {
                 upload('news').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
                     if (err) {
-                        console.error('File upload error:', err);
+                        console.log('File upload error:', err);
                         return reject(err);
                     }
                     if (!req.files || !req.files['image']) {
@@ -214,7 +218,7 @@ class NewsController {
             });
     
         } catch (error) {
-            console.error("Error updating News:", error);
+            console.log("Error updating News:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -250,7 +254,7 @@ class NewsController {
                 message: "News deleted successfully"
             });
         } catch (error) {
-            console.error("Error deleting news:", error);
+            console.log("Error deleting news:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -293,7 +297,7 @@ class NewsController {
             });
       
         } catch (error) {
-            console.error("Error updating status:", error);
+            console.log("Error updating status:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",

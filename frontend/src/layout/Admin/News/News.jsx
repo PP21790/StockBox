@@ -2,14 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getnewslist, AddNewsbyadmin, UpdateNewsbyadmin, changeNewsStatus, DeleteNews } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
+import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import Swal from 'sweetalert2';
+import { image_baseurl } from '../../../Utils/config';
+import { Tooltip } from 'antd';
+
 
 const News = () => {
 
-
-
     const navigate = useNavigate();
+
+
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
@@ -72,7 +75,7 @@ const News = () => {
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
-                    text: 'Service updated successfully.',
+                    text: response.message || 'Service updated successfully.',
                     icon: 'success',
                     confirmButtonText: 'OK',
                     timer: 2000,
@@ -84,7 +87,7 @@ const News = () => {
             } else {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'There was an error updating the service.',
+                    text: response.message || 'There was an error updating the News.',
                     icon: 'error',
                     confirmButtonText: 'Try Again',
                 });
@@ -92,7 +95,7 @@ const News = () => {
         } catch (error) {
             Swal.fire({
                 title: 'Error!',
-                text: 'There was an error updating the service.',
+                text: 'There was an error updating the News.',
                 icon: 'error',
                 confirmButtonText: 'Try Again',
             });
@@ -134,7 +137,6 @@ const News = () => {
                 });
             }
         } catch (error) {
-            console.error("Error adding service:", error);
             Swal.fire({
                 title: 'Error!',
                 text: 'There was an error adding',
@@ -192,7 +194,7 @@ const News = () => {
     // delete news
 
     const DeleteService = async (_id) => {
-        // console.log("_id",_id)
+
         try {
             const result = await Swal.fire({
                 title: 'Are you sure?',
@@ -208,7 +210,7 @@ const News = () => {
                 if (response.status) {
                     Swal.fire({
                         title: 'Deleted!',
-                        text: 'The staff has been successfully deleted.',
+                        text: 'The News has been successfully deleted.',
                         icon: 'success',
                         confirmButtonText: 'OK',
                     });
@@ -219,7 +221,7 @@ const News = () => {
 
                 Swal.fire({
                     title: 'Cancelled',
-                    text: 'The staff deletion was cancelled.',
+                    text: 'The News deletion was cancelled.',
                     icon: 'info',
                     confirmButtonText: 'OK',
                 });
@@ -227,7 +229,7 @@ const News = () => {
         } catch (error) {
             Swal.fire({
                 title: 'Error!',
-                text: 'There was an error deleting the staff.',
+                text: 'There was an error deleting the News.',
                 icon: 'error',
                 confirmButtonText: 'Try Again',
             });
@@ -242,12 +244,13 @@ const News = () => {
             name: 'S.No',
             selector: (row, index) => index + 1,
             sortable: false,
-            width: '70px',
+            width: '100px',
         },
         {
             name: 'Title',
             selector: row => row.title,
             sortable: true,
+            width: '200px',
         },
         {
             name: 'Active Status',
@@ -267,44 +270,152 @@ const News = () => {
                 </div>
             ),
             sortable: true,
+            width: '200px',
         },
         {
             name: 'Description',
             selector: row => row.description,
             sortable: true,
+            width: '200px',
         },
         {
             name: 'Image',
-            cell: row => <img src={`/assets/uploads/news/${row.image}`} alt="Image" width="50" height="50" />,
+            cell: row => <img src={`${image_baseurl}uploads/news/${row.image}`} alt={row.image} width="50" height="50" />,
             sortable: true,
+            width: '100px',
         },
-        
+
 
         {
             name: 'Created At',
             selector: row => new Date(row.created_at).toLocaleDateString(),
             sortable: true,
         },
-        {
-            name: 'Updated At',
-            selector: row => new Date(row.updated_at).toLocaleDateString(),
-            sortable: true,
-        },
+        // {
+        //     name: 'Updated At',
+        //     selector: row => new Date(row.updated_at).toLocaleDateString(),
+        //     sortable: true,
+        // },
+
         {
             name: 'Actions',
             cell: row => (
                 <>
                     <div>
+                        <Tooltip placement="top" overlay="View">
+                            <Eye style={{ marginRight: "10px" }} />
+                        </Tooltip>
+                    </div>
+                    <Tooltip placement="top" overlay="Updte">
                         <SquarePen
                             onClick={() => {
                                 setModel(true);
                                 setServiceid(row);
-                                setUpdatetitle({ title: row.title, id: row._id, description: row.description, image: row.image });
+                                setUpdatetitle({
+                                    title: row.title,
+                                    id: row._id,
+                                    description: row.description,
+                                    image: row.image
+                                });
                             }}
                         />
-                    </div>
+                    </Tooltip>
+                    {model && (
+                        <>
+                            <div className="modal-backdrop fade show"></div>
+                            <div
+                                className="modal fade show"
+                                style={{ display: 'block' }}
+                                tabIndex={-1}
+                                aria-labelledby={`modalLabel-${row._id}`}
+                                aria-hidden="true"
+                                role="dialog"
+                            >
+                                <div className="modal-dialog">
+                                    <div className="modal-content">
+                                        <div className="modal-header">
+                                            <h5 className="modal-title" id={`modalLabel-${row._id}`}>
+                                                Update News
+                                            </h5>
+                                            <button
+                                                type="button"
+                                                className="btn-close"
+                                                onClick={() => setModel(false)}
+                                            />
+                                        </div>
+                                        <div className="modal-body">
+                                            <form>
+                                                <div className="row">
+                                                    <div className="col-md-12">
+                                                        <label htmlFor="" style={{ float: "left" }}>Title</label>
+                                                        <input
+                                                            className="form-control mb-2"
+                                                            type="text"
+                                                            placeholder="Enter news Title"
+                                                            value={updatetitle.title}
+                                                            onChange={(e) => updateServiceTitle({ title: e.target.value })}
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div className="row">
+                                                    <div className="col-md-12">
+                                                        <label htmlFor="imageUpload" style={{ float: "left" }}>Image</label>
+                                                        <input
+                                                            className="form-control mb-3"
+                                                            type="file"
+                                                            accept="image/*"
+                                                            id="imageUpload"
+                                                            onChange={(e) => {
+                                                                const file = e.target.files[0];
+                                                                if (file) {
+                                                                    updateServiceTitle({ image: file });
+                                                                }
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div className="row">
+                                                    <div className="col-md-12">
+                                                        <label htmlFor="" style={{ float: "left" }}>Description</label>
+                                                        <textarea
+                                                            className="form-control mb-2"
+                                                            type="text"
+                                                            placeholder="Enter Description"
+                                                            value={updatetitle.description}
+                                                            onChange={(e) => updateServiceTitle({ description: e.target.value })}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div className="modal-footer">
+                                            <button
+                                                type="button"
+                                                className="btn btn-secondary"
+                                                onClick={() => setModel(false)}
+                                            >
+                                                Close
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className="btn btn-primary"
+                                                onClick={updateNews}
+                                            >
+                                                Update News
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </>
+                    )}
+
                     <div>
-                        <Trash2 onClick={() => DeleteService(row._id)} />
+                        <Tooltip placement="top" overlay="Delete">
+                            <Trash2 onClick={() => DeleteService(row._id)} />
+                        </Tooltip>
                     </div>
                 </>
             ),
@@ -314,14 +425,6 @@ const News = () => {
         }
     ];
 
-
-
-    // const updateServiceTitle = (value) => {
-    //     setUpdatetitle(prev => ({
-    //         ...prev,
-    //         title: value
-    //     }));
-    // };
 
 
     const updateServiceTitle = (updatedField) => {
@@ -352,7 +455,7 @@ const News = () => {
                         </nav>
                     </div>
                 </div>
-
+                <hr />
                 <div className="card">
                     <div className="card-body">
                         <div className="d-lg-flex align-items-center mb-4 gap-3">
@@ -360,7 +463,7 @@ const News = () => {
                                 <input
                                     type="text"
                                     className="form-control ps-5 radius-10"
-                                    placeholder="Search Order"
+                                    placeholder="Search News"
                                     onChange={(e) => setSearchInput(e.target.value)}
                                     value={searchInput}
                                 />
@@ -429,7 +532,7 @@ const News = () => {
                                                     <div className="row">
                                                         <div className="col-md-12">
                                                             <label htmlFor="">description</label>
-                                                            <input
+                                                            <textarea
                                                                 className="form-control mb-3"
                                                                 type="text"
                                                                 placeholder='Enter description'
@@ -461,7 +564,7 @@ const News = () => {
                                 </div>
 
 
-                                {model && (
+                                {/* {model && (
                                     <div
                                         className="modal fade show"
                                         style={{ display: 'block' }}
@@ -548,7 +651,7 @@ const News = () => {
                                             </div>
                                         </div>
                                     </div>
-                                )}
+                                )} */}
 
                             </div>
                         </div>

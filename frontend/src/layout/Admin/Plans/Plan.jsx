@@ -1,13 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getplanlist } from '../../../Services/Admin';
-
-const colors = ['bg-danger', 'bg-primary', 'bg-success', 'bg-info', 'bg-warning'];
+import { getplanlist, getcategoryplan, Deleteplan, changeplanstatus } from '../../../Services/Admin';
+import { fDateTime } from '../../../Utils/Date_formate';
+import Swal from 'sweetalert2';
 
 const Plan = () => {
-    const navigate = useNavigate();
     const [clients, setClients] = useState([]);
+    const [category, setCategory] = useState([]);
+    const [selectedCategoryId, setSelectedCategoryId] = useState(null);
     const token = localStorage.getItem('token');
+
+    useEffect(() => {
+        getAdminclient();
+        getcategoryplanlist();
+    }, []);
+
+    const getcategoryplanlist = async () => {
+        try {
+            const response = await getcategoryplan(token);
+            if (response.status) {
+                setCategory(response.data);
+                if (response.data.length > 0) {
+                    setSelectedCategoryId('all');
+                }
+            }
+        } catch (error) {
+            console.log("error");
+        }
+    };
+
+
+
     const getAdminclient = async () => {
         try {
             const response = await getplanlist(token);
@@ -15,34 +38,107 @@ const Plan = () => {
                 setClients(response.data);
             }
         } catch (error) {
-            console.error("Failed to fetch plans", error);
+            console.log("Failed to fetch plans", error);
         }
     };
 
-    useEffect(() => {
-        getAdminclient();
-    }, []);
 
+
+    const Deleteplanbyadmin = async (_id) => {
+        try {
+            const result = await Swal.fire({
+                title: 'Are you sure?',
+                text: 'Do you want to delete this plan? This action cannot be undone.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel',
+            });
+
+            if (result.isConfirmed) {
+                const response = await Deleteplan(_id, token);
+                if (response.status) {
+                    Swal.fire({
+                        title: 'Deleted!',
+                        text: 'The plan has been successfully deleted.',
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                    });
+                    getAdminclient();
+                }
+            } else {
+                Swal.fire({
+                    title: 'Cancelled',
+                    text: 'The plan deletion was cancelled.',
+                    icon: 'info',
+                    confirmButtonText: 'OK',
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'There was an error deleting the plan.',
+                icon: 'error',
+                confirmButtonText: 'Try Again',
+            });
+        }
+    };
+
+
+
+    const handleSwitchChange = async (event, id) => {
+        const originalChecked = event.target.checked;
+        const user_active_status = originalChecked ? "active" : "inactive";
+        const data = { id: id, status: user_active_status };
+
+        const result = await Swal.fire({
+            title: "Do you want to save the changes?",
+            showCancelButton: true,
+            confirmButtonText: "Save",
+            cancelButtonText: "Cancel",
+            allowOutsideClick: false,
+        });
+
+        if (result.isConfirmed) {
+            try {
+                const response = await changeplanstatus(data, token);
+                if (response.status) {
+                    Swal.fire({
+                        title: "Saved!",
+                        icon: "success",
+                        timer: 1000,
+                        timerProgressBar: true,
+                    });
+                    setTimeout(() => {
+                        Swal.close();
+                    }, 1000);
+                }
+                // Reload the plan list
+                getcategoryplanlist();
+            } catch (error) {
+                Swal.fire(
+                    "Error",
+                    "There was an error processing your request.",
+                    "error"
+                );
+            }
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            event.target.checked = !originalChecked;
+            getcategoryplanlist();
+        }
+    };
+
+
+
+
+    const filteredClients = selectedCategoryId === 'all'
+        ? clients
+        : clients.filter(client => client.category === selectedCategoryId);
 
     return (
         <div className="page-content">
-            {/* Breadcrumb */}
             <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
                 <div className="breadcrumb-title pe-3">Plan</div>
-                <div className="ps-3">
-                    <nav aria-label="breadcrumb">
-                        <ol className="breadcrumb mb-0 p-0">
-                            <li className="breadcrumb-item">
-                                <a href="javascript:;">
-                                    <i className="bx bx-home-alt" />
-                                </a>
-                            </li>
-                            <li className="breadcrumb-item active" aria-current="page">
-                                {/* Plan */}
-                            </li>
-                        </ol>
-                    </nav>
-                </div>
                 <div className="ms-auto">
                     <div className="btn-group">
                         <Link to="/admin/addplan" className="btn btn-primary">
@@ -51,1998 +147,213 @@ const Plan = () => {
                     </div>
                 </div>
             </div>
-            {/* End Breadcrumb */}
+            <hr />
 
             <div className="card">
                 <div className="card-body">
-                    <div className="accordion" id="accordionExample">
-                        <div className="accordion-item">
-                            <h2 className="accordion-header" id="headingOne">
-                                <button
-                                    className="accordion-button collapsed"
-                                    type="button"
-                                    data-bs-toggle="collapse"
-                                    data-bs-target="#collapseOne"
-                                    aria-expanded="false"
-                                    aria-controls="collapseOne"
-                                >
-                                    Stock
-                                </button>
-                            </h2>
-                            <div
-                                id="collapseOne"
-                                className="accordion-collapse collapse"
-                                aria-labelledby="headingOne"
-                                data-bs-parent="#accordionExample"
-                                style={{}}
+                    <ul className="nav nav-pills mb-1" role="tablist">
+                        <li className="nav-item" role="presentation">
+                            <a
+                                className={`nav-link ${selectedCategoryId === 'all' ? 'active' : ''}`}
+                                onClick={() => setSelectedCategoryId('all')}
+                                role="tab"
+                                aria-selected={selectedCategoryId === 'all'}
+                                tabIndex={0}
                             >
-                                <div className="accordion-body">
-                                    <div className="card-body">
-                                        <ul className="nav nav-tabs nav-primary" role="tablist">
-                                            <li className="nav-item" role="presentation">
-                                                <a
-                                                    className="nav-link active"
-                                                    data-bs-toggle="tab"
-                                                    href="#primaryhome"
-                                                    role="tab"
-                                                    aria-selected="true"
-                                                >
-                                                    <div className="d-flex align-items-center">
-                                                        <div className="tab-icon">
-                                                            <i className="bx bx-home font-18 me-1" />
-                                                        </div>
-                                                        <div className="tab-title">Pro</div>
+                                <div className="d-flex align-items-center">
+                                    <div className="tab-title">All</div>
+                                </div>
+                            </a>
+                        </li>
+                        {category.map((cat) => (
+                            <li className="nav-item" role="presentation" key={cat._id}>
+                                <a
+                                    className={`nav-link ${cat._id === selectedCategoryId ? 'active' : ''}`}
+                                    onClick={() => setSelectedCategoryId(cat._id)}
+                                    role="tab"
+                                    aria-selected={cat._id === selectedCategoryId}
+                                    tabIndex={0}
+                                >
+                                    <div className="d-flex align-items-center">
+                                        <div className="tab-title">{cat.title}</div>
+                                    </div>
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                    <hr />
+
+                    <div className="tab-content">
+                        <div className="tab-pane fade active show">
+                            <div className="pricing-section mt-5">
+                                <div className="card-container">
+                                    <div className="row">
+                                        {filteredClients.map((client) => (
+                                            <div className="col-md-6 mb-3" key={client._id}>
+                                                <div className="pricing-card">
+                                                    <div className="category-name text-center mb-3">
+                                                        <span className="badge bg-primary">
+                                                            {category.find(cat => cat._id === client.category)?.title || 'Unknown'}
+                                                        </span>
                                                     </div>
-                                                </a>
-                                            </li>
-                                            <li className="nav-item" role="presentation">
-                                                <a
-                                                    className="nav-link"
-                                                    data-bs-toggle="tab"
-                                                    href="#primaryprofile"
-                                                    role="tab"
-                                                    aria-selected="false"
-                                                    tabIndex={-1}
-                                                >
-                                                    <div className="d-flex align-items-center">
-                                                        <div className="tab-icon">
-                                                            <i className="bx bx-user-pin font-18 me-1" />
-                                                        </div>
-                                                        <div className="tab-title">Pro Plus</div>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                            <li className="nav-item" role="presentation">
-                                                <a
-                                                    className="nav-link"
-                                                    data-bs-toggle="tab"
-                                                    href="#primarycontact"
-                                                    role="tab"
-                                                    aria-selected="false"
-                                                    tabIndex={-1}
-                                                >
-                                                    <div className="d-flex align-items-center">
-                                                        <div className="tab-icon">
-                                                            <i className="bx bx-microphone font-18 me-1" />
-                                                        </div>
-                                                        <div className="tab-title">Pro Lite</div>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                        <div className="tab-content py-3">
-                                            <div
-                                                className="tab-pane fade active show"
-                                                id="primaryhome"
-                                                role="tabpanel"
-                                            >
 
-                                                <div className="pricing-section mt-5">
-
-                                                    <div className="card-container">
-                                                        {/* First Card */}
-
-                                                        <div className='row'>
-                                                            <div className="col-md-6 mb-3">
-
-                                                                <div className="pricing-card highlight-card">
-
-                                                                    <div className="offer-tag">Limited Time Offer</div>
-                                                                    <div className='row justify-content-end mb-3'>
-                                                                        <div className='col-md-6 d-flex justify-content-end'>
-                                                                            {/* <div>
-                                                                                <h4 className='text-success'>active</h4>
-                                                                            </div> */}
-                                                                            <div>
-                                                                                <i className="bx bx-trash trashbtn ms-3" />
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className='row justify-content-between align-items-center'>
-                                                                        <div className='col-md-6'>
-                                                                            <h2 className='fonth3 me-4'>Basic Plan Plus</h2>
-                                                                            <h3 className='fonth2'>Monthly Plan</h3>
-                                                                        </div>
-                                                                        <div className="price-section col-md-6">
-                                                                            <span className="discount">-46%</span>
-                                                                            <span className="original-price">INR 750</span>
-                                                                            <h3 className='ms-4 fnt'>INR 8000</h3>
-                                                                        </div>
-                                                                    </div>
-                                                                    <hr />
-                                                                    <ul>
-
-                                                                        <li>
-                                                                            <b>validity</b> : 1 Month
-                                                                        </li>
-                                                                        <li><b>Description</b> : This is a basic plan with essential features.</li>
-                                                                        <li><b>Created At</b> : 2024-09-03T11:01:32.841Z</li>
-                                                                        <li><b>Updated At</b> : 2024-09-03T11:01:32.841Z</li>
-
-
-                                                                    </ul>
-                                                                    <div className="button-group">
-                                                                        <>
-
-                                                                            <button
-                                                                                type="button"
-                                                                                className="btnsecond "
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#exampleModal"
-                                                                            >
-                                                                                Know More
-                                                                            </button>
-
-                                                                            <div
-                                                                                className="modal fade"
-                                                                                id="exampleModal"
-                                                                                tabIndex={-1}
-                                                                                aria-labelledby="exampleModalLabel"
-                                                                                aria-hidden="true"
-                                                                                style={{ display: "none" }}
-                                                                            >
-                                                                                <div className="modal-dialog">
-                                                                                    <div className="modal-content">
-                                                                                        <div className="modal-header">
-                                                                                            <h5 className="modal-title" id="exampleModalLabel">
-                                                                                                Modal title
-                                                                                            </h5>
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn-close"
-                                                                                                data-bs-dismiss="modal"
-                                                                                                aria-label="Close"
-                                                                                            />
-                                                                                        </div>
-                                                                                        <div className="modal-body">
-                                                                                            <ul>
-                                                                                                <li>
-                                                                                                    <b>Title</b> : Basic Plan Plus
-                                                                                                </li>
-                                                                                                <li><b>Price</b> : 8000</li>
-
-
-                                                                                                <li>
-                                                                                                    <b>validity</b> : 1 Month
-                                                                                                </li>
-                                                                                                <li><b>Description</b> : This is a basic plan with essential features.</li>
-                                                                                                <li><b>Created At</b> : 2024-09-03T11:01:32.841Z</li>
-                                                                                                <li><b>Updated At</b> : 2024-09-03T11:01:32.841Z</li>
-
-
-                                                                                            </ul>
-                                                                                        </div>
-                                                                                        <div className="modal-footer">
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn btn-secondary"
-                                                                                                data-bs-dismiss="modal"
-                                                                                            >
-                                                                                                Close
-                                                                                            </button>
-                                                                                            {/* <button type="button" className="btn btn-primary">
-                                                                            Save changes
-                                                                        </button> */}
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </>
-                                                                        <button className="btn-primary btnprime">Edit</button>
-                                                                    </div>
-
-                                                                </div>
+                                                    <div className="row justify-content-end mb-3">
+                                                        <div className="col-md-6 d-flex justify-content-start">
+                                                            <div className="form-check form-switch form-check-info">
+                                                                <input
+                                                                    id={`rating_${client.status}`}
+                                                                    className="form-check-input toggleswitch"
+                                                                    type="checkbox"
+                                                                    defaultChecked={client.status === "active"}
+                                                                    onChange={(event) => handleSwitchChange(event, client._id)}
+                                                                />
+                                                                <label
+                                                                    htmlFor={`rating_${client.ActiveStatus}`}
+                                                                    className="checktoggle checkbox-bg"
+                                                                ></label>
                                                             </div>
-
-                                                            {/* Second Card */}
-                                                            <div className="col-md-6 mb-3">
-                                                                <div className="pricing-card">
-                                                                    <div className='row justify-content-end mb-3'>
-                                                                        <div className='col-md-6 d-flex justify-content-end'>
-                                                                            {/* <div>
-                                                                                <h4 className='text-success'>active</h4>
-                                                                            </div> */}
-                                                                            <div>
-                                                                                <i className="bx bx-trash trashbtn ms-3" />
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className='row justify-content-between align-items-center'>
-                                                                        <div className='col-md-6'>
-
-
-                                                                            <h3 className='fonth3'>Basic Plan Lite</h3>
-                                                                            <h2 className='fonth2'>Monthly Plan</h2>
-                                                                        </div>
-
-                                                                        <div className="price-section col-md-6">
-                                                                            <span className="discount">-16%</span>
-                                                                            <span className="original-price">INR 6199</span>
-                                                                            <h3 className='ms-4 fnt'>INR 5000</h3>
-                                                                        </div>
-                                                                    </div>
-                                                                    <hr />
-                                                                    <ul>
-                                                                        <li>
-                                                                            <b>validity</b> : 1 Month
-                                                                        </li>
-                                                                        <li><b>Description</b> : This is a basic plan with essential features.</li>
-                                                                        <li><b>Created At</b> : 2024-09-03T11:01:32.841Z</li>
-                                                                        <li><b>Updated At</b> : 2024-09-03T11:01:32.841Z</li>
-                                                                    </ul>
-                                                                    <div className="button-group">
-                                                                        <>
-
-                                                                            <button
-                                                                                type="button"
-                                                                                className="btnsecond "
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#exampleModal"
-                                                                            >
-                                                                                Know More
-                                                                            </button>
-
-                                                                            <div
-                                                                                className="modal fade"
-                                                                                id="exampleModal"
-                                                                                tabIndex={-1}
-                                                                                aria-labelledby="exampleModalLabel"
-                                                                                aria-hidden="true"
-                                                                                style={{ display: "none" }}
-                                                                            >
-                                                                                <div className="modal-dialog">
-                                                                                    <div className="modal-content">
-                                                                                        <div className="modal-header">
-                                                                                            <h5 className="modal-title" id="exampleModalLabel">
-                                                                                                About Plan
-                                                                                            </h5>
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn-close"
-                                                                                                data-bs-dismiss="modal"
-                                                                                                aria-label="Close"
-                                                                                            />
-                                                                                        </div>
-                                                                                        <div className="modal-body">
-                                                                                            Contrary to popular belief, Lorem Ipsum is not simply random text. It
-                                                                                            has roots in a piece of classical Latin literature from 45 BC, making
-                                                                                            it over 2000 years old. Richard McClintock, a Latin professor at
-                                                                                            Hampden-Sydney College in Virginia, looked up one of the more obscure
-                                                                                            Latin words, consectetur.
-                                                                                        </div>
-                                                                                        <div className="modal-footer">
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn btn-secondary"
-                                                                                                data-bs-dismiss="modal"
-                                                                                            >
-                                                                                                Close
-                                                                                            </button>
-                                                                                            <button type="button" className="btn btn-primary">
-                                                                                                Save changes
-                                                                                            </button>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </>
-                                                                        <button className="btn-primary btnprime">Edit</button>
-                                                                    </div>
-                                                                </div>
+                                                        </div>
+                                                        <div className="col-md-6 d-flex justify-content-end">
+                                                            <div>
+                                                                <i className="bx bx-trash trashbtn ms-3" onClick={() => Deleteplanbyadmin(client._id)} />
                                                             </div>
-
                                                         </div>
                                                     </div>
-                                                </div>
 
-
-                                            </div>
-                                            <div className="tab-pane fade" id="primaryprofile" role="tabpanel">
-                                                <div className="pricing-section mt-5">
-
-                                                    <div className="card-container">
-                                                        {/* First Card */}
-                                                        <div className='row'>
-                                                            <div className="col-md-6 mb-3">
-
-                                                                <div className="pricing-card highlight-card">
-
-                                                                    <div className="offer-tag">Limited Time Offer</div>
-                                                                    <div className='row justify-content-between align-items-center'>
-                                                                        <div className='col-md-6'>
-                                                                            <h2 className='fonth3 me-4'>Cricbuzz Plus</h2>
-                                                                            <h3 className='fonth2'>Annual Plan</h3>
-                                                                        </div>
-                                                                        <div className="price-section col-md-6">
-                                                                            <span className="discount">-46%</span>
-                                                                            <span className="original-price">INR 750</span>
-                                                                            <h3 className='ms-4 fnt'>INR 399</h3>
-                                                                        </div>
-                                                                    </div>
-                                                                    <hr />
-                                                                    <ul>
-                                                                        <li>Avail Fantasy Handbook: Comprehensive Fantasy Cricket Guide</li>
-                                                                        <li>
-                                                                            Exclusive access to premium editorial content and Cricbuzz Originals
-                                                                        </li>
-                                                                        <li>Enjoy an ad-free experience on the platform</li>
-                                                                    </ul>
-                                                                    <div className="button-group">
-                                                                        <>
-
-                                                                            <button
-                                                                                type="button"
-                                                                                className="btnsecond "
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#exampleModal2"
-                                                                            >
-                                                                                Know More
-                                                                            </button>
-
-                                                                            <div
-                                                                                className="modal fade"
-                                                                                id="exampleModal2"
-                                                                                tabIndex={-1}
-                                                                                aria-labelledby="exampleModalLabel"
-                                                                                aria-hidden="true"
-                                                                                style={{ display: "none" }}
-                                                                            >
-                                                                                <div className="modal-dialog">
-                                                                                    <div className="modal-content">
-                                                                                        <div className="modal-header">
-                                                                                            <h5 className="modal-title" id="exampleModalLabel">
-                                                                                                Modal title
-                                                                                            </h5>
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn-close"
-                                                                                                data-bs-dismiss="modal"
-                                                                                                aria-label="Close"
-                                                                                            />
-                                                                                        </div>
-                                                                                        <div className="modal-body">
-                                                                                            Contrary to popular belief, Lorem Ipsum is not simply random text. It
-                                                                                            has roots in a piece of classical Latin literature from 45 BC, making
-                                                                                            it over 2000 years old. Richard McClintock, a Latin professor at
-                                                                                            Hampden-Sydney College in Virginia, looked up one of the more obscure
-                                                                                            Latin words, consectetur.
-                                                                                        </div>
-                                                                                        <div className="modal-footer">
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn btn-secondary"
-                                                                                                data-bs-dismiss="modal"
-                                                                                            >
-                                                                                                Close
-                                                                                            </button>
-                                                                                            <button type="button" className="btn btn-primary">
-                                                                                                Save changes
-                                                                                            </button>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </>
-                                                                        <button className="btn-primary btnprime">Edit</button>
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>
-
-                                                            {/* Second Card */}
-                                                            <div className="col-md-6 mb-3">
-                                                                <div className="pricing-card">
-                                                                    <div className='row justify-content-between align-items-center'>
-                                                                        <div className='col-md-6'>
-
-
-                                                                            <h3 className='fonth3'>Cricbuzz Plus Times Prime</h3>
-                                                                            <h2 className='fonth2'>Annual Combo Plan</h2>
-                                                                        </div>
-
-                                                                        <div className="price-section col-md-6">
-                                                                            <span className="discount">-16%</span>
-                                                                            <span className="original-price">INR 1199</span>
-                                                                            <h3 className='ms-4 fnt'>INR 999</h3>
-                                                                        </div>
-                                                                    </div>
-                                                                    <hr />
-                                                                    <ul>
-                                                                        <li>
-                                                                            Access to 23 premium subscriptions, spanning popular platforms.
-
-                                                                        </li>
-                                                                        <li>Avail Fantasy Handbook: Comprehensive Fantasy Cricket Guide</li>
-                                                                        <li>Enjoy an ad-free experience on Cricbuzz</li>
-                                                                    </ul>
-                                                                    <div className="button-group">
-                                                                        <>
-
-                                                                            <button
-                                                                                type="button"
-                                                                                className="btnsecond "
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#exampleModal2"
-                                                                            >
-                                                                                Know More
-                                                                            </button>
-
-                                                                            <div
-                                                                                className="modal fade"
-                                                                                id="exampleModal2"
-                                                                                tabIndex={-1}
-                                                                                aria-labelledby="exampleModalLabel"
-                                                                                aria-hidden="true"
-                                                                                style={{ display: "none" }}
-                                                                            >
-                                                                                <div className="modal-dialog">
-                                                                                    <div className="modal-content">
-                                                                                        <div className="modal-header">
-                                                                                            <h5 className="modal-title" id="exampleModalLabel">
-                                                                                                Modal title
-                                                                                            </h5>
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn-close"
-                                                                                                data-bs-dismiss="modal"
-                                                                                                aria-label="Close"
-                                                                                            />
-                                                                                        </div>
-                                                                                        <div className="modal-body">
-                                                                                            Contrary to popular belief, Lorem Ipsum is not simply random text. It
-                                                                                            has roots in a piece of classical Latin literature from 45 BC, making
-                                                                                            it over 2000 years old. Richard McClintock, a Latin professor at
-                                                                                            Hampden-Sydney College in Virginia, looked up one of the more obscure
-                                                                                            Latin words, consectetur.
-                                                                                        </div>
-                                                                                        <div className="modal-footer">
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn btn-secondary"
-                                                                                                data-bs-dismiss="modal"
-                                                                                            >
-                                                                                                Close
-                                                                                            </button>
-                                                                                            <button type="button" className="btn btn-primary">
-                                                                                                Save changes
-                                                                                            </button>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </>
-                                                                        <button className="btn-primary btnprime">Edit</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
+                                                    <div className="row justify-content-between align-items-center">
+                                                        <div className="col-md-6">
+                                                            <h3 className="fonth3">{client.title}</h3>
+                                                            <h2 className="fonth2">{client.planType}</h2>
+                                                        </div>
+                                                        <div className="price-section col-md-6">
+                                                            <span className="discount">{client.discount}</span>
+                                                            {/* <span className="original-price">INR {client.originalPrice}</span> */}
+                                                            <h3 className="ms-4 fnt">INR {client.price}</h3>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                    <hr />
+                                                    <ul>
+                                                        <li><b>Validity</b>: {client.validity}</li>
+                                                        <li><b className='mb-1'>Description</b>:<textarea className='form-control' >{client.description}</textarea></li>
 
-                                            </div>
-                                            <div className="tab-pane fade" id="primarycontact" role="tabpanel">
-                                                <div className="pricing-section mt-5">
+                                                        <li><b>Created At</b>: {fDateTime(client.created_at)}</li>
+                                                        <li><b>Updated At</b>: {fDateTime(client.updated_at)}</li>
+                                                    </ul>
+                                                    <div className="button-group">
+                                                        <button
+                                                            type="button"
+                                                            className="btnsecond"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target={`#modal-${client._id}`}
 
-                                                    <div className="card-container">
-                                                        {/* First Card */}
-                                                        <div className='row'>
-                                                            <div className="col-md-6 mb-3">
-
-                                                                <div className="pricing-card highlight-card">
-
-                                                                    <div className="offer-tag">Limited Time Offer</div>
-                                                                    <div className='row justify-content-between align-items-center'>
-                                                                        <div className='col-md-6'>
-                                                                            <h2 className='fonth3 me-4'>Cricbuzz Plus</h2>
-                                                                            <h3 className='fonth2'>Annual Plan</h3>
-                                                                        </div>
-                                                                        <div className="price-section col-md-6">
-                                                                            <span className="discount">-46%</span>
-                                                                            <span className="original-price">INR 750</span>
-                                                                            <h3 className='ms-4 fnt'>INR 399</h3>
-                                                                        </div>
+                                                        >
+                                                            View More
+                                                        </button>
+                                                        <div
+                                                            className="modal fade"
+                                                            id={`modal-${client._id}`}
+                                                            tabIndex={-1}
+                                                            aria-labelledby={`modalLabel-${client._id}`}
+                                                            aria-hidden="true"
+                                                        >
+                                                            <div className="modal-dialog">
+                                                                <div className="modal-content">
+                                                                    <div className="modal-header">
+                                                                        <h5 className="modal-title" id={`modalLabel-${client._id}`}>
+                                                                            {client.title}
+                                                                        </h5>
+                                                                        <button
+                                                                            type="button"
+                                                                            className="btn-close"
+                                                                            data-bs-dismiss="modal"
+                                                                            aria-label="Close"
+                                                                        />
                                                                     </div>
-                                                                    <hr />
-                                                                    <ul>
-                                                                        <li>Avail Fantasy Handbook: Comprehensive Fantasy Cricket Guide</li>
-                                                                        <li>
-                                                                            Exclusive access to premium editorial content and Cricbuzz Originals
-                                                                        </li>
-                                                                        <li>Enjoy an ad-free experience on the platform</li>
-                                                                    </ul>
-                                                                    <div className="button-group">
-                                                                        <>
-
-                                                                            <button
-                                                                                type="button"
-                                                                                className="btnsecond "
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#exampleModal3"
-                                                                            >
-                                                                                Know More
-                                                                            </button>
-
-                                                                            <div
-                                                                                className="modal fade"
-                                                                                id="exampleModal3"
-                                                                                tabIndex={-1}
-                                                                                aria-labelledby="exampleModalLabel"
-                                                                                aria-hidden="true"
-                                                                                style={{ display: "none" }}
-                                                                            >
-                                                                                <div className="modal-dialog">
-                                                                                    <div className="modal-content">
-                                                                                        <div className="modal-header">
-                                                                                            <h5 className="modal-title" id="exampleModalLabel">
-                                                                                                Modal title
-                                                                                            </h5>
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn-close"
-                                                                                                data-bs-dismiss="modal"
-                                                                                                aria-label="Close"
-                                                                                            />
-                                                                                        </div>
-                                                                                        <div className="modal-body">
-                                                                                            Contrary to popular belief, Lorem Ipsum is not simply random text. It
-                                                                                            has roots in a piece of classical Latin literature from 45 BC, making
-                                                                                            it over 2000 years old. Richard McClintock, a Latin professor at
-                                                                                            Hampden-Sydney College in Virginia, looked up one of the more obscure
-                                                                                            Latin words, consectetur.
-                                                                                        </div>
-                                                                                        <div className="modal-footer">
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn btn-secondary"
-                                                                                                data-bs-dismiss="modal"
-                                                                                            >
-                                                                                                Close
-                                                                                            </button>
-                                                                                            <button type="button" className="btn btn-primary">
-                                                                                                Save changes
-                                                                                            </button>
-                                                                                        </div>
+                                                                    <div className="modal-body">
+                                                                        <ul>
+                                                                            <li>
+                                                                                <div className="row justify-content-between">
+                                                                                    <div className="col-md-6">
+                                                                                        <b>Title</b>
+                                                                                    </div>
+                                                                                    <div className="col-md-6">
+                                                                                        {client.title}
                                                                                     </div>
                                                                                 </div>
-                                                                            </div>
-                                                                        </>
-                                                                        <button className="btn-primary btnprime">Edit</button>
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>
-
-                                                            {/* Second Card */}
-                                                            <div className="col-md-6 mb-3">
-                                                                <div className="pricing-card">
-                                                                    <div className='row justify-content-between align-items-center'>
-                                                                        <div className='col-md-6'>
-
-
-                                                                            <h3 className='fonth3'>Cricbuzz Plus Times Prime</h3>
-                                                                            <h2 className='fonth2'>Annual Combo Plan</h2>
-                                                                        </div>
-
-                                                                        <div className="price-section col-md-6">
-                                                                            <span className="discount">-16%</span>
-                                                                            <span className="original-price">INR 1199</span>
-                                                                            <h3 className='ms-4 fnt'>INR 999</h3>
-                                                                        </div>
-                                                                    </div>
-                                                                    <hr />
-                                                                    <ul>
-                                                                        <li>
-                                                                            Access to 23 premium subscriptions, spanning popular platforms.
-
-                                                                        </li>
-                                                                        <li>Avail Fantasy Handbook: Comprehensive Fantasy Cricket Guide</li>
-                                                                        <li>Enjoy an ad-free experience on Cricbuzz</li>
-                                                                    </ul>
-                                                                    <div className="button-group">
-                                                                        <>
-
-                                                                            <button
-                                                                                type="button"
-                                                                                className="btnsecond "
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#exampleModal3"
-                                                                            >
-                                                                                Know More
-                                                                            </button>
-
-                                                                            <div
-                                                                                className="modal fade"
-                                                                                id="exampleModal3"
-                                                                                tabIndex={-1}
-                                                                                aria-labelledby="exampleModalLabel"
-                                                                                aria-hidden="true"
-                                                                                style={{ display: "none" }}
-                                                                            >
-                                                                                <div className="modal-dialog">
-                                                                                    <div className="modal-content">
-                                                                                        <div className="modal-header">
-                                                                                            <h5 className="modal-title" id="exampleModalLabel">
-                                                                                                Modal title
-                                                                                            </h5>
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn-close"
-                                                                                                data-bs-dismiss="modal"
-                                                                                                aria-label="Close"
-                                                                                            />
-                                                                                        </div>
-                                                                                        <div className="modal-body">
-                                                                                            Contrary to popular belief, Lorem Ipsum is not simply random text. It
-                                                                                            has roots in a piece of classical Latin literature from 45 BC, making
-                                                                                            it over 2000 years old. Richard McClintock, a Latin professor at
-                                                                                            Hampden-Sydney College in Virginia, looked up one of the more obscure
-                                                                                            Latin words, consectetur.
-                                                                                        </div>
-                                                                                        <div className="modal-footer">
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn btn-secondary"
-                                                                                                data-bs-dismiss="modal"
-                                                                                            >
-                                                                                                Close
-                                                                                            </button>
-                                                                                            <button type="button" className="btn btn-primary">
-                                                                                                Save changes
-                                                                                            </button>
-                                                                                        </div>
+                                                                            </li>
+                                                                            <li>
+                                                                                <div className="row justify-content-between">
+                                                                                    <div className="col-md-6">
+                                                                                        <b>Price</b>
+                                                                                    </div>
+                                                                                    <div className="col-md-6">
+                                                                                        {client.price}
                                                                                     </div>
                                                                                 </div>
-                                                                            </div>
-                                                                        </>
-
-                                                                        <button className="btn-primary btnprime">Edit</button>
+                                                                            </li>
+                                                                            <li>
+                                                                                <div className="row justify-content-between">
+                                                                                    <div className="col-md-6">
+                                                                                        <b>Validity</b>
+                                                                                    </div>
+                                                                                    <div className="col-md-6">
+                                                                                        {client.validity}
+                                                                                    </div>
+                                                                                </div>
+                                                                            </li>
+                                                                            <li>
+                                                                                <div className="row justify-content-between">
+                                                                                    <div className="col-md-6">
+                                                                                        <b>Description</b>
+                                                                                    </div>
+                                                                                    <div className="col-md-6">
+                                                                                        {client.description}
+                                                                                    </div>
+                                                                                </div>
+                                                                            </li>
+                                                                            <li>
+                                                                                <div className="row justify-content-between">
+                                                                                    <div className="col-md-6">
+                                                                                        <b>Created At</b>
+                                                                                    </div>
+                                                                                    <div className="col-md-6">
+                                                                                        {fDateTime(client.created_at)}
+                                                                                    </div>
+                                                                                </div>
+                                                                            </li>
+                                                                            <li>
+                                                                                <div className="row justify-content-between">
+                                                                                    <div className="col-md-6">
+                                                                                        <b>Updated At</b>
+                                                                                    </div>
+                                                                                    <div className="col-md-6">
+                                                                                        {fDateTime(client.updated_at)}
+                                                                                    </div>
+                                                                                </div>
+                                                                            </li>
+                                                                        </ul>
                                                                     </div>
                                                                 </div>
                                                             </div>
-
                                                         </div>
+                                                        <Link to={`editplan/${client._id}`} className="btn-primary btnprime" style={{ color: 'inherit', textDecoration: 'none' }}>
+                                                            <div >
+
+                                                                Edit
+
+                                                            </div>
+                                                        </Link>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        ))}
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="accordion-item">
-                            <h2 className="accordion-header" id="headingTwo">
-                                <button
-                                    className="accordion-button collapsed"
-                                    type="button"
-                                    data-bs-toggle="collapse"
-                                    data-bs-target="#collapseTwo"
-                                    aria-expanded="false"
-                                    aria-controls="collapseTwo"
-                                >
-                                    Case
-                                </button>
-                            </h2>
-                            <div
-                                id="collapseTwo"
-                                className="accordion-collapse collapse"
-                                aria-labelledby="headingTwo"
-                                data-bs-parent="#accordionExample"
-                            >
-                                <div className="accordion-body">
-                                    <div className="card-body">
-                                        <ul className="nav nav-tabs nav-primary" role="tablist">
-                                            <li className="nav-item" role="presentation">
-                                                <a
-                                                    className="nav-link active"
-                                                    data-bs-toggle="tab"
-                                                    href="#primaryhome1"
-                                                    role="tab"
-                                                    aria-selected="true"
-                                                >
-                                                    <div className="d-flex align-items-center">
-                                                        <div className="tab-icon">
-                                                            <i className="bx bx-home font-18 me-1" />
-                                                        </div>
-                                                        <div className="tab-title">Pro</div>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                            <li className="nav-item" role="presentation">
-                                                <a
-                                                    className="nav-link"
-                                                    data-bs-toggle="tab"
-                                                    href="#primaryprofile1"
-                                                    role="tab"
-                                                    aria-selected="false"
-                                                    tabIndex={-1}
-                                                >
-                                                    <div className="d-flex align-items-center">
-                                                        <div className="tab-icon">
-                                                            <i className="bx bx-user-pin font-18 me-1" />
-                                                        </div>
-                                                        <div className="tab-title">Pro Plus</div>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                            <li className="nav-item" role="presentation">
-                                                <a
-                                                    className="nav-link"
-                                                    data-bs-toggle="tab"
-                                                    href="#primarycontact1"
-                                                    role="tab"
-                                                    aria-selected="false"
-                                                    tabIndex={-1}
-                                                >
-                                                    <div className="d-flex align-items-center">
-                                                        <div className="tab-icon">
-                                                            <i className="bx bx-microphone font-18 me-1" />
-                                                        </div>
-                                                        <div className="tab-title">Pro Lite</div>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                        <div className="tab-content py-3">
-                                            <div
-                                                className="tab-pane fade active show"
-                                                id="primaryhome1"
-                                                role="tabpanel"
-                                            >
-
-                                                <div className="pricing-section mt-5">
-
-                                                    <div className="card-container">
-                                                        {/* First Card */}
-                                                        <div className='row'>
-                                                            <div className="col-md-6 mb-3">
-
-                                                                <div className="pricing-card highlight-card">
-
-                                                                    <div className="offer-tag">Limited Time Offer</div>
-                                                                    <div className='row justify-content-between align-items-center'>
-                                                                        <div className='col-md-6'>
-                                                                            <h2 className='fonth3 me-4'>Basic Plan Plus</h2>
-                                                                            <h3 className='fonth2'>Monthly Plan</h3>
-                                                                        </div>
-                                                                        <div className="price-section col-md-6">
-                                                                            <span className="discount">-46%</span>
-                                                                            <span className="original-price">INR 750</span>
-                                                                            <h3 className='ms-4 fnt'>INR 8000</h3>
-                                                                        </div>
-                                                                    </div>
-                                                                    <hr />
-                                                                    <ul>
-
-                                                                        <li>
-                                                                            <b>validity</b> : 1 Month
-                                                                        </li>
-                                                                        <li><b>Description</b> : This is a basic plan with essential features.</li>
-                                                                        <li><b>Created At</b> : 2024-09-03T11:01:32.841Z</li>
-                                                                        <li><b>Updated At</b> : 2024-09-03T11:01:32.841Z</li>
-
-
-                                                                    </ul>
-                                                                    <div className="button-group">
-                                                                        <>
-
-                                                                            <button
-                                                                                type="button"
-                                                                                className="btnsecond "
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#exampleModal0"
-                                                                            >
-                                                                                Know More
-                                                                            </button>
-
-                                                                            <div
-                                                                                className="modal fade"
-                                                                                id="exampleModal0"
-                                                                                tabIndex={-1}
-                                                                                aria-labelledby="exampleModalLabel"
-                                                                                aria-hidden="true"
-                                                                                style={{ display: "none" }}
-                                                                            >
-                                                                                <div className="modal-dialog">
-                                                                                    <div className="modal-content">
-                                                                                        <div className="modal-header">
-                                                                                            <h5 className="modal-title" id="exampleModalLabel">
-                                                                                                Modal title
-                                                                                            </h5>
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn-close"
-                                                                                                data-bs-dismiss="modal"
-                                                                                                aria-label="Close"
-                                                                                            />
-                                                                                        </div>
-                                                                                        <div className="modal-body">
-                                                                                            <ul>
-                                                                                                <li>
-                                                                                                    <b>Title</b> : Basic Plan Plus
-                                                                                                </li>
-                                                                                                <li><b>Price</b> : 8000</li>
-
-
-                                                                                                <li>
-                                                                                                    <b>validity</b> : 1 Month
-                                                                                                </li>
-                                                                                                <li><b>Description</b> : This is a basic plan with essential features.</li>
-                                                                                                <li><b>Created At</b> : 2024-09-03T11:01:32.841Z</li>
-                                                                                                <li><b>Updated At</b> : 2024-09-03T11:01:32.841Z</li>
-
-
-                                                                                            </ul>
-                                                                                        </div>
-                                                                                        <div className="modal-footer">
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn btn-secondary"
-                                                                                                data-bs-dismiss="modal"
-                                                                                            >
-                                                                                                Close
-                                                                                            </button>
-                                                                                            {/* <button type="button" className="btn btn-primary">
-                                                                            Save changes
-                                                                        </button> */}
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </>
-                                                                        <button className="btn-primary btnprime">Edit</button>
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>
-
-                                                            {/* Second Card */}
-                                                            <div className="col-md-6 mb-3">
-                                                                <div className="pricing-card">
-                                                                    <div className='row justify-content-between align-items-center'>
-                                                                        <div className='col-md-6'>
-
-
-                                                                            <h3 className='fonth3'>Basic Plan Lite</h3>
-                                                                            <h2 className='fonth2'>Monthly Plan</h2>
-                                                                        </div>
-
-                                                                        <div className="price-section col-md-6">
-                                                                            <span className="discount">-16%</span>
-                                                                            <span className="original-price">INR 6199</span>
-                                                                            <h3 className='ms-4 fnt'>INR 5000</h3>
-                                                                        </div>
-                                                                    </div>
-                                                                    <hr />
-                                                                    <ul>
-                                                                        <li>
-                                                                            <b>validity</b> : 1 Month
-                                                                        </li>
-                                                                        <li><b>Description</b> : This is a basic plan with essential features.</li>
-                                                                        <li><b>Created At</b> : 2024-09-03T11:01:32.841Z</li>
-                                                                        <li><b>Updated At</b> : 2024-09-03T11:01:32.841Z</li>
-                                                                    </ul>
-                                                                    <div className="button-group">
-                                                                        <>
-
-                                                                            <button
-                                                                                type="button"
-                                                                                className="btnsecond "
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#exampleModal0"
-                                                                            >
-                                                                                Know More
-                                                                            </button>
-
-                                                                            <div
-                                                                                className="modal fade"
-                                                                                id="exampleModal0"
-                                                                                tabIndex={-1}
-                                                                                aria-labelledby="exampleModalLabel"
-                                                                                aria-hidden="true"
-                                                                                style={{ display: "none" }}
-                                                                            >
-                                                                                <div className="modal-dialog">
-                                                                                    <div className="modal-content">
-                                                                                        <div className="modal-header">
-                                                                                            <h5 className="modal-title" id="exampleModalLabel">
-                                                                                                About Plan
-                                                                                            </h5>
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn-close"
-                                                                                                data-bs-dismiss="modal"
-                                                                                                aria-label="Close"
-                                                                                            />
-                                                                                        </div>
-                                                                                        <div className="modal-body">
-                                                                                            Contrary to popular belief, Lorem Ipsum is not simply random text. It
-                                                                                            has roots in a piece of classical Latin literature from 45 BC, making
-                                                                                            it over 2000 years old. Richard McClintock, a Latin professor at
-                                                                                            Hampden-Sydney College in Virginia, looked up one of the more obscure
-                                                                                            Latin words, consectetur.
-                                                                                        </div>
-                                                                                        <div className="modal-footer">
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn btn-secondary"
-                                                                                                data-bs-dismiss="modal"
-                                                                                            >
-                                                                                                Close
-                                                                                            </button>
-                                                                                            <button type="button" className="btn btn-primary">
-                                                                                                Save changes
-                                                                                            </button>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </>
-                                                                        <button className="btn-primary btnprime">Edit</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-
-                                            </div>
-                                            <div className="tab-pane fade" id="primaryprofile1" role="tabpanel">
-                                                <div className="pricing-section mt-5">
-
-                                                    <div className="card-container">
-                                                        {/* First Card */}
-                                                        <div className='row'>
-                                                            <div className="col-md-6 mb-3">
-
-                                                                <div className="pricing-card highlight-card">
-
-                                                                    <div className="offer-tag">Limited Time Offer</div>
-                                                                    <div className='row justify-content-between align-items-center'>
-                                                                        <div className='col-md-6'>
-                                                                            <h2 className='fonth3 me-4'>Cricbuzz Plus</h2>
-                                                                            <h3 className='fonth2'>Annual Plan</h3>
-                                                                        </div>
-                                                                        <div className="price-section col-md-6">
-                                                                            <span className="discount">-46%</span>
-                                                                            <span className="original-price">INR 750</span>
-                                                                            <h3 className='ms-4 fnt'>INR 399</h3>
-                                                                        </div>
-                                                                    </div>
-                                                                    <hr />
-                                                                    <ul>
-                                                                        <li>Avail Fantasy Handbook: Comprehensive Fantasy Cricket Guide</li>
-                                                                        <li>
-                                                                            Exclusive access to premium editorial content and Cricbuzz Originals
-                                                                        </li>
-                                                                        <li>Enjoy an ad-free experience on the platform</li>
-                                                                    </ul>
-                                                                    <div className="button-group">
-                                                                        <>
-
-                                                                            <button
-                                                                                type="button"
-                                                                                className="btnsecond "
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#exampleModal0"
-                                                                            >
-                                                                                Know More
-                                                                            </button>
-
-                                                                            <div
-                                                                                className="modal fade"
-                                                                                id="exampleModal0"
-                                                                                tabIndex={-1}
-                                                                                aria-labelledby="exampleModalLabel"
-                                                                                aria-hidden="true"
-                                                                                style={{ display: "none" }}
-                                                                            >
-                                                                                <div className="modal-dialog">
-                                                                                    <div className="modal-content">
-                                                                                        <div className="modal-header">
-                                                                                            <h5 className="modal-title" id="exampleModalLabel">
-                                                                                                Modal title
-                                                                                            </h5>
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn-close"
-                                                                                                data-bs-dismiss="modal"
-                                                                                                aria-label="Close"
-                                                                                            />
-                                                                                        </div>
-                                                                                        <div className="modal-body">
-                                                                                            Contrary to popular belief, Lorem Ipsum is not simply random text. It
-                                                                                            has roots in a piece of classical Latin literature from 45 BC, making
-                                                                                            it over 2000 years old. Richard McClintock, a Latin professor at
-                                                                                            Hampden-Sydney College in Virginia, looked up one of the more obscure
-                                                                                            Latin words, consectetur.
-                                                                                        </div>
-                                                                                        <div className="modal-footer">
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn btn-secondary"
-                                                                                                data-bs-dismiss="modal"
-                                                                                            >
-                                                                                                Close
-                                                                                            </button>
-                                                                                            <button type="button" className="btn btn-primary">
-                                                                                                Save changes
-                                                                                            </button>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </>
-                                                                        <button className="btn-primary btnprime">Edit</button>
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>
-
-                                                            {/* Second Card */}
-                                                            <div className="col-md-6 mb-3">
-                                                                <div className="pricing-card">
-                                                                    <div className='row justify-content-between align-items-center'>
-                                                                        <div className='col-md-6'>
-
-
-                                                                            <h3 className='fonth3'>Cricbuzz Plus Times Prime</h3>
-                                                                            <h2 className='fonth2'>Annual Combo Plan</h2>
-                                                                        </div>
-
-                                                                        <div className="price-section col-md-6">
-                                                                            <span className="discount">-16%</span>
-                                                                            <span className="original-price">INR 1199</span>
-                                                                            <h3 className='ms-4 fnt'>INR 999</h3>
-                                                                        </div>
-                                                                    </div>
-                                                                    <hr />
-                                                                    <ul>
-                                                                        <li>
-                                                                            Access to 23 premium subscriptions, spanning popular platforms.
-
-                                                                        </li>
-                                                                        <li>Avail Fantasy Handbook: Comprehensive Fantasy Cricket Guide</li>
-                                                                        <li>Enjoy an ad-free experience on Cricbuzz</li>
-                                                                    </ul>
-                                                                    <div className="button-group">
-                                                                        <>
-
-                                                                            <button
-                                                                                type="button"
-                                                                                className="btnsecond "
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#exampleModal0"
-                                                                            >
-                                                                                Know More
-                                                                            </button>
-
-                                                                            <div
-                                                                                className="modal fade"
-                                                                                id="exampleModal0"
-                                                                                tabIndex={-1}
-                                                                                aria-labelledby="exampleModalLabel"
-                                                                                aria-hidden="true"
-                                                                                style={{ display: "none" }}
-                                                                            >
-                                                                                <div className="modal-dialog">
-                                                                                    <div className="modal-content">
-                                                                                        <div className="modal-header">
-                                                                                            <h5 className="modal-title" id="exampleModalLabel">
-                                                                                                Modal title
-                                                                                            </h5>
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn-close"
-                                                                                                data-bs-dismiss="modal"
-                                                                                                aria-label="Close"
-                                                                                            />
-                                                                                        </div>
-                                                                                        <div className="modal-body">
-                                                                                            Contrary to popular belief, Lorem Ipsum is not simply random text. It
-                                                                                            has roots in a piece of classical Latin literature from 45 BC, making
-                                                                                            it over 2000 years old. Richard McClintock, a Latin professor at
-                                                                                            Hampden-Sydney College in Virginia, looked up one of the more obscure
-                                                                                            Latin words, consectetur.
-                                                                                        </div>
-                                                                                        <div className="modal-footer">
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn btn-secondary"
-                                                                                                data-bs-dismiss="modal"
-                                                                                            >
-                                                                                                Close
-                                                                                            </button>
-                                                                                            <button type="button" className="btn btn-primary">
-                                                                                                Save changes
-                                                                                            </button>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </>
-                                                                        <button className="btn-primary btnprime">Edit</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                            <div className="tab-pane fade" id="primarycontact1" role="tabpanel">
-                                                <div className="pricing-section mt-5">
-
-                                                    <div className="card-container">
-                                                        {/* First Card */}
-                                                        <div className='row'>
-                                                            <div className="col-md-6 mb-3">
-
-                                                                <div className="pricing-card highlight-card">
-
-                                                                    <div className="offer-tag">Limited Time Offer</div>
-                                                                    <div className='row justify-content-between align-items-center'>
-                                                                        <div className='col-md-6'>
-                                                                            <h2 className='fonth3 me-4'>Cricbuzz Plus</h2>
-                                                                            <h3 className='fonth2'>Annual Plan</h3>
-                                                                        </div>
-                                                                        <div className="price-section col-md-6">
-                                                                            <span className="discount">-46%</span>
-                                                                            <span className="original-price">INR 750</span>
-                                                                            <h3 className='ms-4 fnt'>INR 399</h3>
-                                                                        </div>
-                                                                    </div>
-                                                                    <hr />
-                                                                    <ul>
-                                                                        <li>Avail Fantasy Handbook: Comprehensive Fantasy Cricket Guide</li>
-                                                                        <li>
-                                                                            Exclusive access to premium editorial content and Cricbuzz Originals
-                                                                        </li>
-                                                                        <li>Enjoy an ad-free experience on the platform</li>
-                                                                    </ul>
-                                                                    <div className="button-group">
-                                                                        <>
-
-                                                                            <button
-                                                                                type="button"
-                                                                                className="btnsecond "
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#exampleModal3"
-                                                                            >
-                                                                                Know More
-                                                                            </button>
-
-                                                                            <div
-                                                                                className="modal fade"
-                                                                                id="exampleModal3"
-                                                                                tabIndex={-1}
-                                                                                aria-labelledby="exampleModalLabel"
-                                                                                aria-hidden="true"
-                                                                                style={{ display: "none" }}
-                                                                            >
-                                                                                <div className="modal-dialog">
-                                                                                    <div className="modal-content">
-                                                                                        <div className="modal-header">
-                                                                                            <h5 className="modal-title" id="exampleModalLabel">
-                                                                                                Modal title
-                                                                                            </h5>
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn-close"
-                                                                                                data-bs-dismiss="modal"
-                                                                                                aria-label="Close"
-                                                                                            />
-                                                                                        </div>
-                                                                                        <div className="modal-body">
-                                                                                            Contrary to popular belief, Lorem Ipsum is not simply random text. It
-                                                                                            has roots in a piece of classical Latin literature from 45 BC, making
-                                                                                            it over 2000 years old. Richard McClintock, a Latin professor at
-                                                                                            Hampden-Sydney College in Virginia, looked up one of the more obscure
-                                                                                            Latin words, consectetur.
-                                                                                        </div>
-                                                                                        <div className="modal-footer">
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn btn-secondary"
-                                                                                                data-bs-dismiss="modal"
-                                                                                            >
-                                                                                                Close
-                                                                                            </button>
-                                                                                            <button type="button" className="btn btn-primary">
-                                                                                                Save changes
-                                                                                            </button>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </>
-                                                                        <button className="btn-primary btnprime">Edit</button>
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>
-
-                                                            {/* Second Card */}
-                                                            <div className="col-md-6 mb-3">
-                                                                <div className="pricing-card">
-                                                                    <div className='row justify-content-between align-items-center'>
-                                                                        <div className='col-md-6'>
-
-
-                                                                            <h3 className='fonth3'>Cricbuzz Plus Times Prime</h3>
-                                                                            <h2 className='fonth2'>Annual Combo Plan</h2>
-                                                                        </div>
-
-                                                                        <div className="price-section col-md-6">
-                                                                            <span className="discount">-16%</span>
-                                                                            <span className="original-price">INR 1199</span>
-                                                                            <h3 className='ms-4 fnt'>INR 999</h3>
-                                                                        </div>
-                                                                    </div>
-                                                                    <hr />
-                                                                    <ul>
-                                                                        <li>
-                                                                            Access to 23 premium subscriptions, spanning popular platforms.
-
-                                                                        </li>
-                                                                        <li>Avail Fantasy Handbook: Comprehensive Fantasy Cricket Guide</li>
-                                                                        <li>Enjoy an ad-free experience on Cricbuzz</li>
-                                                                    </ul>
-                                                                    <div className="button-group">
-                                                                        <>
-
-                                                                            <button
-                                                                                type="button"
-                                                                                className="btnsecond "
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#exampleModal3"
-                                                                            >
-                                                                                Know More
-                                                                            </button>
-
-                                                                            <div
-                                                                                className="modal fade"
-                                                                                id="exampleModal3"
-                                                                                tabIndex={-1}
-                                                                                aria-labelledby="exampleModalLabel"
-                                                                                aria-hidden="true"
-                                                                                style={{ display: "none" }}
-                                                                            >
-                                                                                <div className="modal-dialog">
-                                                                                    <div className="modal-content">
-                                                                                        <div className="modal-header">
-                                                                                            <h5 className="modal-title" id="exampleModalLabel">
-                                                                                                Modal title
-                                                                                            </h5>
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn-close"
-                                                                                                data-bs-dismiss="modal"
-                                                                                                aria-label="Close"
-                                                                                            />
-                                                                                        </div>
-                                                                                        <div className="modal-body">
-                                                                                            Contrary to popular belief, Lorem Ipsum is not simply random text. It
-                                                                                            has roots in a piece of classical Latin literature from 45 BC, making
-                                                                                            it over 2000 years old. Richard McClintock, a Latin professor at
-                                                                                            Hampden-Sydney College in Virginia, looked up one of the more obscure
-                                                                                            Latin words, consectetur.
-                                                                                        </div>
-                                                                                        <div className="modal-footer">
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn btn-secondary"
-                                                                                                data-bs-dismiss="modal"
-                                                                                            >
-                                                                                                Close
-                                                                                            </button>
-                                                                                            <button type="button" className="btn btn-primary">
-                                                                                                Save changes
-                                                                                            </button>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </>
-
-                                                                        <button className="btn-primary btnprime">Edit</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="accordion-item">
-                            <h2 className="accordion-header" id="headingThree">
-                                <button
-                                    className="accordion-button collapsed"
-                                    type="button"
-                                    data-bs-toggle="collapse"
-                                    data-bs-target="#collapseThree"
-                                    aria-expanded="false"
-                                    aria-controls="collapseThree"
-                                >
-                                    Future
-                                </button>
-                            </h2>
-                            <div
-                                id="collapseThree"
-                                className="accordion-collapse collapse"
-                                aria-labelledby="headingThree"
-                                data-bs-parent="#accordionExample"
-                            >
-                                <div className="accordion-body">
-                                    <div className="card-body">
-                                        <ul className="nav nav-tabs nav-primary" role="tablist">
-                                            <li className="nav-item" role="presentation">
-                                                <a
-                                                    className="nav-link active"
-                                                    data-bs-toggle="tab"
-                                                    href="#primaryhome2"
-                                                    role="tab"
-                                                    aria-selected="true"
-                                                >
-                                                    <div className="d-flex align-items-center">
-                                                        <div className="tab-icon">
-                                                            <i className="bx bx-home font-18 me-1" />
-                                                        </div>
-                                                        <div className="tab-title">Pro</div>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                            <li className="nav-item" role="presentation">
-                                                <a
-                                                    className="nav-link"
-                                                    data-bs-toggle="tab"
-                                                    href="#primaryprofile2"
-                                                    role="tab"
-                                                    aria-selected="false"
-                                                    tabIndex={-1}
-                                                >
-                                                    <div className="d-flex align-items-center">
-                                                        <div className="tab-icon">
-                                                            <i className="bx bx-user-pin font-18 me-1" />
-                                                        </div>
-                                                        <div className="tab-title">Pro Plus</div>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                            <li className="nav-item" role="presentation">
-                                                <a
-                                                    className="nav-link"
-                                                    data-bs-toggle="tab"
-                                                    href="#primarycontact2"
-                                                    role="tab"
-                                                    aria-selected="false"
-                                                    tabIndex={-1}
-                                                >
-                                                    <div className="d-flex align-items-center">
-                                                        <div className="tab-icon">
-                                                            <i className="bx bx-microphone font-18 me-1" />
-                                                        </div>
-                                                        <div className="tab-title">Pro Lite</div>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                        <div className="tab-content py-3">
-                                            <div
-                                                className="tab-pane fade active show"
-                                                id="primaryhome2"
-                                                role="tabpanel"
-                                            >
-
-                                                <div className="pricing-section mt-5">
-
-                                                    <div className="card-container">
-                                                        {/* First Card */}
-                                                        <div className='row'>
-                                                            <div className="col-md-6 mb-3">
-
-                                                                <div className="pricing-card highlight-card">
-
-                                                                    <div className="offer-tag">Limited Time Offer</div>
-                                                                    <div className='row justify-content-between align-items-center'>
-                                                                        <div className='col-md-6'>
-                                                                            <h2 className='fonth3 me-4'>Basic Plan Plus</h2>
-                                                                            <h3 className='fonth2'>Monthly Plan</h3>
-                                                                        </div>
-                                                                        <div className="price-section col-md-6">
-                                                                            <span className="discount">-46%</span>
-                                                                            <span className="original-price">INR 750</span>
-                                                                            <h3 className='ms-4 fnt'>INR 8000</h3>
-                                                                        </div>
-                                                                    </div>
-                                                                    <hr />
-                                                                    <ul>
-
-                                                                        <li>
-                                                                            <b>validity</b> : 1 Month
-                                                                        </li>
-                                                                        <li><b>Description</b> : This is a basic plan with essential features.</li>
-                                                                        <li><b>Created At</b> : 2024-09-03T11:01:32.841Z</li>
-                                                                        <li><b>Updated At</b> : 2024-09-03T11:01:32.841Z</li>
-
-
-                                                                    </ul>
-                                                                    <div className="button-group">
-                                                                        <>
-
-                                                                            <button
-                                                                                type="button"
-                                                                                className="btnsecond "
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#exampleModal2"
-                                                                            >
-                                                                                Know More
-                                                                            </button>
-
-                                                                            <div
-                                                                                className="modal fade"
-                                                                                id="exampleModal2"
-                                                                                tabIndex={-1}
-                                                                                aria-labelledby="exampleModalLabel"
-                                                                                aria-hidden="true"
-                                                                                style={{ display: "none" }}
-                                                                            >
-                                                                                <div className="modal-dialog">
-                                                                                    <div className="modal-content">
-                                                                                        <div className="modal-header">
-                                                                                            <h5 className="modal-title" id="exampleModalLabel">
-                                                                                                Modal title
-                                                                                            </h5>
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn-close"
-                                                                                                data-bs-dismiss="modal"
-                                                                                                aria-label="Close"
-                                                                                            />
-                                                                                        </div>
-                                                                                        <div className="modal-body">
-                                                                                            <ul>
-                                                                                                <li>
-                                                                                                    <b>Title</b> : Basic Plan Plus
-                                                                                                </li>
-                                                                                                <li><b>Price</b> : 8000</li>
-
-
-                                                                                                <li>
-                                                                                                    <b>validity</b> : 1 Month
-                                                                                                </li>
-                                                                                                <li><b>Description</b> : This is a basic plan with essential features.</li>
-                                                                                                <li><b>Created At</b> : 2024-09-03T11:01:32.841Z</li>
-                                                                                                <li><b>Updated At</b> : 2024-09-03T11:01:32.841Z</li>
-
-
-                                                                                            </ul>
-                                                                                        </div>
-                                                                                        <div className="modal-footer">
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn btn-secondary"
-                                                                                                data-bs-dismiss="modal"
-                                                                                            >
-                                                                                                Close
-                                                                                            </button>
-                                                                                            {/* <button type="button" className="btn btn-primary">
-                                                                            Save changes
-                                                                        </button> */}
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </>
-                                                                        <button className="btn-primary btnprime">Edit</button>
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>
-
-                                                            {/* Second Card */}
-                                                            <div className="col-md-6 mb-3">
-                                                                <div className="pricing-card">
-                                                                    <div className='row justify-content-between align-items-center'>
-                                                                        <div className='col-md-6'>
-
-
-                                                                            <h3 className='fonth3'>Basic Plan Lite</h3>
-                                                                            <h2 className='fonth2'>Monthly Plan</h2>
-                                                                        </div>
-
-                                                                        <div className="price-section col-md-6">
-                                                                            <span className="discount">-16%</span>
-                                                                            <span className="original-price">INR 6199</span>
-                                                                            <h3 className='ms-4 fnt'>INR 5000</h3>
-                                                                        </div>
-                                                                    </div>
-                                                                    <hr />
-                                                                    <ul>
-                                                                        <li>
-                                                                            <b>validity</b> : 1 Month
-                                                                        </li>
-                                                                        <li><b>Description</b> : This is a basic plan with essential features.</li>
-                                                                        <li><b>Created At</b> : 2024-09-03T11:01:32.841Z</li>
-                                                                        <li><b>Updated At</b> : 2024-09-03T11:01:32.841Z</li>
-                                                                    </ul>
-                                                                    <div className="button-group">
-                                                                        <>
-
-                                                                            <button
-                                                                                type="button"
-                                                                                className="btnsecond "
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#exampleModal2"
-                                                                            >
-                                                                                Know More
-                                                                            </button>
-
-                                                                            <div
-                                                                                className="modal fade"
-                                                                                id="exampleModal2"
-                                                                                tabIndex={-1}
-                                                                                aria-labelledby="exampleModalLabel"
-                                                                                aria-hidden="true"
-                                                                                style={{ display: "none" }}
-                                                                            >
-                                                                                <div className="modal-dialog">
-                                                                                    <div className="modal-content">
-                                                                                        <div className="modal-header">
-                                                                                            <h5 className="modal-title" id="exampleModalLabel">
-                                                                                                About Plan
-                                                                                            </h5>
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn-close"
-                                                                                                data-bs-dismiss="modal"
-                                                                                                aria-label="Close"
-                                                                                            />
-                                                                                        </div>
-                                                                                        <div className="modal-body">
-                                                                                            Contrary to popular belief, Lorem Ipsum is not simply random text. It
-                                                                                            has roots in a piece of classical Latin literature from 45 BC, making
-                                                                                            it over 2000 years old. Richard McClintock, a Latin professor at
-                                                                                            Hampden-Sydney College in Virginia, looked up one of the more obscure
-                                                                                            Latin words, consectetur.
-                                                                                        </div>
-                                                                                        <div className="modal-footer">
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn btn-secondary"
-                                                                                                data-bs-dismiss="modal"
-                                                                                            >
-                                                                                                Close
-                                                                                            </button>
-                                                                                            <button type="button" className="btn btn-primary">
-                                                                                                Save changes
-                                                                                            </button>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </>
-                                                                        <button className="btn-primary btnprime">Edit</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-
-                                            </div>
-                                            <div className="tab-pane fade" id="primaryprofile2" role="tabpanel">
-                                                <div className="pricing-section mt-5">
-
-                                                    <div className="card-container">
-                                                        {/* First Card */}
-                                                        <div className='row'>
-                                                            <div className="col-md-6 mb-3">
-
-                                                                <div className="pricing-card highlight-card">
-
-                                                                    <div className="offer-tag">Limited Time Offer</div>
-                                                                    <div className='row justify-content-between align-items-center'>
-                                                                        <div className='col-md-6'>
-                                                                            <h2 className='fonth3 me-4'>Cricbuzz Plus</h2>
-                                                                            <h3 className='fonth2'>Annual Plan</h3>
-                                                                        </div>
-                                                                        <div className="price-section col-md-6">
-                                                                            <span className="discount">-46%</span>
-                                                                            <span className="original-price">INR 750</span>
-                                                                            <h3 className='ms-4 fnt'>INR 399</h3>
-                                                                        </div>
-                                                                    </div>
-                                                                    <hr />
-                                                                    <ul>
-                                                                        <li>Avail Fantasy Handbook: Comprehensive Fantasy Cricket Guide</li>
-                                                                        <li>
-                                                                            Exclusive access to premium editorial content and Cricbuzz Originals
-                                                                        </li>
-                                                                        <li>Enjoy an ad-free experience on the platform</li>
-                                                                    </ul>
-                                                                    <div className="button-group">
-                                                                        <>
-
-                                                                            <button
-                                                                                type="button"
-                                                                                className="btnsecond "
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#exampleModal2"
-                                                                            >
-                                                                                Know More
-                                                                            </button>
-
-                                                                            <div
-                                                                                className="modal fade"
-                                                                                id="exampleModal2"
-                                                                                tabIndex={-1}
-                                                                                aria-labelledby="exampleModalLabel"
-                                                                                aria-hidden="true"
-                                                                                style={{ display: "none" }}
-                                                                            >
-                                                                                <div className="modal-dialog">
-                                                                                    <div className="modal-content">
-                                                                                        <div className="modal-header">
-                                                                                            <h5 className="modal-title" id="exampleModalLabel">
-                                                                                                Modal title
-                                                                                            </h5>
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn-close"
-                                                                                                data-bs-dismiss="modal"
-                                                                                                aria-label="Close"
-                                                                                            />
-                                                                                        </div>
-                                                                                        <div className="modal-body">
-                                                                                            Contrary to popular belief, Lorem Ipsum is not simply random text. It
-                                                                                            has roots in a piece of classical Latin literature from 45 BC, making
-                                                                                            it over 2000 years old. Richard McClintock, a Latin professor at
-                                                                                            Hampden-Sydney College in Virginia, looked up one of the more obscure
-                                                                                            Latin words, consectetur.
-                                                                                        </div>
-                                                                                        <div className="modal-footer">
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn btn-secondary"
-                                                                                                data-bs-dismiss="modal"
-                                                                                            >
-                                                                                                Close
-                                                                                            </button>
-                                                                                            <button type="button" className="btn btn-primary">
-                                                                                                Save changes
-                                                                                            </button>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </>
-                                                                        <button className="btn-primary btnprime">Edit</button>
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>
-
-                                                            {/* Second Card */}
-                                                            <div className="col-md-6 mb-3">
-                                                                <div className="pricing-card">
-                                                                    <div className='row justify-content-between align-items-center'>
-                                                                        <div className='col-md-6'>
-
-
-                                                                            <h3 className='fonth3'>Cricbuzz Plus Times Prime</h3>
-                                                                            <h2 className='fonth2'>Annual Combo Plan</h2>
-                                                                        </div>
-
-                                                                        <div className="price-section col-md-6">
-                                                                            <span className="discount">-16%</span>
-                                                                            <span className="original-price">INR 1199</span>
-                                                                            <h3 className='ms-4 fnt'>INR 999</h3>
-                                                                        </div>
-                                                                    </div>
-                                                                    <hr />
-                                                                    <ul>
-                                                                        <li>
-                                                                            Access to 23 premium subscriptions, spanning popular platforms.
-
-                                                                        </li>
-                                                                        <li>Avail Fantasy Handbook: Comprehensive Fantasy Cricket Guide</li>
-                                                                        <li>Enjoy an ad-free experience on Cricbuzz</li>
-                                                                    </ul>
-                                                                    <div className="button-group">
-                                                                        <>
-
-                                                                            <button
-                                                                                type="button"
-                                                                                className="btnsecond "
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#exampleModal2"
-                                                                            >
-                                                                                Know More
-                                                                            </button>
-
-                                                                            <div
-                                                                                className="modal fade"
-                                                                                id="exampleModal2"
-                                                                                tabIndex={-1}
-                                                                                aria-labelledby="exampleModalLabel"
-                                                                                aria-hidden="true"
-                                                                                style={{ display: "none" }}
-                                                                            >
-                                                                                <div className="modal-dialog">
-                                                                                    <div className="modal-content">
-                                                                                        <div className="modal-header">
-                                                                                            <h5 className="modal-title" id="exampleModalLabel">
-                                                                                                Modal title
-                                                                                            </h5>
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn-close"
-                                                                                                data-bs-dismiss="modal"
-                                                                                                aria-label="Close"
-                                                                                            />
-                                                                                        </div>
-                                                                                        <div className="modal-body">
-                                                                                            Contrary to popular belief, Lorem Ipsum is not simply random text. It
-                                                                                            has roots in a piece of classical Latin literature from 45 BC, making
-                                                                                            it over 2000 years old. Richard McClintock, a Latin professor at
-                                                                                            Hampden-Sydney College in Virginia, looked up one of the more obscure
-                                                                                            Latin words, consectetur.
-                                                                                        </div>
-                                                                                        <div className="modal-footer">
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn btn-secondary"
-                                                                                                data-bs-dismiss="modal"
-                                                                                            >
-                                                                                                Close
-                                                                                            </button>
-                                                                                            <button type="button" className="btn btn-primary">
-                                                                                                Save changes
-                                                                                            </button>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </>
-                                                                        <button className="btn-primary btnprime">Edit</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                            <div className="tab-pane fade" id="primarycontact2" role="tabpanel">
-                                                <div className="pricing-section mt-5">
-
-                                                    <div className="card-container">
-                                                        {/* First Card */}
-                                                        <div className='row'>
-                                                            <div className="col-md-6 mb-3">
-
-                                                                <div className="pricing-card highlight-card">
-
-                                                                    <div className="offer-tag">Limited Time Offer</div>
-                                                                    <div className='row justify-content-between align-items-center'>
-                                                                        <div className='col-md-6'>
-                                                                            <h2 className='fonth3 me-4'>Cricbuzz Plus</h2>
-                                                                            <h3 className='fonth2'>Annual Plan</h3>
-                                                                        </div>
-                                                                        <div className="price-section col-md-6">
-                                                                            <span className="discount">-46%</span>
-                                                                            <span className="original-price">INR 750</span>
-                                                                            <h3 className='ms-4 fnt'>INR 399</h3>
-                                                                        </div>
-                                                                    </div>
-                                                                    <hr />
-                                                                    <ul>
-                                                                        <li>Avail Fantasy Handbook: Comprehensive Fantasy Cricket Guide</li>
-                                                                        <li>
-                                                                            Exclusive access to premium editorial content and Cricbuzz Originals
-                                                                        </li>
-                                                                        <li>Enjoy an ad-free experience on the platform</li>
-                                                                    </ul>
-                                                                    <div className="button-group">
-                                                                        <>
-
-                                                                            <button
-                                                                                type="button"
-                                                                                className="btnsecond "
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#exampleModal3"
-                                                                            >
-                                                                                Know More
-                                                                            </button>
-
-                                                                            <div
-                                                                                className="modal fade"
-                                                                                id="exampleModal3"
-                                                                                tabIndex={-1}
-                                                                                aria-labelledby="exampleModalLabel"
-                                                                                aria-hidden="true"
-                                                                                style={{ display: "none" }}
-                                                                            >
-                                                                                <div className="modal-dialog">
-                                                                                    <div className="modal-content">
-                                                                                        <div className="modal-header">
-                                                                                            <h5 className="modal-title" id="exampleModalLabel">
-                                                                                                Modal title
-                                                                                            </h5>
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn-close"
-                                                                                                data-bs-dismiss="modal"
-                                                                                                aria-label="Close"
-                                                                                            />
-                                                                                        </div>
-                                                                                        <div className="modal-body">
-                                                                                            Contrary to popular belief, Lorem Ipsum is not simply random text. It
-                                                                                            has roots in a piece of classical Latin literature from 45 BC, making
-                                                                                            it over 2000 years old. Richard McClintock, a Latin professor at
-                                                                                            Hampden-Sydney College in Virginia, looked up one of the more obscure
-                                                                                            Latin words, consectetur.
-                                                                                        </div>
-                                                                                        <div className="modal-footer">
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn btn-secondary"
-                                                                                                data-bs-dismiss="modal"
-                                                                                            >
-                                                                                                Close
-                                                                                            </button>
-                                                                                            <button type="button" className="btn btn-primary">
-                                                                                                Save changes
-                                                                                            </button>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </>
-                                                                        <button className="btn-primary btnprime">Edit</button>
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>
-
-                                                            {/* Second Card */}
-                                                            <div className="col-md-6 mb-3">
-                                                                <div className="pricing-card">
-                                                                    <div className='row justify-content-between align-items-center'>
-                                                                        <div className='col-md-6'>
-
-
-                                                                            <h3 className='fonth3'>Cricbuzz Plus Times Prime</h3>
-                                                                            <h2 className='fonth2'>Annual Combo Plan</h2>
-                                                                        </div>
-
-                                                                        <div className="price-section col-md-6">
-                                                                            <span className="discount">-16%</span>
-                                                                            <span className="original-price">INR 1199</span>
-                                                                            <h3 className='ms-4 fnt'>INR 999</h3>
-                                                                        </div>
-                                                                    </div>
-                                                                    <hr />
-                                                                    <ul>
-                                                                        <li>
-                                                                            Access to 23 premium subscriptions, spanning popular platforms.
-
-                                                                        </li>
-                                                                        <li>Avail Fantasy Handbook: Comprehensive Fantasy Cricket Guide</li>
-                                                                        <li>Enjoy an ad-free experience on Cricbuzz</li>
-                                                                    </ul>
-                                                                    <div className="button-group">
-                                                                        <>
-
-                                                                            <button
-                                                                                type="button"
-                                                                                className="btnsecond "
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#exampleModal3"
-                                                                            >
-                                                                                Know More
-                                                                            </button>
-
-                                                                            <div
-                                                                                className="modal fade"
-                                                                                id="exampleModal3"
-                                                                                tabIndex={-1}
-                                                                                aria-labelledby="exampleModalLabel"
-                                                                                aria-hidden="true"
-                                                                                style={{ display: "none" }}
-                                                                            >
-                                                                                <div className="modal-dialog">
-                                                                                    <div className="modal-content">
-                                                                                        <div className="modal-header">
-                                                                                            <h5 className="modal-title" id="exampleModalLabel">
-                                                                                                Modal title
-                                                                                            </h5>
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn-close"
-                                                                                                data-bs-dismiss="modal"
-                                                                                                aria-label="Close"
-                                                                                            />
-                                                                                        </div>
-                                                                                        <div className="modal-body">
-                                                                                            Contrary to popular belief, Lorem Ipsum is not simply random text. It
-                                                                                            has roots in a piece of classical Latin literature from 45 BC, making
-                                                                                            it over 2000 years old. Richard McClintock, a Latin professor at
-                                                                                            Hampden-Sydney College in Virginia, looked up one of the more obscure
-                                                                                            Latin words, consectetur.
-                                                                                        </div>
-                                                                                        <div className="modal-footer">
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                className="btn btn-secondary"
-                                                                                                data-bs-dismiss="modal"
-                                                                                            >
-                                                                                                Close
-                                                                                            </button>
-                                                                                            <button type="button" className="btn btn-primary">
-                                                                                                Save changes
-                                                                                            </button>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </>
-
-                                                                        <button className="btn-primary btnprime">Edit</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </div>
-
-
-
-
-
         </div>
     );
 };

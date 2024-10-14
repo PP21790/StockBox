@@ -1,7 +1,56 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'
+import { getHelpMessagelist } from '../../Services/Admin'
+import { fDateTime } from '../../Utils/Date_formate';
+import { formatDistanceToNow } from 'date-fns';
 
 const Header = () => {
+
+
+  const token = localStorage.getItem('token');
+
+  const [clients, setClients] = useState([]);
+
+
+  const getdemoclient = async () => {
+    try {
+      const response = await getHelpMessagelist(token);
+      if (response.status) {
+        const today = new Date().toISOString().split('T')[0];
+        const todaysData = response.data.filter(item => {
+          if (!item.created_at) {
+            return false;
+          }
+
+          const itemDate = new Date(item.created_at);
+          if (isNaN(itemDate.getTime())) {
+            return false;
+          }
+
+          return itemDate.toISOString().split('T')[0] === today;
+        });
+
+        setClients(todaysData);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
+
+
+
+
+  useEffect(() => {
+    getdemoclient();
+
+  }, []);
+
+
+
+
+
+
   return (
     <div>
       <>
@@ -12,7 +61,7 @@ const Header = () => {
               <div className="mobile-toggle-menu">
                 <i className="bx bx-menu" />
               </div>
-              <div
+              {/* <div
                 className="position-relative search-bar d-lg-block d-none"
                 data-bs-toggle="modal"
                 data-bs-target="#SearchModal"
@@ -25,7 +74,7 @@ const Header = () => {
                 <span className="position-absolute top-50 search-show ms-3 translate-middle-y start-0 top-50 fs-5">
                   <i className="bx bx-search" />
                 </span>
-              </div>
+              </div> */}
               <div className="top-menu ms-auto">
                 <ul className="navbar-nav align-items-center gap-1">
                   <li
@@ -40,195 +89,75 @@ const Header = () => {
 
 
 
-                  {/* <li className="nav-item dropdown dropdown-large">
+                  <li className="nav-item dropdown dropdown-large">
                     <a
                       className="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative"
                       href="#"
                       data-bs-toggle="dropdown"
                     >
-                      <span className="alert-count">7</span>
+                      {clients.length ?
+                        <>
+                          <span className="alert-count">{clients.length}</span>
+
+                        </>
+                        : ""}
                       <i className="bx bx-bell" />
                     </a>
                     <div className="dropdown-menu dropdown-menu-end">
                       <a href="javascript:;">
                         <div className="msg-header">
                           <p className="msg-header-title">Notifications</p>
-                          <p className="msg-header-badge">8 New</p>
+                          <p className="msg-header-badge">{clients.length} New</p>
                         </div>
                       </a>
-                      <div className="header-notifications-list">
-                        <a className="dropdown-item" href="javascript:;">
-                          <div className="d-flex align-items-center">
-                            <div className="user-online">
-                              <img
-                                src="/assets/images/avatars/avatar-1.png"
-                                className="msg-avatar"
-                                alt="user avatar"
-                              />
+                      <div className="header-notifications-list" style={{ overflowY: "scroll " }}>
+                        {clients && clients.map((notification, index) => (
+                          <a key={index} className="dropdown-item" href="javascript:;">
+                            <div className="d-flex align-items-center">
+
+                              <div className="notify bg-light-danger text-danger">
+                                {notification.clientDetails.FullName.split(' ').map(word => word.charAt(0)).join('')}
+                              </div>
+
+                              <div className="flex-grow-1">
+                                <h6 className="msg-name">
+                                  {notification.clientDetails.FullName}
+                                  <span className="msg-time float-end">
+                                    {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
+                                  </span>
+                                </h6>
+                                <Link to="/admin/help">
+                                  <p
+                                    className="msg-info"
+                                    style={{
+                                      display: "block",
+                                      maxWidth: "200px",
+                                      whiteSpace: "nowrap",
+                                      overflow: "hidden",
+                                      textOverflow: "ellipsis",
+                                      margin: 0
+                                    }}
+                                  >
+
+                                    {notification.message}
+
+                                  </p>
+                                </Link>
+                              </div>
                             </div>
-                            <div className="flex-grow-1">
-                              <h6 className="msg-name">
-                                Daisy Anderson
-                                <span className="msg-time float-end">5 sec ago</span>
-                              </h6>
-                              <p className="msg-info">The standard chunk of lorem</p>
-                            </div>
-                          </div>
-                        </a>
-                        <a className="dropdown-item" href="javascript:;">
-                          <div className="d-flex align-items-center">
-                            <div className="notify bg-light-danger text-danger">
-                              dc
-                            </div>
-                            <div className="flex-grow-1">
-                              <h6 className="msg-name">
-                                New Orders{" "}
-                                <span className="msg-time float-end">2 min ago</span>
-                              </h6>
-                              <p className="msg-info">You have recived new orders</p>
-                            </div>
-                          </div>
-                        </a>
-                        <a className="dropdown-item" href="javascript:;">
-                          <div className="d-flex align-items-center">
-                            <div className="user-online">
-                              <img
-                                src="/assets/images/avatars/avatar-2.png"
-                                className="msg-avatar"
-                                alt="user avatar"
-                              />
-                            </div>
-                            <div className="flex-grow-1">
-                              <h6 className="msg-name">
-                                Althea Cabardo{" "}
-                                <span className="msg-time float-end">14 sec ago</span>
-                              </h6>
-                              <p className="msg-info">
-                                Many desktop publishing packages
-                              </p>
-                            </div>
-                          </div>
-                        </a>
-                        <a className="dropdown-item" href="javascript:;">
-                          <div className="d-flex align-items-center">
-                            <div className="notify bg-light-success text-success">
-                              <img
-                                src="/assets/images/app/outlook.png"
-                                width={25}
-                                alt="user avatar"
-                              />
-                            </div>
-                            <div className="flex-grow-1">
-                              <h6 className="msg-name">
-                                Account Created
-                                <span className="msg-time float-end">28 min ago</span>
-                              </h6>
-                              <p className="msg-info">
-                                Successfully created new email
-                              </p>
-                            </div>
-                          </div>
-                        </a>
-                        <a className="dropdown-item" href="javascript:;">
-                          <div className="d-flex align-items-center">
-                            <div className="notify bg-light-info text-info">Ss</div>
-                            <div className="flex-grow-1">
-                              <h6 className="msg-name">
-                                New Product Approved{" "}
-                                <span className="msg-time float-end">2 hrs ago</span>
-                              </h6>
-                              <p className="msg-info">
-                                Your new product has approved
-                              </p>
-                            </div>
-                          </div>
-                        </a>
-                        <a className="dropdown-item" href="javascript:;">
-                          <div className="d-flex align-items-center">
-                            <div className="user-online">
-                              <img
-                                src="/assets/images/avatars/avatar-4.png"
-                                className="msg-avatar"
-                                alt="user avatar"
-                              />
-                            </div>
-                            <div className="flex-grow-1">
-                              <h6 className="msg-name">
-                                Katherine Pechon{" "}
-                                <span className="msg-time float-end">15 min ago</span>
-                              </h6>
-                              <p className="msg-info">
-                                Making this the first true generator
-                              </p>
-                            </div>
-                          </div>
-                        </a>
-                        <a className="dropdown-item" href="javascript:;">
-                          <div className="d-flex align-items-center">
-                            <div className="notify bg-light-success text-success">
-                              <i className="bx bx-check-square" />
-                            </div>
-                            <div className="flex-grow-1">
-                              <h6 className="msg-name">
-                                Your item is shipped{" "}
-                                <span className="msg-time float-end">5 hrs ago</span>
-                              </h6>
-                              <p className="msg-info">
-                                Successfully shipped your item
-                              </p>
-                            </div>
-                          </div>
-                        </a>
-                        <a className="dropdown-item" href="javascript:;">
-                          <div className="d-flex align-items-center">
-                            <div className="notify bg-light-primary">
-                              <img
-                                src="/assets/images/app/github.png"
-                                width={25}
-                                alt="user avatar"
-                              />
-                            </div>
-                            <div className="flex-grow-1">
-                              <h6 className="msg-name">
-                                New 24 authors
-                                <span className="msg-time float-end">1 day ago</span>
-                              </h6>
-                              <p className="msg-info">
-                                24 new authors joined last week
-                              </p>
-                            </div>
-                          </div>
-                        </a>
-                        <a className="dropdown-item" href="javascript:;">
-                          <div className="d-flex align-items-center">
-                            <div className="user-online">
-                              <img
-                                src="/assets/images/avatars/avatar-8.png"
-                                className="msg-avatar"
-                                alt="user avatar"
-                              />
-                            </div>
-                            <div className="flex-grow-1">
-                              <h6 className="msg-name">
-                                Peter Costanzo{" "}
-                                <span className="msg-time float-end">6 hrs ago</span>
-                              </h6>
-                              <p className="msg-info">
-                                It was popularised in the 1960s
-                              </p>
-                            </div>
-                          </div>
-                        </a>
+                          </a>
+                        ))}
                       </div>
-                      <a href="javascript:;">
+                      <a>
                         <div className="text-center msg-footer">
-                          <button className="btn btn-primary w-100">
-                            View All Notifications
-                          </button>
+                          <Link to="/admin/help">
+                            <button className="btn btn-primary w-100">View All Notifications</button>
+                          </Link>
                         </div>
                       </a>
                     </div>
-                  </li> */}
+
+                  </li>
 
                 </ul>
               </div>
@@ -246,8 +175,8 @@ const Header = () => {
                     alt="user avatar"
                   />
                   <div className="user-info">
-                    <p className="user-name mb-0">Pauline Seitz</p>
-                    <p className="designattion mb-0">Web Designer</p>
+                    <p className="user-name mb-0">Admin</p>
+
                   </div>
                 </a>
                 <ul className="dropdown-menu dropdown-menu-end">
@@ -260,16 +189,16 @@ const Header = () => {
                       <span>Profile</span>
                     </Link>
                   </li>
-                  <li>
-                    <a
+                  {/* <li>
+                    <Link
                       className="dropdown-item d-flex align-items-center"
-                      href="javascript:;"
+                      to="/admin/changepass"
                     >
                       <i className="bx bx-cog fs-5" />
                       <span>Settings</span>
-                    </a>
-                  </li>
-                 
+                    </Link>
+                  </li> */}
+
                   <li>
                     <div className="dropdown-divider mb-0" />
                   </li>

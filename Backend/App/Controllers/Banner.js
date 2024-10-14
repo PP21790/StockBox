@@ -12,7 +12,7 @@ class BannerController {
             await new Promise((resolve, reject) => {
                 upload('banner').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
                     if (err) {
-                        console.error('File upload error:', err);
+                        console.log('File upload error:', err);
                         return reject(err);
                     }
 
@@ -53,7 +53,7 @@ class BannerController {
             });
     
         } catch (error) {
-            console.error("Server error:", error);
+            console.log("Server error:", error);
             return res.status(500).json({ status: false, message: "Server error", data: [] });
         }
     }
@@ -69,7 +69,7 @@ class BannerController {
                 data: Banner
             });
         } catch (error) {
-            console.error("Error retrieving Banner:", error);
+            console.log("Error retrieving Banner:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -89,7 +89,7 @@ class BannerController {
                 data: banner
             });
         } catch (error) {
-            console.error("Error retrieving Banner:", error);
+            console.log("Error retrieving Banner:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -119,7 +119,7 @@ class BannerController {
                 data: banner
             });
         } catch (error) {
-            console.error("Error retrieving Banner:", error);
+            console.log("Error retrieving Banner:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -136,7 +136,7 @@ class BannerController {
             await new Promise((resolve, reject) => {
                 upload('Banner').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
                     if (err) {
-                        console.error('File upload error:', err);
+                        console.log('File upload error:', err);
                         return reject(err);
                     }
 
@@ -194,7 +194,7 @@ class BannerController {
             });
     
         } catch (error) {
-            console.error("Error updating Banner:", error);
+            console.log("Error updating Banner:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -229,7 +229,7 @@ class BannerController {
                 message: "Banner deleted successfully"
             });
         } catch (error) {
-            console.error("Error deleting Banner:", error);
+            console.log("Error deleting Banner:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -271,7 +271,7 @@ class BannerController {
             });
       
         } catch (error) {
-            console.error("Error updating status:", error);
+            console.log("Error updating status:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",

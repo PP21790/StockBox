@@ -20,7 +20,6 @@ class Clients {
 
   async AddClient(req, res) {
 
-  
     try {
       const { FullName, Email, PhoneNo, password, token } = req.body;
 
@@ -75,7 +74,7 @@ class Clients {
 
 
       const hashedPassword = await bcrypt.hash(password, 10);
-      const refer_token = crypto.randomBytes(10).toString('hex'); // 10 bytes = 20 hex characters
+      const refer_token = crypto.randomBytes(10).toString('hex'); 
       const result = new Clients_Modal({
       FullName: FullName,
       Email: Email,
@@ -108,7 +107,7 @@ class Clients {
 
 
 
-    const resetToken = Math.floor(100000 + Math.random() * 900000); // Generates a 6-digit OTP
+    const resetToken = Math.floor(100000 + Math.random() * 900000); 
 
 
       const mailtemplate = await Mailtemplate_Modal.findOne({ mail_type: 'client_verification_mail' }); // Use findOne if you expect a single document
@@ -165,7 +164,7 @@ class Clients {
       });
 
     } catch (error) {
-      console.error("Error occurred while saving client:", error); // Log detailed error
+     
       return res.json({
         status: false,
         message: "Server error",
@@ -205,7 +204,6 @@ class Clients {
         });
 
     } catch (error) {
-        console.error("Error fetching client details:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",
@@ -357,7 +355,7 @@ async forgotPassword(req, res) {
     });
 
   } catch (error) {
-    console.error("Error in forgotPassword:", error);
+    console.log("Error in forgotPassword:", error);
     return res.status(500).json({
       status: false,
       message: "Server error",
@@ -365,6 +363,8 @@ async forgotPassword(req, res) {
     });
   }
 }
+
+
 async resetPassword(req, res) {
   try {
     const { resetToken, newPassword, confirmPassword } = req.body;
@@ -428,7 +428,7 @@ async resetPassword(req, res) {
     });
 
   } catch (error) {
-    console.error("Error in resetPassword:", error);
+    console.log("Error in resetPassword:", error);
     return res.status(500).json({
       status: false,
       message: "Server error",
@@ -491,7 +491,7 @@ async resetPassword(req, res) {
       });
 
     } catch (error) {
-      console.error("Error in changePassword:", error);
+      console.log("Error in changePassword:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -542,7 +542,7 @@ async resetPassword(req, res) {
         });
 
     } catch (error) {
-        console.error("Error in updateProfile:", error);
+        console.log("Error in updateProfile:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",
@@ -581,7 +581,7 @@ async deleteClient(req, res) {
       data: deletedClient,
     });
   } catch (error) {
-    console.error("Error deleting client:", error);
+    console.log("Error deleting client:", error);
     return res.status(500).json({
       status: false,
       message: "Server error",

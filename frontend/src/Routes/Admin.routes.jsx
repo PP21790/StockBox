@@ -35,6 +35,28 @@ import Coupon from '../layout/Admin/Coupon/Coupon';
 import Addcoupon from '../layout/Admin/Coupon/Addcoupon';
 import Updatecoupon from '../layout/Admin/Coupon/Updatecoupon';
 import Condition from '../layout/Admin/Termscondition/Condition';
+import Editbasket from '../layout/Admin/Admin_basket/Editbasket';
+import Viewbasketdetail from '../layout/Admin/Admin_basket/Viewbasketdetail';
+import Editplan from '../layout/Admin/Plans/Editplan';
+import Banner from '../layout/Admin/Banner/Banner';
+import Generalsettings from '../layout/Admin/BasicSetting/Generalsettings';
+import Apiinfo from '../layout/Admin/BasicSetting/Apiinfo';
+import Payementgateway from '../layout/Admin/BasicSetting/Payementgateway';
+import Emailsettings from '../layout/Admin/BasicSetting/Emailsettings';
+import Freeclient from '../layout/Admin/Admin_client/Freeclient';
+import Message from '../layout/Admin/Broadcast/Message';
+
+import Viewclientdetail from '../layout/Admin/Admin_client/Viewclient';
+import Emailtemplate from '../layout/Admin/BasicSetting/Emailtemplate';
+import Changepass from '../Auth/Changepass';
+
+import Help from '../layout/Admin/Help_center/Help';
+import Closesignal from '../layout/Admin/Admin_signal/Closesignal';
+import PaymentRequest from '../layout/Admin/PaymentRequest/PaymentRequest';
+import FreetrialStatus from '../layout/Admin/Freetrialstatus/FreetrialStatus';
+
+
+
 
 
 function MainApp() {
@@ -83,8 +105,10 @@ function MainApp() {
                 <Routes>
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/client" element={<Client/>} />
+                    <Route path="/freeclient" element={<Freeclient />} />
                     <Route path="/addclient" element={<AddUser/>} />
                     <Route path="/client/updateclient/:id" element={<EditClient/>} />
+                    <Route path="/client/clientdetail/:id" element={<Viewclientdetail/>} />
 
                     <Route path="/profile" element={<Profile/>} />
                     <Route path="/service" element={<Service/>} />
@@ -107,27 +131,62 @@ function MainApp() {
 
                     <Route path="/signal" element={<Signal/>} />
                     <Route path="/addsignal" element={<AddSignal/>} />
-                    <Route path="/signal/signaldetaile/:id" element={<Signaldetail/>} />
-                        
+                    <Route path="/signaldetaile/:id" element={<Signaldetail/>} />
+                    <Route path="/closesignal" element={<Closesignal/>} />
+                     
 
                     <Route path="/basket" element={<Basket/>} />
                     <Route path="/addbasket" element={<Addbasket/>} />
+                    <Route path="/basket/viewdetail/:id" element={<Viewbasketdetail/>} />
+                    <Route path="/basket/editbasket/:id" element={<Editbasket />} />
                      
                     
+
                     <Route path="/plan" element={<Plan/>} />
                     <Route path="/addplan" element={<Addplan/>} />
+                    <Route path="/plan/editplan/:id" element={<Editplan/>} />
+
+
+
                     <Route path="/category" element={<Category/>} />
                     <Route path="/stock" element={<Stock/>} />
+
 
                     <Route path="/blogs" element={<Blogs/>} />
                     <Route path="/news" element={<News/>} />
                       
+
+
                     <Route path="/coupon" element={<Coupon/>} />
                     <Route path="/addcoupon" element={<Addcoupon/>} />
                     <Route path="/coupon/updatecoupon/:id" element={<Updatecoupon/>} />
 
+
                     <Route path="/termsandcondtion" element={<Condition/>} />
 
+                    
+                    <Route path="/banner" element={<Banner/>} />
+
+
+                    <Route path="/generalsettings" element={<Generalsettings/>} />
+                    <Route path="/Apiinfo" element={<Apiinfo/>} />
+                    <Route path="/paymentgeteway" element={<Payementgateway/>} />
+                    <Route path="/emailsetting" element={<Emailsettings/>} />
+                    <Route path="/emailtemplate" element={<Emailtemplate/>} />
+                    
+
+
+                    <Route path="/message" element={<Message />} />
+                    <Route path="/changepass" element={<Changepass/>} />
+                  
+                    {/* <Route path="/changepass" element={<Changepass />} /> */}
+                    <Route path="/help" element={<Help />} />
+                    <Route path="/paymentrequest" element={<PaymentRequest/>} />
+                    <Route path="/freetrialstatus" element={<FreetrialStatus/>} />
+                    
+                    
+                    
+                    
                     
                       
                 </Routes>

@@ -226,7 +226,7 @@ class Clients {
         });
 
     } catch (error) {
-        console.error("Error fetching client details:", error);
+        console.log("Error fetching client details:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",
@@ -307,7 +307,7 @@ class Clients {
       });
   
     } catch (error) {
-      console.error("Error updating client:", error);
+      console.log("Error updating client:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -348,7 +348,7 @@ class Clients {
         data: deletedClient,
       });
     } catch (error) {
-      console.error("Error deleting client:", error);
+      console.log("Error deleting client:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -360,7 +360,7 @@ class Clients {
     try {
         const { id, status } = req.body;
   
-        // Validate status
+       
         const validStatuses = ['1', '0'];
         if (!validStatuses.includes(status)) {
             return res.status(400).json({
@@ -373,7 +373,7 @@ class Clients {
         const result = await Clients_Modal.findByIdAndUpdate(
             id,
             { ActiveStatus: status },
-            { new: true } // Return the updated document
+            { new: true } 
         );
   
         if (!result) {
@@ -390,7 +390,7 @@ class Clients {
         });
   
     } catch (error) {
-        console.error("Error updating status:", error);
+        console.log("Error updating status:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",
@@ -511,7 +511,8 @@ class Clients {
 
 async deleteFreetrial(req, res) {
   try {
-    const { id } = req.params; // Extract ID from URL params
+    const { id } = req.params; 
+   
 
     if (!id) {
       return res.status(400).json({
@@ -523,17 +524,18 @@ async deleteFreetrial(req, res) {
   //  const deletedClient = await Clients_Modal.findByIdAndDelete(id);
   const deletedFreetrial = await Freetrial_Modal.findByIdAndUpdate(
     id, 
-    { del: true }, // Set del to true
-    { new: true }  // Return the updated document
+    { del: true }, 
+    { new: true } 
   );
+  
     if (!deletedFreetrial) {
       return res.status(404).json({
         status: false,
         message: "Freetrial not found",
       });
     }
-
-    console.log("Deleted Freetrial:", deletedFreetrial);
+    
+  
     return res.json({
       status: true,
       message: "Freetrial deleted successfully",

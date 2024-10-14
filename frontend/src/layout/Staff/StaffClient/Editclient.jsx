@@ -14,7 +14,7 @@ const EditClient = () => {
   const location = useLocation();
   const { row } = location.state; 
 
-  // console.log("row",row)
+ 
 
   const user_id = localStorage.getItem("id");
   const token = localStorage.getItem("token");
@@ -63,7 +63,7 @@ const EditClient = () => {
           timerProgressBar: true,
         });
         setTimeout(() => {
-          navigate("/admin/client");
+          navigate("/staff/client");
         }, 1500);
       } else {
         Swal.fire({
@@ -75,7 +75,6 @@ const EditClient = () => {
         });
       }
     } catch (error) {
-      console.error("An error occurred", error);
       Swal.fire({
         title: "Error",
         text: "An unexpected error occurred. Please try again later.",

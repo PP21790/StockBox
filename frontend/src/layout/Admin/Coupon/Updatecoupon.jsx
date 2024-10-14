@@ -11,8 +11,8 @@ const Updatecoupon = () => {
   const { row } = location.state;
 
 
-  console.log("row",row)
-   
+
+
 
   const token = localStorage.getItem("token");
 
@@ -88,7 +88,6 @@ const Updatecoupon = () => {
         });
       }
     } catch (error) {
-      console.error("An error occurred", error);
       Swal.fire({
         title: "Error",
         text: "An unexpected error occurred. Please try again later.",
@@ -119,11 +118,11 @@ const Updatecoupon = () => {
 
   const fields = [
     {
-      name: "name",
-      label: "Name",
+      name: "title",
+      label: "Title",
       type: "text",
       label_size: 6,
-      col_size: 6,
+      col_size: 4,
       disable: false,
     },
     {
@@ -131,7 +130,7 @@ const Updatecoupon = () => {
       label: "Code",
       type: "text",
       label_size: 12,
-      col_size: 6,
+      col_size: 4,
       disable: false,
     },
     {
@@ -139,7 +138,7 @@ const Updatecoupon = () => {
       label: "Type",
       type: "text",
       label_size: 12,
-      col_size: 6,
+      col_size: 4,
       disable: false,
     },
     {
@@ -147,7 +146,7 @@ const Updatecoupon = () => {
       label: "Value",
       type: "number",
       label_size: 12,
-      col_size: 6,
+      col_size: 4,
       disable: false,
     },
     {
@@ -155,15 +154,15 @@ const Updatecoupon = () => {
       label: "Min Purchase Value",
       type: "text",
       label_size: 12,
-      col_size: 6,
+      col_size: 4,
       disable: false,
     },
     {
       name: "mincouponvalue",
-      label: "Min Coupon Value",
+      label: "Min Discount Amount",
       type: "text",
       label_size: 12,
-      col_size: 6,
+      col_size: 4,
       disable: false,
     },
     {
@@ -171,7 +170,7 @@ const Updatecoupon = () => {
       label: "Start Date",
       type: "date",
       label_size: 12,
-      col_size: 6,
+      col_size: 4,
       disable: false,
     },
     {
@@ -179,7 +178,7 @@ const Updatecoupon = () => {
       label: "End Date",
       type: "date",
       label_size: 12,
-      col_size: 6,
+      col_size: 4,
       disable: false,
     },
     {
@@ -187,20 +186,20 @@ const Updatecoupon = () => {
       label: "Image",
       type: "file2",
       label_size: 12,
-      col_size: 6,
+      col_size: 3,
       disable: false,
       additional_content: row?.image ? (
         <img
           src={`${imageBaseUrl}${row.image}`}
           alt="Uploaded"
-          style={{ width: "100px", marginTop: "10px" }}
+          style={{ width: "47px", marginTop: "13px" }}
         />
       ) : null,
     },
     {
       name: "description",
       label: "Description",
-      type: "text",
+      type: "text5",
       label_size: 12,
       col_size: 6,
       disable: false,
@@ -211,8 +210,8 @@ const Updatecoupon = () => {
     <div style={{ marginTop: "100px" }}>
       <DynamicForm
         fields={fields}
-        page_title="Update User"
-        btn_name="Update User"
+        page_title="Add Coupon Code"
+        btn_name="Update Coupon"
         btn_name1="Cancel"
         formik={formik}
         sumit_btn={true}

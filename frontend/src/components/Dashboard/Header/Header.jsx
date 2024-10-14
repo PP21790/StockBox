@@ -2,6 +2,8 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 const Header = () => {
+
+
   return (
     <div>
       <>
@@ -40,7 +42,7 @@ const Header = () => {
 
 
 
-                  {/* <li className="nav-item dropdown dropdown-large">
+                  <li className="nav-item dropdown dropdown-large">
                     <a
                       className="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative"
                       href="#"
@@ -52,7 +54,7 @@ const Header = () => {
                     <div className="dropdown-menu dropdown-menu-end">
                       <a href="javascript:;">
                         <div className="msg-header">
-                          <p className="msg-header-title">Notifications</p>
+                          <p className="msg-header-title">Notifications11</p>
                           <p className="msg-header-badge">8 New</p>
                         </div>
                       </a>
@@ -228,7 +230,7 @@ const Header = () => {
                         </div>
                       </a>
                     </div>
-                  </li> */}
+                  </li>
 
                 </ul>
               </div>
@@ -246,8 +248,8 @@ const Header = () => {
                     alt="user avatar"
                   />
                   <div className="user-info">
-                    <p className="user-name mb-0">Pauline Seitz</p>
-                    <p className="designattion mb-0">Web Designer</p>
+                    <p className="user-name mb-0">Admin</p>
+
                   </div>
                 </a>
                 <ul className="dropdown-menu dropdown-menu-end">

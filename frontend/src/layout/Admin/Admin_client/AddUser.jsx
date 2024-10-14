@@ -60,15 +60,14 @@ const AddUser = () => {
         }, 1500);
       } else {
         Swal.fire({
-          title: "Error",
+          title: "Alert",
           text: response.message,
-          icon: "error",
+          icon: "warning",
           timer: 1500,
           timerProgressBar: true,
         });
       }
     } catch (error) {
-      console.error("An error occurred", error);
       Swal.fire({
         title: "Error",
         text: "An unexpected error occurred. Please try again later.",
@@ -140,8 +139,8 @@ const AddUser = () => {
       <DynamicForm
         fields={fields}
         formik={formik}
-        page_title="Add New User"
-        btn_name="Add User"
+        page_title="Add New Client"
+        btn_name="Add Client"
         btn_name1="Cancel"
         sumit_btn={true}
         btn_name1_route={"/admin/client"}

@@ -42,7 +42,7 @@ const Addcoupon = () => {
         if (!values.mincouponvalue) {
             errors.mincouponvalue = "Please enter Min Coupon value";
         }
-       
+
 
         return errors;
     };
@@ -86,7 +86,6 @@ const Addcoupon = () => {
                 });
             }
         } catch (error) {
-            console.error("An error occurred", error);
             Swal.fire({
                 title: "Error",
                 text: "An unexpected error occurred. Please try again later.",
@@ -148,7 +147,7 @@ const Addcoupon = () => {
             col_size: 6,
             disable: false,
         },
-        
+
         {
             name: "minpurchasevalue",
             label: "Min Purchase Value",
@@ -199,7 +198,7 @@ const Addcoupon = () => {
             col_size: 6,
             disable: false,
         },
-        
+
     ];
 
     return (
@@ -207,8 +206,8 @@ const Addcoupon = () => {
             <DynamicForm
                 fields={fields}
                 formik={formik}
-                page_title="Add New User"
-                btn_name="Add User"
+                page_title="Add Coupon Code"
+                btn_name="Add Coupon"
                 btn_name1="Cancel"
                 sumit_btn={true}
                 btn_name1_route={"/admin/coupon"}

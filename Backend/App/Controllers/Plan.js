@@ -36,7 +36,7 @@ class Plan {
     
         } catch (error) {
             // Enhanced error logging
-            console.error("Error adding Plan:", error);
+            console.log("Error adding Plan:", error);
     
             return res.status(500).json({
                 status: false,
@@ -177,7 +177,7 @@ class Plan {
             });
     
         } catch (error) {
-            console.error("Error fetching Plan details:", error);
+            console.log("Error fetching Plan details:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -225,7 +225,7 @@ class Plan {
       });
   
     } catch (error) {
-      console.error("Error updating Plan:", error);
+      console.log("Error updating Plan:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -267,7 +267,7 @@ class Plan {
         data: deletedPlan,
       });
     } catch (error) {
-      console.error("Error deleting Plan:", error);
+      console.log("Error deleting Plan:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -310,7 +310,7 @@ async  statusChange(req, res) {
       });
 
   } catch (error) {
-      console.error("Error updating status:", error);
+      console.log("Error updating status:", error);
       return res.status(500).json({
           status: false,
           message: "Server error",
@@ -379,7 +379,7 @@ async  addPlanSubscription(req, res) {
       });
   
     } catch (error) {
-      console.error(error);
+      console.log(error);
       return res.status(500).json({ status: false, message: 'Server error', data: [] });
     }
   }
@@ -391,7 +391,7 @@ async  addPlanSubscription(req, res) {
   
       // Validate input
       if (!plan_id || !client_id) {
-        return res.status(400).json({ status: false, message: 'Missing required fields' });
+        return res.status(400).json({ status: false, message: 'Please Select the Plan' });
       }
   
       // Fetch the plan and populate the category

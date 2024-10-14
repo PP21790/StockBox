@@ -71,7 +71,6 @@ const AddStaff = () => {
         });
       }
     } catch (error) {
-      console.error("An error occurred", error);
       Swal.fire({
         title: "Error",
         text: "An unexpected error occurred. Please try again later.",
@@ -124,7 +123,7 @@ const AddStaff = () => {
     {
       name: "PhoneNo",
       label: "Phone Number",
-      type: "text3", // Ensure this is handled correctly in DynamicForm
+      type: "text3", 
       label_size: 12,
       col_size: 6,
       disable: false,

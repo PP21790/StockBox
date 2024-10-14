@@ -23,19 +23,19 @@ const EditClient = () => {
     let errors = {};
 
     if (!values.FullName) {
-      errors.FullName = "Please enter Full Name";
+      errors.FullName = "Please Enter Full Name";
     }
     if (!values.Email) {
-      errors.Email = "Please enter Email";
+      errors.Email = "Please Enter Email";
     }
     // if (!values.UserName) {
     //   errors.UserName = "Please enter Username";
     // }
     if (!values.PhoneNo) {
-      errors.PhoneNo = "Please enter Phone Number";
+      errors.PhoneNo = "Please Enter Phone Number";
     }
     if (!values.password) {
-      errors.password = "Please enter Phone Number";
+      errors.password = "Please Enter Password";
     }
 
 
@@ -75,7 +75,6 @@ const EditClient = () => {
         });
       }
     } catch (error) {
-      console.error("An error occurred", error);
       Swal.fire({
         title: "Error",
         text: "An unexpected error occurred. Please try again later.",
@@ -103,8 +102,9 @@ const EditClient = () => {
       name: "FullName",
       label: "Full Name",
       type: "text",
+      star: true,
       label_size: 6,
-      col_size: 6,
+      col_size: 3,
       disable: false,
     },
     // {
@@ -119,8 +119,9 @@ const EditClient = () => {
       name: "Email",
       label: "Email",
       type: "text",
+      star: true,
       label_size: 12,
-      col_size: 6,
+      col_size: 3,
       disable: false,
     },
     {
@@ -128,15 +129,17 @@ const EditClient = () => {
       label: "Phone Number",
       type: "text3",
       label_size: 12,
-      col_size: 6,
+      col_size: 3,
       disable: false,
     },
     {
       name: "password",
       label: "Password",
       type: "text",
+     
+
       label_size: 12,
-      col_size: 6,
+      col_size: 3,
       disable: false,
     },
   ];

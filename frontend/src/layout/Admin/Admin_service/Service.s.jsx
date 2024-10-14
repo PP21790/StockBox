@@ -125,7 +125,6 @@ const Service = () => {
                 });
             }
         } catch (error) {
-            console.error("Error adding service:", error);
             Swal.fire({
                 title: 'Error!',
                 text: 'There was an error adding the service.',
@@ -185,7 +184,6 @@ const Service = () => {
     // delete plan cartegory 
 
     const DeleteService = async (_id) => {
-        // console.log("_id",_id)
         try {
             const result = await Swal.fire({
                 title: 'Are you sure?',
@@ -235,32 +233,32 @@ const Service = () => {
             name: 'S.No',
             selector: (row, index) => index + 1,
             sortable: false,
-            width: '70px',
+
         },
         {
             name: 'Title',
             selector: row => row.title,
             sortable: true,
         },
-        {
-            name: 'Active Status',
-            selector: row => (
-                <div className="form-check form-switch form-check-info">
-                    <input
-                        id={`rating_${row.status}`}
-                        className="form-check-input toggleswitch"
-                        type="checkbox"
-                        checked={row.status === true}
-                        onChange={(event) => handleSwitchChange(event, row._id)}
-                    />
-                    <label
-                        htmlFor={`rating_${row.status}`}
-                        className="checktoggle checkbox-bg"
-                    ></label>
-                </div>
-            ),
-            sortable: true,
-        },
+        // {
+        //     name: 'Active Status',
+        //     selector: row => (
+        //         <div className="form-check form-switch form-check-info">
+        //             <input
+        //                 id={`rating_${row.status}`}
+        //                 className="form-check-input toggleswitch"
+        //                 type="checkbox"
+        //                 checked={row.status === true}
+        //                 onChange={(event) => handleSwitchChange(event, row._id)}
+        //             />
+        //             <label
+        //                 htmlFor={`rating_${row.status}`}
+        //                 className="checktoggle checkbox-bg"
+        //             ></label>
+        //         </div>
+        //     ),
+        //     sortable: true,
+        // },
         {
             name: 'Created At',
             selector: row => new Date(row.created_at).toLocaleDateString(),
@@ -271,28 +269,29 @@ const Service = () => {
             selector: row => new Date(row.updated_at).toLocaleDateString(),
             sortable: true,
         },
-        {
-            name: 'Actions',
-            cell: row => (
-                <>
-                    <div>
-                        <SquarePen
-                            onClick={() => {
-                                setModel(true);
-                                setServiceid(row);
-                                setUpdatetitle({ title: row.title, id: row._id });
-                            }}
-                        />
-                    </div>
-                    <div>
-                        <Trash2 onClick={() => DeleteService(row._id)} />
-                    </div>
-                </>
-            ),
-            ignoreRowClick: true,
-            allowOverflow: true,
-            button: true,
-        }
+
+        // {
+        //     name: 'Actions',
+        //     cell: row => (
+        //         <>
+        //             <div>
+        //                 <SquarePen
+        //                     onClick={() => {
+        //                         setModel(true);
+        //                         setServiceid(row);
+        //                         setUpdatetitle({ title: row.title, id: row._id });
+        //                     }}
+        //                 />
+        //             </div>
+        //             {/* <div>
+        //                 <Trash2 onClick={() => DeleteService(row._id)} />
+        //             </div> */}
+        //         </>
+        //     ),
+        //     ignoreRowClick: true,
+        //     allowOverflow: true,
+        //     button: true,
+        // }
     ];
 
 
@@ -311,7 +310,7 @@ const Service = () => {
             <div className="page-content">
 
                 <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                    <div className="breadcrumb-title pe-3">Service</div>
+                    <div className="breadcrumb-title pe-3">Segment</div>
                     <div className="ps-3">
                         <nav aria-label="breadcrumb">
                             <ol className="breadcrumb mb-0 p-0">
@@ -324,6 +323,7 @@ const Service = () => {
                         </nav>
                     </div>
                 </div>
+                <hr />
 
                 <div className="card">
                     <div className="card-body">
@@ -332,7 +332,7 @@ const Service = () => {
                                 <input
                                     type="text"
                                     className="form-control ps-5 radius-10"
-                                    placeholder="Search Order"
+                                    placeholder="Search Segment"
                                     onChange={(e) => setSearchInput(e.target.value)}
                                     value={searchInput}
                                 />
@@ -341,7 +341,7 @@ const Service = () => {
                                 </span>
                             </div>
                             <div className="ms-auto">
-                                <button
+                                {/* <button
                                     type="button"
                                     className="btn btn-primary"
                                     data-bs-toggle="modal"
@@ -349,7 +349,7 @@ const Service = () => {
                                 >
                                     <i className="bx bxs-plus-square" />
                                     Add Service
-                                </button>
+                                </button> */}
 
                                 <div
                                     className="modal fade"
@@ -409,60 +409,63 @@ const Service = () => {
 
 
                                 {model && (
-                                    <div
-                                        className="modal fade show"
-                                        style={{ display: 'block' }}
-                                        tabIndex={-1}
-                                        aria-labelledby="exampleModalLabel"
-                                        aria-hidden="true"
-                                    >
-                                        <div className="modal-dialog">
-                                            <div className="modal-content">
-                                                <div className="modal-header">
-                                                    <h5 className="modal-title" id="exampleModalLabel">
-                                                        Update Service
-                                                    </h5>
-                                                    <button
-                                                        type="button"
-                                                        className="btn-close"
-                                                        onClick={() => setModel(false)}
-                                                    />
-                                                </div>
-                                                <div className="modal-body">
-                                                    <form>
-                                                        <div className="row">
-                                                            <div className="col-md-12">
-                                                                <label htmlFor="">Title</label>
-                                                                <input
-                                                                    className="form-control mb-2"
-                                                                    type="text"
-                                                                    placeholder='Enter Service Title'
-                                                                    value={updatetitle.title}
-                                                                    onChange={(e) => updateServiceTitle(e.target.value)}
-                                                                />
+                                    <>
+                                        <div className="modal-backdrop fade show"></div>
+                                        <div
+                                            className="modal fade show"
+                                            style={{ display: 'block' }}
+                                            tabIndex={-1}
+                                            aria-labelledby="exampleModalLabel"
+                                            aria-hidden="true"
+                                        >
+                                            <div className="modal-dialog">
+                                                <div className="modal-content">
+                                                    <div className="modal-header">
+                                                        <h5 className="modal-title" id="exampleModalLabel">
+                                                            Update Service
+                                                        </h5>
+                                                        <button
+                                                            type="button"
+                                                            className="btn-close"
+                                                            onClick={() => setModel(false)}
+                                                        />
+                                                    </div>
+                                                    <div className="modal-body">
+                                                        <form>
+                                                            <div className="row">
+                                                                <div className="col-md-12">
+                                                                    <label htmlFor="">Title</label>
+                                                                    <input
+                                                                        className="form-control mb-2"
+                                                                        type="text"
+                                                                        placeholder='Enter Service Title'
+                                                                        value={updatetitle.title}
+                                                                        onChange={(e) => updateServiceTitle(e.target.value)}
+                                                                    />
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                                <div className="modal-footer">
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-secondary"
-                                                        onClick={() => setModel(false)}
-                                                    >
-                                                        Close
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-primary"
-                                                        onClick={Updateservicebyadmin}
-                                                    >
-                                                        Update Service
-                                                    </button>
+                                                        </form>
+                                                    </div>
+                                                    <div className="modal-footer">
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-secondary"
+                                                            onClick={() => setModel(false)}
+                                                        >
+                                                            Close
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-primary"
+                                                            onClick={Updateservicebyadmin}
+                                                        >
+                                                            Update Service
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </>
                                 )}
 
                             </div>

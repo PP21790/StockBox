@@ -19,24 +19,31 @@ const Client = () => {
     const token = localStorage.getItem('token');
     const userid = localStorage.getItem('id');
 
+
+
+
     const getAdminclient = async () => {
         try {
             const response = await GetClient(token);
             if (response.status) {
-                
-                setClients(response.data);
+                const filterdata = response.data.filter((item)=>{
+                    return item.add_by === userid
+                })
+                setClients(filterdata);
             }
         } catch (error) {
             console.log("error");
         }
     }
 
+
+    
+
  
     const getpermissioninfo = async () => {
         try {
             const response = await getstaffperuser(userid, token);
             if (response.status) {
-                console.log("response.data",response.data)
                 setPermission(response.data.permissions);
             }
         } catch (error) {
@@ -44,6 +51,8 @@ const Client = () => {
         }
     };
     
+   
+   
 
 
     useEffect(() => {
@@ -205,38 +214,41 @@ const Client = () => {
             selector: row => new Date(row.updatedAt).toLocaleDateString(),
             sortable: true,
         },
+        
         {
             name: 'Actions',
             cell: row => (
                 <>
-                {permission.includes("edituser") ?  <div>
+                {permission.includes("editclient") ?  <div>
                  <Pencil onClick={() => updateClient(row)} />
                 </div> : ""}
                  
-                 {permission.includes("deleteuser") ?  <div>
+                 {permission.includes("deleteclient") ?  <div>
                <Trash2 onClick={() => DeleteClient(row._id)} />
                </div> : ""}
                
                </>
-            ),
+            ),  
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
         }
     ];
 
+
+
+
     return (
         <div>
             <div>
                 <div className="page-content">
-                    {/* breadcrumb */}
                     <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
                         <div className="breadcrumb-title pe-3">Client</div>
                         <div className="ps-3">
                             <nav aria-label="breadcrumb">
                                 <ol className="breadcrumb mb-0 p-0">
                                     <li className="breadcrumb-item">
-                                        <Link to="/admin/dashboard">
+                                        <Link to="/staff/dashboard">
                                             <i className="bx bx-home-alt" />
                                         </Link>
                                     </li>
@@ -244,7 +256,6 @@ const Client = () => {
                             </nav>
                         </div>
                     </div>
-                    {/* end breadcrumb */}
                     <div className="card">
                         <div className="card-body">
                             <div className="d-lg-flex align-items-center mb-4 gap-3">
@@ -259,7 +270,7 @@ const Client = () => {
                                     </span>
                                 </div>
                                 <div className="ms-auto">
-                                    {permission.includes("adduser") ? 
+                                    {permission.includes("addclient") ? 
                                     <Link
                                         to="/staff/addclient"
                                         className="btn btn-primary"
@@ -269,7 +280,8 @@ const Client = () => {
                                             aria-hidden="true"
                                         />
                                         Add Client
-                                    </Link> : "" }
+                                    </Link> 
+                                    : "" }
                                 </div>
                             </div>
 

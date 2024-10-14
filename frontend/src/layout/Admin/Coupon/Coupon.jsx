@@ -3,9 +3,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getcouponlist } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { Pencil, Trash2 } from 'lucide-react';
+import { Eye, Pencil, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { DeleteCoupon, UpdateClientStatus } from '../../../Services/Admin';
+import { image_baseurl } from '../../../Utils/config';
+import { Tooltip } from 'antd';
+
+
+
 
 const Coupon = () => {
 
@@ -13,23 +18,36 @@ const Coupon = () => {
     const navigate = useNavigate();
 
     const [clients, setClients] = useState([]);
+    const [searchInput, setSearchInput] = useState("");
 
     const token = localStorage.getItem('token');
+
+
 
     const getcoupon = async () => {
         try {
             const response = await getcouponlist(token);
             if (response.status) {
-                setClients(response.data);
+                const filterdata = response.data.filter((item) =>
+                    searchInput === "" ||
+                    item.name.toLowerCase().includes(searchInput.toLowerCase()) ||
+                    item.code.toLowerCase().includes(searchInput.toLowerCase()) ||
+                    item.description.toLowerCase().includes(searchInput.toLowerCase())
+                );
+                setClients(searchInput ? filterdata : response.data);
+                // setClients(response.data);
             }
         } catch (error) {
             console.log("error");
         }
     }
 
+
+
+
     useEffect(() => {
         getcoupon();
-    }, []);
+    }, [searchInput]);
 
 
 
@@ -43,7 +61,7 @@ const Coupon = () => {
         try {
             const result = await Swal.fire({
                 title: 'Are you sure?',
-                text: 'Do you want to delete this staff member? This action cannot be undone.',
+                text: 'Do you want to delete this coupon? This action cannot be undone.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, delete it!',
@@ -55,7 +73,7 @@ const Coupon = () => {
                 if (response.status) {
                     Swal.fire({
                         title: 'Deleted!',
-                        text: 'The staff has been successfully deleted.',
+                        text: 'The coupon has been successfully deleted.',
                         icon: 'success',
                         confirmButtonText: 'OK',
                     });
@@ -66,7 +84,7 @@ const Coupon = () => {
 
                 Swal.fire({
                     title: 'Cancelled',
-                    text: 'The staff deletion was cancelled.',
+                    text: 'The coupon deletion was cancelled.',
                     icon: 'info',
                     confirmButtonText: 'OK',
                 });
@@ -74,7 +92,7 @@ const Coupon = () => {
         } catch (error) {
             Swal.fire({
                 title: 'Error!',
-                text: 'There was an error deleting the staff.',
+                text: 'There was an error deleting the coupon.',
                 icon: 'error',
                 confirmButtonText: 'Try Again',
             });
@@ -84,11 +102,13 @@ const Coupon = () => {
 
 
 
+
+
     // update status 
 
     const handleSwitchChange = async (event, id) => {
 
-        const user_active_status = event.target.checked ? "1" : "0";
+        const user_active_status = event.target.checked ? "1" : "0"
 
         const data = { id: id, status: user_active_status }
         const result = await Swal.fire({
@@ -135,46 +155,50 @@ const Coupon = () => {
             name: 'S.No',
             selector: (row, index) => index + 1,
             sortable: false,
-            width: '70px',
+            width: '100px',
         },
         {
             name: 'Name',
             selector: row => row.name,
             sortable: true,
+            width: '150px',
         },
         {
             name: 'Code',
             selector: row => row.code,
             sortable: true,
-            
+
         },
         {
             name: 'Image',
-            cell: row => <img src={`/assets/uploads/coupon/${row.image}`} alt="Image" width="50" height="50" />,
+            cell: row => <img src={`${image_baseurl}/uploads/coupon/${row.image}`} alt="Image" width="50" height="50" />,
             sortable: true,
+            width: '110px',
         },
         {
             name: 'Min Purchase Value',
             selector: row => row.minpurchasevalue,
             sortable: true,
-            width: '230px',
+            width: '206px',
         },
         {
             name: 'Min Coupon Value',
             selector: row => row.mincouponvalue,
             sortable: true,
+            width: '206px',
         },
 
         {
             name: 'Description',
             selector: row => row.description,
             sortable: true,
-            width: '280px',
+            width: '180px',
         },
         {
             name: 'Type',
             selector: row => row.type,
             sortable: true,
+            width: '115px',
         },
 
         {
@@ -182,19 +206,20 @@ const Coupon = () => {
             selector: row => (
                 <div className="form-check form-switch form-check-info">
                     <input
-                        id={`rating_${row.ActiveStatus}`}
+                        id={`rating_${row.status}`}
                         className="form-check-input toggleswitch"
                         type="checkbox"
-                        defaultChecked={row.ActiveStatus == 1}
+                        defaultChecked={row.status == true}
                         onChange={(event) => handleSwitchChange(event, row._id)}
                     />
                     <label
-                        htmlFor={`rating_${row.ActiveStatus}`}
+                        htmlFor={`rating_${row.status}`}
                         className="checktoggle checkbox-bg"
                     ></label>
                 </div>
             ),
             sortable: true,
+            width: '156px',
         },
 
 
@@ -202,21 +227,33 @@ const Coupon = () => {
             name: 'Startdate',
             selector: row => new Date(row.startdate).toLocaleDateString(),
             sortable: true,
+            width: '142px',
         },
         {
             name: 'Enddate',
             selector: row => new Date(row.enddate).toLocaleDateString(),
             sortable: true,
+            width: '142px',
         },
+
         {
             name: 'Actions',
             cell: row => (
                 <>
                     <div>
-                        <Pencil onClick={() => updatecoupon(row)} />
+                        <Tooltip placement="top" overlay="View">
+                            <Eye style={{ marginRight: "10px" }} />
+                        </Tooltip>
                     </div>
                     <div>
-                        <Trash2 onClick={() => DeleteCouponbyadmin(row._id)} />
+                        <Tooltip placement="top" overlay="Edit">
+                            <Pencil onClick={() => updatecoupon(row)} />
+                        </Tooltip>
+                    </div>
+                    <div>
+                        <Tooltip placement="top" overlay="Delete">
+                            <Trash2 onClick={() => DeleteCouponbyadmin(row._id)} />
+                        </Tooltip>
                     </div>
                 </>
             ),
@@ -230,7 +267,6 @@ const Coupon = () => {
         <div>
             <div>
                 <div className="page-content">
-                    {/* breadcrumb */}
                     <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
                         <div className="breadcrumb-title pe-3">Coupon</div>
                         <div className="ps-3">
@@ -245,7 +281,7 @@ const Coupon = () => {
                             </nav>
                         </div>
                     </div>
-                    {/* end breadcrumb */}
+                    <hr />
                     <div className="card">
                         <div className="card-body">
                             <div className="d-lg-flex align-items-center mb-4 gap-3">
@@ -253,7 +289,9 @@ const Coupon = () => {
                                     <input
                                         type="text"
                                         className="form-control ps-5 radius-10"
-                                        placeholder="Search Order"
+                                        placeholder="Search Coupon"
+                                        onChange={(e) => setSearchInput(e.target.value)}
+                                        value={searchInput}
                                     />
                                     <span className="position-absolute top-50 product-show translate-middle-y">
                                         <i className="bx bx-search" />

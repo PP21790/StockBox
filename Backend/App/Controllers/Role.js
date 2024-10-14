@@ -27,7 +27,7 @@ class Role {
     
         } catch (error) {
             // Enhanced error logging
-            console.error("Error adding Role:", error);
+            console.log("Error adding Role:", error);
     
             return res.status(500).json({
                 status: false,
@@ -84,7 +84,7 @@ class Role {
         });
 
     } catch (error) {
-        console.error("Error fetching Role details:", error);
+        console.log("Error fetching Role details:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",
@@ -130,7 +130,7 @@ class Role {
       });
   
     } catch (error) {
-      console.error("Error updating Role:", error);
+      console.log("Error updating Role:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -173,7 +173,7 @@ class Role {
         data: deletedRole,
       });
     } catch (error) {
-      console.error("Error deleting Role:", error);
+      console.log("Error deleting Role:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",

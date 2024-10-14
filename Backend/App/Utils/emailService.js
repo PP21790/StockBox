@@ -26,7 +26,7 @@ async function createTransporter() {
 
     return transporter;
   } catch (error) {
-    console.error('Error creating transporter:', error);
+    console.log('Error creating transporter:', error);
     throw error;
   }
 }
@@ -43,7 +43,7 @@ async function sendEmail(mailOptions) {
     console.log('Message sent:', info.messageId);
     return info;
   } catch (error) {
-    console.error('Error sending email:', error);
+    console.log('Error sending email:', error);
     throw error;
   }
 }

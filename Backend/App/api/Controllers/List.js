@@ -51,7 +51,7 @@ class List {
                 data: bannerWithImageUrls
             });
         } catch (error) {
-            console.error("Error retrieving Banner:", error);
+            console.log("Error retrieving Banner:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -82,7 +82,7 @@ class List {
                 data: blogsWithImageUrls
             });
         } catch (error) {
-            console.error("Error retrieving blogs:", error);
+            console.log("Error retrieving blogs:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -114,7 +114,7 @@ class List {
                 data: newsWithImageUrls
             });
         } catch (error) {
-            console.error("Error retrieving news:", error);
+            console.log("Error retrieving news:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -265,7 +265,7 @@ class List {
         });
   
       } catch (error) {
-        console.error(error);
+        console.log(error);
         return res.json({ status: false, message: "Server error", data: [] });
       }
     }
@@ -533,7 +533,7 @@ async getallPlan(req, res) {
       });
   
     } catch (error) {
-      console.error(error);
+      console.log(error);
       return res.status(500).json({ status: false, message: 'Server error', data: [] });
     }
   }
@@ -544,7 +544,7 @@ async getallPlan(req, res) {
 async  myPlan(req, res) {
   try {
     const { id } = req.params; 
-    console.log(id);
+  
 
     // Validate input
     if (!id) {
@@ -582,7 +582,7 @@ async  myPlan(req, res) {
     });
 
   } catch (error) {
-    console.error(error);
+    console.log(error);
     return res.status(500).json({ status: false, message: 'Server error', data: [] });
   }
 }
@@ -829,7 +829,7 @@ async Servicelist(req, res) {
           data: service
       });
   } catch (error) {
-      console.error("Error retrieving Service:", error);
+      console.log("Error retrieving Service:", error);
       return res.status(500).json({
           status: false,
           message: "Server error",
@@ -850,7 +850,7 @@ async Faqlist(req, res) {
           data: faq
       });
   } catch (error) {
-      console.error("Error retrieving Faq:", error);
+      console.log("Error retrieving Faq:", error);
       return res.status(500).json({
           status: false,
           message: "Server error",
@@ -887,7 +887,7 @@ async detailContent(req, res) {
       });
 
   } catch (error) {
-      console.error("Error fetching Content details:", error);
+      console.log("Error fetching Content details:", error);
       return res.status(500).json({
           status: false,
           message: "Server error",
@@ -973,7 +973,7 @@ async BasketList(req, res) {
       });
 
   } catch (error) {
-      console.error("Server error occurred:", error);
+      console.log("Server error occurred:", error);
       return res.json({ 
           status: false, 
           message: "Server error", 
@@ -1084,7 +1084,7 @@ async pastPerformance(req, res) {
       }
     });
   } catch (error) {
-    console.error("Error fetching signal details:", error);
+    console.log("Error fetching signal details:", error);
 
     return res.status(500).json({
       status: false,

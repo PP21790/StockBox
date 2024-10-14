@@ -2,7 +2,8 @@ import React from 'react';
 import { Field, ErrorMessage, FieldArray } from 'formik';
 import { Link } from 'react-router-dom';
 
-const FormField = ({ name, label, type, placeholder, col_size, label_size, disable, getFieldProps }) => (
+// FormField component for standard input fields
+const FormField = ({ name, label, type, placeholder, col_size, label_size, disable }) => (
   <div className={`form-group col-md-${col_size} mb-3`}>
     <label htmlFor={name} className={`col-md-${label_size} col-form-label`}>
       {label}
@@ -12,75 +13,87 @@ const FormField = ({ name, label, type, placeholder, col_size, label_size, disab
       type={type}
       placeholder={placeholder}
       className="form-control"
-      readOnly={disable}
-      {...getFieldProps(name)}
+      disabled={disable}
     />
     <ErrorMessage name={name} component="div" className="text-danger" />
   </div>
 );
 
-const BasketField = ({ push, remove, Basket }) => (
+
+const BasketField = ({ push, remove, Stock, showRemoveButtons, disable, fieldTypes }) => (
   <div className="content container-fluid" data-aos="fade-left">
     <div className="card mb-3">
       <div className="card-header d-flex justify-content-between align-items-center">
         <h5 className="card-title mb-0">
-          <i className="fa-regular fa-circle-user pe-2"></i> Basket
+          <i className="fa-regular fa-circle-user pe-2"></i> Stock
         </h5>
       </div>
       <div className="card-body">
-        {Basket.length > 0 ? (
-          Basket.map((BasketData, index) => (
-            <div className="card Basket-group mb-3" key={index}>
+        {Stock.length > 0 ? (
+          Stock.map((BasketData, index) => (
+            <div className="card Stock-group mb-3" key={index}>
               <div className="card-header d-flex justify-content-between align-items-center">
-                <h6 className="mb-0">Basket {index + 1}</h6>
+                <h6 className="mb-0">Stock {index + 1}</h6>
               </div>
               <div className="card-body">
                 <div className="row">
-                  {['stocks', 'pricerange', 'stockweightage', 'entryprice', 'exitprice', 'comment', 'returnpercentage', 'holdingperiod', 'potentialleft'].map(field => (
-                    <div className="col-lg-4 form-group mb-3" key={field}>
-                      <label htmlFor={`Basket.${index}.${field}`}>{field.replace(/([A-Z])/g, ' $1').toUpperCase()}</label>
+                  {fieldTypes.map((field) => (
+                    <div className="col-lg-4 form-group mb-2" key={field.name}>
+                      <label htmlFor={`Stock.${index}.${field.name}`}>{field.label}</label>
                       <Field
-                        name={`Basket.${index}.${field}`}
-                        placeholder={`Enter ${field}`}
-                        className="form-control"
+                        name={`Stock.${index}.${field.name}`}
+                        placeholder={`Enter ${field.label}`}
+                        className="form-control mb-2"
+                        type={field.type}
+                        disabled={disable}
                       />
-                      <ErrorMessage
-                        name={`Basket.${index}.${field}`}
-                        component="div"
-                        className="text-danger"
-                      />
+                      <ErrorMessage name={`Stock.${index}.${field.name}`} component="div" className="text-danger" />
                     </div>
                   ))}
                 </div>
-                {Basket.length > 1 && (
+                {showRemoveButtons && Stock.length > 1 && (
                   <button
                     type="button"
                     className="btn btn-danger"
                     onClick={() => remove(index)}
                   >
-                    Remove
+                    Remove Stock
                   </button>
                 )}
               </div>
             </div>
           ))
         ) : (
-          <p>No Basket added yet.</p>
+          <p>No Stock added yet.</p>
         )}
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={() => push({ stocks: '', pricerange: '', stockweightage: '', entryprice: '', exitprice: '', comment: '', returnpercentage: '', holdingperiod: '', potentialleft: '' })}
-        >
-          Add Basket
-        </button>
+        {showRemoveButtons && (
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => push({})} // Adjust initial state as needed
+          >
+            Add Stock
+          </button>
+        )}
       </div>
     </div>
   </div>
 );
 
-const DynamicForm = ({ fields, page_title, btn_name1, btn_name1_route, formik, sumit_btn, btn_name, btn_name2, submitFunction }) => {
-  const { getFieldProps, values } = formik;
+// DynamicForm component for the main form structure
+const DynamicForm = ({ fields, page_title, btn_name1, btn_name1_route, formik, sumit_btn, btn_name, btn_name2, submitFunction, showAddRemoveButtons, disable }) => {
+  const { values } = formik;
+
+
+  const stockFieldTypes = [
+    { name: 'stocks', label: 'Stocks', type: 'text' },
+    { name: 'pricerange', label: 'Price Range', type: 'number' },
+    { name: 'stockweightage', label: 'Weightage', type: 'number' },
+    { name: 'entryprice', label: 'Entry Price', type: 'number' },
+    { name: 'exitprice', label: 'Exit Price', type: 'number' },
+    { name: 'exitdate', label: 'Exit Date', type: 'date' },
+    { name: 'comment', label: 'Comment', type: 'text' },
+  ];
 
   return (
     <div className="content container-fluid" data-aos="fade-left">
@@ -94,17 +107,23 @@ const DynamicForm = ({ fields, page_title, btn_name1, btn_name1_route, formik, s
           </div>
         )}
         <form onSubmit={formik.handleSubmit} autoComplete="off">
-         
           <div className="card-body">
             <div className="row">
               {fields.map((field, index) => {
-                const { name, label, type, placeholder, col_size, label_size, disable } = field;
+                const { name, label, type, placeholder, col_size, label_size, disable: fieldDisable } = field;
 
-                if (type === "Basket") {
+                if (type === "Stock") {
                   return (
-                    <FieldArray name="Basket" key={index}>
+                    <FieldArray name="Stock" key={index}>
                       {({ push, remove }) => (
-                        <BasketField Basket={values.Basket} push={push} remove={remove} />
+                        <BasketField 
+                          Stock={values.Stock} 
+                          push={push} 
+                          remove={remove} 
+                          showRemoveButtons={showAddRemoveButtons} 
+                          disable={disable || fieldDisable} 
+                          fieldTypes={stockFieldTypes} // Pass field types here
+                        />
                       )}
                     </FieldArray>
                   );
@@ -118,8 +137,7 @@ const DynamicForm = ({ fields, page_title, btn_name1, btn_name1_route, formik, s
                       placeholder={placeholder}
                       col_size={col_size}
                       label_size={label_size}
-                      disable={disable}
-                      getFieldProps={getFieldProps}
+                      disable={disable || fieldDisable}
                     />
                   );
                 }

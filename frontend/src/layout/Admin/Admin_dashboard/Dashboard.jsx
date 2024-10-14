@@ -1,18 +1,255 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { getDashboarddetail } from '../../../Services/Admin'
+import { GetClient } from '../../../Services/Admin';
+import { fDateTime } from '../../../Utils/Date_formate';
+import Table from '../../../components/Table';
+
 
 const Dashbord = () => {
+
+    const token = localStorage.getItem('token');
+
+    const [data, setData] = useState([])
+    const [clients, setClients] = useState([]);
+
+
+    const getdetail = async () => {
+        try {
+            const response = await getDashboarddetail(token);
+            if (response.status) {
+
+                setData(response.data)
+            }
+        } catch (error) {
+            console.log("Error fetching services:", error);
+        }
+    };
+
+
+
+    const getAdminclient = async () => {
+        try {
+            const response = await GetClient(token);
+            if (response.status) {
+                const topClients = response.data.slice(0, 5);
+                setClients(topClients);
+            }
+        } catch (error) {
+            console.log("error");
+        }
+    }
+
+    useEffect(() => {
+        getdetail()
+        getAdminclient()
+    }, [])
+
+
+
+    const columns = [
+        {
+            name: 'S.No',
+            selector: (row, index) => index + 1,
+            sortable: false,
+            width: '100px',
+        },
+        {
+            name: 'Full Name',
+            selector: row => row.FullName,
+            sortable: true,
+            width: '180px',
+        },
+        {
+            name: 'Email',
+            selector: row => row.Email,
+            sortable: true,
+            width: '284px',
+
+        },
+        {
+            name: 'Phone No',
+            selector: row => row.PhoneNo,
+            sortable: true,
+            width: '200px',
+        },
+
+
+        // {
+        //     name: 'Signup Status',
+        //     selector: row => row.Status,
+        //     sortable: true,
+        //     width: '165px',
+        // },
+        // {
+        // name: 'Date',
+        // selector: row => row.Status,
+        // sortable: true,
+        // width: '165px',
+        // },
+
+        // {
+        //     name: 'Active Status',
+        //     selector: row => (
+        //         <div className="form-check form-switch form-check-info">
+        //             <input
+        //                 id={`rating_${row.ActiveStatus}`}
+        //                 className="form-check-input toggleswitch"
+        //                 type="checkbox"
+        //                 defaultChecked={row.ActiveStatus == 1}
+        //                 onChange={(event) => handleSwitchChange(event, row._id)}
+        //             />
+        //             <label
+        //                 htmlFor={`rating_${row.ActiveStatus}`}
+        //                 className="checktoggle checkbox-bg"
+        //             ></label>
+        //         </div>
+        //     ),
+        //     sortable: true,
+        //     width: '165px',
+        // },
+        {
+            name: 'CreatedAt',
+            selector: row => fDateTime(row.createdAt),
+            sortable: true,
+            width: '200px',
+        },
+        // {
+        //     name: 'Actions',
+        //     selector: (row) => (
+        //         <>
+        //             <Tooltip placement="top" overlay="Package Assign">
+        //                 <span onClick={(e) => { showModal(true); setClientid(row); }} style={{ cursor: 'pointer' }}>
+        //                     <Settings2 />
+        //                 </span>
+        //             </Tooltip>
+
+        //             <Tooltip title="view">
+        //                 <Eye
+
+        //                     onClick={() => Clientdetail(row)} />
+        //             </Tooltip>
+
+        //             <div
+        //                 className="modal fade"
+        //                 id={`modal-${client.id}`}
+        //                 tabIndex={-1}
+        //                 aria-labelledby={`modalLabel-${client.id}`}
+        //                 aria-hidden="true"
+        //             >
+        //                 <div className="modal-dialog">
+        //                     <div className="modal-content">
+        //                         <div className="modal-header">
+        //                             <h5 className="modal-title" id={`modalLabel-${client.id}`}>
+        //                                 View Client
+        //                             </h5>
+        //                             <button
+        //                                 type="button"
+        //                                 className="btn-close"
+        //                                 data-bs-dismiss="modal"
+        //                                 aria-label="Close"
+        //                             />
+        //                         </div>
+        //                         <div className="modal-body">
+        //                             <ul>
+        //                                 <li className='viewlist'>
+        //                                     <div className='row justify-content-between'>
+        //                                         <div className="col">
+        //                                             <b>Name</b>
+        //                                         </div>
+        //                                         <div className="col">
+        //                                             Pankaj
+        //                                         </div>
+
+        //                                     </div>
+        //                                 </li>
+        //                                 <li className='viewlist'> <div className='row justify-content-between'>
+        //                                     <div className="col">
+        //                                         <b>Email</b>
+        //                                     </div>
+        //                                     <div className="col">
+        //                                         pankaj@gmail.com
+        //                                     </div>
+
+        //                                 </div></li>
+        //                                 <li className='viewlist'> <div className='row justify-content-between'>
+        //                                     <div className="col">
+        //                                         <b>Phone No.</b>
+        //                                     </div>
+        //                                     <div className="col">
+        //                                         9876543210
+        //                                     </div>
+
+        //                                 </div></li>
+        //                                 <li className='viewlist'> <div className='row justify-content-between'>
+        //                                     <div className="col">
+        //                                         <b>Signup Status</b>
+        //                                     </div>
+        //                                     <div className="col">
+        //                                         App
+        //                                     </div>
+
+        //                                 </div></li>
+        //                                 <li className='viewlist'> <div className='row justify-content-between'>
+        //                                     <div className="col">
+        //                                         <b>Created At</b>
+        //                                     </div>
+        //                                     <div className="col">
+        //                                         25/09/2024
+        //                                     </div>
+
+        //                                 </div></li>
+        //                                 <li className='viewlist'> <div className='row justify-content-between'>
+        //                                     <div className="col">
+        //                                         <b>Updated At</b>
+        //                                     </div>
+        //                                     <div className="col">
+        //                                         26/09/2024
+        //                                     </div>
+
+        //                                 </div></li>
+        //                             </ul>
+        //                         </div>
+        //                         {/* <div className="modal-footer">
+        //                             <button
+        //                                 type="button"
+        //                                 className="btn btn-secondary"
+        //                                 data-bs-dismiss="modal"
+        //                             >
+        //                                 Close
+        //                             </button>
+        //                         </div> */}
+        //                     </div>
+        //                 </div>
+        //             </div>
+        //             <Tooltip title="Update">
+        //                 <UserPen onClick={() => updateClient(row)} />
+        //             </Tooltip>
+        //             <Tooltip title="delete">
+        //                 <Trash2 onClick={() => DeleteClient(row._id)} />
+        //             </Tooltip>
+        //         </>
+        //     ),
+        //     ignoreRowClick: true,
+        //     allowOverflow: true,
+        //     button: true,
+        //     width: '165px',
+        // }
+    ];
+
+
+
     return (
         <div>
 
             <div className="page-content">
-                <div className="row row-cols-1 row-cols-md-2 row-cols-xl-4">
-                    <div className="col">
+                <div className="row">
+                    <div className="col-md-3">
                         <div className="card radius-10 bg-gradient-deepblue">
                             <div className="card-body">
                                 <div className="d-flex align-items-center">
-                                    <h5 className="mb-0 text-white">9526</h5>
+                                    <h5 className="mb-0 text-white">{data.clientCountTotal && data.clientCountTotal}</h5>
                                     <div className="ms-auto">
-                                        <i className="bx bx-cart fs-3 text-white" />
+                                        <i className="bx bx-user fs-3 text-white" />
                                     </div>
                                 </div>
                                 <div
@@ -29,9 +266,9 @@ const Dashbord = () => {
                                     />
                                 </div>
                                 <div className="d-flex align-items-center text-white">
-                                    <p className="mb-0">Total Orders</p>
+                                    <p className="mb-0">Total Clients</p>
                                     <p className="mb-0 ms-auto">
-                                        +4.2%
+
                                         <span>
                                             <i className="bx bx-up-arrow-alt" />
                                         </span>
@@ -40,13 +277,13 @@ const Dashbord = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="col">
+                    <div className="col-md-3">
                         <div className="card radius-10 bg-gradient-ohhappiness">
                             <div className="card-body">
                                 <div className="d-flex align-items-center">
-                                    <h5 className="mb-0 text-white">$8323</h5>
+                                    <h5 className="mb-0 text-white">{data.clientCountActive && data.clientCountActive}</h5>
                                     <div className="ms-auto">
-                                        <i className="bx bx-dollar fs-3 text-white" />
+                                        <i className="fadeIn animated bx bx-user-circle fs-3 text-white" />
                                     </div>
                                 </div>
                                 <div
@@ -63,9 +300,9 @@ const Dashbord = () => {
                                     />
                                 </div>
                                 <div className="d-flex align-items-center text-white">
-                                    <p className="mb-0">Total Revenue</p>
+                                    <p className="mb-0">Total Active Client</p>
                                     <p className="mb-0 ms-auto">
-                                        +1.2%
+
                                         <span>
                                             <i className="bx bx-up-arrow-alt" />
                                         </span>
@@ -74,13 +311,13 @@ const Dashbord = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="col">
+                    <div className="col-md-3">
                         <div className="card radius-10 bg-gradient-ibiza">
                             <div className="card-body">
                                 <div className="d-flex align-items-center">
-                                    <h5 className="mb-0 text-white">6200</h5>
+                                    <h5 className="mb-0 text-white">{data.clientCountTotal - data.clientCountActive}</h5>
                                     <div className="ms-auto">
-                                        <i className="bx bx-group fs-3 text-white" />
+                                        <i className="fadeIn animated bx bx-user-x fs-3 text-white" />
                                     </div>
                                 </div>
                                 <div
@@ -97,9 +334,9 @@ const Dashbord = () => {
                                     />
                                 </div>
                                 <div className="d-flex align-items-center text-white">
-                                    <p className="mb-0">Visitors</p>
+                                    <p className="mb-0">Total Deactive Client</p>
                                     <p className="mb-0 ms-auto">
-                                        +5.2%
+
                                         <span>
                                             <i className="bx bx-up-arrow-alt" />
                                         </span>
@@ -108,13 +345,13 @@ const Dashbord = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="col">
+                    <div className="col-md-3">
                         <div className="card radius-10 bg-gradient-moonlit">
                             <div className="card-body">
                                 <div className="d-flex align-items-center">
-                                    <h5 className="mb-0 text-white">5630</h5>
+                                    <h5 className="mb-0 text-white">{data.userCountTotal && data.userCountTotal}</h5>
                                     <div className="ms-auto">
-                                        <i className="bx bx-envelope fs-3 text-white" />
+                                        <i className="bx bx-user-plus fs-3 text-white" />
                                     </div>
                                 </div>
                                 <div
@@ -131,9 +368,146 @@ const Dashbord = () => {
                                     />
                                 </div>
                                 <div className="d-flex align-items-center text-white">
-                                    <p className="mb-0">Messages</p>
+                                    <p className="mb-0">Total Staff</p>
                                     <p className="mb-0 ms-auto">
-                                        +2.2%
+
+                                        <span>
+                                            <i className="bx bx-up-arrow-alt" />
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-3">
+                        <div className="card radius-10 bg-gradient-moonlit ">
+                            <div className="card-body">
+                                <div className="d-flex align-items-center">
+                                    <h5 className="mb-0 text-white">{data.OpensignalCountTotal && data.OpensignalCountTotal}</h5>
+                                    <div className="ms-auto">
+                                        <i className="bx bx-wifi-2 fs-3 text-white" />
+                                    </div>
+                                </div>
+                                <div
+                                    className="progress my-2 bg-opacity-25 bg-white"
+                                    style={{ height: 4 }}
+                                >
+                                    <div
+                                        className="progress-bar bg-white"
+                                        role="progressbar"
+                                        style={{ width: "55%" }}
+                                        aria-valuenow={25}
+                                        aria-valuemin={0}
+                                        aria-valuemax={100}
+                                    />
+                                </div>
+                                <div className="d-flex align-items-center text-white">
+                                    <p className="mb-0">Todays Open Signal</p>
+                                    <p className="mb-0 ms-auto">
+
+                                        <span>
+                                            <i className="bx bx-up-arrow-alt" />
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-3">
+                        <div className="card radius-10 bg-gradient-ibiza ">
+                            <div className="card-body">
+                                <div className="d-flex align-items-center">
+                                    <h5 className="mb-0 text-white">{data.CloseSignalCountTotal && data.CloseSignalCountTotal}</h5>
+                                    <div className="ms-auto">
+                                        <i className="fadeIn animated bx bx-wifi-off fs-3 text-white" />
+                                    </div>
+                                </div>
+                                <div
+                                    className="progress my-2 bg-opacity-25 bg-white"
+                                    style={{ height: 4 }}
+                                >
+                                    <div
+                                        className="progress-bar bg-white"
+                                        role="progressbar"
+                                        style={{ width: "55%" }}
+                                        aria-valuenow={25}
+                                        aria-valuemin={0}
+                                        aria-valuemax={100}
+                                    />
+                                </div>
+                                <div className="d-flex align-items-center text-white">
+                                    <p className="mb-0">Todays Close Signal</p>
+                                    <p className="mb-0 ms-auto">
+
+                                        <span>
+                                            <i className="bx bx-up-arrow-alt" />
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="col-md-3">
+                        <div className="card radius-10 bg-gradient-ohhappiness">
+                            <div className="card-body">
+                                <div className="d-flex align-items-center">
+                                    <h5 className="mb-0 text-white">{data.PlanCountTotal && data.PlanCountTotal}</h5>
+                                    <div className="ms-auto">
+                                        <i className="bx bxl-redux fs-3 text-white" />
+                                    </div>
+                                </div>
+                                <div
+                                    className="progress my-2 bg-opacity-25 bg-white"
+                                    style={{ height: 4 }}
+                                >
+                                    <div
+                                        className="progress-bar bg-white"
+                                        role="progressbar"
+                                        style={{ width: "55%" }}
+                                        aria-valuenow={25}
+                                        aria-valuemin={0}
+                                        aria-valuemax={100}
+                                    />
+                                </div>
+                                <div className="d-flex align-items-center text-white">
+                                    <p className="mb-0">Total Plan</p>
+                                    <p className="mb-0 ms-auto">
+
+                                        <span>
+                                            <i className="bx bx-up-arrow-alt" />
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-3">
+                        <div className="card radius-10 bg-gradient-deepblue">
+                            <div className="card-body">
+                                <div className="d-flex align-items-center">
+                                    <h5 className="mb-0 text-white">{data.PlanCountActive && data.PlanCountActive}</h5>
+                                    <div className="ms-auto">
+                                        <i className="bx bx-wifi-2 fs-3 text-white" />
+                                    </div>
+                                </div>
+                                <div
+                                    className="progress my-2 bg-opacity-25 bg-white"
+                                    style={{ height: 4 }}
+                                >
+                                    <div
+                                        className="progress-bar bg-white"
+                                        role="progressbar"
+                                        style={{ width: "55%" }}
+                                        aria-valuenow={25}
+                                        aria-valuemin={0}
+                                        aria-valuemax={100}
+                                    />
+                                </div>
+                                <div className="d-flex align-items-center text-white">
+                                    <p className="mb-0">Total Active Plan</p>
+                                    <p className="mb-0 ms-auto">
+
                                         <span>
                                             <i className="bx bx-up-arrow-alt" />
                                         </span>
@@ -144,356 +518,23 @@ const Dashbord = () => {
                     </div>
                 </div>
 
-                <div className="row row-cols-1 row-cols-lg-3">
-                    <div className="col">
-                        <div className="card radius-10">
-                            <div className="card-body">
-                                <div className="d-flex align-items-center">
-                                    <div className="w_chart easy-dash-chart1" data-percent={60}>
-                                        <span className="w_percent">60</span>
-                                        <canvas height={110} width={110} />
-                                    </div>
-                                    <div className="ms-3">
-                                        <h6 className="mb-0">Facebook Followers</h6>
-                                        <small className="mb-0">
-                                            22.14% <i className="bx bxs-up-arrow align-middle me-1" />
-                                            Since Last Week
-                                        </small>
-                                    </div>
-                                    <div className="ms-auto fs-1 text-facebook">
-                                        <i className="bx bxl-facebook" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col">
-                        <div className="card radius-10">
-                            <div className="card-body">
-                                <div className="d-flex align-items-center">
-                                    <div className="w_chart easy-dash-chart2" data-percent={65}>
-                                        <span className="w_percent">65</span>
-                                        <canvas height={110} width={110} />
-                                    </div>
-                                    <div className="ms-3">
-                                        <h6 className="mb-0">Twitter Tweets</h6>
-                                        <small className="mb-0">
-                                            32.15% <i className="bx bxs-up-arrow align-middle me-1" />
-                                            Since Last Week
-                                        </small>
-                                    </div>
-                                    <div className="ms-auto fs-1 text-twitter">
-                                        <i className="bx bxl-twitter" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col">
-                        <div className="card radius-10">
-                            <div className="card-body">
-                                <div className="d-flex align-items-center">
-                                    <div className="w_chart easy-dash-chart3" data-percent={75}>
-                                        <span className="w_percent">75</span>
-                                        <canvas height={110} width={110} />
-                                    </div>
-                                    <div className="ms-3">
-                                        <h6 className="mb-0">Youtube Subscribers</h6>
-                                        <small className="mb-0">
-                                            58.24% <i className="bx bxs-up-arrow align-middle me-1" />
-                                            Since Last Week
-                                        </small>
-                                    </div>
-                                    <div className="ms-auto fs-1 text-youtube">
-                                        <i className="bx bxl-youtube" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {/*End Row*/}
 
 
-
-                {/*End Row*/}
                 <div className="card radius-10">
                     <div className="card-body">
                         <div className="d-flex align-items-center">
                             <div>
-                                <h5 className="mb-0">Orders Summary</h5>
+                                <h5 className="mb-0">Recent Client</h5>
                             </div>
-                            <div className="dropdown options ms-auto">
-                                <div
-                                    className="dropdown-toggle dropdown-toggle-nocaret"
-                                    data-bs-toggle="dropdown"
-                                >
-                                    <i className="bx bx-dots-horizontal-rounded" />
-                                </div>
-                                <ul className="dropdown-menu">
-                                    <li>
-                                        <a className="dropdown-item" href="javascript:;">
-                                            Action
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a className="dropdown-item" href="javascript:;">
-                                            Another action
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a className="dropdown-item" href="javascript:;">
-                                            Something else here
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
+
                         </div>
                         <hr />
-                        <div className="table-responsive">
-                            <table className="table align-middle mb-0">
-                                <thead className="table-light">
-                                    <tr>
-                                        <th>Order id</th>
-                                        <th>Product</th>
-                                        <th>Customer</th>
-                                        <th>Date</th>
-                                        <th>Price</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>#897656</td>
-                                        <td>
-                                            <div className="d-flex align-items-center">
-                                                <div className="recent-product-img">
-                                                    <img src="/assets/images/icons/chair.png" alt="" />
-                                                </div>
-                                                <div className="ms-2">
-                                                    <h6 className="mb-1 font-14">Light Blue Chair</h6>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>Brooklyn Zeo</td>
-                                        <td>12 Jul 2020</td>
-                                        <td>$64.00</td>
-                                        <td>
-                                            <div className="badge rounded-pill bg-light-info text-info w-100">
-                                                In Progress
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div className="d-flex order-actions">
-                                                {" "}
-                                                <a href="javascript:;" className="">
-                                                    <i className="bx bx-cog" />
-                                                </a>
-                                                <a href="javascript:;" className="ms-4">
-                                                    <i className="bx bx-down-arrow-alt" />
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>#987549</td>
-                                        <td>
-                                            <div className="d-flex align-items-center">
-                                                <div className="recent-product-img">
-                                                    <img src="/assets/images/icons/shoes.png" alt="" />
-                                                </div>
-                                                <div className="ms-2">
-                                                    <h6 className="mb-1 font-14">Green Sport Shoes</h6>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>Martin Hughes</td>
-                                        <td>14 Jul 2020</td>
-                                        <td>$45.00</td>
-                                        <td>
-                                            <div className="badge rounded-pill bg-light-success text-success w-100">
-                                                Completed
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div className="d-flex order-actions">
-                                                {" "}
-                                                <a href="javascript:;" className="">
-                                                    <i className="bx bx-cog" />
-                                                </a>
-                                                <a href="javascript:;" className="ms-4">
-                                                    <i className="bx bx-down-arrow-alt" />
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>#685749</td>
-                                        <td>
-                                            <div className="d-flex align-items-center">
-                                                <div className="recent-product-img">
-                                                    <img src="/assets/images/icons/headphones.png" alt="" />
-                                                </div>
-                                                <div className="ms-2">
-                                                    <h6 className="mb-1 font-14">Red Headphone 07</h6>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>Shoan Stephen</td>
-                                        <td>15 Jul 2020</td>
-                                        <td>$67.00</td>
-                                        <td>
-                                            <div className="badge rounded-pill bg-light-danger text-danger w-100">
-                                                Cancelled
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div className="d-flex order-actions">
-                                                {" "}
-                                                <a href="javascript:;" className="">
-                                                    <i className="bx bx-cog" />
-                                                </a>
-                                                <a href="javascript:;" className="ms-4">
-                                                    <i className="bx bx-down-arrow-alt" />
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>#887459</td>
-                                        <td>
-                                            <div className="d-flex align-items-center">
-                                                <div className="recent-product-img">
-                                                    <img src="/assets/images/icons/idea.png" alt="" />
-                                                </div>
-                                                <div className="ms-2">
-                                                    <h6 className="mb-1 font-14">Mini Laptop Device</h6>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>Alister Campel</td>
-                                        <td>18 Jul 2020</td>
-                                        <td>$87.00</td>
-                                        <td>
-                                            <div className="badge rounded-pill bg-light-success text-success w-100">
-                                                Completed
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div className="d-flex order-actions">
-                                                {" "}
-                                                <a href="javascript:;" className="">
-                                                    <i className="bx bx-cog" />
-                                                </a>
-                                                <a href="javascript:;" className="ms-4">
-                                                    <i className="bx bx-down-arrow-alt" />
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>#335428</td>
-                                        <td>
-                                            <div className="d-flex align-items-center">
-                                                <div className="recent-product-img">
-                                                    <img
-                                                        src="/assets/images/icons/user-interface.png"
-                                                        alt=""
-                                                    />
-                                                </div>
-                                                <div className="ms-2">
-                                                    <h6 className="mb-1 font-14">Purple Mobile Phone</h6>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>Keate Medona</td>
-                                        <td>20 Jul 2020</td>
-                                        <td>$75.00</td>
-                                        <td>
-                                            <div className="badge rounded-pill bg-light-info text-info w-100">
-                                                In Progress
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div className="d-flex order-actions">
-                                                {" "}
-                                                <a href="javascript:;" className="">
-                                                    <i className="bx bx-cog" />
-                                                </a>
-                                                <a href="javascript:;" className="ms-4">
-                                                    <i className="bx bx-down-arrow-alt" />
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>#224578</td>
-                                        <td>
-                                            <div className="d-flex align-items-center">
-                                                <div className="recent-product-img">
-                                                    <img src="/assets/images/icons/watch.png" alt="" />
-                                                </div>
-                                                <div className="ms-2">
-                                                    <h6 className="mb-1 font-14">Smart Hand Watch</h6>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>Winslet Maya</td>
-                                        <td>22 Jul 2020</td>
-                                        <td>$80.00</td>
-                                        <td>
-                                            <div className="badge rounded-pill bg-light-danger text-danger w-100">
-                                                Cancelled
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div className="d-flex order-actions">
-                                                {" "}
-                                                <a href="javascript:;" className="">
-                                                    <i className="bx bx-cog" />
-                                                </a>
-                                                <a href="javascript:;" className="ms-4">
-                                                    <i className="bx bx-down-arrow-alt" />
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>#447896</td>
-                                        <td>
-                                            <div className="d-flex align-items-center">
-                                                <div className="recent-product-img">
-                                                    <img src="/assets/images/icons/tshirt.png" alt="" />
-                                                </div>
-                                                <div className="ms-2">
-                                                    <h6 className="mb-1 font-14">T-Shirt Blue</h6>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>Emy Jackson</td>
-                                        <td>28 Jul 2020</td>
-                                        <td>$96.00</td>
-                                        <td>
-                                            <div className="badge rounded-pill bg-light-success text-success w-100">
-                                                Completed
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div className="d-flex order-actions">
-                                                {" "}
-                                                <a href="javascript:;" className="">
-                                                    <i className="bx bx-cog" />
-                                                </a>
-                                                <a href="javascript:;" className="ms-4">
-                                                    <i className="bx bx-down-arrow-alt" />
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+
+
+                        <Table
+                            columns={columns}
+                            data={clients}
+                        />
                     </div>
                 </div>
 

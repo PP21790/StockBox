@@ -19,7 +19,7 @@ const hasPermission = async (userId, permissionName) => {
       return false;
     }
   } catch (error) {
-    console.error("Error checking permission:", error);
+    console.log("Error checking permission:", error);
     throw new Error('Server error');
   }
 };

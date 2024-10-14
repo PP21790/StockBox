@@ -1,14 +1,13 @@
 import React, { useEffect } from 'react';
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
-import Forgetpass from '../Auth/Forgetpass';
-import Resetpass from '../Auth/Resetpass';
 import Login from '../Auth/Login';
 import Register from '../Auth/Register';
 import AdminRouting from './Admin.routes';
-import Staff from './Staff.routes';
+// import Staff from './Staff.routes';
+import Staffrouting from './Staff.routes';
 import Client from './Client.routes';
-
+import Forgetpassword from '../Auth/Forgetpassword';
 
 
 
@@ -71,7 +70,7 @@ const Routing = () => {
         <Routes>
 
             <Route path="/admin/*" element={(roles === "1") ? <AdminRouting /> : <Login />} />
-            <Route path="/Staff/*" element={(roles === "2") ? <Staff /> : <Login />} />
+            <Route path="/Staff/*" element={(roles === "2") ? <Staffrouting /> : <Login />} />
             <Route path="/client/*" element={(roles === "3") ? <Client /> : <Login />} />
 
 
@@ -81,7 +80,7 @@ const Routing = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
 
-            <Route path="/forget" element={<Forgetpass />} />
+            <Route path="/forget" element={<Forgetpassword/>} />
             {/* <Route path="/updatepassword/:id" element={<Update />} /> */}
         </Routes>
     );
