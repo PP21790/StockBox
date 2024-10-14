@@ -56,7 +56,7 @@ class Faq {
       const { } = req.body;
 
     //  const result = await Faq_Modal.find()
-      const result = await Faq_Modal.find({ del: false });
+      const result = await Faq_Modal.find({ del: false }).sort({created_at:-1});
 
 
       return res.json({
@@ -77,7 +77,7 @@ class Faq {
       const { } = req.body;
 
     //  const result = await Faq_Modal.find()
-      const result = await Faq_Modal.find({ del: false,status: true });
+      const result = await Faq_Modal.find({ del: false,status: true }).sort({created_at:-1});
 
 
       return res.json({

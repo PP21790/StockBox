@@ -8,6 +8,7 @@ const fs = require('fs');
 var dateTime = require('node-datetime');
 const cron = require('node-cron');
 const Stock_Modal = db.Stock;
+const Clients_Modal = db.Clients;
 
 
 cron.schedule('0 1 * * *', async () => {
@@ -17,6 +18,11 @@ cron.schedule('0 2 * * *', async () => {
         await AddBulkStockCron();
 
   });
+
+  cron.schedule('0 4 * * *', async () => {
+    await TradingStatusOff();
+
+});
 
 
 async function AddBulkStockCron(req, res) {
@@ -239,5 +245,28 @@ const DeleteTokenAliceToken = async () => {
     }
   
   }
+
+
+
+  async function TradingStatusOff() {
+    try {
+        // Find active clients
+        const result = await Clients_Modal.find({ del: 0, ActiveStatus: 1 });
+        
+        // Update trading status for each active client
+        if (result.length > 0) {
+            const updateResult = await Clients_Modal.updateMany(
+                { del: 0, ActiveStatus: 1 },
+                { $set: { tradingstatus: 0 } }
+            );
+
+            console.log(`Updated trading status for ${updateResult.modifiedCount} active clients.`);
+        } else {
+            console.log('No active clients found to update.');
+        }
+    } catch (error) {
+        console.error('Error updating trading status:', error);
+    }
+}
   
   module.exports = { AddBulkStockCron,DeleteTokenAliceToken };

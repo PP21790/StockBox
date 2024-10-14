@@ -107,7 +107,7 @@ class Coupon {
 
       //const result = await Coupon_Modal.find()
 
-      const result = await Coupon_Modal.find({ del: false });
+      const result = await Coupon_Modal.find({ del: false }).sort({created_at:-1});
 
       return res.json({
         status: true,

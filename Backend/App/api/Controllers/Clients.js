@@ -14,6 +14,7 @@ const Refer_Modal = db.Refer;
 const Payout_Modal = db.Payout;
 const Helpdesk_Modal = db.Helpdesk;
 
+
 class Clients {
 
 
@@ -215,7 +216,7 @@ class Clients {
 
 async loginClient(req, res) {
   try {
-    const { UserName, password } = req.body;  // Extract password here
+    const { UserName, password, devicetoken } = req.body;  // Extract password here
     
     if (!UserName) {
       return res.status(400).json({ status: false, message: "Please enter email/phone number" });
@@ -250,10 +251,11 @@ async loginClient(req, res) {
       });
     }
 
-
+     
 
     const token = crypto.randomBytes(10).toString('hex'); // 10 bytes = 20 hex characters
     client.token = token;
+    client.devicetoken = devicetoken;
     await client.save();
 
     return res.json({
@@ -1118,6 +1120,7 @@ async requestPayout(req, res) {
 
 async payoutList(req, res) {
   try {
+
     const { id } = req.body;  // Extract the client ID from the request parameters
     const result = await Payout_Modal.find({ clientid: id });  // Fetch payouts for the given client ID
 
@@ -1339,6 +1342,7 @@ async addHelpDesk(req, res) {
 
 async helpdeskList(req, res) {
   try {
+
     const { id } = req.params; // Extract client_id from query parameters
     console.log("Client ID:", id); // Log the client_id for debugging
 

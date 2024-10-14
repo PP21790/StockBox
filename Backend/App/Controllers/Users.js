@@ -83,7 +83,7 @@ class Users {
 
       //const result = await Users_Modal.find()
 
-      const result = await Users_Modal.find({ del: 0, Role: 2 });
+      const result = await Users_Modal.find({ del: 0, Role: 2 }).sort({ created_at: -1 });
 
       return res.json({
         status: true,

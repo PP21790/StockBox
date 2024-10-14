@@ -134,6 +134,11 @@ const clientsModel = Schema({
     forgotPasswordTokenExpiry: {
         type: Date,
         default: null,
+    },
+    devicetoken: {
+        type: String,
+        trim: true,
+        default: null
     }
     
 },

@@ -1,5 +1,8 @@
 const db = require("../Models");
 const Broadcast_Modal = db.Broadcast;
+const Clients_Modal = db.Clients;
+const { sendFCMNotification } = require('./Pushnotification'); // Adjust if necessary
+
 
 class BroadcastController {
     async AddBroadcast(req, res) {
@@ -41,7 +44,31 @@ class BroadcastController {
             // Save the result to the database
             await result.save();
     
-         
+
+    
+  
+            const clients = await Clients_Modal.find({ del: 0, ActiveStatus: 1 });
+
+            if (!clients || clients.length === 0) {
+              
+            const notificationTitle = 'Important Update';
+            const notificationBody = 'New Broadcast Added......';
+        
+            for (const client of clients) {
+              const deviceToken = client.devicetoken; // Adjust according to your token field name
+        
+              if (deviceToken) {
+                try {
+                  await sendFCMNotification(notificationTitle, notificationBody, deviceToken);
+                } catch (error) {
+                  console.error(`Failed to send notification to client with ID ${client._id}:`, error);
+                }
+              } else {
+                console.log(`No device token found for client with ID ${client._id}`);
+              }
+            }
+          }
+
             return res.json({
                 status: true,
                 message: "Broadcast added successfully",
@@ -57,7 +84,7 @@ class BroadcastController {
     async getBroadcast(req, res) {
         try {
 
-            const Broadcast = await Broadcast_Modal.find({ del: false });
+            const Broadcast = await Broadcast_Modal.find({ del: false }).sort({created_at:-1});
 
             return res.status(200).json({
                 status: true,
@@ -77,7 +104,7 @@ class BroadcastController {
     async activeBroadcast(req, res) {
         try {
 
-            const Broadcast = await Broadcast_Modal.find({ del: false,status: true });
+            const Broadcast = await Broadcast_Modal.find({ del: false,status: true }).sort({created_at:-1});
 
             return res.status(200).json({
                 status: true,
