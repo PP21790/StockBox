@@ -473,10 +473,9 @@ const News = () => {
 
                             {clients.map((client, index) => (
                                 <div className="row g-0" key={index}>
-                                    {/* Conditional spacer */}
-                                    {index % 2 === 0 ? <div className="col-sm">{/*spacer*/}</div> : null}
+                                    {index % 2 === 0 ? <div className="col-sm">{}</div> : null}
 
-                                    {/* Timeline center dot */}
+                            
                                     <div className="col-sm-1 text-center flex-column d-none d-sm-flex">
                                         <div className="row h-50">
                                             <div className="col">&nbsp;</div>
@@ -484,7 +483,7 @@ const News = () => {
                                         </div>
                                     </div>
 
-                                    {/* Timeline item content */}
+                                    
                                     <div className="col-sm py-2">
 
                                         <div className={`card ${client.borderClass || 'radius-15'}`}>
@@ -492,7 +491,7 @@ const News = () => {
                                             <div className="card-body">
 
                                                 <div className="row">
-                                                    {/* Image on the left side */}
+                                                   
                                                     <div className="col-md-4">
                                                         <img
                                                             src={`${image_baseurl}uploads/news/${client.image}`}
