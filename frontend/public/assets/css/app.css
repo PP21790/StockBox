@@ -5230,6 +5230,7 @@ label {
 	animation: animate-pulse 3s linear infinite;
 	cursor: pointer
 }
+
 .lucide-square-pen:hover {
 
 	background: #000;
@@ -5292,7 +5293,7 @@ label {
 	background-color: white;
 	border: 1px solid #ccc;
 	border-radius: 8px;
-	
+
 	padding: 20px;
 	position: relative;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -5399,6 +5400,7 @@ ul li {
 	font-size: 22px;
 
 }
+
 .trashbtn {
 	font-size: 1.54rem;
 	color: red;
@@ -5733,13 +5735,17 @@ ul li {
 }
 
 
-.rfreshicon{
+.rfreshicon {
 	position: relative;
 	left: 18px;
 	top: 30px;
 }
 
 .custom-accordion-button {
-    padding: 3px !important;
-    font-size: 0.9rem !important;
+	padding: 3px !important;
+	font-size: 0.9rem !important;
+}
+
+.lni-arrow-left-circle:hover {
+	color: #128e0a;
 }

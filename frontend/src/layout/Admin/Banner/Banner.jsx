@@ -244,6 +244,7 @@ const Banner = () => {
             selector: (row, index) => index + 1,
             sortable: false,
             width: '150px',
+
         },
         // {
         //     name: 'Title',
@@ -255,6 +256,7 @@ const Banner = () => {
             cell: row => <img src={`${image_baseurl}uploads/banner/${row.image}`} alt={row.image} title={row.image} width="50" height="50" />,
             sortable: true,
             width: '240px',
+
         },
         {
             name: 'Active Status',
@@ -275,12 +277,14 @@ const Banner = () => {
             ),
             sortable: true,
             width: '240px',
+
         },
         {
             name: 'Created At',
             selector: row => fDateTime(row.created_at),
             sortable: true,
             width: '240px',
+
         },
         // {
         //     name: 'Updated At',
@@ -319,7 +323,7 @@ const Banner = () => {
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
-            width: '200px',
+
 
         }
     ];
@@ -421,6 +425,21 @@ const Banner = () => {
                                                                 accept="image/*"
                                                                 id="imageUpload"
                                                                 onChange={(e) => setTitle({ ...title, image: e.target.files[0] })}
+                                                            />
+                                                        </div>
+                                                        <div className="col-md-12">
+                                                            <label htmlFor="imageUpload">HyperLink</label>
+                                                            <input
+                                                                className="form-control mb-3"
+                                                                type="text"
+
+
+                                                                onChange={(e) => {
+                                                                    const file = e.target.files[0];
+                                                                    if (file) {
+                                                                        updateServiceTitle({ image: file });
+                                                                    }
+                                                                }}
                                                             />
                                                         </div>
                                                     </div>
