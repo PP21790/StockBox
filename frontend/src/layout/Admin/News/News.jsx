@@ -504,7 +504,7 @@ const News = () => {
                                                         />
                                                     </div>
 
-            
+
                                                     <div className="col-md-8">
 
                                                         <div className="d-flex justify-content-between align-items-start mb-2">
@@ -539,7 +539,7 @@ const News = () => {
                                         </div>
                                     </div>
 
-                                    {index % 2 === 1 ? <div className="col-sm">{}</div> : null}
+                                    {index % 2 === 1 ? <div className="col-sm">{ }</div> : null}
                                 </div>
                             ))}
 
