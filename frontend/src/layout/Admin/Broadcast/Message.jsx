@@ -405,31 +405,7 @@ const Message = () => {
 
                                                 return (
                                                     <div className="row" key={index}>
-                                                        <div
-                                                            className="col-auto text-center flex-column d-none d-sm-flex"
-                                                            style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
-                                                        >
-
-                                                            {/* <h5 className="m-2">
-                                                                <span
-                                                                    className="badge rounded-pill bg-light border"
-                                                                    style={{
-                                                                        backgroundColor: "#f8f9fa",
-                                                                        border: "1px solid #dee2e6",
-                                                                        padding: "10px",
-                                                                    }}
-                                                                >
-                                                                    {item.badgeContent || "\u00A0"}
-                                                                </span>
-                                                            </h5> */}
-                                                            {/* <div className="row h-50" style={{ height: "50%" }}>
-                                                                <div className="col border-end" style={{ borderRight: "1px solid #dee2e6" }}>
-                                                                    &nbsp;
-                                                                </div>
-                                                                <div className="col">&nbsp;</div>
-                                                            </div> */}
-                                                        </div>
-
+                                                        
                                                         <div className="col py-2">
                                                             <div className="card" style={{ borderRadius: "10px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
                                                                 <div className="card-body">
