@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 import { Tooltip } from 'antd';
 import styled from 'styled-components';
+import { fDate } from '../../../Utils/Date_formate';
 
 const Category = () => {
     const navigate = useNavigate();
@@ -306,12 +307,12 @@ const Category = () => {
         },
         {
             name: 'Created At',
-            selector: row => new Date(row.created_at).toLocaleDateString(),
+            selector: row => fDate(row.created_at),
             sortable: true,
         },
         {
             name: 'Updated At',
-            selector: row => new Date(row.updated_at).toLocaleDateString(),
+            selector: row => fDate(row.updated_at),
             sortable: true,
         },
 

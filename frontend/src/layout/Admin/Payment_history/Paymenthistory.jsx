@@ -6,7 +6,7 @@ import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
-
+import { fDate } from '../../../Utils/Date_formate';
 
 const History = () => {
 
@@ -68,7 +68,7 @@ const History = () => {
             name: 'S.No',
             selector: (row, index) => index + 1,
             sortable: false,
-            width: '78px',
+            width: '100px',
         },
         {
             name: 'Name',
@@ -98,7 +98,7 @@ const History = () => {
         },
         {
             name: 'Plan Start',
-            selector: row => new Date(row.planDetails.created_at).toLocaleDateString(),
+            selector: row => fDate(row.planDetails.created_at),
             sortable: true,
         },
         // {
@@ -106,11 +106,11 @@ const History = () => {
         //     selector: row => new Date(row.planDetails.plan_end).toLocaleDateString(),
         //     sortable: true,
         // },
-        {
-            name: 'Date',
-            selector: row => new Date(row.planDetails.created_at).toLocaleDateString(),
-            sortable: true,
-        },
+        // {
+        //     name: 'Date',
+        //     selector: row => fDate(row.planDetails.created_at),
+        //     sortable: true,
+        // },
         {
             name: 'Actions',
             cell: row => (

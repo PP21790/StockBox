@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 import { DeleteCoupon, UpdateClientStatus } from '../../../Services/Admin';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
-
+import { fDate } from '../../../Utils/Date_formate';
 
 
 
@@ -225,15 +225,15 @@ const Coupon = () => {
 
         {
             name: 'Startdate',
-            selector: row => new Date(row.startdate).toLocaleDateString(),
+            selector: row => fDate(row.startdate),
             sortable: true,
-            width: '142px',
+            width: '200px',
         },
         {
             name: 'Enddate',
-            selector: row => new Date(row.enddate).toLocaleDateString(),
+            selector: row => fDate(row.enddate),
             sortable: true,
-            width: '142px',
+            width: '200px',
         },
 
         {
