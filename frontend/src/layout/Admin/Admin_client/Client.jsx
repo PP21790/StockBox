@@ -262,7 +262,7 @@ const Client = () => {
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
-                    text:  response.message || 'Plan updated successfully.',
+                    text: response.message || 'Plan updated successfully.',
                     icon: 'success',
                     confirmButtonText: 'OK',
                     timer: 2000,
@@ -274,7 +274,7 @@ const Client = () => {
             } else {
                 Swal.fire({
                     title: 'Error!',
-                    text:   response.message || 'There was an error updating the Plan.',
+                    text: response.message || 'There was an error updating the Plan.',
                     icon: 'error',
                     confirmButtonText: 'Try Again',
                 });
@@ -341,13 +341,13 @@ const Client = () => {
             name: 'Full Name',
             selector: row => row.FullName,
             sortable: true,
-            width: '165px',
+            width: '200px',
         },
         {
             name: 'Email',
             selector: row => row.Email,
             sortable: true,
-            width: '284px',
+            width: '350px',
         },
         {
             name: 'Phone No',
@@ -410,7 +410,7 @@ const Client = () => {
             name: 'CreatedAt',
             selector: row => fDateTime(row.createdAt),
             sortable: true,
-            width: '165px',
+            width: '200px',
         },
         {
             name: 'Actions',

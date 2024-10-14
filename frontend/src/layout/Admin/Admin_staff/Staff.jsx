@@ -196,12 +196,12 @@ const Staff = () => {
             sortable: true,
             width: '142px',
         },
-        {
-            name: 'Updated At',
-            selector: row => new Date(row.updatedAt).toLocaleDateString(),
-            sortable: true,
-            width: '142px',
-        },
+        // {
+        //     name: 'Updated At',
+        //     selector: row => new Date(row.updatedAt).toLocaleDateString(),
+        //     sortable: true,
+        //     width: '142px',
+        // },
 
         // {
         //     name: 'Permission',

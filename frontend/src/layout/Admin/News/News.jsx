@@ -6,7 +6,7 @@ import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
-
+import { fDate } from '../../../Utils/Date_formate';
 
 const News = () => {
 
@@ -57,6 +57,9 @@ const News = () => {
             console.log("Error fetching services:", error);
         }
     };
+
+
+
 
     useEffect(() => {
         getNews();
@@ -198,7 +201,7 @@ const News = () => {
         try {
             const result = await Swal.fire({
                 title: 'Are you sure?',
-                text: 'Do you want to delete this ? This action cannot be undone.',
+                text: 'Do you want to delete this News ? This action cannot be undone.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, delete it!',
@@ -210,7 +213,7 @@ const News = () => {
                 if (response.status) {
                     Swal.fire({
                         title: 'Deleted!',
-                        text: 'The staff has been successfully deleted.',
+                        text: 'The News has been successfully deleted.',
                         icon: 'success',
                         confirmButtonText: 'OK',
                     });
@@ -221,7 +224,7 @@ const News = () => {
 
                 Swal.fire({
                     title: 'Cancelled',
-                    text: 'The staff deletion was cancelled.',
+                    text: 'The News deletion was cancelled.',
                     icon: 'info',
                     confirmButtonText: 'OK',
                 });
@@ -229,202 +232,13 @@ const News = () => {
         } catch (error) {
             Swal.fire({
                 title: 'Error!',
-                text: 'There was an error deleting the staff.',
+                text: 'There was an error deleting the News.',
                 icon: 'error',
                 confirmButtonText: 'Try Again',
             });
 
         }
     };
-
-
-
-    const columns = [
-        {
-            name: 'S.No',
-            selector: (row, index) => index + 1,
-            sortable: false,
-            width: '100px',
-        },
-        {
-            name: 'Title',
-            selector: row => row.title,
-            sortable: true,
-            width: '200px',
-        },
-        {
-            name: 'Active Status',
-            selector: row => (
-                <div className="form-check form-switch form-check-info">
-                    <input
-                        id={`rating_${row.status}`}
-                        className="form-check-input toggleswitch"
-                        type="checkbox"
-                        checked={row.status === true}
-                        onChange={(event) => handleSwitchChange(event, row._id)}
-                    />
-                    <label
-                        htmlFor={`rating_${row.status}`}
-                        className="checktoggle checkbox-bg"
-                    ></label>
-                </div>
-            ),
-            sortable: true,
-            width: '200px',
-        },
-        {
-            name: 'Description',
-            selector: row => row.description,
-            sortable: true,
-            width: '200px',
-        },
-        {
-            name: 'Image',
-            cell: row => <img src={`${image_baseurl}uploads/news/${row.image}`} alt={row.image} width="50" height="50" />,
-            sortable: true,
-            width: '100px',
-        },
-
-
-        {
-            name: 'Created At',
-            selector: row => new Date(row.created_at).toLocaleDateString(),
-            sortable: true,
-        },
-        // {
-        //     name: 'Updated At',
-        //     selector: row => new Date(row.updated_at).toLocaleDateString(),
-        //     sortable: true,
-        // },
-
-        {
-            name: 'Actions',
-            cell: row => (
-                <>
-                    <div>
-                        <Tooltip placement="top" overlay="View">
-                            <Eye style={{ marginRight: "10px" }} />
-                        </Tooltip>
-                    </div>
-                    <Tooltip placement="top" overlay="Updte">
-                        <SquarePen
-                            onClick={() => {
-                                setModel(true);
-                                setServiceid(row);
-                                setUpdatetitle({
-                                    title: row.title,
-                                    id: row._id,
-                                    description: row.description,
-                                    image: row.image
-                                });
-                            }}
-                        />
-                    </Tooltip>
-                    {model && (
-                        <>
-                            <div className="modal-backdrop fade show"></div>
-                            <div
-                                className="modal fade show"
-                                style={{ display: 'block' }}
-                                tabIndex={-1}
-                                aria-labelledby={`modalLabel-${row._id}`}
-                                aria-hidden="true"
-                                role="dialog"
-                            >
-                                <div className="modal-dialog">
-                                    <div className="modal-content">
-                                        <div className="modal-header">
-                                            <h5 className="modal-title" id={`modalLabel-${row._id}`}>
-                                                Update News
-                                            </h5>
-                                            <button
-                                                type="button"
-                                                className="btn-close"
-                                                onClick={() => setModel(false)}
-                                            />
-                                        </div>
-                                        <div className="modal-body">
-                                            <form>
-                                                <div className="row">
-                                                    <div className="col-md-12">
-                                                        <label htmlFor="" style={{ float: "left" }}>Title</label>
-                                                        <input
-                                                            className="form-control mb-2"
-                                                            type="text"
-                                                            placeholder="Enter news Title"
-                                                            value={updatetitle.title}
-                                                            onChange={(e) => updateServiceTitle({ title: e.target.value })}
-                                                        />
-                                                    </div>
-                                                </div>
-
-                                                <div className="row">
-                                                    <div className="col-md-12">
-                                                        <label htmlFor="imageUpload" style={{ float: "left" }}>Image</label>
-                                                        <input
-                                                            className="form-control mb-3"
-                                                            type="file"
-                                                            accept="image/*"
-                                                            id="imageUpload"
-                                                            onChange={(e) => {
-                                                                const file = e.target.files[0];
-                                                                if (file) {
-                                                                    updateServiceTitle({ image: file });
-                                                                }
-                                                            }}
-                                                        />
-                                                    </div>
-                                                </div>
-
-                                                <div className="row">
-                                                    <div className="col-md-12">
-                                                        <label htmlFor="" style={{ float: "left" }}>Description</label>
-                                                        <textarea
-                                                            className="form-control mb-2"
-                                                            type="text"
-                                                            placeholder="Enter Description"
-                                                            value={updatetitle.description}
-                                                            onChange={(e) => updateServiceTitle({ description: e.target.value })}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <div className="modal-footer">
-                                            <button
-                                                type="button"
-                                                className="btn btn-secondary"
-                                                onClick={() => setModel(false)}
-                                            >
-                                                Close
-                                            </button>
-                                            <button
-                                                type="button"
-                                                className="btn btn-primary"
-                                                onClick={updateNews}
-                                            >
-                                                Update News
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </>
-                    )}
-
-                    <div>
-                        <Tooltip placement="top" overlay="Delete">
-                            <Trash2 onClick={() => DeleteService(row._id)} />
-                        </Tooltip>
-                    </div>
-                </>
-            ),
-            ignoreRowClick: true,
-            allowOverflow: true,
-            button: true,
-        }
-    ];
-
 
 
     const updateServiceTitle = (updatedField) => {
@@ -438,6 +252,8 @@ const News = () => {
 
 
     return (
+
+
         <div>
             <div className="page-content">
 
@@ -562,9 +378,7 @@ const News = () => {
                                         </div>
                                     </div>
                                 </div>
-
-
-                                {/* {model && (
+                                {model && (
                                     <div
                                         className="modal fade show"
                                         style={{ display: 'block' }}
@@ -651,226 +465,91 @@ const News = () => {
                                             </div>
                                         </div>
                                     </div>
-                                )} */}
+                                )}
 
                             </div>
                         </div>
-                        <div className="table-responsive">
-                            <Table
-                                columns={columns}
-                                data={clients}
-                                pagination
-                                striped
-                                highlightOnHover
-                                dense
-                            />
-                        </div>
-                    </div>
-                </div>
+                        <div className="container py-2">
 
+                            {clients.map((client, index) => (
+                                <div className="row g-0" key={index}>
+                                    {/* Conditional spacer */}
+                                    {index % 2 === 0 ? <div className="col-sm">{/*spacer*/}</div> : null}
 
+                                    {/* Timeline center dot */}
+                                    <div className="col-sm-1 text-center flex-column d-none d-sm-flex">
+                                        <div className="row h-50">
+                                            <div className="col">&nbsp;</div>
+                                            <div className="col">&nbsp;</div>
+                                        </div>
+                                    </div>
 
+                                    {/* Timeline item content */}
+                                    <div className="col-sm py-2">
 
-                <div className="container py-2">
+                                        <div className={`card ${client.borderClass || 'radius-15'}`}>
 
-                    {/* timeline item 1 */}
-                    <div className="row g-0">
-                        <div className="col-sm">{/*spacer*/}</div>
-                        {/* timeline item 1 center dot */}
-                        <div className="col-sm-1 text-center flex-column d-none d-sm-flex">
-                            <div className="row h-50">
-                                <div className="col">&nbsp;</div>
-                                <div className="col">&nbsp;</div>
-                            </div>
-                        </div>
-                        {/* timeline item 1 event content */}
-                        <div className="col-sm py-2">
-                            <div className="card radius-15">
-                                <div className="card-body">
-                                    <div className="row justify-content-end">
-                                        <div className="col-12 d-flex justify-content-end mb-2">
-                                            <div>
-                                                <Tooltip placement="top" overlay="Updte">
-                                                    <SquarePen
-                                                        onClick={() => {
-                                                            setModel(true);
+                                            <div className="card-body">
 
-                                                        }}
-                                                    />
-                                                </Tooltip>
-                                                {model && (
-                                                    <>
-                                                        <div className="modal-backdrop fade show"></div>
-                                                        <div
-                                                            className="modal fade show"
-                                                            style={{ display: 'block' }}
-                                                            tabIndex={-1}
+                                                <div className="row">
+                                                    {/* Image on the left side */}
+                                                    <div className="col-md-4">
+                                                        <img
+                                                            src={`${image_baseurl}uploads/news/${client.image}`}
 
-                                                            aria-hidden="true"
-                                                            role="dialog"
-                                                        >
-                                                            <div className="modal-dialog">
-                                                                <div className="modal-content">
-                                                                    <div className="modal-header">
-                                                                        <h5 className="modal-title" >
-                                                                            Update News
-                                                                        </h5>
-                                                                        <button
-                                                                            type="button"
-                                                                            className="btn-close"
-                                                                            onClick={() => setModel(false)}
-                                                                        />
-                                                                    </div>
-                                                                    <div className="modal-body">
-                                                                        <form>
-                                                                            <div className="row">
-                                                                                <div className="col-md-12">
-                                                                                    <label htmlFor="" style={{ float: "left" }}>Title</label>
-                                                                                    <input
-                                                                                        className="form-control mb-2"
-                                                                                        type="text"
-                                                                                        placeholder="Enter news Title"
-                                                                                        value={updatetitle.title}
-                                                                                        onChange={(e) => updateServiceTitle({ title: e.target.value })}
-                                                                                    />
-                                                                                </div>
-                                                                            </div>
+                                                            alt={client.image}
+                                                            className="img-fluid"
+                                                            width="100%"
+                                                            height="auto"
+                                                        />
+                                                    </div>
 
-                                                                            <div className="row">
-                                                                                <div className="col-md-12">
-                                                                                    <label htmlFor="imageUpload" style={{ float: "left" }}>Image</label>
-                                                                                    <input
-                                                                                        className="form-control mb-3"
-                                                                                        type="file"
-                                                                                        accept="image/*"
-                                                                                        id="imageUpload"
-                                                                                        onChange={(e) => {
-                                                                                            const file = e.target.files[0];
-                                                                                            if (file) {
-                                                                                                updateServiceTitle({ image: file });
-                                                                                            }
-                                                                                        }}
-                                                                                    />
-                                                                                </div>
-                                                                            </div>
+            
+                                                    <div className="col-md-8">
 
-                                                                            <div className="row">
-                                                                                <div className="col-md-12">
-                                                                                    <label htmlFor="" style={{ float: "left" }}>Description</label>
-                                                                                    <textarea
-                                                                                        className="form-control mb-2"
-                                                                                        type="text"
-                                                                                        placeholder="Enter Description"
-                                                                                        value={updatetitle.description}
-                                                                                        onChange={(e) => updateServiceTitle({ description: e.target.value })}
-                                                                                    />
-                                                                                </div>
-                                                                            </div>
-                                                                        </form>
-                                                                    </div>
-                                                                    <div className="modal-footer">
-                                                                        <button
-                                                                            type="button"
-                                                                            className="btn btn-secondary"
-                                                                            onClick={() => setModel(false)}
-                                                                        >
-                                                                            Close
-                                                                        </button>
-                                                                        <button
-                                                                            type="button"
-                                                                            className="btn btn-primary"
-                                                                            onClick={updateNews}
-                                                                        >
-                                                                            Update News
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
+                                                        <div className="d-flex justify-content-between align-items-start mb-2">
+
+                                                            <h4 className="card-title text-muted">{client.title}</h4>
+                                                            <div>
+
+                                                                <Tooltip placement="top" overlay="Update">
+                                                                    <SquarePen
+                                                                        onClick={() => {
+                                                                            setModel(true);
+                                                                            setServiceid(client);
+                                                                            setUpdatetitle({
+                                                                                title: client.title,
+                                                                                id: client._id,
+                                                                                description: client.description,
+                                                                                image: client.image
+                                                                            });
+                                                                        }}
+                                                                    />
+                                                                </Tooltip>
+                                                                <Tooltip placement="top" overlay="Delete">
+                                                                    <Trash2 onClick={() => DeleteService(client._id)} />
+                                                                </Tooltip>
                                                             </div>
                                                         </div>
-                                                    </>
-                                                )}
-                                            </div>
-
-                                            <div>
-                                                <Tooltip placement="top" overlay="Delete">
-                                                    <Trash2 />
-                                                </Tooltip>
+                                                        <p className="card-text">{client.description}</p>
+                                                        <div className="float-end text-muted small">{fDate(client.created_at)}</div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="float-end text-muted small">Jan 9th 2019 7:00 AM</div>
-                                    <h4 className="card-title text-muted">Title</h4>
-                                    <p className="card-text">
-                                        Welcome to the campus, introduction and get started with the tour.
-                                    </p>
-                                    <div>
-                                        <img src="" alt="" />
-                                    </div>
+
+                                    {index % 2 === 1 ? <div className="col-sm">{}</div> : null}
                                 </div>
-                            </div>
+                            ))}
+
+
                         </div>
                     </div>
-                    {/*/row*/}
-                    {/* timeline item 2 */}
-                    <div className="row g-0">
-                        <div className="col-sm py-2">
-                            <div className="card border-primary shadow radius-15">
-                                <div className="card-body">
-                                    <div className="float-end text-primary small">
-                                        Jan 10th 2019 8:30 AM
-                                    </div>
-                                    <h4 className="card-title text-primary">Day 2 Sessions</h4>
-                                    <p className="card-text">
-                                        Sign-up for the lessons and speakers that coincide with your course
-                                        syllabus. Meet and greet with instructors.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-sm">{/*spacer*/}</div>
-                    </div>
-                    {/*/row*/}
-                    {/* timeline item 3 */}
-                    <div className="row g-0">
-                        <div className="col-sm">{/*spacer*/}</div>
-                        <div className="col-sm py-2">
-                            <div className="card radius-15">
-                                <div className="card-body">
-                                    <div className="float-end text-muted small">
-                                        Jan 11th 2019 8:30 AM
-                                    </div>
-                                    <h4 className="card-title">Day 3 Sessions</h4>
-                                    <p>
-                                        Shoreditch vegan artisan Helvetica. Tattooed Codeply Echo Park
-                                        Godard kogi, next level irony ennui twee squid fap selvage. Meggings
-                                        flannel Brooklyn literally small batch, mumblecore PBR try-hard kale
-                                        chips. Brooklyn vinyl lumbersexual bicycle rights, viral fap cronut
-                                        leggings squid chillwave pickled gentrify mustache.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {/*/row*/}
-                    {/* timeline item 4 */}
-                    <div className="row g-0">
-                        <div className="col-sm py-2">
-                            <div className="card radius-15">
-                                <div className="card-body">
-                                    <div className="float-end text-muted small">
-                                        Jan 12th 2019 11:30 AM
-                                    </div>
-                                    <h4 className="card-title">Day 4 Wrap-up</h4>
-                                    <p>
-                                        Join us for lunch in Bootsy's cafe across from the Campus Center.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-sm">{/*spacer*/}</div>
-                    </div>
-                    {/*/row*/}
                 </div>
+
+
+
 
             </div>
         </div>

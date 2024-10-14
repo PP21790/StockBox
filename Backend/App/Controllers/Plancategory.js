@@ -104,6 +104,9 @@ class Plancategory {
             title: 1 // Only show the service titles
           }
         }
+      },
+      {
+        $sort: { created_at: -1 } // Sort by created_at in descending order
       }
     ]);
 

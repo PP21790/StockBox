@@ -198,7 +198,7 @@ const Blogs = () => {
         try {
             const result = await Swal.fire({
                 title: 'Are you sure?',
-                text: 'Do you want to delete this ? This action cannot be undone.',
+                text: 'Do you want to delete this blogs ? This action cannot be undone.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, delete it!',
@@ -210,7 +210,7 @@ const Blogs = () => {
                 if (response.status) {
                     Swal.fire({
                         title: 'Deleted!',
-                        text: 'The staff has been successfully deleted.',
+                        text: 'The Blogs has been successfully deleted.',
                         icon: 'success',
                         confirmButtonText: 'OK',
                     });
@@ -221,7 +221,7 @@ const Blogs = () => {
 
                 Swal.fire({
                     title: 'Cancelled',
-                    text: 'The staff deletion was cancelled.',
+                    text: 'The Blogs deletion was cancelled.',
                     icon: 'info',
                     confirmButtonText: 'OK',
                 });
@@ -229,7 +229,7 @@ const Blogs = () => {
         } catch (error) {
             Swal.fire({
                 title: 'Error!',
-                text: 'There was an error deleting the staff.',
+                text: 'There was an error deleting the Blogs.',
                 icon: 'error',
                 confirmButtonText: 'Try Again',
             });

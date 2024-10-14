@@ -2,6 +2,11 @@ const db = require("../Models");
 const upload = require('../Utils/multerHelper'); 
 const Signal_Modal = db.Signal;
 mongoose  = require('mongoose');
+const Clients_Modal = db.Clients;
+const { sendFCMNotification } = require('./Pushnotification'); // Adjust if necessary
+
+
+
 
 class Signal {
 
@@ -57,12 +62,41 @@ if (segment == "C") {
     
             await result.save();
     
-            return res.json({
-                status: true,
-                message: "Signal added successfully",
-                data: result,
-            });
-    
+           
+  
+            const clients = await Clients_Modal.find({ del: 0, ActiveStatus: 1 });
+
+            if (!clients || clients.length === 0) {
+              
+         
+        
+            // Iterate through clients and send notifications
+            const notificationTitle = 'Important Update';
+            const notificationBody = 'New Signal Added......';
+        
+            for (const client of clients) {
+              const deviceToken = client.devicetoken; // Adjust according to your token field name
+        
+              if (deviceToken) {
+                try {
+                  await sendFCMNotification(notificationTitle, notificationBody, deviceToken);
+                } catch (error) {
+                  console.error(`Failed to send notification to client with ID ${client._id}:`, error);
+                }
+              } else {
+                console.log(`No device token found for client with ID ${client._id}`);
+              }
+            }
+          }
+
+          return res.json({
+            status: true,
+            message: "Signal added successfully",
+            data: result,
+        });
+
+
+
         } catch (error) {
             // Enhanced error logging
             console.error("Error adding Signal:", error);
@@ -104,28 +138,30 @@ async getSignal(req, res) {
   try {
     const { from, to, service, stock } = req.query;
     // Set today's date and midnight time for filtering
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Set to midnight for accurate comparison
 
     // Default date range is today
-    const fromDate = from ? new Date(from) : today;
+    const fromDate = from ? new Date(from) : "";
     let toDate;
     if (to) {
       toDate = new Date(to);
       toDate.setHours(23, 59, 59, 999); // End of the specified date
-    } else {
-      toDate = new Date(today);
-      toDate.setHours(23, 59, 59, 999); // End of today
-    }
+    } 
 
 
 
     // Build the query object with dynamic filters
+
+    if(fromDate || toDate) {
     const query = {
       del: 0,
       created_at: { $gte: fromDate, $lt: toDate } // Date range filter
     };
-
+  }
+  else{
+    const query = {
+      del: 0
+    };
+  }
 
     if (service) {
       query.service = service; // Convert service ID to ObjectId
@@ -141,8 +177,8 @@ console.log(query);
     // Execute the query and populate service and stock details
    const result = await Signal_Modal.find(query)
       .populate({ path: 'service', select: 'title' }) // Populate only the title from service
-      .populate({ path: 'stock', select: 'title' }); 
-
+      .populate({ path: 'stock', select: 'title' })
+      .sort({ created_at: -1 }); // Sort in descending order
 
 
     

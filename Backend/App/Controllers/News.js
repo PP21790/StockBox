@@ -71,8 +71,8 @@ class NewsController {
 
 
         
-          
-            const news = await News_Modal.find({ del: false });
+           // const news = await News_Modal.find();
+            const news = await News_Modal.find({ del: false }).sort({created_at:-1});
 
             return res.status(200).json({
                 status: true,

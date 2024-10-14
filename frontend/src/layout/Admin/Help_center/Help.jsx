@@ -4,7 +4,7 @@ import { getHelpMessagelist } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import { Tooltip } from 'antd';
 import { Eye } from 'lucide-react';
-
+import { fDate } from '../../../Utils/Date_formate';
 
 
 
@@ -16,18 +16,17 @@ const Help = () => {
     const [searchInput, setSearchInput] = useState("");
 
 
-
     const getdemoclient = async () => {
         try {
             const response = await getHelpMessagelist(token);
             if (response.status) {
 
-                const filterdata =  response.data.filter((item) =>
+                const filterdata = response.data.filter((item) =>
                     searchInput === "" ||
                     item.clientDetails.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
-                    item.clientDetails.Email.toLowerCase().includes(searchInput.toLowerCase()) || 
+                    item.clientDetails.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
                     item.message.toLowerCase().includes(searchInput.toLowerCase()) ||
-                    item.subject.toLowerCase().includes(searchInput.toLowerCase()) 
+                    item.subject.toLowerCase().includes(searchInput.toLowerCase())
                 );
                 setClients(searchInput ? filterdata : response.data);
             }
@@ -37,15 +36,10 @@ const Help = () => {
     }
 
 
-
-
-
     useEffect(() => {
         getdemoclient();
 
     }, [searchInput]);
-
-
 
 
 
@@ -89,9 +83,9 @@ const Help = () => {
 
         {
             name: 'CreatedAt',
-            selector: row => row.created_at,
+            selector: row => fDate(row.created_at),
             sortable: true,
-            width: '146px',
+            width: '200px',
         },
         {
             name: 'Actions',
@@ -102,8 +96,8 @@ const Help = () => {
                             <Eye style={{ marginRight: "10px" }} />
                         </Tooltip>
                     </div>
-                   
-                  
+
+
                 </>
             ),
             ignoreRowClick: true,
@@ -118,7 +112,7 @@ const Help = () => {
 
     return (
         <div>
-            
+
 
             <div>
                 <div>

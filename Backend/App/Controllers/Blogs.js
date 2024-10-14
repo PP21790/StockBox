@@ -69,7 +69,7 @@ class BlogController {
     async getBlogs(req, res) {
         try {
 
-            const blogs = await Blogs_Modal.find({ del: false });
+            const blogs = await Blogs_Modal.find({ del: false }).sort({created_at:-1});
 
             return res.status(200).json({
                 status: true,

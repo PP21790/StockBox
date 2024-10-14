@@ -210,7 +210,7 @@ const Category = () => {
         try {
             const result = await Swal.fire({
                 title: 'Are you sure?',
-                text: 'Do you want to delete this staff member? This action cannot be undone.',
+                text: 'Do you want to delete this catrgory? This action cannot be undone.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, delete it!',
@@ -222,7 +222,7 @@ const Category = () => {
                 if (response.status) {
                     Swal.fire({
                         title: 'Deleted!',
-                        text: 'The staff has been successfully deleted.',
+                        text: 'The catrgory has been successfully deleted.',
                         icon: 'success',
                         confirmButtonText: 'OK',
                     });
@@ -233,7 +233,7 @@ const Category = () => {
 
                 Swal.fire({
                     title: 'Cancelled',
-                    text: 'The staff deletion was cancelled.',
+                    text: 'The catrgory deletion was cancelled.',
                     icon: 'info',
                     confirmButtonText: 'OK',
                 });
@@ -241,7 +241,7 @@ const Category = () => {
         } catch (error) {
             Swal.fire({
                 title: 'Error!',
-                text: 'There was an error deleting the staff.',
+                text: 'There was an error deleting the catrgory.',
                 icon: 'error',
                 confirmButtonText: 'Try Again',
             });
