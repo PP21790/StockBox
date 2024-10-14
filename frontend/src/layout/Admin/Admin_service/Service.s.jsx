@@ -310,7 +310,7 @@ const Service = () => {
             <div className="page-content">
 
                 <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                    <div className="breadcrumb-title pe-3">Service</div>
+                    <div className="breadcrumb-title pe-3">Segment</div>
                     <div className="ps-3">
                         <nav aria-label="breadcrumb">
                             <ol className="breadcrumb mb-0 p-0">
@@ -332,7 +332,7 @@ const Service = () => {
                                 <input
                                     type="text"
                                     className="form-control ps-5 radius-10"
-                                    placeholder="Search Order"
+                                    placeholder="Search Segment"
                                     onChange={(e) => setSearchInput(e.target.value)}
                                     value={searchInput}
                                 />
