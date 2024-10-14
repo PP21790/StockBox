@@ -1267,10 +1267,21 @@ async basicSetting(req, res) {
   try {
 
 
+    const protocol = req.protocol; // Will be 'http' or 'https'
+            const baseUrl = `${protocol}://${req.headers.host}`;
+
+
 
     const result = await BasicSetting_Modal.find({ _id: "66bb3c19542b26b6357bbf4f" })
     .select('freetrial website_title logo contact_number address refer_image receiver_earn refer_title sender_earn refer_description') 
     .exec();
+
+    if (result.length > 0) {
+      result[0].logo = `${baseUrl}/uploads/basicsetting/${result[0].logo}`;
+      result[0].refer_image = `${baseUrl}/uploads/basicsetting/${result[0].refer_image}`;
+  }
+
+
     return res.json({
       status: true,
       message: "details retrieved successfully",
