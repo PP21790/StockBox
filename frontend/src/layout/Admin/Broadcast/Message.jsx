@@ -391,7 +391,7 @@ const Message = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="page-content">
+                            <div className="page-content"> 
                                 <div className="">
                                     <div className="">
                                         <div className="container py-2">
