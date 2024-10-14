@@ -2,11 +2,11 @@
 const admin = require('firebase-admin');
 
 
-const serviceAccount = process.env.GOOGLE_SERVICE_ACCOUNT_KEY_PATH;
+// const serviceAccount = process.env.GOOGLE_SERVICE_ACCOUNT_KEY_PATH;
 // Path to your service account key JSON file
-// const serviceAccount = require('../../template/stockbox-15e55-firebase-adminsdk-1zz93-7b2ff8472b.json');
+const serviceAccount = require('../../template/stockbox-15e55-firebase-adminsdk-1zz93-7b2ff8472b.json');
 
-console.log('aaaaa',serviceAccount);
+// console.log('aaaaa',serviceAccount);
 // Initialize Firebase Admin SDK
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
