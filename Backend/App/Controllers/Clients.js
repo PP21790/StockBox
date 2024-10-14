@@ -158,7 +158,7 @@ class Clients {
 
     //  const result = await Clients_Modal.find()
    // const result = await Clients_Modal.find({ del: 0 });
-    const result = await Clients_Modal.find({ del: 0 }).sort({ _id: -1 });
+    const result = await Clients_Modal.find({ del: 0 }).sort({ created_at: -1 });
       return res.json({
         status: true,
         message: "get",
@@ -453,7 +453,7 @@ class Clients {
       const { } = req.body;
 
     //  const result = await Clients_Modal.find()
-    const result = await Payout_Modal.find({ del: 0 });
+    const result = await Payout_Modal.find({ del: 0 }).sort({ created_at: -1 });
 
       return res.json({
         status: true,
@@ -490,6 +490,9 @@ class Clients {
                     path: '$clientDetails',
                     preserveNullAndEmptyArrays: true // Optional
                 }
+            },
+            {
+              $sort: { created_at: -1 } // Sort by created_at in descending order
             }
         ]);
 
@@ -575,6 +578,9 @@ async helpdeskList(req, res) {
                   path: '$clientDetails',
                   preserveNullAndEmptyArrays: true // Optional
               }
+          }, 
+          {
+            $sort: { created_at: -1 } // Sort by created_at in descending order
           }
       ]);
 
@@ -658,6 +664,9 @@ async  myPlan(req, res) {
   },
   {
     $unwind: '$planDetails' // Optional: Unwind the result if you expect only one matching plan per subscription
+  },
+  {
+    $sort: { created_at: -1 } // Sort by created_at in descending order
   }
 ]);
 
@@ -672,11 +681,6 @@ async  myPlan(req, res) {
     return res.status(500).json({ status: false, message: 'Server error', data: [] });
   }
 }
-
-
-
-
-
 
 
 

@@ -20,6 +20,11 @@ const Clients_Modal = db.Clients;
 const Freetrial_Modal = db.Freetrial;
 const Broadcast_Modal = db.Broadcast;
 const Order_Modal = db.Order;
+const { sendFCMNotification } = require('../../Controllers/Pushnotification'); // Import from controllers folder
+
+
+
+
 
 
 mongoose  = require('mongoose');
@@ -349,7 +354,7 @@ async getallPlan(req, res) {
    // Controller function to add a new plan subscription
    async addPlanSubscription(req, res) {
     try {
-      const { plan_id, client_id, price, discount } = req.body;
+      const { plan_id, client_id, price, discount,orderid } = req.body;
   
       // Validate input
       if (!plan_id || !client_id) {
@@ -447,6 +452,7 @@ async getallPlan(req, res) {
         discount: discount,
         plan_start: start,
         plan_end: end,
+        orderid:orderid
       });
   
       // Save the subscription
@@ -1260,11 +1266,16 @@ async myFreetrial(req, res) {
 
 async basicSetting(req, res) {
   try {
+
+
+    const title = 'Hello!';
+const body = 'This is a test notification.';
+const response = await sendFCMNotification(title, body ,"eQdqk4rsS2-KnkKkvVtQz1:APA91bGcHKzFVzAl58YATdnvjWQrX9kkSI10WrH0VtbVUbBxJKTeEdagKWk1e__kHnMTPZsKVxGgbFj_9tfitTAJ581P6oYBELm0ifuBDm7PGmqhTqBL_zkMMxTxo3tbFeLoyOxPegWA");
+console.log('Notification Response:', response);
    
     const result = await BasicSetting_Modal.find({ _id: "66bb3c19542b26b6357bbf4f" })
-    .select('freetrial website_title logo contact_number address') // Space-separated field names
+    .select('freetrial website_title logo contact_number address refer_image receiver_earn refer_title sender_earn refer_description') 
     .exec();
-
     return res.json({
       status: true,
       message: "details retrieved successfully",
@@ -1276,6 +1287,139 @@ async basicSetting(req, res) {
     return res.status(500).json({ status: false, message: 'Server error', data: [] });
   }
 }
+
+
+async pastPerformances(req, res) {
+  try {
+    // Define fixed service IDs
+    const serviceIds = [
+      '66d2c3bebf7e6dc53ed07626', // Replace with actual service IDs
+      '66dfede64a88602fbbca9b72',
+      '66dfeef84a88602fbbca9b79'
+    ].map(id => new mongoose.Types.ObjectId(id)); // Convert to ObjectId
+
+    // Query to find signals based on the service IDs
+    const signals = await Signal_Modal.find({
+      del: 0,
+      close_status: true,
+      service: { $in: serviceIds } // Match any of the services
+    });
+
+    // Group signals by service ID
+    const groupedSignals = signals.reduce((acc, signal) => {
+      const serviceId = signal.service.toString();
+      if (!acc[serviceId]) {
+        acc[serviceId] = [];
+      }
+      acc[serviceId].push(signal);
+      return acc;
+    }, {});
+
+    const results = {};
+    
+    // Process each service
+    for (const serviceId of serviceIds) {
+      const serviceIdStr = serviceId.toString();
+      const serviceSignals = groupedSignals[serviceIdStr] || [];
+      const count = serviceSignals.length;
+
+      if (count === 0) {
+        results[serviceIdStr] = {
+          status: false,
+          message: "No signals found"
+        };
+        continue;
+      }
+
+      let totalProfit = 0;
+      let totalLoss = 0;
+      let profitCount = 0;
+      let lossCount = 0;
+      let avgreturnpermonth = 0;
+
+      const [firstSignal, lastSignal] = await Promise.all([
+        Signal_Modal.findOne({ del: 0, close_status: true, service: serviceId }).sort({ created_at: 1 }),
+        Signal_Modal.findOne({ del: 0, close_status: true, service: serviceId }).sort({ created_at: -1 })
+      ]);
+
+      if (!firstSignal || !lastSignal) {
+        results[serviceIdStr] = {
+          status: false,
+          message: "No signals found"
+        };
+        continue;
+      }
+
+      const firstCreatedAt = firstSignal.created_at;
+      const lastCreatedAt = lastSignal.created_at;
+
+      const startYear = firstCreatedAt.getFullYear();
+      const startMonth = firstCreatedAt.getMonth();
+      const endYear = lastCreatedAt.getFullYear();
+      const endMonth = lastCreatedAt.getMonth();
+
+      const yearDifference = endYear - startYear;
+      const monthDifference = endMonth - startMonth;
+      const monthsBetween = yearDifference * 12 + monthDifference;
+
+      serviceSignals.forEach(signal => {
+        const entryPrice = parseFloat(signal.price); // Entry price
+        const exitPrice = parseFloat(signal.closeprice); // Exit price
+
+        if (!isNaN(entryPrice) && !isNaN(exitPrice)) {
+          const profitOrLoss = exitPrice - entryPrice;
+
+          if (profitOrLoss >= 0) {
+            totalProfit += profitOrLoss;
+            profitCount++;
+          } else {
+            totalLoss += Math.abs(profitOrLoss);
+            lossCount++;
+          }
+        }
+      });
+
+      const accuracy = (profitCount / count) * 100;
+      const avgreturnpertrade = (totalProfit - totalLoss) / count;
+
+      if (monthsBetween > 0) {
+        avgreturnpermonth = (totalProfit - totalLoss) / monthsBetween;
+      } else {
+        avgreturnpermonth = totalProfit - totalLoss;
+      }
+
+      results[serviceIdStr] = {
+        status: true,
+        message: "Past performance data fetched successfully",
+        data: {
+          count,
+          totalProfit,
+          totalLoss,
+          profitCount,
+          lossCount,
+          accuracy,
+          avgreturnpertrade,
+          avgreturnpermonth
+        }
+      };
+    }
+
+    return res.json({
+      status: true,
+      results
+    });
+
+  } catch (error) {
+    console.error("Error fetching signal details:", error);
+
+    return res.status(500).json({
+      status: false,
+      message: "Server error",
+      error: error.message
+    });
+  }
+}
+
 
 
 

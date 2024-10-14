@@ -541,6 +541,9 @@ async  addPlanSubscription(req, res) {
             clientName: '$clientDetails.FullName', // Assuming the client's name is stored in the 'name' field
             // Include other fields you want in the result
           }
+        },
+        {
+          $sort: { created_at: -1 } // Sort by created_at in descending order
         }
       ]);
   

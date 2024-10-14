@@ -41,6 +41,10 @@ const PlanSubscriptionSchema = new Schema({
         enum: ['active', 'inactive', 'expired'], // Example statuses
         default: 'active'
     },
+    orderid: {
+        type: String,
+        default: null
+    },
     del: {
         type: Boolean,
         default: false // Indicates whether the subscription is marked as deleted
