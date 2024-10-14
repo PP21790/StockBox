@@ -20,7 +20,6 @@ const Clients_Modal = db.Clients;
 const Freetrial_Modal = db.Freetrial;
 const Broadcast_Modal = db.Broadcast;
 const Order_Modal = db.Order;
-const { sendFCMNotification } = require('../../Controllers/Pushnotification'); // Import from controllers folder
 
 
 
@@ -1268,11 +1267,7 @@ async basicSetting(req, res) {
   try {
 
 
-    const title = 'Hello!';
-const body = 'This is a test notification.';
-const response = await sendFCMNotification(title, body ,"eQdqk4rsS2-KnkKkvVtQz1:APA91bGcHKzFVzAl58YATdnvjWQrX9kkSI10WrH0VtbVUbBxJKTeEdagKWk1e__kHnMTPZsKVxGgbFj_9tfitTAJ581P6oYBELm0ifuBDm7PGmqhTqBL_zkMMxTxo3tbFeLoyOxPegWA");
-console.log('Notification Response:', response);
-   
+
     const result = await BasicSetting_Modal.find({ _id: "66bb3c19542b26b6357bbf4f" })
     .select('freetrial website_title logo contact_number address refer_image receiver_earn refer_title sender_earn refer_description') 
     .exec();
