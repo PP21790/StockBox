@@ -409,11 +409,8 @@ const Message = () => {
                                                             className="col-auto text-center flex-column d-none d-sm-flex"
                                                             style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
                                                         >
-                                                            <div className="row h-50" style={{ height: "50%" }}>
-                                                                <div className="col">&nbsp;</div>
-                                                                <div className="col">&nbsp;</div>
-                                                            </div>
-                                                            <h5 className="m-2">
+
+                                                            {/* <h5 className="m-2">
                                                                 <span
                                                                     className="badge rounded-pill bg-light border"
                                                                     style={{
@@ -424,13 +421,13 @@ const Message = () => {
                                                                 >
                                                                     {item.badgeContent || "\u00A0"}
                                                                 </span>
-                                                            </h5>
-                                                            <div className="row h-50" style={{ height: "50%" }}>
+                                                            </h5> */}
+                                                            {/* <div className="row h-50" style={{ height: "50%" }}>
                                                                 <div className="col border-end" style={{ borderRight: "1px solid #dee2e6" }}>
                                                                     &nbsp;
                                                                 </div>
                                                                 <div className="col">&nbsp;</div>
-                                                            </div>
+                                                            </div> */}
                                                         </div>
 
                                                         <div className="col py-2">
@@ -462,9 +459,9 @@ const Message = () => {
                                                                         </span>
                                                                     </h4>
 
-                                                                    <span> Subject: {item.subject}</span>
+                                                                    <span><strong> Subject:</strong> {item.subject}</span>
                                                                     <p className="card-text" title={item.message}>
-                                                                        Message: {item.message.length > 30 ? `${item.message.substring(0, 30)}...` : item.message}
+                                                                        <strong> Message: </strong> {item.message.length > 30 ? `${item.message.substring(0, 30)}...` : item.message}
                                                                     </p>
                                                                     <button
                                                                         className="btn btn-sm btn-primary"
@@ -567,7 +564,7 @@ const Message = () => {
                                         </div>
                                         <div className="col-md-12">
                                             <label htmlFor="category">Message</label>
-                                            <input
+                                            <textarea
                                                 className="form-control mb-2"
                                                 type="text"
                                                 placeholder="Enter Category Title"
