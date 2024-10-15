@@ -140,7 +140,14 @@ async getSignal(req, res) {
     // Set today's date and midnight time for filtering
 
     // Default date range is today
-    const fromDate = from ? new Date(from) : "";
+ 
+
+
+    let fromDate;
+    if (from) {
+      fromDate = new Date(from) ;
+    } 
+
     let toDate;
     if (to) {
       toDate = new Date(to);
@@ -148,20 +155,14 @@ async getSignal(req, res) {
     } 
 
 
+    
 
     // Build the query object with dynamic filters
+    let query = { del: 0 }; // Default query
 
-    if(fromDate || toDate) {
-    const query = {
-      del: 0,
-      created_at: { $gte: fromDate, $lt: toDate } // Date range filter
-    };
-  }
-  else{
-    const query = {
-      del: 0
-    };
-  }
+    if (fromDate && toDate) {
+      query.created_at = { $gte: fromDate, $lt: toDate };
+    }
 
     if (service) {
       query.service = service; // Convert service ID to ObjectId
@@ -173,7 +174,6 @@ async getSignal(req, res) {
 
     // Log the query for debugging
 
-console.log(query);
     // Execute the query and populate service and stock details
    const result = await Signal_Modal.find(query)
       .populate({ path: 'service', select: 'title' }) // Populate only the title from service
