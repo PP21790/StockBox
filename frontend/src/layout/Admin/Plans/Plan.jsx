@@ -4,17 +4,25 @@ import { getplanlist, getcategoryplan, Deleteplan, changeplanstatus } from '../.
 import { fDateTime } from '../../../Utils/Date_formate';
 import Swal from 'sweetalert2';
 
+
+
+
 const Plan = () => {
+
     const [clients, setClients] = useState([]);
     const [category, setCategory] = useState([]);
     const [selectedCategoryId, setSelectedCategoryId] = useState(null);
     const token = localStorage.getItem('token');
+
+
 
     useEffect(() => {
         getAdminclient();
         getcategoryplanlist();
     }, []);
 
+
+    
     const getcategoryplanlist = async () => {
         try {
             const response = await getcategoryplan(token);

@@ -11,21 +11,21 @@ import { Tooltip } from 'antd';
 const Banner = () => {
 
 
-
     const navigate = useNavigate();
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
     const [searchInput, setSearchInput] = useState("");
+
+
     const [updatetitle, setUpdatetitle] = useState({
         title: "",
         id: "",
         description: "",
         image: "",
+        hyperlink:""
 
     });
-
-
 
 
     const [title, setTitle] = useState({
@@ -33,6 +33,7 @@ const Banner = () => {
         description: "",
         image: "",
         add_by: "",
+        hyperlink:""
     });
 
     const token = localStorage.getItem('token');

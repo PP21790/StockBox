@@ -57,7 +57,7 @@ const Client = () => {
     });
 
 
-    console.log("updatetitle", updatetitle)
+    
 
 
     const handleTabChange = (index) => {
