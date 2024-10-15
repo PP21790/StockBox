@@ -27,7 +27,7 @@ class BannerController {
             });
     
             // After the upload is successful, proceed with the rest of the logic
-            const { add_by } = req.body;
+            const { add_by, hyperlink } = req.body;
 
            
               if (!add_by) {
@@ -40,6 +40,7 @@ class BannerController {
             // Create a new News record
             const result = new Banner_Modal({
                 image: image,
+                hyperlink:hyperlink,
                 add_by:add_by,
             });
             
@@ -149,7 +150,7 @@ class BannerController {
             });
     
 
-            const { id } = req.body;
+            const { id, hyperlink } = req.body;
           
 
             if (!id) {
@@ -174,6 +175,7 @@ class BannerController {
                 id,
                 {
                     image,
+                    hyperlink,
                 },
                 { new: true, runValidators: true } // Options: return the updated document and run validators
             );

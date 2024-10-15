@@ -390,8 +390,12 @@ async  addPlanSubscription(req, res) {
       const { plan_id, client_id, price } = req.body;
   
       // Validate input
-      if (!plan_id || !client_id) {
+      if (!plan_id) {
         return res.status(400).json({ status: false, message: 'Please Select the Plan' });
+      }
+
+      if (!client_id) {
+        return res.status(400).json({ status: false, message: 'Client Not Found' });
       }
   
       // Fetch the plan and populate the category
