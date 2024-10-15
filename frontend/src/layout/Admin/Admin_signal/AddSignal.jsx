@@ -48,7 +48,7 @@ const AddSignal = () => {
 
 
 
-  
+
 
   const formik = useFormik({
     initialValues: {
@@ -65,20 +65,17 @@ const AddSignal = () => {
       callduration: '',
       calltype: '',
       expiry: '',
-      optiontype:'',
-      strikeprice:'',
+      optiontype: '',
+      strikeprice: '',
 
     },
     validate: (values) => {
-      //  console.log("values",values)
       const errors = {};
-      //  console.log("errors",errors)
-           
       if (!values.segment) errors.segment = 'Please select a segment';
-      if (!values.stock ) errors.stock = 'Please select a stock';
+      if (!values.stock) errors.stock = 'Please select a stock';
       if (!values.price) errors.price = 'Please select a price';
-       
-       if(values.calltype === "BUY"){
+
+      if (values.calltype === "BUY") {
 
         if (!values.tag1) errors.tag1 = 'Please enter Traget1';
         else if (values.price && values.tag1 && values.price >= values.tag1) {
@@ -91,13 +88,13 @@ const AddSignal = () => {
 
         if (values.tag3 && values.tag2 && values.tag2 >= values.tag3) {
           errors.tag3 = "Please Enter greater Target2"
-       }
-       
-       if(values.price && values.price <= values.stoploss ){
-        errors.stoploss = "Please Enter Less Than Entry Price"
-     }
-    
-       }else if(values.calltype === "SELL"){
+        }
+
+        if (values.price && values.price <= values.stoploss) {
+          errors.stoploss = "Please Enter Less Than Entry Price"
+        }
+
+      } else if (values.calltype === "SELL") {
 
         if (values.price && values.price <= values.stoploss) {
           errors.stoploss = "Please Enter Less Than Entry Price"
@@ -430,6 +427,8 @@ const AddSignal = () => {
     borderBottom: '1px solid #ddd',
   };
 
+
+
   return (
     <div style={{ marginTop: '100px' }}>
       <DynamicForm
@@ -455,7 +454,7 @@ const AddSignal = () => {
                 style={{ cursor: "pointer" }}
               />
 
-              {searchItem && stockList.length > 0 && showDropdown ? (
+              { searchItem && stockList.length > 0 && showDropdown ? (
                 <div className="dropdown-list" style={dropdownStyles}>
                   {stockList
                     .filter((company) =>
@@ -477,6 +476,14 @@ const AddSignal = () => {
                   }
                 </div>
               ) : null}
+
+              {formik.touched.stock &&
+                formik.errors.stock ? (
+                <div style={{ color: "red" }}>
+                  {formik.errors.stock}
+                </div>
+              ) : null}
+
             </div>
           </div>
         }
