@@ -407,7 +407,7 @@ const Message = () => {
                                                     <div className="row" key={index}>
 
                                                         <div className="col py-2">
-                                                            <div className="card" style={{ borderRadius: "10px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
+                                                            <div className="card" style={{ borderRadius: "10px" }}>
                                                                 <div className="card-body">
 
                                                                     <div className="float-end text-muted">
