@@ -16,7 +16,7 @@ const menuItems = [
     ]
   },
   { title: 'Staff', icon: 'bx-user-plus', link: '/admin/staff' },
-  
+
   {
     title: 'Signal',
     icon: 'bx-wifi-2',
@@ -57,17 +57,17 @@ const menuItems = [
 
 
 const Sidebar = ({ onToggleClick }) => {
-  const [activeIndex, setActiveIndex] = useState(null); 
+  const [activeIndex, setActiveIndex] = useState(null);
   const [activeDropdown, setActiveDropdown] = useState(null);
 
   const handleItemClick = (index) => () => {
-    setActiveIndex(index); 
+    setActiveIndex(index);
   };
 
   const toggleDropdown = (dropdownName, index) => (e) => {
     e.preventDefault();
     setActiveDropdown(activeDropdown === dropdownName ? null : dropdownName);
-    setActiveIndex(index); 
+    setActiveIndex(index);
   };
 
   return (
@@ -91,13 +91,12 @@ const Sidebar = ({ onToggleClick }) => {
               </div>
             </div>
 
-            {/* Dynamic Navigation */}
             <ul className="metismenu mm-show" id="menu">
               {menuItems.map((item, index) => (
                 <li
                   key={index}
                   className={
-                    activeIndex === index ? 'mm-active' : '' // Add mm-active if the item is active
+                    activeIndex === index ? 'mm-active' : ''
                   }
                 >
                   {item.subMenu ? (
