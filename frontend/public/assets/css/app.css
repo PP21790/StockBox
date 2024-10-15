@@ -5094,7 +5094,7 @@ input::placeholder {
 	line-height: 100px;
 	font-family: sans-serif;
 	text-transform: uppercase;
-	animation: animate-pulse 3s linear infinite;
+	
 	cursor: pointer
 }
 
@@ -5122,7 +5122,7 @@ input::placeholder {
 	line-height: 100px;
 	font-family: sans-serif;
 	text-transform: uppercase;
-	animation: animate-pulse 3s linear infinite;
+
 	cursor: pointer
 }
 
@@ -5185,7 +5185,7 @@ label {
 	line-height: 100px;
 	font-family: sans-serif;
 	text-transform: uppercase;
-	animation: animate-pulse 3s linear infinite;
+	
 	cursor: pointer
 }
 
@@ -5208,7 +5208,7 @@ label {
 	line-height: 100px;
 	font-family: sans-serif;
 	text-transform: uppercase;
-	animation: animate-pulse 3s linear infinite;
+
 	cursor: pointer
 }
 
@@ -5227,7 +5227,7 @@ label {
 	line-height: 100px;
 	font-family: sans-serif;
 	text-transform: uppercase;
-	animation: animate-pulse 3s linear infinite;
+
 	cursor: pointer
 }
 
@@ -5241,7 +5241,7 @@ label {
 	line-height: 100px;
 	font-family: sans-serif;
 	text-transform: uppercase;
-	animation: animate-pulse 3s linear infinite;
+	
 	cursor: pointer
 }
 
@@ -5255,7 +5255,7 @@ label {
 	line-height: 100px;
 	font-family: sans-serif;
 	text-transform: uppercase;
-	animation: animate-pulse 3s linear infinite;
+	
 	cursor: pointer
 }
 
@@ -5269,7 +5269,7 @@ label {
 	line-height: 100px;
 	font-family: sans-serif;
 	text-transform: uppercase;
-	animation: animate-pulse 3s linear infinite;
+	
 	cursor: pointer
 }
 

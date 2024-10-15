@@ -139,13 +139,14 @@ const Condition = () => {
                 <hr />
                 <div className="row">
                     {clients.map((client, index) => (
-                        <div className="col-md-6 col-lg-4" key={index}>
+                        <div className="col-md-6 col-lg-12" key={index}>
                             <div className="mb-4 card radius-15">
                                 <div className="card-body p-4 position-relative">
                                     <div className='p-4 border radius-15'>
                                         <div className='d-flex justify-content-between align-items-center'>
                                             <div>
-
+                                                <h5 class="m-0">
+                                                    {client.title}</h5>
                                             </div>
                                             <div>
 
@@ -156,10 +157,12 @@ const Condition = () => {
                                                 }} />
 
                                             </div>
-                                        </div>
 
-                                        <form className="row g-3 mt-3">
-                                            <div className="col-md-12">
+                                        </div>
+                                        <hr />
+
+                                        <form className="row g-3">
+                                            {/* <div className="col-md-12">
                                                 <label htmlFor={`mailType${index}`} className="form-label">
                                                     Title
                                                 </label>
@@ -169,7 +172,7 @@ const Condition = () => {
                                                     id={`mailType${index}`}
                                                     value={client.title}
                                                 />
-                                            </div>
+                                            </div> */}
 
                                             <div className="col-md-12">
                                                 <label htmlFor={`mailContent${index}`} className="form-label">
@@ -228,7 +231,7 @@ const Condition = () => {
                                                 
                                             />
                                         </div> */}
-                                        <div className="col-md-12">
+                                        {/* <div className="col-md-12">
                                             <label htmlFor="subject" className="form-label">
                                                 Title
                                             </label>
@@ -240,7 +243,7 @@ const Condition = () => {
                                                 onChange={(e) => updateServiceTitle({ title: e.target.value })}
 
                                             />
-                                        </div>
+                                        </div> */}
 
                                         <div className="col-md-12">
                                             <label htmlFor="mailContent" className="form-label">
