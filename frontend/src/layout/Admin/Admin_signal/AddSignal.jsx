@@ -67,6 +67,8 @@ const AddSignal = () => {
       expiry: '',
       optiontype: '',
       strikeprice: '',
+     
+      
 
     },
     validate: (values) => {
@@ -74,7 +76,7 @@ const AddSignal = () => {
       if (!values.segment) errors.segment = 'Please select a segment';
       if (!values.stock) errors.stock = 'Please select a stock';
       if (!values.price) errors.price = 'Please select a price';
-
+      
       if (values.calltype === "BUY") {
 
         if (!values.tag1) errors.tag1 = 'Please enter Traget1';
@@ -153,7 +155,6 @@ const AddSignal = () => {
         optiontype: values.optiontype,
         strikeprice: values.strikeprice,
       };
-
       try {
         const response = await AddSignalByAdmin(req, token);
         if (response.status) {
@@ -219,8 +220,8 @@ const AddSignal = () => {
 
   useEffect(() => {
     const fetchStockData = async () => {
-      const data = { segment: formik.values.segment, symbol: searchItem };
 
+      const data = { segment: formik.values.segment, symbol: searchItem };
       try {
         const stockResponse = await getstockbyservice(data);
         if (stockResponse.status) {
@@ -280,8 +281,6 @@ const AddSignal = () => {
       })),
       showWhen: (values) => values.segment !== "C",
     },
-
-
     {
       name: 'optiontype',
       label: 'Option Type',
