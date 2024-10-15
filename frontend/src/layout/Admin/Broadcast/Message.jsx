@@ -434,12 +434,14 @@ const Message = () => {
                                                                                     matchedService?.segment === "F" ? " FUTURE" : ""}
                                                                         </span>
                                                                     </h4>
-
-                                                                    <span><strong> Subject:</strong> {item.subject}</span>
+                                                                    <hr />
+                                                                    <p><strong> Subject:</strong> {item.subject}</p>
                                                                     <p className="card-text" >
                                                                         <strong> Message: </strong> {item.message}
                                                                     </p>
-                                                                    <button
+                                                                    <p> <strong>Created At:</strong> {fDate(item.created_at)}</p>
+                                                                    <p> <strong>Updated At:</strong> {fDate(item.updated_at)}</p>
+                                                                    {/* <button
                                                                         className="btn btn-sm btn-primary"
                                                                         type="button"
                                                                         data-bs-target={`#${item._id}`}
@@ -458,7 +460,7 @@ const Message = () => {
                                                                             <div>Created At: {fDate(item.created_at)}</div>
                                                                             <div>Updated At: {fDate(item.updated_at)}</div>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> */}
                                                                 </div>
                                                             </div>
                                                         </div>
