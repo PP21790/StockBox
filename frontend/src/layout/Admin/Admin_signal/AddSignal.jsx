@@ -70,11 +70,12 @@ const AddSignal = () => {
 
     },
     validate: (values) => {
-
+      //  console.log("values",values)
       const errors = {};
-
+      //  console.log("errors",errors)
+           
       if (!values.segment) errors.segment = 'Please select a segment';
-      if (!values.stock) errors.stock = 'Please select a stock';
+      if (!values.stock ) errors.stock = 'Please select a stock';
       if (!values.price) errors.price = 'Please select a price';
        
        if(values.calltype === "BUY"){
@@ -446,8 +447,8 @@ const AddSignal = () => {
               <input
                 type="text"
                 className="form-control"
-                placeholder="Search Company"
-                name="SearchCompany"
+                placeholder="Search stock"
+                name="stock"
                 onChange={(e) => setSearchItem(e.target.value)}
                 value={searchItem}
                 onClick={() => setShowDropdown(true)}

@@ -126,7 +126,7 @@ const Closesignal = () => {
             name: 'S.No',
             selector: (row, index) => index + 1,
             sortable: false,
-            width: '70px',
+            width: '100px',
         },
         {
             name: 'Segment',
@@ -144,13 +144,13 @@ const Closesignal = () => {
             name: 'Entry Type',
             selector: row => row.close_status == true ? "sell" : "buy",
             sortable: true,
-            width: '132px',
+            width: '200px',
         },
         {
             name: 'Entry Price',
             selector: row => row.price,
             sortable: true,
-            width: '132px',
+            width: '200px',
         },
 
         {
