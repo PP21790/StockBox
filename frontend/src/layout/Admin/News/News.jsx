@@ -478,7 +478,7 @@ const News = () => {
                             {clients.map((client, index) => (
                                 <div className="row g-0" key={index}>
                                     {/* Conditional spacer */}
-                                    {index % 2 === 0 ? <div className="col-sm">{/*spacer*/}</div> : null}
+
 
 
 
@@ -489,10 +489,35 @@ const News = () => {
                                         <div className={`card ${client.borderClass || 'radius-15'} d-flex justify-content-center align-items-center`} >
 
                                             <div className="card-body">
+                                                <div className="d-flex justify-content-between align-items-start">
 
+                                                    <h4 className="card-title text-muted mb-0">{client.title}</h4>
+
+                                                    <div>
+
+                                                        <Tooltip placement="top" overlay="Update">
+                                                            <SquarePen
+                                                                onClick={() => {
+                                                                    setModel(true);
+                                                                    setServiceid(client);
+                                                                    setUpdatetitle({
+                                                                        title: client.title,
+                                                                        id: client._id,
+                                                                        description: client.description,
+                                                                        image: client.image
+                                                                    });
+                                                                }}
+                                                            />
+                                                        </Tooltip>
+                                                        <Tooltip placement="top" overlay="Delete">
+                                                            <Trash2 onClick={() => DeleteService(client._id)} />
+                                                        </Tooltip>
+                                                    </div>
+                                                </div>
+                                                <hr />
                                                 <div className="row">
                                                     {/* Image on the left side */}
-                                                    <div className="col-md-4">
+                                                    <div className="col-md-2" style={{ borderRight: "1px solid #D0D0D0" }}>
                                                         <img
                                                             src={`${image_baseurl}uploads/news/${client.image}`}
 
@@ -504,33 +529,9 @@ const News = () => {
                                                     </div>
 
 
-                                                    <div className="col-md-8">
+                                                    <div className="col-md-10">
 
-                                                        <div className="d-flex justify-content-between align-items-start mb-2">
-
-                                                            <h4 className="card-title text-muted">{client.title}</h4>
-
-                                                            <div>
-
-                                                                <Tooltip placement="top" overlay="Update">
-                                                                    <SquarePen
-                                                                        onClick={() => {
-                                                                            setModel(true);
-                                                                            setServiceid(client);
-                                                                            setUpdatetitle({
-                                                                                title: client.title,
-                                                                                id: client._id,
-                                                                                description: client.description,
-                                                                                image: client.image
-                                                                            });
-                                                                        }}
-                                                                    />
-                                                                </Tooltip>
-                                                                <Tooltip placement="top" overlay="Delete">
-                                                                    <Trash2 onClick={() => DeleteService(client._id)} />
-                                                                </Tooltip>
-                                                            </div>
-                                                        </div>
+                                                        <h5>Description:</h5>
                                                         <p className="card-text">{client.description}</p>
                                                         <div className="float-end text-muted small">{fDate(client.created_at)}</div>
                                                     </div>
@@ -539,7 +540,7 @@ const News = () => {
                                         </div>
                                     </div>
 
-                                    {index % 2 === 1 ? <div className="col-sm">{ }</div> : null}
+
                                 </div>
                             ))}
 
