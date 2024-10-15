@@ -1,104 +1,96 @@
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="x-apple-disable-message-reformatting">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Dhan</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Oswald:wght@700&family=Outfit:wght@400;500;600&family=Overpass&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Oswald:wght@700&family=Outfit:wght@400;500;600&family=Overpass:wght@400&display=swap" rel="stylesheet">
   <style type="text/css">
-    font-family: "Montserrat", sans-serif;
-font-family: "Oswald", sans-serif;
-font-family: "Outfit", sans-serif;
-font-family: "Overpass", sans-serif;
-
-
-     a,
-     a[href],
-     a:hover,
-     a:link,
-     a:visited {
-     font-family: "Lato", sans-serif;
-     text-decoration: none !important;
-     color: #0000EE;
-     }
-     .link {
-     text-decoration: underline !important;
-     }
-     p,
-     p:visited {
-     font-size: 14px;
-     line-height: 24px;
-     font-family: "Lato", sans-serif;
-     font-weight: 400;
-     text-decoration: none;
-     color: #000000;
-     }
-     h1 {
-     font-size: 22px;
-     line-height: 24px;
-     font-weight: normal;
-     text-decoration: none;
-     color: #000000;
-     }
-     .ExternalClass p,
-     .ExternalClass span,
-     .ExternalClass font,
-     .ExternalClass td {
-     line-height: 100%;
-     }
-     .ExternalClass {
-     width: 100%;
-     }
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f2f4f6;
+      color: #000000;
+      font-family: 'Montserrat', sans-serif;
+      text-align: center;
+    }
+    .container {
+      max-width: 600px;
+      width: 100%;
+      background-color: #fff;
+      border-radius: 30px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .header {
+      padding: 20px;
+      text-align: center;
+    }
+    .header img {
+      width: 150px;
+    }
+    .content {
+      padding: 40px 30px;
+      text-align: left;
+    }
+    .content p {
+      font-size: 16px;
+      line-height: 24px;
+      color: #3f3100;
+      margin: 0;
+    }
+    .footer {
+      background-color: #242A3B;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      color: #fff;
+    }
+    .footer img {
+      width: 100%;
+    }
+    .footer-text {
+      margin-left: 20px;
+    }
+    .footer-text p {
+      font-size: 13px;
+      line-height: 20px;
+      margin: 0;
+    }
+    .footer-text a {
+      color: #fff;
+      text-decoration: none;
+    }
+    @media screen and (max-width: 600px) {
+      .container {
+        width: 100%;
+      }
+      .content, .footer {
+        padding: 20px 10px;
+      }
+    }
   </style>
 </head>
-<body style="text-align: center; margin: 0; padding-top: 10px; padding-bottom: 10px; padding-left: 0; padding-right: 0; -webkit-text-size-adjust: 100%;background-color: #f2f4f6; color: #000000" align="center">
-  <div style="text-align: center;">
-     
-     <table align="center" style="text-align: center; vertical-align: top; width: 600px; max-width: 600px; background-color: #fff;border-top-left-radius: 30px;
-    border-top-right-radius: 30px;" width="600">
-        <tbody>
-           <tr>
-              <td style="width: 596px; vertical-align: top; text-align: center; padding-left: 24px; padding-right: 30px; padding-top: 20px; padding-bottom: 20px;" width="596">
-                 <img class="fullWidth" src="{{logo}}" width="150px"/>
-              </td>
-           </tr>
-        </tbody>
-     </table>
-	 
-	 <table align="center" style="text-align: center; vertical-align: top; width: 600px; max-width: 600px; background-color: #fff;" width="600">
-        <tbody>
-           <tr>
-              <td style="width: 560px; vertical-align: top; padding-left: 30px; padding-right: 15px; padding-top: 40px; padding-bottom: 40px; text-align: left;" width="252">
-                 <p style="font-size: 16px;
-                    line-height: 20px;
-                    font-weight: 400;
-                    text-decoration: none;
-                    color: #3f3100;
-                    ">{{body}}</p>
-              </td>
-           </tr>
-        </tbody>
-     </table>
-	
-     <table align="center" style="text-align: center; vertical-align: top; width: 600px; padding-bottom: 10px;padding-top: 10px;  max-width: 600px;background-color: #242A3B;" width="600">
-        <tbody>
-           <tr>
-              <td style="width: 25%; padding-left: 20px;
-    padding-right: 0px;">
-                 <img class="fullWidth" src="{{logo}}" width="100%"/>
-              </td>
-              <td style="width: 75%; vertical-align: top; padding-left: 24px; padding-right: 20px; padding-top: 15px;" width="596">
-                 <p style="font-size: 13px; line-height: 20px;  font-weight: 400; text-decoration: none; color: #fff; text-align: left; margin: 0;">You are receiving this email because your are registered with {{company_name}}.</p>
-                 <p style="font-size: 13px; line-height: 20px;  font-weight: 400; text-decoration: none; color: #fff; text-align: left;margin: 0;"><span style="text-decoration: none;"> Contact Us</span> |              
-                 <a href="#" style="color:#fff;text-decoration: none;">Privacy Policy</a></p>
-                 <p style="font-size: 13px; line-height: 20px;  font-weight: 400; text-decoration: none; color: #fff; text-align: left;margin: 0;">Copyright @ 2024 {{company_name}}.</p>
-              </td>
-           </tr>
-        </tbody>
-     </table>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="{{logo}}" alt="Company Logo" />
+    </div>
+    <div class="content">
+      <p>{{body}}</p>
+    </div>
+    <div class="footer">
+      <img src="{{logo}}" alt="Company Logo" width="100%" />
+      <div class="footer-text">
+        <p>You are receiving this email because you are registered with {{company_name}}.</p>
+        <p><span>Contact Us</span> | <a href="#" style="text-decoration: none;">Privacy Policy</a></p>
+        <p>Copyright © 2024 {{company_name}}.</p>
+      </div>
+    </div>
   </div>
 </body>
 </html>

@@ -1105,7 +1105,6 @@ async addFreeTrail(req, res) {
     // Validate input
 
 
-
     if (!client_id) {
       return res.status(400).json({ status: false, message: 'Missing required fields' });
     }
@@ -1121,13 +1120,12 @@ async addFreeTrail(req, res) {
       throw new Error('SMTP settings are not configured or are disabled');
     }
 
-
+    const freetrialDays = parseInt(settings.freetrial, 10); // or you can use +settings.freetrial
 
     const start = new Date();
     const end = new Date(start);
-    end.setDate(start.getDate() + settings.freetrial);  // Add 7 days to the start date
+    end.setDate(start.getDate() + freetrialDays);  // Add 7 days to the start date
     end.setHours(23, 59, 59, 999); 
-
 
 
     const existingPlan = await Planmanage.findOne({ clientid: client_id }).exec();

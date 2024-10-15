@@ -9,6 +9,11 @@ const BannerSchema = new Schema({
         trim: true,
         default: null
     },
+    hyperlink: {
+        type: String,
+        trim: true,
+        default: null
+    },
     status: {
         type: Boolean,
         default: true // assuming true means active and false means inactive

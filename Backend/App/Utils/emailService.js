@@ -23,7 +23,6 @@ async function createTransporter() {
         pass: settings.smtp_password,
       },
     });
-
     return transporter;
   } catch (error) {
     console.log('Error creating transporter:', error);
