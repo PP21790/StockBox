@@ -1474,6 +1474,7 @@ export async function Addbanner(data, token) {
     const formData = new FormData();
     formData.append('image', data.image);
     formData.append('add_by', data.add_by);
+    formData.append('hyperlink', data.hyperlink);
     try {
         const res = await axios.post(`${Config.base_url}banner/add`, formData, {
             headers: {
@@ -1497,6 +1498,7 @@ export async function UpdateBanner(data, token) {
     const formData = new FormData();
     formData.append('image', data.image);
     formData.append('id', data.id);
+    formData.append('hyperlink', data.hyperlink);
     try {
         const res = await axios.post(`${Config.base_url}banner/update`, formData, {
             headers: {
