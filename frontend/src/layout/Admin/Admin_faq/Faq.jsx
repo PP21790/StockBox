@@ -297,7 +297,8 @@ const Faq = () => {
                 <>
                     <div>
                         <Tooltip placement="top" overlay="View">
-                            <Eye style={{ marginRight: "10px" }} />
+                            <Eye style={{ marginRight: "10px" }} data-bs-toggle="modal"
+                                data-bs-target="#example1" />
                         </Tooltip>
                     </div>
                     <div>
@@ -313,7 +314,7 @@ const Faq = () => {
                     </div>
                     <div>
                         <Tooltip placement="top" overlay="Delete">
-                        <Trash2 onClick={() => DeleteFaq(row._id)} />
+                            <Trash2 onClick={() => DeleteFaq(row._id)} />
                         </Tooltip>
                     </div>
                 </>
@@ -549,6 +550,78 @@ const Faq = () => {
                         </div>
                     </div>
                 </div>
+            </div>
+            <div className="button-group">
+
+                <div
+                    className="modal fade"
+                    id="example1"
+                    tabIndex={-1}
+                    aria-labelledby="example1"
+                    aria-hidden="true"
+                >
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title" id="example1">
+                                    FAQ Details
+                                </h5>
+                                <button
+                                    type="button"
+                                    className="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                                />
+                            </div>
+                            <div className="modal-body">
+                                <ul>
+                                    <li>
+                                        <div className="row justify-content-between">
+                                            <div className="col-md-6">
+                                                <b>Title</b>
+                                            </div>
+                                            <div className="col-md-6">
+
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div className="row justify-content-between">
+                                            <div className="col-md-6">
+                                                <b>Discription</b>
+                                            </div>
+                                            <div className="col-md-6">
+
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div className="row justify-content-between">
+                                            <div className="col-md-6">
+                                                <b>Created At</b>
+                                            </div>
+                                            <div className="col-md-6">
+
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div className="row justify-content-between">
+                                            <div className="col-md-6">
+                                                <b>Updated At</b>
+                                            </div>
+                                            <div className="col-md-6">
+
+                                            </div>
+                                        </div>
+                                    </li>
+                                 
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     );

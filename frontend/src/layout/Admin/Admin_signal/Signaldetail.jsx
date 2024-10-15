@@ -59,7 +59,7 @@ const Signaldetail = () => {
                     <div className="col-md-6 d-flex justify-content-end">
                         <Link to="/admin/signal">
                             <Tooltip title="Back">
-                                <i className="lni lni-arrow-left-circle" style={{ fontSize: "2rem" }} />
+                                <i className="lni lni-arrow-left-circle" style={{ fontSize: "2rem", color: "#000" }} />
                             </Tooltip>
                         </Link>
                     </div>

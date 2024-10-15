@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Table from '../../../components/Table';
-import { Settings2, Eye, UserPen, Trash2 , Download } from 'lucide-react';
+import { Settings2, Eye, UserPen, Trash2, Download } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { FreeClientList, deleteClient, UpdateClientStatus, DeleteFreeClient} from '../../../Services/Admin';
+import { FreeClientList, deleteClient, UpdateClientStatus, DeleteFreeClient } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
 import { image_baseurl } from '../../../Utils/config';
 
@@ -192,15 +192,15 @@ const Freeclient = () => {
             name: 'Start Date',
             selector: row => row.startdate,
             sortable: true,
-            width: '146px',
+            width: '230px',
         },
         {
             name: 'End Start',
             selector: row => row.enddate,
             sortable: true,
-            width: '146px',
+            width: '230px',
         },
-        
+
         // {
         //     name: 'Active Status',
         //     selector: row => (
@@ -225,7 +225,7 @@ const Freeclient = () => {
             name: 'CreatedAt',
             selector: row => row.clientDetails.createdAt,
             sortable: true,
-            width: '146px',
+            width: '220px',
         },
         {
             name: 'Actions',
@@ -238,7 +238,7 @@ const Freeclient = () => {
                     </Tooltip>
                     <Tooltip title="delete">
                         <Trash2 onClick={() => DeleteClient(row._id)} />
-                          
+
                     </Tooltip>
                 </>
             ),
@@ -282,7 +282,7 @@ const Freeclient = () => {
                                             <i className="bx bx-search" />
                                         </span>
                                     </div>
-                                   
+
                                 </div>
 
                                 <Table

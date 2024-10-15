@@ -309,11 +309,13 @@ const Category = () => {
             name: 'Created At',
             selector: row => fDate(row.created_at),
             sortable: true,
+            width: '200px',
         },
         {
             name: 'Updated At',
             selector: row => fDate(row.updated_at),
             sortable: true,
+            width: '200px',
         },
 
         {

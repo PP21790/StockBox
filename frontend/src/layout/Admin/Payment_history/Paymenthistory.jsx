@@ -74,6 +74,7 @@ const History = () => {
             name: 'Name',
             selector: row => row.clientName,
             sortable: true,
+            width: '250px',
         },
 
         {
@@ -100,6 +101,7 @@ const History = () => {
             name: 'Plan Start',
             selector: row => fDate(row.planDetails.created_at),
             sortable: true,
+            width: '160px',
         },
         // {
         //     name: 'Plan End',
@@ -117,7 +119,9 @@ const History = () => {
                 <>
                     <div>
                         <Tooltip placement="top" overlay="View">
-                            <Eye />
+                            <Eye data-bs-toggle="modal"
+                                data-bs-target="#example"
+ />
                         </Tooltip>
                     </div>
 
@@ -181,6 +185,98 @@ const History = () => {
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div className="button-group">
+              
+                <div
+                    className="modal fade"
+                    id="example"
+                    tabIndex={-1}
+                    aria-labelledby="example"
+                    aria-hidden="true"
+                >
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title" id="example">
+                                    
+                                </h5>
+                                <button
+                                    type="button"
+                                    className="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                                />
+                            </div>
+                            <div className="modal-body">
+                                <ul>
+                                    <li>
+                                        <div className="row justify-content-between">
+                                            <div className="col-md-6">
+                                                <b>Title</b>
+                                            </div>
+                                            <div className="col-md-6">
+                                               
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div className="row justify-content-between">
+                                            <div className="col-md-6">
+                                                <b>Price</b>
+                                            </div>
+                                            <div className="col-md-6">
+                                               
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div className="row justify-content-between">
+                                            <div className="col-md-6">
+                                                <b>Validity</b>
+                                            </div>
+                                            <div className="col-md-6">
+                                                
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div className="row justify-content-between">
+                                            <div className="col-md-6">
+                                                <b>Description</b>
+                                            </div>
+                                            <div className="col-md-6">
+                                                
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div className="row justify-content-between">
+                                            <div className="col-md-6">
+                                                <b>Created At</b>
+                                            </div>
+                                            <div className="col-md-6">
+                                               
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div className="row justify-content-between">
+                                            <div className="col-md-6">
+                                                <b>Updated At</b>
+                                            </div>
+                                            <div className="col-md-6">
+                                                
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
             </div>
         </div>
     );
