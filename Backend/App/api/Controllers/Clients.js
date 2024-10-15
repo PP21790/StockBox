@@ -51,7 +51,12 @@ class Clients {
      
 
       const existingUser = await Clients_Modal.findOne({
-        $or: [{ Email }, { PhoneNo }]
+        $and: [
+          { del: 0 },
+          {
+            $or: [{ Email }, { PhoneNo }]
+          }
+        ]
       });
   
       if (existingUser) {

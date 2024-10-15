@@ -38,16 +38,10 @@ const Header = () => {
   }
 
 
-
-
-
   useEffect(() => {
     getdemoclient();
 
   }, []);
-
-
-
 
 
 
@@ -111,6 +105,7 @@ const Header = () => {
                         </div>
                       </a>
                       <div className="header-notifications-list" style={{ overflowY: "scroll " }}>
+
                         {clients && clients.map((notification, index) => (
                           <a key={index} className="dropdown-item" href="javascript:;">
                             <div className="d-flex align-items-center">
@@ -146,6 +141,7 @@ const Header = () => {
                               </div>
                             </div>
                           </a>
+                          
                         ))}
                       </div>
                       <a>

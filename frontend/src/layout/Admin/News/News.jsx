@@ -123,7 +123,7 @@ const News = () => {
                     timer: 2000,
                 });
 
-                setTitle({ title: "", add_by: "" });
+                setTitle({ title: "", add_by: "" , description:""});
                 getNews();
 
                 const modal = document.getElementById('exampleModal');
@@ -483,7 +483,15 @@ const News = () => {
 
 
 
+                            
+                                    <div className="col-sm-1 text-center flex-column d-none d-sm-flex">
+                                        <div className="row h-50">
+                                            <div className="col">&nbsp;</div>
+                                            <div className="col">&nbsp;</div>
+                                        </div>
+                                    </div>
 
+                                    
                                     <div className="col-sm py-2">
 
                                         <div className={`card ${client.borderClass || 'radius-15'} d-flex justify-content-center align-items-center`} >

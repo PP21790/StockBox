@@ -136,7 +136,7 @@ const Message = () => {
         try {
             const result = await Swal.fire({
                 title: 'Are you sure?',
-                text: 'Do you want to delete this staff member? This action cannot be undone.',
+                text: 'Do you want to delete this broad cast message? This action cannot be undone.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, delete it!',
@@ -233,7 +233,7 @@ const Message = () => {
             if (response.status) {
                 Swal.fire({
                     title: 'Success!',
-                    text: 'Service updated successfully.',
+                    text: 'Message updated successfully.',
                     icon: 'success',
                     confirmButtonText: 'OK',
                     timer: 2000,
@@ -245,7 +245,7 @@ const Message = () => {
             } else {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'There was an error updating the service.',
+                    text: 'There was an error updating the Message.',
                     icon: 'error',
                     confirmButtonText: 'Try Again',
                 });
@@ -573,7 +573,7 @@ const Message = () => {
                                         onClick={updateBroadcastMessage}
                                     // disabled={!updatetitle.title || !updatetitle.service}
                                     >
-                                        Update Service
+                                        Update Message 
                                     </button>
                                 </div>
                             </div>

@@ -158,7 +158,7 @@ class Clients {
 
     //  const result = await Clients_Modal.find()
    // const result = await Clients_Modal.find({ del: 0 });
-    const result = await Clients_Modal.find({ del: 0 }).sort({ created_at: -1 });
+    const result = await Clients_Modal.find({ del: 0 }).sort({ createdAt: -1 });
       return res.json({
         status: true,
         message: "get",
@@ -179,7 +179,7 @@ class Clients {
       const { } = req.body;
 
     //  const result = await Clients_Modal.find()
-    const result = await Clients_Modal.find({ del: 0,ActiveStatus:1 });
+    const result = await Clients_Modal.find({ del: 0,ActiveStatus:1 }).sort({ createdAt: -1 });
 
       return res.json({
         status: true,

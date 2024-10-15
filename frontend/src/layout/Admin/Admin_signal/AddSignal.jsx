@@ -48,7 +48,7 @@ const AddSignal = () => {
 
 
 
-  
+
 
   const formik = useFormik({
     initialValues: {
@@ -65,19 +65,19 @@ const AddSignal = () => {
       callduration: '',
       calltype: '',
       expiry: '',
-      optiontype:'',
-      strikeprice:'',
+      optiontype: '',
+      strikeprice: '',
+     
+      
 
     },
     validate: (values) => {
-
       const errors = {};
-
       if (!values.segment) errors.segment = 'Please select a segment';
       if (!values.stock) errors.stock = 'Please select a stock';
       if (!values.price) errors.price = 'Please select a price';
-       
-       if(values.calltype === "BUY"){
+      
+      if (values.calltype === "BUY") {
 
         if (!values.tag1) errors.tag1 = 'Please enter Traget1';
         else if (values.price && values.tag1 && values.price >= values.tag1) {
@@ -90,13 +90,13 @@ const AddSignal = () => {
 
         if (values.tag3 && values.tag2 && values.tag2 >= values.tag3) {
           errors.tag3 = "Please Enter greater Target2"
-       }
-       
-       if(values.price && values.price <= values.stoploss ){
-        errors.stoploss = "Please Enter Less Than Entry Price"
-     }
-    
-       }else if(values.calltype === "SELL"){
+        }
+
+        if (values.price && values.price <= values.stoploss) {
+          errors.stoploss = "Please Enter Less Than Entry Price"
+        }
+
+      } else if (values.calltype === "SELL") {
 
         if (values.price && values.price <= values.stoploss) {
           errors.stoploss = "Please Enter Less Than Entry Price"
@@ -155,7 +155,6 @@ const AddSignal = () => {
         optiontype: values.optiontype,
         strikeprice: values.strikeprice,
       };
-
       try {
         const response = await AddSignalByAdmin(req, token);
         if (response.status) {
@@ -221,8 +220,8 @@ const AddSignal = () => {
 
   useEffect(() => {
     const fetchStockData = async () => {
-      const data = { segment: formik.values.segment, symbol: searchItem };
 
+      const data = { segment: formik.values.segment, symbol: searchItem };
       try {
         const stockResponse = await getstockbyservice(data);
         if (stockResponse.status) {
@@ -282,8 +281,6 @@ const AddSignal = () => {
       })),
       showWhen: (values) => values.segment !== "C",
     },
-
-
     {
       name: 'optiontype',
       label: 'Option Type',
@@ -429,6 +426,8 @@ const AddSignal = () => {
     borderBottom: '1px solid #ddd',
   };
 
+
+
   return (
     <div style={{ marginTop: '100px' }}>
       <DynamicForm
@@ -446,15 +445,15 @@ const AddSignal = () => {
               <input
                 type="text"
                 className="form-control"
-                placeholder="Search Company"
-                name="SearchCompany"
+                placeholder="Search stock"
+                name="stock"
                 onChange={(e) => setSearchItem(e.target.value)}
                 value={searchItem}
                 onClick={() => setShowDropdown(true)}
                 style={{ cursor: "pointer" }}
               />
 
-              {searchItem && stockList.length > 0 && showDropdown ? (
+              { searchItem && stockList.length > 0 && showDropdown ? (
                 <div className="dropdown-list" style={dropdownStyles}>
                   {stockList
                     .filter((company) =>
@@ -476,6 +475,14 @@ const AddSignal = () => {
                   }
                 </div>
               ) : null}
+
+              {formik.touched.stock &&
+                formik.errors.stock ? (
+                <div style={{ color: "red" }}>
+                  {formik.errors.stock}
+                </div>
+              ) : null}
+
             </div>
           </div>
         }
