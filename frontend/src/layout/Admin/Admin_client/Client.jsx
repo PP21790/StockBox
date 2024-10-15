@@ -57,6 +57,7 @@ const Client = () => {
     });
 
 
+    console.log("updatetitle", updatetitle)
 
 
     const handleTabChange = (index) => {
@@ -75,6 +76,7 @@ const Client = () => {
     const handleCategoryChange = (categoryId) => {
         setSelectcategory(categoryId);
         setSelectedPlanId(null);
+        setUpdatetitle("")
     };
 
 
@@ -657,7 +659,7 @@ const Client = () => {
                                                                 type="radio"
                                                                 name="planSelection"
                                                                 id={`proplus-${index}`}
-                                                                onClick={() => handleCategoryChange(item._id)} // Handle category change
+                                                                onClick={() => handleCategoryChange(item._id)}
                                                             />
                                                             <label className="form-check-label" htmlFor={`proplus-${index}`}>
                                                                 {item.title}
@@ -682,8 +684,11 @@ const Client = () => {
                                                                                         type="radio"
                                                                                         name="planSelection"
                                                                                         id={`input-plan-${index}`}
-                                                                                        checked={selectedPlanId === item._id} // Bind the selected plan state
-                                                                                        onClick={() => setSelectedPlanId(item._id)}
+                                                                                        checked={selectedPlanId === item._id}
+                                                                                        onClick={() => {
+                                                                                            setSelectedPlanId(item._id);
+                                                                                            setUpdatetitle({ plan_id: item._id, price: item.price });
+                                                                                        }}
                                                                                     />
                                                                                     <label className="form-check-label mx-1" style={{ fontSize: "13px", fontWeight: "800" }} htmlFor={`input-plan-${index}`}>
                                                                                         {item.title}

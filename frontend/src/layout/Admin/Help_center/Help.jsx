@@ -43,77 +43,8 @@ const Help = () => {
 
 
 
-    const columns = [
-        {
-            name: 'S.No',
-            selector: (row, index) => index + 1,
-            sortable: false,
-            width: '100px',
-        },
-        {
-            name: 'Full Name',
-            selector: row => row.clientDetails.FullName,
-            sortable: true,
-            width: '165px',
-        },
-        {
-            name: 'Email',
-            selector: row => row.clientDetails.Email,
-            sortable: true,
-            width: '300px',
-        },
-        {
-            name: 'Subject',
-            selector: row => row.subject,
-            sortable: true,
-            width: '243px',
-        },
-        {
-            name: 'Message',
-            selector: row => row.message,
-            sortable: true,
-            width: '243px',
-        },
-        {
-            name: 'Phone No',
-            selector: row => row.clientDetails.PhoneNo,
-            sortable: true,
-        },
-
-
-        {
-            name: 'CreatedAt',
-            selector: row => fDate(row.created_at),
-            sortable: true,
-            width: '200px',
-        },
-        {
-            name: 'Actions',
-            cell: row => (
-                <>
-                    <div>
-                        <Tooltip placement="top" overlay="View">
-                            <Eye style={{ marginRight: "10px" }} />
-                        </Tooltip>
-                    </div>
-
-
-                </>
-            ),
-            ignoreRowClick: true,
-            allowOverflow: true,
-            button: true,
-        }
-
-    ];
-
-
-
-
     return (
         <div>
-
-
             <div>
                 <div>
                     <div>
@@ -151,129 +82,42 @@ const Help = () => {
 
                                     </div>
 
-                                    <Table
-                                        columns={columns}
-                                        data={clients}
-                                    />
+                                    <div className="container py-2">
+
+                                        <div className="row">
+
+                                            <div className="col py-2">
+                                                <div className="card radius-15">
+                                                    <div className="card-body">
+                                                        {clients.map((item) => (
+                                                            <div key={item.id}>
+                                                                <div className="float-end text-muted">{fDate(item.created_at)}</div>
+                                                                <h4 className="card-title">{item.clientDetails.FullName}</h4>
+                                                                <hr />
+                                                                <p>
+                                                                    <strong>Email:</strong> {item.clientDetails.Email}
+                                                                </p>
+                                                                <p>
+                                                                    <strong>Subject:</strong> {item.subject}
+                                                                </p>
+                                                                <p>
+                                                                    <strong>Phone No:</strong> {item.PhoneNo}
+                                                                </p>
+                                                                <p>
+                                                                    <strong>Description:</strong> {item.message}
+                                                                </p>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+                                    </div>
                                 </div>
                             </div>
-
-
-                            <div className="container py-2">
-
-                                <div className="row">
-
-                                    <div className="col py-2">
-                                        <div className="card radius-15">
-                                            <div className="card-body">
-                                                <div className="float-end text-muted">
-                                                    Jan 12th 2019
-                                                </div>
-                                                <h4 className="card-title">1 Ram</h4>
-                                                <hr/>
-                                                <p>
-                                                    <strong>Email :</strong>ram@gmail.com
-                                                </p>
-                                                <p>
-                                                    <strong>Suject :</strong>efff
-                                                </p>
-                                                <p>
-                                                    <strong>Phone No :</strong>87654123
-                                                </p>
-                                                <p>
-                                                    <strong>Discription :</strong>Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci reiciendis, fugit natus minus, omnis molestiae assumenda alias voluptatum ipsa fuga ipsam repellendus autem.
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {/*/row*/}
-                                {/* timeline item 2 */}
-                                <div className="row">
-
-                                    <div className="col py-2">
-                                        <div className="card radius-15">
-                                            <div className="card-body">
-                                                <div className="float-end text-muted">
-                                                    Jan 12th 2019
-                                                </div>
-                                                <h4 className="card-title">1 Ram</h4>
-                                                <hr />
-                                                <p>
-                                                    <strong>Email :</strong>ram@gmail.com
-                                                </p>
-                                                <p>
-                                                    <strong>Suject :</strong>efff
-                                                </p>
-                                                <p>
-                                                    <strong>Phone No :</strong>87654123
-                                                </p>
-                                                <p>
-                                                    <strong>Discription :</strong>Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci reiciendis, fugit natus minus, omnis molestiae assumenda alias voluptatum ipsa fuga ipsam repellendus autem.
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {/*/row*/}
-                                {/* timeline item 3 */}
-                                <div className="row">
-
-                                    <div className="col py-2">
-                                        <div className="card radius-15">
-                                            <div className="card-body">
-                                                <div className="float-end text-muted">
-                                                    Jan 12th 2019
-                                                </div>
-                                                <h4 className="card-title">1 Ram</h4>
-                                                <hr />
-                                                <p>
-                                                    <strong>Email :</strong>ram@gmail.com
-                                                </p>
-                                                <p>
-                                                    <strong>Suject :</strong>efff
-                                                </p>
-                                                <p>
-                                                    <strong>Phone No :</strong>87654123
-                                                </p>
-                                                <p>
-                                                    <strong>Discription :</strong>Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci reiciendis, fugit natus minus, omnis molestiae assumenda alias voluptatum ipsa fuga ipsam repellendus autem.
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {/*/row*/}
-                                {/* timeline item 4 */}
-                                <div className="row">
-
-                                    <div className="col py-2">
-                                        <div className="card radius-15">
-                                            <div className="card-body">
-                                                <div className="float-end text-muted">
-                                                    Jan 12th 2019
-                                                </div>
-                                                <h4 className="card-title">1 Ram</h4>
-                                                <hr />
-                                                <p>
-                                                    <strong>Email :</strong>ram@gmail.com
-                                                </p>
-                                                <p>
-                                                    <strong>Suject :</strong>efff
-                                                </p>
-                                                <p>
-                                                    <strong>Phone No :</strong>87654123
-                                                </p>
-                                                <p>
-                                                    <strong>Discription :</strong>Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci reiciendis, fugit natus minus, omnis molestiae assumenda alias voluptatum ipsa fuga ipsam repellendus autem.
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {/*/row*/}
-                            </div>
-
                         </div>
                     </div>
 
