@@ -292,7 +292,6 @@ async forgotPassword(req, res) {
     
     // Find the user by email
     const client = await Clients_Modal.findOne({ Email });
-
     if (!client) {
       return res.status(404).json({
         status: false,
@@ -333,7 +332,6 @@ async forgotPassword(req, res) {
 
         const finalMailBody = mailtemplate.mail_body.replace('{resetToken}', resetToken);
         const logo =`http://${req.headers.host}/uploads/basicsetting/${settings.logo}`;
-
         // Replace placeholders with actual values
         const finalHtml = htmlTemplate
             .replace(/{{company_name}}/g, settings.website_title)
@@ -348,11 +346,12 @@ async forgotPassword(req, res) {
             subject: `${mailtemplate.mail_subject}`,
             html: finalHtml // Use the HTML template with dynamic variables
         };
-    
         // Send email
         await sendEmail(mailOptions);
     });
 
+
+  
 
     return res.json({
       status: true,
