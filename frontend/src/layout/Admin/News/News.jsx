@@ -379,92 +379,96 @@ const News = () => {
                                     </div>
                                 </div>
                                 {model && (
-                                    <div
-                                        className="modal fade show"
-                                        style={{ display: 'block' }}
-                                        tabIndex={-1}
-                                        aria-labelledby="exampleModalLabel"
-                                        aria-hidden="true"
-                                    >
-                                        <div className="modal-dialog">
-                                            <div className="modal-content">
-                                                <div className="modal-header">
-                                                    <h5 className="modal-title" id="exampleModalLabel">
-                                                        Update News
-                                                    </h5>
-                                                    <button
-                                                        type="button"
-                                                        className="btn-close"
-                                                        onClick={() => setModel(false)}
-                                                    />
-                                                </div>
-                                                <div className="modal-body">
-                                                    <form>
-                                                        <div className="row">
-                                                            <div className="col-md-12">
-                                                                <label htmlFor="">Title</label>
-                                                                <input
-                                                                    className="form-control mb-2"
-                                                                    type="text"
-                                                                    placeholder='Enter news Title'
-                                                                    value={updatetitle.title}
-                                                                    onChange={(e) => updateServiceTitle({ title: e.target.value })}
-                                                                />
-                                                            </div>
-                                                        </div>
+                                    <>
+                                        <div className="modal-backdrop fade show"></div>
 
-                                                        <div className="row">
-                                                            <div className="col-md-12">
-                                                                <label htmlFor="imageUpload">Image</label>
-                                                                <input
-                                                                    className="form-control mb-3"
-                                                                    type="file"
-                                                                    accept="image/*"
-                                                                    id="imageUpload"
-                                                                    onChange={(e) => {
-                                                                        const file = e.target.files[0];
-                                                                        if (file) {
-                                                                            updateServiceTitle({ image: file });
-                                                                        }
-                                                                    }}
-                                                                />
+                                        <div
+                                            className="modal fade show"
+                                            style={{ display: 'block' }}
+                                            tabIndex={-1}
+                                            aria-labelledby="exampleModalLabel"
+                                            aria-hidden="true"
+                                        >
+                                            <div className="modal-dialog">
+                                                <div className="modal-content">
+                                                    <div className="modal-header">
+                                                        <h5 className="modal-title" id="exampleModalLabel">
+                                                            Update News
+                                                        </h5>
+                                                        <button
+                                                            type="button"
+                                                            className="btn-close"
+                                                            onClick={() => setModel(false)}
+                                                        />
+                                                    </div>
+                                                    <div className="modal-body">
+                                                        <form>
+                                                            <div className="row">
+                                                                <div className="col-md-12">
+                                                                    <label htmlFor="">Title</label>
+                                                                    <input
+                                                                        className="form-control mb-2"
+                                                                        type="text"
+                                                                        placeholder='Enter news Title'
+                                                                        value={updatetitle.title}
+                                                                        onChange={(e) => updateServiceTitle({ title: e.target.value })}
+                                                                    />
+                                                                </div>
                                                             </div>
-                                                        </div>
 
-                                                        <div className="row">
-                                                            <div className="col-md-12">
-                                                                <label htmlFor="">Description</label>
-                                                                <input
-                                                                    className="form-control mb-2"
-                                                                    type="text"
-                                                                    placeholder='Enter  Description'
-                                                                    value={updatetitle.description}
-                                                                    onChange={(e) => updateServiceTitle({ description: e.target.value })}
-                                                                />
+                                                            <div className="row">
+                                                                <div className="col-md-12">
+                                                                    <label htmlFor="imageUpload">Image</label>
+                                                                    <input
+                                                                        className="form-control mb-3"
+                                                                        type="file"
+                                                                        accept="image/*"
+                                                                        id="imageUpload"
+                                                                        onChange={(e) => {
+                                                                            const file = e.target.files[0];
+                                                                            if (file) {
+                                                                                updateServiceTitle({ image: file });
+                                                                            }
+                                                                        }}
+                                                                    />
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </form>
 
-                                                </div>
-                                                <div className="modal-footer">
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-secondary"
-                                                        onClick={() => setModel(false)}
-                                                    >
-                                                        Close
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-primary"
-                                                        onClick={updateNews}
-                                                    >
-                                                        Update News
-                                                    </button>
+                                                            <div className="row">
+                                                                <div className="col-md-12">
+                                                                    <label htmlFor="">Description</label>
+                                                                    <textarea
+                                                                        className="form-control mb-2"
+                                                                        type="text"
+                                                                        placeholder='Enter  Description'
+                                                                        value={updatetitle.description}
+                                                                        onChange={(e) => updateServiceTitle({ description: e.target.value })}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        </form>
+
+                                                    </div>
+                                                    <div className="modal-footer">
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-secondary"
+                                                            onClick={() => setModel(false)}
+                                                        >
+                                                            Close
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-primary"
+                                                            onClick={updateNews}
+                                                        >
+                                                            Update News
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </>
                                 )}
 
                             </div>
@@ -486,7 +490,7 @@ const News = () => {
                                     
                                     <div className="col-sm py-2">
 
-                                        <div className={`card ${client.borderClass || 'radius-15'}`}>
+                                        <div className={`card ${client.borderClass || 'radius-15'} d-flex justify-content-center align-items-center`} >
 
                                             <div className="card-body">
 
@@ -498,7 +502,7 @@ const News = () => {
 
                                                             alt={client.image}
                                                             className="img-fluid"
-                                                            width="100%"
+                                                            width="65%"
                                                             height="auto"
                                                         />
                                                     </div>
@@ -509,6 +513,7 @@ const News = () => {
                                                         <div className="d-flex justify-content-between align-items-start mb-2">
 
                                                             <h4 className="card-title text-muted">{client.title}</h4>
+
                                                             <div>
 
                                                                 <Tooltip placement="top" overlay="Update">

@@ -405,9 +405,9 @@ const Message = () => {
 
                                                 return (
                                                     <div className="row" key={index}>
-                                                        
+
                                                         <div className="col py-2">
-                                                            <div className="card" style={{ borderRadius: "10px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
+                                                            <div className="card" style={{ borderRadius: "10px" }}>
                                                                 <div className="card-body">
 
                                                                     <div className="float-end text-muted">
@@ -434,12 +434,14 @@ const Message = () => {
                                                                                     matchedService?.segment === "F" ? " FUTURE" : ""}
                                                                         </span>
                                                                     </h4>
-
-                                                                    <span><strong> Subject:</strong> {item.subject}</span>
-                                                                    <p className="card-text" title={item.message}>
-                                                                        <strong> Message: </strong> {item.message.length > 30 ? `${item.message.substring(0, 30)}...` : item.message}
+                                                                    <hr />
+                                                                    <p><strong> Subject:</strong> {item.subject}</p>
+                                                                    <p className="card-text" >
+                                                                        <strong> Message: </strong> {item.message}
                                                                     </p>
-                                                                    <button
+                                                                    <p> <strong>Created At:</strong> {fDate(item.created_at)}</p>
+                                                                    <p> <strong>Updated At:</strong> {fDate(item.updated_at)}</p>
+                                                                    {/* <button
                                                                         className="btn btn-sm btn-primary"
                                                                         type="button"
                                                                         data-bs-target={`#${item._id}`}
@@ -458,7 +460,7 @@ const Message = () => {
                                                                             <div>Created At: {fDate(item.created_at)}</div>
                                                                             <div>Updated At: {fDate(item.updated_at)}</div>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> */}
                                                                 </div>
                                                             </div>
                                                         </div>
