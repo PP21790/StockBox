@@ -157,6 +157,123 @@ const Help = () => {
                                     />
                                 </div>
                             </div>
+
+
+                            <div className="container py-2">
+
+                                <div className="row">
+
+                                    <div className="col py-2">
+                                        <div className="card radius-15">
+                                            <div className="card-body">
+                                                <div className="float-end text-muted">
+                                                    Jan 12th 2019
+                                                </div>
+                                                <h4 className="card-title">1 Ram</h4>
+                                                <hr/>
+                                                <p>
+                                                    <strong>Email :</strong>ram@gmail.com
+                                                </p>
+                                                <p>
+                                                    <strong>Suject :</strong>efff
+                                                </p>
+                                                <p>
+                                                    <strong>Phone No :</strong>87654123
+                                                </p>
+                                                <p>
+                                                    <strong>Discription :</strong>Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci reiciendis, fugit natus minus, omnis molestiae assumenda alias voluptatum ipsa fuga ipsam repellendus autem.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {/*/row*/}
+                                {/* timeline item 2 */}
+                                <div className="row">
+
+                                    <div className="col py-2">
+                                        <div className="card radius-15">
+                                            <div className="card-body">
+                                                <div className="float-end text-muted">
+                                                    Jan 12th 2019
+                                                </div>
+                                                <h4 className="card-title">1 Ram</h4>
+                                                <hr />
+                                                <p>
+                                                    <strong>Email :</strong>ram@gmail.com
+                                                </p>
+                                                <p>
+                                                    <strong>Suject :</strong>efff
+                                                </p>
+                                                <p>
+                                                    <strong>Phone No :</strong>87654123
+                                                </p>
+                                                <p>
+                                                    <strong>Discription :</strong>Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci reiciendis, fugit natus minus, omnis molestiae assumenda alias voluptatum ipsa fuga ipsam repellendus autem.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {/*/row*/}
+                                {/* timeline item 3 */}
+                                <div className="row">
+
+                                    <div className="col py-2">
+                                        <div className="card radius-15">
+                                            <div className="card-body">
+                                                <div className="float-end text-muted">
+                                                    Jan 12th 2019
+                                                </div>
+                                                <h4 className="card-title">1 Ram</h4>
+                                                <hr />
+                                                <p>
+                                                    <strong>Email :</strong>ram@gmail.com
+                                                </p>
+                                                <p>
+                                                    <strong>Suject :</strong>efff
+                                                </p>
+                                                <p>
+                                                    <strong>Phone No :</strong>87654123
+                                                </p>
+                                                <p>
+                                                    <strong>Discription :</strong>Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci reiciendis, fugit natus minus, omnis molestiae assumenda alias voluptatum ipsa fuga ipsam repellendus autem.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {/*/row*/}
+                                {/* timeline item 4 */}
+                                <div className="row">
+
+                                    <div className="col py-2">
+                                        <div className="card radius-15">
+                                            <div className="card-body">
+                                                <div className="float-end text-muted">
+                                                    Jan 12th 2019
+                                                </div>
+                                                <h4 className="card-title">1 Ram</h4>
+                                                <hr />
+                                                <p>
+                                                    <strong>Email :</strong>ram@gmail.com
+                                                </p>
+                                                <p>
+                                                    <strong>Suject :</strong>efff
+                                                </p>
+                                                <p>
+                                                    <strong>Phone No :</strong>87654123
+                                                </p>
+                                                <p>
+                                                    <strong>Discription :</strong>Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci reiciendis, fugit natus minus, omnis molestiae assumenda alias voluptatum ipsa fuga ipsam repellendus autem.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {/*/row*/}
+                            </div>
+
                         </div>
                     </div>
 

@@ -237,7 +237,7 @@ const Plan = () => {
                                                         <li><b className='mb-1'>Description</b>:<textarea className='form-control' >{client.description}</textarea></li>
 
                                                         <li><b>Created At</b>: {fDateTime(client.created_at)}</li>
-                                                        <li><b>Updated At</b>: {fDateTime(client.updated_at)}</li>
+                                                        {/* <li><b>Updated At</b>: {fDateTime(client.updated_at)}</li> */}
                                                     </ul>
                                                     <div className="button-group">
                                                         <button
