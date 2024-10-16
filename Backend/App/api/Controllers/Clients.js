@@ -1168,7 +1168,7 @@ async referEarn(req, res) {
       if (entry.user_id.toString() === id.toString()) {
         // Fetch the client based on the token
         const relatedClient = await Clients_Modal.findOne({ refer_token: entry.token });
-        clientName = relatedClient ? relatedClient.FullName : "Unknown";
+        clientName = relatedClient ? relatedClient.FullName : "";
 
         amountType = {
           type: 'receiver',
@@ -1179,7 +1179,7 @@ async referEarn(req, res) {
       else if (entry.token === client.refer_token) {
         // Fetch the client based on the user_id
         const relatedClient = await Clients_Modal.findById(entry.user_id);
-        clientName = relatedClient ? relatedClient.FullName : "Unknown";
+        clientName = relatedClient ? relatedClient.FullName : "";
 
         amountType = {
           type: 'sender',
