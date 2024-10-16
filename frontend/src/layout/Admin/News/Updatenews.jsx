@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { AddClient } from '../../../Services/Admin';
 
 
-const Addbroadcast = () => {
+const Updatenews = () => {
     const navigate = useNavigate();
 
     const user_id = localStorage.getItem("id");
@@ -124,11 +124,11 @@ const Addbroadcast = () => {
             <DynamicForm
                 fields={fields}
                 formik={formik}
-                page_title="Add Broadcast"
-                btn_name="Add Broadcast"
+                page_title="Update News"
+                btn_name="Update"
                 btn_name1="Cancel"
                 sumit_btn={true}
-                btn_name1_route={"/admin/message"}
+                btn_name1_route={"/admin/news"}
                 additional_field={<></>}
 
             />
@@ -136,4 +136,4 @@ const Addbroadcast = () => {
     );
 };
 
-export default Addbroadcast;
+export default Updatenews;

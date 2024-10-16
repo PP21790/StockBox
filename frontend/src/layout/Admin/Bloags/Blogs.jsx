@@ -386,7 +386,8 @@ const Blogs = () => {
                                 </span>
                             </div>
                             <div className="ms-auto">
-                                <button
+                                <Link
+                                // to="/admin/blogs"
                                     type="button"
                                     className="btn btn-primary"
                                     data-bs-toggle="modal"
@@ -394,7 +395,7 @@ const Blogs = () => {
                                 >
                                     <i className="bx bxs-plus-square" />
                                     Add Blog
-                                </button>
+                                </Link>
 
                                 <div
                                     className="modal fade"

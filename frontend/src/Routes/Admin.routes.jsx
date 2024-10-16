@@ -56,6 +56,11 @@ import PaymentRequest from '../layout/Admin/PaymentRequest/PaymentRequest';
 import FreetrialStatus from '../layout/Admin/Freetrialstatus/FreetrialStatus';
 import ReferAndEarn from '../layout/Admin/BasicSetting/ReferAndEarn';
 import Updatebroadcast from '../layout/Admin/Broadcast/Updatebroadcast';
+import Addnews from '../layout/Admin/News/Addnews';
+import Updatenews from '../layout/Admin/News/Updatenews';
+import Addblogs from '../layout/Admin/Bloags/Addblogs';
+import Viewblog from '../layout/Admin/Bloags/Viewblog';
+import Updatecondition from '../layout/Admin/Termscondition/Updatecondition';
 
 
 
@@ -106,93 +111,100 @@ function MainApp() {
             <div className="page-wrapper">
                 <Routes>
                     <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/client" element={<Client/>} />
+                    <Route path="/client" element={<Client />} />
                     <Route path="/freeclient" element={<Freeclient />} />
-                    <Route path="/addclient" element={<AddUser/>} />
-                    <Route path="/client/updateclient/:id" element={<EditClient/>} />
-                    <Route path="/client/clientdetail/:id" element={<Viewclientdetail/>} />
+                    <Route path="/addclient" element={<AddUser />} />
+                    <Route path="/client/updateclient/:id" element={<EditClient />} />
+                    <Route path="/client/clientdetail/:id" element={<Viewclientdetail />} />
 
-                    <Route path="/profile" element={<Profile/>} />
-                    <Route path="/service" element={<Service/>} />
-                    <Route path="/kyc" element={<Kyc/>} />
-    
-                   
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/service" element={<Service />} />
+                    <Route path="/kyc" element={<Kyc />} />
 
 
-                    <Route path="/staff" element={<Staff/>} />
-                    <Route path="/addstaff" element={<AddStaff/>} />
-                    <Route path="/staff/updatestaff/:id" element={<Update/>} />
-                    <Route path="/staff/staffpermission/:id" element={<Staffpermission/>} />
 
 
-                    <Route path="/faq" element={<Faq/>} />
+                    <Route path="/staff" element={<Staff />} />
+                    <Route path="/addstaff" element={<AddStaff />} />
+                    <Route path="/staff/updatestaff/:id" element={<Update />} />
+                    <Route path="/staff/staffpermission/:id" element={<Staffpermission />} />
+
+
+                    <Route path="/faq" element={<Faq />} />
                     <Route path="/paymenthistory" element={<Paymenthistory />} />
-                    
 
 
-                    <Route path="/signal" element={<Signal/>} />
-                    <Route path="/addsignal" element={<AddSignal/>} />
-                    <Route path="/signaldetaile/:id" element={<Signaldetail/>} />
-                    <Route path="/closesignal" element={<Closesignal/>} />
-                     
 
-                    <Route path="/basket" element={<Basket/>} />
-                    <Route path="/addbasket" element={<Addbasket/>} />
-                    <Route path="/basket/viewdetail/:id" element={<Viewbasketdetail/>} />
+                    <Route path="/signal" element={<Signal />} />
+                    <Route path="/addsignal" element={<AddSignal />} />
+                    <Route path="/signaldetaile/:id" element={<Signaldetail />} />
+                    <Route path="/closesignal" element={<Closesignal />} />
+
+
+                    <Route path="/basket" element={<Basket />} />
+                    <Route path="/addbasket" element={<Addbasket />} />
+                    <Route path="/basket/viewdetail/:id" element={<Viewbasketdetail />} />
                     <Route path="/basket/editbasket/:id" element={<Editbasket />} />
-                     
-                    
-
-                    <Route path="/plan" element={<Plan/>} />
-                    <Route path="/addplan" element={<Addplan/>} />
-                    <Route path="/plan/editplan/:id" element={<Editplan/>} />
 
 
 
-                    <Route path="/category" element={<Category/>} />
-                    <Route path="/stock" element={<Stock/>} />
+                    <Route path="/plan" element={<Plan />} />
+                    <Route path="/addplan" element={<Addplan />} />
+                    <Route path="/plan/editplan/:id" element={<Editplan />} />
 
 
-                    <Route path="/blogs" element={<Blogs/>} />
-                    <Route path="/news" element={<News/>} />
-                      
+
+                    <Route path="/category" element={<Category />} />
+                    <Route path="/stock" element={<Stock />} />
 
 
-                    <Route path="/coupon" element={<Coupon/>} />
-                    <Route path="/addcoupon" element={<Addcoupon/>} />
-                    <Route path="/coupon/updatecoupon/:id" element={<Updatecoupon/>} />
+                    <Route path="/blogs" element={<Blogs />} />
+                    <Route path="/addblogs" element={<Addblogs />} />
+                    <Route path="/viewblog" element={<Viewblog />} />
 
 
-                    <Route path="/termsandcondtion" element={<Condition/>} />
+                    <Route path="/news" element={<News />} />
+                    <Route path="/addnews" element={<Addnews />} />
+                    <Route path="/updatenews" element={<Updatenews />} />
 
-                    
-                    <Route path="/banner" element={<Banner/>} />
 
 
-                    <Route path="/generalsettings" element={<Generalsettings/>} />
-                    <Route path="/Apiinfo" element={<Apiinfo/>} />
-                    <Route path="/paymentgeteway" element={<Payementgateway/>} />
-                    <Route path="/emailsetting" element={<Emailsettings/>} />
-                    <Route path="/emailtemplate" element={<Emailtemplate/>} />
-                    <Route path="/referandearn" element={<ReferAndEarn/>} />
-                    
+                    <Route path="/coupon" element={<Coupon />} />
+                    <Route path="/addcoupon" element={<Addcoupon />} />
+                    <Route path="/coupon/updatecoupon/:id" element={<Updatecoupon />} />
+
+
+                    <Route path="/termsandcondtion" element={<Condition />} />
+                    <Route path="/updatecondtion" element={<Updatecondition />} />
+
+
+                    <Route path="/banner" element={<Banner />} />
+
+
+                    <Route path="/generalsettings" element={<Generalsettings />} />
+                    <Route path="/Apiinfo" element={<Apiinfo />} />
+                    <Route path="/paymentgeteway" element={<Payementgateway />} />
+                    <Route path="/emailsetting" element={<Emailsettings />} />
+                    <Route path="/emailtemplate" element={<Emailtemplate />} />
+                    <Route path="/referandearn" element={<ReferAndEarn />} />
+
 
 
                     <Route path="/message" element={<Message />} />
-                    <Route path="/changepass" element={<Changepass/>} />
-                  
+                    <Route path="/changepass" element={<Changepass />} />
+
                     {/* <Route path="/changepass" element={<Changepass />} /> */}
                     <Route path="/help" element={<Help />} />
-                    <Route path="/paymentrequest" element={<PaymentRequest/>} />
-                    <Route path="/freetrialstatus" element={<FreetrialStatus/>} />
+                    <Route path="/paymentrequest" element={<PaymentRequest />} />
+                    <Route path="/freetrialstatus" element={<FreetrialStatus />} />
                     <Route path="/addbroadcast" element={<Addbroadcast />} />
                     <Route path="/updatebroadcast" element={<Updatebroadcast />} />
-                    
-                    
-                    
-                    
-                    
-                      
+
+
+
+
+
+
                 </Routes>
             </div>
             <Footer />

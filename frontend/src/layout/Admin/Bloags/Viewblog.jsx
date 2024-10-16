@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { AddClient } from '../../../Services/Admin';
 
 
-const Addbroadcast = () => {
+const Viewblog = () => {
     const navigate = useNavigate();
 
     const user_id = localStorage.getItem("id");
@@ -136,4 +136,4 @@ const Addbroadcast = () => {
     );
 };
 
-export default Addbroadcast;
+export default Viewblog;
