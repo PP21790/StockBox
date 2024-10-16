@@ -16,7 +16,6 @@ cron.schedule('0 1 * * *', async () => {
 });
 cron.schedule('0 2 * * *', async () => {
         await AddBulkStockCron();
-
   });
 
   cron.schedule('0 4 * * *', async () => {

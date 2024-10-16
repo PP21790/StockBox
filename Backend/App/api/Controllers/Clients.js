@@ -1138,8 +1138,6 @@ async payoutList(req, res) {
   }
 }
 
-
-
 async referEarn(req, res) {
   try {
     const { id } = req.body;  // Extract the client ID from the request parameters
@@ -1154,8 +1152,6 @@ async referEarn(req, res) {
         });
     }
 
-
-
     const result = await Refer_Modal.find({
       $or: [
         { user_id: id },      // Check if user_id matches
@@ -1164,11 +1160,16 @@ async referEarn(req, res) {
     });
     
     // Process result to show receiveramount or senderamount based on the condition
-    const processedResult = result.map(entry => {
+    const processedResult = await Promise.all(result.map(async (entry) => {
       let amountType = null;
-    
+      let clientName = null;
+
       // Check if user_id matched, show receiveramount
       if (entry.user_id.toString() === id.toString()) {
+        // Fetch the client based on the token
+        const relatedClient = await Clients_Modal.findOne({ refer_token: entry.token });
+        clientName = relatedClient ? relatedClient.FullName : "Unknown";
+
         amountType = {
           type: 'receiver',
           amount: entry.receiveramount
@@ -1176,35 +1177,29 @@ async referEarn(req, res) {
       }
       // Check if token matched, show senderamount
       else if (entry.token === client.refer_token) {
+        // Fetch the client based on the user_id
+        const relatedClient = await Clients_Modal.findById(entry.user_id);
+        clientName = relatedClient ? relatedClient.FullName : "Unknown";
+
         amountType = {
           type: 'sender',
           amount: entry.senderamount
         };
       }
     
-      // Return the entry along with the appropriate amount
+      // Return the entry along with the appropriate amount and client name
       return {
         ...entry.toObject(),
-        amountType
+        amountType,
+        clientName
       };
-    });
+    }));
     
     // Respond with the processed result
     return res.json({
       status: true,
       message: "Data retrieved successfully",
       data: processedResult
-    });
-
-   // const result = await Refer_Modal.find({ clientid: id }); 
-    
-    
-    // Fetch payouts for the given client ID
-
-    return res.json({
-      status: true,
-      message: "get",
-      data: result  // Return the fetched payouts
     });
   } catch (error) {
     return res.json({ status: false, message: "Server error", data: [] });  // Error handling
