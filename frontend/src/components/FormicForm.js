@@ -107,11 +107,20 @@ const DynamicForm = ({
         formik.setFieldValue("per_trade_value", value.target.value);
     };
 
-    const [passwordVisible, setPasswordVisible] = useState(false); // State to toggle password visibility
+    const [passwordVisible, setPasswordVisible] = useState(false); 
 
     const togglePasswordVisibility = () => {
         setPasswordVisible(!passwordVisible);
     };
+
+
+    const [passwordVisible1, setPasswordVisible1] = useState(false); 
+
+    const togglePasswordVisibility1 = () => {
+        setPasswordVisible1(!passwordVisible1);
+    };
+
+
 
     return (
         <div className="content container-fluid" data-aos="fade-left">
@@ -706,7 +715,7 @@ const DynamicForm = ({
                                                     </>
                                                 ) : field.type === "password1" ? (
                                                     <>
-                                                        <div className={`col-lg-${field.col_size}`}>
+                                                         <div className={`col-lg-${field.col_size}`}>
                                                             <div className=" input-block row">
                                                                 <label
                                                                     className={`col-lg-${field.label_size} col-form-labelp-0 `}
@@ -715,30 +724,36 @@ const DynamicForm = ({
                                                                     {field.label}
                                                                     <span className="text-danger">*</span>
                                                                 </label>
-                                                                <div
-                                                                    // className={`col-lg-${field.col_size}`}
-                                                                    style={{ position: "relative" }}
-                                                                >
+                                                                <div className="d-flex" style={{ position: 'relative' }}>
                                                                     <input
                                                                         id={field.name}
-                                                                        autoComplete="new-password1"
-                                                                        type={
-                                                                            passwordVisible[field.name]
-                                                                                ? "text"
-                                                                                : field.type
-                                                                        }
+                                                                        autoComplete="new-password"
+                                                                        type={passwordVisible1 ? 'text' : field.type}
                                                                         placeholder={`Enter ${field.label}`}
                                                                         {...formik.getFieldProps(field.name)}
-                                                                        className={` form-control`}
+                                                                        className="form-control"
+                                                                        style={{ paddingRight: '3rem' }}
                                                                     />
+                                                                    {/* Eye Icon inside input */}
+                                                                    <FontAwesomeIcon
+                                                                        icon={passwordVisible1 ? faEyeSlash : faEye}
+                                                                        onClick={togglePasswordVisibility1}
+                                                                        style={{
+                                                                            position: 'absolute',
+                                                                            right: '20px',
+                                                                            top: '50%',
+                                                                            transform: 'translateY(-50%)',
+                                                                            cursor: 'pointer',
+                                                                        }}
+                                                                    />
+                                                                    {/* Formik validation error */}
 
-                                                                    {formik.touched[field.name] &&
-                                                                        formik.errors[field.name] ? (
-                                                                        <div style={{ color: "red" }}>
-                                                                            {formik.errors[field.name]}
-                                                                        </div>
-                                                                    ) : null}
                                                                 </div>
+                                                                {formik.touched[field.name] && formik.errors[field.name] ? (
+                                                                    <div style={{ color: 'red', marginTop: '5px' }}>
+                                                                        {formik.errors[field.name]}
+                                                                    </div>
+                                                                ) : null}
                                                             </div>
                                                         </div>
                                                     </>

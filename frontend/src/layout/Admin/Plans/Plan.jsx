@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getplanlist, getcategoryplan, Deleteplan, changeplanstatus } from '../../../Services/Admin';
-import { fDateTime } from '../../../Utils/Date_formate';
+import { fDateTime ,fDate } from '../../../Utils/Date_formate';
 import Swal from 'sweetalert2';
 
 
@@ -23,6 +23,7 @@ const Plan = () => {
 
 
     
+
     const getcategoryplanlist = async () => {
         try {
             const response = await getcategoryplan(token);
@@ -100,7 +101,7 @@ const Plan = () => {
         const data = { id: id, status: user_active_status };
 
         const result = await Swal.fire({
-            title: "Do you want to save the changes?",
+            title: "Do you want Changes The Pakage Status?",
             showCancelButton: true,
             confirmButtonText: "Save",
             cancelButtonText: "Cancel",
@@ -113,7 +114,7 @@ const Plan = () => {
                 if (response.status) {
                     Swal.fire({
                         title: "Saved!",
-                        icon: "success",
+                        icon: "Status changed successfully!",
                         timer: 1000,
                         timerProgressBar: true,
                     });
@@ -123,6 +124,8 @@ const Plan = () => {
                 }
                 // Reload the plan list
                 getcategoryplanlist();
+                getAdminclient();
+               
             } catch (error) {
                 Swal.fire(
                     "Error",
@@ -162,7 +165,7 @@ const Plan = () => {
                     <ul className="nav nav-pills mb-1" role="tablist">
                         <li className="nav-item" role="presentation">
                             <a
-                                className={`nav-link ${selectedCategoryId === 'all' ? 'active' : ''}`}
+                                className={`nav-link ${selectedCategoryId === 'all' ? 'active' : 'No data'}`}
                                 onClick={() => setSelectedCategoryId('all')}
                                 role="tab"
                                 aria-selected={selectedCategoryId === 'all'}
@@ -176,7 +179,7 @@ const Plan = () => {
                         {category.map((cat) => (
                             <li className="nav-item" role="presentation" key={cat._id}>
                                 <a
-                                    className={`nav-link ${cat._id === selectedCategoryId ? 'active' : ''}`}
+                                    className={`nav-link ${cat._id === selectedCategoryId ? 'active' : 'No Data'}`}
                                     onClick={() => setSelectedCategoryId(cat._id)}
                                     role="tab"
                                     aria-selected={cat._id === selectedCategoryId}
@@ -187,13 +190,14 @@ const Plan = () => {
                                     </div>
                                 </a>
                             </li>
-                        ))}
+                        )) }
                     </ul>
                     <hr />
 
                     <div className="tab-content">
                         <div className="tab-pane fade active show">
                             <div className="pricing-section mt-5">
+                            {filteredClients.length > 0 ? (
                                 <div className="card-container">
                                     <div className="row">
                                         {filteredClients.map((client) => (
@@ -244,7 +248,7 @@ const Plan = () => {
                                                         <li><b>Validity</b>: {client.validity}</li>
                                                         <li><b className='mb-1'>Description</b>:<textarea className='form-control' >{client.description}</textarea></li>
 
-                                                        <li><b>Created At</b>: {fDateTime(client.created_at)}</li>
+                                                        <li><b>Created At</b>: {fDate(client.created_at)}</li>
                                                         {/* <li><b>Updated At</b>: {fDateTime(client.updated_at)}</li> */}
                                                     </ul>
                                                     <div className="button-group">
@@ -325,7 +329,7 @@ const Plan = () => {
                                                                                         <b>Created At</b>
                                                                                     </div>
                                                                                     <div className="col-md-6">
-                                                                                        {fDateTime(client.created_at)}
+                                                                                        {fDate(client.created_at)}
                                                                                     </div>
                                                                                 </div>
                                                                             </li>
@@ -335,7 +339,7 @@ const Plan = () => {
                                                                                         <b>Updated At</b>
                                                                                     </div>
                                                                                     <div className="col-md-6">
-                                                                                        {fDateTime(client.updated_at)}
+                                                                                        {fDate(client.updated_at)}
                                                                                     </div>
                                                                                 </div>
                                                                             </li>
@@ -356,8 +360,8 @@ const Plan = () => {
                                             </div>
                                         ))}
                                     </div>
-                                </div>
-                            </div>
+                                </div> ) : "No PLan"}
+                            </div> 
                         </div>
                     </div>
                 </div>

@@ -34,9 +34,9 @@ const EditClient = () => {
     if (!values.PhoneNo) {
       errors.PhoneNo = "Please Enter Phone Number";
     }
-    if (!values.password) {
-      errors.password = "Please Enter Password";
-    }
+    // if (!values.password) {
+    //   errors.password = "Please Enter Password";
+    // }
 
 
     return errors;
@@ -48,7 +48,7 @@ const EditClient = () => {
       // UserName: values.UserName,
       Email: values.Email,
       PhoneNo: values.PhoneNo,
-      password: values.password,
+      // password: values.password,
       id: row._id,
     };
 
@@ -132,16 +132,14 @@ const EditClient = () => {
       col_size: 3,
       disable: false,
     },
-    {
-      name: "password",
-      label: "Password",
-      type: "text",
-     
-
-      label_size: 12,
-      col_size: 3,
-      disable: false,
-    },
+    // {
+    //   name: "password",
+    //   label: "Password",
+    //   type: "text",
+    //   label_size: 12,
+    //   col_size: 3,
+    //   disable: false,
+    // },
   ];
 
   return (

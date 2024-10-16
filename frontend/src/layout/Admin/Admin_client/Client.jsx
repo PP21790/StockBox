@@ -9,7 +9,7 @@ import { deleteClient, UpdateClientStatus, PlanSubscription, getplanlist, Basket
 import { Tooltip } from 'antd';
 import { fDateTime, fDate } from '../../../Utils/Date_formate';
 import { image_baseurl } from '../../../Utils/config';
-
+import { IndianRupee } from 'lucide-react';
 
 const Client = () => {
 
@@ -410,7 +410,7 @@ const Client = () => {
 
         {
             name: 'CreatedAt',
-            selector: row => fDateTime(row.createdAt),
+            selector: row => fDate(row.createdAt),
             sortable: true,
             width: '200px',
         },
@@ -621,7 +621,7 @@ const Client = () => {
                         <div className="modal-dialog modal-lg">
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <h5 className="modal-title" id="exampleModalLabel">Package Assign</h5>
+                                    <h5 className="modal-title" id="exampleModalLabel">Assign Package</h5>
                                     <button
                                         type="button"
                                         className="btn-close"
@@ -718,7 +718,7 @@ const Client = () => {
                                                                                             <div className="accordion-body">
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Price:</strong>
-                                                                                                    <span>{item.price}</span>
+                                                                                                    <span><IndianRupee /> {item.price}</span>
                                                                                                 </div>
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Validity:</strong>

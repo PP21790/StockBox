@@ -49,7 +49,7 @@ const AddUser = () => {
       const response = await AddClient(req, token);
       if (response.status) {
         Swal.fire({
-          title: "Create Successful!",
+          title: "Client Create Successfull !",
           text: response.message,
           icon: "success",
           timer: 1500,
@@ -127,7 +127,7 @@ const AddUser = () => {
     {
       name: "ConfirmPassword",
       label: "Confirm Password",
-      type: "password",
+      type: "password1",
       label_size: 12,
       col_size: 6,
       disable: false,

@@ -452,7 +452,7 @@ const Dashbord = () => {
                         <div className="card radius-10 bg-gradient-ohhappiness">
                             <div className="card-body">
                                 <div className="d-flex align-items-center">
-                                    <h5 className="mb-0 text-white">{data.PlanCountTotal && data.PlanCountTotal}</h5>
+                                    <h5 className="mb-0 text-white">{data.OpensignalCountTotal && data.OpensignalCountTotal}</h5>
                                     <div className="ms-auto">
                                         <i className="bx bxl-redux fs-3 text-white" />
                                     </div>
@@ -471,7 +471,7 @@ const Dashbord = () => {
                                     />
                                 </div>
                                 <div className="d-flex align-items-center text-white">
-                                    <p className="mb-0">Total Plan</p>
+                                    <p className="mb-0">Total Open Signal</p>
                                     <p className="mb-0 ms-auto">
 
                                         <span>
@@ -486,7 +486,7 @@ const Dashbord = () => {
                         <div className="card radius-10 bg-gradient-deepblue">
                             <div className="card-body">
                                 <div className="d-flex align-items-center">
-                                    <h5 className="mb-0 text-white">{data.PlanCountActive && data.PlanCountActive}</h5>
+                                    <h5 className="mb-0 text-white">{data.CloseSignalCountTotal && data.CloseSignalCountTotal}</h5>
                                     <div className="ms-auto">
                                         <i className="bx bx-wifi-2 fs-3 text-white" />
                                     </div>
@@ -505,7 +505,7 @@ const Dashbord = () => {
                                     />
                                 </div>
                                 <div className="d-flex align-items-center text-white">
-                                    <p className="mb-0">Total Active Plan</p>
+                                    <p className="mb-0">Total Close Signal </p>
                                     <p className="mb-0 ms-auto">
 
                                         <span>
