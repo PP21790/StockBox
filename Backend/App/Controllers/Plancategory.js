@@ -123,15 +123,60 @@ class Plancategory {
   }
 
   async activePlancategory(req, res) {
+  
     try {
 
-     
-     
+    
       const { } = req.body;
 
     //  const result = await Plancategory_Modal.find()
-      const result = await Plancategory_Modal.find({ del: false,status: true });
-
+    const result = await Plancategory_Modal.aggregate([
+      {
+        $match: { del: false,status: true }
+      },
+      {
+        $addFields: {
+          serviceIds: {
+            $map: {
+              input: { $split: ['$service', ','] },
+              as: 'serviceId',
+              in: {
+                $cond: {
+                  if: { $eq: [ { $strLenCP: '$$serviceId' }, 24 ] }, // Check if the length is 24 characters
+                  then: { $toObjectId: '$$serviceId' }, // Convert to ObjectId if valid
+                  else: null // Return null for invalid ObjectIds
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: 'services', // The collection that holds the service details
+          localField: 'serviceIds', // The split and filtered service IDs
+          foreignField: '_id', // The field in the services collection containing the IDs
+          as: 'servicesDetails'
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          add_by: 1,
+          status: 1,
+          created_at: 1,
+          updated_at: 1,
+          servicesDetails: {
+            _id: 1,
+            title: 1 // Only show the service titles
+          }
+        }
+      },
+      {
+        $sort: { created_at: -1 } // Sort by created_at in descending order
+      }
+    ]);
 
       return res.json({
         status: true,
@@ -140,8 +185,10 @@ class Plancategory {
       });
 
     } catch (error) {
+      console.log("error",error)
       return res.json({ status: false, message: "Server error", data: [] });
     }
+  
   }
 
 

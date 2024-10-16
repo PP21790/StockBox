@@ -162,7 +162,7 @@ class Users {
 
   async updateUser(req, res) {
     try {
-      const { id, FullName, Email, PhoneNo, password } = req.body;
+      const { id, FullName, Email, PhoneNo } = req.body;
 
 
       if (!FullName) {
@@ -180,16 +180,16 @@ class Users {
       } else if (!/^\d{10}$/.test(PhoneNo)) {
         return res.status(400).json({ status: false, message: "Invalid phone number format" });
       }
-      if (!password || password.length < 8 ||
-        !/[A-Z]/.test(password) ||
-        !/[a-z]/.test(password) ||
-        !/\d/.test(password) ||
-        !/[@$!%*?&#]/.test(password)) {
-        return res.status(400).json({
-          status: false,
-          message: "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&#)"
-        });
-      }
+      // if (!password || password.length < 8 ||
+      //   !/[A-Z]/.test(password) ||
+      //   !/[a-z]/.test(password) ||
+      //   !/\d/.test(password) ||
+      //   !/[@$!%*?&#]/.test(password)) {
+      //   return res.status(400).json({
+      //     status: false,
+      //     message: "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&#)"
+      //   });
+      // }
 
 
       if (!id) {
@@ -206,7 +206,6 @@ class Users {
           FullName,
           Email,
           PhoneNo,
-          password,
         },
         { updateSearchIndexser: true, runValidators: true } // Options: return the updated document and run validators
       );
