@@ -7,21 +7,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
-
-
-
 const Emailsettings = () => {
-
-
   const token = localStorage.getItem('token');
   const user_id = localStorage.getItem('id');
   const navigate = useNavigate();
 
-
   const [clients, setClients] = useState(null);
   const [passwordVisible, setPasswordVisible] = useState(false);
-
-
 
   const getsettingdetail = async () => {
     try {
@@ -67,7 +59,7 @@ const Emailsettings = () => {
           </nav>
         </div>
       </div>
-      <hr/>
+      <hr />
       <div className="row">
         <div className="col-lg-8 mx-auto">
           <div className="card radius-15">
@@ -84,7 +76,7 @@ const Emailsettings = () => {
                 smtp_password: clients[0].smtp_password || '',
               }}
               validationSchema={validationSchema}
-              onSubmit={async (values) => {
+              onSubmit={async (values, { setSubmitting }) => {
                 const req = {
                   smtp_host: values.smtp_host,
                   smtp_port: values.smtp_port,
@@ -101,7 +93,7 @@ const Emailsettings = () => {
                     Swal.fire({
                       title: "Update Successful!",
                       text: response.message,
-                      icon: "success",    
+                      icon: "success",
                       timer: 1500,
                       timerProgressBar: true,
                     });
@@ -122,10 +114,12 @@ const Emailsettings = () => {
                     timer: 1500,
                     timerProgressBar: true,
                   });
+                } finally {
+                  setSubmitting(false);
                 }
               }}
             >
-              {({ values }) => (
+              {({ values, dirty, isSubmitting }) => (
                 <Form className="card-body">
                   <div className='p-4 border radius-15'>
 
@@ -137,7 +131,6 @@ const Emailsettings = () => {
                           <Field name="smtp_host" type="text" className="form-control mb-2" />
                         </div>
                         <ErrorMessage name="smtp_host" component="div" className="error" />
-
                       </div>
 
                       <div className="row mb-1 align-items-center">
@@ -175,7 +168,6 @@ const Emailsettings = () => {
                       <div className="row mb-1 align-items-center password-group">
                         <label htmlFor="smtp_password" className="col-sm-3 col-form-label"><b>SMTP Password</b></label>
                         <div style={{ position: 'relative' }} className="col-sm-9">
-
                           <Field
                             name="smtp_password"
                             type={passwordVisible ? 'text' : 'password'}
@@ -195,10 +187,13 @@ const Emailsettings = () => {
                         <label className="col-sm-3 col-form-label" />
                         <div className="col-sm-9">
                           <div className="d-md-flex d-grid align-items-center justify-content-end gap-3">
-                            <button type="submit" className="btn btn-primary px-4">
-                              Update
+                            <button 
+                              type="submit" 
+                              className="btn btn-primary px-4" 
+                              disabled={!dirty || isSubmitting}
+                            >
+                              {isSubmitting ? 'Updating...' : 'Update'}
                             </button>
-
                           </div>
                         </div>
                       </div>
@@ -209,55 +204,11 @@ const Emailsettings = () => {
             </Formik>
 
             <style jsx>{`
-        .general-settings {
-          width: 50%;
-          margin: 0 auto;
-          padding: 20px;
-          background-color: #f9f9f9;
-          border-radius: 8px;
-        }
-        .header {
-          text-align: center;
-          font-size: 24px;
-          margin-bottom: 20px;
-        }
-        .form-container {
-          display: flex;
-          flex-direction: column;
-          gap: 20px;
-        }
-        .form-group {
-          display: flex;
-          flex-direction: column;
-        }
-        .form-control, .form-control-file {
-          padding: 10px;
-          border: 1px solid #ccc;
-          border-radius: 4px;
-        }
-        .btn {
-          padding: 10px;
-          background-color: #007bff;
-          color: white;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-        }
-        .file-preview {
-          margin-top: 10px;
-          font-size: 14px;
-          color: #555;
-        }
-       .image-preview {
-    width: 42px;
-    height: auto;
-    margin-top: -10px;
-}
-        .error {
-          color: red;
-          font-size: 12px;
-        }
-      `}</style>
+              .error {
+                color: red;
+                font-size: 14px;
+              }
+            `}</style>
           </div>
         </div>
       </div>
@@ -265,4 +216,4 @@ const Emailsettings = () => {
   );
 };
 
-export default Emailsettings; 
+export default Emailsettings;

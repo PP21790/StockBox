@@ -1,22 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { basicsettinglist, Updatebasicsettings } from '../../../Services/Admin';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
 import Swal from 'sweetalert2';
 import { Link, useNavigate } from 'react-router-dom';
 import { image_baseurl } from '../../../Utils/config';
 
-
 const Generalsettings = () => {
-
-
-
-
     const token = localStorage.getItem('token');
     const user_id = localStorage.getItem('id');
     const navigate = useNavigate();
 
     const [clients, setClients] = useState(null);
+    const [isModified, setIsModified] = useState(false); 
 
     const getsettinglist = async () => {
         try {
@@ -33,29 +28,11 @@ const Generalsettings = () => {
         getsettinglist();
     }, []);
 
-    const validationSchema = Yup.object().shape({
-        from_name: Yup.string().required('From Name is required'),
-        address: Yup.string().required('Address is required'),
-        contact_number: Yup.string().required('Contact Number is required'),
-        email_address: Yup.string().email('Invalid email').required('Email Address is required'),
-        favicon: Yup.mixed().required('Favicon is required').test(
-            "fileFormat",
-            "Unsupported Format",
-            value => !value || (value && ["image/jpeg", "image/png", "image/jpg", "image/gif"].includes(value.type))
-        ),
-        logo: Yup.mixed().required('Logo is required').test(
-            "fileFormat",
-            "Unsupported Format",
-            value => !value || (value && ["image/jpeg", "image/png", "image/jpg", "image/gif"].includes(value.type))
-        ),
-    });
-
     if (!clients) {
         return <div>Loading...</div>;
     }
 
     return (
-
         <div className="page-content">
             <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
                 <div className="breadcrumb-title pe-3">General Settings</div>
@@ -76,7 +53,6 @@ const Generalsettings = () => {
                 <div className="col-lg-8 mx-auto">
                     <div className="card radius-15">
 
-
                         <Formik
                             enableReinitialize={true}
                             initialValues={{
@@ -88,7 +64,6 @@ const Generalsettings = () => {
                                 favicon: null,
                                 logo: null,
                             }}
-                            validationSchema={validationSchema}
                             onSubmit={async (values) => {
                                 const req = {
                                     from_name: values.from_name,
@@ -110,7 +85,7 @@ const Generalsettings = () => {
                                             timer: 1500,
                                             timerProgressBar: true,
                                         });
-
+                                        setIsModified(false); 
                                     } else {
                                         Swal.fire({
                                             title: "Error",
@@ -132,15 +107,11 @@ const Generalsettings = () => {
                             }}
                         >
                             {({ setFieldValue, values }) => (
-
-
-                                <Form className="card-body p-4">
-
+                                <Form className="card-body p-4" onChange={() => setIsModified(true)}> {/* Track changes */}
                                     <div className="p-4 border radius-15">
-
                                         <div className="row mb-3 align-items-center">
                                             <label htmlFor="from_name" className="col-sm-3 col-form-label">
-                                                <b>  Company Name</b>
+                                                <b> Company Name</b>
                                             </label>
                                             <div className="col-sm-9">
                                                 <div className="input-group">
@@ -149,7 +120,6 @@ const Generalsettings = () => {
                                                     </span>
                                                     <Field name="from_name" type="text" className="form-control" placeholder="Your Name" />
                                                 </div>
-                                                <ErrorMessage name="from_name" component="div" className="error" />
                                             </div>
                                         </div>
 
@@ -164,7 +134,6 @@ const Generalsettings = () => {
                                                     </span>
                                                     <Field name="contact_number" type="text" className="form-control" placeholder="Phone No" />
                                                 </div>
-                                                <ErrorMessage name="contact_number" component="div" className="error" />
                                             </div>
                                         </div>
 
@@ -179,7 +148,6 @@ const Generalsettings = () => {
                                                     </span>
                                                     <Field name="email_address" type="email" className="form-control" placeholder="Email" />
                                                 </div>
-
                                             </div>
                                         </div>
 
@@ -194,25 +162,19 @@ const Generalsettings = () => {
                                                     className="form-control"
                                                     onChange={(event) => setFieldValue("favicon", event.currentTarget.files[0])}
                                                 />
-
-
                                             </div>
                                             <div className="col-sm-1">
-
                                                 {clients[0].favicon && (
                                                     <div className="file-preview">
-                                                            {/* // src={`${image_baseurl}uploads/basicsetting/${clients[0].refer_image}`} */}
-                                                        
                                                         <img src={`${image_baseurl}uploads/basicsetting/${clients[0].favicon}`} alt="Favicon Preview" className="image-preview" />
                                                     </div>
                                                 )}
-
                                             </div>
                                         </div>
 
                                         <div className="row mb-3 align-items-center">
                                             <label htmlFor="logo" className="col-sm-3 col-form-label">
-                                                <b>  Logo</b>
+                                                <b> Logo</b>
                                             </label>
                                             <div className="col-sm-8">
                                                 <input
@@ -221,40 +183,28 @@ const Generalsettings = () => {
                                                     className="form-control"
                                                     onChange={(event) => setFieldValue("logo", event.currentTarget.files[0])}
                                                 />
-
-
                                             </div>
                                             <div className="col-sm-1">
-
                                                 {clients[0].logo && (
                                                     <div className="file-preview">
-
-                                                        <img 
-                                                            // src={`${image_baseurl}uploads/basicsetting/${clients[0].refer_image}`}
-                                                        src={`${image_baseurl}uploads/basicsetting/${clients[0].logo}`} alt="Logo Preview" className="image-preview" />
+                                                        <img src={`${image_baseurl}uploads/basicsetting/${clients[0].logo}`} alt="Logo Preview" className="image-preview" />
                                                     </div>
                                                 )}
-
                                             </div>
                                         </div>
-
-
 
                                         <div className="row">
                                             <label className="col-sm-3 col-form-label" />
                                             <div className="col-sm-9">
                                                 <div className="d-md-flex d-grid align-items-center justify-content-end gap-3">
-                                                    <button type="submit" className="btn btn-primary px-4">
+                                                    <button type="submit" className="btn btn-primary px-4" disabled={!isModified}>
                                                         Update
                                                     </button>
-
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </Form>
-
-
                             )}
                         </Formik>
                     </div>
@@ -262,57 +212,36 @@ const Generalsettings = () => {
             </div>
 
             <style jsx>{`
-        .general-settings {
-          width: 50%;
-          margin: 0 auto;
-          padding: 20px;
-          background-color: #f9f9f9;
-          border-radius: 8px;
-        }
-        .header {
-          text-align: center;
-          font-size: 24px;
-          margin-bottom: 20px;
-        }
-        .form-container {
-          display: flex;
-          flex-direction: column;
-          gap: 20px;
-        }
-        .form-group {
-          display: flex;
-          flex-direction: column;
-        }
-        .form-control, .form-control-file {
-          padding: 10px;
-          border: 1px solid #ccc;
-          border-radius: 4px;
-        }
-        .btn {
-          padding: 10px;
-          background-color: #007bff;
-          color: white;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-        }
-        .file-preview {
-          margin-top: 10px;
-          font-size: 14px;
-          color: #555;
-        }
-       .image-preview {
-    width: 42px;
-    height: auto;
-    margin-top: -10px;
-}
-        .error {
-          color: red;
-          font-size: 12px;
-        }
-      `}</style>
+                .general-settings {
+                    width: 50%;
+                    margin: 0 auto;
+                    padding: 20px;
+                    background-color: #f9f9f9;
+                    border-radius: 10px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                }
+
+                .file-preview {
+                    width: 40px;
+                    height: 40px;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    overflow: hidden;
+                    margin-top: 10px;
+                }
+
+                .image-preview {
+                    width: 100%;
+                    height: auto;
+                }
+
+                .error {
+                    color: red;
+                    font-size: 12px;
+                }
+            `}</style>
         </div>
     );
 };
 
-export default Generalsettings; 
+export default Generalsettings;

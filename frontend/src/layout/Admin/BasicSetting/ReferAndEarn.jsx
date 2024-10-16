@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { basicsettinglist, UpdatereferAndEarn } from '../../../Services/Admin';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
+import { Formik, Form, Field } from 'formik';
 import Swal from 'sweetalert2';
 import { Link, useNavigate } from 'react-router-dom';
 import { image_baseurl } from '../../../Utils/config';
 
-
 const ReferAndEarn = () => {
     const token = localStorage.getItem('token');
-    const user_id = localStorage.getItem('id');
     const navigate = useNavigate();
     const [clients, setClients] = useState(null);
+    const [isChanged, setIsChanged] = useState(false);  // Track if a change is made
 
     const getsettinglist = async () => {
         try {
@@ -28,21 +26,9 @@ const ReferAndEarn = () => {
         getsettinglist();
     }, []);
 
-    const validationSchema = Yup.object().shape({
-        sender_earn: Yup.string().required('Sender is required'),
-        receiver_earn: Yup.string().required('Receiver is required'),
-        refer_title: Yup.string().required('Title is required'),
-        refer_description: Yup.string().required('Description is required'),
-        refer_image: Yup.mixed()
-            .required('Image is required')
-            .test(
-                'fileFormat',
-                'Unsupported Format',
-                (value) =>
-                    !value ||
-                    (value && ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'].includes(value.type))
-            ),
-    });
+    const handleFieldChange = () => {
+        setIsChanged(true); // Mark as changed when any field is modified
+    };
 
     if (!clients) {
         return <div>Loading...</div>;
@@ -77,7 +63,6 @@ const ReferAndEarn = () => {
                                 refer_description: clients[0].refer_description || '',
                                 refer_image: null,
                             }}
-                            validationSchema={validationSchema}
                             onSubmit={async (values) => {
                                 const req = {
                                     sender_earn: values.sender_earn,
@@ -89,7 +74,7 @@ const ReferAndEarn = () => {
 
                                 try {
                                     const response = await UpdatereferAndEarn(req, token);
-           
+
                                     if (response.status) {
                                         Swal.fire({
                                             title: 'Update Successful!',
@@ -107,6 +92,7 @@ const ReferAndEarn = () => {
                                             timerProgressBar: true,
                                         });
                                     }
+                                    setIsChanged(false);  // Reset change status after successful update
                                 } catch (error) {
                                     Swal.fire({
                                         title: 'Error',
@@ -135,9 +121,12 @@ const ReferAndEarn = () => {
                                                         type="text"
                                                         className="form-control"
                                                         placeholder="Title"
+                                                        onChange={(e) => {
+                                                            handleFieldChange();
+                                                            setFieldValue('refer_title', e.target.value);
+                                                        }}
                                                     />
                                                 </div>
-                                                <ErrorMessage name="refer_title" component="div" className="error" />
                                             </div>
                                         </div>
 
@@ -155,9 +144,12 @@ const ReferAndEarn = () => {
                                                         type="text"
                                                         className="form-control"
                                                         placeholder="Sender"
+                                                        onChange={(e) => {
+                                                            handleFieldChange();
+                                                            setFieldValue('sender_earn', e.target.value);
+                                                        }}
                                                     />
                                                 </div>
-                                                <ErrorMessage name="sender_earn" component="div" className="error" />
                                             </div>
                                         </div>
 
@@ -175,9 +167,12 @@ const ReferAndEarn = () => {
                                                         type="text"
                                                         className="form-control"
                                                         placeholder="Receiver"
+                                                        onChange={(e) => {
+                                                            handleFieldChange();
+                                                            setFieldValue('receiver_earn', e.target.value);
+                                                        }}
                                                     />
                                                 </div>
-                                                <ErrorMessage name="receiver_earn" component="div" className="error" />
                                             </div>
                                         </div>
 
@@ -195,13 +190,12 @@ const ReferAndEarn = () => {
                                                         type="text"
                                                         className="form-control"
                                                         placeholder="Description"
+                                                        onChange={(e) => {
+                                                            handleFieldChange();
+                                                            setFieldValue('refer_description', e.target.value);
+                                                        }}
                                                     />
                                                 </div>
-                                                <ErrorMessage
-                                                    name="refer_description"
-                                                    component="div"
-                                                    className="error"
-                                                />
                                             </div>
                                         </div>
 
@@ -214,16 +208,17 @@ const ReferAndEarn = () => {
                                                     name="refer_image"
                                                     type="file"
                                                     className="form-control"
-                                                    onChange={(event) =>
-                                                        setFieldValue('refer_image', event.currentTarget.files[0])
-                                                    }
+                                                    onChange={(event) => {
+                                                        handleFieldChange();
+                                                        setFieldValue('refer_image', event.currentTarget.files[0]);
+                                                    }}
                                                 />
                                             </div>
                                             <div className="col-sm-3">
                                                 {clients[0].refer_image && (
                                                     <div className="file-preview">
                                                         <img
-                                                             src={`${image_baseurl}uploads/basicsetting/${clients[0].refer_image}`}
+                                                            src={`${image_baseurl}uploads/basicsetting/${clients[0].refer_image}`}
                                                             alt="refer_image"
                                                             className="image-preview"
                                                         />
@@ -236,7 +231,7 @@ const ReferAndEarn = () => {
                                             <label className="col-sm-3 col-form-label" />
                                             <div className="col-sm-9">
                                                 <div className="d-md-flex d-grid align-items-center justify-content-end gap-3">
-                                                    <button type="submit" className="btn btn-primary px-4">
+                                                    <button type="submit" className="btn btn-primary px-4" disabled={!isChanged}>
                                                         Update
                                                     </button>
                                                 </div>
@@ -257,11 +252,6 @@ const ReferAndEarn = () => {
                     padding: 20px;
                     background-color: #f9f9f9;
                     border-radius: 8px;
-                }
-
-                .error {
-                    color: red;
-                    font-size: 12px;
                 }
 
                 .file-preview {
