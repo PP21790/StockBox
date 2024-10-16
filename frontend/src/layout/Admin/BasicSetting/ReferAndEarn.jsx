@@ -209,7 +209,7 @@ const ReferAndEarn = () => {
                                             <label htmlFor="refer_image" className="col-sm-3 col-form-label">
                                                 <b>Image</b>
                                             </label>
-                                            <div className="col-sm-8">
+                                            <div className="col-sm-6">
                                                 <input
                                                     name="refer_image"
                                                     type="file"
@@ -219,12 +219,11 @@ const ReferAndEarn = () => {
                                                     }
                                                 />
                                             </div>
-                                            <div className="col-sm-1">
+                                            <div className="col-sm-3">
                                                 {clients[0].refer_image && (
                                                     <div className="file-preview">
                                                         <img
                                                              src={`${image_baseurl}uploads/basicsetting/${clients[0].refer_image}`}
-                                                            // src= {`/uploads/basicsetting/${clients[0].refer_image}`}
                                                             alt="refer_image"
                                                             className="image-preview"
                                                         />
@@ -272,7 +271,7 @@ const ReferAndEarn = () => {
                 }
 
                 .image-preview {
-                    width: 40px;
+                    width: auto;
                     height: 40px;
                     object-fit: cover;
                     border-radius: 4px;

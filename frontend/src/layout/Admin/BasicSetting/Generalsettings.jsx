@@ -4,6 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import Swal from 'sweetalert2';
 import { Link, useNavigate } from 'react-router-dom';
+import { image_baseurl } from '../../../Utils/config';
 
 
 const Generalsettings = () => {
@@ -200,8 +201,9 @@ const Generalsettings = () => {
 
                                                 {clients[0].favicon && (
                                                     <div className="file-preview">
-
-                                                        <img src={`/assets/uploads/basicsetting/${clients[0].favicon}`} alt="Favicon Preview" className="image-preview" />
+                                                            {/* // src={`${image_baseurl}uploads/basicsetting/${clients[0].refer_image}`} */}
+                                                        
+                                                        <img src={`${image_baseurl}uploads/basicsetting/${clients[0].favicon}`} alt="Favicon Preview" className="image-preview" />
                                                     </div>
                                                 )}
 
@@ -227,7 +229,9 @@ const Generalsettings = () => {
                                                 {clients[0].logo && (
                                                     <div className="file-preview">
 
-                                                        <img src={`/assets/uploads/basicsetting/${clients[0].logo}`} alt="Logo Preview" className="image-preview" />
+                                                        <img 
+                                                            // src={`${image_baseurl}uploads/basicsetting/${clients[0].refer_image}`}
+                                                        src={`${image_baseurl}uploads/basicsetting/${clients[0].logo}`} alt="Logo Preview" className="image-preview" />
                                                     </div>
                                                 )}
 
