@@ -4,6 +4,8 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import Swal from 'sweetalert2';
 import { Link, useNavigate } from 'react-router-dom';
+import { image_baseurl } from '../../../Utils/config';
+
 
 const ReferAndEarn = () => {
     const token = localStorage.getItem('token');
@@ -87,6 +89,7 @@ const ReferAndEarn = () => {
 
                                 try {
                                     const response = await UpdatereferAndEarn(req, token);
+           
                                     if (response.status) {
                                         Swal.fire({
                                             title: 'Update Successful!',
@@ -220,8 +223,9 @@ const ReferAndEarn = () => {
                                                 {clients[0].refer_image && (
                                                     <div className="file-preview">
                                                         <img
-                                                            src={`/assets/uploads/basicsetting/${clients[0].refer_image}`}
-                                                            alt="Image Preview"
+                                                             src={`${image_baseurl}uploads/basicsetting/${clients[0].refer_image}`}
+                                                            // src= {`/uploads/basicsetting/${clients[0].refer_image}`}
+                                                            alt="refer_image"
                                                             className="image-preview"
                                                         />
                                                     </div>

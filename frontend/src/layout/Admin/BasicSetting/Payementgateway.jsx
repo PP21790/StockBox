@@ -76,7 +76,7 @@ const Payementgateway = () => {
                     timer: 1500,
                     timerProgressBar: true,
                 });
-                setInitialValues(updateapi); // Reset the initial values after a successful update
+                setInitialValues(updateapi); 
             }
         } catch (error) {
             Swal.fire({
@@ -147,7 +147,7 @@ const Payementgateway = () => {
                                     type="button"
                                     className="btn btn-primary mb-2"
                                     onClick={UpdateApi}
-                                    disabled={!hasChanges()} // Disable the button if no changes
+                                    disabled={!hasChanges()} 
                                 >
                                     Update
                                 </button>
