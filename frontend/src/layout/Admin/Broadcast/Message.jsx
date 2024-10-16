@@ -406,11 +406,9 @@ const Message = () => {
 
                                                 return (
                                                     <div className="row" key={index}>
-
                                                         <div className="col py-2">
                                                             <div className="card" style={{ borderRadius: "10px" }}>
                                                                 <div className="card-body">
-
                                                                     <div className="float-end text-muted">
                                                                         <Tooltip placement="top" overlay="Update">
                                                                             <SquarePen
@@ -418,7 +416,10 @@ const Message = () => {
                                                                                     setModel(true);
                                                                                     setServiceid(item);
                                                                                     setUpdatetitle({
-                                                                                        message: item.message, id: item._id, service: item.service, subject: item.subject
+                                                                                        message: item.message,
+                                                                                        id: item._id,
+                                                                                        service: item.service,
+                                                                                        subject: item.subject,
                                                                                     });
                                                                                 }}
                                                                             />
@@ -428,7 +429,6 @@ const Message = () => {
                                                                         </Tooltip>
                                                                     </div>
                                                                     <h4 className="card-title text-muted">
-
                                                                         <span>
                                                                             {matchedService?.segment === "C" ? " CASH" :
                                                                                 matchedService?.segment === "O" ? " OPTION" :
@@ -436,38 +436,25 @@ const Message = () => {
                                                                         </span>
                                                                     </h4>
                                                                     <hr />
-                                                                    <p><strong> Subject:</strong> {item.subject}</p>
-                                                                    <p className="card-text" >
-                                                                        <strong> Message: </strong> {item.message}
+                                                                    <p><strong>Subject:</strong> {item.subject}</p>
+                                                                    <p className="card-text">
+                                                                        <strong>Message:</strong> 
+                                                                         <span
+                                                                            dangerouslySetInnerHTML={{ __html: item.message }}
+                                                                            style={{ display: 'block', marginTop: '0.5rem' }}
+                                                                        />
+                                                                       
                                                                     </p>
-                                                                    <p> <strong>Created At:</strong> {fDate(item.created_at)}</p>
-                                                                    <p> <strong>Updated At:</strong> {fDate(item.updated_at)}</p>
-                                                                    {/* <button
-                                                                        className="btn btn-sm btn-primary"
-                                                                        type="button"
-                                                                        data-bs-target={`#${item._id}`}
-                                                                        data-bs-toggle="collapse"
-                                                                    >
-                                                                        Show Details <i className="bi bi-chevron-down"></i>
-                                                                    </button>
-                                                                    <div className="collapse border" id={item._id} style={{ borderTop: "1px solid #dee2e6" }}>
-                                                                        <div className="p-2 text-monospace">
-
-                                                                            <div>Segment: {matchedService?.segment === "C" ? " CASH" :
-                                                                                matchedService?.segment === "O" ? " OPTION" :
-                                                                                    matchedService?.segment === "F" ? " FUTURE" : ""}</div>
-                                                                            <div>Subject : {item.subject}</div>
-                                                                            <div>Mesaage : {item.message}</div>
-                                                                            <div>Created At: {fDate(item.created_at)}</div>
-                                                                            <div>Updated At: {fDate(item.updated_at)}</div>
-                                                                        </div>
-                                                                    </div> */}
+                                                                    <p><strong>Created At:</strong> {fDate(item.created_at)}</p>
+                                                                    <p><strong>Updated At:</strong> {fDate(item.updated_at)}</p>
+                                                                   
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 );
                                             })}
+
 
 
                                         </div>

@@ -1,36 +1,44 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import DynamicForm from '../../../components/FormicForm';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import { AddClient } from '../../../Services/Admin';
+import { SendBroadCast, GetService } from '../../../Services/Admin';
 
 
 const Addbroadcast = () => {
     const navigate = useNavigate();
-
+    const [servicedata, setServicedata] = useState([]);
+    
     const user_id = localStorage.getItem("id");
     const token = localStorage.getItem("token");
+
+    const getservice = async () => {
+        try {
+            const response = await GetService(token);
+            if (response.status) {
+                setServicedata(response.data);
+            }
+        } catch (error) {
+            console.log("Error fetching services:", error);
+        }
+    };
+
+    useEffect(() => {
+        getservice();
+    }, []);
 
     const validate = (values) => {
         let errors = {};
 
-        if (!values.FullName) {
-            errors.FullName = "Please enter Full Name";
+        if (!values.service) {
+            errors.service = "Please enter service";
         }
-        if (!values.Email) {
-            errors.Email = "Please enter Email";
+        if (!values.subject) {
+            errors.subject = "Please enter subject";
         }
-        if (!values.PhoneNo) {
-            errors.PhoneNo = "Please enter Phone Number";
-        }
-        if (!values.password) {
-            errors.password = "Please enter password";
-        }
-        if (!values.ConfirmPassword) {
-            errors.ConfirmPassword = "Please confirm your password";
-        } else if (values.password !== values.ConfirmPassword) {
-            errors.ConfirmPassword = "Passwords must match";
+        if (!values.message) {
+            errors.message = "Please enter message";
         }
 
         return errors;
@@ -38,25 +46,23 @@ const Addbroadcast = () => {
 
     const onSubmit = async (values) => {
         const req = {
-            FullName: values.FullName,
-            Email: values.Email,
-            PhoneNo: values.PhoneNo,
-            password: values.password,
-            add_by: user_id,
+            service: values.service,
+            subject: values.subject,
+            message: values.message,
         };
 
         try {
-            const response = await AddClient(req, token);
+            const response = await SendBroadCast(req, token);
             if (response.status) {
                 Swal.fire({
-                    title: "Create Successful!",
+                    title: "Send Successful!",
                     text: response.message,
                     icon: "success",
                     timer: 1500,
                     timerProgressBar: true,
                 });
                 setTimeout(() => {
-                    navigate("/admin/client");
+                    navigate("/admin/message");
                 }, 1500);
             } else {
                 Swal.fire({
@@ -80,12 +86,9 @@ const Addbroadcast = () => {
 
     const formik = useFormik({
         initialValues: {
-            FullName: "",
-            Email: "",
-            PhoneNo: "",
-            password: "",
-            ConfirmPassword: "",
-            add_by: "",
+            service: "",
+            subject: "",
+            message: "", 
         },
         validate,
         onSubmit,
@@ -93,15 +96,19 @@ const Addbroadcast = () => {
 
     const fields = [
         {
-            name: "Select Service",
-            label: "Service",
-            type: "text",
+            name: "service",
+            label: "Select Service",
+            type: "select",
             label_size: 6,
             col_size: 6,
             disable: false,
+            options: servicedata.map((item) => ({
+                label: item.title,
+                value: item._id,
+            })),
         },
         {
-            name: "Subject",
+            name: "subject",
             label: "Subject",
             type: "text",
             label_size: 12,
@@ -109,14 +116,13 @@ const Addbroadcast = () => {
             disable: false,
         },
         {
-            name: "Message",
+            name: "message",
             label: "Message",
-            type: "text5",
+            type: "ckeditor", 
             label_size: 12,
-            col_size: 6,
+            col_size: 12,
             disable: false,
         },
-
     ];
 
     return (
@@ -128,10 +134,11 @@ const Addbroadcast = () => {
                 btn_name="Add Broadcast"
                 btn_name1="Cancel"
                 sumit_btn={true}
-                btn_name1_route={"/admin/client"}
+                btn_name1_route={"/admin/message"}
                 additional_field={<></>}
-
             />
+           
+           
         </div>
     );
 };

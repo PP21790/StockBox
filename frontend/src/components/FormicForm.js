@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { MoveLeft, Plus, Eye, EyeOff } from "lucide-react";
-
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const DynamicForm = ({
     fields,
@@ -107,14 +108,14 @@ const DynamicForm = ({
         formik.setFieldValue("per_trade_value", value.target.value);
     };
 
-    const [passwordVisible, setPasswordVisible] = useState(false); 
+    const [passwordVisible, setPasswordVisible] = useState(false);
 
     const togglePasswordVisibility = () => {
         setPasswordVisible(!passwordVisible);
     };
 
 
-    const [passwordVisible1, setPasswordVisible1] = useState(false); 
+    const [passwordVisible1, setPasswordVisible1] = useState(false);
 
     const togglePasswordVisibility1 = () => {
         setPasswordVisible1(!passwordVisible1);
@@ -331,16 +332,16 @@ const DynamicForm = ({
                                                                     onChange={(e) => handleFileChange2(e, index, field.name)}
                                                                     name={field.name}
                                                                 />
-                                                                            </div>
-                                                                        </div>
+                                                            </div>
+                                                        </div>
 
-                                                                {/* Additional content for image preview */}
-                                                                {field.additional_content && (
-                                                                    <div className={`col-lg-${field.col_size}`}>
-                                                                        {field.additional_content}
-                                                                    </div>
-                                                                )}
-                                                       
+                                                        {/* Additional content for image preview */}
+                                                        {field.additional_content && (
+                                                            <div className={`col-lg-${field.col_size}`}>
+                                                                {field.additional_content}
+                                                            </div>
+                                                        )}
+
 
 
                                                     </>
@@ -715,7 +716,7 @@ const DynamicForm = ({
                                                     </>
                                                 ) : field.type === "password1" ? (
                                                     <>
-                                                         <div className={`col-lg-${field.col_size}`}>
+                                                        <div className={`col-lg-${field.col_size}`}>
                                                             <div className=" input-block row">
                                                                 <label
                                                                     className={`col-lg-${field.label_size} col-form-labelp-0 `}
@@ -985,6 +986,39 @@ const DynamicForm = ({
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                    </>
+                                                ) : field.type === "ckeditor" ? (
+                                                    <>
+                                                        <div style={{ marginTop: "20px" }}>
+                                                            <ReactQuill
+                                                                value={formik.values.message}
+                                                                onChange={(value) => formik.setFieldValue('message', value)}
+                                                                modules={{
+                                                                    toolbar: [
+                                                                        [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
+                                                                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                                                                        ['bold', 'italic', 'underline'],
+                                                                        ['link', 'image'],
+                                                                        ['clean'],
+                                                                    ],
+                                                                }}
+                                                                formats={[
+                                                                    'header', 'font', 'size', 'bold', 'italic', 'underline',
+                                                                    'list', 'bullet', 'link', 'image', 'clean',
+                                                                ]}
+                                                                style={{
+                                                                    height: '200px',
+                                                                    border: '1px solid #ccc',
+                                                                    borderRadius: '4px', 
+                                                                    padding: '10px',
+                                                                    backgroundColor: '#fff',
+                                                                    fontFamily: 'inherit',
+                                                                    fontSize: 'inherit', 
+                                                                    overflow: 'auto', 
+                                                                }}
+                                                            />
+                                                        </div>
+
                                                     </>
                                                 ) : field.type === "security" ? (
                                                     <>
