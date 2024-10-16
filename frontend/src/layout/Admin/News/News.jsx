@@ -123,7 +123,7 @@ const News = () => {
                     timer: 2000,
                 });
 
-                setTitle({ title: "", add_by: "" , description:""});
+                setTitle({ title: "", add_by: "", description: "" });
                 getNews();
 
                 const modal = document.getElementById('exampleModal');
@@ -483,15 +483,10 @@ const News = () => {
 
 
 
-                            
-                                    <div className="col-sm-1 text-center flex-column d-none d-sm-flex">
-                                        <div className="row h-50">
-                                            <div className="col">&nbsp;</div>
-                                            <div className="col">&nbsp;</div>
-                                        </div>
-                                    </div>
 
-                                    
+
+
+
                                     <div className="col-sm py-2">
 
                                         <div className={`card ${client.borderClass || 'radius-15'} d-flex justify-content-center align-items-center`} >
@@ -525,7 +520,7 @@ const News = () => {
                                                 <hr />
                                                 <div className="row">
                                                     {/* Image on the left side */}
-                                                    <div className="col-md-2" style={{ borderRight: "1px solid #D0D0D0" }}>
+                                                    <div className="col-md-2" style={{ borderRight: "1px solid #D0D0D0", textAlign: "center" }}>
                                                         <img
                                                             src={`${image_baseurl}uploads/news/${client.image}`}
 
@@ -537,7 +532,7 @@ const News = () => {
                                                     </div>
 
 
-                                                    <div className="col-md-10">
+                                                    <div className="col-md-10 ps-4">
 
                                                         <h5>Description:</h5>
                                                         <p className="card-text">{client.description}</p>

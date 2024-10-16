@@ -44,6 +44,7 @@ import Payementgateway from '../layout/Admin/BasicSetting/Payementgateway';
 import Emailsettings from '../layout/Admin/BasicSetting/Emailsettings';
 import Freeclient from '../layout/Admin/Admin_client/Freeclient';
 import Message from '../layout/Admin/Broadcast/Message';
+import Addbroadcast from '../layout/Admin/Broadcast/Addbroadcast';
 
 import Viewclientdetail from '../layout/Admin/Admin_client/Viewclient';
 import Emailtemplate from '../layout/Admin/BasicSetting/Emailtemplate';
@@ -54,6 +55,7 @@ import Closesignal from '../layout/Admin/Admin_signal/Closesignal';
 import PaymentRequest from '../layout/Admin/PaymentRequest/PaymentRequest';
 import FreetrialStatus from '../layout/Admin/Freetrialstatus/FreetrialStatus';
 import ReferAndEarn from '../layout/Admin/BasicSetting/ReferAndEarn';
+import Updatebroadcast from '../layout/Admin/Broadcast/Updatebroadcast';
 
 
 
@@ -183,6 +185,8 @@ function MainApp() {
                     <Route path="/help" element={<Help />} />
                     <Route path="/paymentrequest" element={<PaymentRequest/>} />
                     <Route path="/freetrialstatus" element={<FreetrialStatus/>} />
+                    <Route path="/addbroadcast" element={<Addbroadcast />} />
+                    <Route path="/updatebroadcast" element={<Updatebroadcast />} />
                     
                     
                     

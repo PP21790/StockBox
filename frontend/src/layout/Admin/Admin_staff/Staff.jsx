@@ -154,7 +154,7 @@ const Staff = () => {
         },
         {
             name: 'User Name',
-            selector: row => row.UserName   ,
+            selector: row => row.UserName,
             sortable: true,
             width: '200px',
         },
@@ -188,7 +188,7 @@ const Staff = () => {
                 </div>
             ),
             sortable: true,
-            width: '142px',
+            width: '170px',
         },
         {
             name: 'Created At',
@@ -218,12 +218,8 @@ const Staff = () => {
             name: 'Actions',
             cell: row => (
                 < >
-                
-                    <div>
-                        <Tooltip placement="top" overlay="View">
-                            <Eye />
-                        </Tooltip>
-                    </div>
+
+
                     <div>
                         <Tooltip placement="top" overlay="Permision">
                             <UserCog onClick={() => updatepermission(row)} />

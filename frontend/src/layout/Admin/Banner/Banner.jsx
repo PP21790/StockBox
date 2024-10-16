@@ -301,11 +301,7 @@ const Banner = () => {
             name: 'Actions',
             cell: row => (
                 <>
-                    <div>
-                        <Tooltip placement="top" overlay="View">
-                            <Eye style={{ marginRight: "10px" }} />
-                        </Tooltip>
-                    </div>
+
                     <div>
                         <Tooltip placement="top" overlay="Updaate">
                             <SquarePen

@@ -112,7 +112,7 @@ const Dashbord = () => {
             name: 'CreatedAt',
             selector: row => fDateTime(row.createdAt),
             sortable: true,
-            width: '200px',
+
         },
         // {
         //     name: 'Actions',
