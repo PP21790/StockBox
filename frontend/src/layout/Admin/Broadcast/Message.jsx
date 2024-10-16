@@ -299,15 +299,15 @@ const Message = () => {
                         <div className="card-body">
                             <div className="d-flex justify-content-end">
                                 <div className='me-2 mb-3'>
-                                    <button
-                                        type="button"
+                                    <Link 
+                                    to="/admin/addbroadcast"
+                                       
                                         className="btn btn-primary"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#exampleModal"
+                                      
                                     >
                                         <i className="bx bxs-plus-square" />
                                         Add Broadcast
-                                    </button>
+                                    </Link>
                                 </div>
                                 <div
                                     className="modal fade"

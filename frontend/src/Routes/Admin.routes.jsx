@@ -45,6 +45,7 @@ import Payementgateway from '../layout/Admin/BasicSetting/Payementgateway';
 import Emailsettings from '../layout/Admin/BasicSetting/Emailsettings';
 import Freeclient from '../layout/Admin/Admin_client/Freeclient';
 import Message from '../layout/Admin/Broadcast/Message';
+import Addbroadcast from '../layout/Admin/Broadcast/Addbroadcast';
 
 import Viewclientdetail from '../layout/Admin/Admin_client/Viewclient';
 import Emailtemplate from '../layout/Admin/BasicSetting/Emailtemplate';
@@ -183,6 +184,7 @@ function MainApp() {
                     <Route path="/help" element={<Help />} />
                     <Route path="/paymentrequest" element={<PaymentRequest/>} />
                     <Route path="/freetrialstatus" element={<FreetrialStatus/>} />
+                    <Route path="/addbroadcast" element={<Addbroadcast />} />
                     
                     
                     
