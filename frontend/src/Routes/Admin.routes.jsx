@@ -159,13 +159,7 @@ function MainApp() {
 
 
                     <Route path="/blogs" element={<Blogs />} />
-                    <Route path="/addblogs" element={<Addblogs />} />
-                    <Route path="/viewblog" element={<Viewblog />} />
-
-
                     <Route path="/news" element={<News />} />
-                    <Route path="/addnews" element={<Addnews />} />
-                    <Route path="/updatenews" element={<Updatenews />} />
 
 
 
@@ -175,7 +169,6 @@ function MainApp() {
 
 
                     <Route path="/termsandcondtion" element={<Condition />} />
-                    <Route path="/updatecondtion" element={<Updatecondition />} />
 
 
                     <Route path="/banner" element={<Banner />} />
