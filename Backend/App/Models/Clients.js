@@ -102,7 +102,7 @@ const clientsModel = Schema({
     },
     del: {
         type: String,
-        enum: ['1', '0'],
+        enum: [1, 0],
         default: 0
     },
     ActiveStatus: {
