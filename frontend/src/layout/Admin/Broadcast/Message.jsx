@@ -299,12 +299,12 @@ const Message = () => {
                         <div className="card-body">
                             <div className="d-flex justify-content-end">
                                 <div className='me-2 mb-3'>
-                                    <Link 
-                                    to="/admin/addbroadcast"
-                                       
+                                    <Link
+                                        to="/admin/addbroadcast"
+
                                         className="btn btn-primary"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#exampleModal"
+                                    // data-bs-toggle="modal"
+                                    // data-bs-target="#exampleModal"
                                     >
                                         <i className="bx bxs-plus-square" />
                                         Add Broadcast
@@ -574,7 +574,7 @@ const Message = () => {
                                         onClick={updateBroadcastMessage}
                                     // disabled={!updatetitle.title || !updatetitle.service}
                                     >
-                                        Update Message 
+                                        Update Message
                                     </button>
                                 </div>
                             </div>

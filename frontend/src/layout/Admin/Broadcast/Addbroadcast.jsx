@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { AddClient } from '../../../Services/Admin';
 
 
-const AddUser = () => {
+const Addbroadcast = () => {
     const navigate = useNavigate();
 
     const user_id = localStorage.getItem("id");
@@ -94,44 +94,29 @@ const AddUser = () => {
     const fields = [
         {
             name: "Select Service",
-            label: "Full Name",
+            label: "Service",
             type: "text",
             label_size: 6,
             col_size: 6,
             disable: false,
         },
         {
-            name: "Email",
-            label: "Email",
+            name: "Subject",
+            label: "Subject",
             type: "text",
             label_size: 12,
             col_size: 6,
             disable: false,
         },
         {
-            name: "PhoneNo",
-            label: "Phone Number",
-            type: "text3",
+            name: "Message",
+            label: "Message",
+            type: "text5",
             label_size: 12,
             col_size: 6,
             disable: false,
         },
-        {
-            name: "password",
-            label: "Password",
-            type: "password",
-            label_size: 12,
-            col_size: 6,
-            disable: false,
-        },
-        {
-            name: "ConfirmPassword",
-            label: "Confirm Password",
-            type: "password",
-            label_size: 12,
-            col_size: 6,
-            disable: false,
-        },
+
     ];
 
     return (
@@ -140,7 +125,7 @@ const AddUser = () => {
                 fields={fields}
                 formik={formik}
                 page_title="Add Broadcast"
-                btn_name="Add Client"
+                btn_name="Add Broadcast"
                 btn_name1="Cancel"
                 sumit_btn={true}
                 btn_name1_route={"/admin/client"}
@@ -151,4 +136,4 @@ const AddUser = () => {
     );
 };
 
-export default AddUser;
+export default Addbroadcast;
