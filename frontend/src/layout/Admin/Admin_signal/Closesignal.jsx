@@ -142,7 +142,7 @@ const Closesignal = () => {
         },
         {
             name: 'Entry Type',
-            selector: row => row.close_status == true ? "sell" : "buy",
+            selector: row => row.calltype ,
             sortable: true,
             width: '200px',
         },

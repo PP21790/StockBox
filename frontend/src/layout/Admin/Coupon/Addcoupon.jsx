@@ -21,6 +21,14 @@ const Addcoupon = () => {
         if (!values.code) {
             errors.code = "Please enter code";
         }
+        if (values.code) {
+            if (values.code.length < 6 || values.code.length > 8) {
+                errors.code = "Please enter between 6 and 8 characters.";
+            } else if (!/^[a-zA-Z0-9]+$/.test(values.code)) {
+                errors.code = "Code must contain only numbers and letters.";
+            }
+        }
+
         if (!values.type) {
             errors.type = "Please enter type";
         }
@@ -126,7 +134,7 @@ const Addcoupon = () => {
         {
             name: "code",
             label: "Code",
-            type: "number",
+            type: "text",
             label_size: 12,
             col_size: 6,
             disable: false,
