@@ -303,7 +303,8 @@ const Message = () => {
                                     to="/admin/addbroadcast"
                                        
                                         className="btn btn-primary"
-                                      
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal"
                                     >
                                         <i className="bx bxs-plus-square" />
                                         Add Broadcast
