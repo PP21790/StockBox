@@ -603,6 +603,24 @@ export async function getcategoryplan(token) {
 }
 
 
+// category active plan 
+
+export async function getActivecategoryplan(token) {
+
+    try {
+        const res = await axios.get(`${Config.base_url}plancategory/activeplancategory`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
+
+
 
 // plan category add 
 
@@ -2081,6 +2099,32 @@ export async function getHelpMessagelist(token) {
 export async function addfreeClient(data, token) {
     const formData = new FormData();
     formData.append('freetrial', data.freetrial);
+    try {
+        const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+// update refer and earn 
+
+export async function UpdatereferAndEarn(data, token) {
+    const formData = new FormData();
+    formData.append('sender_earn', data.sender_earn);
+    formData.append('receiver_earn', data.receiver_earn);
+    formData.append('refer_title', data.refer_title);
+    formData.append('refer_description', data.refer_description);
+    formData.append('refer_image', data.refer_image);
+    
     try {
         const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
             headers: {

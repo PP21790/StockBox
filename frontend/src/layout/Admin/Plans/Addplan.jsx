@@ -3,13 +3,11 @@ import { useFormik } from 'formik';
 import DynamicForm from '../../../components/FormicForm';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import { Addplanbyadmin, getcategoryplan } from '../../../Services/Admin';
+import { Addplanbyadmin, getcategoryplan, getActivecategoryplan } from '../../../Services/Admin';
 
 
 
 const Addplan = () => {
-
-
 
 
     const navigate = useNavigate();
@@ -19,10 +17,9 @@ const Addplan = () => {
 
 
 
-
     const getcategoryplanlist = async () => {
         try {
-            const response = await getcategoryplan(token);
+            const response = await getActivecategoryplan(token);
             if (response.status) {
                 setClients(response.data);
             }
@@ -34,7 +31,6 @@ const Addplan = () => {
     useEffect(() => {
         getcategoryplanlist();
     }, []);
-
 
 
 
@@ -51,7 +47,7 @@ const Addplan = () => {
         if (!values.price) {
             errors.price = "Please enter Price";
         }
-        if(values.price && values.price < 0){
+        if (values.price && values.price < 0) {
             errors.price = "Please Enter Price greater Than 0";
         }
         if (!values.validity) {
@@ -129,7 +125,7 @@ const Addplan = () => {
             label: "Category",
             type: 'select',
             options: clients.map((item) => ({
-                label: item.title,
+                label: `${item.title} (${item.servicesDetails.map(service => service.title).join(', ')})`,
                 value: item._id,
             })),
             label_size: 12,
@@ -147,10 +143,10 @@ const Addplan = () => {
                 { value: "1 months", label: "1 months" },
                 { value: "3 months", label: "3 months" },
                 { value: "6 months", label: "6 months" },
-                { value: "9 months" ,label:"9 months" },
+                { value: "9 months", label: "9 months" },
                 { value: "1 years", label: "1 years" }
-               
-            ]  
+
+            ]
         },
         {
             name: "title",

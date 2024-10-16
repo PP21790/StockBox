@@ -18,7 +18,6 @@ import Staff from '../layout/Admin/Admin_staff/Staff';
 import AddUser from '../layout/Admin/Admin_client/AddUser';
 import AddStaff from '../layout/Admin/Admin_staff/AddStaff';
 import Update from '../layout/Admin/Admin_staff/Update';
-import Refer from '../layout/Admin/Admin_refer/Refer';
 import Paymenthistory from '../layout/Admin/Payment_history/Paymenthistory';
 import EditClient from '../layout/Admin/Admin_client/EditClient';
 import AddSignal from '../layout/Admin/Admin_signal/AddSignal';
@@ -54,6 +53,7 @@ import Help from '../layout/Admin/Help_center/Help';
 import Closesignal from '../layout/Admin/Admin_signal/Closesignal';
 import PaymentRequest from '../layout/Admin/PaymentRequest/PaymentRequest';
 import FreetrialStatus from '../layout/Admin/Freetrialstatus/FreetrialStatus';
+import ReferAndEarn from '../layout/Admin/BasicSetting/ReferAndEarn';
 
 
 
@@ -124,7 +124,6 @@ function MainApp() {
 
 
                     <Route path="/faq" element={<Faq/>} />
-                    <Route path="/refer" element={<Refer />} />
                     <Route path="/paymenthistory" element={<Paymenthistory />} />
                     
 
@@ -173,6 +172,7 @@ function MainApp() {
                     <Route path="/paymentgeteway" element={<Payementgateway/>} />
                     <Route path="/emailsetting" element={<Emailsettings/>} />
                     <Route path="/emailtemplate" element={<Emailtemplate/>} />
+                    <Route path="/referandearn" element={<ReferAndEarn/>} />
                     
 
 

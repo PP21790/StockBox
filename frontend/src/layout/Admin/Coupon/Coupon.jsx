@@ -182,7 +182,7 @@ const Coupon = () => {
             width: '206px',
         },
         {
-            name: 'Min Coupon Value',
+            name: 'Max Discount Value',
             selector: row => row.mincouponvalue,
             sortable: true,
             width: '206px',

@@ -3,6 +3,7 @@ import { getDashboarddetail } from '../../../Services/Admin'
 import { GetClient } from '../../../Services/Admin';
 import { fDateTime } from '../../../Utils/Date_formate';
 import Table from '../../../components/Table';
+import { Link } from 'react-router-dom';
 
 
 const Dashbord = () => {
@@ -267,12 +268,15 @@ const Dashbord = () => {
                                 </div>
                                 <div className="d-flex align-items-center text-white">
                                     <p className="mb-0">Total Clients</p>
+
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <i className="bx bx-up-arrow-alt" />
+                                            <Link to="/admin/client"><i className="bx bx-up-arrow-alt" /> </Link>
                                         </span>
+
                                     </p>
+
                                 </div>
                             </div>
                         </div>
@@ -304,7 +308,8 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <i className="bx bx-up-arrow-alt" />
+                                        <Link to="/admin/client"><i className="bx bx-up-arrow-alt"/></Link>
+                                            {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
                                 </div>
@@ -338,7 +343,8 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <i className="bx bx-up-arrow-alt" />
+                                        <Link to="/admin/client"><i className="bx bx-up-arrow-alt"/></Link>
+                                            {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
                                 </div>
@@ -372,7 +378,8 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <i className="bx bx-up-arrow-alt" />
+                                        <Link to="/admin/staff"><i className="bx bx-up-arrow-alt"/></Link>
+                                            {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
                                 </div>
@@ -406,7 +413,8 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <i className="bx bx-up-arrow-alt" />
+                                        <Link to="/admin/signal"><i className="bx bx-up-arrow-alt"/></Link>
+                                            {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
                                 </div>
@@ -440,7 +448,8 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <i className="bx bx-up-arrow-alt" />
+                                        <Link to="/admin/closesignal"><i className="bx bx-up-arrow-alt"/></Link>
+                                            {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
                                 </div>
@@ -475,7 +484,8 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <i className="bx bx-up-arrow-alt" />
+                                        <Link to="/admin/signal"><i className="bx bx-up-arrow-alt"/></Link>
+                                            {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
                                 </div>
@@ -509,7 +519,8 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <i className="bx bx-up-arrow-alt" />
+                                        <Link to="/admin/closesignal"><i className="bx bx-up-arrow-alt"/></Link>
+                                            {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
                                 </div>

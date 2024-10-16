@@ -42,7 +42,8 @@ const menuItems = [
       { title: 'Email Setting', icon: 'bx-radio-circle', link: '/admin/emailsetting' },
       { title: 'Api Information', icon: 'bx-radio-circle', link: '/admin/Apiinfo' },
       { title: 'Payment Gateway', icon: 'bx-radio-circle', link: '/admin/paymentgeteway' },
-      { title: 'Email Template', icon: 'bx-radio-circle', link: '/admin/emailtemplate' }
+      { title: 'Email Template', icon: 'bx-radio-circle', link: '/admin/emailtemplate' },
+      { title: 'Refer And Earn', icon: 'bx-radio-circle', link: '/admin/referandearn' }
     ]
   },
   { title: 'Broadcast SMS', icon: 'bx-conversation', link: '/admin/message' },

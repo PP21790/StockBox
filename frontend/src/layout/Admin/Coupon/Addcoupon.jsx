@@ -133,7 +133,7 @@ const Addcoupon = () => {
         },
         {
             name: "code",
-            label: "Code",
+            label: "Coupon Code",
             type: "text",
             label_size: 12,
             col_size: 6,
@@ -142,10 +142,14 @@ const Addcoupon = () => {
         {
             name: "type",
             label: "Type",
-            type: "text",
+            type: "select",
             label_size: 12,
             col_size: 6,
             disable: false,
+            options: [
+                { value: "percentage", label: "Percentage" },
+                { value: "fixed", label: "Fixed" },  
+            ]  
         },
         {
             name: "value",
