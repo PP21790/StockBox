@@ -20,7 +20,6 @@ const BannerSchema = new Schema({
     },
     add_by: {
         type: String,
-        required: true,
         trim: true,
         default: null
     },

@@ -16,11 +16,6 @@ class Coupon {
                     return reject(err);
                 }
 
-                if (!req.files || !req.files['image']) {
-                   
-                    return res.status(400).json({ status: false, message: "No file uploaded." });
-                  }
-
 
                 resolve();
             });
@@ -190,10 +185,6 @@ class Coupon {
                 return reject(err);
             }
 
-            if (!req.files || !req.files['image']) {
-               
-                return res.status(400).json({ status: false, message: "No file uploaded." });
-              }
             resolve();
         });
     });

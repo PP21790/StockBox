@@ -20,6 +20,7 @@ const Clients_Modal = db.Clients;
 const Freetrial_Modal = db.Freetrial;
 const Broadcast_Modal = db.Broadcast;
 const Order_Modal = db.Order;
+const License_Modal = db.License;
 
 
 mongoose  = require('mongoose');
@@ -420,7 +421,7 @@ async getallPlan(req, res) {
                 console.error("Error saving updated plan:", error);
             }
         } else {
-            // If the plan does not exist, create a new one
+        
             const newPlanManage = new Planmanage({
                 clientid: client_id,
                 serviceid: serviceId,
@@ -437,7 +438,7 @@ async getallPlan(req, res) {
         }
         
       }
-  
+
       // Create a new plan subscription record
       const newSubscription = new PlanSubscription_Modal({
         plan_id,
@@ -674,9 +675,12 @@ async applyCoupon (req, res) {
       }
 
       // Ensure the discount does not exceed the minimum coupon value
+
+      if(coupon.mincouponvalue) {
       if (discount > coupon.mincouponvalue) {
           discount = coupon.mincouponvalue;
       }
+    }
 
       // Calculate the final price after applying the discount
       const finalPrice = purchaseValue - discount;
