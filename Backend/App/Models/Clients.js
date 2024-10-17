@@ -13,7 +13,6 @@ const clientsModel = Schema({
         type: String,
         required: true,
         trim: true,
-        unique: true,
         default: null
     },
     PhoneNo: {
@@ -22,7 +21,6 @@ const clientsModel = Schema({
         trim: true,
         min: 10,
         max: 10,
-        unique: true,
         default: null
     },
     password:{
@@ -50,7 +48,7 @@ const clientsModel = Schema({
     kyc_verification: {
         type: String,
         enum: ['1', '0'],
-        default: 0
+        default: '0'
     },
     pdf: {
         type: String,

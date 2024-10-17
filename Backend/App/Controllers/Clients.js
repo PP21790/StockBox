@@ -152,13 +152,11 @@ class Clients {
 
   async getClient(req, res) {
     try {
-
-      
+    
       const { } = req.body;
 
-    //  const result = await Clients_Modal.find()
-   // const result = await Clients_Modal.find({ del: 0 });
     const result = await Clients_Modal.find({ del: 0 }).sort({ createdAt: -1 });
+    console.log(result);
       return res.json({
         status: true,
         message: "get",

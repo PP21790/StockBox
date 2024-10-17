@@ -163,17 +163,15 @@ class BannerController {
             const image = req.files && req.files['image'] ? req.files['image'][0].filename : null;
             // Prepare the update object
             
+            const updateFields = { hyperlink };
             if (image) {
-                updateData.image = image;
+                updateFields.image = image;
             }
-            
-                updateData.hyperlink = hyperlink;
-           
-            
+
     
-            const updatedBanner = await Banner_Modal.findByIdAndUpdate(
+            const updatedbanner = await Banner_Modal.findByIdAndUpdate(
                 id,
-                updateData,
+                updateFields,
                 { new: true, runValidators: true } // Options: return the updated document and run validators
             );
             // If the news item is not found

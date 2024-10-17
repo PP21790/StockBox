@@ -485,19 +485,19 @@ if (existingPlans.length > 0) {
         
       }
 
-
+////////////////// 17/10/2024 ////////////////////////
         const currentDate = new Date();
         const targetMonth = `${String(currentDate.getMonth() + 1).padStart(2, '0')}${currentDate.getFullYear()}`;
 
         let license = await License_Modal.findOne({ month: targetMonth }).exec();
 
         if (license) {
-            license.nofoclient += monthsToAdd;
-            console.log('Month found, updating nofoclient.');
+            license.noofclient += monthsToAdd;
+            console.log('Month found, updating noofclient.',monthsToAdd);
         } else {
             license = new License_Modal({
                 month: targetMonth,
-                nofoclient: monthsToAdd
+                noofclient: monthsToAdd
             });
             console.log('Month not found, inserting new record.');
         }
@@ -510,7 +510,7 @@ if (existingPlans.length > 0) {
         }
 
       
-
+////////////////// 17/10/2024 ////////////////////////
       // Create a new plan subscription record
       const newSubscription = new PlanSubscription_Modal({
         plan_id,

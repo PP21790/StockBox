@@ -48,16 +48,20 @@ class Clients {
           message: "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&#)" 
         });
       }
+  
+
      
 
       const existingUser = await Clients_Modal.findOne({
         $and: [
-          { del: '0' },
+          { del: 0 },
           {
             $or: [{ Email }, { PhoneNo }]
           }
         ]
       });
+
+
   
       if (existingUser) {
         if (existingUser.Email === Email) {
@@ -80,6 +84,10 @@ class Clients {
 
       const hashedPassword = await bcrypt.hash(password, 10);
       const refer_token = crypto.randomBytes(10).toString('hex'); 
+
+
+
+
       const result = new Clients_Modal({
       FullName: FullName,
       Email: Email,
@@ -87,8 +95,10 @@ class Clients {
       password: hashedPassword,
       refer_token:refer_token,
       token:refer_token,
-      })
-     
+      });
+
+
+
       await result.save();
 
 
@@ -817,7 +827,10 @@ async  clientKycAndAgreement(req, res) {
         .replace(/{{company_address}}/g, company_address)
         .replace(/{{aadhaarno}}/g, aadhaarno);
 
-    const browser = await puppeteer.launch();
+   // const browser = await puppeteer.launch();
+   const browser = await puppeteer.launch({
+    args: ['--no-sandbox', '--disable-setuid-sandbox']
+       });
     const page = await browser.newPage();
     await page.setContent(htmlContent);
 
@@ -853,7 +866,7 @@ async  clientKycAndAgreement(req, res) {
     const authToken = Buffer.from(`${digio_client_id}:${digio_client_secret}`).toString('base64');
 
     const payload = JSON.stringify({   
-        customer_identifier: email,
+        customer_identifier: phone,
         customer_name: name,
         reference_id: refid,
         template_name: digio_template_name,
@@ -948,12 +961,12 @@ async uploadDocument(req, res) {
   // Prepare the request body for signing
   const requestBody = {
       signers: [{
-          identifier: client.Email,
+          identifier: client.PhoneNo,
           aadhaar_id: client.aadhaarno,
           reason: 'Contract'
       }],
       sign_coordinates: {
-          [client.Email]: {
+          [client.PhoneNo]: {
               "1": [{ llx: 315, lly: 160, urx: 600, ury: 60 }],
               "2": [{ llx: 315, lly: 160, urx: 600, ury: 60 }],
               "3": [{ llx: 315, lly: 160, urx: 600, ury: 60 }]
@@ -984,12 +997,12 @@ async uploadDocument(req, res) {
       const refid = Math.floor(10000 + Math.random() * 90000); // Generate a random reference ID
       const doc_id = response.data.id;
       const email = client.Email;
-
+      const PhoneNo = client.PhoneNo;
       // Define the redirect URL
       const baseUrl = "https://app.digio.in/#/gateway/login/";
       const redirectUrl = encodeURIComponent(`http://${req.headers.host}`);
 
-      const fullUrl = `${baseUrl}${doc_id}/${refid}/${email}?redirect_url=${redirectUrl}`;
+      const fullUrl = `${baseUrl}${doc_id}/${refid}/${PhoneNo}?redirect_url=${redirectUrl}`;
 
       // Respond with the redirect URL or use it on the frontend
       return res.json({
