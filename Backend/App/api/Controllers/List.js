@@ -392,7 +392,6 @@ async getallPlan(req, res) {
       // Split the services in the category if they exist
       const planservice = plan.category.service;
       const planservices = planservice ? planservice.split(',') : [];
-  
       // Loop through each service ID and update or add the plan
       for (const serviceId of planservices) {
         const existingPlan = await Planmanage.findOne({ clientid: client_id, serviceid: serviceId }).exec();
@@ -422,6 +421,53 @@ async getallPlan(req, res) {
             }
         } else {
         
+////////////////// 17/10/2024 ////////////////////////
+
+        const today = new Date(); // Aaj ki date
+        const existingPlans = await Planmanage.find({
+            clientid: client_id,
+            enddate: { $gt: today } // End date must be greater than today's date
+        })
+        .sort({ enddate: -1 }) // Sort by `enddate` in descending order
+        .limit(1) // Get the top result
+        .exec();
+
+if (existingPlans.length > 0) {
+    const existingEndDate = existingPlans[0].enddate; // Get the enddate of the existing plan
+    const newEndDate = end; // Assuming `end` is your new plan's end date
+
+    // Check if the new end date is greater than the existing end date
+    if (newEndDate > existingEndDate) {
+       
+      const differenceInTime = newEndDate.getTime() - existingEndDate.getTime(); // Difference in milliseconds
+      const differenceInDays = Math.floor(differenceInTime / (1000 * 3600 * 24)); // Convert milliseconds to days
+      
+      let differenceInMonths;
+      
+      // Logic to determine the number of months
+      if (differenceInDays < 15) {
+          differenceInMonths = 0; // Less than a month
+      } else {
+          // Calculate the difference in months
+          differenceInMonths = differenceInDays / 30; // Convert days to months
+      }
+      
+      // Round the months based on your requirement
+      if (differenceInMonths % 1 >= 0.5) {
+        console.log('aaaaaa');
+        monthsToAdd = Math.ceil(differenceInMonths); // Round up to the nearest whole number
+      } else {
+        console.log('nnnnnn');
+        monthsToAdd = Math.floor(differenceInMonths); // Round down to the nearest whole number
+      }
+      
+    } 
+} 
+
+
+       ////////////////// 17/10/2024 ////////////////////////
+
+
             const newPlanManage = new Planmanage({
                 clientid: client_id,
                 serviceid: serviceId,
@@ -438,6 +484,32 @@ async getallPlan(req, res) {
         }
         
       }
+
+
+        const currentDate = new Date();
+        const targetMonth = `${String(currentDate.getMonth() + 1).padStart(2, '0')}${currentDate.getFullYear()}`;
+
+        let license = await License_Modal.findOne({ month: targetMonth }).exec();
+
+        if (license) {
+            license.nofoclient += monthsToAdd;
+            console.log('Month found, updating nofoclient.');
+        } else {
+            license = new License_Modal({
+                month: targetMonth,
+                nofoclient: monthsToAdd
+            });
+            console.log('Month not found, inserting new record.');
+        }
+
+        try {
+            await license.save();
+            console.log('License updated successfully.');
+        } catch (error) {
+            console.error('Error updating license:', error);
+        }
+
+      
 
       // Create a new plan subscription record
       const newSubscription = new PlanSubscription_Modal({
