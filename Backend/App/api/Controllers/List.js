@@ -20,10 +20,7 @@ const Clients_Modal = db.Clients;
 const Freetrial_Modal = db.Freetrial;
 const Broadcast_Modal = db.Broadcast;
 const Order_Modal = db.Order;
-
-
-
-
+const License_Modal = db.License;
 
 
 mongoose  = require('mongoose');
@@ -424,7 +421,7 @@ async getallPlan(req, res) {
                 console.error("Error saving updated plan:", error);
             }
         } else {
-            // If the plan does not exist, create a new one
+        
             const newPlanManage = new Planmanage({
                 clientid: client_id,
                 serviceid: serviceId,
@@ -441,7 +438,7 @@ async getallPlan(req, res) {
         }
         
       }
-  
+
       // Create a new plan subscription record
       const newSubscription = new PlanSubscription_Modal({
         plan_id,
@@ -658,7 +655,6 @@ async applyCoupon (req, res) {
       if (!coupon) {
           return res.status(404).json({ message: 'Coupon not found or is inactive' });
       }
-      console.log('coupon-',coupon.mincouponvalue);
 
       // Check if the coupon is within the valid date range
       const currentDate = new Date();
@@ -672,16 +668,19 @@ async applyCoupon (req, res) {
       }
       // Calculate the discount based on the coupon type
       let discount = 0;
-      if (coupon.type === 'fix') {
+      if (coupon.type === 'fixed') {
           discount = coupon.value;
       } else if (coupon.type === 'percentage') {
           discount = (coupon.value / 100) * purchaseValue;
       }
 
       // Ensure the discount does not exceed the minimum coupon value
+
+      if(coupon.mincouponvalue) {
       if (discount > coupon.mincouponvalue) {
           discount = coupon.mincouponvalue;
       }
+    }
 
       // Calculate the final price after applying the discount
       const finalPrice = purchaseValue - discount;
@@ -1210,7 +1209,7 @@ async  BroadcastList(req, res) {
     };
 
     // Execute the query to find matching broadcasts
-    const broadcasts = await Broadcast_Modal.find(query);
+    const broadcasts = await Broadcast_Modal.find(query).sort({ created_at: -1 });
 
     // Remove duplicates from the broadcasts array
     const uniqueBroadcasts = Array.from(new Set(broadcasts.map(b => b._id))).map(id => {
@@ -1424,6 +1423,72 @@ async pastPerformances(req, res) {
   }
 }
 
+
+
+
+
+async myService(req, res) {
+  try {
+    const { id } = req.params;
+
+    // Validate input
+    if (!id) {
+      return res.status(400).json({ status: false, message: 'Client ID is required' });
+    }
+  
+
+    const result = await Planmanage.aggregate([
+      {
+        $match: { clientid: id }
+      },
+      {
+        $addFields: {
+          serviceid: { $toObjectId: '$serviceid' } // Convert serviceid to ObjectId for matching
+        }
+      },
+      {
+        $lookup: {
+          from: 'services',           // The name of the Service collection
+          localField: 'serviceid',    // Field in Planmanage
+          foreignField: '_id',        // Field in Service
+          as: 'serviceDetails'        // Output array field
+        }
+      },
+      {
+        $unwind: {
+          path: '$serviceDetails',
+          preserveNullAndEmptyArrays: true // If there's no matching service, it won't remove the document
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          clientid: 1,
+          serviceid: 1,
+          startdate: 1,
+          enddate: 1,
+          serviceName: '$serviceDetails.title' // Rename the service name field for clarity
+        }
+      }
+    ]);
+
+    // Debug output for troubleshooting
+    console.log('Aggregated Result:', result);
+
+
+
+    // Respond with the retrieved subscriptions and client details
+    return res.json({
+      status: true,
+      message: "Subscriptions and client details retrieved successfully",
+      data: result
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ status: false, message: 'Server error', data: [] });
+  }
+}
 
 
 

@@ -29,6 +29,7 @@ module.exports = {
     Freetrial: require("./Freetrial"),
     Helpdesk: require("./Helpdesk"),
     Broadcast: require("./Broadcast"),
+    License: require("./License"),
 
 
 
