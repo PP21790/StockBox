@@ -190,7 +190,7 @@ const Message = () => {
                                                                             <SquarePen
                                                                                 onClick={() => {
 
-                                                                                    navigate("/admin/updatebroadcast/" + item._id, { state: { item } })
+                                                                                    navigate("/admin/updatebroadcast" ,{ state: { item } })
 
                                                                                 }}
                                                                             />

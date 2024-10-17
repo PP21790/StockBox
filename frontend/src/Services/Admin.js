@@ -947,7 +947,7 @@ export async function changeblogsstatus(data, token) {
 
 // delete news 
 
-export async function DeleteBlogs(_id, token) {
+export async function DeleteBlog(_id, token) {
     try {
         const res = await axios.get(`${Config.base_url}blogs/delete/${_id}`, {
             headers: {
