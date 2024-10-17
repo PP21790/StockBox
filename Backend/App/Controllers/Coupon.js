@@ -57,6 +57,9 @@ class Coupon {
             }
             const image = req.files['image'] ? req.files['image'][0].filename : null;
 
+
+            
+
             const result = new Coupon_Modal({
                 name,
                 code,
