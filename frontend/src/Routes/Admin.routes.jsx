@@ -192,7 +192,7 @@ function MainApp() {
                     <Route path="/paymentrequest" element={<PaymentRequest />} />
                     <Route path="/freetrialstatus" element={<FreetrialStatus />} />
                     <Route path="/addbroadcast" element={<Addbroadcast />} />
-                    <Route path="/updatebroadcast" element={<Updatebroadcast />} />
+                    <Route path="/updatebroadcast/:id" element={<Updatebroadcast />} />
 
 
 

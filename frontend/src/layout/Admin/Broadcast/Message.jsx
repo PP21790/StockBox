@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { SendBroadCast, GetService, getBroadCastmessage, ChangeBroadCastStatus, DeleteBroadCastmessage, UpdateCastmessage } from '../../../Services/Admin';
 import Swal from 'sweetalert2';
 import Table from '../../../components/Table';
@@ -9,6 +9,9 @@ import { fDateTime, fDate } from '../../../Utils/Date_formate';
 
 
 const Message = () => {
+
+
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -88,47 +91,6 @@ const Message = () => {
     };
 
 
-    // const handleSwitchChange = async (event, id) => {
-    //     const originalChecked = event.target.checked;
-    //     const user_active_status = originalChecked;
-    //     const data = { id: id, status: user_active_status };
-
-    //     const result = await Swal.fire({
-    //         title: "Do you want to save the changes?",
-    //         showCancelButton: true,
-    //         confirmButtonText: "Save",
-    //         cancelButtonText: "Cancel",
-    //         allowOutsideClick: false,
-    //     });
-
-    //     if (result.isConfirmed) {
-    //         try {
-    //             const response = await ChangeBroadCastStatus(data, token);
-    //             if (response.status) {
-    //                 Swal.fire({
-    //                     title: "Saved!",
-    //                     icon: "success",
-    //                     timer: 1000,
-    //                     timerProgressBar: true,
-    //                 });
-    //                 setTimeout(() => {
-    //                     Swal.close();
-    //                 }, 1000);
-    //             }
-    //             sendmessagedetail();
-    //         } catch (error) {
-    //             Swal.fire(
-    //                 "Error",
-    //                 "There was an error processing your request.",
-    //                 "error"
-    //             );
-    //         }
-    //     } else if (result.dismiss === Swal.DismissReason.cancel) {
-    //         event.target.checked = !originalChecked;
-    //         sendmessagedetail();
-    //     }
-    // };
-
 
 
 
@@ -176,105 +138,6 @@ const Message = () => {
 
 
 
-
-    const SendMessage = async () => {
-        try {
-            const data = { service: message.service, subject: message.subject, message: message.message };
-            const response = await SendBroadCast(data, token);
-            if (response && response.status) {
-                Swal.fire({
-                    title: 'Success!',
-                    text: 'Message sent successfully!',
-                    icon: 'success',
-                    confirmButtonText: 'OK',
-                    timer: 2000,
-                });
-
-                setChatMessages([...chatMessages, message]);
-
-                setMessage({ service: "", subject: "", message: "" });
-                getservice()
-                const modal = document.getElementById('exampleModal');
-                const bootstrapModal = window.bootstrap.Modal.getInstance(modal);
-                if (bootstrapModal) {
-                    bootstrapModal.hide();
-                }
-            } else {
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'There was an error sending the message.',
-                    icon: 'error',
-                    confirmButtonText: 'Try Again',
-                });
-            }
-        } catch (error) {
-            Swal.fire({
-                title: 'Error!',
-                text: 'Server Error',
-                icon: 'error',
-                confirmButtonText: 'Try Again',
-            });
-        }
-    };
-
-
-
-
-    // Update service
-    const updateBroadcastMessage = async () => {
-        try {
-            const data = {
-                message: updatetitle.message,
-                id: serviceid._id,
-                subject: updatetitle.subject,
-                service: updatetitle.service
-            };
-            const response = await UpdateCastmessage(data, token);
-            if (response.status) {
-                Swal.fire({
-                    title: 'Success!',
-                    text: 'Message updated successfully.',
-                    icon: 'success',
-                    confirmButtonText: 'OK',
-                    timer: 2000,
-                });
-
-                setUpdatetitle({ service: "", subject: "", message: "", id: "" });
-                sendmessagedetail()
-                setModel(false);
-            } else {
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'There was an error updating the Message.',
-                    icon: 'error',
-                    confirmButtonText: 'Try Again',
-                });
-            }
-        } catch (error) {
-            console.log("Update Error:", error);
-            Swal.fire({
-                title: 'Error!',
-                text: 'server error ',
-                icon: 'error',
-                confirmButtonText: 'Try Again',
-            });
-        }
-    };
-
-
-
-
-    const updateServiceTitle = (key, value) => {
-        setUpdatetitle(prev => ({
-            ...prev,
-            [key]: value
-        }));
-    }
-
-
-
-
-
     return (
         <>
 
@@ -301,105 +164,18 @@ const Message = () => {
                                 <div className='me-2 mb-3'>
                                     <Link
                                         to="/admin/addbroadcast"
-
                                         className="btn btn-primary"
-                                    // data-bs-toggle="modal"
-                                    // data-bs-target="#exampleModal"
+
                                     >
                                         <i className="bx bxs-plus-square" />
                                         Add Broadcast
                                     </Link>
-                                </div>
-                                <div
-                                    className="modal fade"
-                                    id="exampleModal"
-                                    tabIndex={-1}
-                                    aria-labelledby="exampleModalLabel"
-                                    aria-hidden="true"
-                                >
-                                    <div className="modal-dialog">
-                                        <div className="modal-content">
-                                            <div className="modal-header">
-                                                <h5 className="modal-title" id="exampleModalLabel">Add Broadcast</h5>
-                                                <button
-                                                    type="button"
-                                                    className="btn-close"
-                                                    data-bs-dismiss="modal"
-                                                    aria-label="Close"
-                                                />
-                                            </div>
-                                            <div className="modal-body">
-                                                <form>
-                                                    <div className="col-md-12">
-                                                        <label htmlFor="service">Select Service</label>
-                                                        <select
-                                                            className="form-control mb-2"
-                                                            id="service"
-                                                            value={message.service}
-                                                            onChange={(e) => setMessage({ ...message, service: e.target.value })}
-                                                        >
-                                                            <option value="">Select a Service</option>
-                                                            {servicedata.map((item) => (
-                                                                <option value={item._id} key={item._id}>
-                                                                    {item.title}
-                                                                </option>
-                                                            ))}
-                                                        </select>
-                                                    </div>
-                                                    <div className="row">
-                                                        <div className="col-md-12">
-                                                            <label>Subject</label>
-                                                            <input
-                                                                className="form-control mb-3"
-                                                                type="text"
-                                                                placeholder='Enter Subject'
-                                                                value={message.subject}
-                                                                onChange={(e) => setMessage({ ...message, subject: e.target.value })}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                    <div className="row">
-                                                        <div className="col-md-12">
-                                                            <label>Message</label>
-                                                            <textarea
-                                                                className="form-control mb-3"
-                                                                placeholder='Enter your Message'
-                                                                value={message.message}
-                                                                onChange={(e) => setMessage({ ...message, message: e.target.value })}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                            <div className="modal-footer">
-                                                <button
-                                                    type="button"
-                                                    className="btn btn-secondary"
-                                                    data-bs-dismiss="modal"
-                                                    onClick={emptyfield}
-                                                >
-                                                    Close
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    className="btn btn-primary"
-                                                    onClick={SendMessage}
-                                                >
-                                                    Submit
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                             <div className="page-content">
                                 <div className="">
                                     <div className="">
                                         <div className="container py-2">
-
-                                            {/* <h2 className="font-weight-light text-center text-muted py-3">
-                                                BroadCast Message
-                                            </h2> */}
 
                                             {chatMessages.map((item, index) => {
                                                 const matchedService = servicedata?.find((service) => service._id === item.service);
@@ -413,14 +189,9 @@ const Message = () => {
                                                                         <Tooltip placement="top" overlay="Update">
                                                                             <SquarePen
                                                                                 onClick={() => {
-                                                                                    setModel(true);
-                                                                                    setServiceid(item);
-                                                                                    setUpdatetitle({
-                                                                                        message: item.message,
-                                                                                        id: item._id,
-                                                                                        service: item.service,
-                                                                                        subject: item.subject,
-                                                                                    });
+
+                                                                                    navigate("/admin/updatebroadcast/" + item._id, { state: { item } })
+
                                                                                 }}
                                                                             />
                                                                         </Tooltip>
@@ -438,16 +209,16 @@ const Message = () => {
                                                                     <hr />
                                                                     <p><strong>Subject:</strong> {item.subject}</p>
                                                                     <p className="card-text">
-                                                                        <strong>Message:</strong> 
-                                                                         <span
+                                                                        <strong>Message:</strong>
+                                                                        <span
                                                                             dangerouslySetInnerHTML={{ __html: item.message }}
                                                                             style={{ display: 'block', marginTop: '0.5rem' }}
                                                                         />
-                                                                       
+
                                                                     </p>
                                                                     <p><strong>Created At:</strong> {fDate(item.created_at)}</p>
                                                                     <p><strong>Updated At:</strong> {fDate(item.updated_at)}</p>
-                                                                   
+
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -466,111 +237,6 @@ const Message = () => {
                     </div>
                 </div>
             </div>
-
-
-            {model && (
-                <>
-                    <div className="modal-backdrop fade show"></div>
-
-                    <div
-                        className="modal fade show"
-                        style={{ display: 'block' }}
-                        tabIndex={-1}
-                        aria-labelledby="updateServiceModalLabel"
-                        aria-hidden="true"
-                        role="dialog"
-                    >
-                        <div className="modal-dialog">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title" id="updateServiceModalLabel">
-                                        Update  Message
-                                    </h5>
-                                    <button
-                                        type="button"
-                                        className="btn-close"
-                                        aria-label="Close"
-                                        onClick={() => setModel(false)}
-                                    />
-                                </div>
-                                <div className="modal-body">
-                                    <form>
-                                        <div className="col-md-12">
-                                            <label htmlFor="category">Service</label>
-                                            <select
-                                                className="form-control mb-2"
-                                                id="category"
-                                                value={updatetitle.service}
-                                                onChange={(e) => updateServiceTitle('service', e.target.value)}
-                                                required
-                                            >
-                                                <option value="" disabled>Select a service</option>
-                                                {servicedata && servicedata.map((item) => (
-
-                                                    <option key={item._id} value={item._id}>{item.title}</option>
-
-                                                ))}
-
-                                            </select>
-                                        </div>
-
-                                        <div className="col-md-12">
-                                            <label htmlFor="category">Subject</label>
-                                            <input
-                                                className="form-control mb-2"
-                                                type="text"
-                                                placeholder="Enter Category Title"
-                                                id="category"
-                                                value={updatetitle.subject}
-                                                onChange={(e) =>
-                                                    updateServiceTitle('subject', e.target.value)
-                                                }
-                                                required
-                                            />
-                                        </div>
-                                        <div className="col-md-12">
-                                            <label htmlFor="category">Message</label>
-                                            <textarea
-                                                className="form-control mb-2"
-                                                type="text"
-                                                placeholder="Enter Category Title"
-                                                id="category"
-                                                value={updatetitle.message}
-                                                onChange={(e) =>
-                                                    updateServiceTitle('message', e.target.value)
-                                                }
-                                                required
-                                            />
-                                        </div>
-
-
-
-                                    </form>
-                                </div>
-                                <div className="modal-footer">
-                                    <button
-                                        type="button"
-                                        className="btn btn-secondary"
-                                        onClick={() => setModel(false)}
-                                    >
-                                        Close
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className="btn btn-primary"
-                                        onClick={updateBroadcastMessage}
-                                    // disabled={!updatetitle.title || !updatetitle.service}
-                                    >
-                                        Update Message
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </>
-
-            )}
-
 
         </>
     );
