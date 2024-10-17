@@ -133,8 +133,10 @@ const PaymentRequest = () => {
             selector: row => (
                 <div>
                     <select
+                        className="form-select"
                         onChange={(event) => handleSelectChange(row._id, event)}
                         defaultValue={selectedValues[row._id] || "0"}
+
                     >
                         <option value="0">Pending</option>
                         <option value="2">Reject</option>
@@ -234,7 +236,7 @@ const PaymentRequest = () => {
                                                 <i className="bx bx-search" />
                                             </span>
                                         </div>
-                                        
+
                                     </div>
 
                                     <ul className="nav nav-pills nav-pills1 mb-4 light">
