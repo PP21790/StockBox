@@ -2139,3 +2139,22 @@ export async function UpdatereferAndEarn(data, token) {
         return err.response?.data || err.message;
     }
 }
+
+
+// update coupon status
+
+export async function CouponStatus(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}coupon/change-status`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}

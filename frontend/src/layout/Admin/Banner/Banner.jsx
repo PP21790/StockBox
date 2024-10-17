@@ -64,14 +64,14 @@ const Banner = () => {
     }, [searchInput]);
 
 
-
+    console.log("updatetitle",updatetitle.image)
 
 
     // Update service
     const updatebanner = async () => {
         try {
             const data = { id: serviceid._id, image: updatetitle.image, hyperlink: updatetitle.hyperlink };
-           
+
             const response = await UpdateBanner(data, token);
 
             if (response && response.status) {
@@ -112,8 +112,8 @@ const Banner = () => {
     const AddBanner = async () => {
         try {
             const data = { title: title.title, description: title.description, image: title.image, add_by: userid, hyperlink: title.hyperlink };
-             
-             
+
+
             const response = await Addbanner(data, token);
             if (response && response.status) {
                 Swal.fire({
@@ -308,7 +308,7 @@ const Banner = () => {
                                 onClick={() => {
                                     setModel(true);
                                     setServiceid(row);
-                                    setUpdatetitle({ title: row.title, id: row._id, description: row.description, image: row.image, hyperlink:row.hyperlink });
+                                    setUpdatetitle({ title: row.title, id: row._id, description: row.description, image: row.image, hyperlink: row.hyperlink });
                                 }}
                             />
                         </Tooltip>
@@ -434,7 +434,7 @@ const Banner = () => {
                                                                 type="text"
                                                                 id="hyperlink"
                                                                 placeholder="Enter link title"
-                                                                value={title.hyperlink} 
+                                                                value={title.hyperlink}
                                                                 onChange={(e) => setTitle({ ...title, hyperlink: e.target.value })}
                                                             />
                                                         </div>
@@ -486,9 +486,8 @@ const Banner = () => {
                                                     </div>
                                                     <div className="modal-body">
                                                         <form>
-
                                                             <div className="row">
-                                                                <div className="col-md-12">
+                                                                <div className="col-md-10">
                                                                     <label htmlFor="imageUpload">Image</label>
                                                                     <input
                                                                         className="form-control mb-3"
@@ -500,25 +499,45 @@ const Banner = () => {
                                                                             if (file) {
                                                                                 updateServiceTitle({ image: file });
                                                                             }
+                                                                             else {
+                                                                               
+                                                                                updateServiceTitle((prevState) => ({ ...prevState}));
+                                                                            }
                                                                         }}
                                                                     />
+                                                                </div>
+                                                                <div className="col-md-2">
+                            
+                                                                    {updatetitle.image && (
+                                                                        <div className="file-preview">
+                                                                            <img
+                                                                                src={
+                                                                                    typeof updatetitle.image === 'string'
+                                                                                        ? `${image_baseurl}uploads/banner/${updatetitle.image}` 
+                                                                                        : URL.createObjectURL(updatetitle.image) 
+                                                                                }
+                                                                                alt="Image Preview"
+                                                                                className="image-preview mt-4"
+                                                                                style={{ width: "68px", height: "auto" }}
+                                                                            />
+                                                                        </div>
+                                                                    )}
                                                                 </div>
                                                             </div>
                                                             <div className="row">
                                                                 <div className="col-md-12">
-                                                                    <label htmlFor="imageUpload">HyperLink</label>
+                                                                    <label htmlFor="hyperlink">HyperLink</label>
                                                                     <input
                                                                         className="form-control mb-2"
                                                                         type="text"
-                                                                        placeholder='Enter blogs Title'
+                                                                        placeholder='Enter blog Title'
                                                                         value={updatetitle.hyperlink}
                                                                         onChange={(e) => updateServiceTitle({ hyperlink: e.target.value })}
                                                                     />
                                                                 </div>
                                                             </div>
-
-
                                                         </form>
+
 
                                                     </div>
                                                     <div className="modal-footer">

@@ -5,7 +5,7 @@ import { getcouponlist } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import { Eye, Pencil, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { DeleteCoupon, UpdateClientStatus } from '../../../Services/Admin';
+import { DeleteCoupon, UpdateClientStatus , CouponStatus} from '../../../Services/Admin';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
 import { fDate } from '../../../Utils/Date_formate';
@@ -108,7 +108,9 @@ const Coupon = () => {
 
     const handleSwitchChange = async (event, id) => {
 
-        const user_active_status = event.target.checked ? "1" : "0"
+        const user_active_status = event.target.checked === true ? "true" : "false"
+         
+        console.log("user_active_status",user_active_status)
 
         const data = { id: id, status: user_active_status }
         const result = await Swal.fire({
@@ -121,7 +123,7 @@ const Coupon = () => {
 
         if (result.isConfirmed) {
             try {
-                const response = await UpdateClientStatus(data, token)
+                const response = await CouponStatus(data, token)
                 if (response.status) {
                     Swal.fire({
                         title: "Saved!",
@@ -169,12 +171,12 @@ const Coupon = () => {
             sortable: true,
 
         },
-        {
-            name: 'Image',
-            cell: row => <img src={`${image_baseurl}/uploads/coupon/${row.image}`} alt="Image" width="50" height="50" />,
-            sortable: true,
-            width: '110px',
-        },
+        // {
+        //     name: 'Image',
+        //     cell: row => <img src={`${image_baseurl}/uploads/coupon/${row.image}`} alt="Image" width="50" height="50" />,
+        //     sortable: true,
+        //     width: '110px',
+        // },
         {
             name: 'Min Purchase Value',
             selector: row => row.minpurchasevalue,
@@ -183,17 +185,17 @@ const Coupon = () => {
         },
         {
             name: 'Max Discount Value',
-            selector: row => row.mincouponvalue,
+            selector: row => row.mincouponvalue?  row.mincouponvalue : "-",
             sortable: true,
             width: '206px',
         },
 
-        {
-            name: 'Description',
-            selector: row => row.description,
-            sortable: true,
-            width: '180px',
-        },
+        // {
+        //     name: 'Description',
+        //     selector: row => row.description,
+        //     sortable: true,
+        //     width: '180px',
+        // },
         {
             name: 'Type',
             selector: row => row.type,

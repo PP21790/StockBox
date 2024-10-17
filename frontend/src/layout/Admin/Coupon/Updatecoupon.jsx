@@ -11,44 +11,41 @@ const Updatecoupon = () => {
   const { row } = location.state;
 
 
-
-
-
   const token = localStorage.getItem("token");
 
-  const imageBaseUrl = "/assets/uploads/coupon/";
 
 
-  const validate = (values) => {
-    let errors = {};
 
-    if (!values.name) {
-      errors.name = "Please enter Name";
-    }
-    if (!values.code) {
-      errors.code = "Please enter code";
-    }
-    if (!values.type) {
-      errors.type = "Please enter type";
-    }
-    if (!values.value) {
-      errors.value = "Please enter value";
-    }
-    if (!values.startdate) {
-      errors.startdate = "Please enter Start Date";
-    }
-    if (!values.enddate) {
-      errors.enddate = "Please enter End Date";
-    }
-    if (!values.minpurchasevalue) {
-      errors.minpurchasevalue = "Please enter Min Purchase value";
-    }
-    if (!values.mincouponvalue) {
-      errors.mincouponvalue = "Please enter Min Coupon value";
-    }
+  // const validate = (values) => {
+  //   let errors = {};
 
-    return errors;
-  };
+  //   if (!values.name) {
+  //     errors.name = "Please enter Name";
+  //   }
+  //   if (!values.code) {
+  //     errors.code = "Please enter code";
+  //   }
+  //   if (!values.type) {
+  //     errors.type = "Please enter type";
+  //   }
+  //   if (!values.value) {
+  //     errors.value = "Please enter value";
+  //   }
+  //   if (!values.startdate) {
+  //     errors.startdate = "Please enter Start Date";
+  //   }
+  //   if (!values.enddate) {
+  //     errors.enddate = "Please enter End Date";
+  //   }
+  //   if (!values.minpurchasevalue) {
+  //     errors.minpurchasevalue = "Please enter Min Purchase value";
+  //   }
+  //   if (!values.mincouponvalue) {
+  //     errors.mincouponvalue = "Please enter Min Coupon value";
+  //   }
+
+  //   return errors;
+  // };
 
   const onSubmit = async (values) => {
     const req = {
@@ -108,18 +105,16 @@ const Updatecoupon = () => {
       enddate: row?.enddate ? new Date(row.enddate).toISOString().split("T")[0] : "",
       minpurchasevalue: row?.minpurchasevalue || "",
       mincouponvalue: row?.mincouponvalue || "",
-      description: row?.description || "",
-      image: row?.image || "",
       id: "",
     },
-    validate,
+    // validate,
     onSubmit,
   });
 
   const fields = [
     {
-      name: "title",
-      label: "Title",
+      name: "name",
+      label: "Name",
       type: "text",
       label_size: 6,
       col_size: 4,
@@ -136,10 +131,14 @@ const Updatecoupon = () => {
     {
       name: "type",
       label: "Type",
-      type: "text",
+      type: "select",
       label_size: 12,
-      col_size: 4,
+      col_size: 10,
       disable: false,
+      options: [
+        { value: "percentage", label: "Percentage" },
+        { value: "fixed", label: "Fixed" },  
+    ] 
     },
     {
       name: "value",
@@ -164,6 +163,7 @@ const Updatecoupon = () => {
       label_size: 12,
       col_size: 4,
       disable: false,
+      showWhen: (values) => values.type === "percentage"
     },
     {
       name: "startdate",
@@ -181,36 +181,14 @@ const Updatecoupon = () => {
       col_size: 4,
       disable: false,
     },
-    {
-      name: "image",
-      label: "Image",
-      type: "file2",
-      label_size: 12,
-      col_size: 3,
-      disable: false,
-      additional_content: row?.image ? (
-        <img
-          src={`${imageBaseUrl}${row.image}`}
-          alt="Uploaded"
-          style={{ width: "47px", marginTop: "13px" }}
-        />
-      ) : null,
-    },
-    {
-      name: "description",
-      label: "Description",
-      type: "text5",
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-    },
+   
   ];
 
   return (
     <div style={{ marginTop: "100px" }}>
       <DynamicForm
-        fields={fields}
-        page_title="Add Coupon Code"
+        fields={fields.filter(field => !field.showWhen || field.showWhen(formik.values))}
+        page_title="Update Coupon Code"
         btn_name="Update Coupon"
         btn_name1="Cancel"
         formik={formik}
