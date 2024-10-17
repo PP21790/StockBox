@@ -50,7 +50,7 @@ const menuItems = [
   // { title: 'KYC Agreement', icon: 'bxs-chevron-right', link: '/admin/kyc' },
   { title: 'FAQ', icon: 'bx-help-circle', link: '/admin/faq' },
   { title: 'Help Center', icon: 'bxs-chevron-right', link: '/admin/help' },
-  { title: 'Terms And Condition', icon: 'bx-info-square', link: '/admin/termsandcondtion' }
+  { title: 'Policy', icon: 'bx-info-square', link: '/admin/termsandcondtion' }
 ];
 
 
