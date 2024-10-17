@@ -49,9 +49,7 @@ class Coupon {
               return res.status(400).json({ status: false, message: "min purchase value  is required" });
             }
 
-            if (!mincouponvalue) {
-              return res.status(400).json({ status: false, message: "min coupon value is required" });
-            }
+            
 
         
             if (!add_by) {
@@ -216,10 +214,7 @@ class Coupon {
         return res.status(400).json({ status: false, message: "min purchase value  is required" });
       }
 
-      if (!mincouponvalue) {
-        return res.status(400).json({ status: false, message: "min coupon value is required" });
-      }
-
+     
   
 
       if (!id) {
