@@ -519,6 +519,7 @@ if (existingPlans.length > 0) {
         plan_price: price,
         discount: discount,
         plan_start: start,
+        plan_end: end,
         validity: plan.validity,
         orderid:orderid
       });
