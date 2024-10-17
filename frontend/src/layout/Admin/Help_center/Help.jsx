@@ -88,7 +88,7 @@ const Help = () => {
 
                                             <div className="col py-2">
                                                 <div className="card radius-15">
-                                                    <div className="card-body">
+                                                    <div className="card-body p-4 position-relative">
                                                         {clients.map((item) => (
                                                             <div key={item.id}>
                                                                 <div className="float-end text-muted">{fDate(item.created_at)}</div>
@@ -109,6 +109,7 @@ const Help = () => {
                                                             </div>
                                                         ))}
                                                     </div>
+
                                                 </div>
                                             </div>
 

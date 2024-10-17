@@ -204,19 +204,7 @@ const Condition = () => {
                                 </div>
                                 <div className="modal-body">
                                     <form className="row g-3">
-                                        {/* <div className="col-md-12">
-                                            <label htmlFor="mailType" className="form-label">
-                                                Mail Type
-                                            </label>
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                id="mailType"
-                                                value={updatetitle.title}
-                                                onChange={(e) => updateServiceTitle({ title: e.target.value })}
-                                                
-                                            />
-                                        </div> */}
+                                       
                                         {/* <div className="col-md-12">
                                             <label htmlFor="subject" className="form-label">
                                                 Title
