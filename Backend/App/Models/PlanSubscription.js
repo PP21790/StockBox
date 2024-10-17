@@ -36,6 +36,11 @@ const PlanSubscriptionSchema = new Schema({
         type: Date,
         required: true
     },
+    validity: {
+        type: String,
+        required: true,
+        default: null
+    },
     status: {
         type: String,
         enum: ['active', 'inactive', 'expired'], // Example statuses

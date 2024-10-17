@@ -570,6 +570,7 @@ try {
         plan_price: price,
         plan_start: start,
         plan_end: end,
+        validity: plan.validity,
       });
   
       // Save the subscription
