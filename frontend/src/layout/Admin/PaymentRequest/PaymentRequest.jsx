@@ -133,6 +133,7 @@ const PaymentRequest = () => {
             selector: row => (
                 <div>
                     <select
+                        className='form-select'
                         onChange={(event) => handleSelectChange(row._id, event)}
                         defaultValue={selectedValues[row._id] || "0"}
                     >

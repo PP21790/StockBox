@@ -165,6 +165,7 @@ function MainApp() {
 
 
                     <Route path="/news" element={<News />} />
+                    <Route path="/addnews" element={<Addnews />} />
 
 
 
