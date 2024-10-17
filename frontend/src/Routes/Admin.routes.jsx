@@ -160,6 +160,7 @@ function MainApp() {
 
                     <Route path="/blogs" element={<Blogs />} />
                     <Route path="/news" element={<News />} />
+                    <Route path="/addnews" element={<Addnews />} />
 
 
 
