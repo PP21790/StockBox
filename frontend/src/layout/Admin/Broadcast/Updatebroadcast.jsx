@@ -8,8 +8,7 @@ import { SendBroadCast, GetService ,UpdateCastmessage } from '../../../Services/
 const Updatebroadcast = () => {
     const location = useLocation();
     const { item } = location.state;
-    console.log("item", item);
-
+   
     const [servicedata, setServicedata] = useState([]);
 
     const navigate = useNavigate();
@@ -30,7 +29,7 @@ const Updatebroadcast = () => {
         getservice();
     }, []);
 
-    // Pre-populate form values with the data from item
+    
     const formik = useFormik({
         initialValues: {
             service: item?.service || "",

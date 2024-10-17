@@ -61,6 +61,7 @@ import Updatenews from '../layout/Admin/News/Updatenews';
 import Addblogs from '../layout/Admin/Bloags/Addblogs';
 import Viewblog from '../layout/Admin/Bloags/Viewblog';
 import Updatecondition from '../layout/Admin/Termscondition/Updatecondition';
+import Updateblogs from '../layout/Admin/Bloags/Updateblogs';
 
 
 
@@ -160,6 +161,8 @@ function MainApp() {
                     
                     <Route path="/blogs" element={<Blogs />} />
                     <Route path="/addblogs" element={<Addblogs/>} />
+                    <Route path="/updatebolgs" element={<Updateblogs/>} />
+
 
                     <Route path="/news" element={<News />} />
 

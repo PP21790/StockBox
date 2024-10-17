@@ -14,6 +14,9 @@ const Blogs = () => {
 
 
     const navigate = useNavigate();
+
+
+
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
@@ -67,43 +70,45 @@ const Blogs = () => {
 
 
 
-    // Update service
-    const updateblogs = async () => {
-        try {
-            const data = { title: updatetitle.title, id: serviceid._id, image: updatetitle.image, description: updatetitle.description };
-            const response = await Updateblogsbyadmin(data, token);
+    // // Update service
+    // const updateblogs = async () => {
+    //     try {
+    //         const data = { title: updatetitle.title, id: serviceid._id, image: updatetitle.image, description: updatetitle.description };
+    //         const response = await Updateblogsbyadmin(data, token);
 
-            if (response && response.status) {
-                Swal.fire({
-                    title: 'Success!',
-                    text: response.message || 'bolgs updated successfully.',
-                    icon: 'success',
-                    confirmButtonText: 'OK',
-                    timer: 2000,
-                });
+    //         if (response && response.status) {
+    //             Swal.fire({
+    //                 title: 'Success!',
+    //                 text: response.message || 'bolgs updated successfully.',
+    //                 icon: 'success',
+    //                 confirmButtonText: 'OK',
+    //                 timer: 2000,
+    //             });
 
-                setUpdatetitle({ title: "", id: "" });
-                getblogs();
-                setModel(false);
-            } else {
-                Swal.fire({
-                    title: 'Error!',
-                    text: response.message || 'There was an error updating the blogs.',
-                    icon: 'error',
-                    confirmButtonText: 'Try Again',
-                });
-            }
-        } catch (error) {
-            Swal.fire({
-                title: 'Error!',
-                text: 'server error',
-                icon: 'error',
-                confirmButtonText: 'Try Again',
-            });
-        }
-    };
+    //             setUpdatetitle({ title: "", id: "" });
+    //             getblogs();
+    //             setModel(false);
+    //         } else {
+    //             Swal.fire({
+    //                 title: 'Error!',
+    //                 text: response.message || 'There was an error updating the blogs.',
+    //                 icon: 'error',
+    //                 confirmButtonText: 'Try Again',
+    //             });
+    //         }
+    //     } catch (error) {
+    //         Swal.fire({
+    //             title: 'Error!',
+    //             text: 'server error',
+    //             icon: 'error',
+    //             confirmButtonText: 'Try Again',
+    //         });
+    //     }
+    // };
 
-
+    const updateblogs = async (row) => {
+        navigate("/admin/updatebolgs" ,{ state: { row } })
+    }
 
 
 
@@ -312,9 +317,7 @@ const Blogs = () => {
                         <Tooltip placement="top" overlay="Update">
                             <SquarePen
                                 onClick={() => {
-                                    setModel(true);
-                                    setServiceid(row);
-                                    setUpdatetitle({ title: row.title, id: row._id, description: row.description, image: row.image });
+                                    updateblogs(row)
                                 }}
                             />
                         </Tooltip>
