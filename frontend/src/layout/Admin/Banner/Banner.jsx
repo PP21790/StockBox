@@ -499,10 +499,7 @@ const Banner = () => {
                                                                             if (file) {
                                                                                 updateServiceTitle({ image: file });
                                                                             }
-                                                                             else {
-                                                                               
-                                                                                updateServiceTitle((prevState) => ({ ...prevState}));
-                                                                            }
+                                                                            
                                                                         }}
                                                                     />
                                                                 </div>
