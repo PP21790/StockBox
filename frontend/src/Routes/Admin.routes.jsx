@@ -56,6 +56,11 @@ import PaymentRequest from '../layout/Admin/PaymentRequest/PaymentRequest';
 import FreetrialStatus from '../layout/Admin/Freetrialstatus/FreetrialStatus';
 import ReferAndEarn from '../layout/Admin/BasicSetting/ReferAndEarn';
 import Updatebroadcast from '../layout/Admin/Broadcast/Updatebroadcast';
+import Addnews from '../layout/Admin/News/Addnews';
+import Updatenews from '../layout/Admin/News/Updatenews';
+import Addblogs from '../layout/Admin/Bloags/Addblogs';
+import Viewblog from '../layout/Admin/Bloags/Viewblog';
+import Updatecondition from '../layout/Admin/Termscondition/Updatecondition';
 
 
 
