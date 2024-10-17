@@ -1,122 +1,107 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import DynamicForm from '../../../components/FormicForm';
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';
-import { AddClient } from '../../../Services/Admin';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { UpdateNewsbyadmin } from '../../../Services/Admin';
+import { image_baseurl } from '../../../Utils/config';
 
 
 const Updatenews = () => {
-    const navigate = useNavigate();
 
-    const user_id = localStorage.getItem("id");
+    
+    const location = useLocation();
+    const { client } = location.state;
+   
+    
+
+    const navigate = useNavigate();
     const token = localStorage.getItem("token");
 
-    const validate = (values) => {
-        let errors = {};
+   
+    
+    const formik = useFormik({
+        initialValues: {
+            title: client?.title || "",
+            description: client?.description || "",
+            image: client?.image || "",
+            id: "" ,
+        },  
+       
+        onSubmit: async (values) => {
+            const req = {
+                title: values.title,
+                id: client._id,
+                description: values.description,
+                image: values.image,
+            };
 
-        if (!values.FullName) {
-            errors.FullName = "Please enter Full Name";
-        }
-        if (!values.Email) {
-            errors.Email = "Please enter Email";
-        }
-        if (!values.PhoneNo) {
-            errors.PhoneNo = "Please enter Phone Number";
-        }
-        if (!values.password) {
-            errors.password = "Please enter password";
-        }
-        if (!values.ConfirmPassword) {
-            errors.ConfirmPassword = "Please confirm your password";
-        } else if (values.password !== values.ConfirmPassword) {
-            errors.ConfirmPassword = "Passwords must match";
-        }
-
-        return errors;
-    };
-
-    const onSubmit = async (values) => {
-        const req = {
-            FullName: values.FullName,
-            Email: values.Email,
-            PhoneNo: values.PhoneNo,
-            password: values.password,
-            add_by: user_id,
-        };
-
-        try {
-            const response = await AddClient(req, token);
-            if (response.status) {
+            try {
+                const response = await UpdateNewsbyadmin(req, token);
+                if (response.status) {
+                    Swal.fire({
+                        title: "Update Successful!",
+                        text: response.message,
+                        icon: "success",
+                        timer: 1500,
+                        timerProgressBar: true,
+                    });
+                    setTimeout(() => {
+                        navigate("/admin/news");
+                    }, 1500);
+                } else {
+                    Swal.fire({
+                        title: "Alert",
+                        text: response.message,
+                        icon: "warning",
+                        timer: 1500,
+                        timerProgressBar: true,
+                    });
+                }
+            } catch (error) {
                 Swal.fire({
-                    title: "Create Successful!",
-                    text: response.message,
-                    icon: "success",
-                    timer: 1500,
-                    timerProgressBar: true,
-                });
-                setTimeout(() => {
-                    navigate("/admin/client");
-                }, 1500);
-            } else {
-                Swal.fire({
-                    title: "Alert",
-                    text: response.message,
-                    icon: "warning",
+                    title: "Error",
+                    text: "An unexpected error occurred. Please try again later.",
+                    icon: "error",
                     timer: 1500,
                     timerProgressBar: true,
                 });
             }
-        } catch (error) {
-            Swal.fire({
-                title: "Error",
-                text: "An unexpected error occurred. Please try again later.",
-                icon: "error",
-                timer: 1500,
-                timerProgressBar: true,
-            });
-        }
-    };
-
-    const formik = useFormik({
-        initialValues: {
-            FullName: "",
-            Email: "",
-            PhoneNo: "",
-            password: "",
-            ConfirmPassword: "",
-            add_by: "",
         },
-        validate,
-        onSubmit,
     });
 
+
+    
     const fields = [
         {
-            name: "Select Service",
-            label: "Service",
+            name: "title",
+            label: "Title",
             type: "text",
             label_size: 6,
             col_size: 6,
             disable: false,
+            
         },
         {
-            name: "Subject",
-            label: "Subject",
-            type: "text",
+            name: "image",
+            label: "Image",
+            type: "file3", 
             label_size: 12,
             col_size: 6,
-            disable: false,
+            disable: false, 
+            image: true,
+            imageWidth: "60px",
+            imageHeight: "auto",  
+            src: `${image_baseurl}/uploads/news/${client.image}`
         },
         {
-            name: "Message",
-            label: "Message",
-            type: "text5",
+            name: "description",
+            label: "Description",
+            type: "ckeditor",
             label_size: 12,
-            col_size: 6,
+            col_size: 12,
             disable: false,
         },
-
     ];
 
     return (
@@ -125,12 +110,13 @@ const Updatenews = () => {
                 fields={fields}
                 formik={formik}
                 page_title="Update News"
-                btn_name="Update"
+                btn_name="Update News"
                 btn_name1="Cancel"
                 sumit_btn={true}
                 btn_name1_route={"/admin/news"}
-                additional_field={<></>}
-
+                additional_field={<>
+                  
+                </>}
             />
         </div>
     );

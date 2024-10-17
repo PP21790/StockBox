@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-
 import { getconsitionlist, UpdateCondition } from '../../../Services/Admin';
-
 import Swal from 'sweetalert2';
-import Table from '../../../components/Table';
-import { fDateTime } from '../../../Utils/Date_formate';
-import { image_baseurl } from '../../../Utils/config';
-import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
+import { SquarePen, } from 'lucide-react';
+
 
 const Condition = () => {
 
@@ -151,9 +147,7 @@ const Condition = () => {
                                             <div>
 
                                                 <SquarePen onClick={() => {
-                                                    setModel(true);
-                                                    setTemplateid(client._id);
-                                                    setUpdatetitle({ title: client.title, id: client._id, description: client.description });
+                                                    navigate("/admin/updatecondition", { state: { client } })
                                                 }} />
 
                                             </div>
@@ -178,11 +172,16 @@ const Condition = () => {
                                                 <label htmlFor={`mailContent${index}`} className="form-label">
                                                     Description
                                                 </label>
-                                                <textarea
+                                                {/* <textarea
                                                     className="form-control"
                                                     id={`mailContent${index}`}
                                                     value={client.description}
                                                     rows={3}
+
+                                                /> */}
+                                                <span
+                                                    dangerouslySetInnerHTML={{ __html: client.description }}
+                                                    style={{ display: 'block', marginTop: '0.5rem' }}
                                                 />
                                             </div>
                                         </form>

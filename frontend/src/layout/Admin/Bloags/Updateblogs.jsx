@@ -107,8 +107,8 @@ const Updateblogs = () => {
             <DynamicForm
                 fields={fields}
                 formik={formik}
-                page_title="Update Broadcast"
-                btn_name="Update Broadcast"
+                page_title="Update Blog"
+                btn_name="Update Blog"
                 btn_name1="Cancel"
                 sumit_btn={true}
                 btn_name1_route={"/admin/blogs"}

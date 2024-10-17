@@ -1,62 +1,61 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import DynamicForm from '../../../components/FormicForm';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import { AddClient } from '../../../Services/Admin';
+import { AddNewsbyadmin} from '../../../Services/Admin';
 
 
 const Addnews = () => {
+
+
     const navigate = useNavigate();
+
 
     const user_id = localStorage.getItem("id");
     const token = localStorage.getItem("token");
+  
+
+    
+     
 
     const validate = (values) => {
         let errors = {};
 
-        if (!values.FullName) {
-            errors.FullName = "Please enter Full Name";
+        if (!values.title) {
+            errors.title = "Please enter title";
         }
-        if (!values.Email) {
-            errors.Email = "Please enter Email";
+        if (!values.description) {
+            errors.description = "Please enter description";
         }
-        if (!values.PhoneNo) {
-            errors.PhoneNo = "Please enter Phone Number";
+        if (!values.image) {
+            errors.image = "Please enter image";
         }
-        if (!values.password) {
-            errors.password = "Please enter password";
-        }
-        if (!values.ConfirmPassword) {
-            errors.ConfirmPassword = "Please confirm your password";
-        } else if (values.password !== values.ConfirmPassword) {
-            errors.ConfirmPassword = "Passwords must match";
-        }
+        console.log("errors",errors)
 
         return errors;
     };
 
     const onSubmit = async (values) => {
         const req = {
-            FullName: values.FullName,
-            Email: values.Email,
-            PhoneNo: values.PhoneNo,
-            password: values.password,
-            add_by: user_id,
+            title: values.title,
+            description: values.description,
+            image: values.image,
+            add_by: user_id ,
         };
-
+       
         try {
-            const response = await AddClient(req, token);
+            const response = await AddNewsbyadmin(req, token);
             if (response.status) {
                 Swal.fire({
-                    title: "Create Successful!",
+                    title: "News Add  Successful!",
                     text: response.message,
                     icon: "success",
                     timer: 1500,
                     timerProgressBar: true,
                 });
                 setTimeout(() => {
-                    navigate("/admin/client");
+                    navigate("/admin/news");
                 }, 1500);
             } else {
                 Swal.fire({
@@ -80,43 +79,40 @@ const Addnews = () => {
 
     const formik = useFormik({
         initialValues: {
-            FullName: "",
-            Email: "",
-            PhoneNo: "",
-            password: "",
-            ConfirmPassword: "",
-            add_by: "",
+            title: "",
+            description: "",
+            image: "", 
         },
         validate,
         onSubmit,
     });
 
     const fields = [
+       
         {
-            name: "Select Service",
-            label: "Service",
-            type: "text",
-            label_size: 6,
-            col_size: 6,
-            disable: false,
-        },
-        {
-            name: "Subject",
-            label: "Subject",
+            name: "title",
+            label: "Title",
             type: "text",
             label_size: 12,
             col_size: 6,
             disable: false,
         },
         {
-            name: "Message",
-            label: "Message",
-            type: "text5",
+            name: "image",
+            label: "Upload Image",
+            type: "file2",
             label_size: 12,
             col_size: 6,
             disable: false,
         },
-
+        {
+            name: "description",
+            label: "Description",
+            type: "ckeditor", 
+            label_size: 12,
+            col_size: 12,
+            disable: false,
+        },
     ];
 
     return (
@@ -124,14 +120,15 @@ const Addnews = () => {
             <DynamicForm
                 fields={fields}
                 formik={formik}
-                page_title="Add News"
-                btn_name="Add"
+                page_title="Add Blog"
+                btn_name="Add Blog"
                 btn_name1="Cancel"
                 sumit_btn={true}
                 btn_name1_route={"/admin/news"}
                 additional_field={<></>}
-
             />
+           
+           
         </div>
     );
 };

@@ -62,6 +62,7 @@ import Addblogs from '../layout/Admin/Bloags/Addblogs';
 import Viewblog from '../layout/Admin/Bloags/Viewblog';
 import Updatecondition from '../layout/Admin/Termscondition/Updatecondition';
 import Updateblogs from '../layout/Admin/Bloags/Updateblogs';
+import { UpdateCondition } from '../Services/Admin';
 
 
 
@@ -118,6 +119,8 @@ function MainApp() {
                     <Route path="/client/updateclient/:id" element={<EditClient />} />
                     <Route path="/client/clientdetail/:id" element={<Viewclientdetail />} />
 
+
+
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/service" element={<Service />} />
                     <Route path="/kyc" element={<Kyc />} />
@@ -166,7 +169,8 @@ function MainApp() {
 
                     <Route path="/news" element={<News />} />
                     <Route path="/addnews" element={<Addnews />} />
-
+                    <Route path="/updatenews" element={<Updatenews/>} />
+                
 
 
                     <Route path="/coupon" element={<Coupon />} />
@@ -175,6 +179,8 @@ function MainApp() {
 
 
                     <Route path="/termsandcondtion" element={<Condition />} />
+                    <Route path="/updatecondition" element={<Updatecondition/>} />
+
 
 
                     <Route path="/banner" element={<Banner />} />
@@ -191,6 +197,8 @@ function MainApp() {
 
                     <Route path="/message" element={<Message />} />
                     <Route path="/changepass" element={<Changepass />} />
+
+
 
                     {/* <Route path="/changepass" element={<Changepass />} /> */}
                     <Route path="/help" element={<Help />} />

@@ -289,11 +289,11 @@ const News = () => {
                             </div>
                             <div className="ms-auto">
                                 <Link
-                                to="/admin/addnews"
+                                    to="/admin/addnews"
                                     type="button"
                                     className="btn btn-primary"
-                                    // data-bs-toggle="modal"
-                                    // data-bs-target="#exampleModal"
+                                // data-bs-toggle="modal"
+                                // data-bs-target="#exampleModal"
                                 >
                                     <i className="bx bxs-plus-square" />
                                     Add News
@@ -478,14 +478,7 @@ const News = () => {
 
                             {clients.map((client, index) => (
                                 <div className="row g-0" key={index}>
-                                    {/* Conditional spacer */}
-
-
-
-
-
-
-
+                                    {}
 
 
                                     <div className="col-sm py-2">
@@ -502,14 +495,9 @@ const News = () => {
                                                         <Tooltip placement="top" overlay="Update">
                                                             <SquarePen
                                                                 onClick={() => {
-                                                                    setModel(true);
-                                                                    setServiceid(client);
-                                                                    setUpdatetitle({
-                                                                        title: client.title,
-                                                                        id: client._id,
-                                                                        description: client.description,
-                                                                        image: client.image
-                                                                    });
+
+
+                                                                    navigate("/admin/updatenews", { state: { client } })
                                                                 }}
                                                             />
                                                         </Tooltip>
@@ -536,7 +524,12 @@ const News = () => {
                                                     <div className="col-md-10 ps-4">
 
                                                         <h5>Description:</h5>
-                                                        <p className="card-text">{client.description}</p>
+                                                        {/* <p className="card-text">{client.description} */}
+                                                            <span
+                                                                dangerouslySetInnerHTML={{ __html: client.description }}
+                                                                style={{ display: 'block', marginTop: '0.5rem' }}
+                                                            />
+                                                        {/* </p> */}
                                                         <div className="float-end text-muted small">{fDate(client.created_at)}</div>
                                                     </div>
                                                 </div>
