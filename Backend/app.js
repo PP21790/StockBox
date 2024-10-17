@@ -40,6 +40,7 @@ const Order_Modal = db.Order;
 const Freetrial_Modal = db.Freetrial;
 const Helpdesk_Modal = db.Helpdesk;
 const Broadcast_Modal = db.Broadcast;
+const License_Modal = db.License;
 
 
 

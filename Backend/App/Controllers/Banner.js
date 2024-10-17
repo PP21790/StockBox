@@ -135,15 +135,12 @@ class BannerController {
 
 
             await new Promise((resolve, reject) => {
-                upload('Banner').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
+                upload('banner').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
                     if (err) {
                         console.log('File upload error:', err);
                         return reject(err);
                     }
 
-                    if (!req.files || !req.files['image']) {
-                        return reject(new Error('No file uploaded.'));
-                      }
 
                     resolve();
                 });

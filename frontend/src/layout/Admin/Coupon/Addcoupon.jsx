@@ -44,12 +44,10 @@ const Addcoupon = () => {
         if (!values.minpurchasevalue) {
             errors.minpurchasevalue = "Please enter Min Purchase value";
         }
-        if (!values.mincouponvalue) {
+        if (values.mincouponvalue && !values.mincouponvalue) {
             errors.mincouponvalue = "Please enter Min Coupon value";
         }
-        if (!values.mincouponvalue) {
-            errors.mincouponvalue = "Please enter Min Coupon value";
-        }
+        
 
 
         return errors;
@@ -160,7 +158,7 @@ const Addcoupon = () => {
             disable: false,
         },
 
-        {
+         {
             name: "minpurchasevalue",
             label: "Min Purchase Value",
             type: "text",
@@ -168,14 +166,15 @@ const Addcoupon = () => {
             col_size: 6,
             disable: false,
         },
-        {
+         {
             name: "mincouponvalue",
-            label: "Min Coupon Value",
+            label: "Max Discount Value",
             type: "text",
             label_size: 12,
             col_size: 6,
             disable: false,
-        },
+          showWhen: (values) => values.type === "percentage"
+        } ,
         {
             name: "startdate",
             label: "Start Date",
@@ -194,29 +193,29 @@ const Addcoupon = () => {
         },
 
 
-        {
-            name: "image",
-            label: "Image",
-            type: "file2",
-            label_size: 12,
-            col_size: 6,
-            disable: false,
-        },
-        {
-            name: "description",
-            label: "Description",
-            type: "text",
-            label_size: 12,
-            col_size: 6,
-            disable: false,
-        },
+        // {
+        //     name: "image",
+        //     label: "Image",
+        //     type: "file2",
+        //     label_size: 12,
+        //     col_size: 6,
+        //     disable: false,
+        // },
+        // {
+        //     name: "description",
+        //     label: "Description",
+        //     type: "text",
+        //     label_size: 12,
+        //     col_size: 6,
+        //     disable: false,
+        // },
 
     ];
 
     return (
         <div style={{ marginTop: "100px" }}>
             <DynamicForm
-                fields={fields}
+                 fields={fields.filter(field => !field.showWhen || field.showWhen(formik.values))}
                 formik={formik}
                 page_title="Add Coupon Code"
                 btn_name="Add Coupon"

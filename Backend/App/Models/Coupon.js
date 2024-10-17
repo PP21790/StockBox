@@ -49,7 +49,6 @@ const CouponSchema = new Schema({
     },
     mincouponvalue: {
         type: Number,
-        required: true
     },
     image: {
         type: String,

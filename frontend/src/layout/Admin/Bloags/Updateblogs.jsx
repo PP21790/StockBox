@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { Addblogsbyadmin} from '../../../Services/Admin';
 
 
-const Addblogs = () => {
+const Updateblogs = () => {
 
 
     const navigate = useNavigate();
@@ -133,4 +133,4 @@ const Addblogs = () => {
     );
 };
 
-export default Addblogs;
+export default Updateblogs;

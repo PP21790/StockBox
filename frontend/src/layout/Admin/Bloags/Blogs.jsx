@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getblogslist, Addblogsbyadmin, Updateblogsbyadmin, changeblogsstatus, DeleteBlogs } from '../../../Services/Admin';
+import { getblogslist, Addblogsbyadmin, Updateblogsbyadmin, changeblogsstatus, DeleteBlog } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
 import { fDate } from '../../../Utils/Date_formate';
+
+
 const Blogs = () => {
 
 
@@ -191,8 +193,7 @@ const Blogs = () => {
 
 
     // delete blogs
-
-
+ 
     const DeleteBlogs = async (_id) => {
         // console.log("_id",_id)
         try {
@@ -206,7 +207,8 @@ const Blogs = () => {
             });
 
             if (result.isConfirmed) {
-                const response = await DeleteBlogs(_id, token);
+                const response = await DeleteBlog(_id, token);
+             
                 if (response.status) {
                     Swal.fire({
                         title: 'Deleted!',
@@ -280,7 +282,7 @@ const Blogs = () => {
         },
         {
             name: 'Description',
-            selector: row => row.description,
+            selector: row => stripHtml(row.description),
             sortable: true,
             width: '200px',
         },
@@ -330,16 +332,15 @@ const Blogs = () => {
         }
     ];
 
+   
+    function stripHtml(html) {
+        const div = document.createElement("div");
+        div.innerHTML = html;
+        return div.textContent || div.innerText || "";
+    }
 
-
-    // const updateServiceTitle = (value) => {
-    //     setUpdatetitle(prev => ({
-    //         ...prev,`
-    //         title: value
-    //     }));
-    // };
-
-
+  
+   
     const updateServiceTitle = (updatedField) => {
         setUpdatetitle(prev => ({
             ...prev,
@@ -387,11 +388,9 @@ const Blogs = () => {
                             </div>
                             <div className="ms-auto">
                                 <Link
-                                // to="/admin/blogs"
-                                    type="button"
+                                    to="/admin/addblogs"
                                     className="btn btn-primary"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal"
+
                                 >
                                     <i className="bx bxs-plus-square" />
                                     Add Blog

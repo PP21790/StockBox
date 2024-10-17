@@ -990,9 +990,10 @@ const DynamicForm = ({
                                                 ) : field.type === "ckeditor" ? (
                                                     <>
                                                         <div style={{ marginTop: "20px" }}>
+                                                            <label htmlFor={field.name}>{field.label}</label>
                                                             <ReactQuill
-                                                                value={formik.values.message}
-                                                                onChange={(value) => formik.setFieldValue('message', value)}
+                                                                value={formik.values[field.name]} 
+                                                                onChange={(value) => formik.setFieldValue(field.name, value)} 
                                                                 modules={{
                                                                     toolbar: [
                                                                         [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
@@ -1009,12 +1010,12 @@ const DynamicForm = ({
                                                                 style={{
                                                                     height: '200px',
                                                                     border: '1px solid #ccc',
-                                                                    borderRadius: '4px', 
+                                                                    borderRadius: '4px',
                                                                     padding: '10px',
                                                                     backgroundColor: '#fff',
                                                                     fontFamily: 'inherit',
-                                                                    fontSize: 'inherit', 
-                                                                    overflow: 'auto', 
+                                                                    fontSize: 'inherit',
+                                                                    overflow: 'auto',
                                                                 }}
                                                             />
                                                         </div>

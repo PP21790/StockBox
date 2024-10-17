@@ -157,8 +157,10 @@ function MainApp() {
                     <Route path="/category" element={<Category />} />
                     <Route path="/stock" element={<Stock />} />
 
-
+                    
                     <Route path="/blogs" element={<Blogs />} />
+                    <Route path="/addblogs" element={<Addblogs/>} />
+
                     <Route path="/news" element={<News />} />
                     <Route path="/addnews" element={<Addnews />} />
 
@@ -192,7 +194,7 @@ function MainApp() {
                     <Route path="/paymentrequest" element={<PaymentRequest />} />
                     <Route path="/freetrialstatus" element={<FreetrialStatus />} />
                     <Route path="/addbroadcast" element={<Addbroadcast />} />
-                    <Route path="/updatebroadcast/:id" element={<Updatebroadcast />} />
+                    <Route path="/updatebroadcast" element={<Updatebroadcast />} />
 
 
 

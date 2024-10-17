@@ -16,11 +16,6 @@ class Coupon {
                     return reject(err);
                 }
 
-                if (!req.files || !req.files['image']) {
-                   
-                    return res.status(400).json({ status: false, message: "No file uploaded." });
-                  }
-
 
                 resolve();
             });
@@ -54,9 +49,7 @@ class Coupon {
               return res.status(400).json({ status: false, message: "min purchase value  is required" });
             }
 
-            if (!mincouponvalue) {
-              return res.status(400).json({ status: false, message: "min coupon value is required" });
-            }
+            
 
         
             if (!add_by) {
@@ -190,10 +183,6 @@ class Coupon {
                 return reject(err);
             }
 
-            if (!req.files || !req.files['image']) {
-               
-                return res.status(400).json({ status: false, message: "No file uploaded." });
-              }
             resolve();
         });
     });
@@ -225,10 +214,7 @@ class Coupon {
         return res.status(400).json({ status: false, message: "min purchase value  is required" });
       }
 
-      if (!mincouponvalue) {
-        return res.status(400).json({ status: false, message: "min coupon value is required" });
-      }
-
+     
   
 
       if (!id) {
