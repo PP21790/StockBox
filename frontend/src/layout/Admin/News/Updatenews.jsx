@@ -9,25 +9,25 @@ import { image_baseurl } from '../../../Utils/config';
 
 const Updatenews = () => {
 
-    
+
     const location = useLocation();
     const { client } = location.state;
-   
-    
+
+
 
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
 
-   
-    
+
+
     const formik = useFormik({
         initialValues: {
             title: client?.title || "",
             description: client?.description || "",
             image: client?.image || "",
-            id: "" ,
-        },  
-       
+            id: "",
+        },
+
         onSubmit: async (values) => {
             const req = {
                 title: values.title,
@@ -71,7 +71,7 @@ const Updatenews = () => {
     });
 
 
-    
+
     const fields = [
         {
             name: "title",
@@ -80,18 +80,18 @@ const Updatenews = () => {
             label_size: 6,
             col_size: 6,
             disable: false,
-            
+
         },
         {
             name: "image",
             label: "Image",
-            type: "file3", 
+            type: "file3",
             label_size: 12,
             col_size: 6,
-            disable: false, 
+            disable: false,
             image: true,
             imageWidth: "60px",
-            imageHeight: "auto",  
+            imageHeight: "auto",
             src: `${image_baseurl}/uploads/news/${client.image}`
         },
         {
@@ -115,7 +115,7 @@ const Updatenews = () => {
                 sumit_btn={true}
                 btn_name1_route={"/admin/news"}
                 additional_field={<>
-                  
+
                 </>}
             />
         </div>

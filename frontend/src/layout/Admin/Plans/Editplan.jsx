@@ -6,6 +6,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getcategoryplan, getbyidplan, Updateplan } from '../../../Services/Admin';
 
 const Editplan = () => {
+
+
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -56,13 +58,14 @@ const Editplan = () => {
             title: values.title,
             description: values.description,
             price: values.price,
-            totaldays: values.validity,
+            validity: values.validity,
             category: values.category,
             id: id,
         };
 
         try {
             const response = await Updateplan(req, token);
+
             if (response.status) {
                 Swal.fire({
                     title: "Edit Successful!",
@@ -99,14 +102,14 @@ const Editplan = () => {
             title: info.title || "",
             description: info.description || "",
             price: info.price || "",
-            validity: info.validity ? info.validity : "" ,
-            category: info.category ? info.category._id : "", 
+            validity: info.validity ? info.validity : "",
+            category: info.category ? info.category._id : "",
         },
         enableReinitialize: true,
         validate,
         onSubmit,
     });
-   
+
 
 
     const fields = [

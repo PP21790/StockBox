@@ -120,8 +120,8 @@ const Addnews = () => {
             <DynamicForm
                 fields={fields}
                 formik={formik}
-                page_title="Add Blog"
-                btn_name="Add Blog"
+                page_title="Add News"
+                btn_name="Add News"
                 btn_name1="Cancel"
                 sumit_btn={true}
                 btn_name1_route={"/admin/news"}

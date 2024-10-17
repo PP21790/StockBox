@@ -189,13 +189,13 @@ class Plan {
   async updatePlan(req, res) {
     try {
         const { id, title, description, price, validity, category,accuracy } = req.body;
-  
+
       if (!id) {
         return res.status(400).json({
           status: false,
           message: "Plan ID is required",
         });
-      }
+      } 
   
       const updatedPlan = await Plan_Modal.findByIdAndUpdate(
         id,
@@ -207,7 +207,7 @@ class Plan {
             category,
             accuracy,
         },
-        { plan: true, runValidators: true } // Options: return the updated document and run validators
+        { plan: true, runValidators: true } 
       );
   
       if (!updatedPlan) {

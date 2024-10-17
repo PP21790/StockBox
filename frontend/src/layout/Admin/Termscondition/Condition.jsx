@@ -46,6 +46,9 @@ const Condition = () => {
     }, [searchInput]);
 
 
+
+
+
     const updateemaitemplate = async () => {
         try {
             const data = { description: updatetitle.description, id: templateid, title: updatetitle.title };
@@ -83,7 +86,7 @@ const Condition = () => {
     };
 
 
-    // Inline CSS styles
+
     const buttonStyle = {
         width: '40px',
         height: '40px',
@@ -156,29 +159,13 @@ const Condition = () => {
                                         <hr />
 
                                         <form className="row g-3">
-                                            {/* <div className="col-md-12">
-                                                <label htmlFor={`mailType${index}`} className="form-label">
-                                                    Title
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    className="form-control"
-                                                    id={`mailType${index}`}
-                                                    value={client.title}
-                                                />
-                                            </div> */}
+                                            
 
                                             <div className="col-md-12">
                                                 <label htmlFor={`mailContent${index}`} className="form-label">
                                                     Description
                                                 </label>
-                                                {/* <textarea
-                                                    className="form-control"
-                                                    id={`mailContent${index}`}
-                                                    value={client.description}
-                                                    rows={3}
-
-                                                /> */}
+                                    
                                                 <span
                                                     dangerouslySetInnerHTML={{ __html: client.description }}
                                                     style={{ display: 'block', marginTop: '0.5rem' }}
