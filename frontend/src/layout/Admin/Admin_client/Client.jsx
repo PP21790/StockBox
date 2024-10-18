@@ -359,7 +359,7 @@ const Client = () => {
 
 
         {
-            name: 'Signup Status',
+            name: 'Created By',
             selector: row => row.Status,
             sortable: true,
             width: '165px',
@@ -531,9 +531,9 @@ const Client = () => {
                     <Tooltip title="Update">
                         <UserPen onClick={() => updateClient(row)} />
                     </Tooltip>
-                    <Tooltip title="delete">
+                    {/* <Tooltip title="delete">
                         <Trash2 onClick={() => DeleteClient(row._id)} />
-                    </Tooltip>
+                    </Tooltip> */}
                 </>
             ),
             ignoreRowClick: true,

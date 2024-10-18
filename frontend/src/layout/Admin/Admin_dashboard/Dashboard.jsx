@@ -535,7 +535,7 @@ const Dashbord = () => {
                     <div className="card-body">
                         <div className="d-flex align-items-center">
                             <div>
-                                <h5 className="mb-0">Recent Client</h5>
+                                <h5 className="mb-0">Recent Clients</h5>
                             </div>
 
                         </div>
