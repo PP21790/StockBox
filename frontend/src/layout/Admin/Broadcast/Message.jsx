@@ -7,58 +7,19 @@ import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import { Tooltip } from 'antd';
 import { fDateTime, fDate } from '../../../Utils/Date_formate';
 
-
 const Message = () => {
-
-
     const navigate = useNavigate();
-
 
     useEffect(() => {
         getservice();
         sendmessagedetail();
     }, []);
 
-
-
-
     const token = localStorage.getItem('token');
     const userid = localStorage.getItem('id');
 
-    const [servicedata, setServicedata] = useState([]);
+    const [servicedata, setServicedata] = useState({});
     const [chatMessages, setChatMessages] = useState([]);
-    const [model, setModel] = useState(false);
-    const [serviceid, setServiceid] = useState({});
-
-
-
-
-    const [updatetitle, setUpdatetitle] = useState({
-        service: "",
-        subject: "",
-        message: "",
-        id: "",
-    });
-
-
-
-    const [message, setMessage] = useState({
-        service: "",
-        subject: "",
-        message: ""
-    });
-
-
-
-
-    const emptyfield = () => {
-        setMessage({
-            service: "",
-            subject: "",
-            message: ""
-        });
-    };
-
 
     const getservice = async () => {
         try {
@@ -71,9 +32,6 @@ const Message = () => {
         }
     };
 
-
-
-
     const sendmessagedetail = async () => {
         try {
             const response = await getBroadCastmessage(token);
@@ -85,15 +43,11 @@ const Message = () => {
         }
     };
 
-
-
-
-
     const DeleteMessage = async (_id) => {
         try {
             const result = await Swal.fire({
                 title: 'Are you sure?',
-                text: 'Do you want to delete this broad cast message? This action cannot be undone.',
+                text: 'Do you want to delete this broadcast message? This action cannot be undone.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, delete it!',
@@ -109,10 +63,9 @@ const Message = () => {
                         icon: 'success',
                         confirmButtonText: 'OK',
                     });
-                    sendmessagedetail()
+                    sendmessagedetail();
                 }
             } else {
-
                 Swal.fire({
                     title: 'Cancelled',
                     text: 'The message deletion was cancelled.',
@@ -127,113 +80,91 @@ const Message = () => {
                 icon: 'error',
                 confirmButtonText: 'Try Again',
             });
-
         }
     };
 
-
-
     return (
-        <>
-
-            <div>
-                <div className="page-content">
-                    <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                        <div className="breadcrumb-title pe-3">Message Broadcast</div>
-                        <div className="ps-3">
-                            <nav aria-label="breadcrumb">
-                                <ol className="breadcrumb mb-0 p-0">
-                                    <li className="breadcrumb-item">
-                                        <Link to="/admin/dashboard">
-                                            <i className="bx bx-home-alt" />
-                                        </Link>
-                                    </li>
-                                </ol>
-                            </nav>
-                        </div>
-                    </div>
-                    <hr />
-                    <div className="card">
-                        <div className="card-body">
-                            <div className="d-flex justify-content-end">
-                                <div className='me-2 mb-3'>
-                                    <Link
-                                        to="/admin/addbroadcast"
-                                        className="btn btn-primary"
-
-                                    >
-                                        <i className="bx bxs-plus-square" />
-                                        Add Broadcast
+        <div>
+            <div className="page-content">
+                <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+                    <div className="breadcrumb-title pe-3">Message Broadcast</div>
+                    <div className="ps-3">
+                        <nav aria-label="breadcrumb">
+                            <ol className="breadcrumb mb-0 p-0">
+                                <li className="breadcrumb-item">
+                                    <Link to="/admin/dashboard">
+                                        <i className="bx bx-home-alt" />
                                     </Link>
-                                </div>
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+                <hr />
+                <div className="card">
+                    <div className="card-body">
+                        <div className="d-flex justify-content-end">
+                            <div className='me-2 mb-3'>
+                                <Link to="/admin/addbroadcast" className="btn btn-primary">
+                                    <i className="bx bxs-plus-square" />
+                                    Add Broadcast
+                                </Link>
                             </div>
-                            <div className="page-content">
-                                <div className="">
-                                    <div className="">
-                                        <div className="container py-2">
+                        </div>
+                        <div className="page-content">
+                            <div className="container py-2">
+                                {chatMessages.map((item, index) => {
+                                    const matchedService = servicedata.find((service) => service._id === item.service);
 
-                                            {chatMessages.map((item, index) => {
-                                                const matchedService = servicedata?.find((service) => service._id === item.service);
-
-                                                return (
-                                                    <div className="row" key={index}>
-                                                        <div className="col py-2">
-                                                            <div className="card" style={{ borderRadius: "10px" }}>
-                                                                <div className="card-body">
-                                                                    <div className="float-end text-muted">
-                                                                        <Tooltip placement="top" overlay="Update">
-                                                                            <SquarePen
-                                                                                onClick={() => {
-
-                                                                                    navigate("/admin/updatebroadcast", { state: { item } })
-
-                                                                                }}
-                                                                            />
-                                                                        </Tooltip>
-                                                                        <Tooltip placement="top" overlay="Delete">
-                                                                            <Trash2 onClick={() => DeleteMessage(item._id)} />
-                                                                        </Tooltip>
-                                                                    </div>
-                                                                    <h4 className="card-title text-muted">
-                                                                        <span>
-                                                                            {matchedService?.segment === "C" ? " CASH" :
-                                                                                matchedService?.segment === "O" ? " OPTION" :
-                                                                                    matchedService?.segment === "F" ? " FUTURE" : ""}
-                                                                        </span>
-                                                                    </h4>
-                                                                    <hr />
-                                                                    <p><strong>Subject:</strong> {item.subject}</p>
-                                                                    <p className="card-text">
-                                                                        <strong>Message:</strong>
-                                                                        <span
-                                                                            dangerouslySetInnerHTML={{ __html: item.message }}
-                                                                            style={{ display: 'block', marginTop: '0.5rem' }}
-                                                                        />
-
-                                                                    </p>
-                                                                    <p><strong>Created At:</strong> {fDate(item.created_at)}</p>
-                                                                    <p><strong>Updated At:</strong> {fDate(item.updated_at)}</p>
-
-                                                                </div>
-                                                            </div>
+                                    return (
+                                        <div className="row" key={index}>
+                                            <div className="col py-2">
+                                                <div className="card" style={{ borderRadius: "10px" }}>
+                                                    <div className="card-body">
+                                                        <div className="float-end text-muted">
+                                                            <Tooltip placement="top" overlay="Update">
+                                                                <SquarePen
+                                                                    onClick={() => navigate("/admin/updatebroadcast",{ state: { item } })}
+                                                                />
+                                                            </Tooltip>
+                                                            <Tooltip placement="top" overlay="Delete">
+                                                                <Trash2 onClick={() => DeleteMessage(item._id)} />
+                                                            </Tooltip>
                                                         </div>
+                                                        <h4 className="card-title text-muted">
+                                                            <span>
+                                                                {matchedService ? (
+                                                                    <>
+                                                                        {matchedService.segment === "C" && <span>CASH</span>}
+                                                                        {matchedService.segment === "O" && <span>OPTION</span>}
+                                                                        {matchedService.segment === "F" && <span>FUTURE</span>}
+                                                                    </>
+                                                                ) : ""}
+                                                            </span>
+                                                        </h4>
+                                                        <hr />
+                                                        <p><strong>Subject:</strong> {item.subject}</p>
+                                                        <p className="card-text">
+                                                            <strong>Message:</strong>
+                                                            <span
+                                                                dangerouslySetInnerHTML={{ __html: item.message }}
+                                                                style={{ display: 'block', marginTop: '0.5rem' }}
+                                                            />
+                                                        </p>
+                                                        <p><strong>Created At:</strong> {fDate(item.created_at)}</p>
+                                                        <p><strong>Updated At:</strong> {fDate(item.updated_at)}</p>
                                                     </div>
-                                                );
-                                            })}
-
-
-
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
+                                    );
+                                })}
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
-
-        </>
+        </div>
     );
 };
 

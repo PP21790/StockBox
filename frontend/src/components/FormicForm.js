@@ -1094,11 +1094,10 @@ const DynamicForm = ({
                                                                 </>
                                                             )
                                                                 : field.type === "selectchecbox" ? (
-                                                                    <>
-
+                                                                    <div className={`col-lg-${field.col_size}`}>
                                                                         <label htmlFor={field.name}>{field.label}</label>
-
-                                                                        <DropdownMultiselect
+                                                      
+                                                                      {field.options && field.options.length > 0 &&  <DropdownMultiselect
                                                                             options={field.options.map((item) => ({
                                                                                 key: item.value,
                                                                                 label: item.label,
@@ -1110,12 +1109,10 @@ const DynamicForm = ({
                                                                             selected={formik.values[field.name]}
                                                                             isCheckbox
                                                                             placeholder="Select options"
-                                                                        />
-
-
-                                                                    </>
-
-                                                                )
+                                                                        />}
+                                                                    </div>
+                                                                ) 
+                                                            
                                                                     : field.type === "security" ? (
                                                                         <>
                                                                             <div className={`col-lg-${field.col_size}`}>
