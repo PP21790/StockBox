@@ -461,6 +461,9 @@ if (existingPlans.length > 0) {
         monthsToAdd = Math.floor(differenceInMonths); // Round down to the nearest whole number
       }
       
+    }
+    else{
+              monthsToAdd = 0;
     } 
 } 
 
@@ -519,6 +522,7 @@ if (existingPlans.length > 0) {
         plan_price: price,
         discount: discount,
         plan_start: start,
+        plan_end: end,
         validity: plan.validity,
         orderid:orderid
       });
@@ -624,27 +628,112 @@ async  myPlan(req, res) {
       return res.status(400).json({ status: false, message: 'Client ID is required' });
     }
 
+
+    const result = await PlanSubscription_Modal.aggregate([
+      {
+        $match: {
+          del: false,
+          client_id: new mongoose.Types.ObjectId(id) // Convert id to ObjectId if necessary
+        }
+      },
+      {
+        $lookup: {
+          from: 'plans', // The name of the plans collection
+          localField: 'plan_id', // The field in PlanSubscription_Modal that references the plans
+          foreignField: '_id', // The field in the plans collection that is referenced
+          as: 'planDetails' // The name of the field in the result that will hold the joined data
+        }
+      },
+      {
+        $unwind: '$planDetails' // Unwind to get a flat structure for planDetails
+      },
+      {
+        $lookup: {
+          from: 'plancategories', // The name of the plan categories collection
+          localField: 'planDetails.category', // Assuming planDetails has a field called category
+          foreignField: '_id', // The field in the planCategories collection
+          as: 'categoryDetails' // The name of the field for category data
+        }
+      },
+      {
+        $unwind: '$categoryDetails' // Unwind to get a flat structure for categoryDetails
+      },
+      {
+        $lookup: {
+          from: 'services', // Collection name for services
+          let: { serviceIds: { $split: ['$categoryDetails.service', ','] } }, // Split service string into array
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    {
+                      $in: ['$_id', { $map: { input: '$$serviceIds', as: 'id', in: { $toObjectId: '$$id' } } }],
+                    },
+                    { $eq: ['$status', true] }, // Match only active services
+                    { $eq: ['$del', false] }, // Match only non-deleted services
+                  ],
+                },
+              },
+            },
+            {
+              $project: {
+                _id: 1, // Service ID
+                title: 1, // Service title
+              },
+            },
+          ],
+          as: 'serviceDetails' // Name of the new array field to hold the services
+        }
+      },
+      {
+        $unwind: {
+          path: '$serviceDetails', // Unwind to get a flat structure for serviceDetails
+          preserveNullAndEmptyArrays: true // Optionally preserve empty arrays if there are no services
+        }
+      },
+      // Grouping to aggregate service titles into an array
+      {
+        $group: {
+          _id: '$_id',
+          planDetails: { $first: '$planDetails' },
+          categoryDetails: { $first: '$categoryDetails' },
+          serviceNames: { $push: '$serviceDetails.title' } // Create an array of service titles
+        }
+      },
+      // Optionally, you can project the fields you want to return
+      {
+        $project: {
+          _id: 1, // Plan Subscription ID
+          plan_id: '$plan_id', // Original plan_id
+          planDetails: 1, // Details from the plans collection
+          categoryDetails: 1, // Details from the plan categories collection
+          serviceNames: 1 // All service titles
+        }
+      }
+    ]);
+    
     
     // Fetch subscriptions based on client_id and del status
-    const result = await PlanSubscription_Modal.aggregate([
-  {
-    $match: {
-      del: false,
-      client_id: new mongoose.Types.ObjectId(id) // Convert id to ObjectId if necessary
-    }
-  },
-  {
-    $lookup: {
-      from: 'plans', // The name of the plans collection
-      localField: 'plan_id', // The field in PlanSubscription_Modal that references the plans
-      foreignField: '_id', // The field in the plans collection that is referenced
-      as: 'planDetails' // The name of the field in the result that will hold the joined data
-    }
-  },
-  {
-    $unwind: '$planDetails' // Optional: Unwind the result if you expect only one matching plan per subscription
-  }
-]);
+//     const result = await PlanSubscription_Modal.aggregate([
+//   {
+//     $match: {
+//       del: false,
+//       client_id: new mongoose.Types.ObjectId(id) // Convert id to ObjectId if necessary
+//     }
+//   },
+//   {
+//     $lookup: {
+//       from: 'plans', // The name of the plans collection
+//       localField: 'plan_id', // The field in PlanSubscription_Modal that references the plans
+//       foreignField: '_id', // The field in the plans collection that is referenced
+//       as: 'planDetails' // The name of the field in the result that will hold the joined data
+//     }
+//   },
+//   {
+//     $unwind: '$planDetails' // Optional: Unwind the result if you expect only one matching plan per subscription
+//   }
+// ]);
 
 
     // Respond with the retrieved subscriptions

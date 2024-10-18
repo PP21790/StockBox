@@ -12,6 +12,9 @@ const cors = require('cors');
 const bodyparser = require('body-parser');
 const db = require("./App/Models");
 //const { AddBulkStockCron } = require('./App/Controllers/Cron.js'); 
+process.env.TZ = 'Asia/Kolkata'; // Set the global time zone to IST
+console.log('Current time in IST:', new Date());
+
 require('./App/Controllers/Cron.js'); 
 const Clients_Modal = db.Clients;
 const BasicSetting_Modal = db.BasicSetting;

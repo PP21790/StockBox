@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const { sendEmail } = require('../Utils/emailService');
 const path = require('path');
 const fs = require('fs');
+
 const Payout_Modal = db.Payout;
 const Clients_Modal = db.Clients;
 const Mailtemplate_Modal = db.Mailtemplate;
@@ -152,11 +153,9 @@ class Clients {
 
   async getClient(req, res) {
     try {
-    
       const { } = req.body;
-
-    const result = await Clients_Modal.find({ del: 0 }).sort({ createdAt: -1 });
-    console.log(result);
+      
+      const result = await Clients_Modal.find({ del: 0 }).sort({ createdAt: -1 });
       return res.json({
         status: true,
         message: "get",
