@@ -23,6 +23,26 @@ class Dashboard {
             const opensignal = await Signal_Modal.countDocuments({ close_status: false });
             const closesignal = await Signal_Modal.countDocuments({ close_status: true });
 
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Set to the start of the day
+            
+            const tomorrow = new Date(today);
+            tomorrow.setDate(today.getDate() + 1); // Set to the start of the next day
+            
+            // Count open signals created today
+            const todayOpenSignal = await Signal_Modal.countDocuments({
+              close_status: false,
+              created_at: { $gte: today, $lt: tomorrow }
+            });
+            
+            // Count closed signals with today's close date
+            const todayCloseSignal = await Signal_Modal.countDocuments({
+              close_status: true,
+              closeDate: { $gte: today, $lt: tomorrow }
+            });
+
+
             const result = await Clients_Modal.find({ del: 0 })
     .sort({ _id: -1 })
     .limit(10);
@@ -39,6 +59,8 @@ class Dashboard {
                     PlanCountActive: activeplan,
                     OpensignalCountTotal: opensignal,
                     CloseSignalCountTotal: closesignal,
+                    todayOpenSignal:todayOpenSignal,
+                    todayCloseSignal:todayCloseSignal,
                     Clientlist: result
                 }
             });

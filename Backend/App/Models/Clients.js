@@ -103,6 +103,11 @@ const clientsModel = Schema({
         enum: [1, 0],
         default: 0
     },
+    clientcome: {
+        type: String,
+        enum: [1, 0],
+        default: 0
+    },
     ActiveStatus: {
         type: String,
         enum: ['1', '0'],
