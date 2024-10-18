@@ -87,9 +87,13 @@ const Help = () => {
                                         <div className="row">
 
                                             <div className="col py-2">
-                                                <div className="card radius-15">
-                                                    <div className="card-body p-4 position-relative">
+                                               
                                                         {clients.map((item) => (
+                                                            <div className="card radius-15">
+                                                                <div className="card-body p-4 position-relative">
+                                                                    <div className='p-4 border radius-15'>
+
+                                                                    
                                                             <div key={item.id}>
                                                                 <div className="float-end text-muted">{fDate(item.created_at)}</div>
                                                                 <h4 className="card-title">{item.clientDetails.FullName}</h4>
@@ -107,11 +111,13 @@ const Help = () => {
                                                                     <strong>Description:</strong> {item.message}
                                                                 </p>
                                                             </div>
+                                                                </div>
+                                                            </div>
+                                                            </div>
                                                         ))}
                                                     </div>
 
-                                                </div>
-                                            </div>
+                                              
 
                                         </div>
 

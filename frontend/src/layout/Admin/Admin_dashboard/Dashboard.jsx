@@ -272,7 +272,7 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <Link to="/admin/client"><i className="bx bx-up-arrow-alt" /> </Link>
+                                            <Link to="/admin/client"><i className="bx bx-up-arrow-alt text-white" /> </Link>
                                         </span>
 
                                     </p>
@@ -308,7 +308,7 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                        <Link to="/admin/client"><i className="bx bx-up-arrow-alt"/></Link>
+                                            <Link to="/admin/client"><i className="bx bx-up-arrow-alt text-white" /></Link>
                                             {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
@@ -343,7 +343,7 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                        <Link to="/admin/client"><i className="bx bx-up-arrow-alt"/></Link>
+                                            <Link to="/admin/client"><i className="bx bx-up-arrow-alt text-white" /></Link>
                                             {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
@@ -378,7 +378,7 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                        <Link to="/admin/staff"><i className="bx bx-up-arrow-alt"/></Link>
+                                            <Link to="/admin/staff"><i className="bx bx-up-arrow-alt text-white" /></Link>
                                             {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
@@ -413,7 +413,7 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                        <Link to="/admin/signal"><i className="bx bx-up-arrow-alt"/></Link>
+                                            <Link to="/admin/signal"><i className="bx bx-up-arrow-alt text-white" /></Link>
                                             {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
@@ -448,7 +448,7 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                        <Link to="/admin/closesignal"><i className="bx bx-up-arrow-alt"/></Link>
+                                            <Link to="/admin/closesignal"><i className="bx bx-up-arrow-alt text-white" /></Link>
                                             {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
@@ -484,7 +484,7 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                        <Link to="/admin/signal"><i className="bx bx-up-arrow-alt"/></Link>
+                                            <Link to="/admin/signal"><i className="bx bx-up-arrow-alt text-white" /></Link>
                                             {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
@@ -519,7 +519,7 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                        <Link to="/admin/closesignal"><i className="bx bx-up-arrow-alt"/></Link>
+                                            <Link to="/admin/closesignal"><i className="bx bx-up-arrow-alt text-white" /></Link>
                                             {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>

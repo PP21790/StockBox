@@ -5382,6 +5382,10 @@ ul li {
 	cursor: pointer;
 	flex-grow: 1;
 }
+.btnprime:hover {
+	background-color: #5F73E4;
+	color: #fff !important;
+}
 
 .picked-badge {
 	position: absolute;

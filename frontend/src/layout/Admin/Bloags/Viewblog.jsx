@@ -93,24 +93,24 @@ const Viewblog = () => {
 
     const fields = [
         {
-            name: "Select Service",
-            label: "Service",
+            name: "Title",
+            label: "Title",
             type: "text",
             label_size: 6,
             col_size: 6,
             disable: false,
         },
         {
-            name: "Subject",
-            label: "Subject",
+            name: "Image",
+            label: "Image",
             type: "text",
             label_size: 12,
             col_size: 6,
             disable: false,
         },
         {
-            name: "Message",
-            label: "Message",
+            name: "Discription",
+            label: "Discription",
             type: "text5",
             label_size: 12,
             col_size: 6,
@@ -124,11 +124,11 @@ const Viewblog = () => {
             <DynamicForm
                 fields={fields}
                 formik={formik}
-                page_title="Add Broadcast"
-                btn_name="Add Broadcast"
+                page_title="Blog Details"
+                btn_name="submit"
                 btn_name1="Cancel"
                 sumit_btn={true}
-                btn_name1_route={"/admin/message"}
+                btn_name1_route={"/admin/blogs"}
                 additional_field={<></>}
 
             />
