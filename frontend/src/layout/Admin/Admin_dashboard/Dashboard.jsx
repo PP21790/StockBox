@@ -390,7 +390,7 @@ const Dashbord = () => {
                         <div className="card radius-10 bg-gradient-moonlit ">
                             <div className="card-body">
                                 <div className="d-flex align-items-center">
-                                    <h5 className="mb-0 text-white">{data.OpensignalCountTotal && data.OpensignalCountTotal}</h5>
+                                    <h5 className="mb-0 text-white">{data.todayOpenSignal && data.todayOpenSignal}</h5>
                                     <div className="ms-auto">
                                         <i className="bx bx-wifi-2 fs-3 text-white" />
                                     </div>
@@ -425,7 +425,7 @@ const Dashbord = () => {
                         <div className="card radius-10 bg-gradient-ibiza ">
                             <div className="card-body">
                                 <div className="d-flex align-items-center">
-                                    <h5 className="mb-0 text-white">{data.CloseSignalCountTotal && data.CloseSignalCountTotal}</h5>
+                                    <h5 className="mb-0 text-white">{data.todayCloseSignal && data.todayCloseSignal}</h5>
                                     <div className="ms-auto">
                                         <i className="fadeIn animated bx bx-wifi-off fs-3 text-white" />
                                     </div>
