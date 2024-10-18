@@ -114,7 +114,7 @@ const ReferAndEarn = () => {
                                             <div className="col-sm-9">
                                                 <div className="input-group">
                                                     <span className="input-group-text">
-                                                        <i className="fadeIn animated bx bx-building" />
+                                                        <i className="fadeIn animated bx bx-message-square-edit" />
                                                     </span>
                                                     <Field
                                                         name="refer_title"
@@ -137,7 +137,7 @@ const ReferAndEarn = () => {
                                             <div className="col-sm-9">
                                                 <div className="input-group">
                                                     <span className="input-group-text">
-                                                        <i className="fadeIn animated bx bx-phone" />
+                                                        <i className="lni lni-customer" />
                                                     </span>
                                                     <Field
                                                         name="sender_earn"
@@ -160,7 +160,7 @@ const ReferAndEarn = () => {
                                             <div className="col-sm-9">
                                                 <div className="input-group">
                                                     <span className="input-group-text">
-                                                        <i className="bx bx-envelope" />
+                                                        <i className="lni lni-customer" />
                                                     </span>
                                                     <Field
                                                         name="receiver_earn"
@@ -183,7 +183,7 @@ const ReferAndEarn = () => {
                                             <div className="col-sm-9">
                                                 <div className="input-group">
                                                     <span className="input-group-text">
-                                                        <i className="bx bx-envelope" />
+                                                        <i className="fadeIn animated bx bx-message-square-dots" />
                                                     </span>
                                                     <Field
                                                         name="refer_description"
