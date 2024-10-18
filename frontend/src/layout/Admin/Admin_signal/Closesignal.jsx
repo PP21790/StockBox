@@ -6,7 +6,7 @@ import Table from '../../../components/Table';
 import { Eye, RefreshCcw ,Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { GetSignallist, DeleteSignal, SignalCloseApi, GetService, GetStockDetail } from '../../../Services/Admin';
-import { fDateTimeSuffix } from '../../../Utils/Date_formate'
+import { fDateTimeSuffix ,fDateTime} from '../../../Utils/Date_formate'
 
 
 

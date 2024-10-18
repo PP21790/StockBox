@@ -4,6 +4,7 @@ import { GetClient } from '../../../Services/Admin';
 import { fDateTime } from '../../../Utils/Date_formate';
 import Table from '../../../components/Table';
 import { getstaffperuser } from '../../../Services/Admin';
+import { Link } from 'react-router-dom';
 
 
 const Dashbord = () => {
@@ -265,7 +266,7 @@ const Dashbord = () => {
         <div>
 
             <div className="page-content">
-                <div className="row">
+            <div className="row">
                     <div className="col-md-3">
                         <div className="card radius-10 bg-gradient-deepblue">
                             <div className="card-body">
@@ -290,12 +291,15 @@ const Dashbord = () => {
                                 </div>
                                 <div className="d-flex align-items-center text-white">
                                     <p className="mb-0">Total Clients</p>
+
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <i className="bx bx-up-arrow-alt" />
+                                            <Link to="/staff/client"><i className="bx bx-up-arrow-alt" /> </Link>
                                         </span>
+
                                     </p>
+
                                 </div>
                             </div>
                         </div>
@@ -306,7 +310,7 @@ const Dashbord = () => {
                                 <div className="d-flex align-items-center">
                                     <h5 className="mb-0 text-white">{data.clientCountActive && data.clientCountActive}</h5>
                                     <div className="ms-auto">
-                                        <i className="bx bx-basket fs-3 text-white" />
+                                        <i className="fadeIn animated bx bx-user-circle fs-3 text-white" />
                                     </div>
                                 </div>
                                 <div
@@ -327,7 +331,8 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <i className="bx bx-up-arrow-alt" />
+                                        <Link to="/staff/client"><i className="bx bx-up-arrow-alt"/></Link>
+                                            {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
                                 </div>
@@ -340,7 +345,7 @@ const Dashbord = () => {
                                 <div className="d-flex align-items-center">
                                     <h5 className="mb-0 text-white">{data.clientCountTotal - data.clientCountActive}</h5>
                                     <div className="ms-auto">
-                                        <i className="bx bxl-redux fs-3 text-white" />
+                                        <i className="fadeIn animated bx bx-user-x fs-3 text-white" />
                                     </div>
                                 </div>
                                 <div
@@ -361,7 +366,8 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <i className="bx bx-up-arrow-alt" />
+                                        <Link to="/staff/client"><i className="bx bx-up-arrow-alt"/></Link>
+                                            {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
                                 </div>
@@ -395,7 +401,8 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <i className="bx bx-up-arrow-alt" />
+                                        <Link to="/staff/staff"><i className="bx bx-up-arrow-alt"/></Link>
+                                            {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
                                 </div>
@@ -425,11 +432,12 @@ const Dashbord = () => {
                                     />
                                 </div>
                                 <div className="d-flex align-items-center text-white">
-                                    <p className="mb-0">Total Open Signal</p>
+                                    <p className="mb-0">Todays Open Signal</p>
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <i className="bx bx-up-arrow-alt" />
+                                        <Link to="/staff/signal"><i className="bx bx-up-arrow-alt"/></Link>
+                                            {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
                                 </div>
@@ -438,6 +446,77 @@ const Dashbord = () => {
                     </div>
                     <div className="col-md-3">
                         <div className="card radius-10 bg-gradient-ibiza ">
+                            <div className="card-body">
+                                <div className="d-flex align-items-center">
+                                    <h5 className="mb-0 text-white">{data.CloseSignalCountTotal && data.CloseSignalCountTotal}</h5>
+                                    <div className="ms-auto">
+                                        <i className="fadeIn animated bx bx-wifi-off fs-3 text-white" />
+                                    </div>
+                                </div>
+                                <div
+                                    className="progress my-2 bg-opacity-25 bg-white"
+                                    style={{ height: 4 }}
+                                >
+                                    <div
+                                        className="progress-bar bg-white"
+                                        role="progressbar"
+                                        style={{ width: "55%" }}
+                                        aria-valuenow={25}
+                                        aria-valuemin={0}
+                                        aria-valuemax={100}
+                                    />
+                                </div>
+                                <div className="d-flex align-items-center text-white">
+                                    <p className="mb-0">Todays Close Signal</p>
+                                    <p className="mb-0 ms-auto">
+
+                                        <span>
+                                        <Link to="/staff/closesignal"><i className="bx bx-up-arrow-alt"/></Link>
+                                            {/* <i className="bx bx-up-arrow-alt" /> */}
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="col-md-3">
+                        <div className="card radius-10 bg-gradient-ohhappiness">
+                            <div className="card-body">
+                                <div className="d-flex align-items-center">
+                                    <h5 className="mb-0 text-white">{data.OpensignalCountTotal && data.OpensignalCountTotal}</h5>
+                                    <div className="ms-auto">
+                                        <i className="bx bxl-redux fs-3 text-white" />
+                                    </div>
+                                </div>
+                                <div
+                                    className="progress my-2 bg-opacity-25 bg-white"
+                                    style={{ height: 4 }}
+                                >
+                                    <div
+                                        className="progress-bar bg-white"
+                                        role="progressbar"
+                                        style={{ width: "55%" }}
+                                        aria-valuenow={25}
+                                        aria-valuemin={0}
+                                        aria-valuemax={100}
+                                    />
+                                </div>
+                                <div className="d-flex align-items-center text-white">
+                                    <p className="mb-0">Total Open Signal</p>
+                                    <p className="mb-0 ms-auto">
+
+                                        <span>
+                                        <Link to="/staff/signal"><i className="bx bx-up-arrow-alt"/></Link>
+                                            {/* <i className="bx bx-up-arrow-alt" /> */}
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-3">
+                        <div className="card radius-10 bg-gradient-deepblue">
                             <div className="card-body">
                                 <div className="d-flex align-items-center">
                                     <h5 className="mb-0 text-white">{data.CloseSignalCountTotal && data.CloseSignalCountTotal}</h5>
@@ -459,80 +538,12 @@ const Dashbord = () => {
                                     />
                                 </div>
                                 <div className="d-flex align-items-center text-white">
-                                    <p className="mb-0">Total Close Signal</p>
+                                    <p className="mb-0">Total Close Signal </p>
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <i className="bx bx-up-arrow-alt" />
-                                        </span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="col-md-3">
-                        <div className="card radius-10 bg-gradient-ohhappiness">
-                            <div className="card-body">
-                                <div className="d-flex align-items-center">
-                                    <h5 className="mb-0 text-white">{data.PlanCountTotal && data.PlanCountTotal}</h5>
-                                    <div className="ms-auto">
-                                        <i className="bx bx-wifi-2 fs-3 text-white" />
-                                    </div>
-                                </div>
-                                <div
-                                    className="progress my-2 bg-opacity-25 bg-white"
-                                    style={{ height: 4 }}
-                                >
-                                    <div
-                                        className="progress-bar bg-white"
-                                        role="progressbar"
-                                        style={{ width: "55%" }}
-                                        aria-valuenow={25}
-                                        aria-valuemin={0}
-                                        aria-valuemax={100}
-                                    />
-                                </div>
-                                <div className="d-flex align-items-center text-white">
-                                    <p className="mb-0">Total Plan</p>
-                                    <p className="mb-0 ms-auto">
-
-                                        <span>
-                                            <i className="bx bx-up-arrow-alt" />
-                                        </span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-md-3">
-                        <div className="card radius-10 bg-gradient-deepblue">
-                            <div className="card-body">
-                                <div className="d-flex align-items-center">
-                                    <h5 className="mb-0 text-white">{data.PlanCountActive && data.PlanCountActive}</h5>
-                                    <div className="ms-auto">
-                                        <i className="bx bx-wifi-2 fs-3 text-white" />
-                                    </div>
-                                </div>
-                                <div
-                                    className="progress my-2 bg-opacity-25 bg-white"
-                                    style={{ height: 4 }}
-                                >
-                                    <div
-                                        className="progress-bar bg-white"
-                                        role="progressbar"
-                                        style={{ width: "55%" }}
-                                        aria-valuenow={25}
-                                        aria-valuemin={0}
-                                        aria-valuemax={100}
-                                    />
-                                </div>
-                                <div className="d-flex align-items-center text-white">
-                                    <p className="mb-0">Total Active Plan</p>
-                                    <p className="mb-0 ms-auto">
-
-                                        <span>
-                                            <i className="bx bx-up-arrow-alt" />
+                                        <Link to="/staff/closesignal"><i className="bx bx-up-arrow-alt"/></Link>
+                                            {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
                                 </div>

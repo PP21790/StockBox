@@ -12,9 +12,9 @@ const EditClient = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { row } = location.state; 
+  const { row } = location.state;
 
- 
+  // console.log("row",row)
 
   const user_id = localStorage.getItem("id");
   const token = localStorage.getItem("token");
@@ -23,21 +23,21 @@ const EditClient = () => {
     let errors = {};
 
     if (!values.FullName) {
-      errors.FullName = "Please enter Full Name";
+      errors.FullName = "Please Enter Full Name";
     }
     if (!values.Email) {
-      errors.Email = "Please enter Email";
+      errors.Email = "Please Enter Email";
     }
     // if (!values.UserName) {
     //   errors.UserName = "Please enter Username";
     // }
     if (!values.PhoneNo) {
-      errors.PhoneNo = "Please enter Phone Number";
+      errors.PhoneNo = "Please Enter Phone Number";
     }
-    if (!values.password) {
-      errors.password = "Please enter Phone Number";
-    }
-    
+    // if (!values.password) {
+    //   errors.password = "Please Enter Password";
+    // }
+
 
     return errors;
   };
@@ -48,12 +48,12 @@ const EditClient = () => {
       // UserName: values.UserName,
       Email: values.Email,
       PhoneNo: values.PhoneNo,
-      password:values.password,
+      // password: values.password,
       id: row._id,
     };
 
     try {
-      const response = await UpdateClient(req,token);
+      const response = await UpdateClient(req, token);
       if (response.status) {
         Swal.fire({
           title: "Update Successful!",
@@ -63,7 +63,7 @@ const EditClient = () => {
           timerProgressBar: true,
         });
         setTimeout(() => {
-          navigate("/staff/client");
+          navigate("/admin/client");
         }, 1500);
       } else {
         Swal.fire({
@@ -91,7 +91,7 @@ const EditClient = () => {
       // UserName: row?.UserName || "",
       Email: row?.Email || "",
       PhoneNo: row?.PhoneNo || "",
-    
+
     },
     validate,
     onSubmit,
@@ -102,8 +102,9 @@ const EditClient = () => {
       name: "FullName",
       label: "Full Name",
       type: "text",
+      star: true,
       label_size: 6,
-      col_size: 6,
+      col_size: 3,
       disable: false,
     },
     // {
@@ -118,37 +119,39 @@ const EditClient = () => {
       name: "Email",
       label: "Email",
       type: "text",
+      star: true,
       label_size: 12,
-      col_size: 6,
+      col_size: 3,
       disable: false,
     },
     {
       name: "PhoneNo",
       label: "Phone Number",
-      type: "text3", 
+      type: "text3",
       label_size: 12,
-      col_size: 6,
+      col_size: 3,
       disable: false,
     },
-    {
-      name: "password",
-      label: "Password",
-      type: "text", 
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-    },
+    // {
+    //   name: "password",
+    //   label: "Password",
+    //   type: "text",
+    //   label_size: 12,
+    //   col_size: 3,
+    //   disable: false,
+    // },
   ];
 
   return (
     <div style={{ marginTop: "100px" }}>
       <DynamicForm
         fields={fields}
-        page_title="Update User"
-        btn_name="Update User"
+        page_title="Update Client"
+        btn_name="Update Client"
         btn_name1="Cancel"
         formik={formik}
-        btn_name1_route={"/staff/client"}
+        sumit_btn={true}
+        btn_name1_route={"/admin/client"}
         additional_field={<></>}
       />
     </div>

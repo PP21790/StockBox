@@ -4,7 +4,9 @@ import DynamicForm from '../../../components/FormicForm';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import { AddClient } from '../../../Services/Admin';
-import { getstaffperuser } from '../../../Services/Admin';
+
+
+
 
 const AddUser = () => {
   const navigate = useNavigate();
@@ -49,7 +51,7 @@ const AddUser = () => {
       const response = await AddClient(req, token);
       if (response.status) {
         Swal.fire({
-          title: "Create Successful!",
+          title: "Client Create Successfull !",
           text: response.message,
           icon: "success",
           timer: 1500,
@@ -60,9 +62,9 @@ const AddUser = () => {
         }, 1500);
       } else {
         Swal.fire({
-          title: "Error",
+          title: "Alert",
           text: response.message,
-          icon: "error",
+          icon: "warning",
           timer: 1500,
           timerProgressBar: true,
         });
@@ -127,7 +129,7 @@ const AddUser = () => {
     {
       name: "ConfirmPassword",
       label: "Confirm Password",
-      type: "password",
+      type: "password1",
       label_size: 12,
       col_size: 6,
       disable: false,
@@ -139,8 +141,8 @@ const AddUser = () => {
       <DynamicForm
         fields={fields}
         formik={formik}
-        page_title="Add New User"
-        btn_name="Add User"
+        page_title="Add New Client"
+        btn_name="Add Client"
         btn_name1="Cancel"
         sumit_btn={true}
         btn_name1_route={"/staff/client"}

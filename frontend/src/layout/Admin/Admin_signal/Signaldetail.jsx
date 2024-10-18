@@ -3,8 +3,9 @@ import { Link, useParams } from 'react-router-dom';
 import Table from '../../../components/Table';
 import { Signalperdetail } from '../../../Services/Admin';
 import { image_baseurl } from '../../../Utils/config';
-import { fDateTime } from '../../../Utils/Date_formate';
+import { fDateTime , } from '../../../Utils/Date_formate';
 import { Tooltip } from 'antd';
+
 
 const Signaldetail = () => {
 
