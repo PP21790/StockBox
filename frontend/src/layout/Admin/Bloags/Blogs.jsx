@@ -110,6 +110,10 @@ const Blogs = () => {
         navigate("/admin/updatebolgs" ,{ state: { row } })
     }
 
+    const viewblog = async (row) => {
+        navigate("/admin/viewblog", { state: { row } })
+    }
+
 
 
     // Add blogs
@@ -310,7 +314,12 @@ const Blogs = () => {
                 <>
                     <div>
                         <Tooltip placement="top" overlay="View">
-                            <Eye style={{ marginRight: "10px" }} />
+                          
+                            <Eye style={{ marginRight: "10px" }} 
+                                onClick={() => {
+                                    viewblog(row)
+                                }}/>
+                            
                         </Tooltip>
                     </div>
                     <div>
