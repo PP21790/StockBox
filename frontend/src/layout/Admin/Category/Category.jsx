@@ -18,7 +18,7 @@ const Category = () => {
     const [searchInput, setSearchInput] = useState("");
     const [selectedServices, setSelectedServices] = useState([]);
 
-    
+
     const [updatetitle, setUpdatetitle] = useState({
         title: "",
         id: "",
@@ -90,7 +90,7 @@ const Category = () => {
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
-                    text:  response.message || 'Category updated successfully.',
+                    text: response.message || 'Category updated successfully.',
                     icon: 'success',
                     confirmButtonText: 'OK',
                     timer: 2000,
@@ -102,7 +102,7 @@ const Category = () => {
             } else {
                 Swal.fire({
                     title: 'Error!',
-                    text: response.message|| 'There was an error updating the Category.',
+                    text: response.message || 'There was an error updating the Category.',
                     icon: 'error',
                     confirmButtonText: 'Try Again',
                 });
@@ -128,7 +128,7 @@ const Category = () => {
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
-                    text: response.message|| 'Category added successfully.',
+                    text: response.message || 'Category added successfully.',
                     icon: 'success',
                     confirmButtonText: 'OK',
                     timer: 2000,
@@ -145,7 +145,7 @@ const Category = () => {
             } else {
                 Swal.fire({
                     title: 'Error!',
-                    text: response.message||  'There was an error adding the Category.',
+                    text: response.message || 'There was an error adding the Category.',
                     icon: 'error',
                     confirmButtonText: 'Try Again',
                 });
@@ -338,9 +338,9 @@ const Category = () => {
                         </Tooltip>
                     </div>
                     <div>
-                        <Tooltip placement="top" overlay="Delete">
+                        {/* <Tooltip placement="top" overlay="Delete">
                             <Trash2 onClick={() => DeleteCategory(row._id)} />
-                        </Tooltip>
+                        </Tooltip> */}
                     </div>
                 </>
             ),

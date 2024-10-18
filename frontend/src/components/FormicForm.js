@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { MoveLeft, Plus, Eye, EyeOff } from "lucide-react";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
+
 
 const DynamicForm = ({
     fields,
@@ -388,7 +390,7 @@ const DynamicForm = ({
                                                                     {field.image === true && (
                                                                         <div >
                                                                             <img
-                                                                            className="mt-3"
+                                                                                className="mt-3"
                                                                                 src={imagePreview[field.name] || field.src}
                                                                                 alt={`${field.label} Preview`}
                                                                                 style={{
@@ -1055,74 +1057,99 @@ const DynamicForm = ({
                                                                     </div>
                                                                 </div>
                                                             </>
-                                                        ) : field.type === "ckeditor" ? (
-                                                            <>
-                                                                <div style={{ marginTop: "20px" }}>
-                                                                    <label htmlFor={field.name}>{field.label}</label>
-                                                                    <ReactQuill
-                                                                        value={formik.values[field.name]}
-                                                                        onChange={(value) => formik.setFieldValue(field.name, value)}
-                                                                        modules={{
-                                                                            toolbar: [
-                                                                                [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
-                                                                                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                                                                                ['bold', 'italic', 'underline'],
-                                                                                ['link', 'image'],
-                                                                                ['clean'],
-                                                                            ],
-                                                                        }}
-                                                                        formats={[
-                                                                            'header', 'font', 'size', 'bold', 'italic', 'underline',
-                                                                            'list', 'bullet', 'link', 'image', 'clean',
-                                                                        ]}
-                                                                        style={{
-                                                                            height: '200px',
-                                                                            border: '1px solid #ccc',
-                                                                            borderRadius: '4px',
-                                                                            padding: '10px',
-                                                                            backgroundColor: '#fff',
-                                                                            fontFamily: 'inherit',
-                                                                            fontSize: 'inherit',
-                                                                            overflow: 'auto',
-                                                                        }}
-                                                                    />
-                                                                </div>
-
-                                                            </>
-                                                        ) : field.type === "security" ? (
-                                                            <>
-                                                                <div className={`col-lg-${field.col_size}`}>
-                                                                    <div className="input-block mb-3 flex-column">
-                                                                        <label className={`col-lg-${field.label_size}`}>
-                                                                            {field.label}
-                                                                        </label>
+                                                        ) :
+                                                            field.type === "ckeditor" ? (
+                                                                <>
+                                                                    <div style={{ marginTop: "20px" }}>
+                                                                        <label htmlFor={field.name}>{field.label}</label>
+                                                                        <ReactQuill
+                                                                            value={formik.values[field.name]}
+                                                                            onChange={(value) => formik.setFieldValue(field.name, value)}
+                                                                            modules={{
+                                                                                toolbar: [
+                                                                                    [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
+                                                                                    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                                                                                    ['bold', 'italic', 'underline'],
+                                                                                    ['link', 'image'],
+                                                                                    ['clean'],
+                                                                                ],
+                                                                            }}
+                                                                            formats={[
+                                                                                'header', 'font', 'size', 'bold', 'italic', 'underline',
+                                                                                'list', 'bullet', 'link', 'image', 'clean',
+                                                                            ]}
+                                                                            style={{
+                                                                                height: '200px',
+                                                                                border: '1px solid #ccc',
+                                                                                borderRadius: '4px',
+                                                                                padding: '10px',
+                                                                                backgroundColor: '#fff',
+                                                                                fontFamily: 'inherit',
+                                                                                fontSize: 'inherit',
+                                                                                overflow: 'auto',
+                                                                            }}
+                                                                        />
                                                                     </div>
-                                                                </div>
-                                                            </>
-                                                        ) : field.type === "convertprice" ? (
-                                                            <>
-                                                                <div key={index} className={`col-md-${field.col_size}`}>
-                                                                    <label htmlFor={field.name}>{field.label}</label>
-                                                                    <input
-                                                                        type="text"
-                                                                        id={field.name}
-                                                                        {...formik.getFieldProps(field.name)}
-                                                                        disabled={field.disable}
-                                                                        className={`form-control ${formik.touched[field.name] && formik.errors[field.name] ? 'is-invalid' : ''}`}
-                                                                    />
-                                                                    {formik.touched[field.name] && formik.errors[field.name] ? (
-                                                                        <div className="invalid-feedback">{formik.errors[field.name]}</div>
-                                                                    ) : null}
-                                                                    {field.customElement}
-                                                                </div>
-                                                            </>
-                                                        ) : (
-                                                            <>
-                                                                <div className={`col-lg-${field.col_size}`}>
-                                                                    <div className="input-block mb-3"></div>
-                                                                </div>
-                                                            </>
-                                                        )}
+
+                                                                </>
+                                                            )
+                                                                : field.type === "selectchecbox" ? (
+                                                                    <>
+
+                                                                        <label htmlFor={field.name}>{field.label}</label>
+
+                                                                        <DropdownMultiselect
+                                                                            options={field.options.map((item) => ({
+                                                                                key: item.value,
+                                                                                label: item.label,
+                                                                            }))}
+                                                                            name={field.name}
+                                                                            handleOnChange={(selected) => {
+                                                                                formik.setFieldValue(field.name, selected);
+                                                                            }}
+                                                                            selected={formik.values[field.name]}
+                                                                            isCheckbox
+                                                                            placeholder="Select options"
+                                                                        />
+
+
+                                                                    </>
+
+                                                                )
+                                                                    : field.type === "security" ? (
+                                                                        <>
+                                                                            <div className={`col-lg-${field.col_size}`}>
+                                                                                <div className="input-block mb-3 flex-column">
+                                                                                    <label className={`col-lg-${field.label_size}`}>
+                                                                                        {field.label}
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </>
+                                                                    ) : field.type === "convertprice" ? (
+                                                                        <>
+                                                                            <div key={index} className={`col-md-${field.col_size}`}>
+                                                                                <label htmlFor={field.name}>{field.label}</label>
+                                                                                <input
+                                                                                    type="text"
+                                                                                    id={field.name}
+                                                                                    {...formik.getFieldProps(field.name)}
+                                                                                    disabled={field.disable}
+                                                                                    className={`form-control ${formik.touched[field.name] && formik.errors[field.name] ? 'is-invalid' : ''}`}
+                                                                                />
+                                                                                {formik.touched[field.name] && formik.errors[field.name] ? (
+                                                                                    <div className="invalid-feedback">{formik.errors[field.name]}</div>
+                                                                                ) : null}
+                                                                                {field.customElement}
+                                                                            </div>
+                                                                        </>
+                                                                    ) : (
+                                                                        <>
+                                                                            <div className={`col-lg-${field.col_size}`}>
+                                                                                <div className="input-block mb-3"></div>
+                                                                            </div>
+                                                                        </>
+                                                                    )}
                                         </React.Fragment>
                                     ))}
                                     {additional_field}

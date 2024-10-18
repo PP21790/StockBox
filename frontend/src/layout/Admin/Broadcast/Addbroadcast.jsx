@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
-import DynamicForm from '../../../components/FormicForm';
 import Swal from 'sweetalert2';
+import DynamicForm from '../../../components/FormicForm';
 import { useNavigate } from 'react-router-dom';
 import { SendBroadCast, GetService } from '../../../Services/Admin';
 
@@ -10,23 +10,30 @@ const Addbroadcast = () => {
     const navigate = useNavigate();
     const [servicedata, setServicedata] = useState([]);
     
+    
+    useEffect(() => {
+        getservice();
+    }, []);
+  
+
     const user_id = localStorage.getItem("id");
     const token = localStorage.getItem("token");
+    
+
 
     const getservice = async () => {
         try {
             const response = await GetService(token);
             if (response.status) {
                 setServicedata(response.data);
+                console.log("servicedata",servicedata)
             }
         } catch (error) {
             console.log("Error fetching services:", error);
         }
     };
 
-    useEffect(() => {
-        getservice();
-    }, []);
+  
 
     const validate = (values) => {
         let errors = {};
@@ -98,11 +105,11 @@ const Addbroadcast = () => {
         {
             name: "service",
             label: "Select Service",
-            type: "select",
+            type: "selectchecbox",
             label_size: 6,
             col_size: 6,
             disable: false,
-            options: servicedata.map((item) => ({
+            options: servicedata && servicedata.map((item) => ({
                 label: item.title,
                 value: item._id,
             })),

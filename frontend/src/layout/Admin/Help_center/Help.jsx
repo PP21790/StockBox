@@ -23,10 +23,10 @@ const Help = () => {
 
                 const filterdata = response.data.filter((item) =>
                     searchInput === "" ||
-                    item.clientDetails.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
-                    item.clientDetails.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
-                    item.message.toLowerCase().includes(searchInput.toLowerCase()) ||
-                    item.subject.toLowerCase().includes(searchInput.toLowerCase())
+                    item.clientDetails?.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
+                    item.clientDetails?.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
+                    item.message?.toLowerCase().includes(searchInput.toLowerCase()) ||
+                    item.subject?.toLowerCase().includes(searchInput.toLowerCase())
                 );
                 setClients(searchInput ? filterdata : response.data);
             }
@@ -96,10 +96,10 @@ const Help = () => {
                                                                     
                                                             <div key={item.id}>
                                                                 <div className="float-end text-muted">{fDate(item.created_at)}</div>
-                                                                <h4 className="card-title">{item.clientDetails.FullName}</h4>
+                                                                <h4 className="card-title">{item.clientDetails?.FullName}</h4>
                                                                 <hr />
                                                                 <p>
-                                                                    <strong>Email:</strong> {item.clientDetails.Email}
+                                                                    <strong>Email:</strong> {item.clientDetails?.Email}
                                                                 </p>
                                                                 <p>
                                                                     <strong>Subject:</strong> {item.subject}

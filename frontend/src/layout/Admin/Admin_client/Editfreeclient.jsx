@@ -7,7 +7,7 @@ import { UpdateClient } from '../../../Services/Admin';
 
 
 
-const EditClient = () => {
+const Editfreeclient = () => {
 
 
   const navigate = useNavigate();
@@ -18,14 +18,6 @@ const EditClient = () => {
 
   const user_id = localStorage.getItem("id");
   const token = localStorage.getItem("token");
-
-
-
-  
-  
-
-
-
 
   const validate = (values) => {
     let errors = {};
@@ -166,4 +158,4 @@ const EditClient = () => {
   );
 };
 
-export default EditClient;
+export default Editfreeclient;

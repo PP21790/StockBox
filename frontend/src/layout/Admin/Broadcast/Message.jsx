@@ -60,11 +60,6 @@ const Message = () => {
     };
 
 
-
-
-
-
-
     const getservice = async () => {
         try {
             const response = await GetService(token);
@@ -190,7 +185,7 @@ const Message = () => {
                                                                             <SquarePen
                                                                                 onClick={() => {
 
-                                                                                    navigate("/admin/updatebroadcast" ,{ state: { item } })
+                                                                                    navigate("/admin/updatebroadcast", { state: { item } })
 
                                                                                 }}
                                                                             />

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getplanlist, getcategoryplan, Deleteplan, changeplanstatus } from '../../../Services/Admin';
+import { getplanlist, getcategoryplan, Deleteplan, changeplanstatus, getActivecategoryplan } from '../../../Services/Admin';
 import { fDateTime, fDate } from '../../../Utils/Date_formate';
 import Swal from 'sweetalert2';
 
@@ -26,9 +26,10 @@ const Plan = () => {
 
     const getcategoryplanlist = async () => {
         try {
-            const response = await getcategoryplan(token);
+            const response = await getActivecategoryplan(token);
             if (response.status) {
                 setCategory(response.data);
+
                 if (response.data.length > 0) {
                     setSelectedCategoryId('all');
                 }
@@ -146,6 +147,9 @@ const Plan = () => {
         ? clients
         : clients.filter(client => client.category === selectedCategoryId);
 
+
+
+
     return (
         <div className="page-content">
             <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
@@ -186,8 +190,17 @@ const Plan = () => {
                                     tabIndex={0}
                                 >
                                     <div className="d-flex align-items-center">
-                                        <div className="tab-title">{cat.title}</div>
+                                        <div className="tab-title">
+                                            {cat.title} <br />
+                                            {/* ({cat?.servicesDetails?.map((item, index) => (
+                                                <span key={index} className="service-title" style={{ marginRight: '5px' }}>
+                                                    {item.title}
+                                                </span>
+                                            ))}) */}
+                                        </div>
+
                                     </div>
+
                                 </a>
                             </li>
                         ))}
@@ -203,10 +216,21 @@ const Plan = () => {
                                             {filteredClients.map((client) => (
                                                 <div className="col-md-6 mb-3" key={client._id}>
                                                     <div className="pricing-card">
-                                                        <div className="category-name text-center mb-3">
+                                                        <div className="row ">
+                                                        <div className="category-name text-center mb-3 col-md-6 d-flex justify-content-start">
+                                                            <span className="badge bg-primary">
+                                                                {category.find(cat => cat._id === client.category)?.servicesDetails.map((item, index) => (
+                                                                    <span key={item._id}>
+                                                                        {item.title}{index < category.find(cat => cat._id === client.category)?.servicesDetails.length - 1 && ', '}
+                                                                    </span>
+                                                                ))}
+                                                            </span>
+                                                        </div>
+                                                        <div className="category-name text-center mb-3 col-md-6 d-flex justify-content-end">
                                                             <span className="badge bg-primary">
                                                                 {category.find(cat => cat._id === client.category)?.title || 'Unknown'}
                                                             </span>
+                                                        </div>
                                                         </div>
 
                                                         <div className="row justify-content-end mb-3">
@@ -226,9 +250,9 @@ const Plan = () => {
                                                                 </div>
                                                             </div>
                                                             <div className="col-md-6 d-flex justify-content-end">
-                                                                <div>
+                                                                {/* <div>
                                                                     <i className="bx bx-trash trashbtn ms-3" onClick={() => Deleteplanbyadmin(client._id)} />
-                                                                </div>
+                                                                </div> */}
                                                             </div>
                                                         </div>
 
