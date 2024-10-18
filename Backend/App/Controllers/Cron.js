@@ -12,7 +12,6 @@ const Clients_Modal = db.Clients;
 
 
 cron.schedule('0 1 * * *', async () => {
-    console.log('Running DeleteTokenAliceToken at 1:00 AM IST');
     await DeleteTokenAliceToken();
 }, {
     scheduled: true,
@@ -20,7 +19,6 @@ cron.schedule('0 1 * * *', async () => {
 });
 
 cron.schedule('0 2 * * *', async () => {
-    console.log('Running AddBulkStockCron at 2:00 AM IST');
     await AddBulkStockCron();
 }, {
     scheduled: true,
@@ -28,7 +26,6 @@ cron.schedule('0 2 * * *', async () => {
 });
 
 cron.schedule('0 4 * * *', async () => {
-    console.log('Running TradingStatusOff at 4:00 AM IST');
     await TradingStatusOff();
 }, {
     scheduled: true,

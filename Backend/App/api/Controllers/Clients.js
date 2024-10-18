@@ -260,7 +260,7 @@ async loginClient(req, res) {
     if (!isMatch) {
       return res.status(401).json({
         status: false,
-        message: "Password not valid",
+        message: "Invalid Password!",
       });
     }
 
@@ -381,7 +381,7 @@ async forgotPassword(req, res) {
 
 async resetPassword(req, res) {
   try {
-    const { resetToken, newPassword, confirmPassword } = req.body;
+    const { resetToken, newPassword } = req.body;
 
     if (!resetToken) {
       return res.status(400).json({
@@ -397,19 +397,19 @@ async resetPassword(req, res) {
       });
     }
 
-    if (!confirmPassword) {
-      return res.status(400).json({
-        status: false,
-        message: "Please confirm your password",
-      });
-    }
+   // if (!confirmPassword) {
+   //   return res.status(400).json({
+   //     status: false,
+   //     message: "Please confirm your password",
+   //   });
+   // }
     
-    if (newPassword !== confirmPassword) {
-      return res.status(400).json({
-        status: false,
-        message: "New password and confirm password do not match",
-      });
-    }
+    //if (newPassword !== confirmPassword) {
+    //  return res.status(400).json({
+    //    status: false,
+    //    message: "New password and confirm password do not match",
+    //  });
+    // }
 
     // Find the user by reset token and check if the token is valid
     const client = await Clients_Modal.findOne({
@@ -1370,6 +1370,75 @@ async helpdeskList(req, res) {
 
   } catch (error) {
     console.error("Error fetching helpdesk:", error); // Log the error for debugging
+    return res.json({ status: false, message: "Server error", data: [] });
+  }
+}
+
+
+
+async resend(req, res) {
+  try {
+
+    const { email } = req.body;
+const resetToken = Math.floor(100000 + Math.random() * 900000); 
+
+
+const mailtemplate = await Mailtemplate_Modal.findOne({ mail_type: 'client_verification_mail' }); // Use findOne if you expect a single document
+if (!mailtemplate || !mailtemplate.mail_body) {
+    throw new Error('Mail template not found');
+}
+
+
+
+const settings = await BasicSetting_Modal.findOne();
+  if (!settings || !settings.smtp_status) {
+    throw new Error('SMTP settings are not configured or are disabled');
+  }
+
+
+
+const templatePath = path.join(__dirname, '../../../template', 'mailtemplate.html');
+
+
+
+fs.readFile(templatePath, 'utf8', async (err, htmlTemplate) => {
+  if (err) {
+      console.error('Error reading HTML template:', err);
+      return;
+  }
+
+  const finalMailBody = mailtemplate.mail_body.replace('{resetToken}', resetToken);
+  const logo =`http://${req.headers.host}/uploads/basicsetting/${settings.logo}`;
+  // Replace placeholders with actual values
+  const finalHtml = htmlTemplate
+      .replace(/{{company_name}}/g, settings.website_title)
+      .replace(/{{body}}/g, finalMailBody)
+      .replace(/{{logo}}/g, logo)
+      .replace(/{{resetToken}}/g, resetToken);
+
+  // Email options
+  const mailOptions = {
+      to: email,
+      from: `${settings.from_name} <${settings.from_mail}>`, // Include business name
+      subject: `${mailtemplate.mail_subject}`,
+      html: finalHtml // Use the HTML template with dynamic variables
+  };
+
+  // Send email
+  await sendEmail(mailOptions);
+});
+
+
+
+return res.json({
+  status: true,
+  otp:resetToken,
+  email:email,
+  message: "OTP has been sent to your email. Please check your email.",
+});
+
+  } catch (error) {
+    console.error("Error fetching :", error); // Log the error for debugging
     return res.json({ status: false, message: "Server error", data: [] });
   }
 }
