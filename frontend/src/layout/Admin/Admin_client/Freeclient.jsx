@@ -32,7 +32,8 @@ const Freeclient = () => {
         try {
             const response = await FreeClientList(token);
             if (response.status) {
-                setClients(response.data);
+                setClients(response.data && response.data);
+                console.log("response.data",response.data)
             }
         } catch (error) {
             console.log("error");
@@ -157,25 +158,25 @@ const Freeclient = () => {
         },
         {
             name: 'Full Name',
-            selector: row => row.clientDetails.FullName,
+            selector: row => row.clientDetails?.FullName,
             sortable: true,
             width: '165px',
         },
         {
             name: 'Email',
-            selector: row => row.clientDetails.Email,
+            selector: row => row.clientDetails?.Email,
             sortable: true,
             width: '243px',
         },
         {
             name: 'Phone No',
-            selector: row => row.clientDetails.PhoneNo,
+            selector: row => row.clientDetails?.PhoneNo,
             sortable: true,
         },
         {
             name: 'Kyc',
             selector: row => (
-                row.clientDetails.kyc_verification === "1" ? (
+                row.clientDetails?.kyc_verification === "1" ? (
                     <div style={{ color: "green" }}>
                         Verfied
                     </div>
@@ -223,7 +224,7 @@ const Freeclient = () => {
         // },
         {
             name: 'CreatedAt',
-            selector: row => row.clientDetails.createdAt,
+            selector: row => row.clientDetails?.createdAt,
             sortable: true,
             width: '220px',
         },
@@ -233,7 +234,7 @@ const Freeclient = () => {
                 <>
                     <Tooltip placement="top" overlay="Kyc Agreement">
 
-                        {row.clientDetails.kyc_verification === "1" ? <Download onClick={() => handleDownload(row)} /> : ""}
+                        {row.clientDetails?.kyc_verification === "1" ? <Download onClick={() => handleDownload(row)} /> : ""}
 
                     </Tooltip>
                     <Tooltip title="delete">
