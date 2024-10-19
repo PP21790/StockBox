@@ -121,7 +121,7 @@ const History = () => {
                         <Tooltip placement="top" overlay="View">
                             <Eye data-bs-toggle="modal"
                                 data-bs-target="#example"
- />
+                            />
                         </Tooltip>
                     </div>
 
@@ -188,7 +188,7 @@ const History = () => {
             </div>
 
             <div className="button-group">
-              
+
                 <div
                     className="modal fade"
                     id="example"
@@ -200,7 +200,7 @@ const History = () => {
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title" id="example">
-                                    
+                                    Payment History Detail
                                 </h5>
                                 <button
                                     type="button"
@@ -217,7 +217,7 @@ const History = () => {
                                                 <b>Title</b>
                                             </div>
                                             <div className="col-md-6">
-                                               
+
                                             </div>
                                         </div>
                                     </li>
@@ -227,7 +227,7 @@ const History = () => {
                                                 <b>Price</b>
                                             </div>
                                             <div className="col-md-6">
-                                               
+
                                             </div>
                                         </div>
                                     </li>
@@ -237,7 +237,7 @@ const History = () => {
                                                 <b>Validity</b>
                                             </div>
                                             <div className="col-md-6">
-                                                
+
                                             </div>
                                         </div>
                                     </li>
@@ -247,7 +247,7 @@ const History = () => {
                                                 <b>Description</b>
                                             </div>
                                             <div className="col-md-6">
-                                                
+
                                             </div>
                                         </div>
                                     </li>
@@ -257,7 +257,7 @@ const History = () => {
                                                 <b>Created At</b>
                                             </div>
                                             <div className="col-md-6">
-                                               
+
                                             </div>
                                         </div>
                                     </li>
@@ -267,7 +267,7 @@ const History = () => {
                                                 <b>Updated At</b>
                                             </div>
                                             <div className="col-md-6">
-                                                
+
                                             </div>
                                         </div>
                                     </li>
@@ -276,7 +276,7 @@ const History = () => {
                         </div>
                     </div>
                 </div>
-                
+
             </div>
         </div>
     );
