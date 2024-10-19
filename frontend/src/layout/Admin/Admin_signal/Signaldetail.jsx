@@ -3,38 +3,35 @@ import { Link, useParams } from 'react-router-dom';
 import Table from '../../../components/Table';
 import { Signalperdetail } from '../../../Services/Admin';
 import { image_baseurl } from '../../../Utils/config';
-import { fDateTime , } from '../../../Utils/Date_formate';
+import { fDateTime } from '../../../Utils/Date_formate';
 import { Tooltip } from 'antd';
 
-
 const Signaldetail = () => {
-
-
     const { id } = useParams();
     const token = localStorage?.getItem('token');
     const [data, setData] = useState([]);
-
-
 
     useEffect(() => {
         getsignaldetail();
     }, []);
 
-
-
     const getsignaldetail = async () => {
         try {
             const response = await Signalperdetail(id, token);
             if (response.status) {
-                setData([response.data]);
+                const signalData = response.data;
+                const totalGain = signalData.closeprice - signalData.price;
+                setData([{ ...signalData, totalGain }]);
             }
         } catch (error) {
             console.log("Error fetching signal details:", error);
         }
     };
 
-
-
+    const calculatePercentage = (gain, entryPrice) => {
+        if (entryPrice === 0) return 0; 
+        return ((gain / entryPrice) * 100).toFixed(3); 
+    };
 
     return (
         <div>
@@ -55,7 +52,6 @@ const Signaldetail = () => {
                                 </nav>
                             </div>
                         </div>
-
                     </div>
                     <div className="col-md-6 d-flex justify-content-end">
                         <Link to="/admin/signal">
@@ -65,7 +61,6 @@ const Signaldetail = () => {
                         </Link>
                     </div>
                 </div>
-
 
                 <hr />
 
@@ -79,7 +74,6 @@ const Signaldetail = () => {
                                             <div className="row">
                                                 <h6> {item.stock} {item.segment === 'O' ? item.strikeprice : item.price} {item.segment === 'O' ? item.optiontype : item.calltype}</h6>
                                                 <div className="card-body col-md-6">
-
                                                     <ul className="list-group list-group-flush">
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="mb-0">Segment</h6>
@@ -168,14 +162,22 @@ const Signaldetail = () => {
 
                                             <hr />
 
-                                            <div className="row">
-                                                <div className="col-lg-12">
-                                                    <div className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                                        <h6 className="ms-3">Total Gain</h6>
-                                                        <h6 className="text-secondary me-2">{item.totalGain ? `${item.totalGain} INR` : '-'}</h6>
+                                            {item.closeprice ? (
+                                                <div className="row">
+                                                    <div className="col-lg-12">
+                                                        <div className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                            <h6 className="ms-3">
+                                                                {item.totalGain > 0 ? "Profit" : item.totalGain < 0 ? "Loss" : "Total Gain"}
+                                                            </h6>
+                                                            <h6 className="text-secondary me-2">
+                                                                {item.totalGain !== null ?
+                                                                    `${calculatePercentage(item.totalGain, item.price)}%` :
+                                                                    '-'}
+                                                            </h6>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            ) : ""}
                                         </React.Fragment>
                                     ))}
                                 </div>

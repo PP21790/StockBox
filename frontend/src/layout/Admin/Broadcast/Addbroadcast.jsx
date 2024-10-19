@@ -1,18 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
-import DynamicForm from '../../../components/FormicForm';
 import Swal from 'sweetalert2';
+import DynamicForm from '../../../components/FormicForm';
 import { useNavigate } from 'react-router-dom';
 import { SendBroadCast, GetService } from '../../../Services/Admin';
 
-
 const Addbroadcast = () => {
+
     const navigate = useNavigate();
     const [servicedata, setServicedata] = useState([]);
     
+    useEffect(() => {
+        getservice();
+    }, []);
+
+
+  
     const user_id = localStorage.getItem("id");
     const token = localStorage.getItem("token");
 
+
+    
     const getservice = async () => {
         try {
             const response = await GetService(token);
@@ -20,17 +28,14 @@ const Addbroadcast = () => {
                 setServicedata(response.data);
             }
         } catch (error) {
-            console.log("Error fetching services:", error);
+            console.error("Error fetching services:", error);
         }
     };
 
-    useEffect(() => {
-        getservice();
-    }, []);
+    
 
     const validate = (values) => {
         let errors = {};
-
         if (!values.service) {
             errors.service = "Please enter service";
         }
@@ -40,7 +45,6 @@ const Addbroadcast = () => {
         if (!values.message) {
             errors.message = "Please enter message";
         }
-
         return errors;
     };
 
@@ -74,6 +78,7 @@ const Addbroadcast = () => {
                 });
             }
         } catch (error) {
+            console.error("Error in API call:", error);
             Swal.fire({
                 title: "Error",
                 text: "An unexpected error occurred. Please try again later.",
@@ -98,13 +103,13 @@ const Addbroadcast = () => {
         {
             name: "service",
             label: "Select Service",
-            type: "select",
+            type: "selectchecbox",
             label_size: 6,
             col_size: 6,
             disable: false,
-            options: servicedata.map((item) => ({
-                label: item.title,
-                value: item._id,
+            options: servicedata  && servicedata.length > 0 && servicedata?.map((item) => ({
+                label: item?.title,
+                value: item?._id,
             })),
         },
         {
@@ -127,7 +132,7 @@ const Addbroadcast = () => {
 
     return (
         <div style={{ marginTop: "100px" }}>
-            <DynamicForm
+         { servicedata  && servicedata.length > 0 && <DynamicForm
                 fields={fields}
                 formik={formik}
                 page_title="Add Broadcast"
@@ -136,9 +141,7 @@ const Addbroadcast = () => {
                 sumit_btn={true}
                 btn_name1_route={"/admin/message"}
                 additional_field={<></>}
-            />
-           
-           
+            />}
         </div>
     );
 };

@@ -28,6 +28,9 @@ const Client = () => {
     const [searchInput, setSearchInput] = useState("");
     const [selectedPlanId, setSelectedPlanId] = useState(null)
 
+  
+  
+  
     const handleDownload = (row) => {
 
         const url = `${image_baseurl}uploads/pdf/${row.pdf}`;

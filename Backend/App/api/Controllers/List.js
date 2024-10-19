@@ -695,9 +695,15 @@ async  myPlan(req, res) {
       // Grouping to aggregate service titles into an array
       {
         $group: {
-          _id: '$_id',
-          planDetails: { $first: '$planDetails' },
-          categoryDetails: { $first: '$categoryDetails' },
+          _id: '$_id', // Group by the PlanSubscription's ID
+          plan_id: { $first: '$plan_id' }, // Keep the original plan_id
+          plan_price: { $first: '$plan_price' }, // Keep the plan_price
+          total: { $first: '$total' }, // Keep the total
+          discount: { $first: '$discount' }, // Keep the discount
+          plan_start: { $first: '$plan_start' }, // Keep the plan_start
+          plan_end: { $first: '$plan_end' }, // Keep the plan_end
+          planDetails: { $first: '$planDetails' }, // First instance of planDetails
+          categoryDetails: { $first: '$categoryDetails' }, // First instance of categoryDetails
           serviceNames: { $push: '$serviceDetails.title' } // Create an array of service titles
         }
       },
@@ -705,13 +711,19 @@ async  myPlan(req, res) {
       {
         $project: {
           _id: 1, // Plan Subscription ID
-          plan_id: '$plan_id', // Original plan_id
+          plan_id: 1, // Original plan_id
+          plan_price: 1, // Plan price
+          total: 1, // Total
+          discount: 1, // Discount
+          plan_start: 1, // Plan start date
+          plan_end: 1, // Plan end date
           planDetails: 1, // Details from the plans collection
           categoryDetails: 1, // Details from the plan categories collection
           serviceNames: 1 // All service titles
         }
       }
     ]);
+    
     
     
     // Fetch subscriptions based on client_id and del status
@@ -751,10 +763,6 @@ async  myPlan(req, res) {
 
 
 
-
-
-
-
 async Couponlist(req, res) {
   try {
 
@@ -762,8 +770,11 @@ async Couponlist(req, res) {
 
     //const result = await Coupon_Modal.find()
 
-    const result = await Coupon_Modal.find({ del: false,status: true });
-
+    const result = await Coupon_Modal.find({
+      del: false,
+      status: true,
+      enddate: { $gt: new Date() } // Filter out expired coupons
+    });
 
     const protocol = req.protocol; // Will be 'http' or 'https'
     const baseUrl = `${protocol}://${req.headers.host}`;

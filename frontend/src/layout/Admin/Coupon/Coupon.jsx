@@ -5,7 +5,7 @@ import { getcouponlist } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import { Eye, Pencil, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { DeleteCoupon, UpdateClientStatus , CouponStatus} from '../../../Services/Admin';
+import { DeleteCoupon, UpdateClientStatus, CouponStatus } from '../../../Services/Admin';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
 import { fDate } from '../../../Utils/Date_formate';
@@ -19,6 +19,9 @@ const Coupon = () => {
 
     const [clients, setClients] = useState([]);
     const [searchInput, setSearchInput] = useState("");
+    const [viewpage, setViewpage] = useState({});
+
+    console.log("viewpage", viewpage)
 
     const token = localStorage.getItem('token');
 
@@ -109,8 +112,8 @@ const Coupon = () => {
     const handleSwitchChange = async (event, id) => {
 
         const user_active_status = event.target.checked === true ? "true" : "false"
-         
-        console.log("user_active_status",user_active_status)
+
+        console.log("user_active_status", user_active_status)
 
         const data = { id: id, status: user_active_status }
         const result = await Swal.fire({
@@ -185,7 +188,7 @@ const Coupon = () => {
         },
         {
             name: 'Max Discount Value',
-            selector: row => row.mincouponvalue?  row.mincouponvalue : "-",
+            selector: row => row.mincouponvalue ? row.mincouponvalue : "-",
             sortable: true,
             width: '206px',
         },
@@ -245,7 +248,9 @@ const Coupon = () => {
                     <div>
                         <Tooltip placement="top" overlay="View">
                             <Eye style={{ marginRight: "10px" }} data-bs-toggle="modal"
-                                data-bs-target="#example2" />
+                                data-bs-target="#example2"
+                                onClick={(e) => { setViewpage(row) }}
+                            />
                         </Tooltip>
                     </div>
                     <div>
@@ -334,7 +339,7 @@ const Coupon = () => {
                             <div className="modal-content">
                                 <div className="modal-header">
                                     <h5 className="modal-title" id="example1">
-                                        FAQ Details
+                                        Coupon Details
                                     </h5>
                                     <button
                                         type="button"
@@ -348,7 +353,7 @@ const Coupon = () => {
                                         <li>
                                             <div className="row justify-content-between">
                                                 <div className="col-md-6">
-                                                    <b>Name</b>
+                                                    <b>Name : {viewpage?.name}</b>
                                                 </div>
                                                 <div className="col-md-6">
 
@@ -358,7 +363,18 @@ const Coupon = () => {
                                         <li>
                                             <div className="row justify-content-between">
                                                 <div className="col-md-6">
-                                                    <b>Code</b>
+                                                    <b>Code : {viewpage?.code}</b>
+                                                </div>
+                                                <div className="col-md-6">
+
+                                                </div>
+                                            </div>
+                                        </li>
+                                       
+                                        <li>
+                                            <div className="row justify-content-between">
+                                                <div className="col-md-6">
+                                                    <b>Min Purchase Value : {viewpage?.minpurchasevalue}</b>
                                                 </div>
                                                 <div className="col-md-6">
 
@@ -368,7 +384,27 @@ const Coupon = () => {
                                         <li>
                                             <div className="row justify-content-between">
                                                 <div className="col-md-6">
-                                                    <b>Image</b>
+                                                    <b>Max Discount Value  : {viewpage?.mincouponvalue}</b>
+                                                </div>
+                                                <div className="col-md-6">
+
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div className="row justify-content-between">
+                                                <div >
+                                                    <b>Discription : {viewpage?.description}</b>
+                                                </div>
+                                                <div className="col-md-6">
+
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div className="row justify-content-between">
+                                                <div className="col-md-8">
+                                                    <b>Start Date : {fDate(viewpage?.startdate)}</b>
                                                 </div>
                                                 <div className="col-md-6">
 
@@ -378,53 +414,23 @@ const Coupon = () => {
                                         <li>
                                             <div className="row justify-content-between">
                                                 <div className="col-md-6">
-                                                    <b>Min Purchase Value</b>
+                                                    <b>End Date : {fDate(viewpage?.enddate)} </b>
                                                 </div>
                                                 <div className="col-md-6">
 
                                                 </div>
                                             </div>
                                         </li>
-                                        <li>
+                                        {/* <li>
                                             <div className="row justify-content-between">
                                                 <div className="col-md-6">
-                                                    <b>Max Discount Value</b>
+                                                    <b>Image </b>
                                                 </div>
                                                 <div className="col-md-6">
 
                                                 </div>
                                             </div>
-                                        </li>
-                                        <li>
-                                            <div className="row justify-content-between">
-                                                <div className="col-md-6">
-                                                    <b>Discription</b>
-                                                </div>
-                                                <div className="col-md-6">
-
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div className="row justify-content-between">
-                                                <div className="col-md-6">
-                                                    <b>Start Date</b>
-                                                </div>
-                                                <div className="col-md-6">
-
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div className="row justify-content-between">
-                                                <div className="col-md-6">
-                                                    <b>End Date</b>
-                                                </div>
-                                                <div className="col-md-6">
-
-                                                </div>
-                                            </div>
-                                        </li>
+                                        </li> */}
 
                                     </ul>
                                 </div>

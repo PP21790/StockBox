@@ -17,6 +17,8 @@ const History = () => {
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
     const [searchInput, setSearchInput] = useState("");
+    const [viewpage, setViewpage] = useState({});
+
     const [updatetitle, setUpdatetitle] = useState({
         title: "",
         id: "",
@@ -25,7 +27,7 @@ const History = () => {
 
     });
 
-
+    
 
 
     const [title, setTitle] = useState({
@@ -119,8 +121,10 @@ const History = () => {
                 <>
                     <div>
                         <Tooltip placement="top" overlay="View">
-                            <Eye data-bs-toggle="modal"
+                            <Eye
+                                data-bs-toggle="modal"
                                 data-bs-target="#example"
+                                onClick={() => setViewpage(row)} 
                             />
                         </Tooltip>
                     </div>
@@ -200,7 +204,6 @@ const History = () => {
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title" id="example">
-                                    Payment History Detail
                                 </h5>
                                 <button
                                     type="button"
@@ -214,7 +217,7 @@ const History = () => {
                                     <li>
                                         <div className="row justify-content-between">
                                             <div className="col-md-6">
-                                                <b>Title</b>
+                                                <b>Title :  {viewpage?.clientName}</b>
                                             </div>
                                             <div className="col-md-6">
 
@@ -224,7 +227,7 @@ const History = () => {
                                     <li>
                                         <div className="row justify-content-between">
                                             <div className="col-md-6">
-                                                <b>Price</b>
+                                                <b>Price : {viewpage?.planDetails?.price}</b>
                                             </div>
                                             <div className="col-md-6">
 
@@ -234,7 +237,7 @@ const History = () => {
                                     <li>
                                         <div className="row justify-content-between">
                                             <div className="col-md-6">
-                                                <b>Validity</b>
+                                                <b>Validity : {viewpage?.planDetails?.validity}</b>
                                             </div>
                                             <div className="col-md-6">
 
@@ -243,8 +246,8 @@ const History = () => {
                                     </li>
                                     <li>
                                         <div className="row justify-content-between">
-                                            <div className="col-md-6">
-                                                <b>Description</b>
+                                            <div >
+                                                <b>Description : {viewpage?.planDetails?.description} </b>
                                             </div>
                                             <div className="col-md-6">
 
@@ -253,15 +256,15 @@ const History = () => {
                                     </li>
                                     <li>
                                         <div className="row justify-content-between">
-                                            <div className="col-md-6">
-                                                <b>Created At</b>
+                                            <div className="col-md-8">
+                                                <b>Payout Date : {fDate(viewpage?.planDetails?.created_at)}</b>
                                             </div>
                                             <div className="col-md-6">
 
                                             </div>
                                         </div>
                                     </li>
-                                    <li>
+                                    {/* <li>
                                         <div className="row justify-content-between">
                                             <div className="col-md-6">
                                                 <b>Updated At</b>
@@ -270,7 +273,7 @@ const History = () => {
 
                                             </div>
                                         </div>
-                                    </li>
+                                    </li> */}
                                 </ul>
                             </div>
                         </div>

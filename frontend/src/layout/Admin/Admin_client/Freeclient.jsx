@@ -4,10 +4,11 @@ import axios from 'axios';
 import Table from '../../../components/Table';
 import { Settings2, Eye, UserPen, Trash2, Download } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { FreeClientList, deleteClient, UpdateClientStatus, DeleteFreeClient } from '../../../Services/Admin';
+import { FreeClientList,PlanSubscription , DeleteFreeClient, getcategoryplan,getplanlist } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
 import { image_baseurl } from '../../../Utils/config';
-
+import { fDate } from '../../../Utils/Date_formate';
+import { IndianRupee } from 'lucide-react';
 
 const Freeclient = () => {
 
@@ -17,11 +18,25 @@ const Freeclient = () => {
 
 
     const [clients, setClients] = useState([]);
-
-
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [selectedPlanId, setSelectedPlanId] = useState(null)
+    const [selectcategory, setSelectcategory] = useState(null)
+    const [planlist, setPlanlist] = useState([]);
+    const [checkedIndex, setCheckedIndex] = useState(0);
+    const [category, setCategory] = useState([]);
+    const [client, setClientid] = useState({});
+    
+    
+    const [updatetitle, setUpdatetitle] = useState({
+        plan_id: "",
+        client_id: "",
+        price: ""
+    });
 
     useEffect(() => {
         getdemoclient();
+        getcategoryplanlist()
+        getplanlistbyadmin()
 
     }, []);
 
@@ -39,6 +54,56 @@ const Freeclient = () => {
             console.log("error");
         }
     }
+   
+
+    const getplanlistbyadmin = async () => {
+        try {
+            const response = await getplanlist(token);
+            if (response.status) {
+
+                setPlanlist(response.data);
+            }
+        } catch (error) {
+            console.log("error");
+        }
+    }
+
+
+    const getcategoryplanlist = async () => {
+        try {
+            const response = await getcategoryplan(token);
+            if (response.status) {
+                setCategory(response.data);
+
+            }
+        } catch (error) {
+            console.log("error");
+        }
+    };
+
+
+    const handleTabChange = (index) => {
+        setCheckedIndex(index);
+    };
+
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
+    const handleCancel = () => {
+        setIsModalVisible(false);
+        setSelectcategory("")
+    };
+
+
+    const handleCategoryChange = (categoryId) => {
+        setSelectcategory(categoryId);
+        setSelectedPlanId(null);
+        setUpdatetitle("")
+    };
+
+
+
+
 
     const handleDownload = (row) => {
 
@@ -52,6 +117,11 @@ const Freeclient = () => {
         document.body.removeChild(link);
 
     };
+
+
+    const updateClient = async (row) => {
+        navigate("/admin/editfreeclient/" + row._id, { state: { row } })
+    }
 
 
 
@@ -143,6 +213,46 @@ const Freeclient = () => {
     //     }
     // };
 
+ 
+
+
+     // Update service
+     const Updateplansubscription = async () => {
+
+        try {
+            const data = { plan_id: updatetitle.plan_id, client_id: client._id, price: updatetitle.price };
+            const response = await PlanSubscription(data, token);
+
+
+            if (response && response.status) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: response.message || 'Plan updated successfully.',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    timer: 2000,
+                });
+
+                setUpdatetitle({ plan_id: "", client_id: "", price: "" });
+                getdemoclient();
+                handleCancel()
+            } else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: response.message || 'There was an error updating the Plan.',
+                    icon: 'error',
+                    confirmButtonText: 'Try Again',
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'Server error',
+                icon: 'error',
+                confirmButtonText: 'Try Again',
+            });
+        }
+    };
 
 
 
@@ -191,13 +301,13 @@ const Freeclient = () => {
         },
         {
             name: 'Start Date',
-            selector: row => row.startdate,
+            selector: row => fDate(row.startdate),
             sortable: true,
             width: '230px',
         },
         {
             name: 'End Start',
-            selector: row => row.enddate,
+            selector: row => fDate(row.enddate),
             sortable: true,
             width: '230px',
         },
@@ -237,10 +347,19 @@ const Freeclient = () => {
                         {row.clientDetails?.kyc_verification === "1" ? <Download onClick={() => handleDownload(row)} /> : ""}
 
                     </Tooltip>
-                    <Tooltip title="delete">
+                    <Tooltip placement="top" overlay="Package Assign">
+                        <span onClick={(e) => { showModal(true); setClientid(row); }} style={{ cursor: 'pointer' }}>
+                            <Settings2 />
+                        </span>
+                    </Tooltip>
+
+                    <Tooltip title="Update">
+                        <UserPen onClick={() => updateClient(row)} />
+                    </Tooltip>
+                    {/* <Tooltip title="delete">
                         <Trash2 onClick={() => DeleteClient(row._id)} />
 
-                    </Tooltip>
+                    </Tooltip> */}
                 </>
             ),
             ignoreRowClick: true,
@@ -296,7 +415,169 @@ const Freeclient = () => {
                 </div>
 
             </div>
+            {isModalVisible && (
+                <>
+                    <div className="modal-backdrop fade show"></div>
+                    <div
+                        className="modal fade show d-block"
+                        tabIndex="-1"
+                        aria-labelledby="exampleModalLabel"
+                        aria-hidden="true"
+                    >
+                        <div className="modal-dialog modal-lg">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="exampleModalLabel">Assign Package</h5>
+                                    <button
+                                        type="button"
+                                        className="btn-close"
+                                        onClick={handleCancel}
+                                        aria-label="Close"
+                                    ></button>
+                                </div>
+                                <div className="modal-body">
+                                    <div className='card'>
+                                        <div className='d-flex justify-content-center align-items-center card-body'>
+                                            {['Plan'].map((tab, index) => (
+                                                <label key={index} className='labelfont'>
+                                                    <input
+                                                        className='ms-3'
+                                                        type="radio"
+                                                        name="tab"
+                                                        checked={checkedIndex === index}
+                                                        onChange={() => handleTabChange(index)}
+                                                    />
+                                                    <span className='ps-2'>{tab}</span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
 
+                                    <div className='card'>
+                                        {checkedIndex === 0 && (
+                                            <>
+                                                <div className='row mt-3'>
+                                                    {category && category.map((item, index) => (
+                                                        <div className='col-lg-4' key={index}>
+                                                            <input
+                                                                style={{ border: "1px solid black" }}
+                                                                className="form-check-input mx-2"
+                                                                type="radio"
+                                                                name="planSelection"
+                                                                id={`proplus-${index}`}
+                                                                onClick={() => handleCategoryChange(item._id)}
+                                                            />
+                                                            <label className="form-check-label" htmlFor={`proplus-${index}`}>
+                                                                {item.title}
+                                                            </label>
+                                                        </div>
+                                                    ))}
+                                                </div>
+
+                                                {selectcategory && (
+                                                    <form className='card-body mt-3' style={{ height: "40vh", overflowY: "scroll" }} >
+                                                        <div className="row">
+                                                            {planlist
+                                                                .filter(item => item.category === selectcategory)
+                                                                .map((item, index) => (
+                                                                    <div className="col-md-6" key={index}>
+                                                                        <div className="card mb-0 my-2">
+                                                                            <div className="card-body p-1">
+                                                                                <h5 className="card-title">
+                                                                                    <input
+                                                                                        style={{ height: "13px", width: "13px", marginTop: "0.52rem", border: "1px solid black" }}
+                                                                                        className="form-check-input"
+                                                                                        type="radio"
+                                                                                        name="planSelection"
+                                                                                        id={`input-plan-${index}`}
+                                                                                        checked={selectedPlanId === item._id}
+                                                                                        onClick={() => {
+                                                                                            setSelectedPlanId(item._id);
+                                                                                            setUpdatetitle({ plan_id: item._id, price: item.price });
+                                                                                        }}
+                                                                                    />
+                                                                                    <label className="form-check-label mx-1" style={{ fontSize: "13px", fontWeight: "800" }} htmlFor={`input-plan-${index}`}>
+                                                                                        {item.title}
+                                                                                    </label>
+                                                                                </h5>
+
+                                                                                <div className="accordion" id={`accordion-${selectcategory}`}>
+                                                                                    <div className="accordion-item">
+                                                                                        <h2 className="accordion-header" id={`heading-${item._id}`}>
+                                                                                            <button
+                                                                                                className={`accordion-button ${selectedPlanId === item._id ? '' : 'collapsed'} custom-accordion-button`}
+                                                                                                type="button"
+                                                                                                data-bs-toggle="collapse"
+                                                                                                data-bs-target={`#collapse-${item._id}`}
+                                                                                                aria-expanded={selectedPlanId === item._id}
+                                                                                                aria-controls={`collapse-${item._id}`}
+                                                                                            >
+                                                                                                <strong className="text-secondary">Validity: {item.validity}</strong>
+                                                                                            </button>
+                                                                                        </h2>
+                                                                                        <div
+                                                                                            id={`collapse-${item._id}`}
+                                                                                            className={`accordion-collapse collapse ${selectedPlanId === item._id ? 'show' : ''}`}
+                                                                                            aria-labelledby={`heading-${item._id}`}
+                                                                                            data-bs-parent={`#accordion-${selectcategory}`}
+                                                                                        >
+                                                                                            <div className="accordion-body">
+                                                                                                <div className="d-flex justify-content-between">
+                                                                                                    <strong>Price:</strong>
+                                                                                                    <span><IndianRupee /> {item.price}</span>
+                                                                                                </div>
+                                                                                                <div className="d-flex justify-content-between">
+                                                                                                    <strong>Validity:</strong>
+                                                                                                    <span>{item.validity}</span>
+                                                                                                </div>
+                                                                                                <div className="d-flex justify-content-between">
+                                                                                                    <strong>Created At:</strong>
+                                                                                                    <span>{fDate(item.created_at)}</span>
+                                                                                                </div>
+                                                                                                <div className="d-flex justify-content-between">
+                                                                                                    <strong>Updated At:</strong>
+                                                                                                    <span>{fDate(item.updated_at)}</span>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                ))}
+                                                        </div>
+                                                    </form>
+                                                )}
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="modal-footer">
+                                    <button
+                                        type="button"
+                                        className="btn btn-secondary"
+                                        onClick={handleCancel}
+                                    >
+                                        Close
+                                    </button>
+
+                                    {checkedIndex === 0 && (
+                                        <button
+                                            type="button"
+                                            className="btn btn-primary"
+                                            onClick={() => Updateplansubscription()}
+                                        >
+                                            Save Plan
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            )}
         </div>
     );
 }

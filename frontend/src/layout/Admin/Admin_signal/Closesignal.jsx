@@ -3,10 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { Eye, RefreshCcw ,Trash2 } from 'lucide-react';
+import { Eye, RefreshCcw, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { GetSignallist, DeleteSignal, SignalCloseApi, GetService, GetStockDetail } from '../../../Services/Admin';
-import { fDateTimeSuffix ,fDateTime} from '../../../Utils/Date_formate'
+import { fDateTimeSuffix, fDateTime } from '../../../Utils/Date_formate'
 
 
 
@@ -32,8 +32,8 @@ const Closesignal = () => {
     const [serviceList, setServiceList] = useState([]);
     const [stockList, setStockList] = useState([]);
     const [searchstock, setSearchstock] = useState("");
-  
-   
+
+
 
     const navigate = useNavigate();
     const [clients, setClients] = useState([]);
@@ -46,8 +46,8 @@ const Closesignal = () => {
             if (response && response.status) {
                 const filterdata = response.data.filter((item) => {
                     return item.close_status == true
-                 })
-                 const searchInputMatch = filterdata.filter((item) => {
+                })
+                const searchInputMatch = filterdata.filter((item) => {
                     const searchInputMatch =
                         searchInput === "" ||
                         item.stock.toLowerCase().includes(searchInput.toLowerCase()) ||
@@ -59,9 +59,9 @@ const Closesignal = () => {
 
                     return searchstockMatch && searchInputMatch;
                 });
-   
-                setClients(searchInput || searchstock ? searchInputMatch : filterdata);     
-        }
+
+                setClients(searchInput || searchstock ? searchInputMatch : filterdata);
+            }
         } catch (error) {
             console.log("error", error);
         }
@@ -106,7 +106,7 @@ const Closesignal = () => {
 
     useEffect(() => {
         getAllSignal();
-    }, [filters, searchInput ,searchstock]);
+    }, [filters, searchInput, searchstock]);
 
 
     const handleFilterChange = (e) => {
@@ -130,7 +130,7 @@ const Closesignal = () => {
         },
         {
             name: 'Segment',
-            selector: row => row.segment == "C" ? "CASH" :row.segment == "O" ? "OPTION" : "FUTURE" ,
+            selector: row => row.segment == "C" ? "CASH" : row.segment == "O" ? "OPTION" : "FUTURE",
             sortable: true,
             width: '132px',
         },
@@ -142,7 +142,7 @@ const Closesignal = () => {
         },
         {
             name: 'Entry Type',
-            selector: row => row.calltype ,
+            selector: row => row.calltype,
             sortable: true,
             width: '200px',
         },
@@ -161,6 +161,18 @@ const Closesignal = () => {
 
         },
         {
+            name: 'Total P&L',
+            cell: row => {
+                const totalPL = (row.closeprice - row.price).toFixed(2);
+                const style = {
+                    color: totalPL < 0 ? 'red' : 'green',
+                };
+                return <span style={style}>{totalPL}</span>;
+            },
+            sortable: true,
+            width: '200px',
+        },
+        {
             name: 'Entry Date',
             selector: row => fDateTimeSuffix(row.created_at),
             sortable: true,
@@ -172,7 +184,7 @@ const Closesignal = () => {
             sortable: true,
             width: '180px',
         },
-
+       
 
 
         {
@@ -192,47 +204,12 @@ const Closesignal = () => {
             button: true,
 
         },
-        // {
-        //     name: 'Status',
-        //     cell: row => (
-        //         <>
-        //             {!row.close_status ? (
-        //                 <button
-        //                     className="btn btn-danger btnclose"
-        //                     onClick={() => {
-        //                         setModel(true);
-        //                         setServiceid(row);
-        //                         setTargetvalue(row);
-        //                     }}
-        //                     disabled
-        //                 >
-        //                    Closed
-        //                 </button>
-        //             ) : (
-        //                 <button
-        //                     className="btn btn-danger btnclose"
-        //                     onClick={() => {
-        //                         setModel(true);
-        //                         setServiceid(row);
-        //                         setTargetvalue(row);
-        //                     }}
-        //                     disabled
-        //                 >
-        //                     Closed
-        //                 </button>
-        //             )}
-        //         </>
-        //     ),
-        //     ignoreRowClick: true,
-        //     allowOverflow: true,
-        //     button: true,
-        // }
-
+        
     ];
 
 
 
-    const resethandle=()=>{
+    const resethandle = () => {
         setFilters({
             from: '',
             to: '',
@@ -244,7 +221,7 @@ const Closesignal = () => {
         fetchAdminServices()
         fetchStockList()
         getAllSignal();
-        
+
     }
 
 
@@ -285,18 +262,6 @@ const Closesignal = () => {
                                     </span>
                                 </div>
 
-                                {/* <div className="ms-auto">
-                                    <Link
-                                        to="/admin/addsignal"
-                                        className="btn btn-primary"
-                                    >
-                                        <i
-                                            className="bx bxs-plus-square"
-                                            aria-hidden="true"
-                                        />
-                                        Add Signal
-                                    </Link>
-                                </div> */}
                             </div>
 
                             <div className="row">
@@ -338,27 +303,27 @@ const Closesignal = () => {
                                             </option>
                                         ))}
                                     </select>
-                                     
+
                                 </div>
 
                                 <div className="col-md-3 d-flex">
-                                    <div style={{width:"80%"}}>
-                                <label>Select Stock</label>
-                                    <select
-                                        className="form-control radius-10"
-                                        value={searchstock}
-                                        onChange={(e) => setSearchstock(e.target.value)}
-                                    >
-                                        <option value="">Select Stock</option>
-                                        {clients.map((item) => (
-                                            <option key={item._id} value={item.stock}>
-                                                {item.stock}
-                                            </option>
-                                        ))}
-                                    </select>
+                                    <div style={{ width: "80%" }}>
+                                        <label>Select Stock</label>
+                                        <select
+                                            className="form-control radius-10"
+                                            value={searchstock}
+                                            onChange={(e) => setSearchstock(e.target.value)}
+                                        >
+                                            <option value="">Select Stock</option>
+                                            {clients.map((item) => (
+                                                <option key={item._id} value={item.stock}>
+                                                    {item.stock}
+                                                </option>
+                                            ))}
+                                        </select>
                                     </div>
                                     <div className='rfreshicon'>
-                                    <RefreshCcw onClick={resethandle}/>
+                                        <RefreshCcw onClick={resethandle} />
                                     </div>
 
                                 </div>

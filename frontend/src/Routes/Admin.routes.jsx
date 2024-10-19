@@ -63,6 +63,7 @@ import Viewblog from '../layout/Admin/Bloags/Viewblog';
 import Updatecondition from '../layout/Admin/Termscondition/Updatecondition';
 import Updateblogs from '../layout/Admin/Bloags/Updateblogs';
 import { UpdateCondition } from '../Services/Admin';
+import Editfreeclient from '../layout/Admin/Admin_client/Editfreeclient';
 
 
 
@@ -204,7 +205,13 @@ function MainApp() {
                     {/* <Route path="/changepass" element={<Changepass />} /> */}
                     <Route path="/help" element={<Help />} />
                     <Route path="/paymentrequest" element={<PaymentRequest />} />
+
                     <Route path="/freetrialstatus" element={<FreetrialStatus />} />
+                    <Route path="/editfreeclient/:id" element={<Editfreeclient/>} />
+
+
+
+
                     <Route path="/addbroadcast" element={<Addbroadcast />} />
                     <Route path="/updatebroadcast" element={<Updatebroadcast />} />
 

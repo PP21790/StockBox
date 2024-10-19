@@ -24,9 +24,9 @@ const Help = () => {
                 const filterdata = response.data.filter((item) =>
                     searchInput === "" ||
                     item.clientDetails?.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
-                    item.clientDetails.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
-                    item.message.toLowerCase().includes(searchInput.toLowerCase()) ||
-                    item.subject.toLowerCase().includes(searchInput.toLowerCase())
+                    item.clientDetails?.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
+                    item.message?.toLowerCase().includes(searchInput.toLowerCase()) ||
+                    item.subject?.toLowerCase().includes(searchInput.toLowerCase())
                 );
                 setClients(searchInput ? filterdata : response.data);
             }

@@ -580,7 +580,7 @@ class Users {
         });
       }
 
-
+      const user = await Users_Modal.findOne({ _id: id });
       // Check if the current password is correct
       const isMatch = await bcrypt.compare(currentPassword, user.password);
 
