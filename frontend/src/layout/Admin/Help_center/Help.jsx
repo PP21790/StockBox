@@ -23,7 +23,7 @@ const Help = () => {
 
                 const filterdata = response.data.filter((item) =>
                     searchInput === "" ||
-                    item.clientDetails.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
+                    item.clientDetails?.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
                     item.clientDetails.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
                     item.message.toLowerCase().includes(searchInput.toLowerCase()) ||
                     item.subject.toLowerCase().includes(searchInput.toLowerCase())
@@ -96,19 +96,19 @@ const Help = () => {
                                                                     
                                                             <div key={item.id}>
                                                                 <div className="float-end text-muted">{fDate(item.created_at)}</div>
-                                                                <h4 className="card-title">{item.clientDetails.FullName}</h4>
+                                                                <h4 className="card-title">{item.clientDetails?.FullName}</h4>
                                                                 <hr />
                                                                 <p>
-                                                                    <strong>Email:</strong> {item.clientDetails.Email}
+                                                                    <strong>Email:</strong> {item.clientDetails?.Email}
                                                                 </p>
                                                                 <p>
-                                                                    <strong>Subject:</strong> {item.subject}
+                                                                    <strong>Subject:</strong> {item?.subject}
                                                                 </p>
                                                                 <p>
-                                                                    <strong>Phone No:</strong> {item.PhoneNo}
+                                                                    <strong>Phone No:</strong> {item?.PhoneNo}
                                                                 </p>
                                                                 <p>
-                                                                    <strong>Description:</strong> {item.message}
+                                                                    <strong>Description:</strong> {item?.message}
                                                                 </p>
                                                             </div>
                                                                 </div>
