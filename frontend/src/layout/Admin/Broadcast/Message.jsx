@@ -25,7 +25,7 @@ const Message = () => {
         try {
             const response = await GetService(token);
             if (response.status) {
-                setServicedata(response.data);
+                setServicedata(response?.data);
             }
         } catch (error) {
             console.log("Error fetching services:", error);
@@ -115,10 +115,10 @@ const Message = () => {
                             <div className="container py-2">
                                 {chatMessages.map((item, index) => {
                                     const serviceIds = item.service?.split(',');
-                                  
-                                    const matchedServices = serviceIds.map(serviceId =>
-                                        servicedata.find(service => service._id === serviceId)
-                                    ).filter(Boolean); 
+
+                                    const matchedServices = serviceIds?.map(serviceId =>
+                                        (Array.isArray(servicedata) ? servicedata : []).find(service => service?._id === serviceId)
+                                    ).filter(Boolean);
 
                                     return (
                                         <div className="row" key={index}>
@@ -165,6 +165,7 @@ const Message = () => {
                                         </div>
                                     );
                                 })}
+
 
                             </div>
                         </div>
