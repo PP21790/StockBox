@@ -28,11 +28,23 @@ const Signaldetail = () => {
         }
     };
 
+   
+    const callType = data.length > 0 ? data[0].calltype : null;
+
+    
     const calculatePercentage = (gain, entryPrice) => {
         if (entryPrice === 0) return 0;
-        return ((gain / entryPrice) * 100).toFixed(2);
+
+        if (callType === "BUY") {
+            return ((gain / entryPrice) * 100).toFixed(2); 
+        } else if (callType === "SELL") {
+            return ((entryPrice / gain) * 100).toFixed(2);
+        }
+        return 0;
     };
 
+
+    
     return (
         <div>
             <div className="page-content">
