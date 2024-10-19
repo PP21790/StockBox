@@ -1089,6 +1089,10 @@ const DynamicForm = ({
                                                                                 overflow: 'auto',
                                                                             }}
                                                                         />
+
+                                                                        {formik.touched[field.name] && formik.errors[field.name] && (
+                                                                            <div style={{ color: "red" }}>{formik.errors[field.name]}</div>
+                                                                        )}
                                                                     </div>
 
                                                                 </>
@@ -1096,8 +1100,8 @@ const DynamicForm = ({
                                                                 : field.type === "selectchecbox" ? (
                                                                     <div className={`col-lg-${field.col_size}`}>
                                                                         <label htmlFor={field.name}>{field.label}</label>
-                                                      
-                                                                      {field.options && field.options.length > 0 &&  <DropdownMultiselect
+
+                                                                        {field.options && field.options.length > 0 && <DropdownMultiselect
                                                                             options={field.options.map((item) => ({
                                                                                 key: item.value,
                                                                                 label: item.label,
@@ -1110,9 +1114,13 @@ const DynamicForm = ({
                                                                             isCheckbox
                                                                             placeholder="Select options"
                                                                         />}
+
+                                                                        {formik.touched[field.name] && formik.errors[field.name] && (
+                                                                            <div style={{ color: "red" }}>{formik.errors[field.name]}</div>
+                                                                        )}
                                                                     </div>
-                                                                ) 
-                                                            
+                                                                )
+
                                                                     : field.type === "security" ? (
                                                                         <>
                                                                             <div className={`col-lg-${field.col_size}`}>

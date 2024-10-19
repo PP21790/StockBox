@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { Settings2, Eye, UserPen, Trash2, Download } from 'lucide-react';
+import { Settings2, Eye, UserPen, Trash2, Download, ArrowDownToLine } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { deleteClient, UpdateClientStatus, PlanSubscription, getplanlist, BasketSubscription, BasketAllList, getcategoryplan } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
@@ -28,9 +28,9 @@ const Client = () => {
     const [searchInput, setSearchInput] = useState("");
     const [selectedPlanId, setSelectedPlanId] = useState(null)
 
-  
-  
-  
+
+
+
     const handleDownload = (row) => {
 
         const url = `${image_baseurl}uploads/pdf/${row.pdf}`;
@@ -60,7 +60,7 @@ const Client = () => {
     });
 
 
-    
+
 
 
     const handleTabChange = (index) => {
@@ -398,19 +398,20 @@ const Client = () => {
             name: 'Kyc',
             selector: row => (
                 row.kyc_verification === "1" ? (
-                    <div style={{ color: "green" }}>
-                        Verfied
+                    <div style={{ color: "green", cursor: "pointer" }} onClick={() => handleDownload(row)}>
+                        <Tooltip placement="top" overlay="Download">
+                            Verified <ArrowDownToLine />
+                        </Tooltip>
                     </div>
                 ) : (
                     <div style={{ color: "red" }}>
-                        Not Verfied
+                        Not Verified
                     </div>
                 )
             ),
             sortable: true,
             width: '160px',
         },
-
         {
             name: 'CreatedAt',
             selector: row => fDate(row.createdAt),
@@ -421,11 +422,7 @@ const Client = () => {
             name: 'Actions',
             selector: (row) => (
                 <>
-                    <Tooltip placement="top" overlay="Kyc Agreement">
 
-                        {row.kyc_verification === "1" ? <Download onClick={() => handleDownload(row)} /> : ""}
-
-                    </Tooltip>
 
                     <Tooltip placement="top" overlay="Package Assign">
                         <span onClick={(e) => { showModal(true); setClientid(row); }} style={{ cursor: 'pointer' }}>
@@ -439,98 +436,6 @@ const Client = () => {
                             onClick={() => Clientdetail(row)} />
                     </Tooltip>
 
-                    <div
-                        className="modal fade"
-                        id={`modal-${client.id}`}
-                        tabIndex={-1}
-                        aria-labelledby={`modalLabel-${client.id}`}
-                        aria-hidden="true"
-                    >
-                        <div className="modal-dialog">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title" id={`modalLabel-${client.id}`}>
-                                        View Client
-                                    </h5>
-                                    <button
-                                        type="button"
-                                        className="btn-close"
-                                        data-bs-dismiss="modal"
-                                        aria-label="Close"
-                                    />
-                                </div>
-                                <div className="modal-body">
-                                    <ul>
-                                        <li className='viewlist'>
-                                            <div className='row justify-content-between'>
-                                                <div className="col">
-                                                    <b>Name</b>
-                                                </div>
-                                                <div className="col">
-                                                    Pankaj
-                                                </div>
-
-                                            </div>
-                                        </li>
-                                        <li className='viewlist'> <div className='row justify-content-between'>
-                                            <div className="col">
-                                                <b>Email</b>
-                                            </div>
-                                            <div className="col">
-                                                pankaj@gmail.com
-                                            </div>
-
-                                        </div></li>
-                                        <li className='viewlist'> <div className='row justify-content-between'>
-                                            <div className="col">
-                                                <b>Phone No.</b>
-                                            </div>
-                                            <div className="col">
-                                                9876543210
-                                            </div>
-
-                                        </div></li>
-                                        <li className='viewlist'> <div className='row justify-content-between'>
-                                            <div className="col">
-                                                <b>Signup Status</b>
-                                            </div>
-                                            <div className="col">
-                                                App
-                                            </div>
-
-                                        </div></li>
-                                        <li className='viewlist'> <div className='row justify-content-between'>
-                                            <div className="col">
-                                                <b>Created At</b>
-                                            </div>
-                                            <div className="col">
-                                                25/09/2024
-                                            </div>
-
-                                        </div></li>
-                                        <li className='viewlist'> <div className='row justify-content-between'>
-                                            <div className="col">
-                                                <b>Updated At</b>
-                                            </div>
-                                            <div className="col">
-                                                26/09/2024
-                                            </div>
-
-                                        </div></li>
-                                    </ul>
-                                </div>
-                                {/* <div className="modal-footer">
-                                    <button
-                                        type="button"
-                                        className="btn btn-secondary"
-                                        data-bs-dismiss="modal"
-                                    >
-                                        Close
-                                    </button>
-                                </div> */}
-                            </div>
-                        </div>
-                    </div>
                     <Tooltip title="Update">
                         <UserPen onClick={() => updateClient(row)} />
                     </Tooltip>
@@ -654,21 +559,23 @@ const Client = () => {
                                         {checkedIndex === 0 && (
                                             <>
                                                 <div className='row mt-3'>
-                                                    {category && category.map((item, index) => (
-                                                        <div className='col-lg-4' key={index}>
-                                                            <input
-                                                                style={{ border: "1px solid black" }}
-                                                                className="form-check-input mx-2"
-                                                                type="radio"
-                                                                name="planSelection"
-                                                                id={`proplus-${index}`}
-                                                                onClick={() => handleCategoryChange(item._id)}
-                                                            />
-                                                            <label className="form-check-label" htmlFor={`proplus-${index}`}>
-                                                                {item.title}
-                                                            </label>
-                                                        </div>
-                                                    ))}
+                                                    {category && category
+                                                        .filter(cat => planlist.some(plan => plan.category === cat._id))
+                                                        .map((item, index) => (
+                                                            <div className='col-lg-4' key={index}>
+                                                                <input
+                                                                    style={{ border: "1px solid black" }}
+                                                                    className="form-check-input mx-2"
+                                                                    type="radio"
+                                                                    name="planSelection"
+                                                                    id={`proplus-${index}`}
+                                                                    onClick={() => handleCategoryChange(item._id)}
+                                                                />
+                                                                <label className="form-check-label" htmlFor={`proplus-${index}`}>
+                                                                    {item.title}
+                                                                </label>
+                                                            </div>
+                                                        ))}
                                                 </div>
 
                                                 {selectcategory && (
@@ -748,6 +655,7 @@ const Client = () => {
                                                 )}
                                             </>
                                         )}
+
                                     </div>
                                 </div>
 

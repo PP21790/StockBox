@@ -180,6 +180,7 @@ const Plan = () => {
                                 </div>
                             </a>
                         </li>
+                        
                         {category.map((cat) => (
                             <li className="nav-item" role="presentation" key={cat._id}>
                                 <a
@@ -190,17 +191,8 @@ const Plan = () => {
                                     tabIndex={0}
                                 >
                                     <div className="d-flex align-items-center">
-                                        <div className="tab-title">
-                                            {cat.title} <br />
-                                            {/* ({cat?.servicesDetails?.map((item, index) => (
-                                                <span key={index} className="service-title" style={{ marginRight: '5px' }}>
-                                                    {item.title}
-                                                </span>
-                                            ))}) */}
-                                        </div>
-
+                                        <div className="tab-title">{cat.title}</div>
                                     </div>
-
                                 </a>
                             </li>
                         ))}
@@ -217,20 +209,20 @@ const Plan = () => {
                                                 <div className="col-md-6 mb-3" key={client._id}>
                                                     <div className="pricing-card">
                                                         <div className="row ">
-                                                        <div className="category-name text-center mb-3 col-md-6 d-flex justify-content-start">
-                                                            <span className="badge bg-primary">
-                                                                {category.find(cat => cat._id === client.category)?.servicesDetails.map((item, index) => (
-                                                                    <span key={item._id}>
-                                                                        {item.title}{index < category.find(cat => cat._id === client.category)?.servicesDetails.length - 1 && ', '}
-                                                                    </span>
-                                                                ))}
-                                                            </span>
-                                                        </div>
-                                                        <div className="category-name text-center mb-3 col-md-6 d-flex justify-content-end">
-                                                            <span className="badge bg-primary">
-                                                                {category.find(cat => cat._id === client.category)?.title || 'Unknown'}
-                                                            </span>
-                                                        </div>
+                                                            <div className="category-name text-center mb-3 col-md-6 d-flex justify-content-start">
+                                                                <span className="badge bg-primary">
+                                                                    {category.find(cat => cat._id === client.category)?.servicesDetails.map((item, index) => (
+                                                                        <span key={item._id}>
+                                                                            {item.title}{index < category.find(cat => cat._id === client.category)?.servicesDetails.length - 1 && ', '}
+                                                                        </span>
+                                                                    ))}
+                                                                </span>
+                                                            </div>
+                                                            <div className="category-name text-center mb-3 col-md-6 d-flex justify-content-end">
+                                                                <span className="badge bg-primary">
+                                                                    {category.find(cat => cat._id === client.category)?.title || 'Unknown'}
+                                                                </span>
+                                                            </div>
                                                         </div>
 
                                                         <div className="row justify-content-end mb-3">
@@ -249,11 +241,6 @@ const Plan = () => {
                                                                     ></label>
                                                                 </div>
                                                             </div>
-                                                            <div className="col-md-6 d-flex justify-content-end">
-                                                                {/* <div>
-                                                                    <i className="bx bx-trash trashbtn ms-3" onClick={() => Deleteplanbyadmin(client._id)} />
-                                                                </div> */}
-                                                            </div>
                                                         </div>
 
                                                         <div className="row justify-content-between align-items-center">
@@ -263,7 +250,6 @@ const Plan = () => {
                                                             </div>
                                                             <div className="price-section col-md-6">
                                                                 <span className="discount">{client.discount}</span>
-                                                                {/* <span className="original-price">INR {client.originalPrice}</span> */}
                                                                 <h3 className="ms-4 fnt">INR {client.price}</h3>
                                                             </div>
                                                         </div>
@@ -271,9 +257,7 @@ const Plan = () => {
                                                         <ul>
                                                             <li><b>Validity</b>: {client.validity}</li>
                                                             <li><b className='mb-1'>Description</b>:<textarea className='form-control' >{client.description}</textarea></li>
-
                                                             <li><b>Created At</b>: {fDate(client.created_at)}</li>
-                                                            {/* <li><b>Updated At</b>: {fDateTime(client.updated_at)}</li> */}
                                                         </ul>
                                                         <div className="button-group">
                                                             <button
@@ -281,7 +265,6 @@ const Plan = () => {
                                                                 className="btnsecond"
                                                                 data-bs-toggle="modal"
                                                                 data-bs-target={`#modal-${client._id}`}
-
                                                             >
                                                                 View More
                                                             </button>
@@ -380,13 +363,20 @@ const Plan = () => {
                                                 </div>
                                             ))}
                                         </div>
-                                    </div>) : "No PLan"}
+                                    </div>
+                                ) : (
+                                    <div>
+                                        <h5>No Plans Available</h5>
+                                        <div className="text-muted">Please select a category to view details.</div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
     );
 };
 

@@ -3,12 +3,13 @@ import { useFormik } from 'formik';
 import DynamicForm from '../../../components/FormicForm';
 import Swal from 'sweetalert2';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { SendBroadCast, GetService ,UpdateCastmessage } from '../../../Services/Admin';
+import { SendBroadCast, GetService, UpdateCastmessage } from '../../../Services/Admin';
 
 const Updatebroadcast = () => {
     const location = useLocation();
     const { item } = location.state;
-   
+  
+
     const [servicedata, setServicedata] = useState([]);
 
     const navigate = useNavigate();
@@ -29,20 +30,19 @@ const Updatebroadcast = () => {
         getservice();
     }, []);
 
-    
     const formik = useFormik({
         initialValues: {
-            service: item?.service || "",
+            service: item?.service ? item.service.split(',') : [], 
             subject: item?.subject || "",
             message: item?.message || "",
         },
-       
+
         onSubmit: async (values) => {
             const req = {
                 message: values.message,
                 id: item._id,
                 subject: values.subject,
-                service: values.service,
+                service: values.service.join(','), 
             };
 
             try {
@@ -79,19 +79,17 @@ const Updatebroadcast = () => {
         },
     });
 
-
-    
     const fields = [
         {
             name: "service",
             label: "Select Service",
-            type: "select",
+            type: "selectchecbox",
             label_size: 6,
             col_size: 6,
             disable: false,
-            options: servicedata.map((item) => ({
-                label: item.title,
-                value: item._id,
+            options: servicedata && servicedata.length > 0 && servicedata.map((item) => ({
+                label: item?.title,
+                value: item?._id,
             })),
         },
         {
@@ -114,16 +112,18 @@ const Updatebroadcast = () => {
 
     return (
         <div style={{ marginTop: "100px" }}>
-            <DynamicForm
-                fields={fields}
-                formik={formik}
-                page_title="Update Broadcast"
-                btn_name="Update Broadcast"
-                btn_name1="Cancel"
-                sumit_btn={true}
-                btn_name1_route={"/admin/message"}
-                additional_field={<></>}
-            />
+            {servicedata && servicedata.length > 0 && (
+                <DynamicForm
+                    fields={fields}
+                    formik={formik}
+                    page_title="Update Broadcast"
+                    btn_name="Update Broadcast"
+                    btn_name1="Cancel"
+                    sumit_btn={true}
+                    btn_name1_route={"/admin/message"}
+                    additional_field={<></>}
+                />
+            )}
         </div>
     );
 };

@@ -158,6 +158,12 @@ const Blogs = () => {
 
 
 
+    const updateClient = async (row) => {
+        navigate("/admin/viewblog/" , { state: { row } })
+    }
+
+
+
 
     // Update status
     const handleSwitchChange = async (event, id) => {
@@ -204,7 +210,6 @@ const Blogs = () => {
     // delete blogs
  
     const DeleteBlogs = async (_id) => {
-        // console.log("_id",_id)
         try {
             const result = await Swal.fire({
                 title: 'Are you sure?',
@@ -317,7 +322,7 @@ const Blogs = () => {
                           
                             <Eye style={{ marginRight: "10px" }} 
                                 onClick={() => {
-                                    viewblog(row)
+                                    updateClient(row)
                                 }}/>
                             
                         </Tooltip>
