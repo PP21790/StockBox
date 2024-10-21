@@ -156,6 +156,7 @@ const Message = () => {
                                                                 dangerouslySetInnerHTML={{ __html: item.message }}
                                                                 style={{ display: 'block', marginTop: '0.5rem' }}
                                                             />
+                                                           
                                                         </p>
                                                         <p><strong>Created At:</strong> {fDate(item.created_at)}</p>
                                                         <p><strong>Updated At:</strong> {fDate(item.updated_at)}</p>

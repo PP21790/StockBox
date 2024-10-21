@@ -90,6 +90,11 @@ const Client = () => {
         getcategoryplanlist()
     }, [searchInput]);
 
+
+
+
+
+
     const getcategoryplanlist = async () => {
         try {
             const response = await getcategoryplan(token);
@@ -102,6 +107,9 @@ const Client = () => {
         }
     };
 
+
+
+    
     const getAdminclient = async () => {
         try {
             const response = await GetClient(token);

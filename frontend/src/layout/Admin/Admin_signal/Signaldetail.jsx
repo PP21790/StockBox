@@ -111,12 +111,12 @@ const Signaldetail = () => {
 
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="mb-0">Target-1</h6>
-                                                            <span className="text-secondary">{item.tag1 || '-'}</span>
+                                                            <span className="text-secondary">{item.targetprice1 || '-'}</span>
                                                         </li>
 
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="mb-0">Target-3</h6>
-                                                            <span className="text-secondary">{item.tag3 || '-'}</span>
+                                                            <span className="text-secondary">{item.targetprice3 || '-'}</span>
                                                         </li>
 
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
@@ -150,7 +150,7 @@ const Signaldetail = () => {
 
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="mb-0">Target-2</h6>
-                                                            <span className="text-secondary">{item.tag2 || '-'}</span>
+                                                            <span className="text-secondary">{item.targetprice2 || '-'}</span>
                                                         </li>
 
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
@@ -179,7 +179,7 @@ const Signaldetail = () => {
                                                     <div className="col-lg-12">
                                                         <div className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="ms-3">
-                                                                {item.totalGain > 0 ? "Profit" : item.totalGain < 0 ? "Loss" : "Total Gain"}
+                                                                {item.totalGain > 0 ? "P&L" : item.totalGain < 0 ? "P&L" : "Total Gain"}
                                                             </h6>
                                                             <h6 className={`text-secondary me-2 ${item.totalGain > 0 ? 'text-success' : item.totalGain < 0 ? 'text-danger' : ''}`}>
                                                                 {item.totalGain !== null ?

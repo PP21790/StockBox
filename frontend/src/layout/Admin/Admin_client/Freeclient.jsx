@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Table from '../../../components/Table';
-import { Settings2, Eye, UserPen, Trash2, Download , ArrowDownToLine} from 'lucide-react';
+import { Settings2, Eye, UserPen, Trash2, Download, ArrowDownToLine } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { FreeClientList, PlanSubscription, DeleteFreeClient, getcategoryplan, getplanlist } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
@@ -48,12 +48,12 @@ const Freeclient = () => {
             const response = await FreeClientList(token);
             if (response.status) {
                 setClients(response.data && response.data);
-                console.log("response.data", response.data)
             }
         } catch (error) {
             console.log("error");
         }
     }
+
 
 
     const getplanlistbyadmin = async () => {
@@ -120,7 +120,7 @@ const Freeclient = () => {
 
 
     const updateClient = async (row) => {
-        navigate("/admin/editfreeclient/" + row._id, { state: { row } })
+        navigate("/admin/editfreeclient/" + row.clientid, { state: { row } })
     }
 
 
@@ -220,7 +220,7 @@ const Freeclient = () => {
     const Updateplansubscription = async () => {
 
         try {
-            const data = { plan_id: updatetitle.plan_id, client_id: client._id, price: updatetitle.price };
+            const data = { plan_id: updatetitle.plan_id, client_id: client.clientid, price: updatetitle.price };
             const response = await PlanSubscription(data, token);
 
 
@@ -344,11 +344,11 @@ const Freeclient = () => {
             name: 'Actions',
             selector: (row) => (
                 <>
-                    <Tooltip placement="top" overlay="Kyc Agreement">
+                    {/* <Tooltip placement="top" overlay="Kyc Agreement">
 
                         {row.clientDetails?.kyc_verification === "1" ? <Download onClick={() => handleDownload(row)} /> : ""}
 
-                    </Tooltip>
+                    </Tooltip> */}
                     <Tooltip placement="top" overlay="Package Assign">
                         <span onClick={(e) => { showModal(true); setClientid(row); }} style={{ cursor: 'pointer' }}>
                             <Settings2 />
@@ -459,21 +459,23 @@ const Freeclient = () => {
                                         {checkedIndex === 0 && (
                                             <>
                                                 <div className='row mt-3'>
-                                                    {category && category.map((item, index) => (
-                                                        <div className='col-lg-4' key={index}>
-                                                            <input
-                                                                style={{ border: "1px solid black" }}
-                                                                className="form-check-input mx-2"
-                                                                type="radio"
-                                                                name="planSelection"
-                                                                id={`proplus-${index}`}
-                                                                onClick={() => handleCategoryChange(item._id)}
-                                                            />
-                                                            <label className="form-check-label" htmlFor={`proplus-${index}`}>
-                                                                {item.title}
-                                                            </label>
-                                                        </div>
-                                                    ))}
+                                                    {category && category
+                                                        .filter(cat => planlist.some(plan => plan.category === cat._id))
+                                                        .map((item, index) => (
+                                                            <div className='col-lg-4' key={index}>
+                                                                <input
+                                                                    style={{ border: "1px solid black" }}
+                                                                    className="form-check-input mx-2"
+                                                                    type="radio"
+                                                                    name="planSelection"
+                                                                    id={`proplus-${index}`}
+                                                                    onClick={() => handleCategoryChange(item._id)}
+                                                                />
+                                                                <label className="form-check-label" htmlFor={`proplus-${index}`}>
+                                                                    {item.title}
+                                                                </label>
+                                                            </div>
+                                                        ))}
                                                 </div>
 
                                                 {selectcategory && (
@@ -553,6 +555,7 @@ const Freeclient = () => {
                                                 )}
                                             </>
                                         )}
+
                                     </div>
                                 </div>
 

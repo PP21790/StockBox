@@ -14,7 +14,7 @@ const Editfreeclient = () => {
   const location = useLocation();
   const { row } = location.state;
 
-  // console.log("row",row)
+  console.log("row",row)
 
   const user_id = localStorage.getItem("id");
   const token = localStorage.getItem("token");
@@ -63,7 +63,7 @@ const Editfreeclient = () => {
           timerProgressBar: true,
         });
         setTimeout(() => {
-          navigate("/admin/client");
+          navigate("/admin/freeclient");
         }, 1500);
       } else {
         Swal.fire({
@@ -87,10 +87,10 @@ const Editfreeclient = () => {
 
   const formik = useFormik({
     initialValues: {
-      FullName: row?.FullName || "",
+      FullName: row?.clientDetails.FullName || "",
       // UserName: row?.UserName || "",
-      Email: row?.Email || "",
-      PhoneNo: row?.PhoneNo || "",
+      Email: row?.clientDetails.Email || "",
+      PhoneNo: row?.clientDetails.PhoneNo || "",
 
     },
     validate,
@@ -151,7 +151,7 @@ const Editfreeclient = () => {
         btn_name1="Cancel"
         formik={formik}
         sumit_btn={true}
-        btn_name1_route={"/admin/client"}
+        btn_name1_route={"/admin/freeclient"}
         additional_field={<></>}
       />
     </div>

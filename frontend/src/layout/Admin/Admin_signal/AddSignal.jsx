@@ -67,76 +67,73 @@ const AddSignal = () => {
       expiry: '',
       optiontype: '',
       strikeprice: '',
-     
-      
+
+
 
     },
     validate: (values) => {
       const errors = {};
+
       if (!values.segment) errors.segment = 'Please select a segment';
       if (!values.stock) errors.stock = 'Please select a stock';
       if (!values.price) errors.price = 'Please select a price';
-      
+      if (!values.tag1) errors.tag1 = 'Please enter Target1';
       if (values.calltype === "BUY") {
 
-        if (!values.tag1) errors.tag1 = 'Please enter Traget1';
-        else if (values.price && values.tag1 && values.price >= values.tag1) {
-          errors.tag1 = "Please Enter greater Than Entry Price"
+        if (values.price && values.tag1 && values.price > values.tag1) {
+          errors.tag1 = "Please Enter greater than Entry Price";
         }
 
-        if (values.tag2 && values.tag1 >= values.tag2) {
-          errors.tag2 = "Please Enter greater Than Target1"
+        if (values.tag2 && values.tag1 > values.tag2) {
+          errors.tag2 = "Please Enter greater than Target1";
         }
 
-        if (values.tag3 && values.tag2 && values.tag2 >= values.tag3) {
-          errors.tag3 = "Please Enter greater Target2"
+        if (values.tag3 && values.tag2 && values.tag2 > values.tag3) {
+          errors.tag3 = "Please Enter greater than Target2";
         }
 
-        if (values.price && values.price <= values.stoploss) {
-          errors.stoploss = "Please Enter Less Than Entry Price"
-        }
-
-      } else if (values.calltype === "SELL") {
-
-        if (values.price && values.price <= values.stoploss) {
-          errors.stoploss = "Please Enter Less Than Entry Price"
+        if (values.price && values.price < values.stoploss) {
+          errors.stoploss = "Please Enter less than Entry Price";
         }
 
       } else if (values.calltype === "SELL") {
 
-        if (!values.tag1) errors.tag1 = 'Please enter Traget1';
-        else if (values.price && values.tag1 && values.price <= values.tag1) {
-          errors.tag1 = "Please Enter Less Than Entry Price"
+        if (values.price && values.tag1 && values.price < values.tag1) {
+          errors.tag1 = "Please Enter less than Entry Price";
         }
 
-        if (values.tag2 && values.tag1 <= values.tag2) {
-          errors.tag2 = "Please Enter Less Than Target1"
+        if (values.tag2 && values.tag1 < values.tag2) {
+          errors.tag2 = "Please Enter less than Target1";
         }
 
-        if (values.tag3 && values.tag2 && values.tag2 <= values.tag3) {
-          errors.tag3 = "Please Enter Less Than Target2"
+        if (values.tag3 && values.tag2 && values.tag2 < values.tag3) {
+          errors.tag3 = "Please Enter less than Target2";
         }
 
-        if (values.price && values.price >= values.stoploss) {
-          errors.stoploss = "Please Enter greater Than Entry Price"
+        if (values.price && values.price > values.stoploss) {
+          errors.stoploss = "Please Enter greater than Entry Price";
         }
       }
 
       if (!values.callduration) errors.callduration = 'Please enter Trade duration';
       if (!values.calltype) errors.calltype = 'Please enter Call Calltype';
       if (!values.description) errors.description = 'Please enter description';
+
       if (values.segment === "O" && !values.optiontype) {
         errors.optiontype = 'Please enter option type';
-      };
-      if ((values.segment === "O" || values.segment === "F") && !values.expiry) {
-        errors.expiry = 'Please enter expirydate';
       }
-      if (values.segment === "O" && !values.expiry) {
-        errors.expiry = 'Please Select Strick Price';
+
+      if ((values.segment === "O" || values.segment === "F") && !values.expiry) {
+        errors.expiry = 'Please enter expiry date';
+      }
+
+      if (values.segment === "O" && !values.strikePrice) {
+        errors.strikePrice = 'Please select Strike Price';
       }
 
       return errors;
     },
+
     onSubmit: async (values) => {
       const req = {
         add_by: user_id,
@@ -214,7 +211,7 @@ const AddSignal = () => {
 
       setSearchItem("")
     }
-  }, [formik.values.segment]);
+  }, [formik.values.segment,]);
 
 
 
@@ -453,7 +450,7 @@ const AddSignal = () => {
                 style={{ cursor: "pointer" }}
               />
 
-              { searchItem && stockList.length > 0 && showDropdown ? (
+              {searchItem && stockList.length > 0 && showDropdown ? (
                 <div className="dropdown-list" style={dropdownStyles}>
                   {stockList
                     .filter((company) =>
