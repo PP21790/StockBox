@@ -9,12 +9,12 @@ const ActivitylogsModel = Schema({
         trim: true,
         default: null
     },
-    add_by: {
+    olddays: {
         type: String,
         trim: true,
         default: null
     },
-    ipaddress: {
+    newdays: {
         type: String,
         trim: true,
         default: null

@@ -53,6 +53,8 @@ class BasicSetting {
     {
                  const message ="Free Trail Update";
         const newactivity = new Activitylogs_Modal({
+            olddays : existingSetting.freetrial,
+            newdays : freetrial,
             message,
           });
           await newactivity.save();
