@@ -371,7 +371,7 @@ const Client = () => {
 
         {
             name: 'Created By',
-            selector: row => row.Status,
+            selector: row => row.clientcome == 0 ? "App" :"Web",
             sortable: true,
             width: '165px',
         },
