@@ -84,29 +84,11 @@ const FreetrialStatus = () => {
 
     },
     {
-      name: 'Title',
-      selector: row => row.title,
+      name: 'Status',
+      selector: row => `${row.freetrial}Day`,
       sortable: true,
     },
-    // {
-    //     name: 'Active Status',
-    //     selector: row => (
-    //         <div className="form-check form-switch form-check-info">
-    //             <input
-    //                 id={`rating_${row.status}`}
-    //                 className="form-check-input toggleswitch"
-    //                 type="checkbox"
-    //                 checked={row.status === true}
-    //                 onChange={(event) => handleSwitchChange(event, row._id)}
-    //             />
-    //             <label
-    //                 htmlFor={`rating_${row.status}`}
-    //                 className="checktoggle checkbox-bg"
-    //             ></label>
-    //         </div>
-    //     ),
-    //     sortable: true,
-    // },
+
     {
       name: 'Created At',
       selector: row => new Date(row.created_at).toLocaleDateString(),
@@ -117,58 +99,13 @@ const FreetrialStatus = () => {
       selector: row => new Date(row.updated_at).toLocaleDateString(),
       sortable: true,
     },
-
-    // {
-    //     name: 'Actions',
-    //     cell: row => (
-    //         <>
-    //             <div>
-    //                 <SquarePen
-    //                     onClick={() => {
-    //                         setModel(true);
-    //                         setServiceid(row);
-    //                         setUpdatetitle({ title: row.title, id: row._id });
-    //                     }}
-    //                 />
-    //             </div>
-    //             {/* <div>
-    //                 <Trash2 onClick={() => DeleteService(row._id)} />
-    //             </div> */}
-    //         </>
-    //     ),
-    //     ignoreRowClick: true,
-    //     allowOverflow: true,
-    //     button: true,
-    // }
   ];
-
-
-
-
-
-
+  
 
 
 
   return (
     <div>
-      {/* <div style={containerStyle}>
-      <h2>Free Trial Status</h2>
-      <select style={selectStyle} value={addStatus.freetrial} onChange={handleSelectChange}>
-        <option value="" disabled>
-          Select days
-        </option>
-        {[...Array(7)].map((_, index) => (
-          <option key={index + 1} value={index + 1}>
-            {index + 1} day{index > 0 ? 's' : ''}
-          </option>
-        ))}
-      </select>
-      <button style={buttonStyle} onClick={UpdateClientstatus}>
-        Update
-      </button>
-    </div> */}
-
 
       <div className="page-content">
 
@@ -210,16 +147,6 @@ const FreetrialStatus = () => {
 
               </div>
               <div className="ms-auto">
-                {/* <button
-                                    type="button"
-                                    className="btn btn-primary"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal"
-                                >
-                                    <i className="bx bxs-plus-square" />
-                                    Add Service
-                                </button> */}
-
                 <div
                   className="modal fade"
                   id="exampleModal"
@@ -274,15 +201,12 @@ const FreetrialStatus = () => {
                     </div>
                   </div>
                 </div>
-
-
-
               </div>
             </div>
             <div className="table-responsive mt-5">
               <Table
                 columns={columns}
-
+                data={data}
                 pagination
                 striped
                 highlightOnHover

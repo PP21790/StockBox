@@ -102,7 +102,7 @@ const AddSignal = () => {
           errors.stoploss = "Please Enter Less Than Entry Price"
         }
 
-      } else if (values.calltype === "sell") {
+      } else if (values.calltype === "SELL") {
 
         if (!values.tag1) errors.tag1 = 'Please enter Traget1';
         else if (values.price && values.tag1 && values.price <= values.tag1) {
@@ -329,7 +329,7 @@ const AddSignal = () => {
       type: 'select',
       options: (() => {
         if (formik.values.segment === "C") {
-          return formik.values.calltype === "sell" ? [
+          return formik.values.calltype === "SELL" ? [
             { label: 'Intraday', value: 'Intraday' }
           ] : [
             { label: 'Short Term (15-30 Days)', value: 'Short Term' },
@@ -338,7 +338,7 @@ const AddSignal = () => {
             { label: 'Intraday', value: 'Intraday' }
           ];
         } else if (formik.values.segment === "F") {
-          return formik.values.calltype === "sell" ? [
+          return formik.values.calltype === "SELL" ? [
             { label: 'Short Term', value: 'Short Term' },
             { label: 'Intraday', value: 'Intraday' },
             { label: 'Still Expiry Date', value: 'Still Expiry Date' }

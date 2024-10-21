@@ -25,7 +25,7 @@ const Message = () => {
         try {
             const response = await GetService(token);
             if (response.status) {
-                setServicedata(response.data);
+                setServicedata(response?.data);
             }
         } catch (error) {
             console.log("Error fetching services:", error);
@@ -114,7 +114,11 @@ const Message = () => {
                         <div className="page-content">
                             <div className="container py-2">
                                 {chatMessages.map((item, index) => {
-                                    const matchedService = servicedata.find((service) => service._id === item.service);
+                                    const serviceIds = item.service?.split(',');
+
+                                    const matchedServices = serviceIds?.map(serviceId =>
+                                        (Array.isArray(servicedata) ? servicedata : []).find(service => service?._id === serviceId)
+                                    ).filter(Boolean);
 
                                     return (
                                         <div className="row" key={index}>
@@ -124,7 +128,7 @@ const Message = () => {
                                                         <div className="float-end text-muted">
                                                             <Tooltip placement="top" overlay="Update">
                                                                 <SquarePen
-                                                                    onClick={() => navigate("/admin/updatebroadcast",{ state: { item } })}
+                                                                    onClick={() => navigate("/admin/updatebroadcast", { state: { item } })}
                                                                 />
                                                             </Tooltip>
                                                             <Tooltip placement="top" overlay="Delete">
@@ -133,12 +137,14 @@ const Message = () => {
                                                         </div>
                                                         <h4 className="card-title text-muted">
                                                             <span>
-                                                                {matchedService ? (
-                                                                    <>
-                                                                        {matchedService.segment === "C" && <span>CASH</span>}
-                                                                        {matchedService.segment === "O" && <span>OPTION</span>}
-                                                                        {matchedService.segment === "F" && <span>FUTURE</span>}
-                                                                    </>
+                                                                {matchedServices.length > 0 ? (
+                                                                    matchedServices.map((service, idx) => (
+                                                                        <span key={idx}>
+                                                                            {service.segment === "C" && <span>CASH </span>}
+                                                                            {service.segment === "O" && <span>OPTION </span>}
+                                                                            {service.segment === "F" && <span>FUTURE </span>}
+                                                                        </span>
+                                                                    ))
                                                                 ) : ""}
                                                             </span>
                                                         </h4>
@@ -159,6 +165,8 @@ const Message = () => {
                                         </div>
                                     );
                                 })}
+
+
                             </div>
                         </div>
                     </div>

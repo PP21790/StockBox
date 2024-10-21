@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Table from '../../../components/Table';
-import { Settings2, Eye, UserPen, Trash2, Download } from 'lucide-react';
+import { Settings2, Eye, UserPen, Trash2, Download , ArrowDownToLine} from 'lucide-react';
 import Swal from 'sweetalert2';
-import { FreeClientList,PlanSubscription , DeleteFreeClient, getcategoryplan,getplanlist } from '../../../Services/Admin';
+import { FreeClientList, PlanSubscription, DeleteFreeClient, getcategoryplan, getplanlist } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
 import { image_baseurl } from '../../../Utils/config';
 import { fDate } from '../../../Utils/Date_formate';
@@ -25,8 +25,8 @@ const Freeclient = () => {
     const [checkedIndex, setCheckedIndex] = useState(0);
     const [category, setCategory] = useState([]);
     const [client, setClientid] = useState({});
-    
-    
+
+
     const [updatetitle, setUpdatetitle] = useState({
         plan_id: "",
         client_id: "",
@@ -48,13 +48,13 @@ const Freeclient = () => {
             const response = await FreeClientList(token);
             if (response.status) {
                 setClients(response.data && response.data);
-                console.log("response.data",response.data)
+                console.log("response.data", response.data)
             }
         } catch (error) {
             console.log("error");
         }
     }
-   
+
 
     const getplanlistbyadmin = async () => {
         try {
@@ -213,11 +213,11 @@ const Freeclient = () => {
     //     }
     // };
 
- 
 
 
-     // Update service
-     const Updateplansubscription = async () => {
+
+    // Update service
+    const Updateplansubscription = async () => {
 
         try {
             const data = { plan_id: updatetitle.plan_id, client_id: client._id, price: updatetitle.price };
@@ -287,8 +287,10 @@ const Freeclient = () => {
             name: 'Kyc',
             selector: row => (
                 row.clientDetails?.kyc_verification === "1" ? (
-                    <div style={{ color: "green" }}>
-                        Verfied
+                    <div style={{ color: "green", cursor: "pointer" }} onClick={() => handleDownload(row)}>
+                        <Tooltip placement="top" overlay="Download">
+                            Verified <ArrowDownToLine />
+                        </Tooltip>
                     </div>
                 ) : (
                     <div style={{ color: "red" }}>

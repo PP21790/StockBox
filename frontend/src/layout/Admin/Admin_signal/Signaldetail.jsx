@@ -28,11 +28,23 @@ const Signaldetail = () => {
         }
     };
 
+   
+    const callType = data.length > 0 ? data[0].calltype : null;
+
+    
     const calculatePercentage = (gain, entryPrice) => {
-        if (entryPrice === 0) return 0; 
-        return ((gain / entryPrice) * 100).toFixed(3); 
+        if (entryPrice === 0) return 0;
+
+        if (callType === "BUY") {
+            return ((gain / entryPrice) * 100).toFixed(2); 
+        } else if (callType === "SELL") {
+            return ((entryPrice / gain) * 100).toFixed(2);
+        }
+        return 0;
     };
 
+
+    
     return (
         <div>
             <div className="page-content">
@@ -169,7 +181,7 @@ const Signaldetail = () => {
                                                             <h6 className="ms-3">
                                                                 {item.totalGain > 0 ? "Profit" : item.totalGain < 0 ? "Loss" : "Total Gain"}
                                                             </h6>
-                                                            <h6 className="text-secondary me-2">
+                                                            <h6 className={`text-secondary me-2 ${item.totalGain > 0 ? 'text-success' : item.totalGain < 0 ? 'text-danger' : ''}`}>
                                                                 {item.totalGain !== null ?
                                                                     `${calculatePercentage(item.totalGain, item.price)}%` :
                                                                     '-'}

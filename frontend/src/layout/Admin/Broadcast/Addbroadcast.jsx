@@ -132,7 +132,7 @@ const Addbroadcast = () => {
 
     return (
         <div style={{ marginTop: "100px" }}>
-         { servicedata  && servicedata.length > 0 && <DynamicForm
+          <DynamicForm
                 fields={fields}
                 formik={formik}
                 page_title="Add Broadcast"
@@ -141,7 +141,7 @@ const Addbroadcast = () => {
                 sumit_btn={true}
                 btn_name1_route={"/admin/message"}
                 additional_field={<></>}
-            />}
+            />
         </div>
     );
 };

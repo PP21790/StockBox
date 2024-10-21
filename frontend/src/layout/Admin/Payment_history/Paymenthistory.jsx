@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
 import { fDate } from '../../../Utils/Date_formate';
+import ExportToExcel from '../../../Utils/ExportCSV';
 
 const History = () => {
 
@@ -18,6 +19,7 @@ const History = () => {
     const [serviceid, setServiceid] = useState({});
     const [searchInput, setSearchInput] = useState("");
     const [viewpage, setViewpage] = useState({});
+    const [ForGetCSV, setForGetCSV] = useState([])
 
     const [updatetitle, setUpdatetitle] = useState({
         title: "",
@@ -27,7 +29,7 @@ const History = () => {
 
     });
 
-    
+
 
 
     const [title, setTitle] = useState({
@@ -39,6 +41,24 @@ const History = () => {
 
     const token = localStorage.getItem('token');
     const userid = localStorage.getItem('id');
+
+
+
+    const forCSVdata = () => {
+        if (clients?.length > 0) {
+            const csvArr = clients.map((item) => ({
+                ClientName: item.clientName,
+                Title: item.planDetails?.title || '',
+                 Total: item.planDetails?.price || '',
+                Validity: item.planDetails?.validity || '',
+                Created_at: item.planDetails?.created_at || '',
+                Updated_at: item.planDetails?.updated_at || '',
+            }));
+
+            setForGetCSV(csvArr);
+        }
+    };
+
 
 
 
@@ -62,7 +82,8 @@ const History = () => {
 
     useEffect(() => {
         gethistory();
-    }, [searchInput]);
+        forCSVdata()
+    }, [searchInput, clients]);
 
 
     const columns = [
@@ -124,7 +145,7 @@ const History = () => {
                             <Eye
                                 data-bs-toggle="modal"
                                 data-bs-target="#example"
-                                onClick={() => setViewpage(row)} 
+                                onClick={() => setViewpage(row)}
                             />
                         </Tooltip>
                     </div>
@@ -164,6 +185,7 @@ const History = () => {
                 <div className="card">
                     <div className="card-body">
                         <div className="d-lg-flex align-items-center mb-4 gap-3">
+
                             <div className="position-relative">
                                 <input
                                     type="text"
@@ -175,6 +197,25 @@ const History = () => {
                                 <span className="position-absolute top-50 product-show translate-middle-y">
                                     <i className="bx bx-search" />
                                 </span>
+
+                            </div>
+                            <div>
+
+                                <div
+                                    className="dropdown dropdown-action"
+                                    data-bs-toggle="tooltip"
+                                    data-bs-placement="bottom"
+                                    title="Download"
+                                >
+
+
+                                    <ExportToExcel
+                                        className="btn btn-primary "
+                                        apiData={ForGetCSV}
+                                        fileName={'All Users'} />
+
+
+                                </div>
                             </div>
                         </div>
                         <div className="table-responsive">

@@ -1,137 +1,129 @@
 import React from 'react';
 import { useFormik } from 'formik';
-import DynamicForm from '../../../components/FormicForm';
-import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';
-import { AddClient } from '../../../Services/Admin';
-
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Formik, Form, Field } from 'formik';
+import { image_baseurl } from '../../../Utils/config';
 
 const Viewblog = () => {
     const navigate = useNavigate();
-
-    const user_id = localStorage.getItem("id");
-    const token = localStorage.getItem("token");
-
-    const validate = (values) => {
-        let errors = {};
-
-        if (!values.FullName) {
-            errors.FullName = "Please enter Full Name";
-        }
-        if (!values.Email) {
-            errors.Email = "Please enter Email";
-        }
-        if (!values.PhoneNo) {
-            errors.PhoneNo = "Please enter Phone Number";
-        }
-        if (!values.password) {
-            errors.password = "Please enter password";
-        }
-        if (!values.ConfirmPassword) {
-            errors.ConfirmPassword = "Please confirm your password";
-        } else if (values.password !== values.ConfirmPassword) {
-            errors.ConfirmPassword = "Passwords must match";
-        }
-
-        return errors;
-    };
-
-    const onSubmit = async (values) => {
-        const req = {
-            FullName: values.FullName,
-            Email: values.Email,
-            PhoneNo: values.PhoneNo,
-            password: values.password,
-            add_by: user_id,
-        };
-
-        try {
-            const response = await AddClient(req, token);
-            if (response.status) {
-                Swal.fire({
-                    title: "Create Successful!",
-                    text: response.message,
-                    icon: "success",
-                    timer: 1500,
-                    timerProgressBar: true,
-                });
-                setTimeout(() => {
-                    navigate("/admin/client");
-                }, 1500);
-            } else {
-                Swal.fire({
-                    title: "Alert",
-                    text: response.message,
-                    icon: "warning",
-                    timer: 1500,
-                    timerProgressBar: true,
-                });
-            }
-        } catch (error) {
-            Swal.fire({
-                title: "Error",
-                text: "An unexpected error occurred. Please try again later.",
-                icon: "error",
-                timer: 1500,
-                timerProgressBar: true,
-            });
-        }
-    };
-
-    const formik = useFormik({
-        initialValues: {
-            FullName: "",
-            Email: "",
-            PhoneNo: "",
-            password: "",
-            ConfirmPassword: "",
-            add_by: "",
-        },
-        validate,
-        onSubmit,
-    });
-
-    const fields = [
-        {
-            name: "Title",
-            label: "Title",
-            type: "text",
-            label_size: 6,
-            col_size: 6,
-            disable: false,
-        },
-        {
-            name: "Image",
-            label: "Image",
-            type: "text",
-            label_size: 12,
-            col_size: 6,
-            disable: false,
-        },
-        {
-            name: "Discription",
-            label: "Discription",
-            type: "text5",
-            label_size: 12,
-            col_size: 6,
-            disable: false,
-        },
-
-    ];
+    const location = useLocation();
+    const { row } = location.state;  // Get the row data from location state
 
     return (
-        <div style={{ marginTop: "100px" }}>
-            <DynamicForm
-                fields={fields}
-                formik={formik}
-                page_title="Blog Details"
-                btn_name="submit"
-                btn_name1="Cancel"
-                sumit_btn={true}
-                btn_name1_route={"/admin/blogs"}
-                additional_field={<></>}
+        <div className="page-content">
+            <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+                <div className="breadcrumb-title pe-3">Blog Details</div>
+                <div className="ps-3">
+                    <nav aria-label="breadcrumb">
+                        <ol className="breadcrumb mb-0 p-0">
+                            <li className="breadcrumb-item">
+                                <Link to="/admin/dashboard">
+                                    <i className="bx bx-home-alt" />
+                                </Link>
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <hr />
+            <div className="row">
+                <div className="col-lg-8 mx-auto">
+                    <div className="card radius-15">
+                        <Formik
+                            enableReinitialize={true}
+                            initialValues={{
+                                title: row.title || '',
+                                description: row.description || '',
+                                image: row.image || '',
+                            }}
+                        >
+                            {({ values }) => (
+                                <Form className="card-body p-4">
+                                    <div className="p-4 border radius-15">
+                                        {/* Title */}
+                                        <div className="row mb-3 align-items-center">
+                                            <label htmlFor="title" className="col-sm-3 col-form-label">
+                                                <b>Title</b>
+                                            </label>
+                                            <div className="col-sm-9">
+                                                <div className="input-group">
+                                                    <span className="input-group-text">
+                                                        <i className="fadeIn animated bx bx-building" />
+                                                    </span>
+                                                    <Field
+                                                        name="title"
+                                                        type="text"
+                                                        className="form-control"
+                                                        placeholder="Blog Title"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
 
-            />
+                                       
+                                        <div className="row mb-3 align-items-center">
+                                            <label htmlFor="description" className="col-sm-3 col-form-label">
+                                                <b>Description</b>
+                                            </label>
+                                            <div className="col-sm-9">
+                                                <div className="input-group">
+                                                    <span className="input-group-text">
+                                                        <i className="fadeIn animated bx bx-phone" />
+                                                    </span>
+                                                   
+                                                     <span
+                                                                dangerouslySetInnerHTML={{ __html: row.description }}
+                                                                style={{ display: 'block', marginTop: '0.5rem' }}
+                                                            />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        
+                                        <div className="row mb-3 align-items-center">
+                                            <label htmlFor="image" className="col-sm-3 col-form-label">
+                                                <b>Image</b>
+                                            </label>
+                                            <div className="col-sm-9">
+                                                <div className="input-group">
+                                                    {row.image && (
+                                                        <div className="file-preview">
+                                                            <img
+                                                                src={`${image_baseurl}uploads/blogs/${row.image}`}
+                                                                alt="Image Preview"
+                                                                className="image-preview"
+                                                            />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Form>
+                            )}
+                        </Formik>
+                    </div>
+                </div>
+            </div>
+
+            <style jsx>{`
+                .file-preview {
+                    width: 100px;
+                    height: 100px;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    overflow: hidden;
+                    margin-top: 10px;
+                }
+                .image-preview {
+                    width: 100%;
+                    height: auto;
+                }
+                .error {
+                    color: red;
+                    font-size: 12px;
+                }
+            `}</style>
         </div>
     );
 };
