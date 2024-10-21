@@ -11,13 +11,11 @@ const ActivitylogsModel = Schema({
     },
     add_by: {
         type: String,
-        required: true,
         trim: true,
         default: null
     },
     ipaddress: {
         type: String,
-        required: true,
         trim: true,
         default: null
     },
