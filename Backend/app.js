@@ -18,6 +18,7 @@ console.log('Current time in IST:', new Date());
 require('./App/Controllers/Cron.js'); 
 const Clients_Modal = db.Clients;
 const BasicSetting_Modal = db.BasicSetting;
+const Activitylogs_Modal = db.Activitylogs;
 const Blogs_Modal = db.Blogs;
 const News_Modal = db.News;
 const Coupon_Modal = db.Coupon;

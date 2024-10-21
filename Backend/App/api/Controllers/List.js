@@ -531,10 +531,18 @@ if (existingPlans.length > 0) {
       const savedSubscription = await newSubscription.save();
   
       const client = await Clients_Modal.findOne({ _id: client_id, del: 0, ActiveStatus: 1 });
+     
 
       if (!client) {
           return console.error('Client not found or inactive.');
       }
+
+
+      if(client.freetrial==0) 
+        {
+        client.freetrial  = 1; 
+        await client.save();
+         }
       
       const refertokens = await Refer_Modal.find({ user_id: client._id, status: 0 });
       if (refertokens.length > 0) {

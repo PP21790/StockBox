@@ -575,6 +575,15 @@ try {
   
       // Save the subscription
       const savedSubscription = await newSubscription.save();
+
+
+      const client = await Clients_Modal.findOne({ _id: client_id, del: 0, ActiveStatus: 1 });
+      if(client.freetrial==0) 
+      {
+      client.freetrial  = 1; 
+      await client.save();
+       }
+
       // Return success response
       return res.status(201).json({
         status: true,

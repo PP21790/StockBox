@@ -635,7 +635,6 @@ const deletedHelpdesk = await Helpdesk_Modal.findByIdAndUpdate(
 async  myPlan(req, res) {
   try {
     const { id } = req.params; 
-    console.log(id);
 
     if (!id) {
       return res.status(400).json({ status: false, message: 'Client ID is required' });
@@ -663,6 +662,9 @@ async  myPlan(req, res) {
     $sort: { created_at: -1 } // Sort by created_at in descending order
   }
 ]);
+
+
+
 
     return res.json({
       status: true,
