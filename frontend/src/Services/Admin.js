@@ -2158,3 +2158,21 @@ export async function CouponStatus(data, token) {
         return err.response?.data || err.message;
     }
 }
+
+
+// get freetrial status 
+
+
+
+export async function getfreetrialstatus(token) {
+    try {
+        const res = await axios.get(`${Config.base_url}basicsetting/freetrial`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}

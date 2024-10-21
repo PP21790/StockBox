@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { addfreeClient, basicsettinglist } from '../../../Services/Admin';
+import { addfreeClient, basicsettinglist , getfreetrialstatus} from '../../../Services/Admin';
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 import Table from '../../../components/Table';
@@ -23,7 +23,7 @@ const FreetrialStatus = () => {
 
   const getApidetail = async () => {
     try {
-      const response = await basicsettinglist(token);
+      const response = await getfreetrialstatus(token);
       if (response?.status && response?.data) {
         setData(response.data);
         const defaultTrial = response.data.length > 0 ? response.data[0].freetrial : "1";
@@ -74,6 +74,7 @@ const FreetrialStatus = () => {
   };
 
 
+  console.log("data",data)
 
 
   const columns = [
