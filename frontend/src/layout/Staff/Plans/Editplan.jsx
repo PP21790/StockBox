@@ -3,20 +3,18 @@ import { useFormik } from 'formik';
 import DynamicForm from '../../../components/FormicForm';
 import Swal from 'sweetalert2';
 import { useNavigate, useParams } from 'react-router-dom';
-import {getcategoryplan, getbyidplan , Updateplan } from '../../../Services/Admin';
+import { getcategoryplan, getbyidplan, Updateplan } from '../../../Services/Admin';
 
 const Editplan = () => {
+
+
     const { id } = useParams();
     const navigate = useNavigate();
-
 
     const user_id = localStorage.getItem("id");
     const token = localStorage.getItem("token");
     const [clients, setClients] = useState([]);
     const [info, setInfo] = useState({});
-
-
-
 
     const getcategoryplanlist = async () => {
         try {
@@ -33,7 +31,7 @@ const Editplan = () => {
         try {
             const response = await getbyidplan(id, token);
             if (response.status) {
-                setInfo(response.data); 
+                setInfo(response.data);
             }
         } catch (error) {
             console.log("Failed to fetch plans", error);
@@ -44,7 +42,6 @@ const Editplan = () => {
         getcategoryplanlist();
         getplaninfo();
     }, []);
-
 
     const validate = (values) => {
         let errors = {};
@@ -61,13 +58,14 @@ const Editplan = () => {
             title: values.title,
             description: values.description,
             price: values.price,
-            totaldays: values.validity,
+            validity: values.validity,
             category: values.category,
             id: id,
         };
 
         try {
             const response = await Updateplan(req, token);
+
             if (response.status) {
                 Swal.fire({
                     title: "Edit Successful!",
@@ -104,13 +102,15 @@ const Editplan = () => {
             title: info.title || "",
             description: info.description || "",
             price: info.price || "",
-            validity: info.validity || "",
-            category: info.category || "",
+            validity: info.validity ? info.validity : "",
+            category: info.category ? info.category._id : "",
         },
-        enableReinitialize: true, // This ensures the form is re-initialized when 'info' is updated
+        enableReinitialize: true,
         validate,
         onSubmit,
     });
+
+
 
     const fields = [
         {
@@ -133,14 +133,10 @@ const Editplan = () => {
             col_size: 6,
             disable: false,
             options: [
+                { value: "1 month", label: "1 month" },
                 { value: "3 months", label: "3 months" },
                 { value: "6 months", label: "6 months" },
-                { value: "9 months", label: "9 months" },
                 { value: "1 year", label: "1 year" },
-                { value: "2 years", label: "2 years" },
-                { value: "3 years", label: "3 years" },
-                { value: "4 years", label: "4 years" },
-                { value: "5 years", label: "5 years" }
             ]
         },
         {

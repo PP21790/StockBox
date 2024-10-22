@@ -181,12 +181,12 @@ const Client = () => {
 
 
     const updateClient = async (row) => {
-        navigate("/admin/client/updateclient/" + row._id, { state: { row } })
+        navigate("/staff/client/updateclient/" + row._id, { state: { row } })
     }
 
 
     const Clientdetail = async (row) => {
-        navigate("/admin/client/clientdetail/" + row._id, { state: { row } })
+        navigate("/staff/clientdetail/" + row._id, { state: { row } })
     }
 
 
@@ -403,7 +403,7 @@ const Client = () => {
         // width: '165px',
         // },
 
-        {
+       permission.includes("clientchangestatus") ? {
             name: 'Active Status',
             selector: row => (
                 <div className="form-check form-switch form-check-info">
@@ -422,7 +422,7 @@ const Client = () => {
             ),
             sortable: true,
             width: '165px',
-        },
+        } :"",
         {
             name: 'Kyc',
             selector: row => (
@@ -459,15 +459,15 @@ const Client = () => {
                         </span>
                     </Tooltip>
 
-                    <Tooltip title="view">
+                    {permission.includes("viewdetail") ? <Tooltip title="view">
                         <Eye
 
                             onClick={() => Clientdetail(row)} />
-                    </Tooltip>
+                    </Tooltip> : ""}
 
-                    <Tooltip title="Update">
+                    {permission.includes("editclient") ? <Tooltip title="Update">
                         <UserPen onClick={() => updateClient(row)} />
-                    </Tooltip>
+                    </Tooltip> : ""}
                     {/* <Tooltip title="delete">
                         <Trash2 onClick={() => DeleteClient(row._id)} />
                     </Tooltip> */}
@@ -520,7 +520,7 @@ const Client = () => {
                                         <i className="bx bx-search" />
                                     </span>
                                 </div>
-                                <div className="ms-auto">
+                                {permission.includes("addclient") ? <div className="ms-auto">
                                     <Link
                                         to="/staff/addclient"
                                         className="btn btn-primary"
@@ -531,7 +531,7 @@ const Client = () => {
                                         />
                                         Add Client
                                     </Link>
-                                </div>
+                                </div> : ""}
                             </div>
 
 

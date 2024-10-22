@@ -45,6 +45,13 @@ import Editplan from '../layout/Staff/Plans/Editplan';
 import Banner from '../layout/Staff/Banner/Banner';
 import Closesignal from '../layout/Staff/Signal/Closesignal';
 import PaymentRequest from '../layout/Staff/PaymentRequest/PaymentRequest';
+import Viewclientdetail from '../layout/Staff/StaffClient/Viewclient';
+import Editfreeclient from '../layout/Staff/StaffClient/Editfreeclient';
+import Addblogs from '../layout/Staff/Bloags/Addblogs';
+import Updateblogs from '../layout/Staff/Bloags/Updateblogs';
+import Viewblog from '../layout/Staff/Bloags/Viewblog';
+import Addnews from '../layout/Staff/News/Addnews';
+import Updatenews from '../layout/Staff/News/Updatenews';
 
 
 
@@ -119,13 +126,14 @@ function Staffrouting() {
             <Header />
             <div className="page-wrapper">
                 <Routes>
-                    <Route path="/dashboard" element={<Dashbord/>} />
+                    <Route path="/dashboard" element={<Dashbord />} />
 
                     {permission.includes("viewclient") ? <Route path="/client" element={<Client />} /> : ""}
                     {permission.includes("addclient") ? <Route path="/addclient" element={<Addclient />} /> : ""}
                     {permission.includes("editclient") ? <Route path="/client/updateclient/:id" element={<EditClient />} /> : ""}
-
-                    {/* <Route path="/freeclient" element={<Freeclient />} /> */}
+                    {permission.includes("viewclient") ? <Route path="/clientdetail/:id" element={<Viewclientdetail />} /> : ""}
+                    <Route path="/freeclient" element={<Freeclient />} />
+                    <Route path="/editfreeclient/:id" element={<Editfreeclient />} />
 
 
                     <Route path="/profile" element={<Profile />} />
@@ -141,7 +149,7 @@ function Staffrouting() {
 
                     {/* {permission.includes("editstaff") ? <Route path="/staff/staffpermission/:id" element={<Staffpermission />} /> : ""} */}
 
-                    
+
 
 
 
@@ -157,10 +165,10 @@ function Staffrouting() {
                     {permission.includes("editsignal") ? <Route path="/signaldetaile/:id" element={<Signaldetail />} />
                         : ""}
                     {/* <Route path="/signaldetaile/:id" element={<Signaldetail/>} /> */}
-                     
-                    <Route path="/closesignal" element={<Closesignal/>} />
-                    
-  
+
+                    <Route path="/closesignal" element={<Closesignal />} />
+
+
 
 
                     {/* <Route path="/basket" element={<Basket />} />
@@ -169,51 +177,61 @@ function Staffrouting() {
                     <Route path="/basket/editbasket/:id" element={<Editbasket />} /> */}
 
 
-                    {permission.includes("viewplan") ?   <Route path="/plan" element={<Plan />} /> : ""}
-                    {permission.includes("addplane") ?  <Route path="/addplan" element={<Addplan />} /> : ""}
+                    {permission.includes("viewplan") ? <Route path="/plan" element={<Plan />} /> : ""}
+                    {permission.includes("addplan") ? <Route path="/addplan" element={<Addplan />} /> : ""}
+
+
                     {permission.includes("editplan") ? <Route path="/plan/editplan/:id" element={<Editplan />} /> : ""}
 
-                  
-                   
-                    
 
-                    
-                    {permission.includes("viewcategory") ?   <Route path="/category" element={<Category />} /> : ""}
-                   
+
+
+
+
+                    {permission.includes("viewcategory") ? <Route path="/category" element={<Category />} /> : ""}
+
                     {/* <Route path="/stock" element={<Stock />} /> */}
 
 
-                    {permission.includes("viewblogs") ?   <Route path="/blogs" element={<Blogs />} /> : ""}
-                    {permission.includes("viewnews") ?  <Route path="/news" element={<News />} /> : ""}
-                   
-                    
+                    {permission.includes("viewblogs") ? <Route path="/blogs" element={<Blogs />} /> : ""}
+                    <Route path="/addblogs" element={<Addblogs />} />
+                    <Route path="/updatebolgs" element={<Updateblogs />} />
+                    <Route path="/viewblog" element={<Viewblog />} />
 
 
-                    {permission.includes("viewcoupon") ?  <Route path="/coupon" element={<Coupon />} /> : ""}
-                    {permission.includes("addcoupon") ?    <Route path="/addcoupon" element={<Addcoupon />} /> : ""}
-                    {permission.includes("editcoupon") ?  <Route path="/coupon/updatecoupon/:id" element={<Updatecoupon />} /> : ""}
 
-                     
-                    
-                  
-                   
-                    {permission.includes("addcoupon") ?    <Route path="/banner" element={<Banner />} /> : ""}
 
-                  
+                    {permission.includes("viewnews") ? <Route path="/news" element={<News />} /> : ""}
+                    <Route path="/addnews" element={<Addnews />} />
+                    <Route path="/updatenews" element={<Updatenews />} />
+
+
+
+                    {permission.includes("viewcoupon") ? <Route path="/coupon" element={<Coupon />} /> : ""}
+                    {permission.includes("addcoupon") ? <Route path="/addcoupon" element={<Addcoupon />} /> : ""}
+                    {permission.includes("editcoupon") ? <Route path="/coupon/updatecoupon/:id" element={<Updatecoupon />} /> : ""}
+
+
+
+
+
+                    {permission.includes("addcoupon") ? <Route path="/banner" element={<Banner />} /> : ""}
+
+
+
+
+
                     {/* <Route path="/termsandcondtion" element={<Condition />} /> */}
-                   
-
-
                     {/* <Route path="/generalsettings" element={<Generalsettings />} />
                     <Route path="/Apiinfo" element={<Apiinfo />} />
                     <Route path="/paymentgeteway" element={<Payementgateway />} />
                     <Route path="/emailsetting" element={<Emailsettings />} />
                     <Route path="/message" element={<Message />} />
                     <Route path="/changepass" element={<Changepass />} /> */}
-                   
 
-                   <Route path="/paymentrequest" element={<PaymentRequest/>} />
-                    
+
+                    <Route path="/paymentrequest" element={<PaymentRequest />} />
+
 
 
 

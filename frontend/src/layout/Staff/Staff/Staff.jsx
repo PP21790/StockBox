@@ -223,17 +223,17 @@ const Staff = () => {
             sortable: true,
             width: '142px',
         },
-        {
-            name: 'Permission',
-            cell: row => (
-                <>
-                    <div>
-                        <UserPen onClick={() => updatepermission(row)} />
-                    </div>
-                </>
-            ),
-            width: '142px',
-        },
+        // {
+        //     name: 'Permission',
+        //     cell: row => (
+        //         <>
+        //             <div>
+        //                 <UserPen onClick={() => updatepermission(row)} />
+        //             </div>
+        //         </>
+        //     ),
+        //     width: '142px',
+        // },
         permission.includes("editstaff") || permission.includes("deletestaff")  ? {
             name: 'Actions',
             cell: row => (

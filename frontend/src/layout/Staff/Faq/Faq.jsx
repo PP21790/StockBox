@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getFaqlist, AddFaq, UpdateFaq, changeFAQStatus, DeleteFAQ } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { SquarePen, Trash2, PanelBottomOpen } from 'lucide-react';
+import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { getstaffperuser } from '../../../Services/Admin';
-
+import { Tooltip } from 'antd';
+import { fDate } from '../../../Utils/Date_formate';
 
 const Faq = () => {
 
@@ -20,12 +20,11 @@ const Faq = () => {
         title: "",
         id: "",
         description: "",
-       
+
 
     });
 
 
-    const [permission, setPermission] = useState([]);
 
 
     const [title, setTitle] = useState({
@@ -57,25 +56,8 @@ const Faq = () => {
         }
     };
 
-   
-
-    const getpermissioninfo = async () => {
-        try {
-            const response = await getstaffperuser(userid, token);
-            if (response.status) {
-                setPermission(response.data.permissions);
-            }
-        } catch (error) {
-            console.log("error", error);
-        }
-    };
-
-
-
-
     useEffect(() => {
         getFaq();
-        getpermissioninfo()
     }, [searchInput]);
 
 
@@ -125,7 +107,7 @@ const Faq = () => {
     // Add blogs
     const addfaqbyadmin = async () => {
         try {
-            const data = { title: title.title, description: title.description , add_by:userid};
+            const data = { title: title.title, description: title.description, add_by: userid };
             const response = await AddFaq(data, token);
             if (response && response.status) {
                 Swal.fire({
@@ -136,7 +118,7 @@ const Faq = () => {
                     timer: 2000,
                 });
 
-                setTitle({ title: "", add_by: "", description:"" });
+                setTitle({ title: "", add_by: "", description: "" });
                 getFaq();
 
                 const modal = document.getElementById('exampleModal');
@@ -214,7 +196,7 @@ const Faq = () => {
         try {
             const result = await Swal.fire({
                 title: 'Are you sure?',
-                text: 'Do you want to delete this ? This action cannot be undone.',
+                text: 'Do you want to delete this Faq ? This action cannot be undone.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, delete it!',
@@ -226,7 +208,7 @@ const Faq = () => {
                 if (response.status) {
                     Swal.fire({
                         title: 'Deleted!',
-                        text: 'The staff has been successfully deleted.',
+                        text: 'The Faq has been successfully deleted.',
                         icon: 'success',
                         confirmButtonText: 'OK',
                     });
@@ -237,7 +219,7 @@ const Faq = () => {
 
                 Swal.fire({
                     title: 'Cancelled',
-                    text: 'The staff deletion was cancelled.',
+                    text: 'The Faq deletion was cancelled.',
                     icon: 'info',
                     confirmButtonText: 'OK',
                 });
@@ -260,14 +242,16 @@ const Faq = () => {
             name: 'S.No',
             selector: (row, index) => index + 1,
             sortable: false,
-            width: '70px',
+            width: '100px',
         },
         {
             name: 'Title',
             selector: row => row.title,
             sortable: true,
+            width: '200px',
+
         },
-        permission.includes("faqstatus") ? {
+        {
             name: 'Active Status',
             selector: row => (
                 <div className="form-check form-switch form-check-info">
@@ -285,45 +269,60 @@ const Faq = () => {
                 </div>
             ),
             sortable: true,
-        } :"",
+            width: '200px',
+
+
+        },
         {
             name: 'Description',
             selector: row => row.description,
             sortable: true,
+            width: '200px',
         },
 
         {
             name: 'Created At',
-            selector: row => new Date(row.created_at).toLocaleDateString(),
+            selector: row => fDate(row.created_at),
             sortable: true,
         },
+        // {
+        //     name: 'Updated At',
+        //     selector: row => new Date(row.updated_at).toLocaleDateString(),
+        //     sortable: true,
+        // },
+
         {
-            name: 'Updated At',
-            selector: row => new Date(row.updated_at).toLocaleDateString(),
-            sortable: true,
-        },
-        permission.includes("editfaq") ||  permission.includes("deletefaq") ?  {
             name: 'Actions',
             cell: row => (
                 <>
-                     {permission.includes("editfaq") ? <div>
-                        <SquarePen
-                            onClick={() => {
-                                setModel(true);
-                                setServiceid(row);
-                                setUpdatetitle({ title: row.title, id: row._id, description: row.description });
-                            }}
-                        />
-                    </div> : "" }
-                    {permission.includes("deletefaq") ? <div>
-                        <Trash2 onClick={() => DeleteFaq(row._id)} />
-                    </div> :"" }
+                    <div>
+                        <Tooltip placement="top" overlay="View">
+                            <Eye style={{ marginRight: "10px" }} data-bs-toggle="modal"
+                                data-bs-target="#example1" />
+                        </Tooltip>
+                    </div>
+                    <div>
+                        <Tooltip placement="top" overlay="Update">
+                            <SquarePen
+                                onClick={() => {
+                                    setModel(true);
+                                    setServiceid(row);
+                                    setUpdatetitle({ title: row.title, id: row._id, description: row.description });
+                                }}
+                            />
+                        </Tooltip>
+                    </div>
+                    <div>
+                        <Tooltip placement="top" overlay="Delete">
+                            <Trash2 onClick={() => DeleteFaq(row._id)} />
+                        </Tooltip>
+                    </div>
                 </>
             ),
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
-        }: ""
+        }
     ];
 
 
@@ -364,6 +363,7 @@ const Faq = () => {
                         </nav>
                     </div>
                 </div>
+                <hr />
 
                 <div className="card">
                     <div className="card-body">
@@ -372,7 +372,7 @@ const Faq = () => {
                                 <input
                                     type="text"
                                     className="form-control ps-5 radius-10"
-                                    placeholder="Search Order"
+                                    placeholder="Search Faq"
                                     onChange={(e) => setSearchInput(e.target.value)}
                                     value={searchInput}
                                 />
@@ -381,7 +381,7 @@ const Faq = () => {
                                 </span>
                             </div>
                             <div className="ms-auto">
-                            {permission.includes("addfaq") ?  <button
+                                <button
                                     type="button"
                                     className="btn btn-primary"
                                     data-bs-toggle="modal"
@@ -389,7 +389,7 @@ const Faq = () => {
                                 >
                                     <i className="bx bxs-plus-square" />
                                     Add FAQ
-                                </button> : "" }
+                                </button>
 
                                 <div
                                     className="modal fade"
@@ -425,11 +425,11 @@ const Faq = () => {
                                                             />
                                                         </div>
                                                     </div>
-                                        
+
                                                     <div className="row">
                                                         <div className="col-md-12">
                                                             <label htmlFor="">description</label>
-                                                            <input
+                                                            <textarea
                                                                 className="form-control mb-3"
                                                                 type="text"
                                                                 placeholder='Enter description'
@@ -462,75 +462,78 @@ const Faq = () => {
 
 
                                 {model && (
-                                    <div
-                                        className="modal fade show"
-                                        style={{ display: 'block' }}
-                                        tabIndex={-1}
-                                        aria-labelledby="exampleModalLabel"
-                                        aria-hidden="true"
-                                    >
-                                        <div className="modal-dialog">
-                                            <div className="modal-content">
-                                                <div className="modal-header">
-                                                    <h5 className="modal-title" id="exampleModalLabel">
-                                                        Update FAQ
-                                                    </h5>
-                                                    <button
-                                                        type="button"
-                                                        className="btn-close"
-                                                        onClick={() => setModel(false)}
-                                                    />
-                                                </div>
-                                                <div className="modal-body">
-                                                    <form>
-                                                        <div className="row">
-                                                            <div className="col-md-12">
-                                                                <label htmlFor="">Title</label>
-                                                                <input
-                                                                    className="form-control mb-2"
-                                                                    type="text"
-                                                                    placeholder='Enter blogs Title'
-                                                                    value={updatetitle.title}
-                                                                    onChange={(e) => updateServiceTitle({ title: e.target.value })}
-                                                                />
+                                    <>
+                                        <div className="modal-backdrop fade show"></div>
+                                        <div
+                                            className="modal fade show"
+                                            style={{ display: 'block' }}
+                                            tabIndex={-1}
+                                            aria-labelledby="exampleModalLabel"
+                                            aria-hidden="true"
+                                        >
+                                            <div className="modal-dialog">
+                                                <div className="modal-content">
+                                                    <div className="modal-header">
+                                                        <h5 className="modal-title" id="exampleModalLabel">
+                                                            Update FAQ
+                                                        </h5>
+                                                        <button
+                                                            type="button"
+                                                            className="btn-close"
+                                                            onClick={() => setModel(false)}
+                                                        />
+                                                    </div>
+                                                    <div className="modal-body">
+                                                        <form>
+                                                            <div className="row">
+                                                                <div className="col-md-12">
+                                                                    <label htmlFor="">Title</label>
+                                                                    <input
+                                                                        className="form-control mb-2"
+                                                                        type="text"
+                                                                        placeholder='Enter blogs Title'
+                                                                        value={updatetitle.title}
+                                                                        onChange={(e) => updateServiceTitle({ title: e.target.value })}
+                                                                    />
+                                                                </div>
                                                             </div>
-                                                        </div>
 
-                    
-                                                        <div className="row">
-                                                            <div className="col-md-12">
-                                                                <label htmlFor="">Description</label>
-                                                                <input
-                                                                    className="form-control mb-2"
-                                                                    type="text"
-                                                                    placeholder='Enter  Description'
-                                                                    value={updatetitle.description}
-                                                                    onChange={(e) => updateServiceTitle({ description: e.target.value })}
-                                                                />
+
+                                                            <div className="row">
+                                                                <div className="col-md-12">
+                                                                    <label htmlFor="">Description</label>
+                                                                    <textarea
+                                                                        className="form-control mb-2"
+                                                                        type="text"
+                                                                        placeholder='Enter  Description'
+                                                                        value={updatetitle.description}
+                                                                        onChange={(e) => updateServiceTitle({ description: e.target.value })}
+                                                                    />
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </form>
+                                                        </form>
 
-                                                </div>
-                                                <div className="modal-footer">
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-secondary"
-                                                        onClick={() => setModel(false)}
-                                                    >
-                                                        Close
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-primary"
-                                                        onClick={updateFaqbyadmin}
-                                                    >
-                                                        Update FAQ
-                                                    </button>
+                                                    </div>
+                                                    <div className="modal-footer">
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-secondary"
+                                                            onClick={() => setModel(false)}
+                                                        >
+                                                            Close
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-primary"
+                                                            onClick={updateFaqbyadmin}
+                                                        >
+                                                            Update FAQ
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </>
                                 )}
 
                             </div>
@@ -547,6 +550,78 @@ const Faq = () => {
                         </div>
                     </div>
                 </div>
+            </div>
+            <div className="button-group">
+
+                <div
+                    className="modal fade"
+                    id="example1"
+                    tabIndex={-1}
+                    aria-labelledby="example1"
+                    aria-hidden="true"
+                >
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title" id="example1">
+                                    FAQ Details
+                                </h5>
+                                <button
+                                    type="button"
+                                    className="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                                />
+                            </div>
+                            <div className="modal-body">
+                                <ul>
+                                    <li>
+                                        <div className="row justify-content-between">
+                                            <div className="col-md-6">
+                                                <b>Title</b>
+                                            </div>
+                                            <div className="col-md-6">
+
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div className="row justify-content-between">
+                                            <div className="col-md-6">
+                                                <b>Discription</b>
+                                            </div>
+                                            <div className="col-md-6">
+
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div className="row justify-content-between">
+                                            <div className="col-md-6">
+                                                <b>Created At</b>
+                                            </div>
+                                            <div className="col-md-6">
+
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div className="row justify-content-between">
+                                            <div className="col-md-6">
+                                                <b>Updated At</b>
+                                            </div>
+                                            <div className="col-md-6">
+
+                                            </div>
+                                        </div>
+                                    </li>
+                                 
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     );

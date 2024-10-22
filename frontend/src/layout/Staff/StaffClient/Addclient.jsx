@@ -6,8 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import { AddClient } from '../../../Services/Admin';
 
 
-
-
 const AddUser = () => {
   const navigate = useNavigate();
 

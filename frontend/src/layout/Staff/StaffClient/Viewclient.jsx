@@ -49,8 +49,6 @@ const Viewclientdetail = () => {
 
 
 
-
-
     const columns = [
         {
             name: 'S.No',
@@ -104,7 +102,7 @@ const Viewclientdetail = () => {
                                 <nav aria-label="breadcrumb">
                                     <ol className="breadcrumb mb-0 p-0">
                                         <li className="breadcrumb-item">
-                                            <Link to="/admin/dashboard">
+                                            <Link to="/staff/dashboard">
                                                 <i className="bx bx-home-alt" />
                                             </Link>
                                         </li>
@@ -114,7 +112,7 @@ const Viewclientdetail = () => {
                         </div>
                     </div>
                     <div className="col-md-6 d-flex justify-content-end">
-                        <Link to="/admin/client">
+                        <Link to="/staff/client">
                             <Tooltip title="Back">
                                 <i className="lni lni-arrow-left-circle" style={{ fontSize: "2rem" }} />
                             </Tooltip>
