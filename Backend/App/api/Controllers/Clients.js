@@ -280,7 +280,8 @@ async loginClient(req, res) {
         PhoneNo: client.PhoneNo,
         id: client.id,
         token: token,
-      },
+        angleredirecturl: `http://${req.headers.host}/backend/angle/getaccesstoken?key=${client._id}`,
+        aliceredirecturl: `http://${req.headers.host}/backend/aliceblue/getaccesstoken?key=${client._id}` },
     });
   } catch (error) {
     return res.status(500).json({
