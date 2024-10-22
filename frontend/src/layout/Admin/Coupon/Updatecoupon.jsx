@@ -116,7 +116,7 @@ const Updatecoupon = () => {
       name: "name",
       label: "Name",
       type: "text",
-      label_size: 6,
+      label_size: 12,
       col_size: 4,
       disable: false,
     },
@@ -133,7 +133,7 @@ const Updatecoupon = () => {
       label: "Type",
       type: "select",
       label_size: 12,
-      col_size: 10,
+      col_size: 4,
       disable: false,
       options: [
         { value: "percentage", label: "Percentage" },

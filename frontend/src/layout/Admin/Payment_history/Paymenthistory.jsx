@@ -207,9 +207,7 @@ const History = () => {
                                     data-bs-placement="bottom"
                                     title="Download"
                                 >
-
-
-                                    <ExportToExcel
+                                                                        <ExportToExcel
                                         className="btn btn-primary "
                                         apiData={ForGetCSV}
                                         fileName={'All Users'} />
