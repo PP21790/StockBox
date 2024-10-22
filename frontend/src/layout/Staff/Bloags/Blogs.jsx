@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
 import { fDate } from '../../../Utils/Date_formate';
+import { getstaffperuser } from '../../../Services/Admin';
 
 
 const Blogs = () => {
@@ -16,7 +17,8 @@ const Blogs = () => {
     const navigate = useNavigate();
 
 
-
+    const [permission, setPermission] = useState([]);
+    
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
@@ -62,8 +64,21 @@ const Blogs = () => {
         }
     };
 
+
+    const getpermissioninfo = async () => {
+        try {
+            const response = await getstaffperuser(userid, token);
+            if (response.status) {
+                setPermission(response.data.permissions);
+            }
+        } catch (error) {
+            console.log("error", error);
+        }
+    }
+
     useEffect(() => {
         getblogs();
+        getpermissioninfo()
     }, [searchInput]);
 
 
@@ -268,7 +283,7 @@ const Blogs = () => {
             sortable: true,
             width: '200px',
         },
-        {
+        permission.includes("blogsstatus")? {
             name: 'Active Status',
             selector: row => (
                 <div className="form-check form-switch form-check-info">
@@ -287,7 +302,7 @@ const Blogs = () => {
             ),
             sortable: true,
             width: '200px',
-        },
+        } : "",
         {
             name: 'Image',
             cell: row => <img src={`${image_baseurl}/uploads/blogs/${row.image}`} alt="Image" width="50" height="50" />,
@@ -317,7 +332,8 @@ const Blogs = () => {
             name: 'Actions',
             cell: row => (
                 <>
-                    <div>
+                   {/* {permission.includes("blogsdetail")?  */}
+                   <div>
                         <Tooltip placement="top" overlay="View">
                           
                             <Eye style={{ marginRight: "10px" }} 
@@ -326,8 +342,9 @@ const Blogs = () => {
                                 }}/>
                             
                         </Tooltip>
-                    </div>
-                    <div>
+                    </div> 
+                    {/* : "" } */}
+                    {permission.includes("editblogs")? <div>
                         <Tooltip placement="top" overlay="Update">
                             <SquarePen
                                 onClick={() => {
@@ -335,12 +352,12 @@ const Blogs = () => {
                                 }}
                             />
                         </Tooltip>
-                    </div>
-                    <div>
+                    </div> : "" }
+                    {permission.includes("deleteblogs")?   <div>
                         <Tooltip placement="top" overlay="Delete">
                             <Trash2 onClick={() => DeleteBlogs(row._id)} />
                         </Tooltip>
-                    </div>
+                    </div> : "" }
                 </>
             ),
             ignoreRowClick: true,
@@ -403,6 +420,7 @@ const Blogs = () => {
                                     <i className="bx bx-search" />
                                 </span>
                             </div>
+                            {permission.includes("addblogs")? 
                             <div className="ms-auto">
                                 <Link
                                     to="/staff/addblogs"
@@ -412,8 +430,8 @@ const Blogs = () => {
                                     <i className="bx bxs-plus-square" />
                                     Add Blog
                                 </Link>
-
-                                <div
+                                
+                                <div  
                                     className="modal fade"
                                     id="exampleModal"
                                     tabIndex={-1}
@@ -587,7 +605,7 @@ const Blogs = () => {
                                     </>
                                 )}
 
-                            </div>
+                            </div>   : "" }
                         </div>
                         <div className="table-responsive">
                             <Table

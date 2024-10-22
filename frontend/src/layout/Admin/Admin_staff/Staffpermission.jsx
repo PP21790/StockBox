@@ -521,7 +521,7 @@ const Staffpermission = () => {
         },
         {
             name: 'viewdetail',
-            label: 'View Client',
+            label: 'View Detail',
             type: 'checkbox',
             label_size: 12,
             col_size: 2,
