@@ -73,7 +73,6 @@ const AddSignal = () => {
     },
     validate: (values) => {
       const errors = {};
-
       if (!values.segment) errors.segment = 'Please select a segment';
       if (!values.stock) errors.stock = 'Please select a stock';
       if (!values.price) errors.price = 'Please select a price';
@@ -127,7 +126,7 @@ const AddSignal = () => {
         errors.expiry = 'Please enter expiry date';
       }
 
-      if (values.segment === "O" && !values.strikePrice) {
+      if (values.segment === "O" && !values.strikeprice) {
         errors.strikePrice = 'Please select Strike Price';
       }
 
@@ -152,6 +151,7 @@ const AddSignal = () => {
         optiontype: values.optiontype,
         strikeprice: values.strikeprice,
       };
+     
       try {
         const response = await AddSignalByAdmin(req, token);
         if (response.status) {

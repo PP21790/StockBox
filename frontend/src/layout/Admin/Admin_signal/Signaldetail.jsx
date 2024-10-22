@@ -28,15 +28,15 @@ const Signaldetail = () => {
         }
     };
 
-   
+
     const callType = data.length > 0 ? data[0].calltype : null;
 
-    
+
     const calculatePercentage = (gain, entryPrice) => {
         if (entryPrice === 0) return 0;
 
         if (callType === "BUY") {
-            return ((gain / entryPrice) * 100).toFixed(2); 
+            return ((gain / entryPrice) * 100).toFixed(2);
         } else if (callType === "SELL") {
             return ((entryPrice / gain) * 100).toFixed(2);
         }
@@ -44,7 +44,7 @@ const Signaldetail = () => {
     };
 
 
-    
+
     return (
         <div>
             <div className="page-content">
@@ -145,8 +145,11 @@ const Signaldetail = () => {
 
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="mb-0">Exit Date & Time</h6>
-                                                            <span className="text-secondary">{fDateTime(item.updated_at) || '-'}</span>
+                                                            <span className="text-secondary">
+                                                                {item.closedate ? fDateTime(item.closedate) : '-'}
+                                                            </span>
                                                         </li>
+
 
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="mb-0">Target-2</h6>

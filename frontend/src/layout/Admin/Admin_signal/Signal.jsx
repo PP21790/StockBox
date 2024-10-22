@@ -255,7 +255,7 @@ const Signal = () => {
         setServiceid({
             ...row,
             "targetprice1": row.targetprice1,
-            "targetprice2":  row.targetprice2,
+            "targetprice2": row.targetprice2,
             "targetprice3": row.targetprice3,
         });
         setClosedata({
