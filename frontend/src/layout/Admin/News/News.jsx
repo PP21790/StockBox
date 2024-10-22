@@ -7,10 +7,15 @@ import Swal from 'sweetalert2';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
 import { fDate } from '../../../Utils/Date_formate';
+import { getstaffperuser } from '../../../Services/Admin';
+
+
 
 const News = () => {
 
     const navigate = useNavigate();
+
+    const [permission, setPermission] = useState([]);
 
 
     const [clients, setClients] = useState([]);
@@ -60,9 +65,21 @@ const News = () => {
 
 
 
+    const getpermissioninfo = async () => {
+        try {
+            const response = await getstaffperuser(userid, token);
+            if (response.status) {
+                setPermission(response.data.permissions);
+            }
+        } catch (error) {
+            console.log("error", error);
+        }
+    }
+
 
     useEffect(() => {
         getNews();
+        getpermissioninfo()
     }, [searchInput]);
 
 
@@ -287,7 +304,7 @@ const News = () => {
                                     <i className="bx bx-search" />
                                 </span>
                             </div>
-                            <div className="ms-auto">
+                            {permission.includes("addnews") ? <div className="ms-auto">
                                 <Link
                                     to="/admin/addnews"
                                     type="button"
@@ -299,186 +316,13 @@ const News = () => {
                                     Add News
                                 </Link>
 
-                                <div
-                                    className="modal fade"
-                                    id="exampleModal"
-                                    tabIndex={-1}
-                                    aria-labelledby="exampleModalLabel"
-                                    aria-hidden="true"
-                                >
-                                    <div className="modal-dialog">
-                                        <div className="modal-content">
-                                            <div className="modal-header">
-                                                <h5 className="modal-title" id="exampleModalLabel">
-                                                    Add News
-                                                </h5>
-                                                <button
-                                                    type="button"
-                                                    className="btn-close"
-                                                    data-bs-dismiss="modal"
-                                                    aria-label="Close"
-                                                />
-                                            </div>
-                                            <div className="modal-body">
-                                                <form>
-                                                    <div className="row">
-                                                        <div className="col-md-12">
-                                                            <label htmlFor="">Title</label>
-                                                            <input
-                                                                className="form-control mb-3"
-                                                                type="text"
-                                                                placeholder='Enter News Title'
-                                                                value={title.title}
-                                                                onChange={(e) => setTitle({ ...title, title: e.target.value })}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                    <div className="row">
-                                                        <div className="col-md-12">
-                                                            <label htmlFor="imageUpload">Upload Image</label>
-                                                            <input
-                                                                className="form-control mb-3"
-                                                                type="file"
-                                                                accept="image/*"
-                                                                id="imageUpload"
-                                                                onChange={(e) => setTitle({ ...title, image: e.target.files[0] })}
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="row">
-                                                        <div className="col-md-12">
-                                                            <label htmlFor="">description</label>
-                                                            <textarea
-                                                                className="form-control mb-3"
-                                                                type="text"
-                                                                placeholder='Enter description'
-                                                                value={title.description}
-                                                                onChange={(e) => setTitle({ ...title, description: e.target.value })}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                            <div className="modal-footer">
-                                                <button
-                                                    type="button"
-                                                    className="btn btn-secondary"
-                                                    data-bs-dismiss="modal"
-                                                >
-                                                    Close
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    className="btn btn-primary"
-                                                    onClick={AddNews}
-                                                >
-                                                    Save
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {model && (
-                                    <>
-                                        <div className="modal-backdrop fade show"></div>
-
-                                        <div
-                                            className="modal fade show"
-                                            style={{ display: 'block' }}
-                                            tabIndex={-1}
-                                            aria-labelledby="exampleModalLabel"
-                                            aria-hidden="true"
-                                        >
-                                            <div className="modal-dialog">
-                                                <div className="modal-content">
-                                                    <div className="modal-header">
-                                                        <h5 className="modal-title" id="exampleModalLabel">
-                                                            Update News
-                                                        </h5>
-                                                        <button
-                                                            type="button"
-                                                            className="btn-close"
-                                                            onClick={() => setModel(false)}
-                                                        />
-                                                    </div>
-                                                    <div className="modal-body">
-                                                        <form>
-                                                            <div className="row">
-                                                                <div className="col-md-12">
-                                                                    <label htmlFor="">Title</label>
-                                                                    <input
-                                                                        className="form-control mb-2"
-                                                                        type="text"
-                                                                        placeholder='Enter news Title'
-                                                                        value={updatetitle.title}
-                                                                        onChange={(e) => updateServiceTitle({ title: e.target.value })}
-                                                                    />
-                                                                </div>
-                                                            </div>
-
-                                                            <div className="row">
-                                                                <div className="col-md-12">
-                                                                    <label htmlFor="imageUpload">Image</label>
-                                                                    <input
-                                                                        className="form-control mb-3"
-                                                                        type="file"
-                                                                        accept="image/*"
-                                                                        id="imageUpload"
-                                                                        onChange={(e) => {
-                                                                            const file = e.target.files[0];
-                                                                            if (file) {
-                                                                                updateServiceTitle({ image: file });
-                                                                            }
-                                                                        }}
-                                                                    />
-                                                                </div>
-                                                            </div>
-
-                                                            <div className="row">
-                                                                <div className="col-md-12">
-                                                                    <label htmlFor="">Description</label>
-                                                                    <textarea
-                                                                        className="form-control mb-2"
-                                                                        type="text"
-                                                                        placeholder='Enter  Description'
-                                                                        value={updatetitle.description}
-                                                                        onChange={(e) => updateServiceTitle({ description: e.target.value })}
-                                                                    />
-                                                                </div>
-                                                            </div>
-                                                        </form>
-
-                                                    </div>
-                                                    <div className="modal-footer">
-                                                        <button
-                                                            type="button"
-                                                            className="btn btn-secondary"
-                                                            onClick={() => setModel(false)}
-                                                        >
-                                                            Close
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            className="btn btn-primary"
-                                                            onClick={updateNews}
-                                                        >
-                                                            Update News
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </>
-                                )}
-
-                            </div>
+                            </div> : ""}
                         </div>
                         <div className="container py-2">
 
                             {clients.map((client, index) => (
                                 <div className="row g-0" key={index}>
-                                    {}
+                                    { }
 
 
                                     <div className="col-sm py-2">
@@ -492,7 +336,7 @@ const News = () => {
 
                                                     <div>
 
-                                                        <Tooltip placement="top" overlay="Update">
+                                                        {permission.includes("editnews") ? <Tooltip placement="top" overlay="Update">
                                                             <SquarePen
                                                                 onClick={() => {
 
@@ -500,10 +344,10 @@ const News = () => {
                                                                     navigate("/admin/updatenews", { state: { client } })
                                                                 }}
                                                             />
-                                                        </Tooltip>
-                                                        <Tooltip placement="top" overlay="Delete">
+                                                        </Tooltip> : ""}
+                                                        {permission.includes("editnews") ? <Tooltip placement="top" overlay="Delete">
                                                             <Trash2 onClick={() => DeleteService(client._id)} />
-                                                        </Tooltip>
+                                                        </Tooltip> : ""}
                                                     </div>
                                                 </div>
                                                 <hr />
@@ -525,10 +369,10 @@ const News = () => {
 
                                                         <h5>Description:</h5>
                                                         {/* <p className="card-text">{client.description} */}
-                                                            <span
-                                                                dangerouslySetInnerHTML={{ __html: client.description }}
-                                                                style={{ display: 'block', marginTop: '0.5rem' }}
-                                                            />
+                                                        <span
+                                                            dangerouslySetInnerHTML={{ __html: client.description }}
+                                                            style={{ display: 'block', marginTop: '0.5rem' }}
+                                                        />
                                                         {/* </p> */}
                                                         <div className="float-end text-muted small">{fDate(client.created_at)}</div>
                                                     </div>
