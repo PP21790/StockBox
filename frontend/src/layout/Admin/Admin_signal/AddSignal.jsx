@@ -91,7 +91,7 @@ const AddSignal = () => {
           errors.tag3 = "Please Enter greater than Target2";
         }
 
-        if (values.price && values.price < values.stoploss) {
+        if (values.stoploss && values.price < values.stoploss) {
           errors.stoploss = "Please Enter less than Entry Price";
         }
 
@@ -109,7 +109,7 @@ const AddSignal = () => {
           errors.tag3 = "Please Enter less than Target2";
         }
 
-        if (values.price && values.price > values.stoploss) {
+        if (values.stoploss && values.price > values.stoploss) {
           errors.stoploss = "Please Enter greater than Entry Price";
         }
       }
