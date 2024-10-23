@@ -57,7 +57,7 @@ const Sidebar = ({ onToggleClick }) => {
     permission.includes('viewsignal') &&
     {
       title: 'Signal',
-      icon: 'bx-wifi-2',
+      icon: 'bx bx-wifi-2 fs-3 text-white',
       isDropdown: true,
       dropdownName: 'Signal',
       subItems: [
