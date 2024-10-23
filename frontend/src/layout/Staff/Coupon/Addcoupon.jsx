@@ -21,6 +21,14 @@ const Addcoupon = () => {
         if (!values.code) {
             errors.code = "Please enter code";
         }
+        if (values.code) {
+            if (values.code.length < 6 || values.code.length > 8) {
+                errors.code = "Please enter between 6 and 8 characters.";
+            } else if (!/^[a-zA-Z0-9]+$/.test(values.code)) {
+                errors.code = "Code must contain only numbers and letters.";
+            }
+        }
+
         if (!values.type) {
             errors.type = "Please enter type";
         }
@@ -36,13 +44,11 @@ const Addcoupon = () => {
         if (!values.minpurchasevalue) {
             errors.minpurchasevalue = "Please enter Min Purchase value";
         }
-        if (!values.mincouponvalue) {
+        if (values.mincouponvalue && !values.mincouponvalue) {
             errors.mincouponvalue = "Please enter Min Coupon value";
         }
-        if (!values.mincouponvalue) {
-            errors.mincouponvalue = "Please enter Min Coupon value";
-        }
-       
+        
+
 
         return errors;
     };
@@ -125,8 +131,8 @@ const Addcoupon = () => {
         },
         {
             name: "code",
-            label: "Code",
-            type: "number",
+            label: "Coupon Code",
+            type: "text",
             label_size: 12,
             col_size: 6,
             disable: false,
@@ -134,10 +140,14 @@ const Addcoupon = () => {
         {
             name: "type",
             label: "Type",
-            type: "text",
+            type: "select",
             label_size: 12,
             col_size: 6,
             disable: false,
+            options: [
+                { value: "percentage", label: "Percentage" },
+                { value: "fixed", label: "Fixed" },  
+            ]  
         },
         {
             name: "value",
@@ -147,8 +157,8 @@ const Addcoupon = () => {
             col_size: 6,
             disable: false,
         },
-        
-        {
+
+         {
             name: "minpurchasevalue",
             label: "Min Purchase Value",
             type: "text",
@@ -156,14 +166,15 @@ const Addcoupon = () => {
             col_size: 6,
             disable: false,
         },
-        {
+         {
             name: "mincouponvalue",
-            label: "Min Coupon Value",
+            label: "Max Discount Value",
             type: "text",
             label_size: 12,
             col_size: 6,
             disable: false,
-        },
+          showWhen: (values) => values.type === "percentage"
+        } ,
         {
             name: "startdate",
             label: "Start Date",
@@ -182,32 +193,32 @@ const Addcoupon = () => {
         },
 
 
-        {
-            name: "image",
-            label: "Image",
-            type: "file2",
-            label_size: 12,
-            col_size: 6,
-            disable: false,
-        },
-        {
-            name: "description",
-            label: "Description",
-            type: "text",
-            label_size: 12,
-            col_size: 6,
-            disable: false,
-        },
-        
+        // {
+        //     name: "image",
+        //     label: "Image",
+        //     type: "file2",
+        //     label_size: 12,
+        //     col_size: 6,
+        //     disable: false,
+        // },
+        // {
+        //     name: "description",
+        //     label: "Description",
+        //     type: "text",
+        //     label_size: 12,
+        //     col_size: 6,
+        //     disable: false,
+        // },
+
     ];
 
     return (
         <div style={{ marginTop: "100px" }}>
             <DynamicForm
-                fields={fields}
+                 fields={fields.filter(field => !field.showWhen || field.showWhen(formik.values))}
                 formik={formik}
-                page_title="Add New User"
-                btn_name="Add User"
+                page_title="Add Coupon Code"
+                btn_name="Add Coupon"
                 btn_name1="Cancel"
                 sumit_btn={true}
                 btn_name1_route={"/staff/coupon"}

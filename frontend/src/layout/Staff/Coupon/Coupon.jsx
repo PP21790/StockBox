@@ -3,38 +3,53 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getcouponlist } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { Pencil, Trash2 } from 'lucide-react';
+import { Eye, Pencil, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { DeleteCoupon, UpdateClientStatus } from '../../../Services/Admin';
+import { DeleteCoupon, UpdateClientStatus, CouponStatus } from '../../../Services/Admin';
 import { image_baseurl } from '../../../Utils/config';
+import { Tooltip } from 'antd';
+import { fDate } from '../../../Utils/Date_formate';
 import { getstaffperuser } from '../../../Services/Admin';
 
 
 const Coupon = () => {
 
-    const token = localStorage.getItem('token');
     const userid = localStorage.getItem('id');
-
-
+  
     const navigate = useNavigate();
 
     const [clients, setClients] = useState([]);
-    const [permission, setPermission] = useState([]);
+    const [searchInput, setSearchInput] = useState("");
+    const [viewpage, setViewpage] = useState({});
 
+   
+
+    const token = localStorage.getItem('token');
+    const [permission, setPermission] = useState([]);
+   
 
 
     const getcoupon = async () => {
         try {
             const response = await getcouponlist(token);
             if (response.status) {
-                setClients(response.data);
+                const filterdata = response.data.filter((item) =>
+                    searchInput === "" ||
+                    item.name.toLowerCase().includes(searchInput.toLowerCase()) ||
+                    item.code.toLowerCase().includes(searchInput.toLowerCase()) ||
+                    item.description.toLowerCase().includes(searchInput.toLowerCase())
+                );
+                setClients(searchInput ? filterdata : response.data);
+                // setClients(response.data);
             }
         } catch (error) {
             console.log("error");
         }
     }
 
-   
+    
+
+    
     const getpermissioninfo = async () => {
         try {
             const response = await getstaffperuser(userid, token);
@@ -44,14 +59,13 @@ const Coupon = () => {
         } catch (error) {
             console.log("error", error);
         }
-    };
-
+    }
 
 
     useEffect(() => {
         getcoupon();
         getpermissioninfo()
-    }, []);
+    }, [searchInput]);
 
 
 
@@ -65,7 +79,7 @@ const Coupon = () => {
         try {
             const result = await Swal.fire({
                 title: 'Are you sure?',
-                text: 'Do you want to delete this staff member? This action cannot be undone.',
+                text: 'Do you want to delete this coupon? This action cannot be undone.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, delete it!',
@@ -77,7 +91,7 @@ const Coupon = () => {
                 if (response.status) {
                     Swal.fire({
                         title: 'Deleted!',
-                        text: 'The staff has been successfully deleted.',
+                        text: 'The coupon has been successfully deleted.',
                         icon: 'success',
                         confirmButtonText: 'OK',
                     });
@@ -88,7 +102,7 @@ const Coupon = () => {
 
                 Swal.fire({
                     title: 'Cancelled',
-                    text: 'The staff deletion was cancelled.',
+                    text: 'The coupon deletion was cancelled.',
                     icon: 'info',
                     confirmButtonText: 'OK',
                 });
@@ -96,7 +110,7 @@ const Coupon = () => {
         } catch (error) {
             Swal.fire({
                 title: 'Error!',
-                text: 'There was an error deleting the staff.',
+                text: 'There was an error deleting the coupon.',
                 icon: 'error',
                 confirmButtonText: 'Try Again',
             });
@@ -106,11 +120,15 @@ const Coupon = () => {
 
 
 
+
+
     // update status 
 
     const handleSwitchChange = async (event, id) => {
 
-        const user_active_status = event.target.checked ? "1" : "0";
+        const user_active_status = event.target.checked === true ? "true" : "false"
+
+        console.log("user_active_status", user_active_status)
 
         const data = { id: id, status: user_active_status }
         const result = await Swal.fire({
@@ -123,7 +141,7 @@ const Coupon = () => {
 
         if (result.isConfirmed) {
             try {
-                const response = await UpdateClientStatus(data, token)
+                const response = await CouponStatus(data, token)
                 if (response.status) {
                     Swal.fire({
                         title: "Saved!",
@@ -157,102 +175,122 @@ const Coupon = () => {
             name: 'S.No',
             selector: (row, index) => index + 1,
             sortable: false,
-            width: '70px',
+            width: '100px',
         },
         {
             name: 'Name',
             selector: row => row.name,
             sortable: true,
+            width: '150px',
         },
         {
             name: 'Code',
             selector: row => row.code,
             sortable: true,
-            
+
         },
-        {
-            name: 'Image',
-            cell: row => <img src={`${image_baseurl}/uploads/coupon/${row.image}`} alt="Image" width="50" height="50" />,
-            sortable: true,
-        },
+        // {
+        //     name: 'Image',
+        //     cell: row => <img src={`${image_baseurl}/uploads/coupon/${row.image}`} alt="Image" width="50" height="50" />,
+        //     sortable: true,
+        //     width: '110px',
+        // },
         {
             name: 'Min Purchase Value',
             selector: row => row.minpurchasevalue,
             sortable: true,
-            width: '230px',
+            width: '206px',
         },
         {
-            name: 'Min Coupon Value',
-            selector: row => row.mincouponvalue,
+            name: 'Max Discount Value',
+            selector: row => row.mincouponvalue ? row.mincouponvalue : "-",
             sortable: true,
+            width: '206px',
         },
 
-        {
-            name: 'Description',
-            selector: row => row.description,
-            sortable: true,
-            width: '280px',
-        },
+        // {
+        //     name: 'Description',
+        //     selector: row => row.description,
+        //     sortable: true,
+        //     width: '180px',
+        // },
         {
             name: 'Type',
             selector: row => row.type,
             sortable: true,
+            width: '115px',
         },
 
-        permission.includes("couponstatus") ? {
+        permission.includes("couponstatus") && {
             name: 'Active Status',
             selector: row => (
                 <div className="form-check form-switch form-check-info">
                     <input
-                        id={`rating_${row.ActiveStatus}`}
+                        id={`rating_${row.status}`}
                         className="form-check-input toggleswitch"
                         type="checkbox"
-                        defaultChecked={row.ActiveStatus == 1}
+                        defaultChecked={row.status == true}
                         onChange={(event) => handleSwitchChange(event, row._id)}
                     />
                     <label
-                        htmlFor={`rating_${row.ActiveStatus}`}
+                        htmlFor={`rating_${row.status}`}
                         className="checktoggle checkbox-bg"
                     ></label>
                 </div>
             ),
             sortable: true,
-        } : "",
+            width: '156px',
+        },
 
 
         {
             name: 'Startdate',
-            selector: row => new Date(row.startdate).toLocaleDateString(),
+            selector: row => fDate(row.startdate),
             sortable: true,
+            width: '200px',
         },
         {
             name: 'Enddate',
-            selector: row => new Date(row.enddate).toLocaleDateString(),
+            selector: row => fDate(row.enddate),
             sortable: true,
+            width: '200px',
         },
-        permission.includes("editcoupon") ||  permission.includes("deletecoupon") ? {
+
+        permission.includes("editcoupon") || permission.includes("viewcoupon") 
+        || permission.includes("deletecoupon") ? {
             name: 'Actions',
             cell: row => (
                 <>
+                  {permission.includes("viewcoupon") ? <div>
+                        <Tooltip placement="top" overlay="View">
+                            <Eye style={{ marginRight: "10px" }} data-bs-toggle="modal"
+                                data-bs-target="#example2"
+                                onClick={(e) => { setViewpage(row) }}
+                            />
+                        </Tooltip>
+                    </div> : "" }
                     {permission.includes("editcoupon") ? <div>
-                        <Pencil onClick={() => updatecoupon(row)} />
-                    </div> : ""}
-                    {permission.includes("deletecoupon") ? <div>
-                        <Trash2 onClick={() => DeleteCouponbyadmin(row._id)} />
+                        <Tooltip placement="top" overlay="Edit">
+                            <Pencil onClick={() => updatecoupon(row)} />
+                        </Tooltip>
+                    </div> : "" }
+                    {permission.includes("deletecoupon") ?  <div>
+                        <Tooltip placement="top" overlay="Delete">
+                            <Trash2 onClick={() => DeleteCouponbyadmin(row._id)} />
+                        </Tooltip>
                     </div> : "" }
                 </>
             ),
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
-        } : "" 
+        }: "" 
     ];
 
     return (
         <div>
             <div>
                 <div className="page-content">
-                    {/* breadcrumb */}
                     <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
                         <div className="breadcrumb-title pe-3">Coupon</div>
                         <div className="ps-3">
@@ -267,7 +305,7 @@ const Coupon = () => {
                             </nav>
                         </div>
                     </div>
-                    {/* end breadcrumb */}
+                    <hr />
                     <div className="card">
                         <div className="card-body">
                             <div className="d-lg-flex align-items-center mb-4 gap-3">
@@ -275,14 +313,16 @@ const Coupon = () => {
                                     <input
                                         type="text"
                                         className="form-control ps-5 radius-10"
-                                        placeholder="Search Order"
+                                        placeholder="Search Coupon"
+                                        onChange={(e) => setSearchInput(e.target.value)}
+                                        value={searchInput}
                                     />
                                     <span className="position-absolute top-50 product-show translate-middle-y">
                                         <i className="bx bx-search" />
                                     </span>
                                 </div>
                                 {permission.includes("addcoupon") ? <div className="ms-auto">
-                                 <Link
+                                    <Link
                                         to="/staff/addcoupon"
                                         className="btn btn-primary"
                                     >
@@ -301,6 +341,119 @@ const Coupon = () => {
                             />
                         </div>
                     </div>
+                </div>
+                <div className="button-group">
+
+                    <div
+                        className="modal fade"
+                        id="example2"
+                        tabIndex={-1}
+                        aria-labelledby="example2"
+                        aria-hidden="true"
+                    >
+                        <div className="modal-dialog">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="example1">
+                                        Coupon Details
+                                    </h5>
+                                    <button
+                                        type="button"
+                                        className="btn-close"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Close"
+                                    />
+                                </div>
+                                <div className="modal-body">
+                                    <ul>
+                                        <li>
+                                            <div className="row justify-content-between">
+                                                <div className="col-md-6">
+                                                    <b>Name : {viewpage?.name}</b>
+                                                </div>
+                                                <div className="col-md-6">
+
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div className="row justify-content-between">
+                                                <div className="col-md-6">
+                                                    <b>Code : {viewpage?.code}</b>
+                                                </div>
+                                                <div className="col-md-6">
+
+                                                </div>
+                                            </div>
+                                        </li>
+                                       
+                                        <li>
+                                            <div className="row justify-content-between">
+                                                <div className="col-md-6">
+                                                    <b>Min Purchase Value : {viewpage?.minpurchasevalue}</b>
+                                                </div>
+                                                <div className="col-md-6">
+
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div className="row justify-content-between">
+                                                <div className="col-md-6">
+                                                    <b>Max Discount Value  : {viewpage?.mincouponvalue}</b>
+                                                </div>
+                                                <div className="col-md-6">
+
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div className="row justify-content-between">
+                                                <div >
+                                                    <b>Discription : {viewpage?.description}</b>
+                                                </div>
+                                                <div className="col-md-6">
+
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div className="row justify-content-between">
+                                                <div className="col-md-8">
+                                                    <b>Start Date : {fDate(viewpage?.startdate)}</b>
+                                                </div>
+                                                <div className="col-md-6">
+
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div className="row justify-content-between">
+                                                <div className="col-md-6">
+                                                    <b>End Date : {fDate(viewpage?.enddate)} </b>
+                                                </div>
+                                                <div className="col-md-6">
+
+                                                </div>
+                                            </div>
+                                        </li>
+                                        {/* <li>
+                                            <div className="row justify-content-between">
+                                                <div className="col-md-6">
+                                                    <b>Image </b>
+                                                </div>
+                                                <div className="col-md-6">
+
+                                                </div>
+                                            </div>
+                                        </li> */}
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>

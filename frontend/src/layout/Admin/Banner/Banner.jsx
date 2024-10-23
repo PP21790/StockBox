@@ -64,8 +64,7 @@ const Banner = () => {
     }, [searchInput]);
 
 
-    console.log("updatetitle",updatetitle.image)
-
+   
 
     // Update service
     const updatebanner = async () => {

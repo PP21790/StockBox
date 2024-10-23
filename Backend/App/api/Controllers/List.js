@@ -531,10 +531,18 @@ if (existingPlans.length > 0) {
       const savedSubscription = await newSubscription.save();
   
       const client = await Clients_Modal.findOne({ _id: client_id, del: 0, ActiveStatus: 1 });
+     
 
       if (!client) {
           return console.error('Client not found or inactive.');
       }
+
+
+      if(client.freetrial==0) 
+        {
+        client.freetrial  = 1; 
+        await client.save();
+         }
       
       const refertokens = await Refer_Modal.find({ user_id: client._id, status: 0 });
       if (refertokens.length > 0) {
@@ -921,10 +929,42 @@ const signalsWithReportUrls = await Promise.all(signals.map(async (signal) => {
     signalid: signal._id
   }).lean();
 
+
+let lot = 0;
+if(signal.segment != "C")
+{
+  if(signal.segment == "F")
+    {
+  const lots = await Stock_Modal.findOne({
+    segment: signal.segment,
+    expiry: signal.expirydate,
+    symbol: signal.stock
+  });
+
+  lot = lots.lotsize;
+}
+else
+{
+  const query = Stock_Modal.findOne({
+    segment: signal.segment,
+    expiry: signal.expirydate,
+    symbol: signal.stock,
+    strike: signal.strikeprice,
+  });
+  
+
+  const lots = await query.exec();
+  lot = lots.lotsize;
+
+}
+
+}
+
   return {
     ...signal,
     report_full_path: signal.report ? `${baseUrl}/uploads/report/${signal.report}` : null, // Append full report URL
-    purchased: order ? true : false // Add a 'purchased' flag to indicate if the client has bought this signal
+    purchased: order ? true : false ,
+    lot: lot
   };
 }));
 
@@ -1248,14 +1288,14 @@ async pastPerformance(req, res) {
       status: true,
       message: "Past performance data fetched successfully",
       data: {
-        count,
-        totalProfit,
-        totalLoss,
-        profitCount,
-        lossCount,
-        accuracy,
-        avgreturnpertrade,
-        avgreturnpermonth
+        count: count || 0,
+        totalProfit: totalProfit || 0,
+        totalLoss: totalLoss || 0,
+        profitCount: profitCount || 0,
+        lossCount: lossCount || 0,
+        accuracy: accuracy || 0,
+        avgreturnpertrade: avgreturnpertrade || 0,
+        avgreturnpermonth: avgreturnpermonth || 0
       }
     });
   } catch (error) {

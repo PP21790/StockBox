@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { addfreeClient, basicsettinglist } from '../../../Services/Admin';
+import { addfreeClient, basicsettinglist , getfreetrialstatus} from '../../../Services/Admin';
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 import Table from '../../../components/Table';
+import { fDate } from '../../../Utils/Date_formate';
 
 const FreetrialStatus = () => {
   const token = localStorage.getItem('token');
@@ -23,7 +24,7 @@ const FreetrialStatus = () => {
 
   const getApidetail = async () => {
     try {
-      const response = await basicsettinglist(token);
+      const response = await getfreetrialstatus(token);
       if (response?.status && response?.data) {
         setData(response.data);
         const defaultTrial = response.data.length > 0 ? response.data[0].freetrial : "1";
@@ -74,6 +75,7 @@ const FreetrialStatus = () => {
   };
 
 
+  
 
 
   const columns = [
@@ -84,19 +86,24 @@ const FreetrialStatus = () => {
 
     },
     {
-      name: 'Status',
-      selector: row => `${row.freetrial}Day`,
+      name: 'Privious Status',
+      selector: row => `${row.olddays}Day`,
+      sortable: true,
+    },
+    {
+      name: 'Updated Status',
+      selector: row => `${row.newdays}Day`,
       sortable: true,
     },
 
     {
       name: 'Created At',
-      selector: row => new Date(row.created_at).toLocaleDateString(),
+      selector: row => fDate(row.createdAt),
       sortable: true,
     },
     {
       name: 'Updated At',
-      selector: row => new Date(row.updated_at).toLocaleDateString(),
+      selector: row =>  fDate(row.updatedAt),
       sortable: true,
     },
   ];

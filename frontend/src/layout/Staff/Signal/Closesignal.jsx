@@ -3,10 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { Eye, RefreshCcw ,Trash2 } from 'lucide-react';
+import { Eye, RefreshCcw, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { GetSignallist, DeleteSignal, SignalCloseApi, GetService, GetStockDetail } from '../../../Services/Admin';
-import { fDateTimeSuffix } from '../../../Utils/Date_formate'
+import { fDateTimeSuffix, fDateTime } from '../../../Utils/Date_formate'
 import { getstaffperuser } from '../../../Services/Admin';
 
 
@@ -16,10 +16,9 @@ const Closesignal = () => {
 
     const token = localStorage.getItem('token');
     const [searchInput, setSearchInput] = useState("");
+
+
     const userid = localStorage.getItem('id');
-  
-    const [permission, setPermission] = useState([]);
-  
 
 
     const [filters, setFilters] = useState({
@@ -30,13 +29,14 @@ const Closesignal = () => {
     });
 
 
-
+    const [permission, setPermission] = useState([]);
+   
 
     const [serviceList, setServiceList] = useState([]);
     const [stockList, setStockList] = useState([]);
     const [searchstock, setSearchstock] = useState("");
-  
-   
+
+
 
     const navigate = useNavigate();
     const [clients, setClients] = useState([]);
@@ -49,8 +49,8 @@ const Closesignal = () => {
             if (response && response.status) {
                 const filterdata = response.data.filter((item) => {
                     return item.close_status == true
-                 })
-                 const searchInputMatch = filterdata.filter((item) => {
+                })
+                const searchInputMatch = filterdata.filter((item) => {
                     const searchInputMatch =
                         searchInput === "" ||
                         item.stock.toLowerCase().includes(searchInput.toLowerCase()) ||
@@ -62,14 +62,26 @@ const Closesignal = () => {
 
                     return searchstockMatch && searchInputMatch;
                 });
-   
-                setClients(searchInput || searchstock ? searchInputMatch : filterdata);     
-        }
+
+                setClients(searchInput || searchstock ? searchInputMatch : filterdata);
+            }
         } catch (error) {
             console.log("error", error);
         }
     };
 
+   
+    
+    const getpermissioninfo = async () => {
+        try {
+            const response = await getstaffperuser(userid, token);
+            if (response.status) {
+                setPermission(response.data.permissions);
+            }
+        } catch (error) {
+            console.log("error", error);
+        }
+    }
 
 
 
@@ -97,20 +109,6 @@ const Closesignal = () => {
         }
     };
 
-  
- 
-    const getpermissioninfo = async () => {
-        try {
-            const response = await getstaffperuser(userid, token);
-            if (response.status) {
-                setPermission(response.data.permissions);
-            }
-        } catch (error) {
-            console.log("error", error);
-        }
-    };
-
-
 
 
     useEffect(() => {
@@ -124,7 +122,7 @@ const Closesignal = () => {
 
     useEffect(() => {
         getAllSignal();
-    }, [filters, searchInput ,searchstock]);
+    }, [filters, searchInput, searchstock]);
 
 
     const handleFilterChange = (e) => {
@@ -144,11 +142,11 @@ const Closesignal = () => {
             name: 'S.No',
             selector: (row, index) => index + 1,
             sortable: false,
-            width: '70px',
+            width: '100px',
         },
         {
             name: 'Segment',
-            selector: row => row.segment == "C" ? "CASH" :row.segment == "O" ? "OPTION" : "FUTURE" ,
+            selector: row => row.segment == "C" ? "CASH" : row.segment == "O" ? "OPTION" : "FUTURE",
             sortable: true,
             width: '132px',
         },
@@ -160,15 +158,15 @@ const Closesignal = () => {
         },
         {
             name: 'Entry Type',
-            selector: row => row.close_status == true ? "sell" : "buy",
+            selector: row => row.calltype,
             sortable: true,
-            width: '132px',
+            width: '200px',
         },
         {
             name: 'Entry Price',
             selector: row => row.price,
             sortable: true,
-            width: '132px',
+            width: '200px',
         },
 
         {
@@ -177,6 +175,18 @@ const Closesignal = () => {
             sortable: true,
             width: '132px',
 
+        },
+        {
+            name: 'Total P&L',
+            cell: row => {
+                const totalPL = (row.closeprice - row.price).toFixed(2);
+                const style = {
+                    color: totalPL < 0 ? 'red' : 'green',
+                };
+                return <span style={style}>{totalPL}</span>;
+            },
+            sortable: true,
+            width: '200px',
         },
         {
             name: 'Entry Date',
@@ -190,11 +200,10 @@ const Closesignal = () => {
             sortable: true,
             width: '180px',
         },
+       
 
 
-
-        // permission.includes("signaldetail") ? 
-          {
+       permission.includes("signaldetail") &&  {
             name: 'Actions',
             cell: row => (
                 <>
@@ -211,47 +220,12 @@ const Closesignal = () => {
             button: true,
 
         },
-        // {
-        //     name: 'Status',
-        //     cell: row => (
-        //         <>
-        //             {!row.close_status ? (
-        //                 <button
-        //                     className="btn btn-danger btnclose"
-        //                     onClick={() => {
-        //                         setModel(true);
-        //                         setServiceid(row);
-        //                         setTargetvalue(row);
-        //                     }}
-        //                     disabled
-        //                 >
-        //                    Closed
-        //                 </button>
-        //             ) : (
-        //                 <button
-        //                     className="btn btn-danger btnclose"
-        //                     onClick={() => {
-        //                         setModel(true);
-        //                         setServiceid(row);
-        //                         setTargetvalue(row);
-        //                     }}
-        //                     disabled
-        //                 >
-        //                     Closed
-        //                 </button>
-        //             )}
-        //         </>
-        //     ),
-        //     ignoreRowClick: true,
-        //     allowOverflow: true,
-        //     button: true,
-        // }
-
+        
     ];
 
 
 
-    const resethandle=()=>{
+    const resethandle = () => {
         setFilters({
             from: '',
             to: '',
@@ -263,7 +237,7 @@ const Closesignal = () => {
         fetchAdminServices()
         fetchStockList()
         getAllSignal();
-        
+
     }
 
 
@@ -278,7 +252,7 @@ const Closesignal = () => {
                             <nav aria-label="breadcrumb">
                                 <ol className="breadcrumb mb-0 p-0">
                                     <li className="breadcrumb-item">
-                                        <Link to="/admin/dashboard">
+                                        <Link to="/staff/dashboard">
                                             <i className="bx bx-home-alt" />
                                         </Link>
                                     </li>
@@ -294,7 +268,7 @@ const Closesignal = () => {
                                         type="text"
 
                                         className="form-control ps-5 radius-10"
-                                        placeholder="Search Order"
+                                        placeholder="Search Signal"
                                         value={searchInput}
                                         onChange={(e) => setSearchInput(e.target.value)}
 
@@ -304,18 +278,6 @@ const Closesignal = () => {
                                     </span>
                                 </div>
 
-                                {/* <div className="ms-auto">
-                                    <Link
-                                        to="/admin/addsignal"
-                                        className="btn btn-primary"
-                                    >
-                                        <i
-                                            className="bx bxs-plus-square"
-                                            aria-hidden="true"
-                                        />
-                                        Add Signal
-                                    </Link>
-                                </div> */}
                             </div>
 
                             <div className="row">
@@ -357,27 +319,27 @@ const Closesignal = () => {
                                             </option>
                                         ))}
                                     </select>
-                                     
+
                                 </div>
 
                                 <div className="col-md-3 d-flex">
-                                    <div style={{width:"80%"}}>
-                                <label>Select Stock</label>
-                                    <select
-                                        className="form-control radius-10"
-                                        value={searchstock}
-                                        onChange={(e) => setSearchstock(e.target.value)}
-                                    >
-                                        <option value="">Select Stock</option>
-                                        {clients.map((item) => (
-                                            <option key={item._id} value={item.stock}>
-                                                {item.stock}
-                                            </option>
-                                        ))}
-                                    </select>
+                                    <div style={{ width: "80%" }}>
+                                        <label>Select Stock</label>
+                                        <select
+                                            className="form-control radius-10"
+                                            value={searchstock}
+                                            onChange={(e) => setSearchstock(e.target.value)}
+                                        >
+                                            <option value="">Select Stock</option>
+                                            {clients.map((item) => (
+                                                <option key={item._id} value={item.stock}>
+                                                    {item.stock}
+                                                </option>
+                                            ))}
+                                        </select>
                                     </div>
                                     <div className='rfreshicon'>
-                                    <RefreshCcw onClick={resethandle}/>
+                                        <RefreshCcw onClick={resethandle} />
                                     </div>
 
                                 </div>

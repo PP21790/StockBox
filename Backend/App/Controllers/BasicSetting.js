@@ -2,6 +2,8 @@ const db = require("../Models");
 const upload = require('../Utils/multerHelper'); // Import the multer helper
 
 const BasicSetting_Modal = db.BasicSetting;
+const Activitylogs_Modal = db.Activitylogs;
+
 
 class BasicSetting {
 
@@ -46,7 +48,19 @@ class BasicSetting {
 
                 const existingSetting = await BasicSetting_Modal.findOne({});
 
-                   // Get the uploaded file paths or retain the existing values
+
+    if(existingSetting.freetrial !== freetrial)
+    {
+                 const message ="Free Trail Update";
+        const newactivity = new Activitylogs_Modal({
+            olddays : existingSetting.freetrial,
+            newdays : freetrial,
+            message,
+          });
+          await newactivity.save();
+    }
+ 
+
             const favicon = req.files['favicon'] ? req.files['favicon'][0].filename : (existingSetting ? existingSetting.favicon : null);
             const logo = req.files['logo'] ? req.files['logo'][0].filename : (existingSetting ? existingSetting.logo : null);
             const refer_image = req.files['refer_image'] ? req.files['refer_image'][0].filename : (existingSetting ? existingSetting.refer_image : null);
@@ -115,6 +129,24 @@ class BasicSetting {
             return res.json({
                 status: true,
                 message: "Settings retrieved successfully",
+                data: settings
+            });
+        } catch (error) {
+            console.log("Error retrieving settings:", error);
+            return res.status(500).json({
+                status: false,
+                message: "Server error",
+                error: error.message
+            });
+        }
+    }
+
+    async getFreetrialActivity(req, res) {
+        try {
+            const settings = await Activitylogs_Modal.find();  // Correct reference here
+            return res.json({
+                status: true,
+                message: "Free trial activity retrieved successfully",
                 data: settings
             });
         } catch (error) {

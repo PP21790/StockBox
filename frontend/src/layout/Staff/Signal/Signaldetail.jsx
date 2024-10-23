@@ -4,28 +4,24 @@ import Table from '../../../components/Table';
 import { Signalperdetail } from '../../../Services/Admin';
 import { image_baseurl } from '../../../Utils/config';
 import { fDateTime } from '../../../Utils/Date_formate';
-
+import { Tooltip } from 'antd';
 
 const Signaldetail = () => {
-
-
     const { id } = useParams();
     const token = localStorage?.getItem('token');
     const [data, setData] = useState([]);
-
-
 
     useEffect(() => {
         getsignaldetail();
     }, []);
 
-
-    
     const getsignaldetail = async () => {
         try {
             const response = await Signalperdetail(id, token);
             if (response.status) {
-                setData([response.data]);
+                const signalData = response.data;
+                const totalGain = signalData.closeprice - signalData.price;
+                setData([{ ...signalData, totalGain }]);
             }
         } catch (error) {
             console.log("Error fetching signal details:", error);
@@ -33,23 +29,48 @@ const Signaldetail = () => {
     };
 
 
+    const callType = data.length > 0 ? data[0].calltype : null;
+
+
+    const calculatePercentage = (gain, entryPrice) => {
+        if (entryPrice === 0) return 0;
+
+        if (callType === "BUY") {
+            return ((gain / entryPrice) * 100).toFixed(2);
+        } else if (callType === "SELL") {
+            return ((entryPrice / gain) * 100).toFixed(2);
+        }
+        return 0;
+    };
+
 
 
     return (
         <div>
             <div className="page-content">
-                <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                    <div className="breadcrumb-title pe-3">Signal Detail</div>
-                    <div className="ps-3">
-                        <nav aria-label="breadcrumb">
-                            <ol className="breadcrumb mb-0 p-0">
-                                <li className="breadcrumb-item">
-                                    <Link to="/admin/dashboard">
-                                        <i className="bx bx-home-alt" />
-                                    </Link>
-                                </li>
-                            </ol>
-                        </nav>
+                <div className="row">
+                    <div className="col-md-6">
+                        <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+                            <div className="breadcrumb-title pe-3">Signal Detail</div>
+                            <div className="ps-3">
+                                <nav aria-label="breadcrumb">
+                                    <ol className="breadcrumb mb-0 p-0">
+                                        <li className="breadcrumb-item">
+                                            <Link to="/staff/dashboard">
+                                                <i className="bx bx-home-alt" />
+                                            </Link>
+                                        </li>
+                                    </ol>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-6 d-flex justify-content-end">
+                        <Link to="/staff/signal">
+                            <Tooltip title="Back">
+                                <i className="lni lni-arrow-left-circle" style={{ fontSize: "2rem", color: "#000" }} />
+                            </Tooltip>
+                        </Link>
                     </div>
                 </div>
 
@@ -63,6 +84,7 @@ const Signaldetail = () => {
                                     {data.map((item, index) => (
                                         <React.Fragment key={index}>
                                             <div className="row">
+                                                <h6> {item.stock} {item.segment === 'O' ? item.strikeprice : item.price} {item.segment === 'O' ? item.optiontype : item.calltype}</h6>
                                                 <div className="card-body col-md-6">
                                                     <ul className="list-group list-group-flush">
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
@@ -89,12 +111,12 @@ const Signaldetail = () => {
 
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="mb-0">Target-1</h6>
-                                                            <span className="text-secondary">{item.tag1 || '-'}</span>
+                                                            <span className="text-secondary">{item.targetprice1 || '-'}</span>
                                                         </li>
 
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="mb-0">Target-3</h6>
-                                                            <span className="text-secondary">{item.tag3 || '-'}</span>
+                                                            <span className="text-secondary">{item.targetprice3 || '-'}</span>
                                                         </li>
 
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
@@ -123,12 +145,15 @@ const Signaldetail = () => {
 
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="mb-0">Exit Date & Time</h6>
-                                                            <span className="text-secondary">{fDateTime(item.updated_at) || '-'}</span>
+                                                            <span className="text-secondary">
+                                                                {item.closedate ? fDateTime(item.closedate) : '-'}
+                                                            </span>
                                                         </li>
+
 
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="mb-0">Target-2</h6>
-                                                            <span className="text-secondary">{item.tag2 || '-'}</span>
+                                                            <span className="text-secondary">{item.targetprice2 || '-'}</span>
                                                         </li>
 
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
@@ -152,14 +177,22 @@ const Signaldetail = () => {
 
                                             <hr />
 
-                                            <div className="row">
-                                                <div className="col-lg-12">
-                                                    <div className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                                        <h6 className="ms-3">Total Gain</h6>
-                                                        <h6 className="text-secondary me-2">{item.totalGain ? `${item.totalGain} INR` : '-'}</h6>
+                                            {item.closeprice ? (
+                                                <div className="row">
+                                                    <div className="col-lg-12">
+                                                        <div className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                            <h6 className="ms-3">
+                                                                {item.totalGain > 0 ? "P&L" : item.totalGain < 0 ? "P&L" : "Total Gain"}
+                                                            </h6>
+                                                            <h6 className={`text-secondary me-2 ${item.totalGain > 0 ? 'text-success' : item.totalGain < 0 ? 'text-danger' : ''}`}>
+                                                                {item.totalGain !== null ?
+                                                                    `${calculatePercentage(item.totalGain, item.price)}%` :
+                                                                    '-'}
+                                                            </h6>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            ) : ""}
                                         </React.Fragment>
                                     ))}
                                 </div>

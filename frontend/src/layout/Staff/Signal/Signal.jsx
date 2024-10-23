@@ -7,7 +7,8 @@ import { Eye, Trash2, RefreshCcw } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { GetSignallist, DeleteSignal, SignalCloseApi, GetService, GetStockDetail } from '../../../Services/Admin';
 import { fDateTimeSuffix } from '../../../Utils/Date_formate'
-
+import { getstaffperuser } from '../../../Services/Admin';
+ 
 
 
 const Signal = () => {
@@ -15,7 +16,7 @@ const Signal = () => {
     const token = localStorage.getItem('token');
     const [searchInput, setSearchInput] = useState("");
 
-
+    const userid = localStorage.getItem('id');
 
 
     const [filters, setFilters] = useState({
@@ -52,7 +53,8 @@ const Signal = () => {
     const [serviceList, setServiceList] = useState([]);
     const [stockList, setStockList] = useState([]);
     const [searchstock, setSearchstock] = useState("");
-
+    const [permission, setPermission] = useState([]);
+   
     const [checkedIndex, setCheckedIndex] = useState(null);
 
     const handleTabChange = (index) => {
@@ -87,11 +89,9 @@ const Signal = () => {
 
         setCheckedTargets1((prevState) => ({
             ...prevState,
-            [target]: e.target.checked ? 1 : 0,
+            [target]: e.target.checked  ? 1 : 0,
         }));
-
-
-
+        
 
         setCheckedTargets((prev) => {
 
@@ -114,8 +114,22 @@ const Signal = () => {
             ...closedata,
             [field]: e.target.value
         });
+        
+        
+       
     };
+   
 
+    const getpermissioninfo = async () => {
+        try {
+            const response = await getstaffperuser(userid, token);
+            if (response.status) {
+                setPermission(response.data.permissions);
+            }
+        } catch (error) {
+            console.log("error", error);
+        }
+    }
 
 
     const getAllSignal = async () => {
@@ -180,11 +194,14 @@ const Signal = () => {
     useEffect(() => {
         fetchAdminServices()
         fetchStockList()
+        getpermissioninfo()
     }, []);
+
 
     useEffect(() => {
         getAllSignal();
     }, [filters, searchInput, searchstock]);
+
 
 
     const handleFilterChange = (e) => {
@@ -194,7 +211,7 @@ const Signal = () => {
 
 
     const Signaldetail = async (_id) => {
-        navigate(`/admin/signaldetaile/${_id}`)
+        navigate(`/staff/signaldetaile/${_id}`)
     }
 
 
@@ -244,6 +261,24 @@ const Signal = () => {
     };
 
     const checkstatus = closedata.closestatus == true ? "true" : "false"
+  
+
+
+    const UpdateData = (row) => {
+        setModel(true);
+        setServiceid({
+            ...row,
+            "targetprice1": row.targetprice1,
+            "targetprice2": row.targetprice2,
+            "targetprice3": row.targetprice3,
+        });
+        setClosedata({
+            ...row,
+            "targetprice1":  row.targetprice1,
+            "targetprice2":  row.targetprice2,
+            "targetprice3":  row.targetprice3,
+        })
+    }
 
 
 
@@ -290,23 +325,55 @@ const Signal = () => {
                     });
                     return;
                 }
-            }
 
+                if(checkedTargets1.target1 && !closedata.targetprice1){
+                    Swal.fire({
+                        title: 'Validation Error!',
+                        text: 'Please Fill the field or Uncheck it',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+
+                if(checkedTargets1.target2 && !closedata.targetprice2){
+                    Swal.fire({
+                        title: 'Validation Error!',
+                        text: 'Please Fill the Target 2 or Uncheck it',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+                if(checkedTargets1.target3 && !closedata.targetprice3){
+                    Swal.fire({
+                        title: 'Validation Error!',
+                        text: 'Please Fill the Target 3 or Uncheck it',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+            }
+            
             const data = {
                 id: serviceid._id,
                 closestatus: index === 1 ? checkstatus : "",
                 closetype: (index === 0) ? "1" : (index === 1) ? "2" : (index === 2) ? "3" : "4",
                 close_description: closedata.close_description,
-                targethit1: index === 1 ? checkedTargets1.target1 : "",
-                targethit2: index === 1 ? checkedTargets1.target2 : "",
-                targethit3: index === 1 ? checkedTargets1.target3 : "",
+                
+                targethit1: index === 1 && closedata.targetprice1 ? checkedTargets1.target1 : "",
+                targethit2: index === 1 &&  closedata.targetprice2 ? checkedTargets1.target2 : "",
+                targethit3: index === 1 &&  closedata.targetprice3 ? checkedTargets1.target3 : "",
+
                 targetprice1: index === 0 ? closedata.tag1 : (index === 1 ? closedata.targetprice1 : ""),
                 targetprice2: index === 0 ? closedata.tag2 : (index === 1 ? closedata.targetprice2 : ""),
                 targetprice3: index === 0 ? closedata.tag3 : (index === 1 ? closedata.targetprice3 : ""),
                 slprice: index === 2 ? closedata.slprice : closedata.stoploss,
                 exitprice: index === 3 ? closedata.exitprice : ""
             };
-
+           
+        
             const response = await SignalCloseApi(data, token);
 
             if (response && response.status) {
@@ -401,7 +468,7 @@ const Signal = () => {
 
 
 
-        {
+        permission.includes("signaldetail") && {
             name: 'Actions',
             cell: row => (
                 <>
@@ -418,7 +485,7 @@ const Signal = () => {
             button: true,
 
         },
-        {
+        permission.includes("signalstatus") &&  {
             name: 'Status',
             cell: row => (
                 <>
@@ -443,22 +510,7 @@ const Signal = () => {
     ];
 
 
-    const UpdateData = (row) => {
-        setModel(true);
-        setServiceid({
-            ...row,
-            "targetprice1": row.tag1 || row.targetprice1,
-            "targetprice2": row.tag2 || row.targetprice2,
-            "targetprice3": row.tag3 || row.targetprice3,
-        });
-        setClosedata({
-            ...row,
-            "targetprice1": row.tag1 || row.targetprice1,
-            "targetprice2": row.tag2 || row.targetprice2,
-            "targetprice3": row.tag3 || row.targetprice3,
-        })
-    }
-
+  
 
     const resethandle = () => {
         setFilters({
@@ -487,7 +539,7 @@ const Signal = () => {
                             <nav aria-label="breadcrumb">
                                 <ol className="breadcrumb mb-0 p-0">
                                     <li className="breadcrumb-item">
-                                        <Link to="/admin/dashboard">
+                                        <Link to="/staff/dashboard">
                                             <i className="bx bx-home-alt" />
                                         </Link>
                                     </li>
@@ -513,9 +565,9 @@ const Signal = () => {
                                     </span>
                                 </div>
 
-                                <div className="ms-auto">
+                               { permission.includes("addsignal")  && (<div className="ms-auto">
                                     <Link
-                                        to="/admin/addsignal"
+                                        to="/staff/addsignal"
                                         className="btn btn-primary"
                                     >
                                         <i
@@ -524,7 +576,7 @@ const Signal = () => {
                                         />
                                         Add Signal
                                     </Link>
-                                </div>
+                                </div> )}
                             </div>
 
                             <div className="row">
@@ -752,7 +804,7 @@ const Signal = () => {
                                                                     style={{ width: "50%" }}
                                                                     type="number"
                                                                     id="targethit1"
-                                                                    defaultValue={closedata.targetprice1}
+                                                                    Value={closedata.targetprice1 || ""}
                                                                     onChange={(e) => handleChange(e, 'targetprice1')}
                                                                 />
                                                             </div>
@@ -780,7 +832,7 @@ const Signal = () => {
                                                                     type="number"
                                                                     style={{ width: "50%" }}
                                                                     id="targethit2"
-                                                                    defaultValue={closedata.targetprice2}
+                                                                    Value={closedata.targetprice2 || ""}
                                                                     onChange={(e) => handleChange(e, 'targetprice2')}
                                                                 />
                                                             </div>
@@ -808,7 +860,7 @@ const Signal = () => {
                                                                     type="number"
                                                                     style={{ width: "50%" }}
                                                                     id="targethit3"
-                                                                    defaultValue={closedata.targetprice3}
+                                                                Value={closedata.targetprice3 || ""}
                                                                     onChange={(e) => handleChange(e, 'targetprice3')}
                                                                 />
                                                             </div>
@@ -945,7 +997,7 @@ const Signal = () => {
                                                     />
                                                 </div>
 
-                                                <button type="submit" className='btn btn-danger mt-2' onClick={() => closeSignalperUser(3)}>Submit</button>
+                                                <button type="submit" className='btn btn-danger mt-2' onClick={() => closeSignalperUser(3) }>Submit</button>
                                             </form>
                                         )}
                                     </div>

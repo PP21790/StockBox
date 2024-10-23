@@ -90,6 +90,11 @@ const Client = () => {
         getcategoryplanlist()
     }, [searchInput]);
 
+
+
+
+
+
     const getcategoryplanlist = async () => {
         try {
             const response = await getcategoryplan(token);
@@ -102,6 +107,9 @@ const Client = () => {
         }
     };
 
+
+
+    
     const getAdminclient = async () => {
         try {
             const response = await GetClient(token);
@@ -363,7 +371,7 @@ const Client = () => {
 
         {
             name: 'Created By',
-            selector: row => row.Status,
+            selector: row => row.clientcome == 0 ? "App" :"Web",
             sortable: true,
             width: '165px',
         },

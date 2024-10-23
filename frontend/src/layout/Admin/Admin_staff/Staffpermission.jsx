@@ -102,6 +102,7 @@ const Staffpermission = () => {
             deletesignal: false,
             editsignal: false,
             viewsignal: false,
+            signaldetail: false,
             addsignal: false,
             Signalpermission: false,
 
@@ -132,6 +133,7 @@ const Staffpermission = () => {
             addcoupon: false,
             editcoupon: false,
             viewcoupon: false,
+            coupondetail: false,
             deletecoupon: false,
             couponstatus: false,
 
@@ -140,6 +142,7 @@ const Staffpermission = () => {
             addblogs: false,
             editblogs: false,
             viewblogs: false,
+            blogdetail:false,
             deleteblogs: false,
             blogsstatus: false,
 
@@ -160,6 +163,14 @@ const Staffpermission = () => {
             deletecategory: false,
             categorystatus: false,
 
+            
+            freeclientpermission: false,
+            addfreeclient: false,
+            editfreeclient: false,
+            viewfreeclient: false,
+            freeclientstatus: false,
+            updatefreeclient: false,
+            
 
         },
         onSubmit,
@@ -189,6 +200,7 @@ const Staffpermission = () => {
             formik.setFieldValue('addsignal', clients.includes('addsignal'));
             formik.setFieldValue('editsignal', clients.includes('editsignal'));
             formik.setFieldValue('viewsignal', clients.includes('viewsignal'));
+            formik.setFieldValue('signaldetail', clients.includes('signaldetail'));
             formik.setFieldValue('deletesignal', clients.includes('deletesignal'));
             formik.setFieldValue('signalstatus', clients.includes('signalstatus'));
 
@@ -225,6 +237,7 @@ const Staffpermission = () => {
             formik.setFieldValue('addcoupon', clients.includes('addcoupon'));
             formik.setFieldValue('editcoupon', clients.includes('editcoupon'));
             formik.setFieldValue('viewcoupon', clients.includes('viewcoupon'));
+            formik.setFieldValue('coupondetail', clients.includes('coupondetail'));
             formik.setFieldValue('deletecoupon', clients.includes('deletecoupon'));
             formik.setFieldValue('couponstatus', clients.includes('couponstatus'));
 
@@ -233,6 +246,7 @@ const Staffpermission = () => {
             formik.setFieldValue('addblogs', clients.includes('addblogs'));
             formik.setFieldValue('editblogs', clients.includes('editblogs'));
             formik.setFieldValue('viewblogs', clients.includes('viewblogs'));
+            formik.setFieldValue('blogdetail', clients.includes('blogdetail'));
             formik.setFieldValue('deleteblogs', clients.includes('deleteblogs'));
             formik.setFieldValue('blogsstatus', clients.includes('blogsstatus'));
 
@@ -253,6 +267,15 @@ const Staffpermission = () => {
             formik.setFieldValue('categorystatus', clients.includes('categorystatus'));
 
 
+            formik.setFieldValue('freeclientpermission', clients.includes('freeclientpermission'));
+            formik.setFieldValue('addfreeclient', clients.includes('addfreeclient'));
+            formik.setFieldValue('editfreeclient', clients.includes('editfreeclient'));
+            formik.setFieldValue('viewfreeclient', clients.includes('viewfreeclient'));
+            formik.setFieldValue('freeclientstatus', clients.includes('freeclientstatus'));
+            formik.setFieldValue('updatefreeclient', clients.includes('updatefreeclient'));
+                      
+          
+  
         }
     }, [clients]);
 
@@ -283,6 +306,7 @@ const Staffpermission = () => {
         if (formik.values.Signalpermission == true) {
             formik.setFieldValue('signalstatus', true);
             formik.setFieldValue('viewsignal', true);
+            formik.setFieldValue('signaldetail', true);
             formik.setFieldValue('addsignal', true);
             formik.setFieldValue('editsignal', true);
             formik.setFieldValue('deletesignal', true);
@@ -291,6 +315,7 @@ const Staffpermission = () => {
         else {
             formik.setFieldValue('signalstatus', false);
             formik.setFieldValue('viewsignal', false);
+            formik.setFieldValue('signaldetail', false);
             formik.setFieldValue('addsignal', false);
             formik.setFieldValue('editsignal', false);
             formik.setFieldValue('deletesignal', false);
@@ -392,6 +417,7 @@ const Staffpermission = () => {
             formik.setFieldValue('addcoupon', true);
             formik.setFieldValue('editcoupon', true);
             formik.setFieldValue('viewcoupon', true);
+            formik.setFieldValue('coupondetail', true);
             formik.setFieldValue('deletecoupon', true);
             formik.setFieldValue('couponstatus', true);
 
@@ -400,6 +426,7 @@ const Staffpermission = () => {
             formik.setFieldValue('addcoupon', false);
             formik.setFieldValue('editcoupon', false);
             formik.setFieldValue('viewcoupon', false);
+            formik.setFieldValue('coupondetail', false);
             formik.setFieldValue('deletecoupon', false);
             formik.setFieldValue('couponstatus', false);
 
@@ -413,6 +440,7 @@ const Staffpermission = () => {
             formik.setFieldValue('addblogs', true);
             formik.setFieldValue('editblogs', true);
             formik.setFieldValue('viewblogs', true);
+            formik.setFieldValue('blogdetail', true);
             formik.setFieldValue('deleteblogs', true);
             formik.setFieldValue('blogsstatus', true);
 
@@ -421,6 +449,7 @@ const Staffpermission = () => {
             formik.setFieldValue('addblogs', false);
             formik.setFieldValue('editblogs', false);
             formik.setFieldValue('viewblogs', false);
+            formik.setFieldValue('blogdetail', false);
             formik.setFieldValue('deleteblogs', false);
             formik.setFieldValue('blogsstatus', false);
 
@@ -472,6 +501,30 @@ const Staffpermission = () => {
 
     }, [formik.values.newspermission])
 
+
+
+    useEffect(() => {
+        if (formik.values.freeclientpermission == true) {
+            formik.setFieldValue('addfreeclient', true);
+            formik.setFieldValue('editfreeclient', true);
+            formik.setFieldValue('viewfreeclient', true);
+            formik.setFieldValue('freeclientstatus', true);
+            formik.setFieldValue('updatefreeclient', true);
+
+        }
+        else {
+            formik.setFieldValue('addfreeclient', false);
+            formik.setFieldValue('editfreeclient', false);
+            formik.setFieldValue('viewfreeclient', false);
+            formik.setFieldValue('freeclientstatus', false);
+            formik.setFieldValue('updatefreeclient', false);
+
+        }
+
+    }, [formik.values.freeclientpermission]) 
+
+    
+
     const fields = [
         {
             name: 'FullName',
@@ -521,7 +574,7 @@ const Staffpermission = () => {
         },
         {
             name: 'viewdetail',
-            label: 'View Client',
+            label: 'View Detail',
             type: 'checkbox',
             label_size: 12,
             col_size: 2,
@@ -637,9 +690,18 @@ const Staffpermission = () => {
             label: 'View Signal',
             type: 'checkbox',
             label_size: 12,
-            col_size: 5,
+            col_size: 2,
             // check_box_true: formik.values.viewservice,
             check_box_true: formik.values.Signalpermission || formik.values.viewsignal ? true : false,
+        },
+        {
+            name: 'signaldetail',
+            label: 'Signal Detail',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.viewservice,
+            check_box_true: formik.values.Signalpermission || formik.values.signaldetail ? true : false,
         },
         {
             name: 'editsignal',
@@ -870,6 +932,15 @@ const Staffpermission = () => {
             check_box_true: formik.values.couponpermission || formik.values.viewcoupon ? true : false,
         },
         {
+            name: 'coupondetail',
+            label: 'View coupon',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.viewservice,
+            check_box_true: formik.values.couponpermission || formik.values.coupondetail ? true : false,
+        },
+        {
             name: 'editcoupon',
             label: 'Edit coupon',
             type: 'checkbox',
@@ -924,6 +995,15 @@ const Staffpermission = () => {
             col_size: 2,
             // check_box_true: formik.values.viewservice,
             check_box_true: formik.values.blogspermission || formik.values.viewblogs ? true : false,
+        },
+        {
+            name: 'blogdetail',
+            label: 'View blogs',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.viewservice,
+            check_box_true: formik.values.blogspermission || formik.values.blogdetail ? true : false,
         },
         {
             name: 'editblogs',
@@ -1063,11 +1143,58 @@ const Staffpermission = () => {
             col_size: 2,
             // check_box_true: formik.values.deleteservice,
             check_box_true: formik.values.categorypermission || formik.values.categorystatus ? true : false,
+        },
+        {
+            name: 'freeclientpermission',
+            label: 'All Free Client',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            check_box_true: formik.values.freeclientpermission,
+            bold: true
+
+        },
+        {
+            name: 'addfreeclient',
+            label: 'Add Free Client',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.viewservice,
+            check_box_true: formik.values.freeclientpermission || formik.values.addfreeclient ? true : false,
+        },
+        {
+            name: 'viewfreeclient',
+            label: 'View Free Client',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.editservice,
+            check_box_true: formik.values.freeclientpermission || formik.values.viewfreeclient ? true : false,
+        },
+        {
+            name: 'editfreeclient',
+            label: 'Edit Free Client',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.deleteservice,
+            check_box_true: formik.values.freeclientpermission || formik.values.editfreeclient ? true : false,
+        },
+        {
+            name: 'freeclientstatus',                           
+            label: 'Free Client Status',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.deleteservice,
+            check_box_true: formik.values.freeclientpermission || formik.values.freeclientstatus ? true : false,
         }
 
 
 
-
+       
+       
 
 
     ];

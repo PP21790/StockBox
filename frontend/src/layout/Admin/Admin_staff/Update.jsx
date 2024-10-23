@@ -36,9 +36,7 @@ const Update = () => {
     if (!values.PhoneNo) {
       errors.PhoneNo = "Please enter Phone Number";
     }
-    if (!values.password) {
-      errors.password = "Please enter Phone Number";
-    }
+   
     
 
     return errors;
@@ -50,7 +48,6 @@ const Update = () => {
       UserName: values.UserName,
       Email: values.Email,
       PhoneNo: values.PhoneNo,
-      password:values.password,
       id: row._id,
     };
 
@@ -132,14 +129,7 @@ const Update = () => {
       col_size: 6,
       disable: false,
     },
-    {
-      name: "password",
-      label: "Password",
-      type: "text", 
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-    },
+
   ];
 
   return (

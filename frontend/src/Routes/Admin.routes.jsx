@@ -119,6 +119,7 @@ function MainApp() {
                     <Route path="/addclient" element={<AddUser />} />
                     <Route path="/client/updateclient/:id" element={<EditClient />} />
                     <Route path="/client/clientdetail/:id" element={<Viewclientdetail />} />
+                    <Route path="/editfreeclient/:id" element={<Editfreeclient/>} />
 
 
 
@@ -207,7 +208,6 @@ function MainApp() {
                     <Route path="/paymentrequest" element={<PaymentRequest />} />
 
                     <Route path="/freetrialstatus" element={<FreetrialStatus />} />
-                    <Route path="/editfreeclient/:id" element={<Editfreeclient/>} />
 
 
 
