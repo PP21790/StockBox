@@ -23,6 +23,11 @@ const OrderModel = Schema({
         trim: true,
         default: null
     },
+    quantity: {
+        type: Number,
+        trim: true,
+        default: 0
+    },
     status: {
         type: String,
         enum: [0, 1], // Example statuses
