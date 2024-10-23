@@ -151,7 +151,7 @@ const AddSignal = () => {
         optiontype: values.optiontype,
         strikeprice: values.strikeprice,
       };
-     
+
       try {
         const response = await AddSignalByAdmin(req, token);
         if (response.status) {
