@@ -47,14 +47,13 @@ const History = () => {
     const forCSVdata = () => {
         if (clients?.length > 0) {
             const csvArr = clients.map((item) => ({
-                ClientName: item.clientName,
+                Segment: item.clientName,
                 Title: item.planDetails?.title || '',
-                 Total: item.planDetails?.price || '',
+                Total: item.planDetails?.price || '',
                 Validity: item.planDetails?.validity || '',
                 Created_at: item.planDetails?.created_at || '',
                 Updated_at: item.planDetails?.updated_at || '',
             }));
-
             setForGetCSV(csvArr);
         }
     };
@@ -184,7 +183,7 @@ const History = () => {
                 <hr />
                 <div className="card">
                     <div className="card-body">
-                        <div className="d-lg-flex align-items-center mb-4 gap-3">
+                        <div className="d-lg-flex align-items-center mb-4 gap-3 justify-content-between">
 
                             <div className="position-relative">
                                 <input

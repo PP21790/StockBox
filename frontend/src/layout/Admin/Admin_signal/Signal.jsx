@@ -7,6 +7,7 @@ import { Eye, Trash2, RefreshCcw } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { GetSignallist, DeleteSignal, SignalCloseApi, GetService, GetStockDetail } from '../../../Services/Admin';
 import { fDateTimeSuffix } from '../../../Utils/Date_formate'
+import ExportToExcel from '../../../Utils/ExportCSV';
 
 
 
@@ -52,6 +53,7 @@ const Signal = () => {
     const [serviceList, setServiceList] = useState([]);
     const [stockList, setStockList] = useState([]);
     const [searchstock, setSearchstock] = useState("");
+    const [ForGetCSV, setForGetCSV] = useState([])
 
     const [checkedIndex, setCheckedIndex] = useState(null);
 
@@ -87,9 +89,9 @@ const Signal = () => {
 
         setCheckedTargets1((prevState) => ({
             ...prevState,
-            [target]: e.target.checked  ? 1 : 0,
+            [target]: e.target.checked ? 1 : 0,
         }));
-        
+
 
         setCheckedTargets((prev) => {
 
@@ -112,9 +114,9 @@ const Signal = () => {
             ...closedata,
             [field]: e.target.value
         });
-        
-        
-       
+
+
+
     };
 
 
@@ -178,15 +180,38 @@ const Signal = () => {
 
 
 
+    const forCSVdata = () => {
+        if (clients?.length > 0) {
+            const csvArr = clients.map((item) => ({
+                Symbol: item.stock || "",
+                segment: item?.segment || '',
+                Price: item?.price || '',
+                EntryType: item?.calltype || '',
+                EntryPrice: item?.price || '',
+                EntryDate: fDateTimeSuffix(item?.created_at) || '',
+
+            }));
+
+            setForGetCSV(csvArr);
+        }
+    };
+
+
+
+
     useEffect(() => {
         fetchAdminServices()
         fetchStockList()
-    }, []);
+        forCSVdata()
+    }, [filters,clients]);
 
 
     useEffect(() => {
         getAllSignal();
     }, [filters, searchInput, searchstock]);
+
+   
+
 
 
 
@@ -247,7 +272,7 @@ const Signal = () => {
     };
 
     const checkstatus = closedata.closestatus == true ? "true" : "false"
-  
+
 
 
     const UpdateData = (row) => {
@@ -260,9 +285,9 @@ const Signal = () => {
         });
         setClosedata({
             ...row,
-            "targetprice1":  row.targetprice1,
-            "targetprice2":  row.targetprice2,
-            "targetprice3":  row.targetprice3,
+            "targetprice1": row.targetprice1,
+            "targetprice2": row.targetprice2,
+            "targetprice3": row.targetprice3,
         })
     }
 
@@ -312,7 +337,7 @@ const Signal = () => {
                     return;
                 }
 
-                if(checkedTargets1.target1 && !closedata.targetprice1){
+                if (checkedTargets1.target1 && !closedata.targetprice1) {
                     Swal.fire({
                         title: 'Validation Error!',
                         text: 'Please Fill the field or Uncheck it',
@@ -322,7 +347,7 @@ const Signal = () => {
                     return;
                 }
 
-                if(checkedTargets1.target2 && !closedata.targetprice2){
+                if (checkedTargets1.target2 && !closedata.targetprice2) {
                     Swal.fire({
                         title: 'Validation Error!',
                         text: 'Please Fill the Target 2 or Uncheck it',
@@ -331,7 +356,7 @@ const Signal = () => {
                     });
                     return;
                 }
-                if(checkedTargets1.target3 && !closedata.targetprice3){
+                if (checkedTargets1.target3 && !closedata.targetprice3) {
                     Swal.fire({
                         title: 'Validation Error!',
                         text: 'Please Fill the Target 3 or Uncheck it',
@@ -341,16 +366,16 @@ const Signal = () => {
                     return;
                 }
             }
-            
+
             const data = {
                 id: serviceid._id,
                 closestatus: index === 1 ? checkstatus : "",
                 closetype: (index === 0) ? "1" : (index === 1) ? "2" : (index === 2) ? "3" : "4",
                 close_description: closedata.close_description,
-                
+
                 targethit1: index === 1 && closedata.targetprice1 ? checkedTargets1.target1 : "",
-                targethit2: index === 1 &&  closedata.targetprice2 ? checkedTargets1.target2 : "",
-                targethit3: index === 1 &&  closedata.targetprice3 ? checkedTargets1.target3 : "",
+                targethit2: index === 1 && closedata.targetprice2 ? checkedTargets1.target2 : "",
+                targethit3: index === 1 && closedata.targetprice3 ? checkedTargets1.target3 : "",
 
                 targetprice1: index === 0 ? closedata.tag1 : (index === 1 ? closedata.targetprice1 : ""),
                 targetprice2: index === 0 ? closedata.tag2 : (index === 1 ? closedata.targetprice2 : ""),
@@ -358,8 +383,8 @@ const Signal = () => {
                 slprice: index === 2 ? closedata.slprice : closedata.stoploss,
                 exitprice: index === 3 ? closedata.exitprice : ""
             };
-           
-        
+
+
             const response = await SignalCloseApi(data, token);
 
             if (response && response.status) {
@@ -496,7 +521,7 @@ const Signal = () => {
     ];
 
 
-  
+
 
     const resethandle = () => {
         setFilters({
@@ -563,6 +588,29 @@ const Signal = () => {
                                         Add Signal
                                     </Link>
                                 </div>
+
+                                {/* <div className="ms-2">
+                                    <div
+                                        className="btn btn-primary"
+                                        apiData={ForGetCSV}
+                                        fileName={'All Users'}
+                                    >
+   
+                                      Export Excel
+                                    </div>
+                                </div> */}
+
+                                <div
+                                    className="ms-2"
+                                >
+                                    <ExportToExcel
+                                        className="btn btn-primary "
+                                        apiData={ForGetCSV}
+                                        fileName={'All Users'} />
+
+
+                                </div>
+
                             </div>
 
                             <div className="row">
@@ -846,7 +894,7 @@ const Signal = () => {
                                                                     type="number"
                                                                     style={{ width: "50%" }}
                                                                     id="targethit3"
-                                                                Value={closedata.targetprice3 || ""}
+                                                                    Value={closedata.targetprice3 || ""}
                                                                     onChange={(e) => handleChange(e, 'targetprice3')}
                                                                 />
                                                             </div>
@@ -983,7 +1031,7 @@ const Signal = () => {
                                                     />
                                                 </div>
 
-                                                <button type="submit" className='btn btn-danger mt-2' onClick={() => closeSignalperUser(3) }>Submit</button>
+                                                <button type="submit" className='btn btn-danger mt-2' onClick={() => closeSignalperUser(3)}>Submit</button>
                                             </form>
                                         )}
                                     </div>

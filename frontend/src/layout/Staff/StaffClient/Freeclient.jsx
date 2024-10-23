@@ -372,7 +372,7 @@ const Freeclient = () => {
                         </span>
                     </Tooltip>
 
-                   {permission.includes("permission") && (<Tooltip title="Update">
+                   {permission.includes("editfreeclient") && (<Tooltip title="Update">
                         <UserPen onClick={() => updateClient(row)} />
                     </Tooltip> ) }
                     {/* <Tooltip title="delete">

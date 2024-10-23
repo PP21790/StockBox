@@ -10,6 +10,10 @@ import { Tooltip } from 'antd';
 import { fDateTime, fDate } from '../../../Utils/Date_formate';
 import { image_baseurl } from '../../../Utils/config';
 import { IndianRupee } from 'lucide-react';
+import ExportToExcel from '../../../Utils/ExportCSV';
+
+
+
 
 const Client = () => {
 
@@ -27,8 +31,9 @@ const Client = () => {
     const [selectcategory, setSelectcategory] = useState(null)
     const [searchInput, setSearchInput] = useState("");
     const [selectedPlanId, setSelectedPlanId] = useState(null)
-
-
+    const [ForGetCSV, setForGetCSV] = useState([])
+   
+     
 
 
     const handleDownload = (row) => {
@@ -89,9 +94,23 @@ const Client = () => {
         getbasketlist()
         getcategoryplanlist()
     }, [searchInput]);
+  
+    useEffect(() => {
+        forCSVdata()
+    }, [searchInput,clients]);
 
-
-
+    const forCSVdata = () => {
+        if (clients?.length > 0) {
+            const csvArr = clients.map((item) => ({
+                FullName: item.FullName,
+                Email: item?.Email || '',
+                PhoneNo: item?.PhoneNo || '',
+                Created_at: item?.createdAt || '',
+               
+            }));
+            setForGetCSV(csvArr);
+        }
+    };
 
 
 
@@ -511,6 +530,18 @@ const Client = () => {
                                         Add Client
                                     </Link>
                                 </div>
+                             
+                                <div
+                                    className="ms-2"
+                                >
+                                    <ExportToExcel
+                                        className="btn btn-primary "
+                                        apiData={ForGetCSV}
+                                        fileName={'All Users'} />
+
+
+                                </div>
+
                             </div>
 
 

@@ -86,6 +86,8 @@ const Client = () => {
     };
 
 
+
+
     useEffect(() => {
         getAdminclient();
         getplanlistbyadmin()
@@ -93,6 +95,8 @@ const Client = () => {
         getcategoryplanlist()
         getpermissioninfo()
     }, [searchInput]);
+
+
 
 
     const getpermissioninfo = async () => {
@@ -130,10 +134,7 @@ const Client = () => {
         try {
             const response = await GetClient(token);
             if (response.status) {
-                // Filter the client data by `add_by` field matching the `userid`
                 const clientdata = response.data.filter((item) => item.add_by === userid);
-
-                // Further filter by search input (if provided)
                 const filterdata = clientdata.filter((item) =>
                     searchInput === "" ||
                     item.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
@@ -141,7 +142,6 @@ const Client = () => {
                     item.PhoneNo.toLowerCase().includes(searchInput.toLowerCase())
                 );
 
-                // Set filtered clients if there's search input; otherwise, set original data
                 setClients(searchInput ? filterdata : clientdata);
             }
         } catch (error) {

@@ -43,9 +43,11 @@ export default function ExportToExport({ apiData, fileName }) {
       data-placement="top"
       title="Export To Excel"
       delay={{ show: "0", hide: "100" }}
-      style={{ margin: "10px 0" }}  
+     
     >
-      <i className="fa fa-download" aria-hidden="true"></i> Export-Excel
+      <i className="bx bxs-download" aria-hidden="true"></i>
+      
+       Export-Excel
     </button>
   );
 }
