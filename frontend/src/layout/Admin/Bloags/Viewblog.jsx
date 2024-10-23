@@ -60,7 +60,7 @@ const Viewblog = () => {
                                             </div>
                                         </div>
 
-                                       
+
                                         <div className="row mb-3 align-items-center">
                                             <label htmlFor="description" className="col-sm-3 col-form-label">
                                                 <b>Description</b>
@@ -68,18 +68,19 @@ const Viewblog = () => {
                                             <div className="col-sm-9">
                                                 <div className="input-group">
                                                     <span className="input-group-text">
-                                                        <i className="fadeIn animated bx bx-phone" />
+
+                                                    
+
+                                                    <span
+                                                        dangerouslySetInnerHTML={{ __html: row.description }}
+                                                        style={{ display: 'block', marginTop: '0.5rem' }}
+                                                    />
                                                     </span>
-                                                   
-                                                     <span
-                                                                dangerouslySetInnerHTML={{ __html: row.description }}
-                                                                style={{ display: 'block', marginTop: '0.5rem' }}
-                                                            />
                                                 </div>
                                             </div>
                                         </div>
 
-                                        
+
                                         <div className="row mb-3 align-items-center">
                                             <label htmlFor="image" className="col-sm-3 col-form-label">
                                                 <b>Image</b>
