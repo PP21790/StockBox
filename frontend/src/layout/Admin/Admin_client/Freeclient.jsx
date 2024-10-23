@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Table from '../../../components/Table';
-import { Settings2, Eye, UserPen, Trash2, Download, ArrowDownToLine } from 'lucide-react';
+import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { FreeClientList, PlanSubscription, DeleteFreeClient, getcategoryplan, getplanlist } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
@@ -356,7 +356,7 @@ const Freeclient = () => {
                     </Tooltip>
 
                     <Tooltip title="Update">
-                        <UserPen onClick={() => updateClient(row)} />
+                        <SquarePen className='ms-2' onClick={() => updateClient(row)} />
                     </Tooltip>
                     {/* <Tooltip title="delete">
                         <Trash2 onClick={() => DeleteClient(row._id)} />
