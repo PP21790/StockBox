@@ -132,13 +132,13 @@ const Updatecoupon = () => {
       name: "type",
       label: "Type",
       type: "select",
-      label_size: 12,
+      label_size: 4,
       col_size: 4,
       disable: false,
       options: [
         { value: "percentage", label: "Percentage" },
-        { value: "fixed", label: "Fixed" },  
-    ] 
+        { value: "fixed", label: "Fixed" },
+      ]
     },
     {
       name: "value",
@@ -169,7 +169,7 @@ const Updatecoupon = () => {
       name: "startdate",
       label: "Start Date",
       type: "date",
-      label_size: 12,
+      label_size: 122,
       col_size: 4,
       disable: false,
     },
@@ -177,11 +177,11 @@ const Updatecoupon = () => {
       name: "enddate",
       label: "End Date",
       type: "date",
-      label_size: 12,
+      label_size: 122,
       col_size: 4,
       disable: false,
     },
-   
+
   ];
 
   return (

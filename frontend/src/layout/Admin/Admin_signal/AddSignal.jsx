@@ -67,8 +67,8 @@ const AddSignal = () => {
       expiry: '',
       optiontype: '',
       strikeprice: '',
-     
-      
+
+
 
     },
     validate: (values) => {
@@ -76,7 +76,7 @@ const AddSignal = () => {
       if (!values.segment) errors.segment = 'Please select a segment';
       if (!values.stock) errors.stock = 'Please select a stock';
       if (!values.price) errors.price = 'Please select a price';
-      
+
       if (values.calltype === "BUY") {
 
         if (!values.tag1) errors.tag1 = 'Please enter Traget1';
@@ -453,7 +453,7 @@ const AddSignal = () => {
                 style={{ cursor: "pointer" }}
               />
 
-              { searchItem && stockList.length > 0 && showDropdown ? (
+              {searchItem && stockList.length > 0 && showDropdown ? (
                 <div className="dropdown-list" style={dropdownStyles}>
                   {stockList
                     .filter((company) =>
