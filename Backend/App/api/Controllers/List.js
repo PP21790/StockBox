@@ -1035,6 +1035,29 @@ async showSignalsToClientsClose(req, res) {
 
 
 
+async CloseSignal(req, res) {
+  try {
+      const { service_id } = req.body;
+
+      const query = {
+          service: service_id,
+          close_status: true,
+      };
+      // Fetch signals and sort by createdAt in descending order
+      const signals = await Signal_Modal.find(query).sort({ created_at: -1 }).lean(); 
+
+      return res.json({
+          status: true,
+          message: "Signals retrieved successfully",
+          data: signals,
+      });
+  } catch (error) {
+      console.error("Error fetching signals:", error);
+      return res.json({ status: false, message: "Server error", data: [] });
+  }
+}
+
+
 async Servicelist(req, res) {
   try {
 

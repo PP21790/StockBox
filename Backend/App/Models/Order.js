@@ -34,8 +34,7 @@ const OrderModel = Schema({
         default: 0
     },
     data: {
-        type: String,
-        trim: true,
+        type: Schema.Types.Mixed,  // Changed to Mixed to allow for objects
         default: null
     },
     createdAt: {
