@@ -206,9 +206,7 @@ const History = () => {
                                     data-bs-placement="bottom"
                                     title="Download"
                                 >
-
-
-                                    <ExportToExcel
+                                                                        <ExportToExcel
                                         className="btn btn-primary "
                                         apiData={ForGetCSV}
                                         fileName={'All Users'} />
@@ -244,7 +242,6 @@ const History = () => {
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title" id="example">
-
                                 </h5>
                                 <button
                                     type="button"
@@ -311,7 +308,7 @@ const History = () => {
                                                 <b>Updated At</b>
                                             </div>
                                             <div className="col-md-6">
-                                                
+
                                             </div>
                                         </div>
                                     </li> */}

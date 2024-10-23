@@ -21,8 +21,8 @@ const EditClient = () => {
 
 
 
-  
-  
+
+
 
 
 
@@ -112,7 +112,7 @@ const EditClient = () => {
       type: "text",
       star: true,
       label_size: 6,
-      col_size: 3,
+      col_size: 4,
       disable: false,
     },
     // {
@@ -129,7 +129,7 @@ const EditClient = () => {
       type: "text",
       star: true,
       label_size: 12,
-      col_size: 3,
+      col_size: 4,
       disable: false,
     },
     {
@@ -137,7 +137,7 @@ const EditClient = () => {
       label: "Phone Number",
       type: "text3",
       label_size: 12,
-      col_size: 3,
+      col_size: 4,
       disable: false,
     },
     // {

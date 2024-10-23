@@ -102,13 +102,13 @@ const Help = () => {
                                                                     <strong>Email:</strong> {item.clientDetails?.Email}
                                                                 </p>
                                                                 <p>
-                                                                    <strong>Subject:</strong> {item.subject}
+                                                                    <strong>Subject:</strong> {item?.subject}
                                                                 </p>
                                                                 <p>
-                                                                    <strong>Phone No:</strong> {item.PhoneNo}
+                                                                    <strong>Phone No:</strong> {item?.PhoneNo}
                                                                 </p>
                                                                 <p>
-                                                                    <strong>Description:</strong> {item.message}
+                                                                    <strong>Description:</strong> {item?.message}
                                                                 </p>
                                                             </div>
                                                                 </div>

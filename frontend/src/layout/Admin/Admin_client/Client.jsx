@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { Settings2, Eye, UserPen, Trash2, Download, ArrowDownToLine } from 'lucide-react';
+import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { deleteClient, UpdateClientStatus, PlanSubscription, getplanlist, BasketSubscription, BasketAllList, getcategoryplan } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
@@ -128,7 +128,7 @@ const Client = () => {
 
 
 
-    
+
     const getAdminclient = async () => {
         try {
             const response = await GetClient(token);
@@ -390,7 +390,7 @@ const Client = () => {
 
         {
             name: 'Created By',
-            selector: row => row.clientcome == 0 ? "App" :"Web",
+            selector: row => row.clientcome == 0 ? "App" : "Web",
             sortable: true,
             width: '165px',
         },
@@ -464,7 +464,7 @@ const Client = () => {
                     </Tooltip>
 
                     <Tooltip title="Update">
-                        <UserPen onClick={() => updateClient(row)} />
+                        <SquarePen className='ms-3' onClick={() => updateClient(row)} />
                     </Tooltip>
                     {/* <Tooltip title="delete">
                         <Trash2 onClick={() => DeleteClient(row._id)} />
