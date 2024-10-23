@@ -8,9 +8,9 @@ import { Tooltip } from 'antd';
 import { fDate } from '../../../Utils/Date_formate';
 import { getstaffperuser } from '../../../Services/Admin';
 
+
+
 const Faq = () => {
-
-
 
     const navigate = useNavigate();
     const [clients, setClients] = useState([]);
@@ -305,18 +305,18 @@ const Faq = () => {
         //     sortable: true,
         // },
 
-        permission.includes("faqsdetail") || permission.includes("editfaq") 
-        || permission.includes("deletefaq") ? {
+        permission.includes("faqsdetail") || permission.includes("editfaq")
+            || permission.includes("deletefaq") ? {
             name: 'Actions',
             cell: row => (
                 <>
-                   {permission.includes("faqsdetail") ? <div>
+                    {permission.includes("faqsdetail") ? <div>
                         <Tooltip placement="top" overlay="View">
                             <Eye style={{ marginRight: "10px" }} data-bs-toggle="modal"
                                 data-bs-target="#example1" />
                         </Tooltip>
-                    </div> :"" }
-                    {permission.includes("editfaq") ?  <div>
+                    </div> : ""}
+                    {permission.includes("editfaq") ? <div>
                         <Tooltip placement="top" overlay="Update">
                             <SquarePen
                                 onClick={() => {
@@ -326,18 +326,18 @@ const Faq = () => {
                                 }}
                             />
                         </Tooltip>
-                    </div> : "" }
+                    </div> : ""}
                     {permission.includes("deletefaq") ? <div>
                         <Tooltip placement="top" overlay="Delete">
                             <Trash2 onClick={() => DeleteFaq(row._id)} />
                         </Tooltip>
-                    </div> : "" }
+                    </div> : ""}
                 </>
             ),
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
-        } :"" 
+        } : ""
     ];
 
 
@@ -395,7 +395,7 @@ const Faq = () => {
                                     <i className="bx bx-search" />
                                 </span>
                             </div>
-                            {permission.includes("addfaq") ?  <div className="ms-auto">
+                            {permission.includes("addfaq") ? <div className="ms-auto">
                                 <button
                                     type="button"
                                     className="btn btn-primary"
@@ -551,7 +551,7 @@ const Faq = () => {
                                     </>
                                 )}
 
-                            </div> : "" }
+                            </div> : ""}
                         </div>
                         <div className="table-responsive">
                             <Table
@@ -630,7 +630,7 @@ const Faq = () => {
                                             </div>
                                         </div>
                                     </li>
-                                 
+
                                 </ul>
                             </div>
                         </div>
