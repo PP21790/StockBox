@@ -964,7 +964,8 @@ else
     ...signal,
     report_full_path: signal.report ? `${baseUrl}/uploads/report/${signal.report}` : null, // Append full report URL
     purchased: order ? true : false ,
-    lot: lot
+    lot: lot,
+    order_quantity: order ? order.quantity : 0 
   };
 }));
 

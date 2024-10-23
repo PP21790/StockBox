@@ -212,11 +212,13 @@ class Angle {
                 if (response.data.message == 'SUCCESS') {
 
 
+
                     const order = new Order_Modal({
                         clientid: client._id,
                         signalid:signal._id,
                         orderid:response.data.data.orderid,
                         borkerid:1,
+                        quantity:quantity,
                     });
     
     

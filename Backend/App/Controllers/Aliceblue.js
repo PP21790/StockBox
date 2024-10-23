@@ -206,6 +206,7 @@ class Aliceblue {
                     const responseData = response.data;
     
     
+
                 if (responseData[0].stat == 'Ok') {
     
                     const order = new Order_Modal({
@@ -213,6 +214,7 @@ class Aliceblue {
                         signalid:signal._id,
                         orderid:responseData[0].NOrdNo,
                         borkerid:2,
+                        quantity:quantity,
                     });
     
     
