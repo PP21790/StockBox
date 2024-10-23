@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { addfreeClient, basicsettinglist , getfreetrialstatus} from '../../../Services/Admin';
+import { addfreeClient, basicsettinglist, getfreetrialstatus } from '../../../Services/Admin';
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 import Table from '../../../components/Table';
 import { fDate } from '../../../Utils/Date_formate';
+import ExportToExcel from '../../../Utils/ExportCSV';
+
 
 const FreetrialStatus = () => {
   const token = localStorage.getItem('token');
 
+  const [ForGetCSV, setForGetCSV] = useState([])
 
   const [data, setData] = useState([]);
   const [addStatus, setAddStatus] = useState({
@@ -20,6 +23,24 @@ const FreetrialStatus = () => {
     getApidetail();
   }, []);
 
+  useEffect(() => {
+    forCSVdata()
+
+  }, [data]);
+
+  const forCSVdata = () => {
+    if (data?.length > 0) {
+      const csvArr = data.map((item) => ({
+        FullName: item.clientDetails?.FullName,
+        Email: item.clientDetails?.Email || '',
+        PhoneNo: item?.clientDetails?.PhoneNo || '',
+        StartDate: item?.startdate || '',
+        EndDate: item?.enddate || '',
+
+      }));
+      setForGetCSV(csvArr);
+    }
+  };
 
 
   const getApidetail = async () => {
@@ -75,7 +96,7 @@ const FreetrialStatus = () => {
   };
 
 
-  
+
 
 
   const columns = [
@@ -103,11 +124,11 @@ const FreetrialStatus = () => {
     },
     {
       name: 'Updated At',
-      selector: row =>  fDate(row.updatedAt),
+      selector: row => fDate(row.updatedAt),
       sortable: true,
     },
   ];
-  
+
 
 
 
@@ -149,10 +170,19 @@ const FreetrialStatus = () => {
                   ))}
                 </select>
                 <button className='btn btn-primary ms-2' onClick={UpdateClientstatus}>
-                  Update
+                  Update 
                 </button>
-
+                
               </div>
+              <div
+                  className="ms-2"
+                >
+                  <ExportToExcel
+                    className="btn btn-primary "
+                    apiData={ForGetCSV}
+                    fileName={'All Users'} />
+
+                </div>
               <div className="ms-auto">
                 <div
                   className="modal fade"

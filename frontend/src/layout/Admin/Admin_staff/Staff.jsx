@@ -7,17 +7,19 @@ import { Eye, Pencil, Trash2, UserCog } from 'lucide-react';
 import { deleteStaff, updateStaffstatus } from '../../../Services/Admin';
 import Swal from 'sweetalert2';
 import { Tooltip } from 'antd';
+import ExportToExcel from '../../../Utils/ExportCSV';
+import { fDate } from '../../../Utils/Date_formate';
+
 
 const Staff = () => {
 
     const navigate = useNavigate();
 
-
-
     const [clients, setClients] = useState([]);
-
+    const [ForGetCSV, setForGetCSV] = useState([])
+    
     const token = localStorage.getItem('token');
-
+    
 
     const getAdminclient = async () => {
         try {
@@ -30,12 +32,29 @@ const Staff = () => {
         }
     }
 
+
     useEffect(() => {
         getAdminclient();
     }, []);
 
+    useEffect(() => {
+        forCSVdata()
+    }, [clients]);
 
 
+    const forCSVdata = () => {
+        if (clients?.length > 0) {
+          const csvArr = clients.map((item) => ({
+            FullName: item?.FullName,
+            UserName: item?.UserName,
+            Email: item?.Email || '',
+            PhoneNo: item?.PhoneNo || '',
+            CreatedAt: item.createdAt || ""
+    
+          }));
+          setForGetCSV(csvArr);
+        }
+      };
 
 
     // staff delete 
@@ -192,7 +211,7 @@ const Staff = () => {
         },
         {
             name: 'Created At',
-            selector: row => new Date(row.createdAt).toLocaleDateString(),
+            selector: row => fDate(row.createdAt),
             sortable: true,
             width: '142px',
         },
@@ -289,6 +308,15 @@ const Staff = () => {
                                             />
                                             Add Staff
                                         </Link>
+                                    </div>
+                                    <div
+                                        className="ms-2"
+                                    >
+                                        <ExportToExcel
+                                            className="btn btn-primary "
+                                            apiData={ForGetCSV}
+                                            fileName={'All Users'} />
+
                                     </div>
                                 </div>
 

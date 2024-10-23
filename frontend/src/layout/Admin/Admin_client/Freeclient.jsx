@@ -9,6 +9,8 @@ import { Tooltip } from 'antd';
 import { image_baseurl } from '../../../Utils/config';
 import { fDate } from '../../../Utils/Date_formate';
 import { IndianRupee } from 'lucide-react';
+import ExportToExcel from '../../../Utils/ExportCSV';
+
 
 const Freeclient = () => {
 
@@ -25,13 +27,16 @@ const Freeclient = () => {
     const [checkedIndex, setCheckedIndex] = useState(0);
     const [category, setCategory] = useState([]);
     const [client, setClientid] = useState({});
-
+    const [ForGetCSV, setForGetCSV] = useState([])
+   
 
     const [updatetitle, setUpdatetitle] = useState({
         plan_id: "",
         client_id: "",
         price: ""
     });
+
+
 
     useEffect(() => {
         getdemoclient();
@@ -40,7 +45,9 @@ const Freeclient = () => {
 
     }, []);
 
-
+    useEffect(() => {
+        forCSVdata()
+    }, [client]);
 
 
     const getdemoclient = async () => {
@@ -53,7 +60,21 @@ const Freeclient = () => {
             console.log("error");
         }
     }
+ 
 
+    const forCSVdata = () => {
+        if (clients?.length > 0) {
+            const csvArr = clients.map((item) => ({
+                FullName: item.clientDetails?.FullName,
+                Email: item.clientDetails?.Email || '',
+                PhoneNo: item?.clientDetails?.PhoneNo || '',
+                StartDate: item?.startdate || '',
+                EndDate: item?.enddate || '',
+               
+            }));
+            setForGetCSV(csvArr);
+        }
+    };
 
 
     const getplanlistbyadmin = async () => {
@@ -404,7 +425,17 @@ const Freeclient = () => {
                                             <i className="bx bx-search" />
                                         </span>
                                     </div>
+                                      
+                                    <div
+                                    className="ms-2"
+                                >
+                                    <ExportToExcel
+                                        className="btn btn-primary "
+                                        apiData={ForGetCSV}
+                                        fileName={'All Users'} />
 
+
+                                </div>
                                 </div>
 
                                 <Table

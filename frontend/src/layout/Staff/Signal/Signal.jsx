@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import { GetSignallist, DeleteSignal, SignalCloseApi, GetService, GetStockDetail } from '../../../Services/Admin';
 import { fDateTimeSuffix } from '../../../Utils/Date_formate'
 import { getstaffperuser } from '../../../Services/Admin';
+import ExportToExcel from '../../../Utils/ExportCSV';
  
 
 
@@ -31,7 +32,10 @@ const Signal = () => {
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
+    const [ForGetCSV, setForGetCSV] = useState([])
 
+
+  
     const [closedata, setClosedata] = useState({
         id: "",
         closestatus: "",
@@ -188,14 +192,31 @@ const Signal = () => {
         }
     };
 
+      
 
+    const forCSVdata = () => {
+        if (clients?.length > 0) {
+            const csvArr = clients.map((item) => ({
+                Symbol: item.stock || "",
+                segment: item?.segment || '',
+                Price: item?.price || '',
+                EntryType: item?.calltype || '',
+                EntryPrice: item?.price || '',
+                EntryDate: fDateTimeSuffix(item?.created_at) || '',
+
+            }));
+
+            setForGetCSV(csvArr);
+        }
+    };
 
 
     useEffect(() => {
         fetchAdminServices()
         fetchStockList()
         getpermissioninfo()
-    }, []);
+        forCSVdata()
+    }, [filters,clients]);
 
 
     useEffect(() => {
@@ -577,8 +598,18 @@ const Signal = () => {
                                         Add Signal
                                     </Link>
                                 </div> )}
-                            </div>
+                                <div
+                                    className="ms-2"
+                                >
+                                    <ExportToExcel
+                                        className="btn btn-primary "
+                                        apiData={ForGetCSV}
+                                        fileName={'All Users'} />
 
+
+                                </div>
+                            </div>
+                           
                             <div className="row">
 
                                 <div className="col-md-3">
