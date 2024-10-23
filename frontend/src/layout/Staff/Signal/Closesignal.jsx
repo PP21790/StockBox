@@ -7,6 +7,7 @@ import { Eye, RefreshCcw, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { GetSignallist, DeleteSignal, SignalCloseApi, GetService, GetStockDetail } from '../../../Services/Admin';
 import { fDateTimeSuffix, fDateTime } from '../../../Utils/Date_formate'
+import { getstaffperuser } from '../../../Services/Admin';
 
 
 
@@ -17,6 +18,7 @@ const Closesignal = () => {
     const [searchInput, setSearchInput] = useState("");
 
 
+    const userid = localStorage.getItem('id');
 
 
     const [filters, setFilters] = useState({
@@ -27,7 +29,8 @@ const Closesignal = () => {
     });
 
 
-
+    const [permission, setPermission] = useState([]);
+   
 
     const [serviceList, setServiceList] = useState([]);
     const [stockList, setStockList] = useState([]);
@@ -67,6 +70,18 @@ const Closesignal = () => {
         }
     };
 
+   
+    
+    const getpermissioninfo = async () => {
+        try {
+            const response = await getstaffperuser(userid, token);
+            if (response.status) {
+                setPermission(response.data.permissions);
+            }
+        } catch (error) {
+            console.log("error", error);
+        }
+    }
 
 
 
@@ -99,6 +114,7 @@ const Closesignal = () => {
     useEffect(() => {
         fetchAdminServices()
         fetchStockList()
+        getpermissioninfo()
     }, []);
 
 
@@ -187,7 +203,7 @@ const Closesignal = () => {
        
 
 
-        {
+       permission.includes("signaldetail") &&  {
             name: 'Actions',
             cell: row => (
                 <>

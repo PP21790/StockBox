@@ -328,11 +328,12 @@ const Blogs = () => {
         //     sortable: true,
         // },
 
-        {
+        permission.includes("blogsdetail") ||  permission.includes("editblogs") 
+        || permission.includes("deleteblogs") ? {
             name: 'Actions',
             cell: row => (
                 <>
-                   {/* {permission.includes("blogsdetail")?  */}
+                   {permission.includes("blogsdetail") ? 
                    <div>
                         <Tooltip placement="top" overlay="View">
                           
@@ -343,7 +344,7 @@ const Blogs = () => {
                             
                         </Tooltip>
                     </div> 
-                    {/* : "" } */}
+                    :""}
                     {permission.includes("editblogs")? <div>
                         <Tooltip placement="top" overlay="Update">
                             <SquarePen
@@ -363,7 +364,7 @@ const Blogs = () => {
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
-        }
+        }: ""
     ];
 
    

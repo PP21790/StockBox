@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
 import { fDate } from '../../../Utils/Date_formate';
-import { getstaffperuser } from '../../../Services/Admin';
+
 
 
 
@@ -65,21 +65,11 @@ const News = () => {
 
 
 
-    const getpermissioninfo = async () => {
-        try {
-            const response = await getstaffperuser(userid, token);
-            if (response.status) {
-                setPermission(response.data.permissions);
-            }
-        } catch (error) {
-            console.log("error", error);
-        }
-    }
-
+    
 
     useEffect(() => {
         getNews();
-        getpermissioninfo()
+
     }, [searchInput]);
 
 
@@ -304,7 +294,7 @@ const News = () => {
                                     <i className="bx bx-search" />
                                 </span>
                             </div>
-                            {permission.includes("addnews") ? <div className="ms-auto">
+                           <div className="ms-auto">
                                 <Link
                                     to="/admin/addnews"
                                     type="button"
@@ -316,7 +306,7 @@ const News = () => {
                                     Add News
                                 </Link>
 
-                            </div> : ""}
+                            </div> 
                         </div>
                         <div className="container py-2">
 
@@ -336,7 +326,7 @@ const News = () => {
 
                                                     <div>
 
-                                                        {permission.includes("editnews") ? <Tooltip placement="top" overlay="Update">
+                                                 <Tooltip placement="top" overlay="Update">
                                                             <SquarePen
                                                                 onClick={() => {
 
@@ -344,10 +334,10 @@ const News = () => {
                                                                     navigate("/admin/updatenews", { state: { client } })
                                                                 }}
                                                             />
-                                                        </Tooltip> : ""}
-                                                        {permission.includes("editnews") ? <Tooltip placement="top" overlay="Delete">
+                                                        </Tooltip> 
+                                                     <Tooltip placement="top" overlay="Delete">
                                                             <Trash2 onClick={() => DeleteService(client._id)} />
-                                                        </Tooltip> : ""}
+                                                        </Tooltip> 
                                                     </div>
                                                 </div>
                                                 <hr />

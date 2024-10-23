@@ -7,6 +7,8 @@ import Swal from 'sweetalert2';
 import { fDate } from '../../../Utils/Date_formate';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
+import { getstaffperuser } from '../../../Services/Admin';
+
 
 const Banner = () => {
 
@@ -16,7 +18,8 @@ const Banner = () => {
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
     const [searchInput, setSearchInput] = useState("");
-
+    const [permission, setPermission] = useState([]);
+    
 
     const [updatetitle, setUpdatetitle] = useState({
         title: "",
@@ -41,7 +44,16 @@ const Banner = () => {
 
 
 
-
+    const getpermissioninfo = async () => {
+        try {
+            const response = await getstaffperuser(userid, token);
+            if (response.status) {
+                setPermission(response.data.permissions);
+            }
+        } catch (error) {
+            console.log("error", error);
+        }
+    }
 
     // Getting services
     const getBanner = async () => {
@@ -61,10 +73,11 @@ const Banner = () => {
 
     useEffect(() => {
         getBanner();
+        getpermissioninfo()
     }, [searchInput]);
 
 
-    console.log("updatetitle",updatetitle.image)
+    
 
 
     // Update service
@@ -262,7 +275,7 @@ const Banner = () => {
             width: '240px',
 
         },
-        {
+        permission.includes("bannerstatus") && {
             name: 'Active Status',
             selector: row => (
                 <div className="form-check form-switch form-check-info">
@@ -302,7 +315,7 @@ const Banner = () => {
             cell: row => (
                 <>
 
-                    <div>
+                   {permission.includes("editbanner") ? <div>
                         <Tooltip placement="top" overlay="Updaate">
                             <SquarePen
                                 onClick={() => {
@@ -312,12 +325,12 @@ const Banner = () => {
                                 }}
                             />
                         </Tooltip>
-                    </div>
-                    <div>
+                    </div> : "" }
+                    {permission.includes("deletebanner") ? <div>
                         <Tooltip placement="top" overlay="Delete">
                             <Trash2 onClick={() => Deletebannerlist(row._id)} />
                         </Tooltip>
-                    </div>
+                    </div> : "" }
                 </>
             ),
             ignoreRowClick: true,
@@ -358,7 +371,7 @@ const Banner = () => {
                         <nav aria-label="breadcrumb">
                             <ol className="breadcrumb mb-0 p-0">
                                 <li className="breadcrumb-item">
-                                    <Link to="/admin/dashboard">
+                                    <Link to="/staff/dashboard">
                                         <i className="bx bx-home-alt" />
                                     </Link>
                                 </li>
@@ -383,7 +396,7 @@ const Banner = () => {
                                     <i className="bx bx-search" />
                                 </span>
                             </div>
-                            <div className="ms-auto">
+                            {permission.includes("addbanner") ? <div className="ms-auto">
                                 <button
                                     type="button"
                                     className="btn btn-primary"
@@ -559,7 +572,7 @@ const Banner = () => {
                                     </>
                                 )}
 
-                            </div>
+                            </div> : "" }
                         </div>
                         <div className="table-responsive">
                             <Table

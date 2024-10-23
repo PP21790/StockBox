@@ -41,7 +41,7 @@ const Sidebar = ({ onToggleClick }) => {
   const menuItems = [
     { title: 'Dashboard', icon: 'bx bx-home-alt', link: '/staff/dashboard' },
     permission.includes('viewclient') && { title: 'Client', icon: 'bx bx-user', link: '/staff/client' },
-    // permission.includes('freetrial') && 
+    permission.includes('viewfreeclient') && 
     { title: 'Free Trial Client', icon: 'bx bx-user', link: '/staff/freeclient' },
     (permission.includes('viewplan') || permission.includes('viewcategory')) && {
       title: 'Plan',

@@ -9,10 +9,14 @@ import { Tooltip } from 'antd';
 import { image_baseurl } from '../../../Utils/config';
 import { fDate } from '../../../Utils/Date_formate';
 import { IndianRupee } from 'lucide-react';
+import { getstaffperuser } from '../../../Services/Admin';
+
+
 
 const Freeclient = () => {
 
-
+    const userid = localStorage.getItem('id');
+   
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
 
@@ -25,7 +29,8 @@ const Freeclient = () => {
     const [checkedIndex, setCheckedIndex] = useState(0);
     const [category, setCategory] = useState([]);
     const [client, setClientid] = useState({});
-
+    const [permission, setPermission] = useState([]);
+    
 
     const [updatetitle, setUpdatetitle] = useState({
         plan_id: "",
@@ -37,9 +42,21 @@ const Freeclient = () => {
         getdemoclient();
         getcategoryplanlist()
         getplanlistbyadmin()
+        getpermissioninfo()
 
     }, []);
+   
 
+    const getpermissioninfo = async () => {
+        try {
+            const response = await getstaffperuser(userid, token);
+            if (response.status) {
+                setPermission(response.data.permissions);
+            }
+        } catch (error) {
+            console.log("error", error);
+        }
+    }
 
 
 
@@ -355,9 +372,9 @@ const Freeclient = () => {
                         </span>
                     </Tooltip>
 
-                    <Tooltip title="Update">
+                   {permission.includes("permission") && (<Tooltip title="Update">
                         <UserPen onClick={() => updateClient(row)} />
-                    </Tooltip>
+                    </Tooltip> ) }
                     {/* <Tooltip title="delete">
                         <Trash2 onClick={() => DeleteClient(row._id)} />
 

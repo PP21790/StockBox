@@ -6,6 +6,7 @@ import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { Tooltip } from 'antd';
 import { fDate } from '../../../Utils/Date_formate';
+import { getstaffperuser } from '../../../Services/Admin';
 
 const Faq = () => {
 
@@ -16,6 +17,8 @@ const Faq = () => {
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
     const [searchInput, setSearchInput] = useState("");
+    const [permission, setPermission] = useState([]);
+
     const [updatetitle, setUpdatetitle] = useState({
         title: "",
         id: "",
@@ -37,6 +40,16 @@ const Faq = () => {
     const userid = localStorage.getItem('id');
 
 
+    const getpermissioninfo = async () => {
+        try {
+            const response = await getstaffperuser(userid, token);
+            if (response.status) {
+                setPermission(response.data.permissions);
+            }
+        } catch (error) {
+            console.log("error", error);
+        }
+    }
 
 
 
@@ -58,6 +71,7 @@ const Faq = () => {
 
     useEffect(() => {
         getFaq();
+        getpermissioninfo()
     }, [searchInput]);
 
 
@@ -251,7 +265,7 @@ const Faq = () => {
             width: '200px',
 
         },
-        {
+        permission.includes("faqstatus") && {
             name: 'Active Status',
             selector: row => (
                 <div className="form-check form-switch form-check-info">
@@ -291,17 +305,18 @@ const Faq = () => {
         //     sortable: true,
         // },
 
-        {
+        permission.includes("faqsdetail") || permission.includes("editfaq") 
+        || permission.includes("deletefaq") ? {
             name: 'Actions',
             cell: row => (
                 <>
-                    <div>
+                   {permission.includes("faqsdetail") ? <div>
                         <Tooltip placement="top" overlay="View">
                             <Eye style={{ marginRight: "10px" }} data-bs-toggle="modal"
                                 data-bs-target="#example1" />
                         </Tooltip>
-                    </div>
-                    <div>
+                    </div> :"" }
+                    {permission.includes("editfaq") ?  <div>
                         <Tooltip placement="top" overlay="Update">
                             <SquarePen
                                 onClick={() => {
@@ -311,18 +326,18 @@ const Faq = () => {
                                 }}
                             />
                         </Tooltip>
-                    </div>
-                    <div>
+                    </div> : "" }
+                    {permission.includes("deletefaq") ? <div>
                         <Tooltip placement="top" overlay="Delete">
                             <Trash2 onClick={() => DeleteFaq(row._id)} />
                         </Tooltip>
-                    </div>
+                    </div> : "" }
                 </>
             ),
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
-        }
+        } :"" 
     ];
 
 
@@ -380,7 +395,7 @@ const Faq = () => {
                                     <i className="bx bx-search" />
                                 </span>
                             </div>
-                            <div className="ms-auto">
+                            {permission.includes("addfaq") ?  <div className="ms-auto">
                                 <button
                                     type="button"
                                     className="btn btn-primary"
@@ -536,7 +551,7 @@ const Faq = () => {
                                     </>
                                 )}
 
-                            </div>
+                            </div> : "" }
                         </div>
                         <div className="table-responsive">
                             <Table

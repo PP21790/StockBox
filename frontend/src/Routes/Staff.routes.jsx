@@ -131,15 +131,15 @@ function Staffrouting() {
                     {permission.includes("viewclient") ? <Route path="/client" element={<Client />} /> : ""}
                     {permission.includes("addclient") ? <Route path="/addclient" element={<Addclient />} /> : ""}
                     {permission.includes("editclient") ? <Route path="/client/updateclient/:id" element={<EditClient />} /> : ""}
-                    {permission.includes("viewclient") ? <Route path="/clientdetail/:id" element={<Viewclientdetail />} /> : ""}
-                    <Route path="/freeclient" element={<Freeclient />} />
-                    <Route path="/editfreeclient/:id" element={<Editfreeclient />} />
+                    {permission.includes("viewdetail") ? <Route path="/clientdetail/:id" element={<Viewclientdetail />} /> : ""}
 
+                    {permission.includes("viewfreeclient") ? <Route path="/freeclient" element={<Freeclient />} /> : ""}
+                    {permission.includes("editfreeclient") ? <Route path="/editfreeclient/:id" element={<Editfreeclient />} /> : ""}
 
                     <Route path="/profile" element={<Profile />} />
 
-                    {/* <Route path="/service" element={<Service />} /> */}
-                    {/* <Route path="/kyc" element={<Kyc />} /> */}
+
+
 
 
 
@@ -155,55 +155,38 @@ function Staffrouting() {
 
                     {permission.includes("viewfaq") ? <Route path="/faq" element={<Faq />} /> : ""}
 
-                    {/* <Route path="/refer" element={<Refer />} /> */}
-                    {/* <Route path="/paymenthistory" element={<Paymenthistory />} /> */}
 
 
 
                     {permission.includes("viewsignal") ? <Route path="/signal" element={<Signal />} /> : ""}
                     {permission.includes("addsignal") ? <Route path="/addsignal" element={<AddSignal />} /> : ""}
-                    {permission.includes("editsignal") ? <Route path="/signaldetaile/:id" element={<Signaldetail />} />
-                        : ""}
-                    {/* <Route path="/signaldetaile/:id" element={<Signaldetail/>} /> */}
+                    {permission.includes("signaldetail") ? <Route path="/signaldetaile/:id" element={<Signaldetail />} /> : ""}
+                    {permission.includes("viewsignal") ? <Route path="/closesignal" element={<Closesignal />} /> : ""}
 
-                    <Route path="/closesignal" element={<Closesignal />} />
-
-
-
-
-                    {/* <Route path="/basket" element={<Basket />} />
-                    <Route path="/addbasket" element={<Addbasket />} />
-                    <Route path="/basket/viewdetail/:id" element={<Viewbasketdetail />} />
-                    <Route path="/basket/editbasket/:id" element={<Editbasket />} /> */}
 
 
                     {permission.includes("viewplan") ? <Route path="/plan" element={<Plan />} /> : ""}
                     {permission.includes("addplan") ? <Route path="/addplan" element={<Addplan />} /> : ""}
-
-
                     {permission.includes("editplan") ? <Route path="/plan/editplan/:id" element={<Editplan />} /> : ""}
-
-
-
 
 
 
                     {permission.includes("viewcategory") ? <Route path="/category" element={<Category />} /> : ""}
 
-                    {/* <Route path="/stock" element={<Stock />} /> */}
-
 
                     {permission.includes("viewblogs") ? <Route path="/blogs" element={<Blogs />} /> : ""}
-                    <Route path="/addblogs" element={<Addblogs />} />
-                    <Route path="/updatebolgs" element={<Updateblogs />} />
-                    <Route path="/viewblog" element={<Viewblog />} />
+                    {permission.includes("addblogs") ? <Route path="/addblogs" element={<Addblogs />} /> : ""}
+                    {permission.includes("editblogs") ? <Route path="/updatebolgs" element={<Updateblogs />} /> : ""}
+                    {permission.includes("blogdetail") ? <Route path="/viewblog" element={<Viewblog />} /> : ""}
+
 
 
 
 
                     {permission.includes("viewnews") ? <Route path="/news" element={<News />} /> : ""}
-                    <Route path="/addnews" element={<Addnews />} />
-                    <Route path="/updatenews" element={<Updatenews />} />
+                    {permission.includes("addnews") ? <Route path="/addnews" element={<Addnews />} /> : ""}
+                    {permission.includes("editnews") ? <Route path="/updatenews" element={<Updatenews />} /> : ""}
+
 
 
 
@@ -213,21 +196,7 @@ function Staffrouting() {
 
 
 
-
-
-                    {permission.includes("addcoupon") ? <Route path="/banner" element={<Banner />} /> : ""}
-
-
-
-
-
-                    {/* <Route path="/termsandcondtion" element={<Condition />} /> */}
-                    {/* <Route path="/generalsettings" element={<Generalsettings />} />
-                    <Route path="/Apiinfo" element={<Apiinfo />} />
-                    <Route path="/paymentgeteway" element={<Payementgateway />} />
-                    <Route path="/emailsetting" element={<Emailsettings />} />
-                    <Route path="/message" element={<Message />} />
-                    <Route path="/changepass" element={<Changepass />} /> */}
+                    {permission.includes("viewbanner") ? <Route path="/banner" element={<Banner />} /> : ""}
 
 
                     <Route path="/paymentrequest" element={<PaymentRequest />} />

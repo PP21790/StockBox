@@ -8,8 +8,16 @@ import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 import { Tooltip } from 'antd';
 import styled from 'styled-components';
 import { fDate } from '../../../Utils/Date_formate';
+import { getstaffperuser } from '../../../Services/Admin';
+
+
+
 
 const Category = () => {
+
+    
+   
+
     const navigate = useNavigate();
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
@@ -17,7 +25,8 @@ const Category = () => {
     const [servicedata, setServicedata] = useState([]);
     const [searchInput, setSearchInput] = useState("");
     const [selectedServices, setSelectedServices] = useState([]);
-
+    const [permission, setPermission] = useState([]);
+  
 
     const [updatetitle, setUpdatetitle] = useState({
         title: "",
@@ -69,12 +78,25 @@ const Category = () => {
             console.log("Error fetching services:", error);
         }
     };
+   
+
+    const getpermissioninfo = async () => {
+        try {
+            const response = await getstaffperuser(userid, token);
+            if (response.status) {
+                setPermission(response.data.permissions);
+            }
+        } catch (error) {
+            console.log("error", error);
+        }
+    }
 
 
 
     useEffect(() => {
         getcategory();
         getservice()
+        getpermissioninfo()
     }, [searchInput]);
 
 
@@ -285,7 +307,7 @@ const Category = () => {
             width: '200px',
             sortable: true,
         },
-        {
+        permission.includes("categorystatus") && {
             name: 'Active Status',
             selector: row => (
                 <div className="form-check form-switch form-check-info">
@@ -322,7 +344,7 @@ const Category = () => {
             name: 'Actions',
             cell: row => (
                 <>
-                    <div>
+                   { permission.includes("editcategory") && ( <div>
                         <Tooltip placement="top" overlay="Update">
                             <SquarePen
                                 onClick={() => {
@@ -336,7 +358,7 @@ const Category = () => {
                                 }}
                             />
                         </Tooltip>
-                    </div>
+                    </div> )}
                     <div>
                         {/* <Tooltip placement="top" overlay="Delete">
                             <Trash2 onClick={() => DeleteCategory(row._id)} />
@@ -415,7 +437,7 @@ const Category = () => {
                                     <i className="bx bx-search" />
                                 </span>
                             </div>
-                            <div className="ms-auto">
+                            { permission.includes("addcategory") && ( <div className="ms-auto">
                                 <button
                                     type="button"
                                     className="btn btn-primary"
@@ -627,7 +649,7 @@ const Category = () => {
 
 
 
-                            </div>
+                            </div> )}
                         </div>
                         <div className="table-responsive">
                             <Table

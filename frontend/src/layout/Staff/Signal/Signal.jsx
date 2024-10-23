@@ -7,7 +7,8 @@ import { Eye, Trash2, RefreshCcw } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { GetSignallist, DeleteSignal, SignalCloseApi, GetService, GetStockDetail } from '../../../Services/Admin';
 import { fDateTimeSuffix } from '../../../Utils/Date_formate'
-
+import { getstaffperuser } from '../../../Services/Admin';
+ 
 
 
 const Signal = () => {
@@ -15,7 +16,7 @@ const Signal = () => {
     const token = localStorage.getItem('token');
     const [searchInput, setSearchInput] = useState("");
 
-
+    const userid = localStorage.getItem('id');
 
 
     const [filters, setFilters] = useState({
@@ -52,7 +53,8 @@ const Signal = () => {
     const [serviceList, setServiceList] = useState([]);
     const [stockList, setStockList] = useState([]);
     const [searchstock, setSearchstock] = useState("");
-
+    const [permission, setPermission] = useState([]);
+   
     const [checkedIndex, setCheckedIndex] = useState(null);
 
     const handleTabChange = (index) => {
@@ -116,7 +118,18 @@ const Signal = () => {
         
        
     };
+   
 
+    const getpermissioninfo = async () => {
+        try {
+            const response = await getstaffperuser(userid, token);
+            if (response.status) {
+                setPermission(response.data.permissions);
+            }
+        } catch (error) {
+            console.log("error", error);
+        }
+    }
 
 
     const getAllSignal = async () => {
@@ -181,6 +194,7 @@ const Signal = () => {
     useEffect(() => {
         fetchAdminServices()
         fetchStockList()
+        getpermissioninfo()
     }, []);
 
 
@@ -454,7 +468,7 @@ const Signal = () => {
 
 
 
-        {
+        permission.includes("signaldetail") && {
             name: 'Actions',
             cell: row => (
                 <>
@@ -471,7 +485,7 @@ const Signal = () => {
             button: true,
 
         },
-        {
+        permission.includes("signalstatus") &&  {
             name: 'Status',
             cell: row => (
                 <>
@@ -551,7 +565,7 @@ const Signal = () => {
                                     </span>
                                 </div>
 
-                                <div className="ms-auto">
+                               { permission.includes("addsignal")  && (<div className="ms-auto">
                                     <Link
                                         to="/staff/addsignal"
                                         className="btn btn-primary"
@@ -562,7 +576,7 @@ const Signal = () => {
                                         />
                                         Add Signal
                                     </Link>
-                                </div>
+                                </div> )}
                             </div>
 
                             <div className="row">

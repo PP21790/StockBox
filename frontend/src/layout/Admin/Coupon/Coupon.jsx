@@ -21,7 +21,7 @@ const Coupon = () => {
     const [searchInput, setSearchInput] = useState("");
     const [viewpage, setViewpage] = useState({});
 
-    console.log("viewpage", viewpage)
+   
 
     const token = localStorage.getItem('token');
 
