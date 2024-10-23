@@ -910,8 +910,10 @@ async showSignalsToClients(req, res) {
 
    const baseUrl = `${protocol}://${req.headers.host}`; // Construct the base URL
 
-   const signals = await Signal_Modal.find(query).lean(); // Use lean() to return plain JavaScript objects
-
+  // const signals = await Signal_Modal.find(query).lean(); // Use lean() to return plain JavaScript objects
+   const signals = await Signal_Modal.find(query)
+   .sort({ created_at: -1 }) // Change "createdAt" to the field you want to sort by
+   .lean();
 /*
    const signalsWithReportUrls = signals.map(signal => {
 
