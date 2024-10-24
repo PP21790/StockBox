@@ -518,8 +518,8 @@ if (existingPlans.length > 0) {
       const newSubscription = new PlanSubscription_Modal({
         plan_id,
         client_id,
-        total: plan.price,
-        plan_price: price,
+        total: price,
+        plan_price: plan.price,
         discount: discount,
         plan_start: start,
         plan_end: end,
