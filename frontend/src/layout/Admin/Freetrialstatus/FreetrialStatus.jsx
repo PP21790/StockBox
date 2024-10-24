@@ -169,7 +169,7 @@ const FreetrialStatus = () => {
                     </option>
                   ))}
                 </select>
-                <button className='btn btn-primary ms-2' style={{ position: "relative", left: "526px" }} onClick={UpdateClientstatus}>
+                <button className='btn btn-primary ms-2'  onClick={UpdateClientstatus}>
                   Update
                 </button>
 
