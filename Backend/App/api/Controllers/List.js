@@ -933,6 +933,7 @@ const signalsWithReportUrls = await Promise.all(signals.map(async (signal) => {
 
 
 let lot = 0;
+let tradesymbol ="";
 if(signal.segment != "C")
 {
   if(signal.segment == "F")
@@ -944,6 +945,7 @@ if(signal.segment != "C")
   });
 
   lot = lots.lotsize;
+  tradesymbol = lots.tradesymbol;
 }
 else
 {
@@ -952,11 +954,13 @@ else
     expiry: signal.expirydate,
     symbol: signal.stock,
     strike: signal.strikeprice,
+   
   });
   
 
   const lots = await query.exec();
   lot = lots.lotsize;
+  tradesymbol = lots.tradesymbol;
 
 }
 
@@ -967,6 +971,7 @@ else
     report_full_path: signal.report ? `${baseUrl}/uploads/report/${signal.report}` : null, // Append full report URL
     purchased: order ? true : false ,
     lot: lot,
+    tradesymbol: tradesymbol,
     order_quantity: order ? order.quantity : 0 
   };
 }));
