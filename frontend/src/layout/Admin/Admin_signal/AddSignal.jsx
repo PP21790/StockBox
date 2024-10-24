@@ -47,7 +47,7 @@ const AddSignal = () => {
   };
 
 
-
+  // console.log("req",expirydate[0]?.stock?.tradesymbol)
 
   const formik = useFormik({
     initialValues: {
@@ -72,8 +72,9 @@ const AddSignal = () => {
     },
     validate: (values) => {
       const errors = {};
+
       if (!values.segment) errors.segment = 'Please select a segment';
-      if (!values.stock) errors.stock = 'Please select a stock';
+      if (!values.stock ) errors.stock = 'Please select a stock';
       if (!values.price) errors.price = 'Please select a price';
       if (!values.tag1) errors.tag1 = 'Please enter Target1';
       if (values.calltype === "BUY") {
@@ -188,7 +189,7 @@ const AddSignal = () => {
   });
 
 
-
+  console.log("searchItem",searchItem)
 
   useEffect(() => {
     if (formik.values.segment) {
@@ -211,10 +212,23 @@ const AddSignal = () => {
         tradesymbol: '',
         lotsize:''
       });
-
+    
       setSearchItem("")
     }
-  }, [formik.values.segment,]);
+  }, [formik.values.segment]);
+
+  
+
+  useEffect(() => {
+    if (!searchItem || searchItem.length === 0) {
+      Object.keys(formik.values).forEach(field => {
+        if (field !== "stock" ) {
+          formik.setFieldValue("stock", "");
+        }
+      });
+    }
+  }, [formik.values.stock, searchItem]);
+  
 
 
 
