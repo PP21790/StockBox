@@ -474,6 +474,109 @@ class Angle {
             });
         }
     }
+
+
+
+    async checkOrder(req, res) {
+        
+        try {
+            const { orderid, clientid } = req.body;
+
+            const order = await Order_Modal.findOne({
+                clientid: clientid,  
+                orderid: orderid        
+            });
+    
+            if (!order) {
+                return res.status(404).json({
+                    status: false,
+                    message: "Order not found for this client"
+                });
+            }
+
+
+          
+
+
+
+            const client = await Clients_Modal.findById(clientid);
+            if (!client) {
+                return res.status(404).json({
+                    status: false,
+                    message: "Client not found"
+                });
+            }
+
+
+            if(client.tradingstatus == 0)
+                {
+                    return res.status(404).json({
+                        status: false,
+                        message: "Client Broker Not Login, Please Login With Broker"
+                    });
+                }
+
+
+                if (order.borkerid!=1) {
+                    return res.status(404).json({
+                        status: false,
+                        message: "Order not found for this Broker"
+                    });
+                }
+
+
+            const authToken = client.authtoken;
+            const userId = client.apikey;
+    
+
+if(order.status==1) {
+
+    return res.json({
+        status: true,
+        response: order.data
+    });
+}
+
+
+            const config = {
+                method: 'get',
+                url: `https://apiconnect.angelone.in/rest/secure/angelbroking/order/v1/details/${orderid}`, // Use dynamic orderid
+                headers: {
+                    'Authorization': 'Bearer ' + authToken,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-UserType': 'USER',
+                    'X-SourceID': 'WEB',
+                    'X-ClientLocalIP': 'CLIENT_LOCAL_IP',
+                    'X-ClientPublicIP': 'CLIENT_PUBLIC_IP',
+                    'X-MACAddress': 'MAC_ADDRESS',
+                    'X-PrivateKey': userId
+                },
+            };
+    
+            const response = await axios(config); // Use await with axios
+
+
+            order.data = response.data; 
+            order.status = 1; 
+    
+            await order.save();
+
+
+            return res.json({
+                status: true,
+                response: response.data
+            });
+    
+        } catch (error) {
+            return res.status(500).json({ 
+                status: false,
+                message: error.response ? error.response.data : "Error occurred while fetching order details."
+            });
+        }
+    }
+    
+
     
 }
 
@@ -602,6 +705,7 @@ let possition_qty = 0;
             qty: 0,
         };
     }
+
 }
 
 module.exports = new Angle();
