@@ -21,6 +21,7 @@ const FreetrialStatus = () => {
 
   useEffect(() => {
     getApidetail();
+    getstatusdetail()
   }, []);
 
   useEffect(() => {
@@ -41,8 +42,21 @@ const FreetrialStatus = () => {
       setForGetCSV(csvArr);
     }
   };
+ 
 
+  const getstatusdetail = async () => {
+    try {
+      const response = await basicsettinglist(token);
+      if (response?.status && response?.data) {
+        const defaultTrial = response.data.length > 0 ? response.data[0].freetrial : "1";
+        setAddStatus({freetrial: defaultTrial });
 
+      }
+    } catch (error) {
+      console.error('Error fetching API details:', error);
+    }
+  };
+ 
   const getApidetail = async () => {
     try {
       const response = await getfreetrialstatus(token);
@@ -50,6 +64,7 @@ const FreetrialStatus = () => {
         setData(response.data);
         const defaultTrial = response.data.length > 0 ? response.data[0].freetrial : "1";
         setAddStatus({ ...addStatus, freetrial: defaultTrial });
+
       }
     } catch (error) {
       console.error('Error fetching API details:', error);
@@ -159,7 +174,7 @@ const FreetrialStatus = () => {
               <label htmlFor="" className='mb-1'> Select Free Days Trial</label>
               <div className='col-lg-4 d-flex '>
 
-                <select class="form-select" value={addStatus.freetrial} onChange={handleSelectChange}>
+                <select className="form-select" value={addStatus.freetrial} onChange={handleSelectChange}>
                   <option value="" disabled>
                     Select days
                   </option>
@@ -169,7 +184,8 @@ const FreetrialStatus = () => {
                     </option>
                   ))}
                 </select>
-                <button className='btn btn-primary ms-2'  onClick={UpdateClientstatus}>
+
+                <button className='btn btn-primary ms-2' onClick={UpdateClientstatus}>
                   Update
                 </button>
 
