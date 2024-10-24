@@ -169,8 +169,7 @@ const Staffpermission = () => {
             editfreeclient: false,
             viewfreeclient: false,
             freeclientstatus: false,
-            updatefreeclient: false,
-            
+           
 
         },
         onSubmit,
@@ -272,17 +271,14 @@ const Staffpermission = () => {
             formik.setFieldValue('editfreeclient', clients.includes('editfreeclient'));
             formik.setFieldValue('viewfreeclient', clients.includes('viewfreeclient'));
             formik.setFieldValue('freeclientstatus', clients.includes('freeclientstatus'));
-            formik.setFieldValue('updatefreeclient', clients.includes('updatefreeclient'));
-                      
-          
-  
+           
         }
     }, [clients]);
 
 
 
     useEffect(() => {
-        if (formik.values.userPermissions == true) {
+        if (formik.values.userPermissions == true ) {
             formik.setFieldValue('addclient', true);
             formik.setFieldValue('viewclient', true);
             formik.setFieldValue('viewdetail', true);
@@ -300,6 +296,15 @@ const Staffpermission = () => {
         }
 
     }, [formik.values.userPermissions])
+   
+
+    useEffect(() => {
+        if (formik.values.addclient || formik.values.editclient || formik.values.clientchangestatus) {
+            formik.setFieldValue('viewclient', true);
+        }
+    }, [formik.values.addclient, formik.values.editclient, formik.values.clientchangestatus]);
+    
+  
 
    
     useEffect(() => {
@@ -323,8 +328,17 @@ const Staffpermission = () => {
         }
 
     }, [formik.values.Signalpermission])
+    
+    
+    useEffect(() => {
+        if (formik.values.signalstatus || formik.values.signaldetail || formik.values.addsignal ||  formik.values.editsignal ) {
+            formik.setFieldValue('viewsignal', true);
+        }
+    }, [formik.values.signalstatus, formik.values.signaldetail, formik.values.addsignal,formik.values.editsignal]);
+    
 
 
+ 
     useEffect(() => {
         if (formik.values.categorypermission == true) {
             formik.setFieldValue('categorystatus', true);
@@ -346,12 +360,19 @@ const Staffpermission = () => {
     }, [formik.values.categorypermission])
 
 
+    useEffect(() => {
+        if (formik.values.categorystatus || formik.values.addcategory || formik.values.editcategory  ) {
+            formik.setFieldValue('viewcategory', true);
+        }
+    }, [formik.values.categorystatus , formik.values.addcategory , formik.values.editcategory]);
+
+
 
     useEffect(() => {
         if (formik.values.planpermission == true) {
             formik.setFieldValue('addplan', true);
             formik.setFieldValue('editplan', true);
-            formik.setFieldValue('deleteplan', true);
+            // formik.setFieldValue('deleteplan', true);
             formik.setFieldValue('viewplan', true);
             formik.setFieldValue('planstatus', true);
 
@@ -359,13 +380,21 @@ const Staffpermission = () => {
         else {
             formik.setFieldValue('addplan', false);
             formik.setFieldValue('editplan', false);
-            formik.setFieldValue('deleteplan', false);
+            // formik.setFieldValue('deleteplan', false);
             formik.setFieldValue('viewplan', false);
             formik.setFieldValue('planstatus', false);
 
         }
 
     }, [formik.values.planpermission])
+
+
+    useEffect(() => {
+        if (formik.values.addplan || formik.values.editplan || formik.values.planstatus  ) {
+            formik.setFieldValue('viewplan', true);
+        }
+    }, [formik.values.addplan , formik.values.editplan ,formik.values.planstatus]);
+
 
 
 
@@ -390,6 +419,13 @@ const Staffpermission = () => {
     }, [formik.values.Staffpermission])
 
 
+    useEffect(() => {
+        if (formik.values.addstaff || formik.values.editstaff || formik.values.staffstatus  ) {
+            formik.setFieldValue('viewstaff', true);
+        }
+    }, [formik.values.addstaff , formik.values.editstaff , formik.values.staffstatus]);
+
+
 
     useEffect(() => {
         if (formik.values.bannerpermission == true) {
@@ -410,6 +446,14 @@ const Staffpermission = () => {
         }
 
     }, [formik.values.bannerpermission])
+   
+    useEffect(() => {
+        if (formik.values.addbanner || formik.values.editbanner || formik.values.bannerstatus  ) {
+            formik.setFieldValue('viewbanner', true);
+        }
+    }, [formik.values.addbanner , formik.values.editbanner , formik.values.bannerstatus]);
+
+
 
   
     useEffect(() => {
@@ -433,6 +477,16 @@ const Staffpermission = () => {
         }
 
     }, [formik.values.couponpermission])
+  
+
+    useEffect(() => {
+        if (formik.values.addcoupon || formik.values.editcoupon || formik.values.coupondetail || formik.values.coupondetail  ) {
+            formik.setFieldValue('viewcoupon', true);
+        }
+    }, [formik.values.addcoupon ,formik.values.editcoupon ,formik.values.coupondetail ,formik.values.coupondetail ]);
+
+
+
 
    
     useEffect(() => {
@@ -458,6 +512,12 @@ const Staffpermission = () => {
     }, [formik.values.blogspermission])
 
    
+    useEffect(() => {
+        if (formik.values.addblogs || formik.values.editblogs || formik.values.blogdetail || formik.values.blogsstatus  ) {
+            formik.setFieldValue('viewblogs', true);
+        }
+    }, [formik.values.addblogs ,formik.values.editblogs ,formik.values.blogdetail ,formik.values.blogsstatus ]);
+
 
 
     useEffect(() => {
@@ -480,6 +540,14 @@ const Staffpermission = () => {
 
     }, [formik.values.faqpermission])
   
+    useEffect(() => {
+        if (formik.values.addfaq || formik.values.editfaq ||  formik.values.faqstatus  ) {
+            formik.setFieldValue('viewfaq', true);
+        }
+    }, [formik.values.addfaq ,formik.values.editfaq ,formik.values.faqstatus ]);
+
+
+
 
     useEffect(() => {
         if (formik.values.newspermission == true) {
@@ -501,6 +569,13 @@ const Staffpermission = () => {
 
     }, [formik.values.newspermission])
 
+  
+    useEffect(() => {
+        if (formik.values.addnews || formik.values.editnews ||  formik.values.newsstatus  ) {
+            formik.setFieldValue('viewnews', true);
+        }
+    }, [formik.values.addnews ,formik.values.editnews ,formik.values.newsstatus ]);
+
 
 
     useEffect(() => {
@@ -509,7 +584,7 @@ const Staffpermission = () => {
             formik.setFieldValue('editfreeclient', true);
             formik.setFieldValue('viewfreeclient', true);
             formik.setFieldValue('freeclientstatus', true);
-            formik.setFieldValue('updatefreeclient', true);
+         
 
         }
         else {
@@ -517,11 +592,18 @@ const Staffpermission = () => {
             formik.setFieldValue('editfreeclient', false);
             formik.setFieldValue('viewfreeclient', false);
             formik.setFieldValue('freeclientstatus', false);
-            formik.setFieldValue('updatefreeclient', false);
+            
 
         }
 
     }, [formik.values.freeclientpermission]) 
+
+
+    useEffect(() => {
+        if (formik.values.addfreeclient || formik.values.editfreeclient ||  formik.values.freeclientstatus  ) {
+            formik.setFieldValue('viewfreeclient', true);
+        }
+    }, [formik.values.addfreeclient ,formik.values.editfreeclient ,formik.values.freeclientstatus ]);
 
     
 
