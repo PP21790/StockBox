@@ -169,20 +169,21 @@ const FreetrialStatus = () => {
                     </option>
                   ))}
                 </select>
-                <button className='btn btn-primary ms-2' onClick={UpdateClientstatus}>
-                  Update 
+                <button className='btn btn-primary ms-2' style={{ position: "relative", left: "526px" }} onClick={UpdateClientstatus}>
+                  Update
                 </button>
-                
+
               </div>
               <div
-                  className="ms-2"
-                >
-                  <ExportToExcel
-                    className="btn btn-primary "
-                    apiData={ForGetCSV}
-                    fileName={'All Users'} />
+                className="ms-2"
+                style={{ position: "relative", top: "-38px" }}
+              >
+                <ExportToExcel
+                  className="btn btn-primary "
+                  apiData={ForGetCSV}
+                  fileName={'All Users'} />
 
-                </div>
+              </div>
               <div className="ms-auto">
                 <div
                   className="modal fade"

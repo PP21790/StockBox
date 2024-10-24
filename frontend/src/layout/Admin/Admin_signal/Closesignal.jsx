@@ -269,7 +269,7 @@ const Closesignal = () => {
                     </div>
                     <div className="card">
                         <div className="card-body">
-                            <div className="d-lg-flex align-items-center mb-4 gap-3">
+                            <div className="d-lg-flex align-items-center mb-4 gap-3 justify-content-between">
                                 <div className="position-relative">
                                     <input
                                         type="text"

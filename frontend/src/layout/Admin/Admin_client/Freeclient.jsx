@@ -28,7 +28,7 @@ const Freeclient = () => {
     const [category, setCategory] = useState([]);
     const [client, setClientid] = useState({});
     const [ForGetCSV, setForGetCSV] = useState([])
-   
+
 
     const [updatetitle, setUpdatetitle] = useState({
         plan_id: "",
@@ -60,7 +60,7 @@ const Freeclient = () => {
             console.log("error");
         }
     }
- 
+
 
     const forCSVdata = () => {
         if (clients?.length > 0) {
@@ -70,7 +70,7 @@ const Freeclient = () => {
                 PhoneNo: item?.clientDetails?.PhoneNo || '',
                 StartDate: item?.startdate || '',
                 EndDate: item?.enddate || '',
-               
+
             }));
             setForGetCSV(csvArr);
         }
@@ -397,7 +397,7 @@ const Freeclient = () => {
             <div>
                 <div>
                     <div className="page-content">
-                        <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+                        <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3 ">
                             <div className="breadcrumb-title pe-3">Free Trial Client</div>
                             <div className="ps-3">
                                 <nav aria-label="breadcrumb">
@@ -414,7 +414,7 @@ const Freeclient = () => {
                         <hr />
                         <div className="card">
                             <div className="card-body">
-                                <div className="d-lg-flex align-items-center mb-4 gap-3">
+                                <div className="d-lg-flex align-items-center mb-4 gap-3 justify-content-between">
                                     <div className="position-relative">
                                         <input
                                             type="text"
@@ -425,17 +425,17 @@ const Freeclient = () => {
                                             <i className="bx bx-search" />
                                         </span>
                                     </div>
-                                      
+
                                     <div
-                                    className="ms-2"
-                                >
-                                    <ExportToExcel
-                                        className="btn btn-primary "
-                                        apiData={ForGetCSV}
-                                        fileName={'All Users'} />
+                                        className="ms-2"
+                                    >
+                                        <ExportToExcel
+                                            className="btn btn-primary "
+                                            apiData={ForGetCSV}
+                                            fileName={'All Users'} />
 
 
-                                </div>
+                                    </div>
                                 </div>
 
                                 <Table

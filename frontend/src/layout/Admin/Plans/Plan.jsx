@@ -180,7 +180,7 @@ const Plan = () => {
                                 </div>
                             </a>
                         </li>
-                        
+
                         {category.map((cat) => (
                             <li className="nav-item" role="presentation" key={cat._id}>
                                 <a
@@ -254,7 +254,7 @@ const Plan = () => {
                                                             </div>
                                                         </div>
                                                         <hr />
-                                                        <ul>
+                                                        <ul className='p-0'>
                                                             <li><b>Validity</b>: {client.validity}</li>
                                                             <li><b className='mb-1'>Description</b>:<textarea className='form-control' >{client.description}</textarea></li>
                                                             <li><b>Created At</b>: {fDate(client.created_at)}</li>
