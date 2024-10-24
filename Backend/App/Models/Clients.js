@@ -125,10 +125,7 @@ const clientsModel = Schema({
     refer_token: {
         type: String,
         unique: true,
-        default: function () {
-            // Generate a random token using crypto module
-            return crypto.randomBytes(16).toString('hex');
-        }
+        default: null,
     },
     forgotPasswordToken: {
         type: String,

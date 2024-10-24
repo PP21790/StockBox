@@ -63,7 +63,17 @@ class Clients {
         }
       }
 
-      const refer_token = crypto.randomBytes(10).toString('hex'); 
+      const refer_tokens = crypto.randomBytes(10).toString('hex'); 
+
+
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+let refer_token = '';
+const length = 10; // Length of the token
+while (refer_token.length < length) {
+    const byte = crypto.randomBytes(1);
+    const index = byte[0] % characters.length;
+    refer_token += characters[index];
+}
 
       const hashedPassword = await bcrypt.hash(password, 10);   
       const result = new Clients_Modal({
@@ -73,7 +83,7 @@ class Clients {
       password: hashedPassword,
       add_by: add_by,
       refer_token:refer_token,
-      token:refer_token,
+      token:refer_tokens,
       ActiveStatus:1,
       clientcome:1
       })
