@@ -81,7 +81,6 @@ class Clients {
 
 
 
-
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -118,7 +117,7 @@ class Clients {
         const refertoken = await Clients_Modal.findOne({ refer_token:token,del:0,ActiveStatus:1 });
     
         if (!refertoken) {
-            return res.status(400).json({ status: false, message: "refer token doesn't exists" });
+            return res.status(400).json({ status: false, message: "Referral code doesn't exists" });
         }
   
         const results = new Refer_Modal({
