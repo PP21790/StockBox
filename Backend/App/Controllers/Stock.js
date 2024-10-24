@@ -107,6 +107,10 @@ class Stock {
     }
   }
 
+
+
+
+  
   async getStocksByExpiry(req, res) {
     try {
       const { segment,symbol } = req.body;

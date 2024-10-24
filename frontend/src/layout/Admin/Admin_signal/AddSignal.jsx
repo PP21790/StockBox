@@ -50,6 +50,7 @@ const AddSignal = () => {
 
 
 
+
   const formik = useFormik({
     initialValues: {
       add_by: user_id,
@@ -67,8 +68,8 @@ const AddSignal = () => {
       expiry: '',
       optiontype: '',
       strikeprice: '',
-      
-
+      tradesymbol: expirydate[0]?.stock?.tradesymbol || "",
+      lotsize: expirydate[0]?.stock?.lotsize || ""
 
     },
     validate: (values) => {
@@ -136,6 +137,8 @@ const AddSignal = () => {
     onSubmit: async (values) => {
       const req = {
         add_by: user_id,
+        tradesymbol: expirydate[0]?.stock?.tradesymbol || "",
+        lotsize: expirydate[0]?.stock?.lotsize || "",
         stock: values.stock,
         price: values.price,
         tag1: values.tag1,
@@ -151,7 +154,7 @@ const AddSignal = () => {
         optiontype: values.optiontype,
         strikeprice: values.strikeprice,
       };
-
+      
       try {
         const response = await AddSignalByAdmin(req, token);
         if (response.status) {
@@ -188,6 +191,7 @@ const AddSignal = () => {
 
 
 
+
   useEffect(() => {
     if (formik.values.segment) {
       formik.setValues({
@@ -206,7 +210,8 @@ const AddSignal = () => {
         expiry: '',
         optiontype: '',
         strikeprice: '',
-
+        tradesymbol: '',
+        lotsize:''
       });
 
       setSearchItem("")
