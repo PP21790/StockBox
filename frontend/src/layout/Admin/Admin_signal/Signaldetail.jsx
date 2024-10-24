@@ -84,7 +84,7 @@ const Signaldetail = () => {
                                     {data.map((item, index) => (
                                         <React.Fragment key={index}>
                                             <div className="row">
-                                                <h6> {item.stock} {item.segment === 'O' ? item.strikeprice : ""} {item.segment === 'O' ? item.optiontype : item.calltype} {item.expirydate}</h6>
+                                                <h6> {item.tradesymbol}</h6>
                                                 <div className="card-body col-md-6">
                                                     <ul className="list-group list-group-flush">
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
