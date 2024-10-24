@@ -518,8 +518,8 @@ if (existingPlans.length > 0) {
       const newSubscription = new PlanSubscription_Modal({
         plan_id,
         client_id,
-        total: plan.price,
-        plan_price: price,
+        total: price,
+        plan_price: plan.price,
         discount: discount,
         plan_start: start,
         plan_end: end,
@@ -932,7 +932,10 @@ const signalsWithReportUrls = await Promise.all(signals.map(async (signal) => {
   }).lean();
 
 
+/*
+
 let lot = 0;
+let tradesymbol ="";
 if(signal.segment != "C")
 {
   if(signal.segment == "F")
@@ -942,8 +945,8 @@ if(signal.segment != "C")
     expiry: signal.expirydate,
     symbol: signal.stock
   });
-
   lot = lots.lotsize;
+  tradesymbol = lots.tradesymbol;
 }
 else
 {
@@ -952,21 +955,22 @@ else
     expiry: signal.expirydate,
     symbol: signal.stock,
     strike: signal.strikeprice,
+   
   });
   
-
   const lots = await query.exec();
   lot = lots.lotsize;
-
+  tradesymbol = lots.tradesymbol;
 }
-
 }
+*/
 
   return {
     ...signal,
     report_full_path: signal.report ? `${baseUrl}/uploads/report/${signal.report}` : null, // Append full report URL
     purchased: order ? true : false ,
-    lot: lot,
+  //  lot: lot,
+  //  tradesymbol: tradesymbol,
     order_quantity: order ? order.quantity : 0 
   };
 }));
