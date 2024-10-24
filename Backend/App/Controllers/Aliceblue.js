@@ -289,7 +289,6 @@ class Aliceblue {
                     message: "Signal not found"
                 });
             }
-
     
     
              const authToken = client.authtoken;

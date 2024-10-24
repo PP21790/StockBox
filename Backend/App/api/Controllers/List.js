@@ -932,6 +932,8 @@ const signalsWithReportUrls = await Promise.all(signals.map(async (signal) => {
   }).lean();
 
 
+/*
+
 let lot = 0;
 let tradesymbol ="";
 if(signal.segment != "C")
@@ -943,7 +945,6 @@ if(signal.segment != "C")
     expiry: signal.expirydate,
     symbol: signal.stock
   });
-
   lot = lots.lotsize;
   tradesymbol = lots.tradesymbol;
 }
@@ -957,21 +958,19 @@ else
    
   });
   
-
   const lots = await query.exec();
   lot = lots.lotsize;
   tradesymbol = lots.tradesymbol;
-
 }
-
 }
+*/
 
   return {
     ...signal,
     report_full_path: signal.report ? `${baseUrl}/uploads/report/${signal.report}` : null, // Append full report URL
     purchased: order ? true : false ,
-    lot: lot,
-    tradesymbol: tradesymbol,
+  //  lot: lot,
+  //  tradesymbol: tradesymbol,
     order_quantity: order ? order.quantity : 0 
   };
 }));
