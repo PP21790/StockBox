@@ -135,6 +135,16 @@ const signalModel = Schema({
         trim: true,
         default: null
     },
+    tradesymbol: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    lotsize: {
+        type: String,
+        trim: true,
+        default: null
+    },
     add_by: {
         type: String,
         trim: true,
