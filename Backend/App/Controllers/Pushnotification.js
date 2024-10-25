@@ -1,6 +1,5 @@
 const admin = require('firebase-admin');
-const serviceAccount = require("../../template/stockbox-15e55-firebase-adminsdk-1zz93-b45e3b0c77.json");
-//const serviceAccount = require('../../template/stockbox-15e55-firebase-adminsdk-1zz93-f32c384cb8.json');
+const serviceAccount = require('../../template/stockbox-15e55-firebase-adminsdk-1zz93-c91de27a7e.json');
 // Initialize Firebase Admin SDK
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -9,7 +8,7 @@ admin.initializeApp({
 // Function to send FCM notification
 async function sendFCMNotification(title, body, token) {
 
-
+console.log(token);
   const message = {
     token: token,
     notification: {
@@ -21,7 +20,6 @@ async function sendFCMNotification(title, body, token) {
       
     },
   };
-
 
 
   try {
