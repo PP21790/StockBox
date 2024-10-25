@@ -9,7 +9,7 @@ const ReferAndEarn = () => {
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
     const [clients, setClients] = useState(null);
-    const [isChanged, setIsChanged] = useState(false);  // Track if a change is made
+    const [isChanged, setIsChanged] = useState(false);  
 
     const getsettinglist = async () => {
         try {
@@ -182,14 +182,12 @@ const ReferAndEarn = () => {
                                             </label>
                                             <div className="col-sm-9">
                                                 <div className="input-group">
-                                                    <span className="input-group-text">
-                                                        <i className="fadeIn animated bx bx-message-square-dots" />
-                                                    </span>
                                                     <Field
+                                                        as="textarea"
                                                         name="refer_description"
-                                                        type="text"
                                                         className="form-control"
                                                         placeholder="Description"
+                                                        style={{ width: "100%" }}
                                                         onChange={(e) => {
                                                             handleFieldChange();
                                                             setFieldValue('refer_description', e.target.value);
@@ -198,6 +196,7 @@ const ReferAndEarn = () => {
                                                 </div>
                                             </div>
                                         </div>
+
 
                                         <div className="row mb-3 align-items-center">
                                             <label htmlFor="refer_image" className="col-sm-3 col-form-label">
