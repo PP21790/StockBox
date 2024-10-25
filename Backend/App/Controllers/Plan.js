@@ -15,7 +15,6 @@ class Plan {
             const { title, description, price, validity, category, add_by } = req.body;
     
             // Debugging: Log the incoming request body to ensure the data is correct
-            console.log("Request Body:", req.body);
     
             const result = new Plan_Modal({
                 title,
