@@ -233,12 +233,14 @@ const Service = () => {
             name: 'S.No',
             selector: (row, index) => index + 1,
             sortable: false,
+            width: "200px",
 
         },
         {
             name: 'Title',
             selector: row => row.title,
             sortable: true,
+            width: "200px",
         },
         // {
         //     name: 'Active Status',
@@ -263,11 +265,13 @@ const Service = () => {
             name: 'Created At',
             selector: row => new Date(row.created_at).toLocaleDateString(),
             sortable: true,
+            width: "200px",
         },
         {
             name: 'Updated At',
             selector: row => new Date(row.updated_at).toLocaleDateString(),
             sortable: true,
+            width: "200px",
         },
 
         // {
@@ -470,7 +474,7 @@ const Service = () => {
 
                             </div>
                         </div>
-                        <div className="table-responsive">
+                        <div className="table-responsive d-flex justify-content-center">
                             <Table
                                 columns={columns}
                                 data={clients}
