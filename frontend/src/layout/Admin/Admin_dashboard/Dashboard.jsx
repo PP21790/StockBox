@@ -541,11 +541,13 @@ const Dashbord = () => {
                         </div>
                         <hr />
 
-
+<div className="table-responsive d-flex justify-content-center">
                         <Table
+                       
                             columns={columns}
                             data={clients}
                         />
+                        </div>
                     </div>
                 </div>
 
