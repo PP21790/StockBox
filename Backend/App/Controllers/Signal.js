@@ -25,7 +25,7 @@ class Signal {
         });
 
 
-            const { price,calltype,stock,tag1,tag2,tag3,stoploss,description,callduration,callperiod,add_by,expirydate,segment,optiontype,strikeprice } = req.body;
+            const { price,calltype,stock,tag1,tag2,tag3,stoploss,description,callduration,callperiod,add_by,expirydate,segment,optiontype,strikeprice,tradesymbol,lotsize } = req.body;
         
             const report = req.files['report'] ? req.files['report'][0].filename : null;
 
@@ -61,6 +61,8 @@ if (segment == "C") {
               expirydate: expirydate,
               segment:segment,
               optiontype: optiontype,
+              tradesymbol:tradesymbol,
+              lotsize: lotsize,
           });
     
             await result.save();
@@ -70,9 +72,9 @@ if (segment == "C") {
             const clients = await Clients_Modal.find({ del: 0, ActiveStatus: 1 });
 
             if (!clients || clients.length === 0) {
-              
-         
-        
+
+             } else
+            {
             // Iterate through clients and send notifications
             const notificationTitle = 'Important Update';
             const notificationBody = 'New Signal Added......';
@@ -83,11 +85,12 @@ if (segment == "C") {
               if (deviceToken) {
                 try {
                   await sendFCMNotification(notificationTitle, notificationBody, deviceToken);
+
                 } catch (error) {
-                  console.error(`Failed to send notification to client with ID ${client._id}:`, error);
+                 // console.error(`Failed to send notification to client with ID ${client._id}:`, error);
                 }
               } else {
-                console.log(`No device token found for client with ID ${client._id}`);
+              //  console.log(`No device token found for client with ID ${client._id}`);
               }
             }
           }
@@ -294,7 +297,7 @@ async getSignal(req, res) {
 
      
       const { id, targethit1,targethit2,targethit3,targetprice1,targetprice2,targetprice3,slprice,exitprice,closestatus,closetype, close_description } = req.body;
-     
+     console.log("req",req.body);
 
       let close_status = false;
       let closeprice = null;

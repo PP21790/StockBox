@@ -13,7 +13,10 @@ class Dashboard {
         try {
             // Count documents in the Clients_Modal collection where del is false
             const client = await Clients_Modal.countDocuments({ del: 0 });
-            const user = await Users_Modal.countDocuments({ del: 0 });
+            const user = await Users_Modal.countDocuments({ 
+                del: 0, 
+                _id: { $ne: "66bc8b0c3fb6f1724c02bfec" } 
+              });
             const clientactive = await Clients_Modal.countDocuments({ del: 0,ActiveStatus:1 });
             const useractive = await Users_Modal.countDocuments({ del: 0,ActiveStatus:1 });
 

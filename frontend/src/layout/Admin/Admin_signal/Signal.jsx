@@ -288,9 +288,24 @@ const Signal = () => {
             "targetprice1": row.targetprice1,
             "targetprice2": row.targetprice2,
             "targetprice3": row.targetprice3,
+            "slprice":row.stoploss
         })
     }
 
+
+    useEffect(() => {
+        if (closedata.targetprice3) {
+            setClosedata(prevState => ({
+                ...prevState,
+                closestatus: true,
+            }));
+        }else{
+            setClosedata(prevState => ({
+                ...prevState,
+                closestatus: false,
+            }));
+        }
+    }, [closedata.targetprice3]);
 
 
 
@@ -383,10 +398,10 @@ const Signal = () => {
                 slprice: index === 2 ? closedata.slprice : closedata.stoploss,
                 exitprice: index === 3 ? closedata.exitprice : ""
             };
-
-
+            
+            
             const response = await SignalCloseApi(data, token);
-
+             
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
@@ -957,7 +972,7 @@ const Signal = () => {
                                                             type="number"
                                                             className='form-control'
                                                             style={{ width: "50%" }}
-                                                            defaultValue={closedata.slprice || closedata.stoploss}
+                                                            defaultValue={closedata.slprice }
                                                             onChange={(e) =>
                                                                 setClosedata({
                                                                     ...closedata,

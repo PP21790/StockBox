@@ -1,10 +1,9 @@
 // E:\StockBox\Backend\App\Controllers\pushnotification.js
 const admin = require('firebase-admin');
-
+// const { format, zonedTimeToUtc } = require('date-fns-tz');
 
 // Path to your service account key JSON file
 const serviceAccount = require('../../template/stockbox-15e55-firebase-adminsdk-1zz93-b45e3b0c77.json');
-
 // Initialize Firebase Admin SDK
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -12,6 +11,14 @@ admin.initializeApp({
 
 // Function to send FCM notification
 async function sendFCMNotification(title, body, token) {
+
+
+
+  // const now = new Date();
+  // const istTime = zonedTimeToUtc(now, 'Asia/Kolkata');
+  // const formattedTime = format(istTime, 'yyyy-MM-dd HH:mm:ssXXX', { timeZone: 'Asia/Kolkata' });
+
+
   const message = {
     token: token,
     notification: {
@@ -19,9 +26,12 @@ async function sendFCMNotification(title, body, token) {
       body: body,
     },
     data: {
-      additional_data: 'value', // Optional additional data
+      additional_data: 'value', 
+      
     },
   };
+
+  
 
   try {
     // Send the notification

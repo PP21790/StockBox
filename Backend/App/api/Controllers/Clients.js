@@ -81,9 +81,19 @@ class Clients {
 
 
 
-
       const hashedPassword = await bcrypt.hash(password, 10);
-      const refer_token = crypto.randomBytes(10).toString('hex'); 
+
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let refer_token = '';
+      const length = 10; // Length of the token
+      while (refer_token.length < length) {
+          const byte = crypto.randomBytes(1);
+          const index = byte[0] % characters.length;
+          refer_token += characters[index];
+      }
+      
+
+      const refer_tokens = crypto.randomBytes(10).toString('hex'); 
 
 
 
@@ -94,7 +104,7 @@ class Clients {
       PhoneNo: PhoneNo,
       password: hashedPassword,
       refer_token:refer_token,
-      token:refer_token,
+      token:refer_tokens,
       });
 
 
@@ -107,7 +117,7 @@ class Clients {
         const refertoken = await Clients_Modal.findOne({ refer_token:token,del:0,ActiveStatus:1 });
     
         if (!refertoken) {
-            return res.status(400).json({ status: false, message: "refer token doesn't exists" });
+            return res.status(400).json({ status: false, message: "Referral code doesn't exists" });
         }
   
         const results = new Refer_Modal({

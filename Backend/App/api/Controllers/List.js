@@ -518,8 +518,8 @@ if (existingPlans.length > 0) {
       const newSubscription = new PlanSubscription_Modal({
         plan_id,
         client_id,
-        total: plan.price,
-        plan_price: price,
+        total: price,
+        plan_price: plan.price,
         discount: discount,
         plan_start: start,
         plan_end: end,
@@ -882,7 +882,6 @@ async showSignalsToClients(req, res) {
     try {
       const { service_id, client_id } = req.body;
 
-      // Fetch the plan that matches the serviceId and clientId
       const plans = await Planmanage.find({ serviceid: service_id, clientid: client_id });
       if (plans.length === 0) {
           return res.json({
@@ -892,12 +891,12 @@ async showSignalsToClients(req, res) {
           });
       }
 
-      // Get the start and end dates from the plans
       const startDates = plans.map(plan => new Date(plan.startdate));
       const endDates = plans.map(plan => new Date(plan.enddate));
      
       const query = {
         service: service_id,
+        close_status:false,
         created_at: {
             $gte: startDates[0], // Assuming all plans have the same startdate
             $lte: endDates[0] // Assuming all plans have the same enddate
@@ -910,8 +909,10 @@ async showSignalsToClients(req, res) {
 
    const baseUrl = `${protocol}://${req.headers.host}`; // Construct the base URL
 
-   const signals = await Signal_Modal.find(query).lean(); // Use lean() to return plain JavaScript objects
-
+  // const signals = await Signal_Modal.find(query).lean(); // Use lean() to return plain JavaScript objects
+   const signals = await Signal_Modal.find(query)
+   .sort({ created_at: -1 }) // Change "createdAt" to the field you want to sort by
+   .lean();
 /*
    const signalsWithReportUrls = signals.map(signal => {
 
@@ -930,7 +931,10 @@ const signalsWithReportUrls = await Promise.all(signals.map(async (signal) => {
   }).lean();
 
 
+/*
+
 let lot = 0;
+let tradesymbol ="";
 if(signal.segment != "C")
 {
   if(signal.segment == "F")
@@ -940,8 +944,8 @@ if(signal.segment != "C")
     expiry: signal.expirydate,
     symbol: signal.stock
   });
-
   lot = lots.lotsize;
+  tradesymbol = lots.tradesymbol;
 }
 else
 {
@@ -950,21 +954,22 @@ else
     expiry: signal.expirydate,
     symbol: signal.stock,
     strike: signal.strikeprice,
+   
   });
   
-
   const lots = await query.exec();
   lot = lots.lotsize;
-
+  tradesymbol = lots.tradesymbol;
 }
-
 }
+*/
 
   return {
     ...signal,
     report_full_path: signal.report ? `${baseUrl}/uploads/report/${signal.report}` : null, // Append full report URL
     purchased: order ? true : false ,
-    lot: lot,
+  //  lot: lot,
+  //  tradesymbol: tradesymbol,
     order_quantity: order ? order.quantity : 0 
   };
 }));
@@ -983,6 +988,124 @@ else
       return res.json({ status: false, message: "Server error", data: [] });
   }
 }
+
+
+async showSignalsToClientsCloses(req, res) {
+
+
+  try {
+    const { service_id, client_id } = req.body;
+
+    const plans = await Planmanage.find({ serviceid: service_id, clientid: client_id });
+    if (plans.length === 0) {
+        return res.json({
+            status: false,
+            message: "No plans found for the given service and client IDs",
+            data: []
+        });
+    }
+
+    const startDates = plans.map(plan => new Date(plan.startdate));
+    const endDates = plans.map(plan => new Date(plan.enddate));
+   
+    const query = {
+      service: service_id,
+      close_status:true,
+      created_at: {
+          $gte: startDates[0], // Assuming all plans have the same startdate
+          $lte: endDates[0] // Assuming all plans have the same enddate
+      }
+  };
+
+ // const signals = await Signal_Modal.find(query);
+
+ const protocol = req.protocol; // Will be 'http' or 'https'
+
+ const baseUrl = `${protocol}://${req.headers.host}`; // Construct the base URL
+
+// const signals = await Signal_Modal.find(query).lean(); // Use lean() to return plain JavaScript objects
+ const signals = await Signal_Modal.find(query)
+ .sort({ closedate: -1 }) // Change "createdAt" to the field you want to sort by
+ .lean();
+/*
+ const signalsWithReportUrls = signals.map(signal => {
+
+  return {
+      ...signal,
+      report_full_path: signal.report ? `${baseUrl}/uploads/report/${signal.report}` : null 
+  };
+});
+*/
+
+const signalsWithReportUrls = await Promise.all(signals.map(async (signal) => {
+// Check if the signal was bought by the client
+const order = await Order_Modal.findOne({
+  clientid: client_id,
+  signalid: signal._id
+}).lean();
+
+
+/*
+
+let lot = 0;
+let tradesymbol ="";
+if(signal.segment != "C")
+{
+if(signal.segment == "F")
+  {
+const lots = await Stock_Modal.findOne({
+  segment: signal.segment,
+  expiry: signal.expirydate,
+  symbol: signal.stock
+});
+lot = lots.lotsize;
+tradesymbol = lots.tradesymbol;
+}
+else
+{
+const query = Stock_Modal.findOne({
+  segment: signal.segment,
+  expiry: signal.expirydate,
+  symbol: signal.stock,
+  strike: signal.strikeprice,
+ 
+});
+
+const lots = await query.exec();
+lot = lots.lotsize;
+tradesymbol = lots.tradesymbol;
+}
+}
+*/
+
+return {
+  ...signal,
+  report_full_path: signal.report ? `${baseUrl}/uploads/report/${signal.report}` : null, // Append full report URL
+  purchased: order ? true : false ,
+//  lot: lot,
+//  tradesymbol: tradesymbol,
+  order_quantity: order ? order.quantity : 0 
+};
+}));
+
+
+
+
+    return res.json({
+        status: true,
+        message: "Signals retrieved successfully",
+        data: signalsWithReportUrls
+    });
+
+} catch (error) {
+    console.error("Error fetching signals:", error);
+    return res.json({ status: false, message: "Server error", data: [] });
+}
+}
+
+
+
+
 
 
 async showSignalsToClientsClose(req, res) {
@@ -1031,6 +1154,29 @@ async showSignalsToClientsClose(req, res) {
 }
 
 
+
+
+async CloseSignal(req, res) {
+  try {
+      const { service_id } = req.body;
+
+      const query = {
+          service: service_id,
+          close_status: true,
+      };
+      // Fetch signals and sort by createdAt in descending order
+      const signals = await Signal_Modal.find(query).sort({ created_at: -1 }).lean(); 
+
+      return res.json({
+          status: true,
+          message: "Signals retrieved successfully",
+          data: signals,
+      });
+  } catch (error) {
+      console.error("Error fetching signals:", error);
+      return res.json({ status: false, message: "Server error", data: [] });
+  }
+}
 
 
 async Servicelist(req, res) {

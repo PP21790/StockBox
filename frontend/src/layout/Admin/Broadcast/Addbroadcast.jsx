@@ -78,7 +78,7 @@ const Addbroadcast = () => {
                 });
             }
         } catch (error) {
-            console.error("Error in API call:", error);
+            // console.error("Error in API call:", error);
             Swal.fire({
                 title: "Error",
                 text: "An unexpected error occurred. Please try again later.",

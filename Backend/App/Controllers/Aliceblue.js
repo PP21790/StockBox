@@ -289,7 +289,6 @@ class Aliceblue {
                     message: "Signal not found"
                 });
             }
-
     
     
              const authToken = client.authtoken;
@@ -481,6 +480,107 @@ class Aliceblue {
             });
         }
     }
+
+
+    
+    async checkOrder(req, res) {
+        
+        try {
+            const { orderid, clientid } = req.body;
+
+            const order = await Order_Modal.findOne({
+                clientid: clientid,  
+                orderid: orderid        
+            });
+    
+            if (!order) {
+                return res.status(404).json({
+                    status: false,
+                    message: "Order not found for this client"
+                });
+            }
+
+
+          
+
+
+
+            const client = await Clients_Modal.findById(clientid);
+            if (!client) {
+                return res.status(404).json({
+                    status: false,
+                    message: "Client not found"
+                });
+            }
+
+
+            if(client.tradingstatus == 0)
+                {
+                    return res.status(404).json({
+                        status: false,
+                        message: "Client Broker Not Login, Please Login With Broker"
+                    });
+                }
+
+
+                if (order.borkerid!=2) {
+                    return res.status(404).json({
+                        status: false,
+                        message: "Order not found for this Broker"
+                    });
+                }
+
+
+            const authToken = client.authtoken;
+            const userId = client.apikey;
+    
+
+if(order.status==1) {
+
+    return res.json({
+        status: true,
+        response: order.data
+    });
+}
+
+    var data = JSON.stringify([
+        {
+          "nestOrderNumber": orderid
+        }
+      ]);
+
+
+        let config = {
+            method: 'post',
+            maxBodyLength: Infinity,
+            url: 'https://ant.aliceblueonline.com/rest/AliceBlueAPIService/api/placeOrder/orderHistory',
+            headers: {
+                'Authorization': 'Bearer ' + userId + ' ' + authToken,
+                'Content-Type': 'application/json',
+            },
+            data: data
+        };
+       
+            const response = await axios(config); // Use await with axios
+            order.data = response.data; 
+            order.status = 1; 
+    
+            await order.save();
+
+
+            return res.json({
+                status: true,
+                response: response.data
+            });
+    
+        } catch (error) {
+            return res.status(500).json({ 
+                status: false,
+                message: error.response ? error.response.data : "Error occurred while fetching order details."
+            });
+        }
+    }
+    
 
 
 

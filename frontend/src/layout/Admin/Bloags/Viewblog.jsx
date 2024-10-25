@@ -7,7 +7,7 @@ import { image_baseurl } from '../../../Utils/config';
 const Viewblog = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { row } = location.state;  // Get the row data from location state
+    const { row } = location.state;
 
     return (
         <div className="page-content">
@@ -61,17 +61,33 @@ const Viewblog = () => {
                                         </div>
 
 
+                                        {/* <div className="row mb-3 align-items-center">
+                                            <label htmlFor="description" className="col-sm-3 col-form-label">
+                                                <b>Description</b>
+                                            </label>
+                                            <div className="col-sm-9">
+                                                <div className="input-group">
+                                                    <textarea className="input-group-text" style={{ width: "100%" }}>
+                                                        <span
+                                                            dangerouslySetInnerHTML={{ __html: row.description }}
+
+                                                        />
+                                                    </textarea>
+                                                </div>
+                                            </div>
+                                        </div> */}
+
                                         <div className="row mb-3 align-items-center">
                                             <label htmlFor="description" className="col-sm-3 col-form-label">
                                                 <b>Description</b>
                                             </label>
                                             <div className="col-sm-9">
                                                 <div className="input-group">
-                                                    <textarea
-                                                        className="input-group-text"
+                                                    <div
+                                                        className="form-control"
                                                         style={{ width: "100%" }}
-                                                        value={row.description} // Displaying the text directly here
-                                                        readOnly // Optional, if you want it to be read-only
+                                                        dangerouslySetInnerHTML={{ __html: row.description || "" }}
+                                                        readOnly
                                                     />
                                                 </div>
                                             </div>

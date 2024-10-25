@@ -65,7 +65,7 @@ const News = () => {
 
 
 
-    
+
 
     useEffect(() => {
         getNews();
@@ -294,7 +294,7 @@ const News = () => {
                                     <i className="bx bx-search" />
                                 </span>
                             </div>
-                           <div className="ms-auto">
+                            <div className="ms-auto">
                                 <Link
                                     to="/admin/addnews"
                                     type="button"
@@ -306,7 +306,7 @@ const News = () => {
                                     Add News
                                 </Link>
 
-                            </div> 
+                            </div>
                         </div>
                         <div className="container py-2">
 
@@ -319,14 +319,14 @@ const News = () => {
 
                                         <div className={`card ${client.borderClass || 'radius-15'} d-flex justify-content-center align-items-center`} >
 
-                                            <div className="card-body">
+                                            <div className="card-body" style={{width:"100%"}}>
                                                 <div className="d-flex justify-content-between align-items-start">
 
                                                     <h4 className="card-title text-muted mb-0">{client.title}</h4>
 
                                                     <div>
 
-                                                 <Tooltip placement="top" overlay="Update">
+                                                        <Tooltip placement="top" overlay="Update">
                                                             <SquarePen
                                                                 onClick={() => {
 
@@ -334,10 +334,10 @@ const News = () => {
                                                                     navigate("/admin/updatenews", { state: { client } })
                                                                 }}
                                                             />
-                                                        </Tooltip> 
-                                                     <Tooltip placement="top" overlay="Delete">
+                                                        </Tooltip>
+                                                        <Tooltip placement="top" overlay="Delete">
                                                             <Trash2 onClick={() => DeleteService(client._id)} />
-                                                        </Tooltip> 
+                                                        </Tooltip>
                                                     </div>
                                                 </div>
                                                 <hr />
@@ -354,18 +354,38 @@ const News = () => {
                                                         />
                                                     </div>
 
+                                                    {/* <div className="row mb-3 align-items-center">
+                                                        <label htmlFor="description" className="col-sm-3 col-form-label">
+                                                            <b>Description</b>
+                                                        </label>
+                                                        <div className="col-sm-9">
+                                                            <div className="input-group">
+                                                                <div
+                                                                    className="form-control"
+                                                                    style={{ width: "100%" }}
+                                                                    dangerouslySetInnerHTML={{ __html: row.description || "" }}
+                                                                    readOnly
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div> */}
+
 
                                                     <div className="col-md-10 ps-4">
 
                                                         <h5>Description:</h5>
-                                                        {/* <p className="card-text">{client.description} */}
-                                                        <span
-                                                            dangerouslySetInnerHTML={{ __html: client.description }}
-                                                            style={{ display: 'block', marginTop: '0.5rem' }}
+
+                                                        <div
+                                                            className="form-control"
+                                                            style={{ width: "100%" }}
+                                                            dangerouslySetInnerHTML={{ __html: client.description || "" }}
+                                                            readOnly
                                                         />
-                                                        {/* </p> */}
+
                                                         <div className="float-end text-muted small">{fDate(client.created_at)}</div>
                                                     </div>
+
+
                                                 </div>
                                             </div>
                                         </div>

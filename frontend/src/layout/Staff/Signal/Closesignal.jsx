@@ -8,8 +8,7 @@ import Swal from 'sweetalert2';
 import { GetSignallist, DeleteSignal, SignalCloseApi, GetService, GetStockDetail } from '../../../Services/Admin';
 import { fDateTimeSuffix, fDateTime } from '../../../Utils/Date_formate'
 import { getstaffperuser } from '../../../Services/Admin';
-
-
+import ExportToExcel from '../../../Utils/ExportCSV';
 
 
 const Closesignal = () => {
@@ -35,6 +34,7 @@ const Closesignal = () => {
     const [serviceList, setServiceList] = useState([]);
     const [stockList, setStockList] = useState([]);
     const [searchstock, setSearchstock] = useState("");
+    const [ForGetCSV, setForGetCSV] = useState([])
 
 
 
@@ -109,13 +109,34 @@ const Closesignal = () => {
         }
     };
 
+    
+
+    
+    const forCSVdata = () => {
+        if (clients?.length > 0) {
+            const csvArr = clients.map((item) => ({
+                Symbol: item.stock || "",
+                segment: item?.segment || '',
+                Price: item?.price || '',
+                EntryType: item?.calltype || '',
+                EntryPrice: item?.price || '',
+                ExitPrice : item?.closeprice || "" ,
+                EntryDate: fDateTimeSuffix(item?.created_at) || '',
+                ExitDate: fDateTimeSuffix(item?.closedate) || '',
+
+            }));
+
+            setForGetCSV(csvArr);
+        }
+    };
 
 
     useEffect(() => {
         fetchAdminServices()
         fetchStockList()
         getpermissioninfo()
-    }, []);
+        forCSVdata()
+    }, [filters,clients]);
 
 
 
@@ -258,6 +279,7 @@ const Closesignal = () => {
                                     </li>
                                 </ol>
                             </nav>
+                            
                         </div>
                     </div>
                     <div className="card">
@@ -277,7 +299,16 @@ const Closesignal = () => {
                                         <i className="bx bx-search" />
                                     </span>
                                 </div>
+                                <div
+                                    className="ms-2"
+                                >
+                                    <ExportToExcel
+                                        className="btn btn-primary "
+                                        apiData={ForGetCSV}
+                                        fileName={'All Users'} />
 
+
+                                </div>
                             </div>
 
                             <div className="row">

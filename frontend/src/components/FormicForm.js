@@ -68,9 +68,15 @@ const DynamicForm = ({
 
     const [imagePreview, setImagePreview] = useState({});
 
+
+
+
     const handleFileChange3 = (event, index, fieldName) => {
         const file = event.target.files[0];
         if (file) {
+            formik.setFieldValue(fieldName, file);
+
+            // Image preview logic
             const reader = new FileReader();
             reader.onloadend = () => {
                 setImagePreview((prevState) => ({
@@ -81,6 +87,7 @@ const DynamicForm = ({
             reader.readAsDataURL(file);
         }
     };
+
 
 
 
