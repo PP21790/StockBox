@@ -189,7 +189,7 @@ const AddSignal = () => {
   });
 
 
-  console.log("searchItem",searchItem)
+ 
 
   useEffect(() => {
     if (formik.values.segment) {

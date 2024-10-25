@@ -290,7 +290,7 @@ const Plan = () => {
                                                                         </div>
                                                                         <div className="modal-body">
                                                                             <ul>
-                                                                                <li>
+                                                                                {/* <li>
                                                                                     <div className="row justify-content-between">
                                                                                         <div className="col-md-6">
                                                                                             <b>Title</b>
@@ -299,7 +299,7 @@ const Plan = () => {
                                                                                             {client.title}
                                                                                         </div>
                                                                                     </div>
-                                                                                </li>
+                                                                                </li> */}
                                                                                 <li>
                                                                                     <div className="row justify-content-between">
                                                                                         <div className="col-md-6">

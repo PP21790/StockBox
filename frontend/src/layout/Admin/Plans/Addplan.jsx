@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import DynamicForm from '../../../components/FormicForm';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import { Addplanbyadmin, getcategoryplan, getActivecategoryplan } from '../../../Services/Admin';
+import { Addplanbyadmin, getcategoryplan, getplanlist, getActivecategoryplan } from '../../../Services/Admin';
 
 
 
@@ -14,6 +14,7 @@ const Addplan = () => {
     const user_id = localStorage.getItem("id");
     const token = localStorage.getItem("token");
     const [clients, setClients] = useState([]);
+    const [plan, setPlan] = useState([]);
 
 
 
@@ -28,19 +29,18 @@ const Addplan = () => {
         }
     }
 
+
+
     useEffect(() => {
         getcategoryplanlist();
     }, []);
 
 
 
-
     const validate = (values) => {
         let errors = {};
 
-        if (!values.title) {
-            errors.title = "Please enter Title";
-        }
+
         if (!values.description) {
             errors.description = "Please enter Description";
         }
@@ -62,7 +62,7 @@ const Addplan = () => {
 
     const onSubmit = async (values) => {
         const req = {
-            title: values.title,
+            title: "",
             description: values.description,
             price: values.price,
             validity: values.validity,
@@ -119,6 +119,8 @@ const Addplan = () => {
 
 
 
+
+
     const fields = [
         {
             name: "category",
@@ -129,7 +131,7 @@ const Addplan = () => {
                 value: item._id,
             })),
             label_size: 12,
-            col_size: 6,
+            col_size: 4,
             disable: false,
         },
         {
@@ -137,30 +139,22 @@ const Addplan = () => {
             label: "Validity",
             type: "select",
             label_size: 12,
-            col_size: 6,
+            col_size: 4,
             disable: false,
             options: [
-                { value: "1 month", label: "1 Month" },
-                { value: "3 months", label: "3 Months" },
-                { value: "6 months", label: "6 Months" },
-                { value: "1 year", label: "1 Year" }
-
-            ]
+                plan[0]?.validity !== "1 month" ? { value: "1 month", label: "1 Month" } : null,
+                plan[0]?.validity !== "3 months" ? { value: "3 months", label: "3 Months" }: null,
+                plan[0]?.validity !== "6 months" ? { value: "6 months", label: "6 Months" }: null,
+                plan[0]?.validity !== "1 year" ? { value: "1 year", label: "1 Year" }: null
+            ].filter(option => option !== null) 
         },
-        {
-            name: "title",
-            label: "Title",
-            type: "text",
-            label_size: 6,
-            col_size: 6,
-            disable: false,
-        },
+        
         {
             name: "price",
             label: "Price",
             type: "number",
             label_size: 12,
-            col_size: 6,
+            col_size: 4,
             disable: false,
         },
 
@@ -169,10 +163,32 @@ const Addplan = () => {
             label: "Description",
             type: "text5",
             label_size: 12,
-            col_size: 6,
+            col_size: 12,
             disable: false,
         },
     ];
+
+
+
+    useEffect(() => {
+        const getplanlistfordetail = async () => {
+            try {
+                const response = await getplanlist(token);
+                if (response.status) {
+                    const filteredPlans = response.data.filter(item => item.category === formik.values.category);
+                    setPlan(filteredPlans);
+
+                }
+            } catch (error) {
+                console.error("Plan list fetch error:", error);
+            }
+        };
+    
+        if (formik.values.category) {
+            getplanlistfordetail();
+        }
+    }, [formik.values.category]);
+    
 
 
 
