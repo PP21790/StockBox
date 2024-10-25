@@ -67,15 +67,12 @@ const Viewblog = () => {
                                             </label>
                                             <div className="col-sm-9">
                                                 <div className="input-group">
-                                                    <span className="input-group-text">
-
-                                                    
-
+                                                    <textarea className="input-group-text" style={{width:"100%"}}>
                                                     <span
                                                         dangerouslySetInnerHTML={{ __html: row.description }}
-                                                        style={{ display: 'block', marginTop: '0.5rem' }}
+                                                        
                                                     />
-                                                    </span>
+                                                    </textarea>
                                                 </div>
                                             </div>
                                         </div>
