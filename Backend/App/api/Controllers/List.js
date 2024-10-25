@@ -715,7 +715,13 @@ async  myPlan(req, res) {
           serviceNames: { $push: '$serviceDetails.title' } // Create an array of service titles
         }
       },
-      // Optionally, you can project the fields you want to return
+
+      {
+        $sort: {
+          plan_end: -1 
+        }
+      },
+
       {
         $project: {
           _id: 1, // Plan Subscription ID
