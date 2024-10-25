@@ -36,6 +36,7 @@ const Updateblogs = () => {
 
             try {
                 const response = await Updateblogsbyadmin(req, token);
+                 
                 if (response.status) {
                     Swal.fire({
                         title: "Update Successful!",

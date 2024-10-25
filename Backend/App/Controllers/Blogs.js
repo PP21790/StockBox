@@ -138,6 +138,8 @@ class BlogController {
 
 
     async  updateBlogs(req, res) {
+
+        console.log("req",req)
         try {
             // Log incoming data for debugging
          //   console.log('Request Body:', req.body);
@@ -180,7 +182,8 @@ class BlogController {
             if (image) {
                 updateFields.image = image;
             }
-    
+         
+            console.log("image",image)
             // Find and update the blog post by ID
             const updatedBlogs = await Blogs_Modal.findByIdAndUpdate(
                 id,

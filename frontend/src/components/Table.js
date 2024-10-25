@@ -1,9 +1,6 @@
 import DataTable from 'react-data-table-component';
 import React from 'react';
 
-
-
-
 const Table = ({ columns, data }) => {
     return (
         <div className="table-responsive" style={tableContainerStyle}>
@@ -14,6 +11,7 @@ const Table = ({ columns, data }) => {
                 highlightOnHover  
                 striped  
                 customStyles={customStyles}
+                responsive={true}  // Ensure responsiveness
             />
         </div>
     );
@@ -24,6 +22,9 @@ const tableContainerStyle = {
     backgroundColor: '#f9f9f9',
     borderRadius: '10px',
     boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
+    display: 'inline-block',  // Allow content width
+    maxWidth: '100%',  // Prevent the table from exceeding container width
+    overflowX: 'auto',  // Add horizontal scroll if content exceeds screen size
 };
 
 const customStyles = {
