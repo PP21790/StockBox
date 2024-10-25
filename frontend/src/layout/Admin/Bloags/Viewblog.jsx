@@ -67,15 +67,16 @@ const Viewblog = () => {
                                             </label>
                                             <div className="col-sm-9">
                                                 <div className="input-group">
-                                                    <textarea className="input-group-text" style={{width:"100%"}}>
-                                                    <span
-                                                        dangerouslySetInnerHTML={{ __html: row.description }}
-                                                        
+                                                    <textarea
+                                                        className="input-group-text"
+                                                        style={{ width: "100%" }}
+                                                        value={row.description} // Displaying the text directly here
+                                                        readOnly // Optional, if you want it to be read-only
                                                     />
-                                                    </textarea>
                                                 </div>
                                             </div>
                                         </div>
+
 
 
                                         <div className="row mb-3 align-items-center">
