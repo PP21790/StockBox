@@ -42,21 +42,21 @@ const FreetrialStatus = () => {
       setForGetCSV(csvArr);
     }
   };
- 
+
 
   const getstatusdetail = async () => {
     try {
       const response = await basicsettinglist(token);
       if (response?.status && response?.data) {
         const defaultTrial = response.data.length > 0 ? response.data[0].freetrial : "1";
-        setAddStatus({freetrial: defaultTrial });
+        setAddStatus({ freetrial: defaultTrial });
 
       }
     } catch (error) {
       console.error('Error fetching API details:', error);
     }
   };
- 
+
   const getApidetail = async () => {
     try {
       const response = await getfreetrialstatus(token);
@@ -125,22 +125,26 @@ const FreetrialStatus = () => {
       name: 'Privious Status',
       selector: row => `${row.olddays}Day`,
       sortable: true,
+      width: "200px",
     },
     {
       name: 'Updated Status',
       selector: row => `${row.newdays}Day`,
       sortable: true,
+      width: "200px",
     },
 
     {
       name: 'Created At',
       selector: row => fDate(row.createdAt),
       sortable: true,
+      width: "200px",
     },
     {
       name: 'Updated At',
       selector: row => fDate(row.updatedAt),
       sortable: true,
+      width: "200px",
     },
   ];
 
@@ -257,7 +261,7 @@ const FreetrialStatus = () => {
                 </div>
               </div>
             </div>
-            <div className="table-responsive mt-5">
+            <div className="table-responsive mt-5 d-flex justify-content-center">
               <Table
                 columns={columns}
                 data={data}

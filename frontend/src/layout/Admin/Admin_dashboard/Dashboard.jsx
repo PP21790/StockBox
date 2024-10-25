@@ -528,9 +528,6 @@ const Dashbord = () => {
                         </div>
                     </div>
                 </div>
-
-
-
                 <div className="card radius-10">
                     <div className="card-body">
                         <div className="d-flex align-items-center">
@@ -541,11 +538,13 @@ const Dashbord = () => {
                         </div>
                         <hr />
 
-
+<div className="table-responsive d-flex justify-content-center">
                         <Table
+                       
                             columns={columns}
                             data={clients}
                         />
+                        </div>
                     </div>
                 </div>
 
