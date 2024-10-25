@@ -23,3 +23,6 @@ yarn-debug.log*
 yarn-error.log*
 
 
+# Ignoring environment files
+.env
+/Backend/.env
