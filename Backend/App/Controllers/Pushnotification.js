@@ -1,8 +1,5 @@
 const admin = require('firebase-admin');
-
-// Parse the service account credentials from the environment variable
-const serviceAccount = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS);
-
+const serviceAccount = require('../../template/stockbox-15e55-firebase-adminsdk-1zz93-c91de27a7e.json');
 // Initialize Firebase Admin SDK
 if (!admin.apps.length) {
   console.log('Initializing Firebase Admin SDK...');
@@ -13,6 +10,8 @@ if (!admin.apps.length) {
 }
 
 async function sendFCMNotification(title, body, token) {
+
+// console.log(token);
   const message = {
     token: token,
     notification: {

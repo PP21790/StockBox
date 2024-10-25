@@ -50,7 +50,9 @@ class BroadcastController {
             const clients = await Clients_Modal.find({ del: 0, ActiveStatus: 1 });
 
             if (!clients || clients.length === 0) {
-              
+
+            } else
+              {
             const notificationTitle = 'Important Update';
             const notificationBody = 'New Broadcast Added......';
         
