@@ -72,9 +72,9 @@ if (segment == "C") {
             const clients = await Clients_Modal.find({ del: 0, ActiveStatus: 1 });
 
             if (!clients || clients.length === 0) {
-              
-         
-        
+
+             } else
+            {
             // Iterate through clients and send notifications
             const notificationTitle = 'Important Update';
             const notificationBody = 'New Signal Added......';
@@ -85,11 +85,12 @@ if (segment == "C") {
               if (deviceToken) {
                 try {
                   await sendFCMNotification(notificationTitle, notificationBody, deviceToken);
+
                 } catch (error) {
-                  console.error(`Failed to send notification to client with ID ${client._id}:`, error);
+                 // console.error(`Failed to send notification to client with ID ${client._id}:`, error);
                 }
               } else {
-                console.log(`No device token found for client with ID ${client._id}`);
+              //  console.log(`No device token found for client with ID ${client._id}`);
               }
             }
           }

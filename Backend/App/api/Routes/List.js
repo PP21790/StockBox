@@ -1,6 +1,6 @@
 const router = require("express").Router()
 
-const {Blogslist,Newslist,Bannerlist,Plancategorysist,getPlansByPlancategoryId,addPlanSubscription,myPlan,Couponlist,Signallist,applyCoupon,showSignalsToClients,Servicelist,Faqlist,detailContent,showSignalsToClientsClose,BasketList,pastPerformance,addBasketSubscription,getallPlan,addFreeTrail,BroadcastList,myFreetrial,basicSetting,pastPerformances,myService,CloseSignal} = require('../Controllers/List')
+const {Blogslist,Newslist,Bannerlist,Plancategorysist,getPlansByPlancategoryId,addPlanSubscription,myPlan,Couponlist,Signallist,applyCoupon,showSignalsToClients,Servicelist,Faqlist,detailContent,showSignalsToClientsClose,BasketList,pastPerformance,addBasketSubscription,getallPlan,addFreeTrail,BroadcastList,myFreetrial,basicSetting,pastPerformances,myService,CloseSignal,showSignalsToClientsCloses} = require('../Controllers/List')
 
 
 router.get('/api/list/blogs',Blogslist);
@@ -21,8 +21,8 @@ router.get('/api/list/coupon', Couponlist);
 router.get('/api/list/signal', Signallist);
 router.post('/api/list/applycoupon', applyCoupon);
 router.post('/api/list/signalclient', showSignalsToClients);
+router.post('/api/list/closesignalclient', showSignalsToClientsCloses);
 router.post('/api/list/closesignal', CloseSignal);
-
 router.post('/api/list/signalclientclose', showSignalsToClientsClose);
 
 router.get('/api/list/service', Servicelist);
