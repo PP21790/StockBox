@@ -13,11 +13,16 @@ import { IndianRupee } from 'lucide-react';
 import ExportToExcel from '../../../Utils/ExportCSV';
 
 
+
+
 const Client = () => {
+
 
 
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
+
+
 
     const [category, setCategory] = useState([]);
     const [checkedIndex, setCheckedIndex] = useState(0);
@@ -30,11 +35,12 @@ const Client = () => {
     const [searchInput, setSearchInput] = useState("");
     const [selectedPlanId, setSelectedPlanId] = useState(null)
     const [ForGetCSV, setForGetCSV] = useState([])
-   
-     
+
 
 
     const handleDownload = (row) => {
+
+
 
         const url = `${image_baseurl}uploads/pdf/${row.pdf}`;
         const link = document.createElement('a');
@@ -47,14 +53,13 @@ const Client = () => {
 
     };
 
-
-
     const [basketdetail, setBasketdetail] = useState({
         plan_id: "",
         client_id: "",
         price: "",
         discount: ""
     });
+
 
     const [updatetitle, setUpdatetitle] = useState({
         plan_id: "",
@@ -64,15 +69,15 @@ const Client = () => {
 
 
 
-
-
     const handleTabChange = (index) => {
         setCheckedIndex(index);
     };
 
+
     const showModal = () => {
         setIsModalVisible(true);
     };
+
     const handleCancel = () => {
         setIsModalVisible(false);
         setSelectcategory("")
@@ -92,10 +97,12 @@ const Client = () => {
         getbasketlist()
         getcategoryplanlist()
     }, [searchInput]);
-  
+
+
     useEffect(() => {
         forCSVdata()
-    }, [searchInput,clients]);
+    }, [searchInput, clients]);
+
 
     const forCSVdata = () => {
         if (clients?.length > 0) {
@@ -104,18 +111,17 @@ const Client = () => {
                 Email: item?.Email || '',
                 PhoneNo: item?.PhoneNo || '',
                 Created_at: item?.createdAt || '',
-               
+
             }));
             setForGetCSV(csvArr);
         }
     };
 
-
-
     const getcategoryplanlist = async () => {
         try {
             const response = await getcategoryplan(token);
             if (response.status) {
+
                 setCategory(response.data);
 
             }
@@ -123,8 +129,6 @@ const Client = () => {
             console.log("error");
         }
     };
-
-
 
 
     const getAdminclient = async () => {
@@ -147,7 +151,6 @@ const Client = () => {
 
 
 
-
     const getplanlistbyadmin = async () => {
         try {
             const response = await getplanlist(token);
@@ -159,7 +162,6 @@ const Client = () => {
             console.log("error");
         }
     }
-
 
 
     const getbasketlist = async () => {
@@ -174,8 +176,6 @@ const Client = () => {
     }
 
 
-
-
     const updateClient = async (row) => {
         navigate("/admin/client/updateclient/" + row._id, { state: { row } })
     }
@@ -184,7 +184,6 @@ const Client = () => {
     const Clientdetail = async (row) => {
         navigate("/admin/client/clientdetail/" + row._id, { state: { row } })
     }
-
 
 
 
@@ -233,9 +232,8 @@ const Client = () => {
 
 
 
+
     // update status 
-
-
 
     const handleSwitchChange = async (event, id) => {
         const originalChecked = event.target.checked;
@@ -278,6 +276,8 @@ const Client = () => {
             getAdminclient();
         }
     };
+
+
 
 
 
@@ -528,7 +528,7 @@ const Client = () => {
                                         Add Client
                                     </Link>
                                 </div>
-                             
+
                                 <div
                                     className="ms-2"
                                 >
@@ -609,7 +609,9 @@ const Client = () => {
                                                                     onClick={() => handleCategoryChange(item._id)}
                                                                 />
                                                                 <label className="form-check-label" htmlFor={`proplus-${index}`}>
-                                                                    {item.title}
+                                                                    {item.title} (
+                                                                    {item.servicesDetails.map((service) => service.title).join(", ")}
+                                                                    )
                                                                 </label>
                                                             </div>
                                                         ))}
@@ -638,7 +640,7 @@ const Client = () => {
                                                                                         }}
                                                                                     />
                                                                                     <label className="form-check-label mx-1" style={{ fontSize: "13px", fontWeight: "800" }} htmlFor={`input-plan-${index}`}>
-                                                                                        {item.title}
+                                                                                        {item.validity}
                                                                                     </label>
                                                                                 </h5>
 
@@ -653,7 +655,7 @@ const Client = () => {
                                                                                                 aria-expanded={selectedPlanId === item._id}
                                                                                                 aria-controls={`collapse-${item._id}`}
                                                                                             >
-                                                                                                <strong className="text-secondary">Validity: {item.validity}</strong>
+                                                                                                <strong className="text-secondary m-2">Detail</strong>
                                                                                             </button>
                                                                                         </h2>
                                                                                         <div
@@ -666,6 +668,7 @@ const Client = () => {
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Price:</strong>
                                                                                                     <span><IndianRupee /> {item.price}</span>
+
                                                                                                 </div>
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Validity:</strong>
