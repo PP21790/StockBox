@@ -21,6 +21,8 @@ class Clients {
   async AddClient(req, res) {
 
     try {
+
+    
       const { FullName, Email, PhoneNo, password, token } = req.body;
 
       if (!FullName) {
@@ -62,7 +64,7 @@ class Clients {
       });
 
 
-  
+   
       if (existingUser) {
         if (existingUser.Email === Email) {
           return res.status(400).json({ status: false, message: "Email already exists" });
@@ -105,13 +107,12 @@ class Clients {
       password: hashedPassword,
       refer_token:refer_token,
       token:refer_tokens,
+      del: 0
       });
 
 
-
-      await result.save();
-
-
+  await result.save();
+ 
 
       if(token) {
         const refertoken = await Clients_Modal.findOne({ refer_token:token,del:0,ActiveStatus:1 });

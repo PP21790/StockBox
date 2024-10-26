@@ -18,8 +18,9 @@ class Clients {
 
 
   async AddClient(req, res) {
+    
     try {
-      
+    
       const { FullName, Email, PhoneNo, password,add_by } = req.body;
       if (!FullName) {
         return res.status(400).json({ status: false, message: "fullname is required" });
