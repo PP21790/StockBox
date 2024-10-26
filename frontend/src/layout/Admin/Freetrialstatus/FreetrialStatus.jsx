@@ -119,32 +119,32 @@ const FreetrialStatus = () => {
       name: 'S.No',
       selector: (row, index) => index + 1,
       sortable: false,
-
+      // width: "17  0px",
     },
     {
       name: 'Privious Status',
       selector: row => `${row.olddays}Day`,
       sortable: true,
-      width: "200px",
+      // width: "280px",
     },
     {
       name: 'Updated Status',
       selector: row => `${row.newdays}Day`,
       sortable: true,
-      width: "200px",
+      // width: "200px",
     },
 
     {
       name: 'Created At',
       selector: row => fDate(row.createdAt),
       sortable: true,
-      width: "200px",
+      // width: "200px",
     },
     {
       name: 'Updated At',
       selector: row => fDate(row.updatedAt),
       sortable: true,
-      width: "200px",
+      // width: "200px",
     },
   ];
 

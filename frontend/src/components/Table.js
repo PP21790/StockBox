@@ -11,7 +11,7 @@ const Table = ({ columns, data }) => {
                 highlightOnHover  
                 striped  
                 customStyles={customStyles}
-                responsive={true}  // Ensure responsiveness
+                responsive={true}  
             />
         </div>
     );
@@ -22,9 +22,9 @@ const tableContainerStyle = {
     backgroundColor: '#f9f9f9',
     borderRadius: '10px',
     boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
-    display: 'inline-block',  // Allow content width
-    maxWidth: '100%',  // Prevent the table from exceeding container width
-    overflowX: 'auto',  // Add horizontal scroll if content exceeds screen size
+    display: 'block', 
+    maxWidth: '100%',
+    overflowX: 'auto',  
 };
 
 const customStyles = {
@@ -54,6 +54,7 @@ const customStyles = {
             color: '#333',
             padding: '10px 20px',
             textAlign: 'center',
+            whiteSpace: 'nowrap', 
         },
     },
     cells: {
@@ -65,6 +66,9 @@ const customStyles = {
             borderBottom: '1px solid #eee',
             textAlign: 'center',
             transition: 'background-color 0.3s',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',  
+            whiteSpace: 'nowrap',      
         },
         activeStyle: {
             backgroundColor: '#e7f7e7',

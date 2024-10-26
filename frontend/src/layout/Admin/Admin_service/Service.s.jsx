@@ -233,14 +233,14 @@ const Service = () => {
             name: 'S.No',
             selector: (row, index) => index + 1,
             sortable: false,
-            width: "200px",
+            width: "290px",
 
         },
         {
             name: 'Title',
             selector: row => row.title,
             sortable: true,
-            width: "200px",
+            width: "300px",
         },
         // {
         //     name: 'Active Status',
@@ -265,7 +265,7 @@ const Service = () => {
             name: 'Created At',
             selector: row => new Date(row.created_at).toLocaleDateString(),
             sortable: true,
-            width: "200px",
+            width: "280px",
         },
         {
             name: 'Updated At',
