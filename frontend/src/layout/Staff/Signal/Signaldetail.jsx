@@ -56,7 +56,7 @@ const Signaldetail = () => {
                                 <nav aria-label="breadcrumb">
                                     <ol className="breadcrumb mb-0 p-0">
                                         <li className="breadcrumb-item">
-                                            <Link to="/staff/dashboard">
+                                            <Link to="/admin/dashboard">
                                                 <i className="bx bx-home-alt" />
                                             </Link>
                                         </li>
@@ -66,7 +66,7 @@ const Signaldetail = () => {
                         </div>
                     </div>
                     <div className="col-md-6 d-flex justify-content-end">
-                        <Link to="/staff/signal">
+                        <Link to="/admin/signal">
                             <Tooltip title="Back">
                                 <i className="lni lni-arrow-left-circle" style={{ fontSize: "2rem", color: "#000" }} />
                             </Tooltip>
@@ -84,7 +84,7 @@ const Signaldetail = () => {
                                     {data.map((item, index) => (
                                         <React.Fragment key={index}>
                                             <div className="row">
-                                                <h6>{item.tradesymbol}</h6>
+                                                <h6> {item.tradesymbol && item.tradesymbol}</h6>
                                                 <div className="card-body col-md-6">
                                                     <ul className="list-group list-group-flush">
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
@@ -111,12 +111,13 @@ const Signaldetail = () => {
 
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="mb-0">Target-1</h6>
-                                                            <span className="text-secondary">{item.targetprice1 || '-'}</span>
+                                                            <span className="text-secondary">{item.targetprice1 ? item.targetprice1 : item.tag1 || "-"}</span>
+                                                            {console.log("item",item)}
                                                         </li>
 
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="mb-0">Target-3</h6>
-                                                            <span className="text-secondary">{item.targetprice3 || '-'}</span>
+                                                            <span className="text-secondary">{item.targetprice3 ? item.targetprice3 :  item.tag3 || "-" }</span>
                                                         </li>
 
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
@@ -153,7 +154,7 @@ const Signaldetail = () => {
 
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="mb-0">Target-2</h6>
-                                                            <span className="text-secondary">{item.targetprice2 || '-'}</span>
+                                                            <span className="text-secondary">{item.targetprice2 ? item.targetprice2 : item.tag2 || "-"}</span>
                                                         </li>
 
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
