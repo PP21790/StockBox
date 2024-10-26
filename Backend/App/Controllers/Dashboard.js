@@ -42,7 +42,7 @@ class Dashboard {
             // Count closed signals with today's close date
             const todayCloseSignal = await Signal_Modal.countDocuments({
               close_status: true,
-              closeDate: { $gte: today, $lt: tomorrow }
+              closedate: { $gte: today, $lt: tomorrow }
             });
 
 

@@ -18,8 +18,9 @@ class Clients {
 
 
   async AddClient(req, res) {
+    
     try {
-      
+    
       const { FullName, Email, PhoneNo, password,add_by } = req.body;
       if (!FullName) {
         return res.status(400).json({ status: false, message: "fullname is required" });
@@ -52,7 +53,12 @@ class Clients {
 
 
       const existingUser = await Clients_Modal.findOne({
-        $or: [{ Email }, { PhoneNo }]
+        $and: [
+          { del: "0" },
+          {
+            $or: [{ Email }, { PhoneNo }]
+          }
+        ]
       });
   
       if (existingUser) {
