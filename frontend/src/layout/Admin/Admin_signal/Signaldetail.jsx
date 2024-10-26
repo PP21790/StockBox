@@ -111,12 +111,13 @@ const Signaldetail = () => {
 
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="mb-0">Target-1</h6>
-                                                            <span className="text-secondary">{item.targetprice1 || '-'}</span>
+                                                            <span className="text-secondary">{item.targetprice1 ? item.targetprice1 : item.tag1 || "-"}</span>
+                                                            {console.log("item",item)}
                                                         </li>
 
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="mb-0">Target-3</h6>
-                                                            <span className="text-secondary">{item.targetprice3 || '-'}</span>
+                                                            <span className="text-secondary">{item.targetprice3 ? item.targetprice3 :  item.tag3 || "-" }</span>
                                                         </li>
 
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
@@ -153,7 +154,7 @@ const Signaldetail = () => {
 
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="mb-0">Target-2</h6>
-                                                            <span className="text-secondary">{item.targetprice2 || '-'}</span>
+                                                            <span className="text-secondary">{item.targetprice2 ? item.targetprice2 : item.tag2 || "-"}</span>
                                                         </li>
 
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">

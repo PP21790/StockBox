@@ -288,7 +288,7 @@ const Signal = () => {
             "targetprice1": row.targetprice1,
             "targetprice2": row.targetprice2,
             "targetprice3": row.targetprice3,
-            "slprice":row.stoploss
+            "slprice": row.stoploss
         })
     }
 

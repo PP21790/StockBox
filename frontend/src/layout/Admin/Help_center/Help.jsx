@@ -100,7 +100,7 @@ const Help = () => {
                                                                         <strong>Subject:</strong> {item?.subject}
                                                                     </p>
                                                                     <p>
-                                                                        <strong>Phone No:</strong> {item?.PhoneNo}
+                                                                        <strong>Phone No:</strong> {item.clientDetails?.PhoneNo}
                                                                     </p>
                                                                     <p>
                                                                         <strong>Description:</strong> {item?.message}

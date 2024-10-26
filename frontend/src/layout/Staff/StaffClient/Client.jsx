@@ -403,7 +403,7 @@ const Client = () => {
         // width: '165px',
         // },
 
-       permission.includes("clientchangestatus") ? {
+        permission.includes("clientchangestatus") ? {
             name: 'Active Status',
             selector: row => (
                 <div className="form-check form-switch form-check-info">
@@ -422,7 +422,7 @@ const Client = () => {
             ),
             sortable: true,
             width: '165px',
-        } :"",
+        } : "",
         {
             name: 'Kyc',
             selector: row => (
@@ -630,7 +630,7 @@ const Client = () => {
                                                                                         }}
                                                                                     />
                                                                                     <label className="form-check-label mx-1" style={{ fontSize: "13px", fontWeight: "800" }} htmlFor={`input-plan-${index}`}>
-                                                                                        {item.title}
+                                                                                        {item.validity}
                                                                                     </label>
                                                                                 </h5>
 
@@ -645,7 +645,7 @@ const Client = () => {
                                                                                                 aria-expanded={selectedPlanId === item._id}
                                                                                                 aria-controls={`collapse-${item._id}`}
                                                                                             >
-                                                                                                <strong className="text-secondary">Validity: {item.validity}</strong>
+                                                                                                <strong className="text-secondary m-2">Detail</strong>
                                                                                             </button>
                                                                                         </h2>
                                                                                         <div
@@ -658,6 +658,7 @@ const Client = () => {
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Price:</strong>
                                                                                                     <span><IndianRupee /> {item.price}</span>
+
                                                                                                 </div>
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Validity:</strong>
