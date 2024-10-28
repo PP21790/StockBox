@@ -17,8 +17,6 @@ import ExportToExcel from '../../../Utils/ExportCSV';
 
 const Client = () => {
 
-
-
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
 
@@ -38,9 +36,8 @@ const Client = () => {
 
 
 
+
     const handleDownload = (row) => {
-
-
 
         const url = `${image_baseurl}uploads/pdf/${row.pdf}`;
         const link = document.createElement('a');
@@ -53,6 +50,7 @@ const Client = () => {
 
     };
 
+
     const [basketdetail, setBasketdetail] = useState({
         plan_id: "",
         client_id: "",
@@ -61,11 +59,13 @@ const Client = () => {
     });
 
 
+
     const [updatetitle, setUpdatetitle] = useState({
         plan_id: "",
         client_id: "",
         price: ""
     });
+
 
 
 
@@ -77,6 +77,7 @@ const Client = () => {
     const showModal = () => {
         setIsModalVisible(true);
     };
+
 
     const handleCancel = () => {
         setIsModalVisible(false);
