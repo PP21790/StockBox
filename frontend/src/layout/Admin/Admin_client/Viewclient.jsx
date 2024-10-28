@@ -5,6 +5,9 @@ import { Tooltip } from 'antd';
 import { clientdetailbyid, clientplandatabyid, getcategoryplan } from '../../../Services/Admin';
 import { fDate } from '../../../Utils/Date_formate';
 
+
+
+
 const Viewclientdetail = () => {
     const { id } = useParams();
     const token = localStorage?.getItem('token');
@@ -16,6 +19,10 @@ const Viewclientdetail = () => {
         getPlanDetail();
         getClientDetail();
     }, []);
+
+
+
+
 
     const getCategoryTitle = async (categoryId) => {
         try {
@@ -29,6 +36,9 @@ const Viewclientdetail = () => {
         }
         return '-';
     };
+
+
+
 
     const getPlanDetail = async () => {
         try {
@@ -51,6 +61,9 @@ const Viewclientdetail = () => {
         }
     };
 
+
+
+
     const getClientDetail = async () => {
         try {
             const response = await clientdetailbyid(id, token);
@@ -62,6 +75,8 @@ const Viewclientdetail = () => {
         }
     };
 
+
+    
     const columns = [
         {
             name: 'S.No',
@@ -94,6 +109,8 @@ const Viewclientdetail = () => {
             width: '180px'
         },
     ];
+
+ 
 
     return (
         <div>
