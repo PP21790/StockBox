@@ -467,7 +467,6 @@ class Angle {
         }
 
         } catch (error) {
-            console.error("Error placing order:", error); // Log the error
             return res.status(500).json({ 
                 status: false, 
                 message: error.response ? error.response.data : "An error occurred while placing the order" 
