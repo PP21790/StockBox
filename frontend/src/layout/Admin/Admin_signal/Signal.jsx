@@ -309,99 +309,72 @@ const Signal = () => {
 
 
 
+
+
     const closeSignalperUser = async (index) => {
         try {
-            if (index == 1) {
+            const showValidationError = (message) => {
+                Swal.fire({
+                    title: 'Error!',
+                    text: message,
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
+            };
+    
+
+            if (index === 1) {
                 if (closedata.targetprice2 && !closedata.targetprice1) {
-                    Swal.fire({
-                        title: 'Validation Error!',
-                        text: 'Target 1 must be provided if Target 2 is entered.',
-                        icon: 'warning',
-                        confirmButtonText: 'OK'
-                    });
+                    showValidationError('Target 1 must be provided if Target 2 is entered.');
                     return;
                 }
-
                 if (closedata.targetprice3 && (!closedata.targetprice1 || !closedata.targetprice2)) {
-                    Swal.fire({
-                        title: 'Validation Error!',
-                        text: 'Target 1 and Target 2 must be provided if Target 3 is entered.',
-                        icon: 'warning',
-                        confirmButtonText: 'OK'
-                    });
+                    showValidationError('Target 1 and Target 2 must be provided if Target 3 is entered.');
                     return;
                 }
-
                 if (closedata.targetprice1 && closedata.targetprice2 && closedata.targetprice1 >= closedata.targetprice2) {
-                    Swal.fire({
-                        title: 'Validation Error!',
-                        text: 'Target 2 must be greater than Target 1.',
-                        icon: 'warning',
-                        confirmButtonText: 'OK'
-                    });
+                    showValidationError('Target 2 must be greater than Target 1.');
                     return;
                 }
-
                 if (closedata.targetprice3 && closedata.targetprice2 >= closedata.targetprice3) {
-                    Swal.fire({
-                        title: 'Validation Error!',
-                        text: 'Target 3 must be greater than Target 2.',
-                        icon: 'warning',
-                        confirmButtonText: 'OK'
-                    });
+                    showValidationError('Target 3 must be greater than Target 2.');
                     return;
                 }
-
                 if (checkedTargets1.target1 && !closedata.targetprice1) {
-                    Swal.fire({
-                        title: 'Validation Error!',
-                        text: 'Please Fill the field or Uncheck it',
-                        icon: 'warning',
-                        confirmButtonText: 'OK'
-                    });
+                    showValidationError('Please fill in Target 1 or uncheck it.');
                     return;
                 }
-
                 if (checkedTargets1.target2 && !closedata.targetprice2) {
-                    Swal.fire({
-                        title: 'Validation Error!',
-                        text: 'Please Fill the Target 2 or Uncheck it',
-                        icon: 'warning',
-                        confirmButtonText: 'OK'
-                    });
+                    showValidationError('Please fill in Target 2 or uncheck it.');
                     return;
                 }
                 if (checkedTargets1.target3 && !closedata.targetprice3) {
-                    Swal.fire({
-                        title: 'Validation Error!',
-                        text: 'Please Fill the Target 3 or Uncheck it',
-                        icon: 'warning',
-                        confirmButtonText: 'OK'
-                    });
+                    showValidationError('Please fill in Target 3 or uncheck it.');
                     return;
                 }
             }
-
+    
+            // Data preparation based on index
             const data = {
                 id: serviceid._id,
                 closestatus: index === 1 ? checkstatus : "",
-                closetype: (index === 0) ? "1" : (index === 1) ? "2" : (index === 2) ? "3" : "4",
+                closetype: index === 0 ? "1" : index === 1 ? "2" : index === 2 ? "3" : "4",
                 close_description: closedata.close_description,
-
+    
                 targethit1: index === 1 && closedata.targetprice1 ? checkedTargets1.target1 : "",
                 targethit2: index === 1 && closedata.targetprice2 ? checkedTargets1.target2 : "",
                 targethit3: index === 1 && closedata.targetprice3 ? checkedTargets1.target3 : "",
-
-                targetprice1: index === 0 ? closedata.tag1 : (index === 1 ? closedata.targetprice1 : ""),
-                targetprice2: index === 0 ? closedata.tag2 : (index === 1 ? closedata.targetprice2 : ""),
-                targetprice3: index === 0 ? closedata.tag3 : (index === 1 ? closedata.targetprice3 : ""),
+    
+                targetprice1: index === 0 ? closedata.tag1 : index === 1 ? closedata.targetprice1 : "",
+                targetprice2: index === 0 ? closedata.tag2 : index === 1 ? closedata.targetprice2 : "",
+                targetprice3: index === 0 ? closedata.tag3 : index === 1 ? closedata.targetprice3 : "",
                 slprice: index === 2 ? closedata.slprice : closedata.stoploss,
                 exitprice: index === 3 ? closedata.exitprice : ""
             };
-            
-            
+    
+
             const response = await SignalCloseApi(data, token);
-             
+
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
@@ -409,11 +382,12 @@ const Signal = () => {
                     icon: 'success',
                     confirmButtonText: 'OK',
                     timer: 2000,
+                    timerProgressBar: true
                 });
 
                 setClosedata({
-                    closeprice: "", close_description: "", targetprice1: "", targetprice1: "", targetprice2: "",
-                    targetprice3: "", targethit1: "", targethit2: "", targethit3: ""
+                    closeprice: "", close_description: "", targetprice1: "", targetprice2: "", targetprice3: "",
+                    targethit1: "", targethit2: "", targethit3: ""
                 });
                 getAllSignal();
                 setModel(!model);
@@ -422,7 +396,7 @@ const Signal = () => {
                     title: 'Error!',
                     text: response.message || 'There was an error closing the signal.',
                     icon: 'error',
-                    confirmButtonText: 'Try Again',
+                    confirmButtonText: 'Try Again'
                 });
             }
         } catch (error) {
@@ -430,15 +404,15 @@ const Signal = () => {
                 title: 'Error!',
                 text: 'There was an error updating the service.',
                 icon: 'error',
-                confirmButtonText: 'Try Again',
+                confirmButtonText: 'Try Again'
             });
         }
     };
+    
 
 
 
     // colums
-
     let columns = [
         {
             name: 'S.No',
