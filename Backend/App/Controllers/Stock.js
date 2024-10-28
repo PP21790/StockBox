@@ -86,7 +86,7 @@ class Stock {
         {
           $match: { 
             segment: segment,
-            symbol: { $regex: symbol, $options: 'i' }  // Like query for symbol
+            symbol: { $regex: symbol, $options: 'i' }  
           }
         },
         {
