@@ -11,45 +11,40 @@ const Viewclientdetail = () => {
 
     const [data, setData] = useState([]);
     const [client, setClient] = useState([]);
-    const [categoryTitle, setCategoryTitle] = useState('');
-
-
 
     useEffect(() => {
         getPlanDetail();
         getClientDetail();
     }, []);
 
-
-
-
-    const getCategoryPlanList = async (categoryId) => {
+    const getCategoryTitle = async (categoryId) => {
         try {
             const response = await getcategoryplan(token);
             if (response.status) {
-                const filteredTitles = response.data
-                    .filter(item => item._id === categoryId)
-                    .map(item => item.title);
-
-                if (filteredTitles.length) {
-                    setCategoryTitle(filteredTitles[0]);
-                    console.log("Filtered Titles:", filteredTitles);
-                } else {
-                    console.log("No matching category title found.");
-                }
+                const category = response.data.find(item => item._id === categoryId);
+                return category ? category.title : '-';
             }
         } catch (error) {
-            console.error("Error fetching category plans:", error);
+            console.error("Error fetching category title:", error);
         }
+        return '-';
     };
 
     const getPlanDetail = async () => {
         try {
             const response = await clientplandatabyid(id, token);
             if (response.status) {
-                setData(response.data);
-                const categoryId = response.data[0]?.planDetails?.category ?? '';
-                if (categoryId) getCategoryPlanList(categoryId);
+                const plansWithTitles = await Promise.all(
+                    response.data.map(async (plan) => {
+                        const categoryId = plan.planDetails?.category;
+                        if (categoryId) {
+                            const categoryTitle = await getCategoryTitle(categoryId);
+                            return { ...plan, categoryTitle };
+                        }
+                        return plan;
+                    })
+                );
+                setData(plansWithTitles);
             }
         } catch (error) {
             console.error("Error fetching plan details:", error);
@@ -72,11 +67,10 @@ const Viewclientdetail = () => {
             name: 'S.No',
             selector: (row, index) => index + 1,
             width: '100px'
-        }
-        ,
+        },
         {
             name: 'Plan Name',
-            selector: () => categoryTitle || '-',
+            selector: row => row.categoryTitle || '-',
             width: '180px'
         },
         {
@@ -154,7 +148,6 @@ const Viewclientdetail = () => {
                         </div>
                     </div>
                 </div>
-
 
                 <div className="card">
                     <div className="card-body">
