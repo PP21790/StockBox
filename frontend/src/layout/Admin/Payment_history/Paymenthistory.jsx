@@ -9,6 +9,8 @@ import { Tooltip } from 'antd';
 import { fDate } from '../../../Utils/Date_formate';
 import ExportToExcel from '../../../Utils/ExportCSV';
 
+
+
 const History = () => {
 
 
@@ -61,8 +63,6 @@ const History = () => {
 
 
 
-
-
     // Getting services
     const gethistory = async () => {
         try {
@@ -82,6 +82,10 @@ const History = () => {
     useEffect(() => {
         gethistory();
         forCSVdata()
+    }, []);
+   
+    useEffect(() => {
+        forCSVdata()
     }, [searchInput, clients]);
 
 
@@ -96,7 +100,7 @@ const History = () => {
             name: 'Name',
             selector: row => row.clientName,
             sortable: true,
-            width: '250px',
+            width: '200px',
         },
 
         {
