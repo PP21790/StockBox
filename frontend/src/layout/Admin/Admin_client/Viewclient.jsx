@@ -76,7 +76,8 @@ const Viewclientdetail = () => {
     };
 
 
-    
+
+
     const columns = [
         {
             name: 'S.No',
