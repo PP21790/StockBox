@@ -22,11 +22,6 @@ const EditClient = () => {
 
 
 
-
-
-
-
-
   const validate = (values) => {
     let errors = {};
 
