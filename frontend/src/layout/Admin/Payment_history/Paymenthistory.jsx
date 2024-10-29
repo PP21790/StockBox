@@ -107,17 +107,20 @@ const History = () => {
             name: 'Title',
             selector: row => row.planDetails.title,
             sortable: true,
+            width: '200px',
         },
         {
             name: 'Order_ID',
             selector: row => row.orderid ? row.orderid : "-" ,
             sortable: true,
+            width: '200px',
         },
 
         {
             name: 'Total',
             selector: row => row.planDetails.price,
             sortable: true,
+            width: '200px',
         },
         // {
         //     name: 'Plan Price',
@@ -128,6 +131,7 @@ const History = () => {
             name: 'Validity',
             selector: row => row.planDetails.validity,
             sortable: true,
+            width: '200px',
         },
         {
             name: 'Plan Start',

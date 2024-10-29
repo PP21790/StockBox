@@ -35,7 +35,7 @@ const Client = () => {
     const [ForGetCSV, setForGetCSV] = useState([])
 
     
-    console.log("clients",clients)
+    // console.log("clients",clients)
 
 
     const handleDownload = (row) => {
@@ -611,7 +611,7 @@ const Client = () => {
                                                                     id={`proplus-${index}`}
                                                                     onClick={() => handleCategoryChange(item._id)}
                                                                 />
-                                                                <label className="form-check-label" htmlFor={`proplus-${index}`}>
+                                                                <label className="form-check-label" htmlFor={`proplus-${index}`} style={{fontSize:"12px"}}>
                                                                     {item.title} (
                                                                     {item.servicesDetails.map((service) => service.title).join(", ")}
                                                                     )

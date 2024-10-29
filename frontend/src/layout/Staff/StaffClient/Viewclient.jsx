@@ -85,7 +85,7 @@ const Viewclientdetail = () => {
         },
         {
             name: 'Order_ID',
-            selector: row => row.orderid ?? '-',
+            selector: row => row.orderid ?? 'Assign By Admin',
             width: '189px'
         },
         {

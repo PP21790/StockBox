@@ -607,7 +607,7 @@ const Client = () => {
                                                                     id={`proplus-${index}`}
                                                                     onClick={() => handleCategoryChange(item._id)}
                                                                 />
-                                                                <label className="form-check-label" htmlFor={`proplus-${index}`}>
+                                                                <label className="form-check-label" htmlFor={`proplus-${index}`} style={{fontSize:"12px"}}>
                                                                     {item.title}
                                                                 </label>
                                                             </div>
