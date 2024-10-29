@@ -52,6 +52,7 @@ import Updateblogs from '../layout/Staff/Bloags/Updateblogs';
 import Viewblog from '../layout/Staff/Bloags/Viewblog';
 import Addnews from '../layout/Staff/News/Addnews';
 import Updatenews from '../layout/Staff/News/Updatenews';
+import Changepass from '../Auth/Changepass';
 
 
 
@@ -200,7 +201,8 @@ function Staffrouting() {
 
 
                     <Route path="/paymentrequest" element={<PaymentRequest />} />
-
+                    <Route path="/changepass" element={<Changepass />} />
+                      
 
 
 

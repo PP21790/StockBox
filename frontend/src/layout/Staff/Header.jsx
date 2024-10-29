@@ -254,7 +254,7 @@ const Header = () => {
                   <li>
                     <Link
                       className="dropdown-item d-flex align-items-center"
-                      to="/admin/profile"
+                      to="/staff/profile"
                     >
                       <i className="bx bx-user fs-5" />
                       <span>Profile</span>

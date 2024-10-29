@@ -328,46 +328,47 @@ const Blogs = () => {
         //     sortable: true,
         // },
 
-        permission.includes("blogsdetail") ||  permission.includes("editblogs") 
-        || permission.includes("deleteblogs") ? {
-            name: 'Actions',
-            cell: row => (
-                <>
-                   {permission.includes("blogsdetail") ? 
-                   <div>
-                        <Tooltip placement="top" overlay="View">
-                          
-                            <Eye style={{ marginRight: "10px" }} 
-                                onClick={() => {
-                                    updateClient(row)
-                                }}/>
-                            
-                        </Tooltip>
-                    </div> 
-                    :""}
-                    {permission.includes("editblogs")? <div>
-                        <Tooltip placement="top" overlay="Update">
-                            <SquarePen
-                                onClick={() => {
-                                    updateblogs(row)
-                                }}
-                            />
-                        </Tooltip>
-                    </div> : "" }
-                    {permission.includes("deleteblogs")?   <div>
-                        <Tooltip placement="top" overlay="Delete">
-                            <Trash2 onClick={() => DeleteBlogs(row._id)} />
-                        </Tooltip>
-                    </div> : "" }
-                </>
-            ),
-            ignoreRowClick: true,
-            allowOverflow: true,
-            button: true,
-        }: ""
+            // permission.includes("blogsdetail") || permission.includes("editblogs") || permission.includes("deleteblogs") ? 
+            {
+                name: 'Actions',
+                cell: row => (
+                    <>
+                        {permission.includes("blogdetail") && (
+                            <div>
+                                <Tooltip placement="top" overlay="View">
+                                    <Eye style={{ marginRight: "10px" }} onClick={() => updateClient(row)} />
+                                </Tooltip>
+                            </div>
+                        )}
+                        {permission.includes("editblogs") && (
+                            <div>
+                                <Tooltip placement="top" overlay="Update">
+                                    <SquarePen onClick={() => updateblogs(row)} />
+                                </Tooltip>
+                            </div>
+                        )}
+                        {permission.includes("deleteblogs") && (
+                            <div>
+                                <Tooltip placement="top" overlay="Delete">
+                                    <Trash2 onClick={() => DeleteBlogs(row._id)} />
+                                </Tooltip>
+                            </div>
+                        )}
+                    </>
+                ),
+                ignoreRowClick: true,
+                allowOverflow: true,
+                button: true,
+            } 
+            // : null
+        
+        
     ];
 
-   
+
+    console.log("permission",permission.includes("editblogs"))
+
+     
     function stripHtml(html) {
         const div = document.createElement("div");
         div.innerHTML = html;

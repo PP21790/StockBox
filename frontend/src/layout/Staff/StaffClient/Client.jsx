@@ -381,12 +381,13 @@ const Client = () => {
             name: 'Email',
             selector: row => row.Email,
             sortable: true,
-            width: '350px',
+            width: '300px',
         },
         {
             name: 'Phone No',
             selector: row => row.PhoneNo,
             sortable: true,
+            width: '200px',
         },
 
 
@@ -447,17 +448,20 @@ const Client = () => {
             sortable: true,
             width: '200px',
         },
-        {
+        permission.includes("assignPackage") ||
+        permission.includes("viewdetail") ||
+        permission.includes("editclient") ?
+          {
             name: 'Actions',
             selector: (row) => (
                 <>
 
 
-                    <Tooltip placement="top" overlay="Package Assign">
+                    {permission.includes("assignPackage") ? <Tooltip placement="top" overlay="Package Assign">
                         <span onClick={(e) => { showModal(true); setClientid(row); }} style={{ cursor: 'pointer' }}>
                             <Settings2 />
                         </span>
-                    </Tooltip>
+                    </Tooltip> : ""}
 
                     {permission.includes("viewdetail") ? <Tooltip title="view">
                         <Eye
@@ -477,7 +481,7 @@ const Client = () => {
             allowOverflow: true,
             button: true,
             width: '165px',
-        }
+        }:""
     ];
 
 

@@ -327,7 +327,7 @@ const News = () => {
 
                                     <div className="col-sm py-2">
 
-                                        <div className={`card ${client.borderClass || 'radius-15'} d-flex justify-content-center align-items-center`} >
+                                        <div className={`card ${client.borderClass || 'radius-15'} d-flex justify-content-center`} >
 
                                             <div className="card-body">
                                                 <div className="d-flex justify-content-between align-items-start">
@@ -352,7 +352,7 @@ const News = () => {
                                                 </div>
                                                 <hr />
                                                 <div className="row">
-                                                    {/* Image on the left side */}
+                            
                                                     <div className="col-md-2" style={{ borderRight: "1px solid #D0D0D0", textAlign: "center" }}>
                                                         <img
                                                             src={`${image_baseurl}uploads/news/${client.image}`}
@@ -368,12 +368,12 @@ const News = () => {
                                                     <div className="col-md-10 ps-4">
 
                                                         <h5>Description:</h5>
-                                                        {/* <p className="card-text">{client.description} */}
+                                        
                                                         <span
                                                             dangerouslySetInnerHTML={{ __html: client.description }}
                                                             style={{ display: 'block', marginTop: '0.5rem' }}
                                                         />
-                                                        {/* </p> */}
+                                                        
                                                         <div className="float-end text-muted small">{fDateTime(client.created_at)}</div>
                                                     </div>
                                                 </div>

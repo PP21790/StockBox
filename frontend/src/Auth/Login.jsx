@@ -24,6 +24,7 @@ const Login = () => {
 
         try {
             var login_data = await login_Api(req);
+           
             if (login_data.data.status) {
                 Swal.fire({
                     title: "Login Successful!",

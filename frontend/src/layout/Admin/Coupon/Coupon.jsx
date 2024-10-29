@@ -420,7 +420,7 @@ const Coupon = () => {
                                                 </div>
                                             </div>
                                         </li>
-                                        <li>
+                                        {/* <li>
                                             <div className="row justify-content-between">
                                                 <div >
                                                     <b>Discription : {viewpage?.description}</b>
@@ -429,7 +429,7 @@ const Coupon = () => {
 
                                                 </div>
                                             </div>
-                                        </li>
+                                        </li> */}
                                         <li>
                                             <div className="row justify-content-between">
                                                 <div className="col-md-8">

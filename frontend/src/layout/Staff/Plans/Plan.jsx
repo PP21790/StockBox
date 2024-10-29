@@ -264,7 +264,7 @@ const Plan = () => {
 
                                                         <div className="row justify-content-between align-items-center">
                                                             <div className="col-md-6">
-                                                                <h3 className="fonth3">{client.title}</h3>
+                                                                {/* <h3 className="fonth3">{client.title}</h3> */}
                                                                 <h2 className="fonth2">{client.planType}</h2>
                                                             </div>
                                                             <div className="price-section col-md-6">

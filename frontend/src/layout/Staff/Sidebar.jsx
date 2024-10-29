@@ -52,7 +52,7 @@ const Sidebar = ({ onToggleClick }) => {
         ...(permission.includes('viewcategory') ? [{ title: 'Category', link: '/staff/category' }] : []),
       ].filter(Boolean),
     },
-    permission.includes('viewstaff') && { title: 'Staff', icon: 'bx bx-user-plus', link: '/staff/staff' },
+    // permission.includes('viewstaff') && { title: 'Staff', icon: 'bx bx-user-plus', link: '/staff/staff' },
     permission.includes('viewsignal') &&
     {
       title: 'Signal',
