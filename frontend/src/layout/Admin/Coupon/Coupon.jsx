@@ -173,13 +173,13 @@ const Coupon = () => {
             name: 'Name',
             selector: row => row.name,
             sortable: true,
-            width: '150px',
+            width: '200px',
         },
         {
             name: 'Code',
             selector: row => row.code,
             sortable: true,
-
+            width: '150px',
         },
         // {
         //     name: 'Image',
@@ -191,13 +191,13 @@ const Coupon = () => {
             name: 'Min Purchase Value',
             selector: row => row.minpurchasevalue,
             sortable: true,
-            width: '206px',
+            width: '210px',
         },
         {
             name: 'Max Discount Value',
             selector: row => row.mincouponvalue ? row.mincouponvalue : "-",
             sortable: true,
-            width: '206px',
+            width: '210px',
         },
 
         // {
@@ -210,7 +210,7 @@ const Coupon = () => {
             name: 'Type',
             selector: row => row.type,
             sortable: true,
-            width: '115px',
+            width: '120px',
         },
 
         {

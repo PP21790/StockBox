@@ -266,7 +266,7 @@ const Blogs = () => {
             name: 'Title',
             selector: row => row.title,
             sortable: true,
-            width: '200px',
+            width: '300px',
         },
         {
             name: 'Active Status',

@@ -81,20 +81,20 @@ const Dashbord = () => {
             name: 'Full Name',
             selector: row => row.FullName,
             sortable: true,
-            width: '180px',
+            width: '200px',
         },
         {
             name: 'Email',
             selector: row => row.Email,
             sortable: true,
-            width: '284px',
+            width: '400px',
 
         },
         {
             name: 'Phone No',
             selector: row => row.PhoneNo,
             sortable: true,
-            width: '180px',
+            width: '200px',
         },
 
 
