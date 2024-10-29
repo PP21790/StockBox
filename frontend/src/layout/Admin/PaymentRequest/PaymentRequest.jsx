@@ -97,12 +97,12 @@ const PaymentRequest = () => {
         },
         {
             name: 'Created At',
-            selector: row => fDate(row.created_at),
+            selector: row => fDateTime(row.created_at),
             sortable: true,
         },
         {
             name: 'Updated At',
-            selector: row => fDate(row.updated_at),
+            selector: row => fDateTime(row.updated_at),
             sortable: true,
         },
         {

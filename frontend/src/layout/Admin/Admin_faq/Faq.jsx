@@ -5,7 +5,7 @@ import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { Tooltip } from 'antd';
-import { fDate } from '../../../Utils/Date_formate';
+import { fDate ,fDateTime } from '../../../Utils/Date_formate';
 
 const Faq = () => {
 
@@ -282,7 +282,7 @@ const Faq = () => {
 
         {
             name: 'Created At',
-            selector: row => fDate(row.created_at),
+            selector: row => fDateTime(row.created_at),
             sortable: true,
         },
         // {

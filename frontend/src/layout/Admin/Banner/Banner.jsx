@@ -4,7 +4,7 @@ import { getbannerlist, Addbanner, UpdateBanner, changeBannerStatus, DeleteBanne
 import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { fDate } from '../../../Utils/Date_formate';
+import { fDateTime } from '../../../Utils/Date_formate';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
 
@@ -284,7 +284,7 @@ const Banner = () => {
         },
         {
             name: 'Created At',
-            selector: row => fDate(row.created_at),
+            selector: row => fDateTime(row.created_at),
             sortable: true,
             width: '240px',
 

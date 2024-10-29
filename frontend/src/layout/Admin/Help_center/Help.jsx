@@ -4,7 +4,7 @@ import { getHelpMessagelist } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import { Tooltip } from 'antd';
 import { Eye } from 'lucide-react';
-import { fDate } from '../../../Utils/Date_formate';
+import { fDate , fDateTime} from '../../../Utils/Date_formate';
 
 
 
@@ -89,7 +89,7 @@ const Help = () => {
                                                             <div className="card-body p-4 position-relative">
                                                                 <div className="p-4 border radius-15">
                                                                     <div className="float-end text-muted">
-                                                                        {fDate(item.created_at)}
+                                                                        {fDateTime(item.created_at)}
                                                                     </div>
                                                                     <h4 className="card-title">{item.clientDetails?.FullName}</h4>
                                                                     <hr />

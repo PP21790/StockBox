@@ -6,7 +6,7 @@ import Table from '../../../components/Table';
 import { Eye, RefreshCcw, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { GetSignallist, DeleteSignal, SignalCloseApi, GetService, GetStockDetail } from '../../../Services/Admin';
-import { fDateTimeSuffix, fDateTime } from '../../../Utils/Date_formate'
+import { fDateTimeSuffix, fDateTimeH } from '../../../Utils/Date_formate'
 import { getstaffperuser } from '../../../Services/Admin';
 import ExportToExcel from '../../../Utils/ExportCSV';
 
@@ -121,8 +121,8 @@ const Closesignal = () => {
                 EntryType: item?.calltype || '',
                 EntryPrice: item?.price || '',
                 ExitPrice : item?.closeprice || "" ,
-                EntryDate: fDateTimeSuffix(item?.created_at) || '',
-                ExitDate: fDateTimeSuffix(item?.closedate) || '',
+                EntryDate: fDateTimeH(item?.created_at) || '',
+                ExitDate: fDateTimeH(item?.closedate) || '',
 
             }));
 
@@ -211,13 +211,13 @@ const Closesignal = () => {
         },
         {
             name: 'Entry Date',
-            selector: row => fDateTimeSuffix(row.created_at),
+            selector: row => fDateTimeH(row.created_at),
             sortable: true,
             width: '190px',
         },
         {
             name: 'Exit Date',
-            selector: row => fDateTimeSuffix(row.closedate),
+            selector: row => fDateTimeH(row.closedate),
             sortable: true,
             width: '180px',
         },

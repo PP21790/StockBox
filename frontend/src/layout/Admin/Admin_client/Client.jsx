@@ -7,7 +7,7 @@ import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine } from 'lu
 import Swal from 'sweetalert2';
 import { deleteClient, UpdateClientStatus, PlanSubscription, getplanlist, BasketSubscription, BasketAllList, getcategoryplan } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
-import { fDateTime, fDate } from '../../../Utils/Date_formate';
+import { fDateTime } from '../../../Utils/Date_formate';
 import { image_baseurl } from '../../../Utils/config';
 import { IndianRupee } from 'lucide-react';
 import ExportToExcel from '../../../Utils/ExportCSV';
@@ -440,7 +440,7 @@ const Client = () => {
         },
         {
             name: 'CreatedAt',
-            selector: row => fDate(row.createdAt),
+            selector: row => fDateTime(row.createdAt),
             sortable: true,
             width: '200px',
         },
@@ -677,11 +677,11 @@ const Client = () => {
                                                                                                 </div>
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Created At:</strong>
-                                                                                                    <span>{fDate(item.created_at)}</span>
+                                                                                                    <span>{fDateTime(item.created_at)}</span>
                                                                                                 </div>
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Updated At:</strong>
-                                                                                                    <span>{fDate(item.updated_at)}</span>
+                                                                                                    <span>{fDateTime(item.updated_at)}</span>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>

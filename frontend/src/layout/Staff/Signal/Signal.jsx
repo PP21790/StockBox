@@ -6,7 +6,7 @@ import Table from '../../../components/Table';
 import { Eye, Trash2, RefreshCcw } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { GetSignallist, DeleteSignal, SignalCloseApi, GetService, GetStockDetail } from '../../../Services/Admin';
-import { fDateTimeSuffix } from '../../../Utils/Date_formate'
+import { fDateTimeSuffix , fDateTimeH } from '../../../Utils/Date_formate'
 import { getstaffperuser } from '../../../Services/Admin';
 import ExportToExcel from '../../../Utils/ExportCSV';
  
@@ -202,7 +202,7 @@ const Signal = () => {
                 Price: item?.price || '',
                 EntryType: item?.calltype || '',
                 EntryPrice: item?.price || '',
-                EntryDate: fDateTimeSuffix(item?.created_at) || '',
+                EntryDate: fDateTimeH(item?.created_at) || '',
 
             }));
 
@@ -476,7 +476,7 @@ const Signal = () => {
         // },
         {
             name: 'Entry Date',
-            selector: row => fDateTimeSuffix(row.created_at),
+            selector: row => fDateTimeH(row.created_at),
             sortable: true,
             width: '250px',
         },

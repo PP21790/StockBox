@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import Table from '../../../components/Table';
 import { Tooltip } from 'antd';
 import { clientdetailbyid, clientplandatabyid, getcategoryplan } from '../../../Services/Admin';
-import { fDate } from '../../../Utils/Date_formate';
+import { fDate , fDateTime } from '../../../Utils/Date_formate';
 
 
 
@@ -100,13 +100,19 @@ const Viewclientdetail = () => {
             width: '180px'
         },
         {
+            name: 'Order_ID',
+            selector: row => row.orderid ?? '-',
+            width: '189px'
+        },
+        
+        {
             name: 'Purchase Date',
-            selector: row => fDate(row.plan_start),
+            selector: row => fDateTime(row.plan_start),
             width: '180px'
         },
         {
             name: 'Expiry Date',
-            selector: row => fDate(row.plan_end),
+            selector: row => fDateTime(row.plan_end),
             width: '180px'
         },
     ];

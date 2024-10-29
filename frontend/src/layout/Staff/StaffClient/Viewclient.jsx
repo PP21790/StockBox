@@ -84,6 +84,11 @@ const Viewclientdetail = () => {
             width: '180px'
         },
         {
+            name: 'Order_ID',
+            selector: row => row.orderid ?? '-',
+            width: '189px'
+        },
+        {
             name: 'Purchase Date',
             selector: row => fDate(row.plan_start),
             width: '180px'

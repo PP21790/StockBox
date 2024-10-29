@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import { Tooltip } from 'antd';
-import { fDateTime, fDate } from '../../../Utils/Date_formate';
+import { fDateTime} from '../../../Utils/Date_formate';
 
 const Message = () => {
     const navigate = useNavigate();
@@ -158,8 +158,8 @@ const Message = () => {
                                                             />
                                                            
                                                         </p>
-                                                        <p><strong>Created At:</strong> {fDate(item.created_at)}</p>
-                                                        <p><strong>Updated At:</strong> {fDate(item.updated_at)}</p>
+                                                        <p><strong>Created At:</strong> {fDateTime(item.created_at)}</p>
+                                                        <p><strong>Updated At:</strong> {fDateTime(item.updated_at)}</p>
                                                     </div>
                                                 </div>
                                             </div>

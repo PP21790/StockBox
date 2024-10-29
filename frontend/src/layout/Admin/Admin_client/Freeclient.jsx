@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 import { FreeClientList, PlanSubscription, DeleteFreeClient, getcategoryplan, getplanlist } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
 import { image_baseurl } from '../../../Utils/config';
-import { fDate } from '../../../Utils/Date_formate';
+import { fDate,fDateTime } from '../../../Utils/Date_formate';
 import { IndianRupee } from 'lucide-react';
 import ExportToExcel from '../../../Utils/ExportCSV';
 
@@ -324,13 +324,13 @@ const Freeclient = () => {
         },
         {
             name: 'Start Date',
-            selector: row => fDate(row.startdate),
+            selector: row => fDateTime(row.startdate),
             sortable: true,
             width: '230px',
         },
         {
             name: 'End Start',
-            selector: row => fDate(row.enddate),
+            selector: row => fDateTime(row.enddate),
             sortable: true,
             width: '230px',
         },
@@ -567,11 +567,11 @@ const Freeclient = () => {
                                                                                                 </div>
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Created At:</strong>
-                                                                                                    <span>{fDate(item.created_at)}</span>
+                                                                                                    <span>{fDateTime(item.created_at)}</span>
                                                                                                 </div>
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Updated At:</strong>
-                                                                                                    <span>{fDate(item.updated_at)}</span>
+                                                                                                    <span>{fDateTime(item.updated_at)}</span>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>

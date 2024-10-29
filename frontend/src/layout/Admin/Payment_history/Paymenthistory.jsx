@@ -6,7 +6,7 @@ import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
-import { fDate } from '../../../Utils/Date_formate';
+import { fDateTime } from '../../../Utils/Date_formate';
 import ExportToExcel from '../../../Utils/ExportCSV';
 
 
@@ -83,7 +83,7 @@ const History = () => {
         gethistory();
         forCSVdata()
     }, []);
-   
+
     useEffect(() => {
         forCSVdata()
     }, [searchInput, clients]);
@@ -109,6 +109,12 @@ const History = () => {
             sortable: true,
         },
         {
+            name: 'Order_ID',
+            selector: row => row.planDetails.orderid,
+            sortable: true,
+        },
+
+        {
             name: 'Total',
             selector: row => row.planDetails.price,
             sortable: true,
@@ -125,7 +131,7 @@ const History = () => {
         },
         {
             name: 'Plan Start',
-            selector: row => fDate(row.planDetails.created_at),
+            selector: row => fDateTime(row?.planDetails?.created_at),
             sortable: true,
             width: '160px',
         },
@@ -210,7 +216,7 @@ const History = () => {
                                     data-bs-placement="bottom"
                                     title="Download"
                                 >
-                                                                        <ExportToExcel
+                                    <ExportToExcel
                                         className="btn btn-primary "
                                         apiData={ForGetCSV}
                                         fileName={'All Users'} />
@@ -299,13 +305,16 @@ const History = () => {
                                     <li>
                                         <div className="row justify-content-between">
                                             <div className="col-md-8">
-                                                <b>Payout Date : {fDate(viewpage?.planDetails?.created_at)}</b>
+                                                {viewpage?.planDetails?.created_at ? (
+                                                    <b>Payout Date: {fDateTime(viewpage.planDetails.created_at)}</b>
+                                                ) : (
+                                                    <b>Payout Date: Not available</b>
+                                                )}
                                             </div>
-                                            <div className="col-md-6">
-
-                                            </div>
+                                            <div className="col-md-6"></div>
                                         </div>
                                     </li>
+
                                     {/* <li>
                                         <div className="row justify-content-between">
                                             <div className="col-md-6">

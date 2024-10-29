@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 import { DeleteCoupon, UpdateClientStatus, CouponStatus } from '../../../Services/Admin';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
-import { fDate } from '../../../Utils/Date_formate';
+import { fDate, fDateTime } from '../../../Utils/Date_formate';
 
 
 
@@ -20,8 +20,7 @@ const Coupon = () => {
     const [clients, setClients] = useState([]);
     const [searchInput, setSearchInput] = useState("");
     const [viewpage, setViewpage] = useState({});
-
-   
+    const [datewise, setDatewise] = useState("")
 
     const token = localStorage.getItem('token');
 
@@ -38,6 +37,7 @@ const Coupon = () => {
                     item.description.toLowerCase().includes(searchInput.toLowerCase())
                 );
                 setClients(searchInput ? filterdata : response.data);
+                setDatewise(response.data)
                 // setClients(response.data);
             }
         } catch (error) {
@@ -113,8 +113,6 @@ const Coupon = () => {
 
         const user_active_status = event.target.checked === true ? "true" : "false"
 
-        console.log("user_active_status", user_active_status)
-
         const data = { id: id, status: user_active_status }
         const result = await Swal.fire({
             title: "Do you want to save the changes?",
@@ -152,6 +150,15 @@ const Coupon = () => {
     };
 
 
+
+
+    const expiredbydate = () => {
+        const data = datewise?.map((item) => {
+            console.log("datewise", item.enddate)
+            return item.enddate
+
+        })
+    }
 
 
 
@@ -208,21 +215,29 @@ const Coupon = () => {
 
         {
             name: 'Active Status',
-            selector: row => (
-                <div className="form-check form-switch form-check-info">
-                    <input
-                        id={`rating_${row.status}`}
-                        className="form-check-input toggleswitch"
-                        type="checkbox"
-                        defaultChecked={row.status == true}
-                        onChange={(event) => handleSwitchChange(event, row._id)}
-                    />
-                    <label
-                        htmlFor={`rating_${row.status}`}
-                        className="checktoggle checkbox-bg"
-                    ></label>
-                </div>
-            ),
+            selector: row => {
+                const currentDate = new Date();
+                const endDate = new Date(row.enddate);
+                if (currentDate > endDate) {
+                    return <span className="text-danger" style={{ color: "red" }}>Expired</span>;
+                } else {
+                    return (
+                        <div className="form-check form-switch form-check-info">
+                            <input
+                                id={`rating_${row.status}`}
+                                className="form-check-input toggleswitch"
+                                type="checkbox"
+                                defaultChecked={row.status === true}
+                                onChange={(event) => handleSwitchChange(event, row._id)}
+                            />
+                            <label
+                                htmlFor={`rating_${row.status}`}
+                                className="checktoggle checkbox-bg"
+                            ></label>
+                        </div>
+                    );
+                }
+            },
             sortable: true,
             width: '156px',
         },
@@ -230,45 +245,59 @@ const Coupon = () => {
 
         {
             name: 'Startdate',
-            selector: row => fDate(row.startdate),
+            selector: row => fDateTime(row.startdate),
             sortable: true,
             width: '200px',
         },
         {
             name: 'Enddate',
-            selector: row => fDate(row.enddate),
+            selector: row => fDateTime(row.enddate),
             sortable: true,
             width: '200px',
         },
 
         {
             name: 'Actions',
-            cell: row => (
-                <>
-                    <div>
-                        <Tooltip placement="top" overlay="View">
-                            <Eye style={{ marginRight: "10px" }} data-bs-toggle="modal"
-                                data-bs-target="#example2"
-                                onClick={(e) => { setViewpage(row) }}
-                            />
-                        </Tooltip>
-                    </div>
-                    <div>
-                        <Tooltip placement="top" overlay="Edit">
-                            <Pencil onClick={() => updatecoupon(row)} />
-                        </Tooltip>
-                    </div>
-                    <div>
-                        <Tooltip placement="top" overlay="Delete">
-                            <Trash2 onClick={() => DeleteCouponbyadmin(row._id)} />
-                        </Tooltip>
-                    </div>
-                </>
-            ),
+            cell: row => {
+                const currentDate = new Date();
+                const endDate = new Date(row.enddate);
+
+                return (
+                    <>
+                        {currentDate > endDate ? (
+                            <span className="text-danger" >-</span>
+                        ) : (
+                            <div className='d-flex' >
+                                <div >
+                                    <Tooltip placement="top" overlay="View">
+                                        <Eye
+                                            style={{ marginRight: "10px" }}
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#example2"
+                                            onClick={() => setViewpage(row)}
+                                        />
+                                    </Tooltip>
+                                </div>
+                                <div>
+                                    <Tooltip placement="top" overlay="Edit">
+                                        <Pencil onClick={() => updatecoupon(row)} />
+                                    </Tooltip>
+                                </div>
+                                <div>
+                                    <Tooltip placement="top" overlay="Delete">
+                                        <Trash2 onClick={() => DeleteCouponbyadmin(row._id)} />
+                                    </Tooltip>
+                                </div>
+                            </div>
+                        )}
+                    </>
+                );
+            },
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
         }
+
     ];
 
     return (
@@ -370,7 +399,7 @@ const Coupon = () => {
                                                 </div>
                                             </div>
                                         </li>
-                                       
+
                                         <li>
                                             <div className="row justify-content-between">
                                                 <div className="col-md-6">
@@ -404,23 +433,28 @@ const Coupon = () => {
                                         <li>
                                             <div className="row justify-content-between">
                                                 <div className="col-md-8">
-                                                    <b>Start Date : {fDate(viewpage?.startdate)}</b>
+                                                    {viewpage?.startdate ? (
+                                                        <b>Start Date: {fDateTime(viewpage.startdate)}</b>
+                                                    ) : (
+                                                        <b>Start Date: Not available</b>
+                                                    )}
                                                 </div>
-                                                <div className="col-md-6">
-
-                                                </div>
+                                                <div className="col-md-6"></div>
                                             </div>
                                         </li>
                                         <li>
                                             <div className="row justify-content-between">
                                                 <div className="col-md-6">
-                                                    <b>End Date : {fDate(viewpage?.enddate)} </b>
+                                                    {viewpage?.enddate ? (
+                                                        <b>End Date: {fDateTime(viewpage.enddate)}</b>
+                                                    ) : (
+                                                        <b>End Date: Not available</b>
+                                                    )}
                                                 </div>
-                                                <div className="col-md-6">
-
-                                                </div>
+                                                <div className="col-md-6"></div>
                                             </div>
                                         </li>
+
                                         {/* <li>
                                             <div className="row justify-content-between">
                                                 <div className="col-md-6">

@@ -15,18 +15,18 @@ import { getstaffperuser } from '../../../Services/Admin';
 const Coupon = () => {
 
     const userid = localStorage.getItem('id');
-  
+
     const navigate = useNavigate();
 
     const [clients, setClients] = useState([]);
     const [searchInput, setSearchInput] = useState("");
     const [viewpage, setViewpage] = useState({});
 
-   
+
 
     const token = localStorage.getItem('token');
     const [permission, setPermission] = useState([]);
-   
+
 
 
     const getcoupon = async () => {
@@ -47,9 +47,9 @@ const Coupon = () => {
         }
     }
 
-    
 
-    
+
+
     const getpermissioninfo = async () => {
         try {
             const response = await getstaffperuser(userid, token);
@@ -223,21 +223,29 @@ const Coupon = () => {
 
         permission.includes("couponstatus") && {
             name: 'Active Status',
-            selector: row => (
-                <div className="form-check form-switch form-check-info">
-                    <input
-                        id={`rating_${row.status}`}
-                        className="form-check-input toggleswitch"
-                        type="checkbox"
-                        defaultChecked={row.status == true}
-                        onChange={(event) => handleSwitchChange(event, row._id)}
-                    />
-                    <label
-                        htmlFor={`rating_${row.status}`}
-                        className="checktoggle checkbox-bg"
-                    ></label>
-                </div>
-            ),
+            selector: row => {
+                const currentDate = new Date();
+                const endDate = new Date(row.enddate);
+                if (currentDate > endDate) {
+                    return <span className="text-danger" style={{ color: "red" }}>Expired</span>;
+                } else {
+                    return (
+                        <div className="form-check form-switch form-check-info">
+                            <input
+                                id={`rating_${row.status}`}
+                                className="form-check-input toggleswitch"
+                                type="checkbox"
+                                defaultChecked={row.status === true}
+                                onChange={(event) => handleSwitchChange(event, row._id)}
+                            />
+                            <label
+                                htmlFor={`rating_${row.status}`}
+                                className="checktoggle checkbox-bg"
+                            ></label>
+                        </div>
+                    );
+                }
+            },
             sortable: true,
             width: '156px',
         },
@@ -256,35 +264,57 @@ const Coupon = () => {
             width: '200px',
         },
 
-        permission.includes("editcoupon") || permission.includes("viewcoupon") 
-        || permission.includes("deletecoupon") ? {
+
+        permission.includes("editcoupon") ||
+            permission.includes("viewcoupon") ||
+            permission.includes("deletecoupon") ? {
             name: 'Actions',
-            cell: row => (
-                <>
-                  {permission.includes("viewcoupon") ? <div>
-                        <Tooltip placement="top" overlay="View">
-                            <Eye style={{ marginRight: "10px" }} data-bs-toggle="modal"
-                                data-bs-target="#example2"
-                                onClick={(e) => { setViewpage(row) }}
-                            />
-                        </Tooltip>
-                    </div> : "" }
-                    {permission.includes("editcoupon") ? <div>
-                        <Tooltip placement="top" overlay="Edit">
-                            <Pencil onClick={() => updatecoupon(row)} />
-                        </Tooltip>
-                    </div> : "" }
-                    {permission.includes("deletecoupon") ?  <div>
-                        <Tooltip placement="top" overlay="Delete">
-                            <Trash2 onClick={() => DeleteCouponbyadmin(row._id)} />
-                        </Tooltip>
-                    </div> : "" }
-                </>
-            ),
+            cell: row => {
+                const currentDate = new Date();
+                const endDate = new Date(row.enddate);
+                return (
+                    <>
+                        {currentDate > endDate ? (
+                            <span className="text-danger">-</span>
+                        ) : (
+                            <>
+                                {permission.includes("viewcoupon") && (
+                                    <div>
+                                        <Tooltip placement="top" overlay="View">
+                                            <Eye
+                                                style={{ marginRight: "10px" }}
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#example2"
+                                                onClick={(e) => { setViewpage(row); }}
+                                            />
+                                        </Tooltip>
+                                    </div>
+                                )}
+                                {permission.includes("editcoupon") && (
+                                    <div>
+                                        <Tooltip placement="top" overlay="Edit">
+                                            <Pencil onClick={() => updatecoupon(row)} />
+                                        </Tooltip>
+                                    </div>
+                                )}
+                                {permission.includes("deletecoupon") && (
+                                    <div>
+                                        <Tooltip placement="top" overlay="Delete">
+                                            <Trash2 onClick={() => DeleteCouponbyadmin(row._id)} />
+                                        </Tooltip>
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </>
+                );
+            },
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
-        }: "" 
+        } : ""
+
+
     ];
 
     return (
@@ -332,7 +362,7 @@ const Coupon = () => {
                                         />
                                         Add Coupon
                                     </Link>
-                                </div> : "" }
+                                </div> : ""}
                             </div>
 
                             <Table
@@ -386,7 +416,7 @@ const Coupon = () => {
                                                 </div>
                                             </div>
                                         </li>
-                                       
+
                                         <li>
                                             <div className="row justify-content-between">
                                                 <div className="col-md-6">

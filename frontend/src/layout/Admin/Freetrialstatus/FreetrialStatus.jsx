@@ -3,7 +3,7 @@ import { addfreeClient, basicsettinglist, getfreetrialstatus } from '../../../Se
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 import Table from '../../../components/Table';
-import { fDate } from '../../../Utils/Date_formate';
+import { fDate ,fDateTime} from '../../../Utils/Date_formate';
 import ExportToExcel from '../../../Utils/ExportCSV';
 
 
@@ -136,13 +136,13 @@ const FreetrialStatus = () => {
 
     {
       name: 'Created At',
-      selector: row => fDate(row.createdAt),
+      selector: row => fDateTime(row.createdAt),
       sortable: true,
       width: "200px",
     },
     {
       name: 'Updated At',
-      selector: row => fDate(row.updatedAt),
+      selector: row => fDateTime(row.updatedAt),
       sortable: true,
       width: "200px",
     },

@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import Table from '../../../components/Table';
 import { Signalperdetail } from '../../../Services/Admin';
 import { image_baseurl } from '../../../Utils/config';
-import { fDateTime } from '../../../Utils/Date_formate';
+import { fDateTime ,fDateTimeH} from '../../../Utils/Date_formate';
 import { Tooltip } from 'antd';
 
 const Signaldetail = () => {
@@ -106,7 +106,7 @@ const Signaldetail = () => {
 
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="mb-0">Entry Date & Time</h6>
-                                                            <span className="text-secondary">{fDateTime(item.created_at) || '-'}</span>
+                                                            <span className="text-secondary">{fDateTimeH(item.created_at) || '-'}</span>
                                                         </li>
 
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
@@ -147,7 +147,7 @@ const Signaldetail = () => {
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="mb-0">Exit Date & Time</h6>
                                                             <span className="text-secondary">
-                                                                {item.closedate ? fDateTime(item.closedate) : '-'}
+                                                                {item.closedate ? fDateTimeH(item.closedate) : '-'}
                                                             </span>
                                                         </li>
 

@@ -8,7 +8,7 @@ import { deleteStaff, updateStaffstatus } from '../../../Services/Admin';
 import Swal from 'sweetalert2';
 import { Tooltip } from 'antd';
 import ExportToExcel from '../../../Utils/ExportCSV';
-import { fDate } from '../../../Utils/Date_formate';
+import { fDate,fDateTime } from '../../../Utils/Date_formate';
 
 
 const Staff = () => {
@@ -211,7 +211,7 @@ const Staff = () => {
         },
         {
             name: 'Created At',
-            selector: row => fDate(row.createdAt),
+            selector: row => fDateTime(row.createdAt),
             sortable: true,
             width: '142px',
         },
