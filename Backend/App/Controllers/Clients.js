@@ -169,7 +169,41 @@ while (refer_token.length < length) {
     try {
       const { } = req.body;
       
-      const result = await Clients_Modal.find({ del: 0 }).sort({ createdAt: -1 });
+    //  const result = await Clients_Modal.find({ del: 0 }).sort({ createdAt: -1 });
+
+    const result = await Clients_Modal.aggregate([
+      {
+        $match: { del: 0 }
+      },
+      {
+        $lookup: {
+          from: 'users', // The users collection name
+          let: { userId: { $toObjectId: "$add_by" } }, // Convert add_by to ObjectId
+          pipeline: [
+            { $match: { $expr: { $eq: ["$_id", "$$userId"] } } }
+          ],
+          as: 'addedByDetails'
+        }
+      },
+      {
+        $unwind: {
+          path: '$addedByDetails',
+          preserveNullAndEmptyArrays: true // Keeps clients without a matching user
+        }
+      },
+      {
+        $project: {
+          clientData: "$$ROOT", // Includes all fields from Clients_Modal
+          'addedByDetails.FullName': 1, // Include user's first name
+        
+        }
+      },
+      {
+        $sort: { 'clientData.createdAt': -1 } // Sort by createdAt in descending order
+      }
+    ]);
+    
+
       return res.json({
         status: true,
         message: "get",
