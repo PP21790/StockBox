@@ -193,7 +193,35 @@ while (refer_token.length < length) {
       },
       {
         $project: {
-          clientData: "$$ROOT", // Includes all fields from Clients_Modal
+          _id: 1,
+          FullName: 1,
+          Email: 1,
+          PhoneNo: 1,
+          password: 1,
+          token: 1,
+          panno: 1,
+          aadhaarno: 1,
+          kyc_verification: 1,
+          pdf: 1,
+          add_by: 1,
+          apikey: 1,
+          apisecret: 1,
+          alice_userid: 1,
+          brokerid: 1,
+          authtoken: 1,
+          dlinkstatus: 1,
+          tradingstatus: 1,
+          wamount: 1,
+          del: 1,
+          clientcome: 1,
+          ActiveStatus: 1,
+          freetrial: 1,
+          refer_token: 1,
+          forgotPasswordToken: 1,
+          forgotPasswordTokenExpiry: 1,
+          devicetoken: 1,
+          createdAt: 1,
+          updatedAt: 1,
           'addedByDetails.FullName': 1, // Include user's first name
         
         }

@@ -470,6 +470,7 @@ async  addPlanSubscription(req, res) {
 const today = new Date(); // Aaj ki date
 const existingPlans = await Planmanage.find({
     clientid: client_id,
+    serviceid: serviceId,
     enddate: { $gt: today } // End date must be greater than today's date
 })
 .sort({ enddate: -1 }) // Sort by `enddate` in descending order
