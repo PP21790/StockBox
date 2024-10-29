@@ -640,7 +640,7 @@ try {
           }
         },
         {
-          $sort: { createdAt: -1 } // Sort by created_at in descending order
+          $sort: { created_at: -1 } // Sort by created_at in descending order
         }
       ]);
   
