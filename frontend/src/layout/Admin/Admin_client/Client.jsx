@@ -34,7 +34,8 @@ const Client = () => {
     const [selectedPlanId, setSelectedPlanId] = useState(null)
     const [ForGetCSV, setForGetCSV] = useState([])
 
-
+   
+    console.log("clients",clients)
 
 
     const handleDownload = (row) => {
@@ -437,12 +438,6 @@ const Client = () => {
             ),
             sortable: true,
             width: '160px',
-        },
-        {
-            name: 'CreatedAt',
-            selector: row => fDateTime(row.createdAt),
-            sortable: true,
-            width: '200px',
         },
         {
             name: 'Actions',
