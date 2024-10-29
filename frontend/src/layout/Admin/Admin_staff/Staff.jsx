@@ -169,7 +169,7 @@ const Staff = () => {
             name: 'Full Name',
             selector: row => row.FullName,
             sortable: true,
-            width: '142px',
+            width: '200px',
         },
         {
             name: 'User Name',

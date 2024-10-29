@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 import { DeleteCoupon, UpdateClientStatus, CouponStatus } from '../../../Services/Admin';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
-import { fDate } from '../../../Utils/Date_formate';
+import { fDate, fDateTime } from '../../../Utils/Date_formate';
 import { getstaffperuser } from '../../../Services/Admin';
 
 
@@ -253,13 +253,13 @@ const Coupon = () => {
 
         {
             name: 'Startdate',
-            selector: row => fDate(row.startdate),
+            selector: row => fDateTime(row.startdate),
             sortable: true,
             width: '200px',
         },
         {
             name: 'Enddate',
-            selector: row => fDate(row.enddate),
+            selector: row => fDateTime(row.enddate),
             sortable: true,
             width: '200px',
         },
@@ -450,21 +450,25 @@ const Coupon = () => {
                                         <li>
                                             <div className="row justify-content-between">
                                                 <div className="col-md-8">
-                                                    <b>Start Date : {fDate(viewpage?.startdate)}</b>
+                                                    {viewpage?.startdate ? (
+                                                        <b>Start Date: {fDateTime(viewpage.startdate)}</b>
+                                                    ) : (
+                                                        <b>Start Date: Not available</b>
+                                                    )}
                                                 </div>
-                                                <div className="col-md-6">
-
-                                                </div>
+                                                <div className="col-md-6"></div>
                                             </div>
                                         </li>
                                         <li>
                                             <div className="row justify-content-between">
                                                 <div className="col-md-6">
-                                                    <b>End Date : {fDate(viewpage?.enddate)} </b>
+                                                    {viewpage?.enddate ? (
+                                                        <b>End Date: {fDateTime(viewpage.enddate)}</b>
+                                                    ) : (
+                                                        <b>End Date: Not available</b>
+                                                    )}
                                                 </div>
-                                                <div className="col-md-6">
-
-                                                </div>
+                                                <div className="col-md-6"></div>
                                             </div>
                                         </li>
                                         {/* <li>

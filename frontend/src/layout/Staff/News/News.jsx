@@ -6,7 +6,7 @@ import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
-import { fDate } from '../../../Utils/Date_formate';
+import { fDate , fDateTime} from '../../../Utils/Date_formate';
 import { getstaffperuser } from '../../../Services/Admin';
 
 
@@ -374,7 +374,7 @@ const News = () => {
                                                             style={{ display: 'block', marginTop: '0.5rem' }}
                                                         />
                                                         {/* </p> */}
-                                                        <div className="float-end text-muted small">{fDate(client.created_at)}</div>
+                                                        <div className="float-end text-muted small">{fDateTime(client.created_at)}</div>
                                                     </div>
                                                 </div>
                                             </div>

@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 import { Tooltip } from 'antd';
 import styled from 'styled-components';
-import { fDate } from '../../../Utils/Date_formate';
+import { fDate , fDateTime} from '../../../Utils/Date_formate';
 import { getstaffperuser } from '../../../Services/Admin';
 
 
@@ -329,13 +329,13 @@ const Category = () => {
         },
         {
             name: 'Created At',
-            selector: row => fDate(row.created_at),
+            selector: row => fDateTime(row.created_at),
             sortable: true,
             width: '200px',
         },
         {
             name: 'Updated At',
-            selector: row => fDate(row.updated_at),
+            selector: row => fDateTime(row.updated_at),
             sortable: true,
             width: '200px',
         },

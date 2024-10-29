@@ -163,8 +163,8 @@ class Users {
   async updateUser(req, res) {
     try {
       const { id, FullName, Email, PhoneNo } = req.body;
-
-
+           
+    
       if (!FullName) {
         return res.status(400).json({ status: false, message: "fullName is required" });
       }
