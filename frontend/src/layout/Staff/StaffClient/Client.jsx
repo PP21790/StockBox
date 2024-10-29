@@ -13,6 +13,9 @@ import { IndianRupee } from 'lucide-react';
 import { getstaffperuser } from '../../../Services/Admin';
 
 
+
+
+
 const Client = () => {
 
     const userid = localStorage.getItem('id');
@@ -393,7 +396,7 @@ const Client = () => {
 
         {
             name: 'Created By',
-            selector: row => row.clientcome == 0 ? "App" : "Web",
+            selector: row => row.addedByDetails?.FullName ?? (row.clientcome == 1 ? "WEB" : "APP"),
             sortable: true,
             width: '165px',
         },
@@ -449,39 +452,39 @@ const Client = () => {
             width: '200px',
         },
         permission.includes("assignPackage") ||
-        permission.includes("viewdetail") ||
-        permission.includes("editclient") ?
-          {
-            name: 'Actions',
-            selector: (row) => (
-                <>
+            permission.includes("viewdetail") ||
+            permission.includes("editclient") ?
+            {
+                name: 'Actions',
+                selector: (row) => (
+                    <>
 
 
-                    {permission.includes("assignPackage") ? <Tooltip placement="top" overlay="Package Assign">
-                        <span onClick={(e) => { showModal(true); setClientid(row); }} style={{ cursor: 'pointer' }}>
-                            <Settings2 />
-                        </span>
-                    </Tooltip> : ""}
+                        {permission.includes("assignPackage") ? <Tooltip placement="top" overlay="Package Assign">
+                            <span onClick={(e) => { showModal(true); setClientid(row); }} style={{ cursor: 'pointer' }}>
+                                <Settings2 />
+                            </span>
+                        </Tooltip> : ""}
 
-                    {permission.includes("viewdetail") ? <Tooltip title="view">
-                        <Eye
+                        {permission.includes("viewdetail") ? <Tooltip title="view">
+                            <Eye
 
-                            onClick={() => Clientdetail(row)} />
-                    </Tooltip> : ""}
+                                onClick={() => Clientdetail(row)} />
+                        </Tooltip> : ""}
 
-                    {permission.includes("editclient") ? <Tooltip title="Update">
-                        <UserPen onClick={() => updateClient(row)} />
-                    </Tooltip> : ""}
-                    {/* <Tooltip title="delete">
+                        {permission.includes("editclient") ? <Tooltip title="Update">
+                            <UserPen onClick={() => updateClient(row)} />
+                        </Tooltip> : ""}
+                        {/* <Tooltip title="delete">
                         <Trash2 onClick={() => DeleteClient(row._id)} />
                     </Tooltip> */}
-                </>
-            ),
-            ignoreRowClick: true,
-            allowOverflow: true,
-            button: true,
-            width: '165px',
-        }:""
+                    </>
+                ),
+                ignoreRowClick: true,
+                allowOverflow: true,
+                button: true,
+                width: '165px',
+            } : ""
     ];
 
 
