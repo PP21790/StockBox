@@ -632,6 +632,7 @@ try {
         },
         {
           $project: {
+            orderid: 1,
             planDetails: 1,
             clientName: '$clientDetails.FullName', // Assuming the client's name is stored in the 'name' field
             // Include other fields you want in the result
