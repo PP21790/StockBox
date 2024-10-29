@@ -34,7 +34,7 @@ const Client = () => {
     const [selectedPlanId, setSelectedPlanId] = useState(null)
     const [ForGetCSV, setForGetCSV] = useState([])
 
-   
+    
     console.log("clients",clients)
 
 
@@ -390,10 +390,11 @@ const Client = () => {
 
         {
             name: 'Created By',
-            selector: row => row.clientcome == 0 ? "App" : "Web",
+            selector: row => row.addedByDetails?.FullName ?? (row.clientcome === 1 ? "WEB" : "APP"),
             sortable: true,
             width: '165px',
         },
+        
         // {
         // name: 'Date',
         // selector: row => row.Status,
@@ -438,6 +439,12 @@ const Client = () => {
             ),
             sortable: true,
             width: '160px',
+        },
+        {
+            name: 'CreatedAt',
+            selector: row => fDateTime(row.createdAt),
+            sortable: true,
+            width: '200px',
         },
         {
             name: 'Actions',
