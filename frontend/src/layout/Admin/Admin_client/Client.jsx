@@ -450,9 +450,9 @@ const Client = () => {
         {
             name: 'Actions',
             selector: (row) => (
-                <>
-
-
+                <div className='d-flex'>
+ 
+                    
                     <Tooltip placement="top" overlay="Package Assign">
                         <span onClick={(e) => { showModal(true); setClientid(row); }} style={{ cursor: 'pointer' }}>
                             <Settings2 />
@@ -471,7 +471,7 @@ const Client = () => {
                     {/* <Tooltip title="delete">
                         <Trash2 onClick={() => DeleteClient(row._id)} />
                     </Tooltip> */}
-                </>
+                </div>
             ),
             ignoreRowClick: true,
             allowOverflow: true,

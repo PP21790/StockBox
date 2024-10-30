@@ -16,7 +16,7 @@ const Addplan = () => {
     const [clients, setClients] = useState([]);
     const [plan, setPlan] = useState([]);
 
-
+    console.log("plan",plan)
 
     const getcategoryplanlist = async () => {
         try {
@@ -142,12 +142,15 @@ const Addplan = () => {
             col_size: 4,
             disable: false,
             options: [
-                plan[0]?.validity !== "1 month" ? { value: "1 month", label: "1 Month" } : null,
-                plan[0]?.validity !== "3 months" ? { value: "3 months", label: "3 Months" }: null,
-                plan[0]?.validity !== "6 months" ? { value: "6 months", label: "6 Months" }: null,
-                plan[0]?.validity !== "1 year" ? { value: "1 year", label: "1 Year" }: null
-            ].filter(option => option !== null) 
+                { value: "1 month", label: "1 Month" },
+                { value: "3 months", label: "3 Months" },
+                { value: "6 months", label: "6 Months" },
+                { value: "1 year", label: "1 Year" }
+            ].filter((option) => {
+                return !plan.some((item) => item?.validity === option.value);
+            })
         },
+        
         
         {
             name: "price",
