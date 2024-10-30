@@ -457,7 +457,7 @@ const Client = () => {
             {
                 name: 'Actions',
                 selector: (row) => (
-                    <>
+                    <div className='d-flex'>
 
 
                         {permission.includes("assignPackage") ? <Tooltip placement="top" overlay="Package Assign">
@@ -478,7 +478,7 @@ const Client = () => {
                         {/* <Tooltip title="delete">
                         <Trash2 onClick={() => DeleteClient(row._id)} />
                     </Tooltip> */}
-                    </>
+                    </div>
                 ),
                 ignoreRowClick: true,
                 allowOverflow: true,
