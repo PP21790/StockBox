@@ -48,17 +48,12 @@ const clientsModel = new Schema({
         trim: true,
         default: null
     },
-    // kyc_verification: {
-    //     type: Number, // changed to Number
-    //     enum: [1, 0],
-    //     default: 0
-    // },
     kyc_verification: {
-        type: String, // changed to String
-        enum: ['1', '0'], // enum values must be strings now
-        default: '0' // default value is now a string
+        type: Number, // changed to Number
+        enum: [1, 0],
+        default: 0
     },
-    
+
     pdf: {
         type: String,
         trim: true,
