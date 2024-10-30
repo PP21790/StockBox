@@ -88,12 +88,12 @@ const clientsModel = new Schema({
         default: null
     },
     dlinkstatus: {
-        type: Number, // changed to Number
+        type: Number,
         enum: [1, 0],
         default: 0
     },
     tradingstatus: {
-        type: Number, // changed to Number
+        type: Number, 
         enum: [1, 0],
         default: 0
     },
@@ -103,22 +103,22 @@ const clientsModel = new Schema({
         min: 0
     },
     del: {
-        type: Number, // changed to Number
+        type: Number, 
         enum: [1, 0],
         default: 0
     },
     clientcome: {
-        type: Number, // changed to Number
+        type: Number, 
         enum: [1, 0],
         default: 0
     },
     ActiveStatus: {
-        type: Number, // changed to Number
+        type: Number, 
         enum: [1, 0],
         default: 0
     },
     freetrial: {
-        type: Number, // changed to Number
+        type: Number, 
         enum: [1, 0],
         default: 0
     },
