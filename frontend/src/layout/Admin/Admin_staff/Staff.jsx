@@ -181,7 +181,7 @@ const Staff = () => {
             name: 'Email',
             selector: row => row.Email,
             sortable: true,
-            width: '200px',
+            width: '300px',
         },
         {
             name: 'Phone No',

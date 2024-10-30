@@ -111,7 +111,7 @@ const History = () => {
         },
         {
             name: 'Order_ID',
-            selector: row => row.orderid ? row.orderid : "-" ,
+            selector: row => row.orderid ? row.orderid : "Make By Admin" ,
             sortable: true,
             width: '200px',
         },

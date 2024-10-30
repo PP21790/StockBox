@@ -119,13 +119,13 @@ const FreetrialStatus = () => {
       name: 'S.No',
       selector: (row, index) => index + 1,
       sortable: false,
-      width: "170px",
+      width: "200px",
     },
     {
       name: 'Privious Status',
       selector: row => `${row.olddays}Day`,
       sortable: true,
-      width: "280px",
+      width: "200px",
     },
     {
       name: 'Updated Status',
