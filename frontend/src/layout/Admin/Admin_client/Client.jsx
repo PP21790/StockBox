@@ -645,6 +645,7 @@ const Client = () => {
                                                                                     />
                                                                                     <label className="form-check-label mx-1" style={{ fontSize: "13px", fontWeight: "800" }} htmlFor={`input-plan-${index}`}>
                                                                                         {item.validity}
+                                                                                        
                                                                                     </label>
                                                                                 </h5>
 
@@ -671,8 +672,9 @@ const Client = () => {
                                                                                             <div className="accordion-body">
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Price:</strong>
-                                                                                                    <span><IndianRupee /> {item.price}</span>
-
+                                                                                                    <span><IndianRupee /> {item.price && item.price}</span>
+     
+     
                                                                                                 </div>
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Validity:</strong>
