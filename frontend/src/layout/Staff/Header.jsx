@@ -2,6 +2,12 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 const Header = () => {
+  
+
+  const FullName = localStorage.getItem('FullName');
+
+
+
   return (
     <div>
       <>
@@ -246,8 +252,8 @@ const Header = () => {
                     alt="user avatar"
                   />
                   <div className="user-info">
-                    <p className="user-name mb-0">Pauline Seitz</p>
-                    <p className="designattion mb-0">Web Designer</p>
+                    <p className="user-name mb-0">{FullName && FullName}</p>
+                    <p className="designattion mb-0">Staff</p>
                   </div>
                 </a>
                 <ul className="dropdown-menu dropdown-menu-end">
@@ -260,7 +266,7 @@ const Header = () => {
                       <span>Profile</span>
                     </Link>
                   </li>
-                  <li>
+                  {/* <li>
                     <a
                       className="dropdown-item d-flex align-items-center"
                       href="javascript:;"
@@ -268,7 +274,7 @@ const Header = () => {
                       <i className="bx bx-cog fs-5" />
                       <span>Settings</span>
                     </a>
-                  </li>
+                  </li> */}
                  
                   <li>
                     <div className="dropdown-divider mb-0" />

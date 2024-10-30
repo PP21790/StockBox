@@ -15,6 +15,7 @@ const AddUser = () => {
   const validate = (values) => {
     let errors = {};
 
+
     if (!values.FullName) {
       errors.FullName = "Please enter Full Name";
     }

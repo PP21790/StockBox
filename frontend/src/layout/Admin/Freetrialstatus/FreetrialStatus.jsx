@@ -3,7 +3,7 @@ import { addfreeClient, basicsettinglist, getfreetrialstatus } from '../../../Se
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 import Table from '../../../components/Table';
-import { fDate ,fDateTime} from '../../../Utils/Date_formate';
+import { fDate, fDateTime } from '../../../Utils/Date_formate';
 import ExportToExcel from '../../../Utils/ExportCSV';
 
 
@@ -29,14 +29,15 @@ const FreetrialStatus = () => {
 
   }, [data]);
 
+
+
   const forCSVdata = () => {
     if (data?.length > 0) {
       const csvArr = data.map((item) => ({
-        FullName: item.clientDetails?.FullName,
-        Email: item.clientDetails?.Email || '',
-        PhoneNo: item?.clientDetails?.PhoneNo || '',
-        StartDate: item?.startdate || '',
-        EndDate: item?.enddate || '',
+        CurrentDays:item.newdays ,
+        PreviousDays: item.olddays || '',
+        CreatedAt: item.createdAt || '',
+      
 
       }));
       setForGetCSV(csvArr);
@@ -83,7 +84,7 @@ const FreetrialStatus = () => {
       if (response?.status) {
         Swal.fire({
           icon: 'success',
-          title: response.message || 'Update Successful!',
+          title: 'Free Trial Update Successful!',
           text: 'Your API information was updated successfully.',
           timer: 1500,
           timerProgressBar: true,

@@ -8,6 +8,7 @@ const Header = () => {
 
 
   const token = localStorage.getItem('token');
+  const FullName = localStorage.getItem('FullName');
 
   const [clients, setClients] = useState([]);
 
@@ -171,8 +172,8 @@ const Header = () => {
                     alt="user avatar"
                   />
                   <div className="user-info">
-                    <p className="user-name mb-0">Admin</p>
-
+                    <p className="user-name mb-0">{FullName && FullName}</p>
+                    <p className="designattion mb-0">Admin</p>
                   </div>
                 </a>
                 <ul className="dropdown-menu dropdown-menu-end">

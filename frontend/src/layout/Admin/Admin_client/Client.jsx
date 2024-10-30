@@ -35,7 +35,7 @@ const Client = () => {
     const [ForGetCSV, setForGetCSV] = useState([])
 
     
-    // console.log("clients",clients)
+
 
 
     const handleDownload = (row) => {
@@ -111,6 +111,7 @@ const Client = () => {
             const csvArr = clients.map((item) => ({
                 FullName: item.FullName,
                 Email: item?.Email || '',
+                kyc_verification : item?.kyc_verification == 1 ? "Verfied" : "Not Verified" ,
                 PhoneNo: item?.PhoneNo || '',
                 Created_at: item?.createdAt || '',
 
