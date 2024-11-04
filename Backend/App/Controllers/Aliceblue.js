@@ -218,6 +218,7 @@ class Aliceblue {
                     });
     
     
+                    
                    await order.save();
                     return res.json({
                         status: true,
@@ -501,7 +502,6 @@ class Aliceblue {
             }
 
 
-          
 
 
 
@@ -514,25 +514,7 @@ class Aliceblue {
             }
 
 
-            if(client.tradingstatus == 0)
-                {
-                    return res.status(404).json({
-                        status: false,
-                        message: "Client Broker Not Login, Please Login With Broker"
-                    });
-                }
-
-
-                if (order.borkerid!=2) {
-                    return res.status(404).json({
-                        status: false,
-                        message: "Order not found for this Broker"
-                    });
-                }
-
-
-            const authToken = client.authtoken;
-            const userId = client.apikey;
+      
     
 
 if(order.status==1) {
@@ -543,12 +525,35 @@ if(order.status==1) {
     });
 }
 
+if(client.tradingstatus == 0)
+    {
+        return res.status(404).json({
+            status: false,
+            message: "Client Broker Not Login, Please Login With Broker"
+        });
+    }
+
+
+    if (order.borkerid!=2) {
+        return res.status(404).json({
+            status: false,
+            message: "Order not found for this Broker"
+        });
+    }
+
+
+const authToken = client.authtoken;
+const userId = client.apikey;
+
+
+
+
+
     var data = JSON.stringify([
         {
           "nestOrderNumber": orderid
         }
       ]);
-
 
         let config = {
             method: 'post',
@@ -567,7 +572,6 @@ if(order.status==1) {
     
             await order.save();
 
-
             return res.json({
                 status: true,
                 response: response.data
@@ -580,9 +584,6 @@ if(order.status==1) {
             });
         }
     }
-    
-
-
 
 }
 

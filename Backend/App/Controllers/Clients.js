@@ -227,7 +227,7 @@ while (refer_token.length < length) {
         }
       },
       {
-        $sort: { 'clientData.createdAt': -1 } // Sort by createdAt in descending order
+        $sort: { 'createdAt': -1 } // Sort by createdAt in descending order
       }
     ]);
     
