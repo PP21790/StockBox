@@ -13,6 +13,7 @@ const Mailtemplate_Modal = db.Mailtemplate;
 const Refer_Modal = db.Refer;
 const Payout_Modal = db.Payout;
 const Helpdesk_Modal = db.Helpdesk;
+const Order_Modal = db.Order;
 
 
 class Clients {
@@ -1455,7 +1456,21 @@ return res.json({
   }
 }
 
+async orderList(req, res) {
+  try {
 
+    const { clientid } = req.body;  // Extract the client ID from the request parameters
+    const result = await Order_Modal.find({ clientid: clientid });  // Fetch payouts for the given client ID
+
+    return res.json({
+      status: true,
+      message: "get",
+      data: result  // Return the fetched payouts
+    });
+  } catch (error) {
+    return res.json({ status: false, message: "Server error", data: [] });  // Error handling
+  }
+}
 
 }
 module.exports = new Clients();
