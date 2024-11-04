@@ -4,11 +4,10 @@ const Clients_Modal = db.Clients;
 const Service_Modal = db.Service;
 const Plan_Modal = db.Plan;
 const Signal_Modal = db.Signal;
+const License_Modal = db.License;
 
 
 class Dashboard {
-
-
     async getcount(req, res) {
         try {
             // Count documents in the Clients_Modal collection where del is false
@@ -74,5 +73,23 @@ class Dashboard {
     }
   
  
+
+    async getLicense(req, res) {
+        try {
+          const { key } = req.body;
+          const license = await License_Modal.find();
+
+          return res.json({
+            status: true,
+            message: "Data retrieved successfully",
+            data:license
+          });
+        
+    } catch (error) {
+        return res.json({ status: false, message: "Server error", data: [] });
+    }
+}
+
+
 }
 module.exports = new Dashboard();

@@ -139,7 +139,7 @@ class Angle {
                      symbol: signal.stock, 
                      segment: signal.segment, 
                      expiry: signal.expirydate, 
-                  //   option_type: optiontype, 
+                      option_type: optiontype, 
                      strike: signal.strikeprice 
                  });
              }

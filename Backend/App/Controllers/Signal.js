@@ -1,6 +1,8 @@
 const db = require("../Models");
 const upload = require('../Utils/multerHelper'); 
 const Signal_Modal = db.Signal;
+const Stock_Modal = db.Stock;
+
 mongoose  = require('mongoose');
 const Clients_Modal = db.Clients;
 const { sendFCMNotification } = require('./Pushnotification'); // Adjust if necessary
@@ -39,6 +41,38 @@ if (segment == "C") {
   service = "66dfede64a88602fbbca9b72";
 }
 
+
+
+let stocks;
+if (segment === "C") {
+    stocks = await Stock_Modal.findOne({ 
+        symbol: stock, 
+        segment: segment, 
+    });
+} else if (segment === "F") {
+    stocks = await Stock_Modal.findOne({ 
+        symbol: stock, 
+        segment: segment, 
+        expiry: expirydate, 
+    });
+} else {
+    stocks = await Stock_Modal.findOne({ 
+        symbol: stock, 
+        segment: segment, 
+        expiry: expirydate, 
+         option_type: optiontype, 
+        strike: strikeprice 
+    });
+}
+
+
+if (!stocks) {
+   return res.status(404).json({
+       status: false,
+       message: "Stock not found"
+   });
+ }
+
          
             const result = new Signal_Modal({
               price: price,
@@ -61,7 +95,7 @@ if (segment == "C") {
               expirydate: expirydate,
               segment:segment,
               optiontype: optiontype,
-              tradesymbol:tradesymbol,
+              tradesymbol:stocks.tradesymbol,
               lotsize: lotsize,
           });
     

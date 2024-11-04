@@ -498,6 +498,7 @@ if (existingPlans.length > 0) {
 
         let license = await License_Modal.findOne({ month: targetMonth }).exec();
 
+        
         if (license) {
             license.noofclient += monthsToAdd;
             console.log('Month found, updating noofclient.',monthsToAdd);
