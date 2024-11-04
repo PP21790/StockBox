@@ -30,10 +30,14 @@ class Angle {
                 }
 
               
-
                 var auth_token = keystr.split('?auth_token=')[1];
 
-
+                if (!auth_token) {
+                    return res.status(404).json({
+                        status: false,
+                        message: "Auth Token is required"
+                    });
+                }
 
                 const brokerlink = await Clients_Modal.findByIdAndUpdate(
                     key, 
