@@ -4,11 +4,14 @@ const xlsx = require('xlsx');
 const csv = require('csv-parser');
 const path = require('path');
 const axios = require('axios');
+const Papa = require('papaparse');
 const fs = require('fs');
 var dateTime = require('node-datetime');
 const cron = require('node-cron');
 const Stock_Modal = db.Stock;
 const Clients_Modal = db.Clients;
+const Signal_Modal = db.Signal;
+const BasicSetting_Modal = db.BasicSetting;
 
 
 cron.schedule('0 1 * * *', async () => {
@@ -32,6 +35,20 @@ cron.schedule('0 4 * * *', async () => {
     timezone: "Asia/Kolkata"
 });
 
+
+cron.schedule('20 15 * * *', async () => {
+    await CheckExpireSignalCash();
+}, {
+    scheduled: true,
+    timezone: "Asia/Kolkata"
+});
+
+cron.schedule('25 15 * * *', async () => {
+    await CheckExpireSignalFutureOption();
+}, {
+    scheduled: true,
+    timezone: "Asia/Kolkata"
+});
 
 
 async function AddBulkStockCron(req, res) {
@@ -277,5 +294,136 @@ const DeleteTokenAliceToken = async () => {
         console.error('Error updating trading status:', error);
     }
 }
+
+
+
+
+async function CheckExpireSignalCash(req, res) {
+    try {
+        const today = new Date();
+        const signals = await Signal_Modal.find({
+            del: 0,
+            close_status: false,
+            segment: "C",
+            callduration:"Intraday",
+          });
+
+
+
+          for (const signal of signals) {
+            try {
+                // Get the CPrice for each signal's stock symbol
+                const cPrice = await returnstockcloseprice(signal.stock);
+
+                // Update the signal with close_status and close_price
+                await Signal_Modal.updateOne(
+                    { _id: signal._id },
+                    { $set: { close_status: true, closeprice: cPrice, closedate: today } }
+                );
+            } catch (error) {
+                console.error(`Failed to update signal for ${signal.stock}:`, error.message);
+            }
+        }
+
+        res.json({ message: "Process completed successfully." });
+      
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: "An error occurred while processing signals." });
+
+    } 
+}
+
+
+async function CheckExpireSignalFutureOption(req, res) {
+    try {
+
+        const today = new Date();
+       const formattedToday = `${String(today.getDate()).padStart(2, '0')}${String(today.getMonth() + 1).padStart(2, '0')}${today.getFullYear()}`;
+
+
+        const signals = await Signal_Modal.find({
+            del: 0,
+            close_status: false,
+            segment: { $in: ["F", "O"] },
+            expirydate: formattedToday
+          });
+
+          for (const signal of signals) {
+            try {
+                // Get the CPrice for each signal's stock symbol
+                const cPrice = await returnstockcloseprice(signal.stock);
+
+                // Update the signal with close_status and close_price
+                await Signal_Modal.updateOne(
+                    { _id: signal._id },
+                    { $set: { close_status: true, closeprice: cPrice, closedate: today } }
+                );
+            } catch (error) {
+                console.error(`Failed to update signal for ${signal.stock}:`, error.message);
+            }
+        }
+
+        res.json({ message: "Process completed successfully." });
+
+      
+    } catch (error) {
+       // console.error('Error:', error);
+        res.status(500).json({ error: "An error occurred while processing signals." });
+    } 
+}
   
-  module.exports = { AddBulkStockCron,DeleteTokenAliceToken };
+async function returnstockcloseprice(symbol) {
+    try {
+        if (!symbol) {
+            throw new Error("Symbol is required.");
+        }
+
+        const csvFilePath = "https://docs.google.com/spreadsheets/d/1wwSMDmZuxrDXJsmxSIELk1O01F0x1-0LEpY03iY1tWU/export?format=csv";
+        const { data } = await axios.get(csvFilePath);
+        
+        // Return a promise that resolves with the CPrice after parsing
+        return new Promise((resolve, reject) => {
+            Papa.parse(data, {
+                header: true,
+                complete: (result) => {
+                    let sheetData = result.data;
+
+                    // Map symbol names as needed
+                    sheetData.forEach(item => {
+                        switch (item.SYMBOL) {
+                            case "NIFTY_BANK":
+                                item.SYMBOL = "BANKNIFTY";
+                                break;
+                            case "NIFTY_50":
+                                item.SYMBOL = "NIFTY";
+                                break;
+                            case "NIFTY_FIN_SERVICE":
+                                item.SYMBOL = "FINNIFTY";
+                                break;
+                        }
+                    });
+
+                    // Find the requested symbol and return its CPrice
+                    const stockData = sheetData.find(item => item.SYMBOL === symbol);
+
+                    if (stockData && stockData.CPrice && stockData.CPrice !== "#N/A") {
+                        resolve(stockData.CPrice);
+                    } else {
+                        reject(new Error("CPrice unavailable or symbol not found."));
+                    }
+                },
+                error: (error) => {
+                    reject(error);
+                }
+            });
+        });
+    } catch (error) {
+        console.error("Error in returnstockcloseprice:", error.message);
+        throw error;
+    }
+}
+
+
+
+  module.exports = { AddBulkStockCron,DeleteTokenAliceToken,TradingStatusOff,CheckExpireSignalCash,CheckExpireSignalFutureOption };

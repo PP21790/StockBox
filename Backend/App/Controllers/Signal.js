@@ -239,8 +239,6 @@ async getSignal(req, res) {
 
 
 
-
-
   async detailSignal(req, res) {
     try {
         // Extract ID from request parameters

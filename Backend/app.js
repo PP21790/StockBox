@@ -4,11 +4,13 @@ require('dotenv').config();
 const mongoConnection = require("./App/Connection/Connection");
 const express = require("express");
 const app = express();
+var axios = require('axios');
 const http = require('http');
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
+const Papa = require('papaparse');
 const bodyparser = require('body-parser');
 const db = require("./App/Models");
 //const { AddBulkStockCron } = require('./App/Controllers/Cron.js'); 
@@ -67,14 +69,55 @@ app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 const server = http.createServer(app);
 
+// app.get('/getcurrentprice', async (req, res) => {
+//   try {
+//    // const { symbol } = req.query; // Get symbol from query parameter
+//    const symbol ="NIFTY";
+//     if (!symbol) {
+//       return res.status(400).json({ error: "Please provide a symbol as a query parameter." });
+//     }
 
+//     const csvFilePath = "https://docs.google.com/spreadsheets/d/1wwSMDmZuxrDXJsmxSIELk1O01F0x1-0LEpY03iY1tWU/export?format=csv";
+    
+//     // Fetch CSV data from Google Sheets
+//     const { data } = await axios.get(csvFilePath);
+    
+//     // Parse CSV data
+//     Papa.parse(data, {
+//       header: true,
+//       complete: (result) => {
+//         let sheetData = result.data;
 
-// app.get('/cron', (req, res) => {
-//   AddBulkStockCron()
-//   res.json("done")
-// })
+//         // Map symbol names as needed
+//         sheetData.forEach(item => {
+//           switch (item.SYMBOL) {
+//             case "NIFTY_BANK":
+//               item.SYMBOL = "BANKNIFTY";
+//               break;
+//             case "NIFTY_50":
+//               item.SYMBOL = "NIFTY";
+//               break;
+//             case "NIFTY_FIN_SERVICE":
+//               item.SYMBOL = "FINNIFTY";
+//               break;
+//           }
+//         });
 
+//         // Find the requested symbol and return its CPrice
+//         const stockData = sheetData.find(item => item.SYMBOL === symbol);
 
+//         if (stockData && stockData.CPrice && stockData.CPrice !== "#N/A") {
+//           res.json({ symbol: stockData.SYMBOL, CPrice: stockData.CPrice });
+//         } else {
+//           res.status(404).json({ error: "Symbol not found or CPrice unavailable." });
+//         }
+//       }
+//     });
+//   } catch (error) {
+//     console.error("Error fetching or parsing CSV:", error.message);
+//     res.status(500).json({ error: "Error fetching or processing data.", details: error.message });
+//   }
+// });
 
 // Importing routes
 require('./App/Routes/index')(app)

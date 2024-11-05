@@ -1423,10 +1423,25 @@ async pastPerformance(req, res) {
         const profitOrLoss = exitPrice - entryPrice;
 
         if (profitOrLoss >= 0) {
-          totalProfit += profitOrLoss;
+       //   totalProfit += profitOrLoss;
+
+       if(id=="66dfede64a88602fbbca9b72" || id=="66dfeef84a88602fbbca9b79")
+        {
+          totalProfit += profitOrLoss*signal.lotsize;
+        }
+        else{
+      totalProfit += profitOrLoss;
+        }
           profitCount++;
         } else {
-          totalLoss += Math.abs(profitOrLoss);
+
+          if(id=="66dfede64a88602fbbca9b72" || id=="66dfeef84a88602fbbca9b79")
+            {
+              totalLoss += Math.abs(profitOrLoss)*signal.lotsize;
+            }
+            else{
+                totalLoss += Math.abs(profitOrLoss);
+            }
           lossCount++;
         }
       }
@@ -1743,17 +1758,38 @@ async pastPerformances(req, res) {
           const profitOrLoss = exitPrice - entryPrice;
 
           if (profitOrLoss >= 0) {
+
+            if(serviceId=="66dfede64a88602fbbca9b72" || serviceId=="66dfeef84a88602fbbca9b79")
+              {
+                totalProfit += profitOrLoss*signal.lotsize;
+              }
+              else{
             totalProfit += profitOrLoss;
+              }
             profitCount++;
           } else {
+            if(serviceId=="66dfede64a88602fbbca9b72" || serviceId=="66dfeef84a88602fbbca9b79")
+              {
+                totalLoss += Math.abs(profitOrLoss)*signal.lotsize;
+              }
+              else{
             totalLoss += Math.abs(profitOrLoss);
+              }
             lossCount++;
           }
         }
+
+
       });
 
       const accuracy = (profitCount / count) * 100;
-      const avgreturnpertrade = (totalProfit - totalLoss) / count;
+      let avgreturnpertrade = 0;
+     
+
+         avgreturnpertrade = (totalProfit - totalLoss) / count;
+    
+
+      console.log("avgreturnpertrade",avgreturnpertrade);
 
       if (monthsBetween > 0) {
         avgreturnpermonth = (totalProfit - totalLoss) / monthsBetween;

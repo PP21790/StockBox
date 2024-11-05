@@ -135,6 +135,21 @@ const BasicSettingSchema = new Schema({
         type: Number,
         trim: true,
         default: 0
+    },
+    company_key: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    cashexpiretime: {
+        type: Number,
+        trim: true,
+        default: 0
+    },
+    foexpiretime: {
+        type: Number,
+        trim: true,
+        default: 0
     }
 
 }, {
