@@ -117,7 +117,7 @@ if (!stocks) {
               const deviceToken = client.devicetoken; // Adjust according to your token field name
         
               const resultn = new Notification_Modal({
-                clientid: clients._id,
+                clientid: client._id,
                 title: notificationTitle,
                 message: notificationBody
             });
