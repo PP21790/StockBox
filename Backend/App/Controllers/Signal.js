@@ -2,7 +2,7 @@ const db = require("../Models");
 const upload = require('../Utils/multerHelper'); 
 const Signal_Modal = db.Signal;
 const Stock_Modal = db.Stock;
-
+const Notification_Modal = db.Notification;
 mongoose  = require('mongoose');
 const Clients_Modal = db.Clients;
 const { sendFCMNotification } = require('./Pushnotification'); // Adjust if necessary
@@ -116,15 +116,22 @@ if (!stocks) {
             for (const client of clients) {
               const deviceToken = client.devicetoken; // Adjust according to your token field name
         
+              const resultn = new Notification_Modal({
+                clientid: clients._id,
+                title: notificationTitle,
+                message: notificationBody
+            });
+    
+            await resultn.save();
+
+
               if (deviceToken) {
                 try {
                   await sendFCMNotification(notificationTitle, notificationBody, deviceToken);
 
                 } catch (error) {
-                 // console.error(`Failed to send notification to client with ID ${client._id}:`, error);
                 }
               } else {
-              //  console.log(`No device token found for client with ID ${client._id}`);
               }
             }
           }

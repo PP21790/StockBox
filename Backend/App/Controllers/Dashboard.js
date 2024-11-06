@@ -5,7 +5,7 @@ const Service_Modal = db.Service;
 const Plan_Modal = db.Plan;
 const Signal_Modal = db.Signal;
 const License_Modal = db.License;
-
+const Planmanage = db.Planmanage;
 
 class Dashboard {
     async getcount(req, res) {
@@ -90,6 +90,339 @@ class Dashboard {
     }
 }
 
+
+async pastPerformance(req, res) {
+  try {
+    const { id } = req.params;
+
+    // Query to find signals based on the service ID
+    const signals = await Signal_Modal.find({
+      del: 0,
+      close_status: true,
+      service: new mongoose.Types.ObjectId(id) // Ensure service is an ObjectId
+    });
+
+    // Count the number of signals
+    const count = signals.length;
+    if (count === 0) {
+      return res.status(404).json({
+        status: false,
+        message: "No signals found"
+      });
+    }
+
+    let totalProfit = 0;
+    let totalLoss = 0;
+    let profitCount = 0;
+    let lossCount = 0;
+    let avgreturnpermonth = 0;
+
+    const [firstSignal, lastSignal] = await Promise.all([
+      Signal_Modal.findOne({
+        del: 0,
+        close_status: true,
+        service: new mongoose.Types.ObjectId(id)
+      }).sort({ created_at: 1 }), // Sort by created_at in ascending order
+
+      Signal_Modal.findOne({
+        del: 0,
+        close_status: true,
+        service: new mongoose.Types.ObjectId(id)
+      }).sort({ created_at: -1 }) // Sort by created_at in descending order
+    ]);
+
+    if (!firstSignal || !lastSignal) {
+      return res.status(404).json({
+        status: false,
+        message: "No signals found"
+      });
+    }
+
+    const firstCreatedAt = firstSignal.created_at;
+    const lastCreatedAt = lastSignal.created_at;
+
+    const startYear = firstCreatedAt.getFullYear();
+    const startMonth = firstCreatedAt.getMonth();
+    const endYear = lastCreatedAt.getFullYear();
+    const endMonth = lastCreatedAt.getMonth();
+
+    const yearDifference = endYear - startYear;
+    const monthDifference = endMonth - startMonth;
+    const monthsBetween = yearDifference * 12 + monthDifference;
+
+    signals.forEach(signal => {
+      const entryPrice = parseFloat(signal.price); // Entry price
+      const exitPrice = parseFloat(signal.closeprice); // Exit price
+
+      if (!isNaN(entryPrice) && !isNaN(exitPrice)) {
+        const profitOrLoss = exitPrice - entryPrice;
+
+        if (profitOrLoss >= 0) {
+       //   totalProfit += profitOrLoss;
+
+       if(id=="66dfede64a88602fbbca9b72" || id=="66dfeef84a88602fbbca9b79")
+        {
+          totalProfit += profitOrLoss*signal.lotsize;
+        }
+        else{
+      totalProfit += profitOrLoss;
+        }
+          profitCount++;
+        } else {
+
+          if(id=="66dfede64a88602fbbca9b72" || id=="66dfeef84a88602fbbca9b79")
+            {
+              totalLoss += Math.abs(profitOrLoss)*signal.lotsize;
+            }
+            else{
+                totalLoss += Math.abs(profitOrLoss);
+            }
+          lossCount++;
+        }
+      }
+    });
+
+    const accuracy = (profitCount / count) * 100;
+    const avgreturnpertrade = (totalProfit - totalLoss) / count;
+
+    if (monthsBetween > 0) {
+      avgreturnpermonth = (totalProfit - totalLoss) / monthsBetween;
+    } else {
+      avgreturnpermonth = totalProfit - totalLoss;
+    }
+
+
+    return res.json({
+      status: true,
+      message: "Past performance data fetched successfully",
+      data: {
+        count: count || 0,
+        totalProfit: totalProfit || 0,
+        totalLoss: totalLoss || 0,
+        profitCount: profitCount || 0,
+        lossCount: lossCount || 0,
+        accuracy: accuracy || 0,
+        avgreturnpertrade: avgreturnpertrade || 0,
+        avgreturnpermonth: avgreturnpermonth || 0
+      }
+    });
+  } catch (error) {
+    console.log("Error fetching signal details:", error);
+
+    return res.status(500).json({
+      status: false,
+      message: "Server error",
+      error: error.message
+    });
+  }
+}
+
+async pastPerformances(req, res) {
+  try {
+    // Define fixed service IDs
+    const serviceIds = [
+      '66d2c3bebf7e6dc53ed07626', // Replace with actual service IDs
+      '66dfede64a88602fbbca9b72',
+      '66dfeef84a88602fbbca9b79'
+    ].map(id => new mongoose.Types.ObjectId(id)); // Convert to ObjectId
+
+    // Query to find signals based on the service IDs
+    const signals = await Signal_Modal.find({
+      del: 0,
+      close_status: true,
+      service: { $in: serviceIds } // Match any of the services
+    });
+
+    // Group signals by service ID
+    const groupedSignals = signals.reduce((acc, signal) => {
+      const serviceId = signal.service.toString();
+      if (!acc[serviceId]) {
+        acc[serviceId] = [];
+      }
+      acc[serviceId].push(signal);
+      return acc;
+    }, {});
+
+    const results = {};
+    
+    // Process each service
+    for (const serviceId of serviceIds) {
+      const serviceIdStr = serviceId.toString();
+      const serviceSignals = groupedSignals[serviceIdStr] || [];
+      const count = serviceSignals.length;
+
+      if (count === 0) {
+        results[serviceIdStr] = {
+          status: false,
+          message: "No signals found"
+        };
+        continue;
+      }
+
+      let totalProfit = 0;
+      let totalLoss = 0;
+      let profitCount = 0;
+      let lossCount = 0;
+      let avgreturnpermonth = 0;
+
+      const [firstSignal, lastSignal] = await Promise.all([
+        Signal_Modal.findOne({ del: 0, close_status: true, service: serviceId }).sort({ created_at: 1 }),
+        Signal_Modal.findOne({ del: 0, close_status: true, service: serviceId }).sort({ created_at: -1 })
+      ]);
+
+      if (!firstSignal || !lastSignal) {
+        results[serviceIdStr] = {
+          status: false,
+          message: "No signals found"
+        };
+        continue;
+      }
+
+      const firstCreatedAt = firstSignal.created_at;
+      const lastCreatedAt = lastSignal.created_at;
+
+      const startYear = firstCreatedAt.getFullYear();
+      const startMonth = firstCreatedAt.getMonth();
+      const endYear = lastCreatedAt.getFullYear();
+      const endMonth = lastCreatedAt.getMonth();
+
+      const yearDifference = endYear - startYear;
+      const monthDifference = endMonth - startMonth;
+      const monthsBetween = yearDifference * 12 + monthDifference;
+
+      serviceSignals.forEach(signal => {
+        const entryPrice = parseFloat(signal.price); // Entry price
+        const exitPrice = parseFloat(signal.closeprice); // Exit price
+
+        if (!isNaN(entryPrice) && !isNaN(exitPrice)) {
+          const profitOrLoss = exitPrice - entryPrice;
+
+          if (profitOrLoss >= 0) {
+
+            if(serviceId=="66dfede64a88602fbbca9b72" || serviceId=="66dfeef84a88602fbbca9b79")
+              {
+                totalProfit += profitOrLoss*signal.lotsize;
+              }
+              else{
+            totalProfit += profitOrLoss;
+              }
+            profitCount++;
+          } else {
+            if(serviceId=="66dfede64a88602fbbca9b72" || serviceId=="66dfeef84a88602fbbca9b79")
+              {
+                totalLoss += Math.abs(profitOrLoss)*signal.lotsize;
+              }
+              else{
+            totalLoss += Math.abs(profitOrLoss);
+              }
+            lossCount++;
+          }
+        }
+
+
+      });
+
+      const accuracy = (profitCount / count) * 100;
+      let avgreturnpertrade = 0;
+     
+
+         avgreturnpertrade = (totalProfit - totalLoss) / count;
+    
+
+      console.log("avgreturnpertrade",avgreturnpertrade);
+
+      if (monthsBetween > 0) {
+        avgreturnpermonth = (totalProfit - totalLoss) / monthsBetween;
+      } else {
+        avgreturnpermonth = totalProfit - totalLoss;
+      }
+
+      results[serviceIdStr] = {
+        status: true,
+        message: "Past performance data fetched successfully",
+        data: {
+          count,
+          totalProfit,
+          totalLoss,
+          profitCount,
+          lossCount,
+          accuracy,
+          avgreturnpertrade,
+          avgreturnpermonth
+        }
+      };
+    }
+
+    return res.json({
+      status: true,
+      results
+    });
+
+  } catch (error) {
+    console.error("Error fetching signal details:", error);
+
+    return res.status(500).json({
+      status: false,
+      message: "Server error",
+      error: error.message
+    });
+  }
+}
+
+async CloseSignal(req, res) {
+  try {
+      const { service_id } = req.body;
+
+      const query = {
+          service: service_id,
+          close_status: true,
+      };
+      // Fetch signals and sort by createdAt in descending order
+      const signals = await Signal_Modal.find(query).sort({ created_at: -1 }).lean(); 
+
+      return res.json({
+          status: true,
+          message: "Signals retrieved successfully",
+          data: signals,
+      });
+  } catch (error) {
+      console.error("Error fetching signals:", error);
+      return res.json({ status: false, message: "Server error", data: [] });
+  }
+}
+
+
+async PlanExipreList(req, res) {
+  try {
+    const { serviceid } = req.query;  
+
+    const filter = serviceid ? { serviceid } : {}; 
+    const plans = await Planmanage.find(filter);
+
+    // Prepare an array to store the enriched data
+    const enrichedPlans = [];
+
+    for (let plan of plans) {
+      const service = await Service_Modal.findById(plan.serviceid).select('title');
+
+      const client = await Clients_Modal.findById(plan.clientid).select('FullName');
+      enrichedPlans.push({
+        ...plan.toObject(), 
+        serviceTitle: service ? service.title : null, 
+        clientFullName: client ? client.FullName : null 
+      });
+    }
+
+
+    return res.json({
+      status: true,
+      message: "get",
+      data: enrichedPlans  
+    });
+  } catch (error) {
+    return res.json({ status: false, message: "Server error", data: [] });  // Error handling
+  }
+}
 
 }
 module.exports = new Dashboard();

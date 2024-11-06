@@ -12,7 +12,10 @@ const Stock_Modal = db.Stock;
 const Clients_Modal = db.Clients;
 const Signal_Modal = db.Signal;
 const BasicSetting_Modal = db.BasicSetting;
+const Notification_Modal = db.Notification;
+const Planmanage = db.Planmanage;
 
+const { sendFCMNotification } = require('./Pushnotification'); 
 
 cron.schedule('0 1 * * *', async () => {
     await DeleteTokenAliceToken();
@@ -45,6 +48,14 @@ cron.schedule('20 15 * * *', async () => {
 
 cron.schedule('25 15 * * *', async () => {
     await CheckExpireSignalFutureOption();
+}, {
+    scheduled: true,
+    timezone: "Asia/Kolkata"
+});
+
+
+cron.schedule('0 09 * * *', async () => {
+    await PlanExpire();
 }, {
     scheduled: true,
     timezone: "Asia/Kolkata"
@@ -425,5 +436,90 @@ async function returnstockcloseprice(symbol) {
 }
 
 
+async function PlanExpire(req, res) {
+    try {
+        // Get the current date at midnight (start of the day)
+        const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0); // Set to start of the day (midnight)
+    
+        // Calculate the future dates (5, 3, and 1 days later)
+        const futureDates = [
+            new Date(currentDate),
+            new Date(currentDate),
+            new Date(currentDate)
+        ];
+    
+        futureDates[0].setDate(currentDate.getDate() + 5); // 5 days later
+        futureDates[1].setDate(currentDate.getDate() + 3); // 3 days later
+        futureDates[2].setDate(currentDate.getDate() + 1); // 1 day later
+    
+        // Normalize each date to midnight (00:00:00)
+        futureDates.forEach(date => {
+            date.setHours(0, 0, 0, 0); // Resetting to midnight for each date
+        });
+    
+      
+    
+        // Find plans with `enddate` within the range of the future dates (5, 3, or 1 days)
+        const plans = await Planmanage.find({
+            enddate: { 
+                $gte: futureDates[2], // greater than or equal to 1 day from now
+                $lt: futureDates[0]  // less than 5 days from now
+            }
+        });
+    
+        // Iterate over each expiring plan
+        for (const plan of plans) {
+            const planEndDate = new Date(plan.enddate);
+            planEndDate.setHours(0, 0, 0, 0); // Normalize the plan's end date to midnight
+    
+            const timeDifference = planEndDate - currentDate;
+            const daysRemaining = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+         
+            let message;
+            const title = 'Plan Expiry Notification';
+    
+            if (daysRemaining === 5) {
+                message = 'Your plan will expire in 5 days.';
+            } else if (daysRemaining === 3) {
+                message = 'Your plan will expire in 3 days.';
+            } else if (daysRemaining === 1) {
+                message = 'Your plan will expire tomorrow.';
+            }
+    
+    
+            if (message) {
+                try {
+              
+                  const client = await Clients_Modal.findById(plan.clientid); // Fetch the client
+    
+    
+                  const resultn = new Notification_Modal({
+                    clientid: plan.clientid,
+                    title: title,
+                    message: message
+                });
+    
+                await resultn.save();
+    
+                    if (client && client.devicetoken) {
+                        await sendFCMNotification(title, message, client.devicetoken);
+                       
+                    } else {
+                    }
+                        
+                } catch (error) {
+                }
+            }
+        }
+    
+        res.status(200).json({ message: "Notifications sent successfully for expiring plans." });
+    
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: "An error occurred while processing signals." });
+    }
+}
 
-  module.exports = { AddBulkStockCron,DeleteTokenAliceToken,TradingStatusOff,CheckExpireSignalCash,CheckExpireSignalFutureOption };
+
+  module.exports = { AddBulkStockCron,DeleteTokenAliceToken,TradingStatusOff,CheckExpireSignalCash,CheckExpireSignalFutureOption,PlanExpire };

@@ -21,6 +21,7 @@ const Freetrial_Modal = db.Freetrial;
 const Broadcast_Modal = db.Broadcast;
 const Order_Modal = db.Order;
 const License_Modal = db.License;
+const Notification_Modal = db.Notification;
 
 
 mongoose  = require('mongoose');
@@ -1894,6 +1895,25 @@ async myService(req, res) {
     console.error(error);
     return res.status(500).json({ status: false, message: 'Server error', data: [] });
   }
+}
+
+
+
+
+async Notification(req, res) {
+  try {
+    const { id } = req.params;
+      const result = await Notification_Modal.find({ clientid: id }).sort({ createdAt: -1 });
+
+      return res.json({
+        status: true,
+        message: "get",
+        data:result
+      });
+
+    } catch (error) {
+      return res.json({ status: false, message: "Server error", data: [] });
+    }
 }
 
 
