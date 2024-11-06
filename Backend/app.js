@@ -10,7 +10,7 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
-//const Papa = require('papaparse');
+// const Papa = require('papaparse');
 const bodyparser = require('body-parser');
 const db = require("./App/Models");
 //const { AddBulkStockCron } = require('./App/Controllers/Cron.js'); 
@@ -71,97 +71,55 @@ app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 const server = http.createServer(app);
 
- //app.get('/getcurrentprice', async (req, res) => {
-
-
+//  app.get('/getcurrentprice', async (req, res) => {
 //   try {
-//     // Get the current date at midnight (start of the day)
-//     const currentDate = new Date();
-//     currentDate.setHours(0, 0, 0, 0); // Set to start of the day (midnight)
-
-//     // Calculate the future dates (5, 3, and 1 days later)
-//     const futureDates = [
-//         new Date(currentDate),
-//         new Date(currentDate),
-//         new Date(currentDate)
-//     ];
-
-//     futureDates[0].setDate(currentDate.getDate() + 5); // 5 days later
-//     futureDates[1].setDate(currentDate.getDate() + 3); // 3 days later
-//     futureDates[2].setDate(currentDate.getDate() + 1); // 1 day later
-
-//     // Normalize each date to midnight (00:00:00)
-//     futureDates.forEach(date => {
-//         date.setHours(0, 0, 0, 0); // Resetting to midnight for each date
-//     });
-
-  
-
-//     // Find plans with `enddate` within the range of the future dates (5, 3, or 1 days)
-//     const plans = await Planmanage.find({
-//         enddate: { 
-//             $gte: futureDates[2], // greater than or equal to 1 day from now
-//             $lt: futureDates[0]  // less than 5 days from now
-//         }
-//     });
-
-//     // Iterate over each expiring plan
-//     for (const plan of plans) {
-//         const planEndDate = new Date(plan.enddate);
-//         planEndDate.setHours(0, 0, 0, 0); // Normalize the plan's end date to midnight
-
-//         const timeDifference = planEndDate - currentDate;
-//         const daysRemaining = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-     
-//         let message;
-//         const title = 'Plan Expiry Notification';
-
-//         if (daysRemaining === 5) {
-//             message = 'Your plan will expire in 5 days.';
-//         } else if (daysRemaining === 3) {
-//             message = 'Your plan will expire in 3 days.';
-//         } else if (daysRemaining === 1) {
-//             message = 'Your plan will expire tomorrow.';
-//         }
-
-
-//         if (message) {
-//             try {
-          
-//               const client = await Clients_Modal.findById(plan.clientid); // Fetch the client
-
-
-//               const resultn = new Notification_Modal({
-//                 clientid: plan.clientid,
-//                 title: title,
-//                 message: message
-//             });
-
-//             await resultn.save();
-
-//                 if (client && client.devicetoken) {
-//                     await sendFCMNotification(title, message, client.devicetoken);
-
-                   
-//                     console.log(`Notification sent and logged for client ID ${plan.clientid}`);
-//                 } else {
-//                     console.log(`No device token found for client ID ${plan.clientid}`);
-//                 }
-
-
-                
-//             } catch (error) {
-//             }
-//         }
+//     if (!symbol) {
+//         throw new Error("Symbol is required.");
 //     }
 
-//     res.status(200).json({ message: "Notifications sent successfully for expiring plans." });
+//     const csvFilePath = "https://docs.google.com/spreadsheets/d/1wwSMDmZuxrDXJsmxSIELk1O01F0x1-0LEpY03iY1tWU/export?format=csv";
+//     const { data } = await axios.get(csvFilePath);
+    
+//     // Return a promise that resolves with the CPrice after parsing
+//     return new Promise((resolve, reject) => {
+//         Papa.parse(data, {
+//             header: true,
+//             complete: (result) => {
+//                 let sheetData = result.data;
 
+//                 // Map symbol names as needed
+//                 sheetData.forEach(item => {
+//                     switch (item.SYMBOL) {
+//                         case "NIFTY_BANK":
+//                             item.SYMBOL = "BANKNIFTY";
+//                             break;
+//                         case "NIFTY_50":
+//                             item.SYMBOL = "NIFTY";
+//                             break;
+//                         case "NIFTY_FIN_SERVICE":
+//                             item.SYMBOL = "FINNIFTY";
+//                             break;
+//                     }
+//                 });
+
+//                 // Find the requested symbol and return its CPrice
+//                 const stockData = sheetData.find(item => item.SYMBOL === symbol);
+
+//                 if (stockData && stockData.CPrice && stockData.CPrice !== "#N/A") {
+//                     resolve(stockData.CPrice);
+//                 } else {
+//                     reject(new Error("CPrice unavailable or symbol not found."));
+//                 }
+//             },
+//             error: (error) => {
+//                 reject(error);
+//             }
+//         });
+//     });
 // } catch (error) {
-//     console.error('Error:', error);
-//     res.status(500).json({ error: "An error occurred while processing signals." });
+//     console.error("Error in returnstockcloseprice:", error.message);
+//     throw error;
 // }
-
 // });
 
 // Importing routes
