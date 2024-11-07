@@ -1,6 +1,7 @@
 const db = require("../Models");
 const upload = require('../Utils/multerHelper'); // Import the multer helper
-
+const fs = require('fs');
+const path = require('path');
 const BasicSetting_Modal = db.BasicSetting;
 const Activitylogs_Modal = db.Activitylogs;
 
@@ -158,6 +159,57 @@ class BasicSetting {
             });
         }
     }
+
+    
+
+    async updateCronTime(req, res) {
+        try {
+            const { cashexpiretime, foexpiretime, cashexpirehours, foexpirehours } = req.body;
+    
+            const update = {
+                cashexpiretime,
+                foexpiretime,
+                cashexpirehours,
+                foexpirehours
+            };
+    
+            // Update the database
+            const options = { new: true, upsert: true, runValidators: true };
+            const result = await BasicSetting_Modal.findOneAndUpdate({}, update, options);
+    
+            // Define path to the JSON file
+            const filePath = path.join(__dirname, '../../uploads/json', 'config.json');
+            // Read the existing JSON data
+            let jsonData = {};
+            if (fs.existsSync(filePath)) {
+                const fileData = fs.readFileSync(filePath, 'utf8');
+                jsonData = JSON.parse(fileData);
+            }
+    
+            // Update fields in the JSON data
+            jsonData.cashexpiretime = cashexpiretime;
+            jsonData.foexpiretime = foexpiretime;
+            jsonData.cashexpirehours = cashexpirehours;
+            jsonData.foexpirehours = foexpirehours;
+    
+            // Write the updated data back to the JSON file
+            fs.writeFileSync(filePath, JSON.stringify(jsonData, null, 2), 'utf8');
+    
+            return res.status(200).json({
+                status: true,
+                message: "Basic setting updated successfully",
+                data: result
+            });
+        } catch (error) {
+            console.error("Error updating basic setting:", error);
+            return res.status(500).json({
+                status: false,
+                message: "Server error",
+                error: error.message
+            });
+        }
+    }
+
 
 
   }

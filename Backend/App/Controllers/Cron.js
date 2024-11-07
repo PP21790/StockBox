@@ -8,14 +8,21 @@ const Papa = require('papaparse');
 const fs = require('fs');
 var dateTime = require('node-datetime');
 const cron = require('node-cron');
+const WebSocket = require('ws');
+var CryptoJS = require("crypto-js");
 const Stock_Modal = db.Stock;
 const Clients_Modal = db.Clients;
 const Signal_Modal = db.Signal;
 const BasicSetting_Modal = db.BasicSetting;
 const Notification_Modal = db.Notification;
 const Planmanage = db.Planmanage;
+const JsonFile = require("../../uploads/json/config.json");
 
 const { sendFCMNotification } = require('./Pushnotification'); 
+
+
+let ws;
+const url = "wss://ws1.aliceblueonline.com/NorenWS/"
 
 cron.schedule('0 1 * * *', async () => {
     await DeleteTokenAliceToken();
@@ -31,6 +38,7 @@ cron.schedule('0 2 * * *', async () => {
     timezone: "Asia/Kolkata"
 });
 
+
 cron.schedule('0 4 * * *', async () => {
     await TradingStatusOff();
 }, {
@@ -38,15 +46,15 @@ cron.schedule('0 4 * * *', async () => {
     timezone: "Asia/Kolkata"
 });
 
-
-cron.schedule('20 15 * * *', async () => {
+cron.schedule(`${JsonFile.cashexpiretime} ${JsonFile.cashexpirehours} * * *`, async () => {
     await CheckExpireSignalCash();
 }, {
     scheduled: true,
     timezone: "Asia/Kolkata"
 });
 
-cron.schedule('25 15 * * *', async () => {
+// Schedule for future option expiry
+cron.schedule(`${JsonFile.foexpiretime} ${JsonFile.foexpirehours} * * *`, async () => {
     await CheckExpireSignalFutureOption();
 }, {
     scheduled: true,
@@ -301,6 +309,26 @@ const DeleteTokenAliceToken = async () => {
         } else {
             console.log('No active clients found to update.');
         }
+
+
+        const existingSetting = await BasicSetting_Modal.findOne({});
+
+        if (!existingSetting) {
+          return res.status(404).json({
+            status: false,
+            message: "Data not found",
+          });
+        }
+
+        if (existingSetting.length > 0) {
+            existingSetting.brokerloginstatus = 0;
+            await existingSetting.save();
+        
+
+            console.log(`Updated trading status ....`);
+        } 
+
+
     } catch (error) {
         console.error('Error updating trading status:', error);
     }
@@ -349,39 +377,152 @@ async function CheckExpireSignalCash(req, res) {
 async function CheckExpireSignalFutureOption(req, res) {
     try {
 
-        const today = new Date();
-       const formattedToday = `${String(today.getDate()).padStart(2, '0')}${String(today.getMonth() + 1).padStart(2, '0')}${today.getFullYear()}`;
+        const existingSetting = await BasicSetting_Modal.findOne({});
 
-
-        const signals = await Signal_Modal.find({
-            del: 0,
-            close_status: false,
-            segment: { $in: ["F", "O"] },
-            expirydate: formattedToday
+        if (!existingSetting.brokerloginstatus) {
+          return res.status(404).json({
+            status: false,
+            message: "Broker not Login",
           });
-
-          for (const signal of signals) {
-            try {
-                // Get the CPrice for each signal's stock symbol
-                const cPrice = await returnstockcloseprice(signal.stock);
-
-                // Update the signal with close_status and close_price
-                await Signal_Modal.updateOne(
-                    { _id: signal._id },
-                    { $set: { close_status: true, closeprice: cPrice, closedate: today } }
-                );
-            } catch (error) {
-                console.error(`Failed to update signal for ${signal.stock}:`, error.message);
-            }
         }
 
-        res.json({ message: "Process completed successfully." });
 
-      
+
+        const today = new Date();
+        const formattedToday = `${String(today.getDate()).padStart(2, '0')}${String(today.getMonth() + 1).padStart(2, '0')}${today.getFullYear()}`;
+
+        // Fetch signals based on criteria
+        const signals = await Signal_Modal.aggregate([
+            {
+                $match: {
+                    del: 0,
+                    close_status: false,
+                    segment: { $in: ["F", "O"] },
+                    expirydate: formattedToday
+                }
+            },
+            {
+                $lookup: {
+                    from: "stocks",  // Stock details collection
+                    localField: "tradesymbol",
+                    foreignField: "tradesymbol",
+                    as: "stockDetails"
+                }
+            },
+            {
+                $unwind: {
+                    path: "$stockDetails",
+                    preserveNullAndEmptyArrays: true
+                }
+            }
+        ]);
+
+        // Generate channel string for the socket connection
+        const channelStradd = signals
+            .map(signal => `NFO|${signal.stockDetails?.instrument_token || ''}`)
+            .join('#');
+
+        // Check if we have any valid signals
+        if (!channelStradd) {
+            return res.status(404).json({ message: "No valid signals found for today." });
+        }
+
+        // Socket session setup parameters
+        const userid = existingSetting.aliceuserid;
+        const userSession1 = existingSetting.authtoken;  // Replace with actual token
+        const type = { loginType: "API" };
+
+        try {
+            const response = await axios.post(
+                `https://ant.aliceblueonline.com/rest/AliceBlueAPIService/api/ws/createSocketSess`,
+                type,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${userid} ${userSession1}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+
+            if (response.data.stat === "Ok") {
+                // If session creation is successful, open socket connection
+                await openSocketConnection(channelStradd, userid, userSession1);
+
+                return res.json({
+                    message: "Socket session and connection established successfully."
+                });
+            } else {
+                return res.status(500).json({
+                    error: "Failed to create socket session.",
+                    details: response.data
+                });
+            }
+        } catch (sessionError) {
+            console.error('Socket session error:', sessionError);
+            return res.status(500).json({ error: "Failed to create socket session." });
+        }
+
     } catch (error) {
-       // console.error('Error:', error);
-        res.status(500).json({ error: "An error occurred while processing signals." });
-    } 
+        console.error('Error:', error);
+        return res.status(500).json({ error: "An error occurred while processing signals." });
+    }
+}
+
+
+async function openSocketConnection(channelList, userid, userSession1) {
+
+  ws = new WebSocket(url);
+  ws.onopen = function () {
+    var encrcptToken = CryptoJS.SHA256(CryptoJS.SHA256(userSession1).toString()).toString();
+    var initCon = {
+      susertoken: encrcptToken,
+      t: "c",
+      actid: userid + "_" + "API",
+      uid: userid + "_" + "API",
+      source: "API"
+    }
+    ws.send(JSON.stringify(initCon))
+  
+  };
+
+  ws.onmessage = async function (msg) {
+    const response = JSON.parse(msg.data)
+    if (response.lp != undefined) {
+      const Cprice = response.lp;
+
+
+      const today = new Date();
+      const formattedToday = `${String(today.getDate()).padStart(2, '0')}${String(today.getMonth() + 1).padStart(2, '0')}${today.getFullYear()}`;
+    
+      const stock = await Stock_Modal.findOne({ instrument_token: response.tk });
+
+      await Signal_Modal.updateOne(
+        { tradesymbol: stock.tradesymbol,expirydate: formattedToday,close_status: false },
+        { $set: { close_status: true, closeprice: Cprice, closedate: today } }
+    );
+
+
+    }
+    if (response.s === 'OK') {
+
+      let json = {
+      k: channelList,
+      t: 't'
+      };
+      
+      await ws.send(JSON.stringify(json))
+      }
+
+  };
+
+  ws.onerror = function (error) {
+    console.log(`WebSocket error: ${error}`);
+  };
+
+  ws.onclose = async function () {
+    
+  };
+
 }
   
 async function returnstockcloseprice(symbol) {

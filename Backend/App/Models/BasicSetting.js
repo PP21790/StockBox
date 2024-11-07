@@ -150,6 +150,41 @@ const BasicSettingSchema = new Schema({
         type: Number,
         trim: true,
         default: 0
+    },
+    cashexpirehours: {
+        type: Number,
+        trim: true,
+        default: 0
+    },
+    foexpirehours: {
+        type: Number,
+        trim: true,
+        default: 0
+    },
+    aliceuserid: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    apikey: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    secretkey: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    authtoken: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    brokerloginstatus: {
+        type: Number,
+        enum: [1, 0],
+        default: 0
     }
 
 }, {
