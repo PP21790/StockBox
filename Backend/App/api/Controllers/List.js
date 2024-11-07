@@ -866,6 +866,10 @@ async applyCoupon (req, res) {
           discount = (coupon.value / 100) * purchaseValue;
       }
 
+      if (discount > purchaseValue) {
+        return res.status(400).json({ message: "Discount should be less than the purchase value." });
+    }
+
       // Ensure the discount does not exceed the minimum coupon value
 
       if(coupon.mincouponvalue) {

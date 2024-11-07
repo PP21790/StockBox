@@ -398,7 +398,10 @@ async function CheckExpireSignalFutureOption(req, res) {
                     del: 0,
                     close_status: false,
                     segment: { $in: ["F", "O"] },
-                    expirydate: formattedToday
+                 $or: [
+                    { expirydate: formattedToday },
+                    { callduration: "Intraday" }
+                ]
                 }
             },
             {
