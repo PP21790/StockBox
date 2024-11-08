@@ -72,7 +72,6 @@ const AddSignal = () => {
     },
     validate: (values) => {
       const errors = {};
-
       if (!values.segment) errors.segment = 'Please select a segment';
       if (!values.stock ) errors.stock = 'Please select a stock';
       if (!values.price) errors.price = 'Please select a price';
