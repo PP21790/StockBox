@@ -656,6 +656,15 @@ async brokerLink(req, res) {
   try {
     const { apikey, secretkey, aliceuserid } = req.body;
 
+
+
+    if (!apikey && !secretkey && !aliceuserid) {
+        return res.status(404).json({
+          status: false,
+          message: "appcode,userid and secret is required",
+        });
+      }
+
   const existingSetting = await BasicSetting_Modal.findOne({});
 
     if (!existingSetting) {
