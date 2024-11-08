@@ -1,16 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'
-import { getHelpMessagelist } from '../../Services/Admin'
+import { getHelpMessagelist , gettradestatus} from '../../Services/Admin'
 import { fDateTime } from '../../Utils/Date_formate';
 import { formatDistanceToNow } from 'date-fns';
 
 const Header = () => {
-
-
+  
+  
   const token = localStorage.getItem('token');
   const FullName = localStorage.getItem('FullName');
-
+  
   const [clients, setClients] = useState([]);
+  const [isChecked, setIsChecked] = useState(false);
+  
+  
+  useEffect(() => {
+    getdemoclient();
+
+  }, []);
 
 
   const getdemoclient = async () => {
@@ -39,11 +46,29 @@ const Header = () => {
   }
 
 
-  useEffect(() => {
-    getdemoclient();
 
-  }, []);
+  const getstatusdetaile = async () => {
+    try {
+      const response = await gettradestatus(token);
+      console.log("reponse")
+      if (response.status === true && response.url) {
+        window.location.href = response.url; 
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+  
 
+
+
+
+
+
+
+  const handleToggle = () => {
+    setIsChecked(!isChecked);
+  };
 
 
   return (
@@ -80,6 +105,24 @@ const Header = () => {
                     <a className="nav-link" href="avascript:;">
                       <i className="bx bx-search" />
                     </a>
+                  </li>
+
+                  <li>
+                    <div className='d-flex'>
+                      <span className="switch-label p-1">Trading Status :{isChecked ? "On" : "Off"}</span>
+                      <div className="form-check form-switch form-check-dark" style={{ margin: "inherit", fontSize: "21px" }}>
+
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          role="switch"
+                          id="flexSwitchCheckDark"
+                          checked={isChecked}
+                          onChange={getstatusdetaile}
+                        />
+
+                      </div>
+                    </div>
                   </li>
 
 
@@ -142,7 +185,7 @@ const Header = () => {
                               </div>
                             </div>
                           </a>
-                          
+
                         ))}
                       </div>
                       <a>
