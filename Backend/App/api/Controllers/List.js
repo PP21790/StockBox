@@ -983,7 +983,9 @@ else
   return {
     ...signal,
     report_full_path: signal.report ? `${baseUrl}/uploads/report/${signal.report}` : null, // Append full report URL
-    purchased: order ? true : false ,
+   // purchased: order ? true : false ,
+    purchased: false ,
+
   //  lot: lot,
   //  tradesymbol: tradesymbol,
     order_quantity: order ? order.quantity : 0 
@@ -1097,7 +1099,9 @@ tradesymbol = lots.tradesymbol;
 return {
   ...signal,
   report_full_path: signal.report ? `${baseUrl}/uploads/report/${signal.report}` : null, // Append full report URL
-  purchased: order ? true : false ,
+ // purchased: order ? true : false ,
+  purchased: false ,
+
 //  lot: lot,
 //  tradesymbol: tradesymbol,
   order_quantity: order ? order.quantity : 0 

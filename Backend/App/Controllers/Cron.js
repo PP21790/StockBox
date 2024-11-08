@@ -24,14 +24,14 @@ const { sendFCMNotification } = require('./Pushnotification');
 let ws;
 const url = "wss://ws1.aliceblueonline.com/NorenWS/"
 
-cron.schedule('0 1 * * *', async () => {
+cron.schedule('0 7 * * *', async () => {
     await DeleteTokenAliceToken();
 }, {
     scheduled: true,
     timezone: "Asia/Kolkata"
 });
 
-cron.schedule('0 2 * * *', async () => {
+cron.schedule('0 8 * * *', async () => {
     await AddBulkStockCron();
 }, {
     scheduled: true,
@@ -85,6 +85,8 @@ async function AddBulkStockCron(req, res) {
               (element.instrumenttype === 'OPTIDX' || element.instrumenttype === 'OPTSTK') &&
               element.exch_seg === "NFO" && element.name != ""
           );
+
+         
           const filteredDataF = response.data.filter(element =>
               (element.instrumenttype === 'FUTSTK' || element.instrumenttype === 'FUTIDX') &&
               element.exch_seg === "NFO" && element.name != ""
@@ -183,7 +185,7 @@ async function AddBulkStockCron(req, res) {
   }
   }
   
-const DeleteTokenAliceToken = async () => {
+const DeleteTokenAliceToken = async (req, res) => {
     const pipeline = [
         {
             $addFields: {
@@ -223,17 +225,16 @@ const DeleteTokenAliceToken = async () => {
   
     ];
     const result = await Stock_Modal.aggregate(pipeline)
-    console.log("result", result.length)
+    console.log("result", result)
     if (result.length > 0) {
         const idsToDelete = result.map(item => item._id);
         await Stock_Modal.deleteMany({ _id: { $in: result[0].idsToDelete } });
         console.log(`${result.length} expired tokens deleted.`);
-        return
+        return res.send({status:true})
     } else {
         console.log('No expired tokens found.');
-    }
+        return res.status(500).send({ status: false, message: 'Internal server error' });    }
   
-    return ""
   }
   
   function createUserDataArray(data, segment) {
@@ -273,7 +274,7 @@ const DeleteTokenAliceToken = async () => {
             tradesymbol: element.symbol,
             tradesymbol_m_w: tradesymbol_m_w,
             exch_seg: element.exch_seg
-        };
+        }; 
     });
   }
   async function insertData(dataArray) {
@@ -283,7 +284,6 @@ const DeleteTokenAliceToken = async () => {
         const filteredDataArray = dataArray.filter(userData => {
             return !existingTokens.includes(userData.instrument_token);
         });
-  
         await Stock_Modal.insertMany(filteredDataArray);
     } catch (error) {
         console.log("Error in insertData:", error)

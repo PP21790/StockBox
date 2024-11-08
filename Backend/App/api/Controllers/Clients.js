@@ -1493,6 +1493,79 @@ async orderList(req, res) {
           status: 1,
           borkerid:1,
           data:1,
+          signalid: 1,
+          signalDetails: 1, // Include all fields from the signalDetails object
+          createdAt: 1
+        }
+      },
+      {
+        $sort: {
+          createdAt: -1 // Sort by order creation date in descending order
+        }
+      },
+      {
+        $group: {
+          _id: "$signalid", // Group by signalid
+          latestOrder: { $first: "$$ROOT" } // Take the first (latest) order per signalid
+        }
+      },
+      {
+        $replaceRoot: {
+          newRoot: "$latestOrder" // Replace the root document with the latest order for each signalid
+        }
+      }
+    ]);
+
+    return res.json({
+      status: true,
+      message: "get",
+      data: result  // Return the fetched payouts
+    });
+  } catch (error) {
+    return res.json({ status: false, message: "Server error", data: [] });  // Error handling
+  }
+}
+
+
+
+async orderListDetail(req, res) {
+  try {
+
+    const { clientid,signalid } = req.body; 
+
+
+   
+    const result = await Order_Modal.aggregate([
+      {
+        $match: {
+          clientid: clientid,
+          signalid: signalid 
+        }
+      },
+      {
+        $addFields: {
+          signalObjectId: { $toObjectId: "$signalid" } // Convert signalid to ObjectId
+        }
+      },
+      {
+        $lookup: {
+          from: 'signals', // The collection to join with
+          localField: 'signalObjectId', // Use converted ObjectId field for lookup
+          foreignField: '_id', // Match with _id in signals collection
+          as: 'signalDetails' // The name of the array field in the result containing signal data
+        }
+      },
+      {
+        $unwind: '$signalDetails' // Unwind the result if expecting a single match per order
+      },
+      {
+        $project: {
+          orderid: 1,
+          uniqueorderid: 1,
+          quantity: 1,
+          status: 1,
+          borkerid:1,
+          data:1,
           signalDetails: 1, // Include all fields from the signalDetails object
           createdAt: 1
         }

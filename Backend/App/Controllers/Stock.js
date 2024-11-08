@@ -148,7 +148,7 @@ else if(segment=="C")
           $match: {
               symbol: symbol,
               segment: segment,
-              option_type: option_type,
+            //  option_type: option_type,
               expiry_month_year: { $in: expiryMonths }
           }
       },
@@ -219,7 +219,7 @@ else
         $match: {
             symbol: symbol,
             segment: segment,
-            option_type: option_type,
+          //  option_type: option_type,
             expiry: expiry
         }
     },
