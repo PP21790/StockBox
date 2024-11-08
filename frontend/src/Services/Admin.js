@@ -2180,15 +2180,18 @@ export async function getfreetrialstatus(token) {
 
 // get trading status
 
-export async function gettradestatus(token) {
+export async function gettradestatus(data, token) {
     try {
-        const res = await axios.post(`${Config.base_url}aliceblue/brokerlink`, {
+        const res = await axios.post(`${Config.base_url}aliceblue/brokerlink`, data, {
             headers: {
-                'Authorization': `${token}`
+                data: {},
+                'Authorization': `${token}`,
             },
         });
+
         return res?.data;
     } catch (err) {
-        return err;
+
+        return err.response?.data || err.message;
     }
 }
