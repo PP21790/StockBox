@@ -21,6 +21,7 @@ module.exports = function (app) {
     app.use(require("./Angle"))
     app.use(require("./Aliceblue"))
     app.use(require("./Broadcast"))
+    app.use(require("./Cron"))
 
 
 
