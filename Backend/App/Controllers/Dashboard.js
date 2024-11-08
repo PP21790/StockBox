@@ -6,6 +6,7 @@ const Plan_Modal = db.Plan;
 const Signal_Modal = db.Signal;
 const License_Modal = db.License;
 const Planmanage = db.Planmanage;
+const BasicSetting_Modal = db.BasicSetting;
 
 class Dashboard {
     async getcount(req, res) {
@@ -77,6 +78,20 @@ class Dashboard {
     async getLicense(req, res) {
         try {
           const { key } = req.body;
+
+
+
+          const basicSetting = await BasicSetting_Modal.findOne({ company_key: key });
+          
+      if (!basicSetting) {
+
+          return res.status(500).json({
+            status: false,
+            message: "Company Key Not Forund",
+            error: error.message
+        });
+      }   
+
           const license = await License_Modal.find();
 
           return res.json({

@@ -9,7 +9,7 @@ router.post('/aliceblue/placeorder', placeOrder);
 router.post('/aliceblue/exitplaceorder', ExitplaceOrder);
 router.post('/aliceblue/checkorder', checkOrder);
 router.get('/aliceblue/getaccesstokenadmin', GetAccessTokenAdmin);
-router.get('/aliceblue/brokerlink', brokerLink);
+router.post('/aliceblue/brokerlink', brokerLink);
 
 
 module.exports = router;

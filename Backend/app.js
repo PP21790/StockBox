@@ -149,7 +149,6 @@ const url = "wss://ws1.aliceblueonline.com/NorenWS/"
 
 
 
-
 // Importing routes
 require('./App/Routes/index')(app)
 require('./App/api/Routes/index')(app)
