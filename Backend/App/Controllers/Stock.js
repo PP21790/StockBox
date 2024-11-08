@@ -210,32 +210,83 @@ else
 
     // Build query
   // Build aggregation pipeline
-  const pipeline = [
-    {
-        $match: {
-            symbol: symbol,
-            segment: segment,
-          //  option_type: option_type,
-            expiry: expiry
-        }
-    },
-    {
-        $project: {
-            expiry: 1, // Include the expiry field
-            stock: "$$ROOT", // Include the entire stock document
-            _id: 0 // Exclude the _id field from the output
-        }
-    },
-    {
-        $sort: { expiry: 1 } // Optional: Sort by expiry date in ascending order
-    }
-];
+//   const pipeline = [
+//     {
+//         $match: {
+//             symbol: symbol,
+//             segment: segment,
+//           //  option_type: option_type,
+//             expiry: expiry
+//         }
+//     },
+//     {
+//         $project: {
+//             expiry: 1, // Include the expiry field
+//             stock: "$$ROOT", // Include the entire stock document
+//             _id: 0 // Exclude the _id field from the output
+//         }
+//     },
+//     {
+//         $sort: { expiry: 1 } // Optional: Sort by expiry date in ascending order
+//     }
+// ];
 
 
 
 
 // Execute the aggregation
-const result = await Stock_Modal.aggregate(pipeline);
+//const result = await Stock_Modal.aggregate(pipeline);
+
+    // Build the base match query
+    const matchStage = {
+      $match: {
+        symbol: symbol,
+        segment: segment,
+        expiry: expiry
+      }
+    };
+
+    // Build the aggregation pipeline based on the segment
+    const pipeline = [
+      matchStage,
+      ...(segment === "O"
+        ? [
+            {
+              $group: {
+                _id: {
+                  symbol: "$symbol",
+                  expiry: "$expiry",
+                  strike: "$strike"
+                },
+                latestStock: { $first: "$$ROOT" } // Gets the latest stock by the first matching document
+              }
+            },
+            {
+              $replaceRoot: {
+                newRoot: "$latestStock" // Replace the root with the latest stock document for each group
+              }
+            },
+            {
+              $sort: { strike: 1 } // Sort by strike in ascending order within the grouped data
+            }
+          ]
+        : [
+            {
+              $project: {
+                expiry: 1, // Include the expiry field
+                stock: "$$ROOT", // Include the entire stock document
+                _id: 0 // Exclude the _id field from the output
+              }
+            }
+          ]
+      ),
+      {
+        $sort: { expiry: 1 } // Optional: Sort by expiry date in ascending order for non-options
+      }
+    ];
+
+    // Execute the aggregation
+    const result = await Stock_Modal.aggregate(pipeline);
 
 // Log the result of aggregation for debugging
 console.log("Aggregation Result:", JSON.stringify(result, null, 2));
