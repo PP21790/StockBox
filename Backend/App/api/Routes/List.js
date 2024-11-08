@@ -1,6 +1,6 @@
 const router = require("express").Router()
 
-const {Blogslist,Newslist,Bannerlist,Plancategorysist,getPlansByPlancategoryId,addPlanSubscription,myPlan,Couponlist,Signallist,applyCoupon,showSignalsToClients,Servicelist,Faqlist,detailContent,showSignalsToClientsClose,BasketList,pastPerformance,addBasketSubscription,getallPlan,addFreeTrail,BroadcastList,myFreetrial,basicSetting,pastPerformances,myService,CloseSignal,showSignalsToClientsCloses} = require('../Controllers/List')
+const {Blogslist,Newslist,Bannerlist,Plancategorysist,getPlansByPlancategoryId,addPlanSubscription,myPlan,Couponlist,Signallist,applyCoupon,showSignalsToClients,Servicelist,Faqlist,detailContent,showSignalsToClientsClose,BasketList,pastPerformance,addBasketSubscription,getallPlan,addFreeTrail,BroadcastList,myFreetrial,basicSetting,pastPerformances,myService,CloseSignal,showSignalsToClientsCloses,Notification} = require('../Controllers/List')
 
 
 router.get('/api/list/blogs',Blogslist);
@@ -36,8 +36,7 @@ router.post('/api/list/broadcast', BroadcastList);
 router.get('/api/list/myfreetrial/:id', myFreetrial); 
 router.get('/api/list/basicsetting', basicSetting); 
 router.get('/api/list/myservice/:id', myService); 
-
-
+router.get('/api/list/notification/:id', Notification); 
 
 
 module.exports = router;

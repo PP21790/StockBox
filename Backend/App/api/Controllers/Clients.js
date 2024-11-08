@@ -13,6 +13,8 @@ const Mailtemplate_Modal = db.Mailtemplate;
 const Refer_Modal = db.Refer;
 const Payout_Modal = db.Payout;
 const Helpdesk_Modal = db.Helpdesk;
+const Order_Modal = db.Order;
+const Signal_Modal = db.Signal;
 
 
 class Clients {
@@ -52,8 +54,7 @@ class Clients {
       }
   
 
-     
-
+  
       const existingUser = await Clients_Modal.findOne({
         $and: [
           { del: "0" },
@@ -64,7 +65,6 @@ class Clients {
       });
 
 
-   
       if (existingUser) {
         if (existingUser.Email === Email) {
           return res.status(400).json({ status: false, message: "Email already exists" });
@@ -72,7 +72,6 @@ class Clients {
           return res.status(400).json({ status: false, message: "Phone number already exists" });
         }
       }
-
 
 
       const settings = await BasicSetting_Modal.findOne();
@@ -1147,6 +1146,7 @@ async requestPayout(req, res) {
   }
 }
 
+
 async payoutList(req, res) {
   try {
 
@@ -1455,7 +1455,64 @@ return res.json({
   }
 }
 
+async orderList(req, res) {
+  try {
 
+    const { clientid } = req.body;  // Extract the client ID from the request parameters
+    //const result = await Order_Modal.find({ clientid: clientid });  // Fetch payouts for the given client ID
+
+
+   
+    const result = await Order_Modal.aggregate([
+      {
+        $match: {
+          clientid: clientid // Match orders based on clientid, if necessary
+        }
+      },
+      {
+        $addFields: {
+          signalObjectId: { $toObjectId: "$signalid" } // Convert signalid to ObjectId
+        }
+      },
+      {
+        $lookup: {
+          from: 'signals', // The collection to join with
+          localField: 'signalObjectId', // Use converted ObjectId field for lookup
+          foreignField: '_id', // Match with _id in signals collection
+          as: 'signalDetails' // The name of the array field in the result containing signal data
+        }
+      },
+      {
+        $unwind: '$signalDetails' // Unwind the result if expecting a single match per order
+      },
+      {
+        $project: {
+          orderid: 1,
+          uniqueorderid: 1,
+          quantity: 1,
+          status: 1,
+          borkerid:1,
+          data:1,
+          signalDetails: 1, // Include all fields from the signalDetails object
+          createdAt: 1
+        }
+      },
+      {
+        $sort: {
+          createdAt: -1 // Sort by order creation date in descending order
+        }
+      }
+    ]);
+
+    return res.json({
+      status: true,
+      message: "get",
+      data: result  // Return the fetched payouts
+    });
+  } catch (error) {
+    return res.json({ status: false, message: "Server error", data: [] });  // Error handling
+  }
+}
 
 }
 module.exports = new Clients();

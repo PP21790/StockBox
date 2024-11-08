@@ -9,6 +9,7 @@ const Clients_Modal = db.Clients;
 const Signal_Modal = db.Signal;
 const Stock_Modal = db.Stock;
 const Order_Modal = db.Order;
+const BasicSetting_Modal = db.BasicSetting;
 
 class Aliceblue {
 
@@ -80,7 +81,6 @@ class Aliceblue {
             return res.status(500).json({ status: false, message: error.message || "Server error" });
         }
     }
-
 
     async placeOrder(req, res) {
         
@@ -156,7 +156,7 @@ class Aliceblue {
                      symbol: signal.stock, 
                      segment: signal.segment, 
                      expiry: signal.expirydate, 
-                //     option_type: optiontype, 
+                     option_type: optiontype, 
                      strike: signal.strikeprice 
                  });
              }
@@ -218,6 +218,7 @@ class Aliceblue {
                     });
     
     
+                    
                    await order.save();
                     return res.json({
                         status: true,
@@ -501,7 +502,6 @@ class Aliceblue {
             }
 
 
-          
 
 
 
@@ -514,25 +514,7 @@ class Aliceblue {
             }
 
 
-            if(client.tradingstatus == 0)
-                {
-                    return res.status(404).json({
-                        status: false,
-                        message: "Client Broker Not Login, Please Login With Broker"
-                    });
-                }
-
-
-                if (order.borkerid!=2) {
-                    return res.status(404).json({
-                        status: false,
-                        message: "Order not found for this Broker"
-                    });
-                }
-
-
-            const authToken = client.authtoken;
-            const userId = client.apikey;
+      
     
 
 if(order.status==1) {
@@ -543,12 +525,35 @@ if(order.status==1) {
     });
 }
 
+if(client.tradingstatus == 0)
+    {
+        return res.status(404).json({
+            status: false,
+            message: "Client Broker Not Login, Please Login With Broker"
+        });
+    }
+
+
+    if (order.borkerid!=2) {
+        return res.status(404).json({
+            status: false,
+            message: "Order not found for this Broker"
+        });
+    }
+
+
+const authToken = client.authtoken;
+const userId = client.apikey;
+
+
+
+
+
     var data = JSON.stringify([
         {
           "nestOrderNumber": orderid
         }
       ]);
-
 
         let config = {
             method: 'post',
@@ -567,7 +572,6 @@ if(order.status==1) {
     
             await order.save();
 
-
             return res.json({
                 status: true,
                 response: response.data
@@ -580,8 +584,110 @@ if(order.status==1) {
             });
         }
     }
-    
 
+    async GetAccessTokenAdmin(req, res) {
+        try {
+
+            const aliceuserid = req.query.userId;
+            const alice = await BasicSetting_Modal.findOne();
+    
+            // Check if the client exists
+            if (!alice.aliceuserid) {
+                return res.status(404).json({
+                    status: false,
+                    message: "Userid not found"
+                });
+            }
+    
+            if (req.query.authCode) {
+                const authCode = req.query.authCode;
+                const appcode = req.query.appcode;
+                const encryptedData = sha256(aliceuserid + authCode + alice.secretkey);
+                
+
+                const data = { checkSum: encryptedData };
+                // Axios configuration
+                const config = {
+                    method: "post",
+                    url: "https://ant.aliceblueonline.com/rest/AliceBlueAPIService/sso/getUserDetails",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    data: data,
+                };
+    
+                try {
+                    const response = await axios(config);
+                    console.log(response.data);
+                    // Check if the response status is not OK
+                    if (response.data.stat === "Not_ok") {
+                        return res.status(500).json({ status: false, message: response.data.emsg });
+                    }
+   
+                    if (response.data.userSession) {
+                        const brokerlink = await BasicSetting_Modal.findOneAndUpdate(
+                            { aliceuserid }, // Find by alice_userid
+                            { 
+                                authtoken: response.data.userSession,  // Update authtoken
+                                brokerloginstatus: 1        // Update tradingstatus
+                            }, 
+                            { new: true }  // Return the updated document
+                        );
+    
+                        return res.json({
+                            status: true,
+                            message: "Broker login successfully",
+                        });
+                    }
+    
+                } catch (error) {
+                    return res.status(500).json({ status: false, message: "Server error" });
+                }
+    
+            } else {
+                return res.status(400).json({ status: false, message: "authCode is required" });
+            }
+        } catch (error) {
+            return res.status(500).json({ status: false, message: error.message || "Server error" });
+        }
+    }
+
+async brokerLink(req, res) {
+  try {
+    const { apikey, secretkey, aliceuserid } = req.body;
+
+  const existingSetting = await BasicSetting_Modal.findOne({});
+
+    if (!existingSetting) {
+      return res.status(404).json({
+        status: false,
+        message: "Userid not found",
+      });
+    }
+
+    // Update client details
+    existingSetting.apikey = apikey;
+    existingSetting.secretkey = secretkey;
+    existingSetting.aliceuserid = aliceuserid;
+    await existingSetting.save();
+
+
+     let url =  `https://ant.aliceblueonline.com/?appcode=${apikey}`; 
+  
+     return res.json({
+        status: true,
+        url: url
+    });
+
+  } catch (error) {
+    // Handle server errors
+    return res.status(500).json({
+      status: false,
+      message: "Server error",
+      error: error.message,
+    });
+  }
+}
 
 
 }

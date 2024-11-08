@@ -18,6 +18,11 @@ const OrderModel = Schema({
         trim: true,
         default: null
     },
+    uniqueorderid: {
+        type: String,
+        trim: true,
+        default: null
+    },
     borkerid: {
         type: String,
         trim: true,

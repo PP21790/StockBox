@@ -30,10 +30,14 @@ class Angle {
                 }
 
               
-
                 var auth_token = keystr.split('?auth_token=')[1];
 
-
+                if (!auth_token) {
+                    return res.status(404).json({
+                        status: false,
+                        message: "Auth Token is required"
+                    });
+                }
 
                 const brokerlink = await Clients_Modal.findByIdAndUpdate(
                     key, 
@@ -135,7 +139,7 @@ class Angle {
                      symbol: signal.stock, 
                      segment: signal.segment, 
                      expiry: signal.expirydate, 
-                  //   option_type: optiontype, 
+                      option_type: optiontype, 
                      strike: signal.strikeprice 
                  });
              }
@@ -217,9 +221,12 @@ class Angle {
                         clientid: client._id,
                         signalid:signal._id,
                         orderid:response.data.data.orderid,
+                        uniqueorderid:response.data.data.uniqueorderid,
                         borkerid:1,
                         quantity:quantity,
                     });
+
+
     
     
                    await order.save();
@@ -423,6 +430,7 @@ class Angle {
                         clientid: client._id,
                         signalid:signal._id,
                         orderid:response.data.data.orderid,
+                        uniqueorderid:response.data.data.uniqueorderid,
                         borkerid:1,
                     });
     
@@ -506,28 +514,6 @@ class Angle {
                 });
             }
 
-
-            if(client.tradingstatus == 0)
-                {
-                    return res.status(404).json({
-                        status: false,
-                        message: "Client Broker Not Login, Please Login With Broker"
-                    });
-                }
-
-
-                if (order.borkerid!=1) {
-                    return res.status(404).json({
-                        status: false,
-                        message: "Order not found for this Broker"
-                    });
-                }
-
-
-            const authToken = client.authtoken;
-            const userId = client.apikey;
-    
-
 if(order.status==1) {
 
     return res.json({
@@ -536,10 +522,31 @@ if(order.status==1) {
     });
 }
 
+if(client.tradingstatus == 0)
+    {
+        return res.status(404).json({
+            status: false,
+            message: "Client Broker Not Login, Please Login With Broker"
+        });
+    }
 
+
+    if (order.borkerid!=1) {
+        return res.status(404).json({
+            status: false,
+            message: "Order not found for this Broker"
+        });
+    }
+
+
+const authToken = client.authtoken;
+const userId = client.apikey;
+
+
+const uniorderId = order.uniqueorderid;
             const config = {
                 method: 'get',
-                url: `https://apiconnect.angelone.in/rest/secure/angelbroking/order/v1/details/${orderid}`, // Use dynamic orderid
+                url: `https://apiconnect.angelone.in/rest/secure/angelbroking/order/v1/details/${uniorderId}`, // Use dynamic orderid
                 headers: {
                     'Authorization': 'Bearer ' + authToken,
                     'Content-Type': 'application/json',
@@ -555,12 +562,9 @@ if(order.status==1) {
     
             const response = await axios(config); // Use await with axios
 
-
             order.data = response.data; 
             order.status = 1; 
-    
             await order.save();
-
 
             return res.json({
                 status: true,

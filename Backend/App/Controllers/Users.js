@@ -12,7 +12,6 @@ const nodemailer = require('nodemailer');
 
 class Users {
 
-
   async AddUser(req, res) {
     try {
       const { FullName, UserName, Email, PhoneNo, password, add_by } = req.body;
@@ -47,6 +46,24 @@ class Users {
       if (!add_by) {
         return res.status(400).json({ status: false, message: "Added by field is required" });
       }
+
+
+      const existingUser = await Users_Modal.findOne({
+        del: "0",
+        $or: [{ Email }, { PhoneNo }, { UserName }]
+      });
+      
+      if (existingUser) {
+        if (existingUser.UserName === UserName) {
+          return res.status(400).json({ status: false, message: "Username already exists" });
+        } else if (existingUser.Email === Email) {
+          return res.status(400).json({ status: false, message: "Email already exists" });
+        } else if (existingUser.PhoneNo === PhoneNo) {
+          return res.status(400).json({ status: false, message: "Phone number already exists" });
+        }
+      }
+
+
 
       const hashedPassword = await bcrypt.hash(password, 10);
       //  console.log("result", hashedPassword);
@@ -83,7 +100,7 @@ class Users {
 
       //const result = await Users_Modal.find()
 
-      const result = await Users_Modal.find({ del: 0, Role: 2 }).sort({ created_at: -1 });
+      const result = await Users_Modal.find({ del: 0, Role: 2 }).sort({ createdAt: -1 });
 
       return res.json({
         status: true,
@@ -106,7 +123,7 @@ class Users {
 
       //const result = await Users_Modal.find()
 
-      const result = await Users_Modal.find({ del: 0, Role: 2, ActiveStatus: 1 });
+      const result = await Users_Modal.find({ del: 0, Role: 2, ActiveStatus: 1 }).sort({ createdAt: -1 });
 
       return res.json({
         status: true,

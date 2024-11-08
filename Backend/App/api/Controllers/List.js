@@ -21,6 +21,7 @@ const Freetrial_Modal = db.Freetrial;
 const Broadcast_Modal = db.Broadcast;
 const Order_Modal = db.Order;
 const License_Modal = db.License;
+const Notification_Modal = db.Notification;
 
 
 mongoose  = require('mongoose');
@@ -498,6 +499,7 @@ if (existingPlans.length > 0) {
 
         let license = await License_Modal.findOne({ month: targetMonth }).exec();
 
+        
         if (license) {
             license.noofclient += monthsToAdd;
             console.log('Month found, updating noofclient.',monthsToAdd);
@@ -863,6 +865,10 @@ async applyCoupon (req, res) {
       } else if (coupon.type === 'percentage') {
           discount = (coupon.value / 100) * purchaseValue;
       }
+
+      if (discount > purchaseValue) {
+        return res.status(400).json({ message: "Discount should be less than the purchase value." });
+    }
 
       // Ensure the discount does not exceed the minimum coupon value
 
@@ -1422,10 +1428,25 @@ async pastPerformance(req, res) {
         const profitOrLoss = exitPrice - entryPrice;
 
         if (profitOrLoss >= 0) {
-          totalProfit += profitOrLoss;
+       //   totalProfit += profitOrLoss;
+
+       if(id=="66dfede64a88602fbbca9b72" || id=="66dfeef84a88602fbbca9b79")
+        {
+          totalProfit += profitOrLoss*signal.lotsize;
+        }
+        else{
+      totalProfit += profitOrLoss;
+        }
           profitCount++;
         } else {
-          totalLoss += Math.abs(profitOrLoss);
+
+          if(id=="66dfede64a88602fbbca9b72" || id=="66dfeef84a88602fbbca9b79")
+            {
+              totalLoss += Math.abs(profitOrLoss)*signal.lotsize;
+            }
+            else{
+                totalLoss += Math.abs(profitOrLoss);
+            }
           lossCount++;
         }
       }
@@ -1742,17 +1763,38 @@ async pastPerformances(req, res) {
           const profitOrLoss = exitPrice - entryPrice;
 
           if (profitOrLoss >= 0) {
+
+            if(serviceId=="66dfede64a88602fbbca9b72" || serviceId=="66dfeef84a88602fbbca9b79")
+              {
+                totalProfit += profitOrLoss*signal.lotsize;
+              }
+              else{
             totalProfit += profitOrLoss;
+              }
             profitCount++;
           } else {
+            if(serviceId=="66dfede64a88602fbbca9b72" || serviceId=="66dfeef84a88602fbbca9b79")
+              {
+                totalLoss += Math.abs(profitOrLoss)*signal.lotsize;
+              }
+              else{
             totalLoss += Math.abs(profitOrLoss);
+              }
             lossCount++;
           }
         }
+
+
       });
 
       const accuracy = (profitCount / count) * 100;
-      const avgreturnpertrade = (totalProfit - totalLoss) / count;
+      let avgreturnpertrade = 0;
+     
+
+         avgreturnpertrade = (totalProfit - totalLoss) / count;
+    
+
+      console.log("avgreturnpertrade",avgreturnpertrade);
 
       if (monthsBetween > 0) {
         avgreturnpermonth = (totalProfit - totalLoss) / monthsBetween;
@@ -1857,6 +1899,25 @@ async myService(req, res) {
     console.error(error);
     return res.status(500).json({ status: false, message: 'Server error', data: [] });
   }
+}
+
+
+
+
+async Notification(req, res) {
+  try {
+    const { id } = req.params;
+      const result = await Notification_Modal.find({ clientid: id }).sort({ createdAt: -1 });
+
+      return res.json({
+        status: true,
+        message: "get",
+        data:result
+      });
+
+    } catch (error) {
+      return res.json({ status: false, message: "Server error", data: [] });
+    }
 }
 
 
