@@ -10,6 +10,7 @@ class BasicSetting {
 
 
     async AddBasicSetting(req, res) {
+
         try {
             // Handle the image uploads
             upload('basicsetting').fields([{ name: 'favicon', maxCount: 1 }, { name: 'logo', maxCount: 1 }, , { name: 'refer_image', maxCount: 1 }])(req, res, async (err) => {

@@ -64,6 +64,8 @@ import Updatecondition from '../layout/Admin/Termscondition/Updatecondition';
 import Updateblogs from '../layout/Admin/Bloags/Updateblogs';
 import { UpdateCondition } from '../Services/Admin';
 import Editfreeclient from '../layout/Admin/Admin_client/Editfreeclient';
+import Autosquareoff from '../layout/Admin/BasicSetting/Autosquareoff';
+
 
 
 
@@ -195,6 +197,8 @@ function MainApp() {
                     <Route path="/emailsetting" element={<Emailsettings />} />
                     <Route path="/emailtemplate" element={<Emailtemplate />} />
                     <Route path="/referandearn" element={<ReferAndEarn />} />
+                    <Route path="/autosquareoff" element={<Autosquareoff/>} />
+                  
 
 
 

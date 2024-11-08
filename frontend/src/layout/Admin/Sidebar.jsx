@@ -43,7 +43,8 @@ const menuItems = [
       { title: 'Api Information', icon: 'bx-radio-circle', link: '/admin/Apiinfo' },
       { title: 'Payment Gateway', icon: 'bx-radio-circle', link: '/admin/paymentgeteway' },
       { title: 'Email Template', icon: 'bx-radio-circle', link: '/admin/emailtemplate' },
-      { title: 'Refer And Earn', icon: 'bx-radio-circle', link: '/admin/referandearn' }
+      { title: 'Refer And Earn', icon: 'bx-radio-circle', link: '/admin/referanderarn' },
+      { title: 'Auto SquareOff', icon: 'bx-radio-circle', link: '/admin/autosquareoff' }
     ]
   },
   { title: 'Broadcast SMS', icon: 'bx-conversation', link: '/admin/message' },
