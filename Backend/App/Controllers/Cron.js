@@ -62,7 +62,7 @@ cron.schedule(`${JsonFile.foexpiretime} ${JsonFile.foexpirehours} * * *`, async 
 });
 
 
-cron.schedule('0 09 * * *', async () => {
+cron.schedule('0 9 * * *', async () => {
     await PlanExpire();
 }, {
     scheduled: true,

@@ -633,11 +633,12 @@ const userId = client.apikey;
                             }, 
                             { new: true }  // Return the updated document
                         );
-    
-                        return res.json({
-                            status: true,
-                            message: "Broker login successfully",
-                        });
+                        const dynamicUrl = `http://${req.headers.host}`;
+                        return res.redirect(dynamicUrl);
+                        // return res.json({
+                        //     status: true,
+                        //     message: "Broker login successfully",
+                        // });
                     }
     
                 } catch (error) {

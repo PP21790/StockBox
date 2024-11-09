@@ -137,39 +137,32 @@ else if(segment=="C")
    option_type= "PE";
 }
 
-      // Build query
-    // Build aggregation pipeline
     const pipeline = [
       {
           $match: {
               symbol: symbol,
               segment: segment,
-            //  option_type: option_type,
               expiry_month_year: { $in: expiryMonths }
           }
       },
       {
           $group: {
-              _id: "$expiry", // Group by expiry date
-              stock: { $first: "$$ROOT" } // Get the first document for each expiry
+              _id: "$expiry",
+              stock: { $first: "$$ROOT" } 
           }
       },
       {
           $project: {
-              expiry: "$_id", // Rename _id to expiry
-              stock: 1, // Include the stock document
-              _id: 0 // Exclude the original _id field from the output
+              expiry: "$_id", 
+              stock: 1,
+              _id: 0 
           }
       },
       {
-          $sort: { expiry: 1 } // Optional: Sort by expiry date in ascending order
+          $sort: { expiry: 1 } 
       }
   ];
 
-
-
-
-  // Execute the aggregation
   const result = await Stock_Modal.aggregate(pipeline);
 
   
@@ -189,119 +182,65 @@ else if(segment=="C")
   }
 }
     
-
 async getStocksByExpiryByStrike(req, res) {
   try {
-    const { segment,symbol,expiry } = req.body;
+    const { segment, symbol, expiry, optiontype } = req.body;
 
-let option_type;
-if(segment=="F")
-{
-option_type= "UT";
-}
-else if(segment=="C")
-{
-  option_type= "EQ";
-}
-else
-{
- option_type= "PE";
-}
+    // Define matchStage based on the segment
+    let matchStage;
+    if (segment === "O") {
+      matchStage = {
+        $match: {
+          symbol: symbol,
+          segment: segment,
+          expiry: expiry,
+          option_type: optiontype
+        }
+      };
+    } else {
+      matchStage = {
+        $match: {
+          symbol: symbol,
+          segment: segment,
+          expiry: expiry
+        }
+      };
+    }
 
-    // Build query
-  // Build aggregation pipeline
-//   const pipeline = [
-//     {
-//         $match: {
-//             symbol: symbol,
-//             segment: segment,
-//           //  option_type: option_type,
-//             expiry: expiry
-//         }
-//     },
-//     {
-//         $project: {
-//             expiry: 1, // Include the expiry field
-//             stock: "$$ROOT", // Include the entire stock document
-//             _id: 0 // Exclude the _id field from the output
-//         }
-//     },
-//     {
-//         $sort: { expiry: 1 } // Optional: Sort by expiry date in ascending order
-//     }
-// ];
-
-
-
-
-// Execute the aggregation
-//const result = await Stock_Modal.aggregate(pipeline);
-
-    // Build the base match query
-    const matchStage = {
-      $match: {
-        symbol: symbol,
-        segment: segment,
-        expiry: expiry
-      }
-    };
-
-    // Build the aggregation pipeline based on the segment
+    // Build the aggregation pipeline
     const pipeline = [
-      matchStage,
-      ...(segment === "O"
-        ? [
-            {
-              $group: {
-                _id: {
-                  symbol: "$symbol",
-                  expiry: "$expiry",
-                  strike: "$strike"
-                },
-                latestStock: { $first: "$$ROOT" } // Gets the latest stock by the first matching document
-              }
-            },
-            {
-              $replaceRoot: {
-                newRoot: "$latestStock" // Replace the root with the latest stock document for each group
-              }
-            },
-            {
-              $sort: { strike: 1 } // Sort by strike in ascending order within the grouped data
-            }
-          ]
-        : [
-            {
-              $project: {
-                expiry: 1, // Include the expiry field
-                stock: "$$ROOT", // Include the entire stock document
-                _id: 0 // Exclude the _id field from the output
-              }
-            }
-          ]
-      ),
+      matchStage, // Add matchStage directly here
       {
-        $sort: { expiry: 1 } // Optional: Sort by expiry date in ascending order for non-options
-      }
+        $project: {
+          expiry: 1,
+          strike: 1, // Include strike for sorting if needed
+          stock: "$$ROOT",
+          _id: 0
+        }
+      },
+      ...(segment === "O" 
+          ? [{ $sort: { strike: 1 } }] // Sort by strike in ascending order if segment is "O"
+          : [{ $sort: { expiry: 1 } }] // Otherwise, sort by expiry in ascending order
+      )
     ];
 
     // Execute the aggregation
     const result = await Stock_Modal.aggregate(pipeline);
 
-// Log the result of aggregation for debugging
-console.log("Aggregation Result:", JSON.stringify(result, null, 2));
+    // Log the result for debugging
+    console.log("Aggregation Result:", JSON.stringify(result, null, 2));
 
-return res.json({
-    status: true,
-    message: "Stocks retrieved successfully",
-    data: result
-});
-  
-} catch (error) {
+    return res.json({
+      status: true,
+      message: "Stocks retrieved successfully",
+      data: result
+    });
+  } catch (error) {
     console.error("Error executing query:", error);
     return res.json({ status: false, message: "Server error", data: [] });
+  }
 }
-}
+
   
 
 
