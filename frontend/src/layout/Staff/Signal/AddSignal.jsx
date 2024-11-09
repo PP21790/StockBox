@@ -47,8 +47,7 @@ const AddSignal = () => {
   };
 
 
-
-  
+  // console.log("req",expirydate[0]?.stock?.tradesymbol)
 
   const formik = useFormik({
     initialValues: {
@@ -65,81 +64,79 @@ const AddSignal = () => {
       callduration: '',
       calltype: '',
       expiry: '',
-      optiontype:'',
-      strikeprice:'',
+      optiontype: '',
+      strikeprice: '',
+      tradesymbol: expirydate[0]?.stock?.tradesymbol || "",
+      lotsize: expirydate[0]?.stock?.lotsize || ""
 
     },
     validate: (values) => {
-
       const errors = {};
-
       if (!values.segment) errors.segment = 'Please select a segment';
-      if (!values.stock) errors.stock = 'Please select a stock';
+      if (!values.stock ) errors.stock = 'Please select a stock';
       if (!values.price) errors.price = 'Please select a price';
-       
-       if(values.calltype === "BUY"){
+      if (!values.tag1) errors.tag1 = 'Please enter Target1';
+      if (values.calltype === "BUY") {
 
-        if (!values.tag1) errors.tag1 = 'Please enter Traget1';
-        else if (values.price && values.tag1 && values.price >= values.tag1) {
-          errors.tag1 = "Please Enter greater Than Entry Price"
+        if (values.price && values.tag1 && values.price > values.tag1) {
+          errors.tag1 = "Please Enter greater than Entry Price";
         }
 
-        if (values.tag2 && values.tag1 >= values.tag2) {
-          errors.tag2 = "Please Enter greater Than Target1"
+        if (values.tag2 && values.tag1 > values.tag2) {
+          errors.tag2 = "Please Enter greater than Target1";
         }
 
-        if (values.tag3 && values.tag2 && values.tag2 >= values.tag3) {
-          errors.tag3 = "Please Enter greater Target2"
-       }
-       
-       if(values.price && values.price <= values.stoploss ){
-        errors.stoploss = "Please Enter Less Than Entry Price"
-     }
-    
-       }else if(values.calltype === "SELL"){
-
-        if (values.price && values.price <= values.stoploss) {
-          errors.stoploss = "Please Enter Less Than Entry Price"
+        if (values.tag3 && values.tag2 && values.tag2 > values.tag3) {
+          errors.tag3 = "Please Enter greater than Target2";
         }
 
-      } else if (values.calltype === "sell") {
-
-        if (!values.tag1) errors.tag1 = 'Please enter Traget1';
-        else if (values.price && values.tag1 && values.price <= values.tag1) {
-          errors.tag1 = "Please Enter Less Than Entry Price"
+        if (values.stoploss && values.price < values.stoploss) {
+          errors.stoploss = "Please Enter less than Entry Price";
         }
 
-        if (values.tag2 && values.tag1 <= values.tag2) {
-          errors.tag2 = "Please Enter Less Than Target1"
+      } else if (values.calltype === "SELL") {
+
+        if (values.price && values.tag1 && values.price < values.tag1) {
+          errors.tag1 = "Please Enter less than Entry Price";
         }
 
-        if (values.tag3 && values.tag2 && values.tag2 <= values.tag3) {
-          errors.tag3 = "Please Enter Less Than Target2"
+        if (values.tag2 && values.tag1 < values.tag2) {
+          errors.tag2 = "Please Enter less than Target1";
         }
 
-        if (values.price && values.price >= values.stoploss) {
-          errors.stoploss = "Please Enter greater Than Entry Price"
+        if (values.tag3 && values.tag2 && values.tag2 < values.tag3) {
+          errors.tag3 = "Please Enter less than Target2";
+        }
+
+        if (values.stoploss && values.price > values.stoploss) {
+          errors.stoploss = "Please Enter greater than Entry Price";
         }
       }
 
       if (!values.callduration) errors.callduration = 'Please enter Trade duration';
       if (!values.calltype) errors.calltype = 'Please enter Call Calltype';
       if (!values.description) errors.description = 'Please enter description';
+
       if (values.segment === "O" && !values.optiontype) {
         errors.optiontype = 'Please enter option type';
-      };
-      if ((values.segment === "O" || values.segment === "F") && !values.expiry) {
-        errors.expiry = 'Please enter expirydate';
       }
-      if (values.segment === "O" && !values.expiry) {
-        errors.expiry = 'Please Select Strick Price';
+
+      if ((values.segment === "O" || values.segment === "F") && !values.expiry) {
+        errors.expiry = 'Please enter expiry date';
+      }
+
+      if (values.segment === "O" && !values.strikeprice) {
+        errors.strikePrice = 'Please select Strike Price';
       }
 
       return errors;
     },
+
     onSubmit: async (values) => {
       const req = {
         add_by: user_id,
+        tradesymbol: expirydate[0]?.stock?.tradesymbol || "",
+        lotsize: expirydate[0]?.stock?.lotsize || "",
         stock: values.stock,
         price: values.price,
         tag1: values.tag1,
@@ -155,7 +152,7 @@ const AddSignal = () => {
         optiontype: values.optiontype,
         strikeprice: values.strikeprice,
       };
-
+      
       try {
         const response = await AddSignalByAdmin(req, token);
         if (response.status) {
@@ -191,6 +188,7 @@ const AddSignal = () => {
   });
 
 
+ 
 
   useEffect(() => {
     if (formik.values.segment) {
@@ -210,19 +208,33 @@ const AddSignal = () => {
         expiry: '',
         optiontype: '',
         strikeprice: '',
-
+        tradesymbol: '',
+        lotsize:''
       });
-
+    
       setSearchItem("")
     }
   }, [formik.values.segment]);
+
+  
+
+  useEffect(() => {
+    if (!searchItem || searchItem.length === 0) {
+      Object.keys(formik.values).forEach(field => {
+        if (field !== "stock" ) {
+          formik.setFieldValue("stock", "");
+        }
+      });
+    }
+  }, [formik.values.stock, searchItem]);
+  
 
 
 
   useEffect(() => {
     const fetchStockData = async () => {
-      const data = { segment: formik.values.segment, symbol: searchItem };
 
+      const data = { segment: formik.values.segment, symbol: searchItem };
       try {
         const stockResponse = await getstockbyservice(data);
         if (stockResponse.status) {
@@ -239,10 +251,12 @@ const AddSignal = () => {
         }
 
 
-        const data1 = { ...data, expiry: formik.values.expiry };
+        const data1 = { ...data, expiry: formik.values.expiry , optiontype : formik.values.optiontype };
+        console.log("data1",data1)
         const strikePriceResponse = await getstockStrickprice(data1);
         if (strikePriceResponse.status) {
           setStrikePrice(strikePriceResponse.data);
+          console.log("strikePriceResponse.data",strikePriceResponse.data)
         } else {
           console.log("Failed to fetch strike price", strikePriceResponse);
         }
@@ -252,7 +266,7 @@ const AddSignal = () => {
     };
 
     fetchStockData();
-  }, [formik.values.segment, searchItem, formik.values.expiry]);
+  }, [formik.values.segment, searchItem, formik.values.expiry, formik.values.optiontype]);
 
 
 
@@ -270,6 +284,8 @@ const AddSignal = () => {
       label_size: 12,
       col_size: 8,
     },
+    
+   
     {
       name: 'expiry',
       label: 'Expiry Date',
@@ -282,8 +298,6 @@ const AddSignal = () => {
       })),
       showWhen: (values) => values.segment !== "C",
     },
-
-
     {
       name: 'optiontype',
       label: 'Option Type',
@@ -332,16 +346,16 @@ const AddSignal = () => {
       type: 'select',
       options: (() => {
         if (formik.values.segment === "C") {
-          return formik.values.calltype === "sell" ? [
+          return formik.values.calltype === "SELL" ? [
             { label: 'Intraday', value: 'Intraday' }
           ] : [
-            { label: 'Long Term', value: 'Long Term' },
-            { label: 'Medium Term', value: 'Medium Term' },
-            { label: 'Short Term', value: 'Short Term' },
+            { label: 'Short Term (15-30 Days)', value: 'Short Term' },
+            { label: 'Medium Term (Above 3 Month)', value: 'Medium Term' },
+            { label: 'Long Term (Above 1 year)', value: 'Long Term' },
             { label: 'Intraday', value: 'Intraday' }
           ];
         } else if (formik.values.segment === "F") {
-          return formik.values.calltype === "sell" ? [
+          return formik.values.calltype === "SELL" ? [
             { label: 'Short Term', value: 'Short Term' },
             { label: 'Intraday', value: 'Intraday' },
             { label: 'Still Expiry Date', value: 'Still Expiry Date' }
@@ -429,6 +443,8 @@ const AddSignal = () => {
     borderBottom: '1px solid #ddd',
   };
 
+
+
   return (
     <div style={{ marginTop: '100px' }}>
       <DynamicForm
@@ -446,8 +462,8 @@ const AddSignal = () => {
               <input
                 type="text"
                 className="form-control"
-                placeholder="Search Company"
-                name="SearchCompany"
+                placeholder="Search stock"
+                name="stock"
                 onChange={(e) => setSearchItem(e.target.value)}
                 value={searchItem}
                 onClick={() => setShowDropdown(true)}
@@ -476,6 +492,14 @@ const AddSignal = () => {
                   }
                 </div>
               ) : null}
+
+              {formik.touched.stock &&
+                formik.errors.stock ? (
+                <div style={{ color: "red" }}>
+                  {formik.errors.stock}
+                </div>
+              ) : null}
+
             </div>
           </div>
         }

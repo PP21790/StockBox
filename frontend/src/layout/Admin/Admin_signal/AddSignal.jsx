@@ -16,6 +16,7 @@ const AddSignal = () => {
   const token = localStorage.getItem('token');
 
 
+  const [loading, setLoading] = useState(false);
 
 
   const [serviceList, setServiceList] = useState([]);
@@ -251,7 +252,7 @@ const AddSignal = () => {
         }
 
 
-        const data1 = { ...data, expiry: formik.values.expiry };
+        const data1 = { ...data, expiry: formik.values.expiry , optiontype : formik.values.optiontype };
         const strikePriceResponse = await getstockStrickprice(data1);
         if (strikePriceResponse.status) {
           setStrikePrice(strikePriceResponse.data);
@@ -264,7 +265,7 @@ const AddSignal = () => {
     };
 
     fetchStockData();
-  }, [formik.values.segment, searchItem, formik.values.expiry]);
+  }, [formik.values.segment, searchItem, formik.values.expiry, formik.values.optiontype]);
 
 
 
@@ -282,6 +283,8 @@ const AddSignal = () => {
       label_size: 12,
       col_size: 8,
     },
+    
+   
     {
       name: 'expiry',
       label: 'Expiry Date',
