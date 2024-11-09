@@ -15,6 +15,7 @@ const AddSignal = () => {
   const user_id = localStorage.getItem('id');
   const token = localStorage.getItem('token');
 
+  const [loading, setLoading] = useState(false);
 
 
 
@@ -133,6 +134,8 @@ const AddSignal = () => {
     },
 
     onSubmit: async (values) => {
+      setLoading(!loading)
+
       const req = {
         add_by: user_id,
         tradesymbol: expirydate[0]?.stock?.tradesymbol || "",
@@ -454,6 +457,7 @@ const AddSignal = () => {
         btn_name1="Cancel"
         formik={formik}
         sumit_btn={true}
+        btnstatus={loading}
         btn_name1_route="/staff/signal"
         additional_field1={
           <div className="mb-3">

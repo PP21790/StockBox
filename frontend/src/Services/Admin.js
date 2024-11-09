@@ -2246,3 +2246,24 @@ export async function getclientPlanexpiry(token) {
         return err;
     }
 }
+
+
+// get performaer data 
+
+export async function getPerformerstatus(token ,_id) {
+    console.log("_id",_id)
+    try {
+        const res = await axios.get(`${Config.base_url}dashboard/past-performance/${_id}`, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}

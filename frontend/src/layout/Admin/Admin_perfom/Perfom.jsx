@@ -1,139 +1,194 @@
-import React, { useState } from 'react';
-import { Bar, Pie } from 'react-chartjs-2';
-import 'chart.js/auto';
+import React, { useState, useEffect } from 'react';
+import { getPerformerstatus, GetService } from '../../../Services/Admin';
+import Table from '../../../components/Table';
+import Swal from 'sweetalert2';
+import { fDateTime } from '../../../Utils/Date_formate';
 import { Link } from 'react-router-dom';
-import { Chart, CategoryScale, LinearScale, BarElement, ArcElement } from 'chart.js';
-
-// Register necessary components for Chart.js
-Chart.register(CategoryScale, LinearScale, BarElement, ArcElement);
 
 const Perform = () => {
-    const [filter, setFilter] = useState('Cash');
+    const token = localStorage.getItem('token');
+    const [clients, setClients] = useState([]);
+    const [searchInput, setSearchInput] = useState("");
+    const [activeTab, setActiveTab] = useState(null); 
+    const [servicedata, setServicedata] = useState([]);
 
-    // Data for charts based on filter
-    const performanceData = {
-        Cash: [12, 19, 3, 5, 2, 3],
-        Future: [15, 9, 8, 12, 5, 7],
-        Option: [5, 3, 10, 2, 20, 4],
-    };
-    const topCategoriesData = {
-        Cash: [300, 500, 100, 200],
-        Future: [400, 300, 500, 150],
-        Option: [200, 400, 300, 250],
-    };
-    const colors = {
-        Cash: 'rgba(75, 192, 192, 0.6)',
-        Future: 'rgba(255, 159, 64, 0.6)',
-        Option: 'rgba(153, 102, 255, 0.6)',
-    };
 
-    const barData = {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-        datasets: [
-            {
-                label: filter,
-                data: performanceData[filter],
-                backgroundColor: colors[filter],
-            },
-        ],
-    };
 
-    const pieData = {
-        labels: ['Hits', 'Miss'],
-        datasets: [
-            {
-                label: filter,
-                data: topCategoriesData[filter],
-                backgroundColor: ['#0DBE34', '#FF6384'],
-            },
-        ],
+    useEffect(() => {
+        getServiceData();
+    }, []);
+
+
+
+    const getServiceData = async () => {
+        try {
+            const response = await GetService(token);
+            if (response.status) {
+                setServicedata(response.data);
+                
+                const cashService = response.data.find(service => service.title === "Cash");
+                const defaultService = cashService || response.data[0];
+                
+                if (defaultService) {
+                    setActiveTab(defaultService._id); 
+                    getperformdata(defaultService._id);
+                }
+            }
+        } catch (error) {
+            console.log("Error fetching services:", error);
+        }
     };
 
-    return (
-        <div className="page-content">
-            <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                <div className="breadcrumb-title pe-3">Performance</div>
-                <div className="ps-3">
-                    <nav aria-label="breadcrumb">
-                        <ol className="breadcrumb mb-0 p-0">
-                            <li className="breadcrumb-item">
-                                <a href="javascript:;">
-                                    <i className="bx bx-home-alt" />
-                                </a>
-                            </li>
-                            <li className="breadcrumb-item active" aria-current="page">
-                                Past Perfomance
-                            </li>
-                        </ol>
-                    </nav>
-                </div>
-               
+
+
+
+    const getperformdata = async (service_id) => {
+        try {
+            const response = await getPerformerstatus(token, service_id);
+            if (response.status) {
+                setClients([response.data]);
+                console.log("response.data", response.data);
+            }
+        } catch (error) {
+            console.log("Error fetching performance data:", error);
+        }
+    };
+
+    const columns = [
+        {
+            name: 'S.No',
+            selector: (row, index) => index + 1,
+            sortable: false,
+            width: '100px',
+        },
+        {
+            name: 'accuracy',
+            selector: row => row.accuracy.toFixed(3),
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'avgreturnpermonth',
+            selector: row => row.avgreturnpermonth.toFixed(3),
+            sortable: true,
+            width: '250px',
+        },
+        {
+            name: 'avgreturnpertrade',
+            selector: row => row.avgreturnpertrade.toFixed(3),
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'count',
+            selector: row => row.count.toFixed(3),
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'lossCount',
+            selector: row => row.lossCount.toFixed(3),
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'profitCount',
+            selector: row => row.profitCount.toFixed(3),
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'totalLoss',
+            selector: row => row.totalLoss.toFixed(3),
+            sortable: true,
+        },
+        {
+            name: 'totalProfit',
+            selector: row => row.totalProfit.toFixed(3),
+            sortable: true,
+            width:"200px"
+        },
+    ];
+
+
+
+
+    const renderTable = () => {
+        const activeService = servicedata.find(service => service._id === activeTab);
+        return (
+            <div className="table-responsive">
+                <h5>{activeService ? `Transactions for ${activeService.title}` : 'Transactions'}</h5>
+                <Table columns={columns} data={clients} />
             </div>
+        );
+    };
 
-            <div className="pricing-table">
+    const handleTabClick = (serviceId) => {
+        setActiveTab(serviceId);
+        getperformdata(serviceId);  
+    };
 
 
 
-                <div className="row">
-                    <div className="col-lg-8">
-                        <div className="card radius-10 w-100">
-                            <div className="card-body">
-                                <div className="d-flex align-items-center mb-3">
-                                    <h5>Performance</h5>
-                                    <div className="dropdown ms-auto">
-                                        <div className="dropdown-toggle" data-bs-toggle="dropdown">
-                                            <i className="bx bx-dots-horizontal-rounded" />
-                                        </div>
-                                        <ul className="dropdown-menu">
-                                            {['Cash', 'Future', 'Option'].map((type) => (
-                                                <li key={type}>
-                                                    <button
-                                                        className={`dropdown-item ${filter === type ? 'active-filter' : ''}`}
-                                                        onClick={() => setFilter(type)}
-                                                        style={{
-                                                            cursor: 'pointer',
-                                                            background: filter === type ? '#e0e0e0' : 'none',
-                                                        }}
-                                                    >
-                                                        {type}
-                                                    </button>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                </div>
-                                <Bar data={barData} height={300} />
-                            </div>
-                        </div>
+    
+    return (
+        <div>
+            <div className='page-content'>
+                <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+                    <div className="breadcrumb-title pe-3">Performance Status</div>
+                    <div className="ps-3">
+                        <nav aria-label="breadcrumb">
+                            <ol className="breadcrumb mb-0 p-0">
+                                <li className="breadcrumb-item">
+                                    <Link to="/admin/dashboard">
+                                        <i className="bx bx-home-alt" />
+                                    </Link>
+                                </li>
+                            </ol>
+                        </nav>
                     </div>
-                    <div className="col-lg-4">
-                        <div className="card radius-10 w-100">
-                            <div className="card-body">
-                                <div className="d-flex align-items-center mb-3">
-                                    <h5>Ideal Hit Accuracy</h5>
-                                    <div className="dropdown ms-auto">
-                                        <div className="dropdown-toggle" data-bs-toggle="dropdown">
-                                            <i className="bx bx-dots-horizontal-rounded" />
+                </div>
+                <hr />
+
+                <div className='card'>
+                    <div className='card-body'>
+                        <div className="tab-content" id="myTabContent3">
+                            <div className="tab-pane fade show active" id="NavPills">
+                                <div className="card-body pt-0">
+                                    <div className="d-lg-flex align-items-center mb-4 gap-3">
+                                        <div className="position-relative">
+                                            <input
+                                                type="text"
+                                                className="form-control ps-5 radius-10"
+                                                placeholder="Search Payment Request"
+                                                value={searchInput}
+                                                onChange={(e) => setSearchInput(e.target.value)}
+                                            />
+                                            <span className="position-absolute top-50 product-show translate-middle-y">
+                                                <i className="bx bx-search" />
+                                            </span>
                                         </div>
-                                        <ul className="dropdown-menu">
-                                            {['Cash', 'Future', 'Option'].map((type) => (
-                                                <li key={type}>
-                                                    <button
-                                                        className={`dropdown-item ${filter === type ? 'active-filter' : ''}`}
-                                                        onClick={() => setFilter(type)}
-                                                        style={{
-                                                            cursor: 'pointer',
-                                                            background: filter === type ? '#e0e0e0' : 'none',
-                                                        }}
-                                                    >
-                                                        {type}
-                                                    </button>
-                                                </li>
-                                            ))}
-                                        </ul>
+                                    </div>
+
+                                    <ul className="nav nav-pills nav-pills1 mb-4 light">
+                                        {servicedata.map((service) => (
+                                            <li className="nav-item" key={service._id}>
+                                                <button
+                                                    className={`nav-link navlink ${activeTab === service._id ? 'active' : ''}`}
+                                                    onClick={() => handleTabClick(service._id)}
+                                                >
+                                                    {service.title}
+                                                </button>
+                                            </li>
+                                        ))}
+                                    </ul>
+
+                                    <div className="tab-content">
+                                        <div id="navpills" className="tab-pane active">
+                                            {renderTable()}
+                                        </div>
                                     </div>
                                 </div>
-                                <Pie data={pieData} height={250} />
                             </div>
                         </div>
                     </div>

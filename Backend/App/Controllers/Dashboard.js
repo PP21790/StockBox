@@ -109,7 +109,6 @@ class Dashboard {
 async pastPerformance(req, res) {
   try {
     const { id } = req.params;
-
     // Query to find signals based on the service ID
     const signals = await Signal_Modal.find({
       del: 0,
