@@ -86,11 +86,19 @@ async function AddBulkStockCron(req, res) {
               element.exch_seg === "NFO" && element.name != ""
           );
 
+
+          const filteredDataOO = filteredDataO.filter(element =>
+            (element.instrumenttype === 'OPTIDX' || element.instrumenttype === 'OPTSTK') &&
+            element.exch_seg === "NFO" && element.name == "RELIANCE" &&  element.expiry=='28NOV2024'
+            
+        );
+
+// console.log(filteredDataOO);
          
-          const filteredDataF = response.data.filter(element =>
-              (element.instrumenttype === 'FUTSTK' || element.instrumenttype === 'FUTIDX') &&
-              element.exch_seg === "NFO" && element.name != ""
-          );
+//           const filteredDataF = response.data.filter(element =>
+//               (element.instrumenttype === 'FUTSTK' || element.instrumenttype === 'FUTIDX') &&
+//               element.exch_seg === "NFO" && element.name != ""
+//           );
   
           // const filteredDataMF = response.data.filter(element =>
           //     element.instrumenttype === 'FUTCOM' && element.name != ""
@@ -308,11 +316,11 @@ const DeleteTokenAliceToken = async (req, res) => {
             console.log(`Updated trading status for ${updateResult.modifiedCount} active clients.`);
         } else {
             console.log('No active clients found to update.');
+            
         }
 
 
         const existingSetting = await BasicSetting_Modal.findOne({});
-
         if (!existingSetting) {
           return res.status(404).json({
             status: false,
@@ -320,11 +328,10 @@ const DeleteTokenAliceToken = async (req, res) => {
           });
         }
 
-        if (existingSetting.length > 0) {
+        if (existingSetting) {
             existingSetting.brokerloginstatus = 0;
             await existingSetting.save();
         
-
             console.log(`Updated trading status ....`);
         } 
 
