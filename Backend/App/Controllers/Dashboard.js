@@ -440,7 +440,7 @@ async PlanExipreList(req, res) {
     for (let plan of plans) {
       const service = await Service_Modal.findById(plan.serviceid).select('title');
 
-      const client = await Clients_Modal.findById(plan.clientid).select('FullName');
+      const client = await Clients_Modal.findById(plan.clientid).select('FullName,PhoneNo,Email');
       enrichedPlans.push({
         ...plan.toObject(), 
         serviceTitle: service ? service.title : null, 
