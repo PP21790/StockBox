@@ -34,6 +34,7 @@ const menuItems = [
   { title: 'News', icon: 'bx-news', link: '/admin/news' },
   { title: 'Coupon', icon: 'bx-edit-alt', link: '/admin/coupon' },
   { title: 'Banner', icon: 'bx-news', link: '/admin/banner' },
+  { title: 'Performance', icon: 'bx-news', link: '/admin/perfom' },
   {
     title: 'Basic Settings',
     icon: 'bx-cog',
