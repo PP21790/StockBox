@@ -119,24 +119,9 @@ const Autosquareoff = () => {
                   <div className='p-4 border radius-15'>
                     <div className="row">
                       <div className="row mb-1 align-items-center">
-                        <label htmlFor="cashexpiretime" className="col-sm-3 col-form-label"><b>Cash Expire Time</b></label>
-                        <div className="col-sm-9">
-                          <Field name="cashexpiretime" type="text" className="form-control mb-2" />
-                        </div>
-                        <ErrorMessage name="cashexpiretime" component="div" className="error" />
-                      </div>
 
-                      <div className="row mb-1 align-items-center">
-                        <label htmlFor="foexpiretime" className="col-sm-3 col-form-label"><b>FO Expire Time</b></label>
-                        <div className="col-sm-9">
-                          <Field name="foexpiretime" type="text" className="form-control" />
-                        </div>
-                        <ErrorMessage name="foexpiretime" component="div" className="error" />
-                      </div>
-
-                      <div className="row mb-1 align-items-center">
-                        <label htmlFor="cashexpirehours" className="col-sm-3 col-form-label"><b>Cash Expire Hours</b></label>
-                        <div className="col-sm-9">
+                        <div className="col-sm-5">
+                          <label htmlFor="cashexpiretime" className="col-form-label"><b>Cash Expire Hours</b></label>
                           <Field as="select" name="cashexpirehours" className="form-control custom-select">
                             <option value="">Select Expiry Hours</option>
                             <option value="9">9</option>
@@ -148,15 +133,30 @@ const Autosquareoff = () => {
                             <option value="15">3</option>
                           </Field>
                         </div>
-                        <ErrorMessage name="cashexpirehours" component="div" className="error" />
+                        <ErrorMessage name="cashexpiretime" component="div" className="error" />
+                        <div className="col-sm-5">
+                          <label htmlFor="cashexpiretime" className="col-form-label"><b>Cash Expire Minutes</b></label>
+                          <Field name="cashexpiretime" type="text" className="form-control mb-2" />
+                        </div>
+                        <ErrorMessage name="cashexpiretime" component="div" className="error" />
+                        <div className="col-sm-2 mt-2">
+
+                          <button
+                            type="submit"
+                            className="btn btn-primary px-4"
+
+                          >
+                            Submit
+                          </button>
+
+                        </div>
                       </div>
 
-
-
                       <div className="row mb-1 align-items-center">
-                        <label htmlFor="foexpirehours" className="col-sm-3 col-form-label"><b>FO Expire Hours</b></label>
-                        <div className="col-sm-9">
+                        <div className="col-sm-5">
+                          <label htmlFor="foexpiretime" className="col-form-label"><b>F&O Expire Hours</b></label>
                           <Field as="select" name="foexpirehours" className="form-control custom-select">
+
                             <option value="">Select Expiry Hours</option>
                             <option value="9">9</option>
                             <option value="10">10</option>
@@ -168,10 +168,27 @@ const Autosquareoff = () => {
                           </Field>
                         </div>
                         <ErrorMessage name="foexpirehours" component="div" className="error" />
+                        <div className="col-sm-5">
+                          <label htmlFor="foexpiretime" className="col-form-label"><b>F&O Expire Minutes</b></label>
+                          <Field name="foexpiretime" type="text" className="form-control" />
+                        </div>
+                        <ErrorMessage name="foexpiretime" component="div" className="error" />
+                        <div className="col-sm-2 mt-3">
+
+                          <button
+                            type="submit"
+                            className="btn btn-primary px-4"
+
+                          >
+                            Submit
+                          </button>
+
+                        </div>
                       </div>
 
 
-                      <div className="row mt-2">
+
+                      {/* <div className="row mt-2">
                         <label className="col-sm-3 col-form-label" />
                         <div className="col-sm-9">
                           <div className="d-md-flex d-grid align-items-center justify-content-end gap-3">
@@ -184,7 +201,7 @@ const Autosquareoff = () => {
                             </button>
                           </div>
                         </div>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </Form>
