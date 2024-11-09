@@ -12,16 +12,17 @@ const Header = () => {
   const token = localStorage.getItem('token');
   const FullName = localStorage.getItem('FullName');
 
-  const [clients, setClients] = useState([]);
 
+  const [clients, setClients] = useState([]);
   const [isDisabled, setIsDisabled] = useState(false);
 
+
+  
   const [model, setModel] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [getstatus, setGetstatus] = useState([]);
 
 
-  
   const [statusinfo, setStatusinfo] = useState({
     aliceuserid: "",
     apikey: "",
@@ -45,7 +46,6 @@ const Header = () => {
 
 
 
-
   const gettradedetail = async () => {
     try {
       const response = await basicsettinglist(token);
@@ -56,7 +56,6 @@ const Header = () => {
       console.log("Error fetching services:", error);
     }
   };
-
 
 
 
@@ -152,12 +151,9 @@ const Header = () => {
 
 
 
-
-
   const handleToggle = () => {
     if (getstatus[0]?.brokerloginstatus === 1) {
       setIsChecked(!isChecked);
-
 
     } else {
       setModel(true);
@@ -168,6 +164,7 @@ const Header = () => {
       });
     }
   };
+
 
 
 

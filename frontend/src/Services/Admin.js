@@ -2228,3 +2228,21 @@ export async function Updatesquareoffdata(data, token) {
         return err.response?.data || err.message;
     }
 }
+
+
+// get client expiry plan data 
+
+
+
+export async function getclientPlanexpiry(token) {
+    try {
+        const res = await axios.get(`${Config.base_url}dashboard/planexiprelist`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}

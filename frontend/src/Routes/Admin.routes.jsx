@@ -65,6 +65,7 @@ import Updateblogs from '../layout/Admin/Bloags/Updateblogs';
 import { UpdateCondition } from '../Services/Admin';
 import Editfreeclient from '../layout/Admin/Admin_client/Editfreeclient';
 import Autosquareoff from '../layout/Admin/BasicSetting/Autosquareoff';
+import Planexpiry from '../layout/Admin/PlanExpiry/Planexpiry';
 
 
 
@@ -219,8 +220,9 @@ function MainApp() {
                     <Route path="/addbroadcast" element={<Addbroadcast />} />
                     <Route path="/updatebroadcast" element={<Updatebroadcast />} />
 
+                    <Route path="/planexpiry" element={<Planexpiry />} />
 
-
+                 
 
 
 
