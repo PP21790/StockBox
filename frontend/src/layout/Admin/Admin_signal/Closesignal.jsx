@@ -46,6 +46,7 @@ const Closesignal = () => {
         try {
             const response = await GetSignallist(filters, token);
             if (response && response.status) {
+                console.log("response.data",response.data)
                 const filterdata = response.data.filter((item) => {
                     return item.close_status == true
                 })
@@ -186,7 +187,7 @@ const Closesignal = () => {
         {
             name: 'Total P&L',
             cell: row => {
-                const totalPL = (row.closeprice - row.price).toFixed(2);
+                const totalPL = ((row.closeprice - row.price) * row.lotsize).toFixed(2);
                 const style = {
                     color: totalPL < 0 ? 'red' : 'green',
                 };
@@ -195,6 +196,7 @@ const Closesignal = () => {
             sortable: true,
             width: '200px',
         },
+        
         {
             name: 'Entry Date',
             selector: row => fDateTimeH(row.created_at),

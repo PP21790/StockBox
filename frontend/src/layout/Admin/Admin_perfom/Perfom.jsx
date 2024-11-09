@@ -117,7 +117,7 @@ const Perform = () => {
         const activeService = servicedata.find(service => service._id === activeTab);
         return (
             <div className="table-responsive">
-                <h5>{activeService ? `Transactions for ${activeService.title}` : 'Transactions'}</h5>
+                <h5>{activeService ? `Performance for ${activeService.title}` : 'Performance'}</h5>
                 <Table columns={columns} data={clients} />
             </div>
         );
@@ -130,7 +130,7 @@ const Perform = () => {
 
 
 
-    
+
     return (
         <div>
             <div className='page-content'>

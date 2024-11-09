@@ -6,14 +6,23 @@ import { image_baseurl } from '../../../Utils/config';
 import { fDateTime ,fDateTimeH} from '../../../Utils/Date_formate';
 import { Tooltip } from 'antd';
 
+
+
 const Signaldetail = () => {
+
+
+
     const { id } = useParams();
     const token = localStorage?.getItem('token');
     const [data, setData] = useState([]);
 
+
+
     useEffect(() => {
         getsignaldetail();
     }, []);
+
+    
 
     const getsignaldetail = async () => {
         try {
