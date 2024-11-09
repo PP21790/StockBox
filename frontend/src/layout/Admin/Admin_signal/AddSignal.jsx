@@ -134,6 +134,7 @@ const AddSignal = () => {
     },
 
     onSubmit: async (values) => {
+      setLoading(!loading)
       const req = {
         add_by: user_id,
         tradesymbol: expirydate[0]?.stock?.tradesymbol || "",
@@ -166,6 +167,7 @@ const AddSignal = () => {
           });
           setTimeout(() => {
             navigate('/admin/signal');
+            
           }, 2000);
         } else {
           Swal.fire({
@@ -454,6 +456,7 @@ const AddSignal = () => {
         formik={formik}
         sumit_btn={true}
         btn_name1_route="/admin/signal"
+        btnstatus={loading}
         additional_field1={
           <div className="mb-3">
             <div className="position-relative">

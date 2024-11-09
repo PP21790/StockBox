@@ -33,11 +33,13 @@ const DynamicForm = ({
     content_path,
     btn_name2,
     sumit_btn,
-    additional_field1
+    additional_field1,
+    btnstatus
 }) => {
 
 
     const location = useLocation();
+    const [loading, setLoading] = useState(false);
 
     const [inputPerTrade, setInputPerTrade] = useState("");
     const [inputPerStrategy, setInputPerStrategy] = useState("");
@@ -147,7 +149,7 @@ const DynamicForm = ({
     };
 
 
-
+ console.log("formik.values.sumbitsts",btnstatus)
     return (
         <div className="content container-fluid" data-aos="fade-left">
             <div className="card mb-0">
@@ -1188,6 +1190,7 @@ const DynamicForm = ({
                                             <>
                                                 {sumit_btn === true && <button
                                                     type="submit"
+                                                    disabled={btnstatus}
                                                     className="btn customer-btn-save btn btn-primary m-2"
                                                 >
                                                     {btn_name}

@@ -1,6 +1,6 @@
 {
-  "cashexpiretime": 25,
+  "cashexpiretime": "24",
   "foexpiretime": 22,
-  "cashexpirehours": 15,
-  "foexpirehours": "12"
+  "cashexpirehours": 10,
+  "foexpirehours": 14
 }
