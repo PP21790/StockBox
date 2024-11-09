@@ -109,6 +109,18 @@ const Planexpiry = () => {
             width: '200px',
         },
         {
+            name: 'Client Full Name',
+            selector: row => row.clientFullName,
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'Client Full Name',
+            selector: row => row.clientFullName,
+            sortable: true,
+            width: '200px',
+        },
+        {
             name: 'Segment',
             selector: row => row.serviceTitle,
             sortable: true,

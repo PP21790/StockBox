@@ -200,7 +200,7 @@ const Closesignal = () => {
         {
             name: 'Total P&L',
             cell: row => {
-                const totalPL = (row.closeprice - row.price).toFixed(2);
+                const totalPL = ((row.closeprice - row.price) * row.lotsize).toFixed(2);
                 const style = {
                     color: totalPL < 0 ? 'red' : 'green',
                 };
