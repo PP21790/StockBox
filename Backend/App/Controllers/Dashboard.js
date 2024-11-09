@@ -431,7 +431,7 @@ async PlanExipreList(req, res) {
     const { serviceid } = req.query;  
 
     const filter = serviceid ? { serviceid } : {}; 
-    const plans = await Planmanage.find(filter);
+    const plans = await Planmanage.find(filter).sort({ enddate: -1 });
 
     // Prepare an array to store the enriched data
     const enrichedPlans = [];
@@ -443,7 +443,10 @@ async PlanExipreList(req, res) {
       enrichedPlans.push({
         ...plan.toObject(), 
         serviceTitle: service ? service.title : null, 
-        clientFullName: client ? client.FullName : null 
+        clientFullName: client ? client.FullName : null,
+        clientMobile: client ? client.PhoneNo : null,
+        clientEmail: client ? client.Email : null 
+
       });
     }
 
