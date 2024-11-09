@@ -1428,16 +1428,8 @@ async pastPerformance(req, res) {
       const entryPrice = parseFloat(signal.price); // Entry price
       const exitPrice = parseFloat(signal.closeprice); // Exit price
 
-      const callType = signal.calltype; // "BUY" or "SELL"
-
       if (!isNaN(entryPrice) && !isNaN(exitPrice)) {
-       // const profitOrLoss = exitPrice - entryPrice;
-       let profitOrLoss;
-       if (callType === "BUY") {
-        profitOrLoss = exitPrice - entryPrice; // Profit when exit is greater
-      } else if (callType === "SELL") {
-        profitOrLoss = entryPrice - exitPrice; // Profit when exit is less
-      }
+        const profitOrLoss = exitPrice - entryPrice;
 
         if (profitOrLoss >= 0) {
        //   totalProfit += profitOrLoss;
@@ -1771,18 +1763,8 @@ async pastPerformances(req, res) {
         const entryPrice = parseFloat(signal.price); // Entry price
         const exitPrice = parseFloat(signal.closeprice); // Exit price
 
-
-          const callType = signal.calltype; // "BUY" or "SELL"
-
-          if (!isNaN(entryPrice) && !isNaN(exitPrice)) {
-           // const profitOrLoss = exitPrice - entryPrice;
-           let profitOrLoss;
-           if (callType === "BUY") {
-            profitOrLoss = exitPrice - entryPrice; // Profit when exit is greater
-          } else if (callType === "SELL") {
-            profitOrLoss = entryPrice - exitPrice; // Profit when exit is less
-          }
-
+        if (!isNaN(entryPrice) && !isNaN(exitPrice)) {
+          const profitOrLoss = exitPrice - entryPrice;
 
           if (profitOrLoss >= 0) {
 
