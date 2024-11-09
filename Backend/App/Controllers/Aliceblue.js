@@ -504,7 +504,6 @@ class Aliceblue {
 
 
 
-
             const client = await Clients_Modal.findById(clientid);
             if (!client) {
                 return res.status(404).json({
@@ -566,7 +565,9 @@ const userId = client.apikey;
             data: data
         };
        
-            const response = await axios(config); // Use await with axios
+    
+            const response = await axios(config); 
+
             order.data = response.data; 
             order.status = 1; 
     
