@@ -35,6 +35,7 @@ const menuItems = [
   { title: 'Coupon', icon: 'bx-edit-alt', link: '/admin/coupon' },
   { title: 'Banner', icon: 'bx-news', link: '/admin/banner' },
   { title: 'Client Plan Expiry', icon: 'bx-news', link: '/admin/planexpiry' },
+  { title: 'Performance', icon: 'bx-news', link: '/admin/perfom' },
   {
     title: 'Basic Settings',
     icon: 'bx-cog',

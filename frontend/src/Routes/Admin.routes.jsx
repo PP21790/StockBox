@@ -24,6 +24,7 @@ import AddSignal from '../layout/Admin/Admin_signal/AddSignal';
 import Signaldetail from '../layout/Admin/Admin_signal/Signaldetail';
 import Addbasket from '../layout/Admin/Admin_basket/Addbasket';
 import Staffpermission from '../layout/Admin/Admin_staff/Staffpermission';
+import Perfom from '../layout/Admin/Admin_perfom/Perfom';
 import Plan from '../layout/Admin/Plans/Plan';
 import Addplan from '../layout/Admin/Plans/Addplan';
 import Category from '../layout/Admin/Category/Category';
@@ -122,10 +123,10 @@ function MainApp() {
                     <Route path="/addclient" element={<AddUser />} />
                     <Route path="/client/updateclient/:id" element={<EditClient />} />
                     <Route path="/client/clientdetail/:id" element={<Viewclientdetail />} />
-                    <Route path="/editfreeclient/:id" element={<Editfreeclient/>} />
+                    <Route path="/editfreeclient/:id" element={<Editfreeclient />} />
 
 
-
+                    <Route path="/perfom" element={<Perfom />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/service" element={<Service />} />
                     <Route path="/kyc" element={<Kyc />} />
@@ -166,17 +167,17 @@ function MainApp() {
                     <Route path="/category" element={<Category />} />
                     <Route path="/stock" element={<Stock />} />
 
-                    
+
                     <Route path="/blogs" element={<Blogs />} />
-                    <Route path="/addblogs" element={<Addblogs/>} />
-                    <Route path="/updatebolgs" element={<Updateblogs/>} />
+                    <Route path="/addblogs" element={<Addblogs />} />
+                    <Route path="/updatebolgs" element={<Updateblogs />} />
                     <Route path="/viewblog" element={<Viewblog />} />
 
 
                     <Route path="/news" element={<News />} />
                     <Route path="/addnews" element={<Addnews />} />
-                    <Route path="/updatenews" element={<Updatenews/>} />
-                
+                    <Route path="/updatenews" element={<Updatenews />} />
+
 
 
                     <Route path="/coupon" element={<Coupon />} />
@@ -185,7 +186,7 @@ function MainApp() {
 
 
                     <Route path="/termsandcondtion" element={<Condition />} />
-                    <Route path="/updatecondition" element={<Updatecondition/>} />
+                    <Route path="/updatecondition" element={<Updatecondition />} />
 
 
 
@@ -198,8 +199,8 @@ function MainApp() {
                     <Route path="/emailsetting" element={<Emailsettings />} />
                     <Route path="/emailtemplate" element={<Emailtemplate />} />
                     <Route path="/referandearn" element={<ReferAndEarn />} />
-                    <Route path="/autosquareoff" element={<Autosquareoff/>} />
-                  
+                    <Route path="/autosquareoff" element={<Autosquareoff />} />
+
 
 
 
