@@ -645,8 +645,13 @@ async function PlanExpire(req, res) {
                   const client = await Clients_Modal.findById(plan.clientid); // Fetch the client
     
     
+
+
+                  
                   const resultn = new Notification_Modal({
                     clientid: plan.clientid,
+                    segmentid:plan._id,
+                    type:4,
                     title: title,
                     message: message
                 });
@@ -654,7 +659,8 @@ async function PlanExpire(req, res) {
                 await resultn.save();
     
                     if (client && client.devicetoken) {
-                        await sendFCMNotification(title, message, client.devicetoken);
+                        const tokens = [client.devicetoken];
+                        await sendFCMNotification(title, message,tokens);
                        
                     } else {
                     }
