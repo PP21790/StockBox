@@ -34,7 +34,7 @@ const Closesignal = () => {
     const [stockList, setStockList] = useState([]);
     const [searchstock, setSearchstock] = useState("");
     const [ForGetCSV, setForGetCSV] = useState([])
-   
+
 
 
     const navigate = useNavigate();
@@ -46,7 +46,7 @@ const Closesignal = () => {
         try {
             const response = await GetSignallist(filters, token);
             if (response && response.status) {
-                console.log("response.data",response.data)
+                console.log("response.data", response.data)
                 const filterdata = response.data.filter((item) => {
                     return item.close_status == true
                 })
@@ -96,9 +96,9 @@ const Closesignal = () => {
             console.log('Error fetching stock list:', error);
         }
     };
-     
 
-      
+
+
 
     const forCSVdata = () => {
         if (clients?.length > 0) {
@@ -108,7 +108,7 @@ const Closesignal = () => {
                 Price: item?.price || '',
                 EntryType: item?.calltype || '',
                 EntryPrice: item?.price || '',
-                ExitPrice : item?.closeprice || "" ,
+                ExitPrice: item?.closeprice || "",
                 EntryDate: fDateTimeH(item?.created_at) || '',
                 ExitDate: fDateTimeH(item?.closedate) || '',
 
@@ -123,7 +123,7 @@ const Closesignal = () => {
         fetchAdminServices()
         fetchStockList()
         forCSVdata()
-    }, [filters,clients]);
+    }, [filters, clients]);
 
 
 
@@ -187,7 +187,12 @@ const Closesignal = () => {
         {
             name: 'Total P&L',
             cell: row => {
-                const totalPL = ((row.closeprice - row.price) * row.lotsize).toFixed(2);
+                let totalPL = 0;
+                if (row.calltype === "BUY") {
+                    totalPL = ((row.closeprice - row.price) * row.lotsize).toFixed(2);
+                } else if (row.calltype === "SELL") {
+                    totalPL = ((row.price - row.closeprice) * row.lotsize).toFixed(2);
+                }
                 const style = {
                     color: totalPL < 0 ? 'red' : 'green',
                 };
@@ -196,7 +201,6 @@ const Closesignal = () => {
             sortable: true,
             width: '200px',
         },
-        
         {
             name: 'Entry Date',
             selector: row => fDateTimeH(row.created_at),
@@ -209,7 +213,7 @@ const Closesignal = () => {
             sortable: true,
             width: '180px',
         },
-       
+
 
 
         {
@@ -229,7 +233,7 @@ const Closesignal = () => {
             button: true,
 
         },
-        
+
     ];
 
 
@@ -286,7 +290,7 @@ const Closesignal = () => {
                                         <i className="bx bx-search" />
                                     </span>
                                 </div>
-                                  
+
                                 <div
                                     className="ms-2"
                                 >
@@ -298,7 +302,7 @@ const Closesignal = () => {
 
                                 </div>
                             </div>
-                           
+
                             <div className="row">
 
                                 <div className="col-md-3">

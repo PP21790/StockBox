@@ -2251,7 +2251,7 @@ export async function getclientPlanexpiry(token) {
 // get performaer data 
 
 export async function getPerformerstatus(token ,_id) {
-    console.log("_id",_id)
+  
     try {
         const res = await axios.get(`${Config.base_url}dashboard/past-performance/${_id}`, {
             headers: {
@@ -2262,6 +2262,25 @@ export async function getPerformerstatus(token ,_id) {
 
         return res?.data;
 
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+// get performace data by segment 
+
+export async function getperformacebysegment(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}dashboard/closesignal`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
     } catch (err) {
 
         return err.response?.data || err.message;

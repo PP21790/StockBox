@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getPerformerstatus, GetService } from '../../../Services/Admin';
+import { getPerformerstatus, GetService , getperformacebysegment } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import Swal from 'sweetalert2';
 import { fDateTime } from '../../../Utils/Date_formate';
@@ -11,6 +11,7 @@ const Perform = () => {
     const [searchInput, setSearchInput] = useState("");
     const [activeTab, setActiveTab] = useState(null); 
     const [servicedata, setServicedata] = useState([]);
+    const [closesignal,setClosesignal] = useState([])
 
 
 
@@ -32,6 +33,7 @@ const Perform = () => {
                 if (defaultService) {
                     setActiveTab(defaultService._id); 
                     getperformdata(defaultService._id);
+                    getdatabysegment(defaultService._id);
                 }
             }
         } catch (error) {
@@ -47,12 +49,32 @@ const Perform = () => {
             const response = await getPerformerstatus(token, service_id);
             if (response.status) {
                 setClients([response.data]);
+               
+            }
+        } catch (error) {
+            console.log("Error fetching performance data:", error);
+        }
+    };
+
+
+
+
+    const getdatabysegment = async (service_id) => {
+        try {
+            const response = await getperformacebysegment({token,service_id});
+            if (response.status) {
+                setClosesignal(response.data);
                 console.log("response.data", response.data);
             }
         } catch (error) {
             console.log("Error fetching performance data:", error);
         }
     };
+
+
+
+
+
 
     const columns = [
         {
@@ -110,6 +132,66 @@ const Perform = () => {
         },
     ];
 
+  
+
+    const columns1 = [
+        {
+            name: 'S.No',
+            selector: (row, index) => index + 1,
+            sortable: false,
+            width: '100px',
+        },
+        {
+            name: 'Tradesymbol',
+            selector: row => row.tradesymbol,
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'calltype',
+            selector: row => row.calltype,
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'price',
+            selector: row => row.price,
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'Target1',
+            selector: row => row.tag1,
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'Target2',
+            selector: row => row.tag2,
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'Target3',
+            selector: row => row.tag3,
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'StopLoss',
+            selector: row => row.stoploss,
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'ExitLoss',
+            selector: row => row.closeprice,
+            sortable: true,
+            width: '200px',
+        },
+  
+    ];
+
 
 
 
@@ -123,9 +205,24 @@ const Perform = () => {
         );
     };
 
+  
+    const renderTable1 = () => {
+        const activeService = servicedata.find(service => service._id === activeTab);
+        return (
+            <div className="table-responsive">
+                <h5>{activeService ? `Performance for ${activeService.title}` : 'Performance'}</h5>
+                <Table columns={columns1} data={closesignal} />
+            </div>
+        );
+    };
+
+
+
+
     const handleTabClick = (serviceId) => {
         setActiveTab(serviceId);
         getperformdata(serviceId);  
+        getdatabysegment(serviceId)
     };
 
 
@@ -186,6 +283,7 @@ const Perform = () => {
                                     <div className="tab-content">
                                         <div id="navpills" className="tab-pane active">
                                             {renderTable()}
+                                            {renderTable1()}
                                         </div>
                                     </div>
                                 </div>
