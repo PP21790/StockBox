@@ -82,7 +82,7 @@ class BannerController {
     async activeBanner(req, res) {
         try {
 
-            const banner = await Banner_Modal.find({ del: false,status: true });
+            const banner = await Banner_Modal.find({ del: false,status: true }).sort({created_at:-1});;
 
             return res.status(200).json({
                 status: true,
