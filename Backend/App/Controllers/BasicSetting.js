@@ -145,7 +145,8 @@ class BasicSetting {
 
     async getFreetrialActivity(req, res) {
         try {
-            const settings = await Activitylogs_Modal.find();  // Correct reference here
+            const settings = await Activitylogs_Modal.find().sort({ createdAt: -1 });
+
             return res.json({
                 status: true,
                 message: "Free trial activity retrieved successfully",

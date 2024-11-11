@@ -504,7 +504,6 @@ class Aliceblue {
 
 
 
-
             const client = await Clients_Modal.findById(clientid);
             if (!client) {
                 return res.status(404).json({
@@ -549,11 +548,11 @@ const userId = client.apikey;
 
 
 
-    var data = JSON.stringify([
+    var data = JSON.stringify(
         {
           "nestOrderNumber": orderid
         }
-      ]);
+      );
 
         let config = {
             method: 'post',
@@ -566,10 +565,10 @@ const userId = client.apikey;
             data: data
         };
        
-            const response = await axios(config); // Use await with axios
+           const response = await axios(config); 
+
             order.data = response.data; 
             order.status = 1; 
-    
             await order.save();
 
             return res.json({
@@ -618,7 +617,6 @@ const userId = client.apikey;
     
                 try {
                     const response = await axios(config);
-                    console.log(response.data);
                     // Check if the response status is not OK
                     if (response.data.stat === "Not_ok") {
                         return res.status(500).json({ status: false, message: response.data.emsg });
@@ -703,7 +701,7 @@ async brokerLink(req, res) {
 }
 
 
-async function CheckPosition(userId, authToken , segment, instrument_token, producttype, calltype, trading_symbol) {
+async function CheckPosition(userId, authToken, segment, instrument_token, producttype, calltype, trading_symbol) {
     
 
     var data_possition = {

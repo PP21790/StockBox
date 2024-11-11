@@ -1458,15 +1458,20 @@ return res.json({
 async orderList(req, res) {
   try {
 
-    const { clientid } = req.body;  // Extract the client ID from the request parameters
-    //const result = await Order_Modal.find({ clientid: clientid });  // Fetch payouts for the given client ID
+    const { clientid } = req.body;  
+
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+    
+    const todayEnd = new Date();
+    todayEnd.setHours(23, 59, 59, 999);
 
 
-   
     const result = await Order_Modal.aggregate([
       {
         $match: {
-          clientid: clientid // Match orders based on clientid, if necessary
+          clientid: clientid,
+          createdAt: { $gte: todayStart, $lt: todayEnd } // Match orders created today
         }
       },
       {
@@ -1533,8 +1538,6 @@ async orderListDetail(req, res) {
 
     const { clientid,signalid } = req.body; 
 
-
-   
     const result = await Order_Modal.aggregate([
       {
         $match: {

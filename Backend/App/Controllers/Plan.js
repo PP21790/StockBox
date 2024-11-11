@@ -68,6 +68,9 @@ class Plan {
                         path: '$service',
                         preserveNullAndEmptyArrays: true // If a plan does not have a matching service, it will still appear in the result
                     }
+                },
+                {
+                  $sort: { created_at: -1 } // Sort by created_at in descending order
                 }
             ]);
     
@@ -108,6 +111,9 @@ class Plan {
                       path: '$category',
                       preserveNullAndEmptyArrays: true // If a plan does not have a matching category, it will still appear in the result
                   }
+              },
+              {
+                $sort: { created_at: -1 } // Sort by created_at in descending order
               }
           ]);
   
@@ -634,6 +640,7 @@ try {
         {
           $project: {
             orderid: 1,
+            created_at: 1,
             planDetails: 1,
             clientName: '$clientDetails.FullName', // Assuming the client's name is stored in the 'name' field
             // Include other fields you want in the result
