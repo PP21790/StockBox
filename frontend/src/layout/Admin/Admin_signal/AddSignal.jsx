@@ -323,13 +323,6 @@ const AddSignal = () => {
       col_size: 6,
     },
     {
-      name: 'price',
-      label: 'Entry Price',
-      type: 'number',
-      label_size: 12,
-      col_size: 6,
-    },
-    {
       name: 'strikeprice',
       label: 'Strike Price',
       type: 'select',
@@ -377,6 +370,15 @@ const AddSignal = () => {
       label_size: 12,
       col_size: 6,
     },
+    {
+      name: 'price',
+      label: 'Entry Price',
+      type: 'number',
+      label_size: 12,
+      col_size: 6,
+    },
+    
+   
     {
       name: 'tag1',
       label: 'Target-1',

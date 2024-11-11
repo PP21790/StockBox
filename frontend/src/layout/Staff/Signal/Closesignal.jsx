@@ -173,9 +173,9 @@ const Closesignal = () => {
         },
         {
             name: 'Symbol',
-            selector: row => row.stock,
+            selector: row => row.tradesymbol,
             sortable: true,
-            width: '132px',
+            width: '300px',
         },
         {
             name: 'Entry Type',

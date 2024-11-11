@@ -357,7 +357,7 @@ const Freeclient = () => {
         // },
         {
             name: 'CreatedAt',
-            selector: row => row.clientDetails?.createdAt,
+            selector: row => fDateTime(row.clientDetails?.createdAt),
             sortable: true,
             width: '220px',
         },

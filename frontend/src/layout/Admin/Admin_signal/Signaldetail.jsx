@@ -19,7 +19,7 @@ const Signaldetail = () => {
         getsignaldetail();
     }, []);
 
-    
+
 
     const getsignaldetail = async () => {
         try {
@@ -43,7 +43,7 @@ const Signaldetail = () => {
 
     const calculatePercentage = (gain, entryPrice) => {
         if (!entryPrice) return 0;
-        const absGain = Math.abs(gain); // Using absolute gain for a positive percentage value
+        const absGain = Math.abs(gain);
         return ((absGain / entryPrice) * 100).toFixed(2);
     };
 

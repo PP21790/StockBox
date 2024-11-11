@@ -134,7 +134,7 @@ const History = () => {
             width: '200px',
         },
         {
-            name: 'Plan Start',
+            name: 'Purchase Date.',
             selector: row => fDateTime(row?.planDetails?.created_at),
             sortable: true,
             width: '160px',

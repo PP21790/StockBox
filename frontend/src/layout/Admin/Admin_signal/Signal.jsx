@@ -429,9 +429,9 @@ const Signal = () => {
 
         {
             name: 'Symbol',
-            selector: row => row.stock,
+            selector: row => row.tradesymbol,
             sortable: true,
-            width: '200px',
+            width: '300px',
         },
         {
             name: 'Entry Type',
@@ -466,25 +466,6 @@ const Signal = () => {
         //     width: '160px',
         // },
 
-
-
-        {
-            name: 'Actions',
-            cell: row => (
-                <>
-                    <div>
-                        <Eye onClick={() => Signaldetail(row._id)} />
-                    </div>
-                    {/* <div>
-                        <Trash2 onClick={() => DeleteSignals(row._id)} />
-                    </div> */}
-                </>
-            ),
-            ignoreRowClick: true,
-            allowOverflow: true,
-            button: true,
-
-        },
         {
             name: 'Status',
             cell: row => (
@@ -504,8 +485,25 @@ const Signal = () => {
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
-        }
+        },
+        {
+            name: 'Actions',
+            cell: row => (
+                <>
+                    <div>
+                        <Eye onClick={() => Signaldetail(row._id)} />
+                    </div>
+                    {/* <div>
+                        <Trash2 onClick={() => DeleteSignals(row._id)} />
+                    </div> */}
+                </>
+            ),
+            ignoreRowClick: true,
+            allowOverflow: true,
+            button: true,
 
+        },
+       
 
     ];
 

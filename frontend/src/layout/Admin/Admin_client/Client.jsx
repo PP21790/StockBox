@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine } from 'lucide-react';
+import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine, RefreshCcw } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { deleteClient, UpdateClientStatus, PlanSubscription, getplanlist, BasketSubscription, BasketAllList, getcategoryplan } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
@@ -33,8 +33,10 @@ const Client = () => {
     const [searchInput, setSearchInput] = useState("");
     const [selectedPlanId, setSelectedPlanId] = useState(null)
     const [ForGetCSV, setForGetCSV] = useState([])
+    const [searchkyc, setSearchkyc] = useState("");
+    const [statuscreatedby, setStatuscreatedby] = useState("");
 
-    
+
 
 
 
@@ -93,12 +95,28 @@ const Client = () => {
     };
 
 
+
+    const resethandle = () => {
+        setSearchkyc("")
+        setSearchInput("")
+        setStatuscreatedby("")
+
+
+    }
+
     useEffect(() => {
-        getAdminclient();
         getplanlistbyadmin()
         getbasketlist()
         getcategoryplanlist()
-    }, [searchInput]);
+    }, []);
+
+
+
+
+    useEffect(() => {
+        getAdminclient();
+
+    }, [searchInput, searchkyc, statuscreatedby]);
 
 
     useEffect(() => {
@@ -111,7 +129,7 @@ const Client = () => {
             const csvArr = clients.map((item) => ({
                 FullName: item.FullName,
                 Email: item?.Email || '',
-                kyc_verification : item?.kyc_verification == 1 ? "Verfied" : "Not Verified" ,
+                kyc_verification: item?.kyc_verification == 1 ? "Verfied" : "Not Verified",
                 PhoneNo: item?.PhoneNo || '',
                 Created_at: item?.createdAt || '',
 
@@ -138,19 +156,33 @@ const Client = () => {
         try {
             const response = await GetClient(token);
             if (response.status) {
-                const filterdata = response.data.filter((item) =>
-                    searchInput === "" ||
-                    item.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
-                    item.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
-                    item.PhoneNo.toLowerCase().includes(searchInput.toLowerCase())
+                const filterdata = response.data.filter((item) => {
+                    const matchesSearchInput =
+                        searchInput === "" ||
+                        item.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
+                        item.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
+                        item.PhoneNo.toLowerCase().includes(searchInput.toLowerCase());
 
-                );
-                setClients(searchInput ? filterdata : response.data);
+                        const matchesKycFilter =
+                        searchkyc === "" ||
+                        item.kyc_verification === Number(searchkyc);
+                    
+                    
+
+                    const filterCreatedBy =
+                        statuscreatedby === "" ||
+                        item.clientcome.toString() === statuscreatedby;
+
+                    return matchesSearchInput && matchesKycFilter && filterCreatedBy;
+                });
+
+                setClients(searchInput || searchkyc || statuscreatedby ? filterdata : response.data);
             }
         } catch (error) {
-            console.log("error");
+            console.log("Error fetching clients:", error);
         }
-    }
+    };
+
 
 
 
@@ -395,7 +427,7 @@ const Client = () => {
             sortable: true,
             width: '165px',
         },
-        
+
         // {
         // name: 'Date',
         // selector: row => row.Status,
@@ -426,7 +458,7 @@ const Client = () => {
         {
             name: 'Kyc',
             selector: row => (
-                row.kyc_verification === "1" ? (
+                row.kyc_verification === 1 ? (
                     <div style={{ color: "green", cursor: "pointer" }} onClick={() => handleDownload(row)}>
                         <Tooltip placement="top" overlay="Download">
                             Verified <ArrowDownToLine />
@@ -451,8 +483,8 @@ const Client = () => {
             name: 'Actions',
             selector: (row) => (
                 <div className='d-flex'>
- 
-                    
+
+
                     <Tooltip placement="top" overlay="Package Assign">
                         <span onClick={(e) => { showModal(true); setClientid(row); }} style={{ cursor: 'pointer' }}>
                             <Settings2 />
@@ -520,6 +552,55 @@ const Client = () => {
                                         <i className="bx bx-search" />
                                     </span>
                                 </div>
+                                <div className="col-md-3 d-flex">
+                                    <div style={{ width: "60%" }}>
+                                        <label htmlFor="kycSelect">Select Kyc</label>
+                                        <select
+                                            id="kycSelect"
+                                            className="form-control radius-10"
+                                            value={searchkyc}
+                                            onChange={(e) => setSearchkyc(e.target.value)}
+                                        >
+                                            <option value="">Select Stock</option>
+                                            <option value="1">Verified</option>
+                                            <option value="0">Not Verified</option>
+                                        </select>
+                                    </div>
+                                   <div >
+                                    <div style={{ width: "300%" }} >
+                                        <label htmlFor="kycSelect">Select CreatedBy</label>
+                                        <select
+                                            id="CreatedBy"
+                                            className="form-control radius-10"
+                                            value={statuscreatedby}
+                                            onChange={(e) => setStatuscreatedby(e.target.value)}
+                                        >
+                                            <option value="">Select Created By</option>
+                                            <option value="1">Web</option>
+                                            <option value="0">App</option>
+                                        </select>
+                                    </div>
+
+                                    <div style={{ width: "300%" }} >
+                                        <label htmlFor="kycSelect">Select Client</label>
+                                        <select
+                                            id="CreatedBy"
+                                            className="form-control radius-10"
+                                            value={statuscreatedby}
+                                            onChange={(e) => setStatuscreatedby(e.target.value)}
+                                        >
+                                            <option value="">Select Client</option>
+                                            <option value="">Active</option>
+                                            <option value="">Expired</option>
+                                        </select>
+                                    </div>
+
+                                    </div>
+                                    <div className="refresh-icon">
+                                        <RefreshCcw onClick={resethandle} />
+                                    </div>
+                                </div>
+
                                 <div className="ms-auto">
                                     <Link
                                         to="/admin/addclient"
@@ -612,7 +693,7 @@ const Client = () => {
                                                                     id={`proplus-${index}`}
                                                                     onClick={() => handleCategoryChange(item._id)}
                                                                 />
-                                                                <label className="form-check-label" htmlFor={`proplus-${index}`} style={{fontSize:"12px"}}>
+                                                                <label className="form-check-label" htmlFor={`proplus-${index}`} style={{ fontSize: "12px" }}>
                                                                     {item.title} (
                                                                     {item.servicesDetails.map((service) => service.title).join(", ")}
                                                                     )
@@ -645,7 +726,7 @@ const Client = () => {
                                                                                     />
                                                                                     <label className="form-check-label mx-1" style={{ fontSize: "13px", fontWeight: "800" }} htmlFor={`input-plan-${index}`}>
                                                                                         {item.validity}
-                                                                                        
+
                                                                                     </label>
                                                                                 </h5>
 
@@ -673,8 +754,8 @@ const Client = () => {
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Price:</strong>
                                                                                                     <span><IndianRupee /> {item.price && item.price}</span>
-     
-     
+
+
                                                                                                 </div>
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Validity:</strong>
@@ -729,10 +810,6 @@ const Client = () => {
                     </div>
                 </>
             )}
-
-
-
-
 
         </div >
 

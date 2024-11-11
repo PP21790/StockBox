@@ -6,7 +6,11 @@ import Swal from 'sweetalert2';
 import { ForgetPasswordApi } from '../Services/Admin';
 
 const Forgetpassword = () => {
+
+
     const token = localStorage.getItem('token');
+
+
 
     const UpdateForgetPassword = async (values, { resetForm }) => {
         try {
@@ -14,7 +18,6 @@ const Forgetpassword = () => {
                 Email: values.Email,
             };
             const response = await ForgetPasswordApi(data, token);
-
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',

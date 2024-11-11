@@ -160,9 +160,9 @@ const Closesignal = () => {
         },
         {
             name: 'Symbol',
-            selector: row => row.stock,
+            selector: row => row.tradesymbol,
             sortable: true,
-            width: '132px',
+            width: '300px',
         },
         {
             name: 'Entry Type',
@@ -205,13 +205,13 @@ const Closesignal = () => {
             name: 'Entry Date',
             selector: row => fDateTimeH(row.created_at),
             sortable: true,
-            width: '190px',
+            width: '200px',
         },
         {
             name: 'Exit Date',
             selector: row => fDateTimeH(row.closedate),
             sortable: true,
-            width: '180px',
+            width: '200px',
         },
 
 

@@ -46,6 +46,8 @@ const Dashbord = () => {
     }, [])
 
 
+    
+
 
     const columns = [
         {
@@ -73,168 +75,22 @@ const Dashbord = () => {
             sortable: true,
             width: '200px',
         },
+     
 
-
-        // {
-        //     name: 'Signup Status',
-        //     selector: row => row.Status,
-        //     sortable: true,
-        //     width: '165px',
-        // },
-        // {
-        // name: 'Date',
-        // selector: row => row.Status,
-        // sortable: true,
-        // width: '165px',
-        // },
-
-        // {
-        //     name: 'Active Status',
-        //     selector: row => (
-        //         <div className="form-check form-switch form-check-info">
-        //             <input
-        //                 id={`rating_${row.ActiveStatus}`}
-        //                 className="form-check-input toggleswitch"
-        //                 type="checkbox"
-        //                 defaultChecked={row.ActiveStatus == 1}
-        //                 onChange={(event) => handleSwitchChange(event, row._id)}
-        //             />
-        //             <label
-        //                 htmlFor={`rating_${row.ActiveStatus}`}
-        //                 className="checktoggle checkbox-bg"
-        //             ></label>
-        //         </div>
-        //     ),
-        //     sortable: true,
-        //     width: '165px',
-        // },
+        {
+            name: 'Created By',
+            selector: row => row.addedByDetails?.FullName ?? (row.clientcome === 1 ? "WEB" : "APP"),
+            sortable: true,
+            width: '165px',
+        },
+       
         {
             name: 'CreatedAt',
             selector: row => fDateTime(row.createdAt),
             sortable: true,
 
         },
-        // {
-        //     name: 'Actions',
-        //     selector: (row) => (
-        //         <>
-        //             <Tooltip placement="top" overlay="Package Assign">
-        //                 <span onClick={(e) => { showModal(true); setClientid(row); }} style={{ cursor: 'pointer' }}>
-        //                     <Settings2 />
-        //                 </span>
-        //             </Tooltip>
-
-        //             <Tooltip title="view">
-        //                 <Eye
-
-        //                     onClick={() => Clientdetail(row)} />
-        //             </Tooltip>
-
-        //             <div
-        //                 className="modal fade"
-        //                 id={`modal-${client.id}`}
-        //                 tabIndex={-1}
-        //                 aria-labelledby={`modalLabel-${client.id}`}
-        //                 aria-hidden="true"
-        //             >
-        //                 <div className="modal-dialog">
-        //                     <div className="modal-content">
-        //                         <div className="modal-header">
-        //                             <h5 className="modal-title" id={`modalLabel-${client.id}`}>
-        //                                 View Client
-        //                             </h5>
-        //                             <button
-        //                                 type="button"
-        //                                 className="btn-close"
-        //                                 data-bs-dismiss="modal"
-        //                                 aria-label="Close"
-        //                             />
-        //                         </div>
-        //                         <div className="modal-body">
-        //                             <ul>
-        //                                 <li className='viewlist'>
-        //                                     <div className='row justify-content-between'>
-        //                                         <div className="col">
-        //                                             <b>Name</b>
-        //                                         </div>
-        //                                         <div className="col">
-        //                                             Pankaj
-        //                                         </div>
-
-        //                                     </div>
-        //                                 </li>
-        //                                 <li className='viewlist'> <div className='row justify-content-between'>
-        //                                     <div className="col">
-        //                                         <b>Email</b>
-        //                                     </div>
-        //                                     <div className="col">
-        //                                         pankaj@gmail.com
-        //                                     </div>
-
-        //                                 </div></li>
-        //                                 <li className='viewlist'> <div className='row justify-content-between'>
-        //                                     <div className="col">
-        //                                         <b>Phone No.</b>
-        //                                     </div>
-        //                                     <div className="col">
-        //                                         9876543210
-        //                                     </div>
-
-        //                                 </div></li>
-        //                                 <li className='viewlist'> <div className='row justify-content-between'>
-        //                                     <div className="col">
-        //                                         <b>Signup Status</b>
-        //                                     </div>
-        //                                     <div className="col">
-        //                                         App
-        //                                     </div>
-
-        //                                 </div></li>
-        //                                 <li className='viewlist'> <div className='row justify-content-between'>
-        //                                     <div className="col">
-        //                                         <b>Created At</b>
-        //                                     </div>
-        //                                     <div className="col">
-        //                                         25/09/2024
-        //                                     </div>
-
-        //                                 </div></li>
-        //                                 <li className='viewlist'> <div className='row justify-content-between'>
-        //                                     <div className="col">
-        //                                         <b>Updated At</b>
-        //                                     </div>
-        //                                     <div className="col">
-        //                                         26/09/2024
-        //                                     </div>
-
-        //                                 </div></li>
-        //                             </ul>
-        //                         </div>
-        //                         {/* <div className="modal-footer">
-        //                             <button
-        //                                 type="button"
-        //                                 className="btn btn-secondary"
-        //                                 data-bs-dismiss="modal"
-        //                             >
-        //                                 Close
-        //                             </button>
-        //                         </div> */}
-        //                     </div>
-        //                 </div>
-        //             </div>
-        //             <Tooltip title="Update">
-        //                 <UserPen onClick={() => updateClient(row)} />
-        //             </Tooltip>
-        //             <Tooltip title="delete">
-        //                 <Trash2 onClick={() => DeleteClient(row._id)} />
-        //             </Tooltip>
-        //         </>
-        //     ),
-        //     ignoreRowClick: true,
-        //     allowOverflow: true,
-        //     button: true,
-        //     width: '165px',
-        // }
+       
     ];
 
 

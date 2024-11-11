@@ -5,16 +5,24 @@ import Swal from 'sweetalert2';
 import { Link, useNavigate } from 'react-router-dom';
 import { image_baseurl } from '../../../Utils/config';
 
+
+
 const ReferAndEarn = () => {
+
+
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
     const [clients, setClients] = useState(null);
     const [isChanged, setIsChanged] = useState(false);  
 
+
+
     const getsettinglist = async () => {
         try {
             const response = await basicsettinglist(token);
+        
             if (response.status) {
+
                 setClients(response.data);
             }
         } catch (error) {
@@ -27,7 +35,7 @@ const ReferAndEarn = () => {
     }, []);
 
     const handleFieldChange = () => {
-        setIsChanged(true); // Mark as changed when any field is modified
+        setIsChanged(true);
     };
 
     if (!clients) {
@@ -57,19 +65,19 @@ const ReferAndEarn = () => {
                         <Formik
                             enableReinitialize={true}
                             initialValues={{
-                                sender_earn: clients[0].sender_earn || '',
-                                receiver_earn: clients[0].receiver_earn || '',
-                                refer_title: clients[0].refer_title || '',
-                                refer_description: clients[0].refer_description || '',
+                                sender_earn: clients[0]?.sender_earn || '',
+                                receiver_earn: clients[0]?.receiver_earn || '',
+                                refer_title: clients[0]?.refer_title || '',
+                                refer_description: clients[0]?.refer_description || '',
                                 refer_image: null,
                             }}
                             onSubmit={async (values) => {
                                 const req = {
-                                    sender_earn: values.sender_earn,
-                                    receiver_earn: values.receiver_earn,
-                                    refer_title: values.refer_title,
-                                    refer_description: values.refer_description,
-                                    refer_image: values.refer_image,
+                                    sender_earn: values?.sender_earn,
+                                    receiver_earn: values?.receiver_earn,
+                                    refer_title: values?.refer_title,
+                                    refer_description: values?.refer_description,
+                                    refer_image: values?.refer_image,
                                 };
 
                                 try {
@@ -92,7 +100,7 @@ const ReferAndEarn = () => {
                                             timerProgressBar: true,
                                         });
                                     }
-                                    setIsChanged(false);  // Reset change status after successful update
+                                    setIsChanged(false);  
                                 } catch (error) {
                                     Swal.fire({
                                         title: 'Error',
@@ -214,7 +222,7 @@ const ReferAndEarn = () => {
                                                 />
                                             </div>
                                             <div className="col-sm-3">
-                                                {clients[0].refer_image && (
+                                                {clients[0]?.refer_image && (
                                                     <div className="file-preview">
                                                         <img
                                                             src={`${image_baseurl}uploads/basicsetting/${clients[0].refer_image}`}

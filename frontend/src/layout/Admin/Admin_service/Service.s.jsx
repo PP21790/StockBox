@@ -233,14 +233,14 @@ const Service = () => {
             name: 'S.No',
             selector: (row, index) => index + 1,
             sortable: false,
-            width: "290px",
+            width: "400px",
 
         },
         {
             name: 'Title',
             selector: row => row.title,
             sortable: true,
-            width: "300px",
+            width: "200px",
         },
         // {
         //     name: 'Active Status',
@@ -261,18 +261,18 @@ const Service = () => {
         //     ),
         //     sortable: true,
         // },
-        {
-            name: 'Created At',
-            selector: row => new Date(row.created_at).toLocaleDateString(),
-            sortable: true,
-            width: "280px",
-        },
-        {
-            name: 'Updated At',
-            selector: row => new Date(row.updated_at).toLocaleDateString(),
-            sortable: true,
-            width: "200px",
-        },
+        // {
+        //     name: 'Created At',
+        //     selector: row => new Date(row.created_at).toLocaleDateString(),
+        //     sortable: true,
+        //     width: "280px",
+        // },
+        // {
+        //     name: 'Updated At',
+        //     selector: row => new Date(row.updated_at).toLocaleDateString(),
+        //     sortable: true,
+        //     width: "200px",
+        // },
 
         // {
         //     name: 'Actions',
