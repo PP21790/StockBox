@@ -587,7 +587,7 @@ const uniorderId = order.uniqueorderid;
 
 
 
-async function CheckPosition(userId, authToken , segment, instrument_token, producttype, calltype, trading_symbol) {
+async function CheckPosition(userId, authToken, segment, instrument_token, producttype, calltype, trading_symbol) {
     
 
     var config = {

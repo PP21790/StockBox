@@ -87,18 +87,18 @@ async function AddBulkStockCron(req, res) {
           );
 
 
-          const filteredDataOO = filteredDataO.filter(element =>
-            (element.instrumenttype === 'OPTIDX' || element.instrumenttype === 'OPTSTK') &&
-            element.exch_seg === "NFO" && element.name == "RELIANCE" &&  element.expiry=='28NOV2024'
+        //   const filteredDataOO = filteredDataO.filter(element =>
+        //     (element.instrumenttype === 'OPTIDX' || element.instrumenttype === 'OPTSTK') &&
+        //     element.exch_seg === "NFO" && element.name == "RELIANCE" &&  element.expiry=='28NOV2024'
             
-        );
+        // );
 
 // console.log(filteredDataOO);
          
-//           const filteredDataF = response.data.filter(element =>
-//               (element.instrumenttype === 'FUTSTK' || element.instrumenttype === 'FUTIDX') &&
-//               element.exch_seg === "NFO" && element.name != ""
-//           );
+          const filteredDataF = response.data.filter(element =>
+              (element.instrumenttype === 'FUTSTK' || element.instrumenttype === 'FUTIDX') &&
+              element.exch_seg === "NFO" && element.name != ""
+          );
   
           // const filteredDataMF = response.data.filter(element =>
           //     element.instrumenttype === 'FUTCOM' && element.name != ""
