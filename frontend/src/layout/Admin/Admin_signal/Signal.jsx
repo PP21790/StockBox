@@ -183,7 +183,7 @@ const Signal = () => {
     const forCSVdata = () => {
         if (clients?.length > 0) {
             const csvArr = clients.map((item) => ({
-                Symbol: item.stock || "",
+                Symbol: item.tradesymbol || "",
                 segment: item?.segment || '',
                 Price: item?.price || '',
                 EntryType: item?.calltype || '',

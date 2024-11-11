@@ -149,27 +149,27 @@ const History = () => {
         //     selector: row => fDate(row.planDetails.created_at),
         //     sortable: true,
         // },
-        {
-            name: 'Actions',
-            cell: row => (
-                <>
-                    <div>
-                        <Tooltip placement="top" overlay="View">
-                            <Eye
-                                data-bs-toggle="modal"
-                                data-bs-target="#example"
-                                onClick={() => setViewpage(row)}
-                            />
-                        </Tooltip>
-                    </div>
+        // {
+        //     name: 'Actions',
+        //     cell: row => (
+        //         <>
+        //             <div>
+        //                 <Tooltip placement="top" overlay="View">
+        //                     <Eye
+        //                         data-bs-toggle="modal"
+        //                         data-bs-target="#example"
+        //                         onClick={() => setViewpage(row)}
+        //                     />
+        //                 </Tooltip>
+        //             </div>
 
 
-                </>
-            ),
-            ignoreRowClick: true,
-            allowOverflow: true,
-            button: true,
-        }
+        //         </>
+        //     ),
+        //     ignoreRowClick: true,
+        //     allowOverflow: true,
+        //     button: true,
+        // }
     ];
 
 

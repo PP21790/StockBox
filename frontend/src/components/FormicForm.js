@@ -60,6 +60,9 @@ const DynamicForm = ({
     //   )?.prifix_key;
 
 
+    const today = new Date().toISOString().slice(0, 10);
+
+
     const handleFileChange2 = (event, index, fieldName) => {
         const file = event.target.files[0];
         if (file) {
@@ -149,7 +152,7 @@ const DynamicForm = ({
     };
 
 
- console.log("formik.values.sumbitsts",btnstatus)
+
     return (
         <div className="content container-fluid" data-aos="fade-left">
             <div className="card mb-0">
@@ -298,7 +301,7 @@ const DynamicForm = ({
                                                             </div>
                                                         </div>
                                                     </>
-                                                ) 
+                                                )
 
                                                     : field.type === "file" ? (
                                                         <>
@@ -869,8 +872,39 @@ const DynamicForm = ({
                                                                             </div>
                                                                         </div>
                                                                     </>
-                                                                )
+                                                                ) : field.type === "date1" ? (
+                                                                    <>
+                                                                        <div className={`col-lg-${field.col_size}`}>
+                                                                            <div className="row d-flex">
+                                                                                <div className="col-lg-12">
+                                                                                    <div className="form-check custom-checkbox input-block ps-0 mb-3">
+                                                                                        <label className={`col-lg-${field.label}`} htmlFor={field.name}>
+                                                                                            {field.name}
+                                                                                        </label>
+                                                                                        <input
+                                                                                            type={"date"}
+                                                                                            name={field.name}
+                                                                                            readOnly={field.disable}
+                                                                                            className="form-control"
+                                                                                            id={field.name}
+                                                                                            min={ new Date().toISOString().split("T")[0]
 
+                                                                                            }
+                                                                                            defaultValue={formik.values[field.name] || new Date().toISOString().split('T')[0]}
+                                                                                            {...formik.getFieldProps(field.name)}
+                                                                                        />
+                                                                                    </div>
+                                                                                    {formik.errors[field.name] && (
+                                                                                        <div style={{ color: "red" }}>
+                                                                                            {formik.errors[field.name]}
+                                                                                        </div>
+                                                                                    )}
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </>
+                                                                )
                                                                     : field.type === "msgbox" ? (
                                                                         <>
                                                                             <div className={`col-lg-${field.col_size}`}>

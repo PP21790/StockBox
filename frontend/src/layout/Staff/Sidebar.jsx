@@ -84,7 +84,7 @@ const Sidebar = ({ onToggleClick }) => {
             <img src="/assets/images/logo-icon.png" className="logo-icon" alt="logo icon" />
           </div>
           <div>
-            <h4 className="logo-text">STOCK BOX</h4>
+            <h4 className="logo-text">STOCK RA</h4>
           </div>
           <div className="toggle-icon ms-auto" onClick={onToggleClick}>
             <i className="bx bx-arrow-back" />

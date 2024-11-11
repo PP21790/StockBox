@@ -18,6 +18,9 @@ export default function ExportToExport({ apiData, fileName }) {
       { wpx: 200 }, 
       { wpx: 200 }, 
       { wpx: 200 }, 
+      { wpx: 200 }, 
+      { wpx: 200 }, 
+      { wpx: 200 }, 
     ];
     ws['!cols'] = wscols;
 

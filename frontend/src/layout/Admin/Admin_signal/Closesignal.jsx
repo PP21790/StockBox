@@ -102,22 +102,31 @@ const Closesignal = () => {
 
     const forCSVdata = () => {
         if (clients?.length > 0) {
-            const csvArr = clients.map((item) => ({
-                Symbol: item.stock || "",
-                segment: item?.segment || '',
-                Price: item?.price || '',
-                EntryType: item?.calltype || '',
-                EntryPrice: item?.price || '',
-                ExitPrice: item?.closeprice || "",
-                EntryDate: fDateTimeH(item?.created_at) || '',
-                ExitDate: fDateTimeH(item?.closedate) || '',
-
-            }));
-
+            const csvArr = clients.map((item) => {
+                let profitAndLoss = 0;
+                if (item.calltype === "BUY") {
+                    profitAndLoss = ((item.closeprice - item.price) * item.lotsize).toFixed(2);
+                } else if (item.calltype === "SELL") {
+                    profitAndLoss = ((item.price - item.closeprice) * item.lotsize).toFixed(2);
+                }
+    
+                return {
+                    Symbol: item.tradesymbol || "",
+                    segment: item?.segment || '',
+                    Price: item?.price || '',
+                    EntryType: item?.calltype || '',
+                    EntryPrice: item?.price || '',
+                    ExitPrice: item?.closeprice || "",
+                    ProfitAndLoss: profitAndLoss || "",
+                    EntryDate: fDateTimeH(item?.created_at) || '',
+                    ExitDate: fDateTimeH(item?.closedate) || ''
+                };
+            });
+    
             setForGetCSV(csvArr);
         }
     };
-
+    
 
     useEffect(() => {
         fetchAdminServices()

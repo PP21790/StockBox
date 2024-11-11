@@ -89,7 +89,7 @@ const Login = () => {
                                             <img src="/assets/images/logo-icon.png" width={60} alt="" />
                                         </div>
                                         <div className="text-center mb-4">
-                                            <h5 className="">StockBox</h5>
+                                            <h5 className="">Stock RA</h5>
                                         </div>
                                         <div className="form-body">
                                             <form className="row g-3" onSubmit={loginpageOpen}>
