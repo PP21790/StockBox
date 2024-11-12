@@ -80,13 +80,14 @@ class Clients {
       }
 
 
-
+      let cleanedName = FullName.replace(/\s+/g, '');
+          let referCode = cleanedName.substring(0, 7).toUpperCase();
 
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      const characters = '0123456789';
       let refer_token = '';
-      const length = 10; // Length of the token
+      const length = 5; // Length of the token
       while (refer_token.length < length) {
           const byte = crypto.randomBytes(1);
           const index = byte[0] % characters.length;
@@ -96,15 +97,15 @@ class Clients {
 
       const refer_tokens = crypto.randomBytes(10).toString('hex'); 
 
-
-
+    
+      let refer_tokenss = referCode + refer_token;
 
       const result = new Clients_Modal({
       FullName: FullName,
       Email: Email,
       PhoneNo: PhoneNo,
       password: hashedPassword,
-      refer_token:refer_token,
+      refer_token:refer_tokenss,
       token:refer_tokens,
       del: 0
       });

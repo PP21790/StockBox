@@ -638,15 +638,10 @@ async function PlanExpire(req, res) {
                 message = 'Your plan will expire tomorrow.';
             }
     
-    
-            if (message) {
+             if (message) {
                 try {
               
                   const client = await Clients_Modal.findById(plan.clientid); // Fetch the client
-    
-    
-
-
                   
                   const resultn = new Notification_Modal({
                     clientid: plan.clientid,
@@ -662,7 +657,6 @@ async function PlanExpire(req, res) {
                         const tokens = [client.devicetoken];
                         await sendFCMNotification(title, message,tokens);
                        
-                    } else {
                     }
                         
                 } catch (error) {

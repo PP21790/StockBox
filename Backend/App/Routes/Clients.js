@@ -1,7 +1,7 @@
 const router = require("express").Router()
 const { checkPermission } = require('../Middleware/permissionMiddleware');
 
-const {AddClient,getClient,updateClient,deleteClient,detailClient,statusChange,activeClient,processPayoutRequest,payoutList,freetrialList,deleteFreetrial,helpdeskList,deleteHelpdesk,myPlan} = require('../Controllers/Clients')
+const {AddClient,getClient,updateClient,deleteClient,detailClient,statusChange,activeClient,processPayoutRequest,payoutList,freetrialList,deleteFreetrial,helpdeskList,deleteHelpdesk,myPlan,myService} = require('../Controllers/Clients')
 
 
 
@@ -30,6 +30,7 @@ router.get('/client/helpdesklist', helpdeskList);
 router.get('/client/helpdeskdelete/:id', deleteHelpdesk);
 router.post('/client/process-payout-request', processPayoutRequest);
 router.get('/client/myplan/:id', myPlan); 
+router.get('/client/myservice/:id', myService); 
 
 
 

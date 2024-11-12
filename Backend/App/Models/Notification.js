@@ -14,8 +14,9 @@ const Notification = Schema({
         default: null
     },
     type: {
-        type: Number,
-        default: 0
+        type: String,
+        trim: true,
+        default: null
     },
     title: {
         type: String,

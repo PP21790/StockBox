@@ -136,6 +136,11 @@ const BasicSettingSchema = new Schema({
         trim: true,
         default: 0
     },
+    kyc: {
+        type: Number,
+        trim: true,
+        default: 1
+    },
     company_key: {
         type: String,
         trim: true,
@@ -177,6 +182,26 @@ const BasicSettingSchema = new Schema({
         default: null
     },
     authtoken: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    facebook: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    youtube: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    twitter: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    instagram: {
         type: String,
         trim: true,
         default: null

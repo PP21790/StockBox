@@ -72,14 +72,20 @@ class Clients {
       const refer_tokens = crypto.randomBytes(10).toString('hex'); 
 
 
-      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-let refer_token = '';
-const length = 10; // Length of the token
-while (refer_token.length < length) {
-    const byte = crypto.randomBytes(1);
-    const index = byte[0] % characters.length;
-    refer_token += characters[index];
-}
+      let cleanedName = FullName.replace(/\s+/g, '');
+      let referCode = cleanedName.substring(0, 7).toUpperCase();
+
+
+  const characters = '0123456789';
+  let refer_token = '';
+  const length = 5; // Length of the token
+  while (refer_token.length < length) {
+      const byte = crypto.randomBytes(1);
+      const index = byte[0] % characters.length;
+      refer_token += characters[index];
+  }
+  let refer_tokenss = referCode + refer_token;
+
 
       const hashedPassword = await bcrypt.hash(password, 10);   
       const result = new Clients_Modal({
@@ -88,7 +94,7 @@ while (refer_token.length < length) {
       PhoneNo: PhoneNo,
       password: hashedPassword,
       add_by: add_by,
-      refer_token:refer_token,
+      refer_token:refer_tokenss,
       token:refer_tokens,
       ActiveStatus:1,
       clientcome:1
@@ -492,19 +498,48 @@ while (refer_token.length < length) {
       if (!client) {
         return res.status(404).json({ status: false, message: 'Client not found or inactive.' });
       }
-  
+      const notificationTitle = 'Important Update';
+
       if (status === '1') {
         // Approve the payout request
         payoutRequest.status = '1';
+        const notificationBody = 'Your Payout Approved......';
+
+
       } else if (status === '2') {
         // Logic to reject the payout request
         payoutRequest.status = '2';
         payoutRequest.remark = remark;
         client.wamount += payoutRequest.amount; // Refund amount back to client's wamount
         await client.save();
+
+        const notificationBody = 'Your Payout Reject......';
+
       }
   
       await payoutRequest.save();
+
+
+          const resultn = new Notification_Modal({
+            clientid:client._id,
+            segmentid:payoutRequest._id,
+            type:'payout',
+            title: notificationTitle,
+            message: notificationBody
+        });
+  
+        await resultn.save();
+        try {
+          if (client && client.devicetoken) {
+            const tokens = [client.devicetoken];
+            await sendFCMNotification(notificationTitle, notificationBody,tokens);
+           
+        }
+          console.log('Notifications sent successfully');
+        } catch (error) {
+          console.error('Error sending notifications:', error);
+        }
+  
       return res.status(200).json({
         status: true,
         message: 'Payout request updated successfully.',
@@ -747,6 +782,65 @@ async  myPlan(req, res) {
     return res.json({
       status: true,
       message: "Subscriptions retrieved successfully",
+      data: result
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ status: false, message: 'Server error', data: [] });
+  }
+}
+
+
+async myService(req, res) {
+  try {
+    const { id } = req.params;
+
+    // Validate input
+    if (!id) {
+      return res.status(400).json({ status: false, message: 'Client ID is required' });
+    }
+  
+
+    const result = await Planmanage.aggregate([
+      {
+        $match: { clientid: id }
+      },
+      {
+        $addFields: {
+          serviceid: { $toObjectId: '$serviceid' } // Convert serviceid to ObjectId for matching
+        }
+      },
+      {
+        $lookup: {
+          from: 'services',           // The name of the Service collection
+          localField: 'serviceid',    // Field in Planmanage
+          foreignField: '_id',        // Field in Service
+          as: 'serviceDetails'        // Output array field
+        }
+      },
+      {
+        $unwind: {
+          path: '$serviceDetails',
+          preserveNullAndEmptyArrays: true // If there's no matching service, it won't remove the document
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          clientid: 1,
+          serviceid: 1,
+          startdate: 1,
+          enddate: 1,
+          serviceName: '$serviceDetails.title' // Rename the service name field for clarity
+        }
+      }
+    ]);
+
+
+    return res.json({
+      status: true,
+      message: "Subscriptions and client details retrieved successfully",
       data: result
     });
 

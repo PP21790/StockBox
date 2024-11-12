@@ -641,8 +641,14 @@ try {
           $project: {
             orderid: 1,
             created_at: 1,
+            plan_price:1,
+            total:1,
+            coupon:1,
+            discount:1,
             planDetails: 1,
-            clientName: '$clientDetails.FullName', // Assuming the client's name is stored in the 'name' field
+            clientName: '$clientDetails.FullName',
+            clientEmail: '$clientDetails.Email',
+            clientPhoneNo: '$clientDetails.PhoneNo', // Assuming the client's name is stored in the 'name' field
             // Include other fields you want in the result
           }
         },
