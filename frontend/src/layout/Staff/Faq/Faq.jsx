@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getFaqlist, AddFaq, UpdateFaq, changeFAQStatus, DeleteFAQ } from '../../../Services/Admin';
 import Table from '../../../components/Table';
@@ -18,6 +18,8 @@ const Faq = () => {
     const [serviceid, setServiceid] = useState({});
     const [searchInput, setSearchInput] = useState("");
     const [permission, setPermission] = useState([]);
+    const [viewdetail,setviewdetail] = useState([])
+
 
     const [updatetitle, setUpdatetitle] = useState({
         title: "",
@@ -313,7 +315,10 @@ const Faq = () => {
                     {permission.includes("faqsdetail") ? <div>
                         <Tooltip placement="top" overlay="View">
                             <Eye style={{ marginRight: "10px" }} data-bs-toggle="modal"
-                                data-bs-target="#example1" />
+                                data-bs-target="#example1"
+                                 onClick={()=>setviewdetail([row])}
+
+                                 />
                         </Tooltip>
                     </div> : ""}
                     {permission.includes("editfaq") ? <div>
@@ -590,10 +595,12 @@ const Faq = () => {
                             </div>
                             <div className="modal-body">
                                 <ul>
-                                    <li>
+                                {viewdetail && viewdetail.map((item)=>(
+                                        <Fragment>
+                                              <li>
                                         <div className="row justify-content-between">
                                             <div className="col-md-6">
-                                                <b>Title</b>
+                                                <b>Title : {item.title}</b>
                                             </div>
                                             <div className="col-md-6">
 
@@ -603,7 +610,7 @@ const Faq = () => {
                                     <li>
                                         <div className="row justify-content-between">
                                             <div className="col-md-6">
-                                                <b>Discription</b>
+                                                <b>Discription : {item.description}</b>
                                             </div>
                                             <div className="col-md-6">
 
@@ -613,7 +620,7 @@ const Faq = () => {
                                     <li>
                                         <div className="row justify-content-between">
                                             <div className="col-md-6">
-                                                <b>Created At</b>
+                                                <b>Created At : {fDateTime(item.created_at)} </b>
                                             </div>
                                             <div className="col-md-6">
 
@@ -623,14 +630,16 @@ const Faq = () => {
                                     <li>
                                         <div className="row justify-content-between">
                                             <div className="col-md-6">
-                                                <b>Updated At</b>
+                                                <b>Updated At : {fDateTime(item.updated_at)}</b>
                                             </div>
                                             <div className="col-md-6">
 
                                             </div>
                                         </div>
                                     </li>
-
+                                 
+                                        </Fragment>
+                                    ))}
                                 </ul>
                             </div>
                         </div>

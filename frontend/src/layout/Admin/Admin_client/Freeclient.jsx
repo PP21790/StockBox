@@ -291,18 +291,19 @@ const Freeclient = () => {
             name: 'Full Name',
             selector: row => row.clientDetails?.FullName,
             sortable: true,
-            width: '165px',
+            width: '200px',
         },
         {
             name: 'Email',
             selector: row => row.clientDetails?.Email,
             sortable: true,
-            width: '243px',
+            width: '300px',
         },
         {
             name: 'Phone No',
             selector: row => row.clientDetails?.PhoneNo,
             sortable: true,
+            width: '200px',
         },
         {
             name: 'Kyc',
@@ -320,19 +321,19 @@ const Freeclient = () => {
                 )
             ),
             sortable: true,
-            width: '160px',
+            width: '200px',
         },
         {
             name: 'Start Date',
             selector: row => fDateTime(row.startdate),
             sortable: true,
-            width: '230px',
+            width: '200px',
         },
         {
             name: 'End Start',
             selector: row => fDateTime(row.enddate),
             sortable: true,
-            width: '230px',
+            width: '200px',
         },
 
         // {

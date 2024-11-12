@@ -12,6 +12,8 @@ const Faq = () => {
 
 
     const navigate = useNavigate();
+
+    
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
