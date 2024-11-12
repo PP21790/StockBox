@@ -221,6 +221,10 @@ const Profile = () => {
                                                 <input type="text" className='form-control' placeholder='https://www.facebook.com/help' style={{ width: "auto" }} value={weblink.facebook} onChange={(e) => { setWeblink({ ...weblink, facebook: e.target.value }) }} />
                                             </li>
                                         </ul>
+
+                                        <div className="col-sm-12 d-flex justify-content-end">
+                                                        <Link to="/admin/changepass" className="btn btn-primary mb-0" style={{ fontSize: "14px" }}>Update</Link>
+                                    </div>
                                     </div>
                                 </div>
                             </div>
