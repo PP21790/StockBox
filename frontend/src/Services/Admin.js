@@ -2333,3 +2333,25 @@ export async function ResetPassword(data, token) {
     }
 }
 
+
+
+// get view client subscribtion
+
+
+export async function getclientsubscription(_id,token) {
+  
+    try {
+        const res = await axios.get(`${Config.base_url}client/myservice/${_id}`, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}

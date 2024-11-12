@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Table from '../../../components/Table';
 import { Tooltip } from 'antd';
-import { clientdetailbyid, clientplandatabyid, getcategoryplan } from '../../../Services/Admin';
+import { clientdetailbyid, clientplandatabyid, getcategoryplan , getclientsubscription } from '../../../Services/Admin';
 import { fDate , fDateTime } from '../../../Utils/Date_formate';
 
 
@@ -18,6 +18,7 @@ const Viewclientdetail = () => {
     useEffect(() => {
         getPlanDetail();
         getClientDetail();
+        getclientservice()
     }, []);
 
 
@@ -69,6 +70,19 @@ const Viewclientdetail = () => {
             const response = await clientdetailbyid(id, token);
             if (response.status) {
                 setClient([response.data]);
+            }
+        } catch (error) {
+            console.error("Error fetching client details:", error);
+        }
+    };
+
+    
+    
+    const getclientservice = async () => {
+        try {
+            const response = await getclientsubscription(id, token);
+            if (response.status) {
+                console.log(response.data)
             }
         } catch (error) {
             console.error("Error fetching client details:", error);

@@ -1,28 +1,23 @@
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import React, { useState } from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import Swal from 'sweetalert2';
 import { ResetPassword } from '../Services/Admin';
 
-
-
 const Resetpassword = () => {
 
 
+    const { id } = useParams();
     const token = localStorage.getItem('token');
-    const userid = localStorage.getItem('id');
-
+    
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
 
     const togglePasswordVisibility = (e) => {
         e.preventDefault();
         setShowPassword(!showPassword);
     };
-
-
 
     const toggleConfirmPasswordVisibility = (e) => {
         e.preventDefault();
@@ -41,7 +36,7 @@ const Resetpassword = () => {
     const UpdateChangedPassword = async (values, { resetForm }) => {
         try {
             const data = {
-                resetToken:values.resetToken,
+                resetToken: values.resetToken,
                 newPassword: values.newPassword,
             };
             const response = await ResetPassword(data, token);
@@ -100,16 +95,15 @@ const Resetpassword = () => {
                             <div className="card-body p-4">
                                 <Formik
                                     initialValues={{
-
                                         newPassword: '',
-                                        resetToken: '',
+                                        confirmPassword: '',
+                                        resetToken: id,
                                     }}
                                     validationSchema={validationSchema}
                                     onSubmit={UpdateChangedPassword}
                                 >
-                                    {({ values, handleSubmit, isSubmitting }) => (
+                                    {({ isSubmitting }) => (
                                         <Form className="row g-3">
-
                                             <div className="col-md-12">
                                                 <label htmlFor="newPassword" className="form-label">
                                                     New Password
