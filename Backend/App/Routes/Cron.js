@@ -1,12 +1,13 @@
 const router = require("express").Router()
 
-const {AddBulkStockCron,DeleteTokenAliceToken,TradingStatusOff} = require('../Controllers/Cron')
+const {AddBulkStockCron,DeleteTokenAliceToken,TradingStatusOff,PlanExpire} = require('../Controllers/Cron')
 
 
 
 router.get('/cron/add', AddBulkStockCron);
 router.get('/cron/delete', DeleteTokenAliceToken);
 router.get('/cron/tradingstatusoff', TradingStatusOff);
+router.get('/cron/checknoitification', PlanExpire);
 
 
 module.exports = router;

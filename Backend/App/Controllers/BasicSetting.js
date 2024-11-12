@@ -212,6 +212,35 @@ class BasicSetting {
         }
     }
 
+    async updateSocialLink(req, res) {
+        try {
+            const { facebook, youtube, twitter, instagram } = req.body;
+    
+            const update = {
+                facebook,
+                youtube,
+                twitter,
+                instagram
+            };
+    
+            // Update the database
+            const options = { new: true, upsert: true, runValidators: true };
+            const result = await BasicSetting_Modal.findOneAndUpdate({}, update, options);
+        
+            return res.status(200).json({
+                status: true,
+                message: "Social Link updated successfully",
+                data: result
+            });
+        } catch (error) {
+            console.error("Error updating social link:", error);
+            return res.status(500).json({
+                status: false,
+                message: "Server error",
+                error: error.message
+            });
+        }
+    }
 
 
   }

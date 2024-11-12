@@ -80,33 +80,46 @@ class Coupon {
             await result.save();
     
 
-            const clients = await Clients_Modal.find({ del: 0, ActiveStatus: 1 });
+           
 
-            if (!clients || clients.length === 0) {
+          const clients = await Clients_Modal.find({
+            del: 0,
+            ActiveStatus: 1,
+            devicetoken: { $exists: true, $ne: null }
+          }).select('devicetoken');
 
-            } else
-              {
+          const tokens = clients.map(client => client.devicetoken);
+
+          if (tokens.length > 0) {
+
+
             const notificationTitle = 'Important Update';
             const notificationBody = 'New Coupon Added......';
-        
-            for (const client of clients) {
-              const deviceToken = client.devicetoken; // Adjust according to your token field name
-              const resultn = new Notification_Modal({
-                clientid: client._id,
-                title: notificationTitle,
-                message: notificationBody
-            });
-    
-            await resultn.save();
-              if (deviceToken) {
-                try {
-                  await sendFCMNotification(notificationTitle, notificationBody, deviceToken);
-                } catch (error) {
-                }
-              } else {
-              }
-            }
+
+            const resultn = new Notification_Modal({
+              segmentid:result._id,
+              type:3,
+              title: notificationTitle,
+              message: notificationBody
+          });
+  
+          await resultn.save();
+
+
+          try {
+            // Send notifications to all device tokens
+            await sendFCMNotification(notificationTitle, notificationBody, tokens);
+            console.log('Notifications sent successfully');
+          } catch (error) {
+            console.error('Error sending notifications:', error);
           }
+
+
+          }
+
+
+
+
 
             console.log("Coupon successfully added:", result);
             return res.json({

@@ -8,6 +8,16 @@ const Notification = Schema({
         trim: true,
         default: null
     },
+    segmentid: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    type: {
+        type: String,
+        trim: true,
+        default: null
+    },
     title: {
         type: String,
         trim: true,

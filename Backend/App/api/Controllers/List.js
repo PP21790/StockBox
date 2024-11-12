@@ -352,7 +352,7 @@ async getallPlan(req, res) {
    // Controller function to add a new plan subscription
    async addPlanSubscription(req, res) {
     try {
-      const { plan_id, client_id, price, discount,orderid } = req.body;
+      const { plan_id, client_id, price, discount, orderid, coupon } = req.body;
   
       // Validate input
       if (!plan_id || !client_id) {
@@ -527,6 +527,7 @@ if (existingPlans.length > 0) {
         total: price,
         plan_price: plan.price,
         discount: discount,
+        coupon: coupon,
         plan_start: start,
         plan_end: end,
         validity: plan.validity,
