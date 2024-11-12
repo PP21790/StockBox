@@ -13,7 +13,7 @@ const Faq = () => {
 
     const navigate = useNavigate();
 
-    
+
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
@@ -422,7 +422,7 @@ const Faq = () => {
                                                             <input
                                                                 className="form-control mb-3"
                                                                 type="text"
-                                                                placeholder='Enter blogs Title'
+                                                                placeholder='Enter Faq Title'
                                                                 value={title.title}
                                                                 onChange={(e) => setTitle({ ...title, title: e.target.value })}
                                                             />
@@ -494,7 +494,7 @@ const Faq = () => {
                                                                     <input
                                                                         className="form-control mb-2"
                                                                         type="text"
-                                                                        placeholder='Enter blogs Title'
+                                                                        placeholder='Enter Faq Title'
                                                                         value={updatetitle.title}
                                                                         onChange={(e) => updateServiceTitle({ title: e.target.value })}
                                                                     />

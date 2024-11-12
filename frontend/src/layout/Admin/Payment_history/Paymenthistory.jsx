@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getnewslist, AddNewsbyadmin, UpdateNewsbyadmin, changeNewsStatus, DeleteNews, getPayementhistory } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
+import { SquarePen, Trash2, PanelBottomOpen, Eye , RefreshCcw } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
@@ -45,7 +45,15 @@ const History = () => {
 
     const token = localStorage.getItem('token');
     const userid = localStorage.getItem('id');
+  
 
+    const resethandle = () => {
+        setSearchInput("")
+        setStartDate("")
+        setEndDate("")
+
+
+    }
 
 
     const forCSVdata = () => {
@@ -53,15 +61,15 @@ const History = () => {
             const csvArr = clients.map((item) => ({
                 Name: item.clientName || "",
                 Email: item.clientEmail || "",
-                Phone : item.clientPhoneNo || "",
-                OerderId : item.orderid || "",
-                PlanDiscount : item.discount || "",
-                PlanAmount : item.plan_price || "",
+                Phone: item.clientPhoneNo || "",
+                OerderId: item.orderid || "",
+                PlanDiscount: item.discount || "",
+                PlanAmount: item.plan_price || "",
                 Title: item.planDetails?.title || '',
                 Total: item.planDetails?.price || '',
                 Validity: item.planDetails?.validity || '',
-                PurchaseDate : item.created_at || '',
-              
+                PurchaseDate: item.created_at || '',
+
             }));
             setForGetCSV(csvArr);
         }
@@ -71,42 +79,21 @@ const History = () => {
 
 
     // Getting services
-    const gethistory = async () => {
-        try {
-            const response = await getPayementhistory(token);
-            if (response.status) {
-                const filterdata = response.data.filter((item) =>
-                    searchInput === "" ||
-                    item.title.toLowerCase().includes(searchInput.toLowerCase())
-                );
-                setClients(searchInput ? filterdata : response.data);
-                console.log(response.data)
-            }
-        } catch (error) {
-            console.log("Error fetching services:", error);
-        }
-    };
-
-    // const gethistory = async () => {
+    //    const gethistory = async () => {
     //     try {
     //         const response = await getPayementhistory(token);
     //         if (response.status) {
-    //             let filteredData = response.data;
+    //             const filterdata = response.data.filter((item) =>
+    //                 searchInput === "" ||
+    //                 item.title?.toLowerCase().includes(searchInput.toLowerCase()) ||
+    //                 item.clientName?.toLowerCase().includes(searchInput.toLowerCase()) ||
+    //                 item.clientEmail?.toLowerCase().includes(searchInput.toLowerCase()) ||
+    //                 item.clientPhoneNo?.toLowerCase().includes(searchInput.toLowerCase()) ||
+    //                 item.orderid?.toLowerCase().includes(searchInput.toLowerCase()) ||
+    //                 item.planDetails?.validity?.toLowerCase().includes(searchInput.toLowerCase())
+    //             );
+    //             setClients(searchInput ? filterdata : response.data);
 
-    //             if (searchInput) {
-    //                 filteredData = filteredData.filter((item) =>
-    //                     item.title.toLowerCase().includes(searchInput.toLowerCase())
-    //                 );
-    //             }
-
-    //             if (startDate && endDate) {
-    //                 filteredData = filteredData.filter((item) => {
-    //                     const itemDate = new Date(item.created_at);
-    //                     return itemDate >= new Date(startDate) && itemDate <= new Date(endDate);
-    //                 });
-    //             }
-
-    //             setClients(filteredData);
     //         }
     //     } catch (error) {
     //         console.log("Error fetching services:", error);
@@ -114,15 +101,47 @@ const History = () => {
     // };
 
 
+    const gethistory = async () => {
+        try {
+            const response = await getPayementhistory(token);
+            if (response.status) {
+                let filteredData = response.data;
+
+                if (searchInput) {
+                    filteredData = filteredData.filter((item) =>
+                        item.title?.toLowerCase().includes(searchInput.toLowerCase()) ||
+                        item.clientName?.toLowerCase().includes(searchInput.toLowerCase()) ||
+                        item.clientEmail?.toLowerCase().includes(searchInput.toLowerCase()) ||
+                        item.clientPhoneNo?.toLowerCase().includes(searchInput.toLowerCase()) ||
+                        item.orderid?.toLowerCase().includes(searchInput.toLowerCase()) ||
+                        item.planDetails?.validity?.toLowerCase().includes(searchInput.toLowerCase())
+                    );
+                }
+
+                if (startDate && endDate) {
+                    filteredData = filteredData.filter((item) => {
+                        const itemDate = new Date(item.created_at);
+                        return itemDate >= new Date(startDate) && itemDate <= new Date(endDate);
+                    });
+                }
+
+                setClients(filteredData);
+            }
+        } catch (error) {
+            console.log("Error fetching services:", error);
+        }
+    };
+
+
 
     useEffect(() => {
         gethistory();
         forCSVdata()
-    }, []);
+    }, [searchInput, startDate, endDate]);
 
     useEffect(() => {
         forCSVdata()
-    }, [searchInput, clients ,  startDate, endDate]);
+    }, [searchInput, clients]);
 
 
     const columns = [
@@ -142,7 +161,7 @@ const History = () => {
             name: 'Email',
             selector: row => row.clientEmail,
             sortable: true,
-            width: '200px',
+            width: '300px',
         },
         {
             name: 'Phone',
@@ -159,7 +178,7 @@ const History = () => {
         },
         {
             name: 'Order_ID',
-            selector: row => row.orderid ? row.orderid : "Make By Admin" ,
+            selector: row => row.orderid ? row.orderid : "Make By Admin",
             sortable: true,
             width: '200px',
         },
@@ -271,24 +290,12 @@ const History = () => {
                                 <span className="position-absolute top-50 product-show translate-middle-y">
                                     <i className="bx bx-search" />
                                 </span>
-                                
+
                             </div>
-                            {/* <div className='d-flex '>
-                                <input
-                                    type="date"
-                                    className="form-control"
-                                    onChange={(e) => setStartDate(e.target.value)}
-                                    value={startDate}
-                                />
-                                <input
-                                    type="date"
-                                    className="form-control mt-2"
-                                    onChange={(e) => setEndDate(e.target.value)}
-                                    value={endDate}
-                                />
-                            </div> */}
+
+
                             <div>
-                            
+
                                 <div
                                     className="dropdown dropdown-action"
                                     data-bs-toggle="tooltip"
@@ -303,6 +310,32 @@ const History = () => {
 
                                 </div>
                             </div>
+                        </div>
+                        <div className='row mb-2'>
+                            <div className="col-md-3">
+                                <input
+                                    type="date"
+                                    className="form-control"
+                                    onChange={(e) => setStartDate(e.target.value)}
+                                    value={startDate}
+                                />
+                            </div>
+
+
+                            <div className='col-md-3'>
+                                <input
+                                    type="date"
+                                    className="form-control"
+                                    onChange={(e) => setEndDate(e.target.value)}
+                                    value={endDate}
+                                />
+                            </div>
+
+                            <div className="col-md-1">
+                                    <div className="refresh-icon mt-1">
+                                        <RefreshCcw onClick={resethandle} />
+                                    </div>
+                                </div>
                         </div>
                         <div className="table-responsive">
                             <Table
