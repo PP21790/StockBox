@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getstaffperuser, WebLinkforMedia, basicsettinglist } from '../../../Services/Admin';
+import Swal from 'sweetalert2';
+
 
 const Profile = () => {
 
@@ -49,22 +51,43 @@ const Profile = () => {
             console.log('error', error);
         }
     };
-   
-    console.log("weblink",weblink)
+
+    console.log("weblink", weblink)
 
     const Updateweblink = async () => {
         try {
-            const data = { facebook: weblink.facebook,
-                 instagram: weblink.instagram , 
-                 twitter: weblink.twitter,
-                  youtube: weblink.youtube }
-            const response = await WebLinkforMedia(data, token);
-            if (response.status) {
-                console.log("sucess", response.data)
+            const data = {
+                facebook: weblink.facebook,
+                instagram: weblink.instagram,
+                twitter: weblink.twitter,
+                youtube: weblink.youtube
+            };
 
+            const response = await WebLinkforMedia(data, token);
+
+            if (response.status) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Web links updated successfully.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                Swal.fire({
+                    title: 'Oops!',
+                    text: 'There was an issue updating the web links.',
+                    icon: 'error',
+                    confirmButtonText: 'Try Again'
+                });
             }
         } catch (error) {
-            console.log("error", error);
+            Swal.fire({
+                title: 'Error!',
+                text: 'Something went wrong. Please try again later.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+           
         }
     };
 
@@ -223,8 +246,8 @@ const Profile = () => {
                                         </ul>
 
                                         <div className="col-sm-12 d-flex justify-content-end">
-                                                        <Link to="/admin/changepass" className="btn btn-primary mb-0" style={{ fontSize: "14px" }}>Update</Link>
-                                    </div>
+                                            <div className="btn btn-primary mb-0" style={{ fontSize: "14px" }} onClick={Updateweblink}>Update</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

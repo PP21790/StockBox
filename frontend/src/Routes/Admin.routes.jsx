@@ -70,9 +70,6 @@ import Planexpiry from '../layout/Admin/PlanExpiry/Planexpiry';
 
 
 
-
-
-
 function MainApp() {
     const [isToggled, setIsToggled] = useState(false);
     const [isSidebarHovered, setIsSidebarHovered] = useState(false);
@@ -206,6 +203,7 @@ function MainApp() {
 
                     <Route path="/message" element={<Message />} />
                     <Route path="/changepass" element={<Changepass />} />
+                    
 
 
 
@@ -222,7 +220,7 @@ function MainApp() {
                     <Route path="/updatebroadcast" element={<Updatebroadcast />} />
 
                     <Route path="/planexpiry" element={<Planexpiry />} />
-
+                
                  
 
 

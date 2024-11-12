@@ -494,7 +494,7 @@ class Users {
             console.error('Error reading HTML template:', err);
             return;
         }
-        const url =`http://${req.headers.host}/backend/user/reset-password/${resetToken}`;
+        const url =`http://${req.headers.host}/resetpassword/${resetToken}`;
         
         const logo =`http://${req.headers.host}/uploads/basicsetting/${settings.logo}`;
 

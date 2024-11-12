@@ -2296,17 +2296,14 @@ export async function getperformacebysegment(data, token) {
 
 /// web link for socila media 
 
-export async function WebLinkforMedia(data, token) {
-    const formData = new FormData();
 
-    formData.append('facebook', data.facebook);
-    formData.append('instagram', data.instagram);
-    formData.append('twitter', data.twitter);
-    formData.append('youtube', data.youtube);
+
+
+export async function WebLinkforMedia(data, token) {
     try {
-        const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
+        const res = await axios.post(`${Config.base_url}basicsetting/updatesociallink`, data, {
             headers: {
-                'Content-Type': 'multipart/form-data',
+                data: {},
                 'Authorization': `${token}`,
             },
         });
@@ -2317,3 +2314,22 @@ export async function WebLinkforMedia(data, token) {
         return err.response?.data || err.message;
     }
 }
+
+
+
+export async function ResetPassword(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}user/reset-password`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+

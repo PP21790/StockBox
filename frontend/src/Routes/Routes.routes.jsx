@@ -8,6 +8,7 @@ import AdminRouting from './Admin.routes';
 import Staffrouting from './Staff.routes';
 import Client from './Client.routes';
 import Forgetpassword from '../Auth/Forgetpassword';
+import Resetpassword from '../Auth/Resetpassword';
 
 
 
@@ -23,6 +24,11 @@ const Routing = () => {
 
 
     useEffect(() => {
+
+        if (location.pathname.includes("resetpassword")) {
+            navigate(location.pathname);
+            return;
+        }
 
         if (location.pathname === "/forget") {
             navigate("/forget");
@@ -79,7 +85,7 @@ const Routing = () => {
             {/* Add other routes here */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-
+            <Route path="/resetpassword/:id" element={<Resetpassword/>} />
             <Route path="/forget" element={<Forgetpassword/>} />
             {/* <Route path="/updatepassword/:id" element={<Update />} /> */}
         </Routes>
