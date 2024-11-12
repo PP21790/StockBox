@@ -7,6 +7,7 @@ const Signal_Modal = db.Signal;
 const License_Modal = db.License;
 const Planmanage = db.Planmanage;
 const BasicSetting_Modal = db.BasicSetting;
+const Freetrial_Modal = db.Freetrial;
 
 class Dashboard {
     async getcount(req, res) {
@@ -49,7 +50,123 @@ class Dashboard {
             const result = await Clients_Modal.find({ del: 0 })
     .sort({ _id: -1 })
     .limit(10);
+
+    const activefreetrial = await Freetrial_Modal.aggregate([
+      {
+          $match: {
+              enddate: { $gte: today } // Only trials ending today or later
+          }
+      },
+      {
+          $addFields: {
+              clientid: { $toObjectId: "$clientid" } // Convert clientid to ObjectId for matching
+          }
+      },
+      {
+          $lookup: {
+              from: 'plansubscriptions', 
+              localField: 'clientid', 
+              foreignField: 'client_id', 
+              as: 'subscriptionInfo'
+          }
+      },
+      {
+          $addFields: {
+              subscriptionCount: { $size: "$subscriptionInfo" } // Count the entries in subscriptionInfo
+          }
+      },
+      {
+          $match: {
+              subscriptionCount: 0 // Only clients with no subscriptions in plansubscriptions
+          }
+      },
+      {
+          $group: {
+              _id: null, 
+              clientCount: { $sum: 1 } // Count of active clients
+          }
+      }
+    ]);
     
+    // Get the count of clients with inactive free trials (enddate is before today)
+    const inactivefreetrial = await Freetrial_Modal.aggregate([
+      {
+          $match: {
+              enddate: { $lt: today } // Only trials that have already expired
+          }
+      },
+      {
+          $addFields: {
+              clientid: { $toObjectId: "$clientid" } // Convert clientid to ObjectId for matching
+          }
+      },
+      {
+          $lookup: {
+              from: 'plansubscriptions', 
+              localField: 'clientid', 
+              foreignField: 'client_id', 
+              as: 'subscriptionInfo'
+          }
+      },
+      {
+          $addFields: {
+              subscriptionCount: { $size: "$subscriptionInfo" } // Count the entries in subscriptionInfo
+          }
+      },
+      {
+          $match: {
+              subscriptionCount: 0 // Only clients with no subscriptions in plansubscriptions
+          }
+      },
+      {
+          $group: {
+              _id: null, 
+              clientCount: { $sum: 1 } // Count of inactive clients
+          }
+      }
+    ]);
+    
+    // Retrieve total active and inactive client counts
+    const totalActiveClients = activefreetrial.length > 0 ? activefreetrial[0].clientCount : 0;
+    const totalInactiveClients = inactivefreetrial.length > 0 ? inactivefreetrial[0].clientCount : 0;
+    
+  
+const clientStatusCounts = await Planmanage.aggregate([
+  {
+    // Step 1: Group by clientid and determine min and max enddate for each client
+    $group: {
+      _id: "$clientid",
+      maxEnddate: { $max: "$enddate" } // Find the latest enddate for each client
+    }
+  },
+  {
+    // Step 2: Classify each client as active or inactive based on maxEnddate
+    $project: {
+      isActive: { $gte: ["$maxEnddate", today] } // true if maxEnddate is today or later
+    }
+  },
+  {
+    // Step 3: Group by isActive status to count active and inactive clients
+    $group: {
+      _id: "$isActive", // Group by active/inactive status
+      clientCount: { $sum: 1 } // Count clients in each group
+    }
+  }
+]);
+
+// Parse the result to get counts of active and inactive clients
+let activeCount = 0;
+let inactiveCount = 0;
+clientStatusCounts.forEach(result => {
+  if (result._id === true) {
+    activeCount = result.clientCount;
+  } else {
+    inactiveCount = result.clientCount;
+  }
+});
+
+
+
             return res.json({
                 status: true,
                 message: "Count retrieved successfully",
@@ -64,6 +181,10 @@ class Dashboard {
                     CloseSignalCountTotal: closesignal,
                     todayOpenSignal:todayOpenSignal,
                     todayCloseSignal:todayCloseSignal,
+                    activeFreetrial:totalActiveClients,
+                    inActiveFreetrial:totalInactiveClients,
+                    activePlanclient:activeCount,
+                    inActivePlanclient:inactiveCount,
                     Clientlist: result
                 }
             });
