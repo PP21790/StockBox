@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Table from '../../../components/Table';
 import { Tooltip } from 'antd';
-import { clientdetailbyid, clientplandatabyid, getcategoryplan , getclientsubscription } from '../../../Services/Admin';
-import { fDate , fDateTime } from '../../../Utils/Date_formate';
+import { clientdetailbyid, clientplandatabyid, getcategoryplan, getclientsubscription } from '../../../Services/Admin';
+import { fDate, fDateTime } from '../../../Utils/Date_formate';
 
 
 
@@ -20,10 +20,6 @@ const Viewclientdetail = () => {
         getClientDetail();
         getclientservice()
     }, []);
-
-
-
-
 
     const getCategoryTitle = async (categoryId) => {
         try {
@@ -76,8 +72,8 @@ const Viewclientdetail = () => {
         }
     };
 
-    
-    
+
+
     const getclientservice = async () => {
         try {
             const response = await getclientsubscription(id, token);
@@ -118,7 +114,7 @@ const Viewclientdetail = () => {
             selector: row => row.orderid ?? 'Assign By Admin',
             width: '189px'
         },
-        
+
         {
             name: 'Purchase Date',
             selector: row => fDateTime(row.plan_start),
@@ -131,7 +127,8 @@ const Viewclientdetail = () => {
         },
     ];
 
- 
+
+
 
     return (
         <div>
@@ -180,10 +177,44 @@ const Viewclientdetail = () => {
                                             <strong>Phone No</strong>
                                             <p className='my-0 ms-4'>{PhoneNo}</p>
                                         </div>
+
                                     </div>
                                 ))}
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div className="card">
+                    <div className="card-body">
+
+
+                        <ul className="list-group list-group-flush">
+                            <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                <h6 className="mb-0">
+                                    Service Name
+                                </h6>
+                                <h6 className="mb-0">Expiry Date</h6>
+                            </li>
+                            <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                <h6 className="mb-0">
+                                    Cash
+                                </h6>
+                                <span className="text-secondary">25 Sep,2025</span>
+                            </li>
+                            <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                <h6 className="mb-0">
+                                    Future
+                                </h6>
+                                <span className="text-secondary">25 Sep,2025</span>
+                            </li>
+                            <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                <h6 className="mb-0">
+                                    Option
+                                </h6>
+                                <span className="text-secondary">25 Sep,2025</span>
+                            </li>
+
+                        </ul>
                     </div>
                 </div>
 
