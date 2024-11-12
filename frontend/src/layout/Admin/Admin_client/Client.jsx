@@ -163,11 +163,11 @@ const Client = () => {
                         item.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
                         item.PhoneNo.toLowerCase().includes(searchInput.toLowerCase());
 
-                        const matchesKycFilter =
+                    const matchesKycFilter =
                         searchkyc === "" ||
                         item.kyc_verification === Number(searchkyc);
-                    
-                    
+
+
 
                     const filterCreatedBy =
                         statuscreatedby === "" ||
@@ -552,54 +552,6 @@ const Client = () => {
                                         <i className="bx bx-search" />
                                     </span>
                                 </div>
-                                <div className="col-md-3 d-flex">
-                                    <div style={{ width: "60%" }}>
-                                        <label htmlFor="kycSelect">Select Kyc</label>
-                                        <select
-                                            id="kycSelect"
-                                            className="form-control radius-10"
-                                            value={searchkyc}
-                                            onChange={(e) => setSearchkyc(e.target.value)}
-                                        >
-                                            <option value="">Select Stock</option>
-                                            <option value="1">Verified</option>
-                                            <option value="0">Not Verified</option>
-                                        </select>
-                                    </div>
-                                   <div >
-                                    <div style={{ width: "300%" }} >
-                                        <label htmlFor="kycSelect">Select CreatedBy</label>
-                                        <select
-                                            id="CreatedBy"
-                                            className="form-control radius-10"
-                                            value={statuscreatedby}
-                                            onChange={(e) => setStatuscreatedby(e.target.value)}
-                                        >
-                                            <option value="">Select Created By</option>
-                                            <option value="1">Web</option>
-                                            <option value="0">App</option>
-                                        </select>
-                                    </div>
-
-                                    <div style={{ width: "300%" }} >
-                                        <label htmlFor="kycSelect">Select Client</label>
-                                        <select
-                                            id="CreatedBy"
-                                            className="form-control radius-10"
-                                            value={statuscreatedby}
-                                            onChange={(e) => setStatuscreatedby(e.target.value)}
-                                        >
-                                            <option value="">Select Client</option>
-                                            <option value="">Active</option>
-                                            <option value="">Expired</option>
-                                        </select>
-                                    </div>
-
-                                    </div>
-                                    <div className="refresh-icon">
-                                        <RefreshCcw onClick={resethandle} />
-                                    </div>
-                                </div>
 
                                 <div className="ms-auto">
                                     <Link
@@ -624,6 +576,64 @@ const Client = () => {
 
 
                                 </div>
+
+                            </div>
+                            <div className="row">
+                                <div className="col-md-4 ">
+                                    <div>
+                                        <label htmlFor="kycSelect">Select Kyc</label>
+                                        <select
+                                            id="kycSelect"
+                                            className="form-control radius-10"
+                                            value={searchkyc}
+                                            onChange={(e) => setSearchkyc(e.target.value)}
+                                        >
+                                            <option value="">Select Stock</option>
+                                            <option value="1">Verified</option>
+                                            <option value="0">Not Verified</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="col-md-4">
+                                    <div >
+                                        <label htmlFor="kycSelect">Select CreatedBy</label>
+                                        <select
+                                            id="CreatedBy"
+                                            className="form-control radius-10"
+                                            value={statuscreatedby}
+                                            onChange={(e) => setStatuscreatedby(e.target.value)}
+                                        >
+                                            <option value="">Select Created By</option>
+                                            <option value="1">Web</option>
+                                            <option value="0">App</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="col-md-3">
+                                    <div>
+                                        <label htmlFor="kycSelect">Select Client</label>
+                                        <select
+                                            id="CreatedBy"
+                                            className="form-control radius-10"
+                                            value={statuscreatedby}
+                                            onChange={(e) => setStatuscreatedby(e.target.value)}
+                                        >
+                                            <option value="">Select Client</option>
+                                            <option value="">Active</option>
+                                            <option value="">Expired</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div className="col-md-1">
+                                    <div className="refresh-icon mt-4">
+                                        <RefreshCcw onClick={resethandle} />
+                                    </div>
+                                </div>
+
+
+
+
 
                             </div>
 
