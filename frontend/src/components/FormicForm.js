@@ -114,6 +114,8 @@ const DynamicForm = ({
         }
     };
 
+
+    
     const [selectedImage, setSelectedImage] = useState(null);
 
     // Function to handle image selection

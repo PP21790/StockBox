@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { Settings2, Eye, UserPen, Trash2, Download, ArrowDownToLine } from 'lucide-react';
+import { Settings2, Eye, UserPen, Trash2, Download, ArrowDownToLine , RefreshCcw } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { deleteClient, UpdateClientStatus, PlanSubscription, getplanlist, BasketSubscription, BasketAllList, getcategoryplan } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
@@ -18,6 +18,8 @@ import { getstaffperuser } from '../../../Services/Admin';
 
 const Client = () => {
 
+
+    
     const userid = localStorage.getItem('id');
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
@@ -34,7 +36,10 @@ const Client = () => {
     const [selectedPlanId, setSelectedPlanId] = useState(null)
 
     const [permission, setPermission] = useState([]);
-
+    
+    const [ForGetCSV, setForGetCSV] = useState([])
+    const [searchkyc, setSearchkyc] = useState("");
+    const [statuscreatedby, setStatuscreatedby] = useState("");
 
     const handleDownload = (row) => {
 
@@ -64,8 +69,16 @@ const Client = () => {
         price: ""
     });
 
+     
+    const resethandle = () => {
+        setSearchkyc("")
+        setSearchInput("")
+        setStatuscreatedby("")
 
 
+    }
+
+   
 
 
     const handleTabChange = (index) => {
@@ -540,7 +553,64 @@ const Client = () => {
                                     </Link>
                                 </div> : ""}
                             </div>
+                            <div className="row">
+                                <div className="col-md-4 ">
+                                    <div>
+                                        <label htmlFor="kycSelect">Select Kyc</label>
+                                        <select
+                                            id="kycSelect"
+                                            className="form-control radius-10"
+                                            value={searchkyc}
+                                            onChange={(e) => setSearchkyc(e.target.value)}
+                                        >
+                                            <option value="">Select Kyc</option>
+                                            <option value="1">Verified</option>
+                                            <option value="0">Not Verified</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="col-md-4">
+                                    <div >
+                                        <label htmlFor="kycSelect">Select CreatedBy</label>
+                                        <select
+                                            id="CreatedBy"
+                                            className="form-control radius-10"
+                                            value={statuscreatedby}
+                                            onChange={(e) => setStatuscreatedby(e.target.value)}
+                                        >
+                                            <option value="">Select Created By</option>
+                                            <option value="1">Web</option>
+                                            <option value="0">App</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="col-md-3">
+                                    <div>
+                                        <label htmlFor="kycSelect">Select Client</label>
+                                        <select
+                                            id="CreatedBy"
+                                            className="form-control radius-10"
+                                            value={statuscreatedby}
+                                            onChange={(e) => setStatuscreatedby(e.target.value)}
+                                        >
+                                            <option value="">Select Client</option>
+                                            <option value="">Active</option>
+                                            <option value="">Expired</option>
+                                        </select>
+                                    </div>
 
+                                </div>
+                                <div className="col-md-1">
+                                    <div className="refresh-icon mt-4">
+                                        <RefreshCcw onClick={resethandle} />
+                                    </div>
+                                </div>
+
+
+
+
+
+                            </div>
 
                             <Table
                                 columns={columns}

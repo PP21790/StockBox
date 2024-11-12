@@ -21,7 +21,6 @@ const Client = () => {
     const navigate = useNavigate();
 
 
-
     const [category, setCategory] = useState([]);
     const [checkedIndex, setCheckedIndex] = useState(0);
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -96,13 +95,13 @@ const Client = () => {
 
 
 
-    const resethandle = () => {
-        setSearchkyc("")
-        setSearchInput("")
-        setStatuscreatedby("")
+        const resethandle = () => {
+            setSearchkyc("")
+            setSearchInput("")
+            setStatuscreatedby("")
 
 
-    }
+        }
 
     useEffect(() => {
         getplanlistbyadmin()
@@ -588,7 +587,7 @@ const Client = () => {
                                             value={searchkyc}
                                             onChange={(e) => setSearchkyc(e.target.value)}
                                         >
-                                            <option value="">Select Stock</option>
+                                            <option value="">Select Kyc</option>
                                             <option value="1">Verified</option>
                                             <option value="0">Not Verified</option>
                                         </select>

@@ -139,7 +139,7 @@ const AddStaff = () => {
     {
       name: "ConfirmPassword",
       label: "Confirm Password",
-      type: "password",
+      type: "password1",
       label_size: 12,
       col_size: 6,
       disable: false,
