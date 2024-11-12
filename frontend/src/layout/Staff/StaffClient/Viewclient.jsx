@@ -51,6 +51,8 @@ const Viewclientdetail = () => {
         }
     };
 
+
+    
     const getClientDetail = async () => {
         try {
             const response = await clientdetailbyid(id, token);

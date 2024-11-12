@@ -82,7 +82,7 @@ const Viewclientdetail = () => {
         try {
             const response = await getclientsubscription(id, token);
             if (response.status) {
-                console.log(response.data)
+                // console.log(response.data)
             }
         } catch (error) {
             console.error("Error fetching client details:", error);
