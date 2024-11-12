@@ -4,6 +4,8 @@ import Table from '../../../components/Table';
 import Swal from 'sweetalert2';
 import { fDateTime } from '../../../Utils/Date_formate';
 import { Link } from 'react-router-dom';
+import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine, RefreshCcw } from 'lucide-react';
+import { Tooltip } from 'antd';
 
 const Perform = () => {
     const token = localStorage.getItem('token');
@@ -113,7 +115,7 @@ const Perform = () => {
             cell: row => {
                 let totalPL = 0;
                 let plPercent = 0;
-                
+
                 if (row.calltype === "BUY") {
                     totalPL = ((row.closeprice - row.price) * row.lotsize).toFixed(2);
                     plPercent = (((row.closeprice - row.price) / row.price) * 100).toFixed(2);
@@ -121,11 +123,11 @@ const Perform = () => {
                     totalPL = ((row.price - row.closeprice) * row.lotsize).toFixed(2);
                     plPercent = (((row.price - row.closeprice) / row.price) * 100).toFixed(2);
                 }
-        
+
                 const style = {
                     color: totalPL < 0 ? 'red' : 'green',
                 };
-        
+
                 return (
                     <span style={style}>
                         {totalPL} ({plPercent}%)
@@ -141,14 +143,33 @@ const Perform = () => {
             sortable: true,
             width: '200px',
         },
-        
+
         {
             name: 'Exit Date',
             selector: row => fDateTime(row.closedate),
             sortable: true,
             width: '200px',
         },
+        {
+            name: 'Actions',
+            selector: (row) => (
+                <div className='d-flex'>
 
+
+                    <Tooltip title="view">
+                        <Eye
+
+                            data-bs-toggle="modal" data-bs-target="#exampleModal" />
+                    </Tooltip>
+
+
+                </div>
+            ),
+            ignoreRowClick: true,
+            allowOverflow: true,
+            button: true,
+            width: '165px',
+        }
 
     ];
 
@@ -296,6 +317,24 @@ const Perform = () => {
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Discription</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum quibusdam, placeat, molestias eius ducimus voluptas quod minima ratione odit fugit quisquam velit sint, cupiditate dignissimos.
+                            </div>
+                            <div class="modal-footer">
+
+                                <button type="button" class="btn btn-primary">Save</button>
                             </div>
                         </div>
                     </div>
