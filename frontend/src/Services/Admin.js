@@ -1574,6 +1574,8 @@ export async function DeleteBanner(_id, token) {
 }
 
 
+
+
 // basic setting 
 
 export async function basicsettinglist(token) {
@@ -1757,6 +1759,9 @@ export async function getstockbyservice(data, token) {
         return err.response?.data || err.message;
     }
 }
+
+
+
 
 // get stock expiry date
 
@@ -2276,6 +2281,32 @@ export async function getperformacebysegment(data, token) {
         const res = await axios.post(`${Config.base_url}dashboard/closesignal`, data, {
             headers: {
                 data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+/// web link for socila media 
+
+export async function WebLinkforMedia(data, token) {
+    const formData = new FormData();
+
+    formData.append('facebook', data.facebook);
+    formData.append('instagram', data.instagram);
+    formData.append('twitter', data.twitter);
+    formData.append('youtube', data.youtube);
+    try {
+        const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
                 'Authorization': `${token}`,
             },
         });
