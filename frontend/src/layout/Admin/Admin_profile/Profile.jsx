@@ -43,7 +43,7 @@ const Profile = () => {
         try {
             const response = await basicsettinglist(token);
             if (response.status) {
-                setWeblink(response.data);
+                setWeblink(response.data[0]);
             }
         } catch (error) {
             console.log('error', error);
