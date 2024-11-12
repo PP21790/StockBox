@@ -12,7 +12,10 @@ const BasicSetting_Modal = db.BasicSetting;
 const Freetrial_Modal = db.Freetrial;
 const Helpdesk_Modal = db.Helpdesk;
 const PlanSubscription_Modal = db.PlanSubscription;
+const Planmanage = db.Planmanage;
 
+const Notification_Modal = db.Notification;
+const { sendFCMNotification } = require('./Pushnotification'); 
 
 class Clients {
 
