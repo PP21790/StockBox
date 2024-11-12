@@ -9,17 +9,21 @@ import { fDate, fDateTime } from '../../../Utils/Date_formate';
 
 
 const Viewclientdetail = () => {
+    
     const { id } = useParams();
     const token = localStorage?.getItem('token');
 
     const [data, setData] = useState([]);
     const [client, setClient] = useState([]);
+    const [service, setService] = useState([]);
 
     useEffect(() => {
         getPlanDetail();
         getClientDetail();
         getclientservice()
     }, []);
+
+
 
     const getCategoryTitle = async (categoryId) => {
         try {
@@ -65,7 +69,7 @@ const Viewclientdetail = () => {
         try {
             const response = await clientdetailbyid(id, token);
             if (response.status) {
-                setClient([response.data]);
+                setClient([response.data])
             }
         } catch (error) {
             console.error("Error fetching client details:", error);
@@ -78,14 +82,14 @@ const Viewclientdetail = () => {
         try {
             const response = await getclientsubscription(id, token);
             if (response.status) {
-                // console.log(response.data)
+                setService(response.data);
             }
         } catch (error) {
             console.error("Error fetching client details:", error);
         }
     };
 
-
+   
 
 
     const columns = [
@@ -190,31 +194,17 @@ const Viewclientdetail = () => {
 
                         <ul className="list-group list-group-flush">
                             <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                <h6 className="mb-0">
-                                    Service Name
-                                </h6>
+                                <h6 className="mb-0">Service Name</h6>
                                 <h6 className="mb-0">Expiry Date</h6>
                             </li>
-                            <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                <h6 className="mb-0">
-                                    Cash
-                                </h6>
-                                <span className="text-secondary">25 Sep,2025</span>
-                            </li>
-                            <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                <h6 className="mb-0">
-                                    Future
-                                </h6>
-                                <span className="text-secondary">25 Sep,2025</span>
-                            </li>
-                            <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                <h6 className="mb-0">
-                                    Option
-                                </h6>
-                                <span className="text-secondary">25 Sep,2025</span>
-                            </li>
-
+                            {service && service.map((item) => (
+                                <li key={item._id} className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                    <h6 className="mb-0">{item?.serviceName}</h6>
+                                    <span className="text-secondary">{fDateTime(item?.enddate)}</span>
+                                </li>
+                            ))}
                         </ul>
+
                     </div>
                 </div>
 

@@ -2,20 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Table from '../../../components/Table';
 import { Tooltip } from 'antd';
-import { clientdetailbyid, clientplandatabyid, getcategoryplan } from '../../../Services/Admin';
-import { fDate , fDateTime} from '../../../Utils/Date_formate';
+import { clientdetailbyid, clientplandatabyid, getcategoryplan, getclientsubscription } from '../../../Services/Admin';
+import { fDate, fDateTime } from '../../../Utils/Date_formate';
+
+
+
 
 const Viewclientdetail = () => {
+    
     const { id } = useParams();
     const token = localStorage?.getItem('token');
 
     const [data, setData] = useState([]);
     const [client, setClient] = useState([]);
+    const [service, setService] = useState([]);
 
     useEffect(() => {
         getPlanDetail();
         getClientDetail();
+        getclientservice()
     }, []);
+
+
 
     const getCategoryTitle = async (categoryId) => {
         try {
@@ -29,6 +37,9 @@ const Viewclientdetail = () => {
         }
         return '-';
     };
+
+
+
 
     const getPlanDetail = async () => {
         try {
@@ -52,17 +63,34 @@ const Viewclientdetail = () => {
     };
 
 
-    
+
+
     const getClientDetail = async () => {
         try {
             const response = await clientdetailbyid(id, token);
             if (response.status) {
-                setClient([response.data]);
+                setClient([response.data])
             }
         } catch (error) {
             console.error("Error fetching client details:", error);
         }
     };
+
+
+
+    const getclientservice = async () => {
+        try {
+            const response = await getclientsubscription(id, token);
+            if (response.status) {
+                setService(response.data);
+            }
+        } catch (error) {
+            console.error("Error fetching client details:", error);
+        }
+    };
+
+   
+
 
     const columns = [
         {
@@ -90,6 +118,7 @@ const Viewclientdetail = () => {
             selector: row => row.orderid ?? 'Assign By Admin',
             width: '189px'
         },
+
         {
             name: 'Purchase Date',
             selector: row => fDateTime(row.plan_start),
@@ -101,6 +130,9 @@ const Viewclientdetail = () => {
             width: '180px'
         },
     ];
+
+
+
 
     return (
         <div>
@@ -149,10 +181,30 @@ const Viewclientdetail = () => {
                                             <strong>Phone No</strong>
                                             <p className='my-0 ms-4'>{PhoneNo}</p>
                                         </div>
+
                                     </div>
                                 ))}
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div className="card">
+                    <div className="card-body">
+
+
+                        <ul className="list-group list-group-flush">
+                            <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                <h6 className="mb-0">Service Name</h6>
+                                <h6 className="mb-0">Expiry Date</h6>
+                            </li>
+                            {service && service.map((item) => (
+                                <li key={item._id} className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                    <h6 className="mb-0">{item?.serviceName}</h6>
+                                    <span className="text-secondary">{fDateTime(item?.enddate)}</span>
+                                </li>
+                            ))}
+                        </ul>
+
                     </div>
                 </div>
 
