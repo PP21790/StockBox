@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getstaffperuser , WebLinkforMedia } from '../../../Services/Admin';
+import { getstaffperuser, WebLinkforMedia, basicsettinglist } from '../../../Services/Admin';
 
 const Profile = () => {
 
@@ -8,16 +8,23 @@ const Profile = () => {
     const userid = localStorage.getItem('id');
 
     const [data, setData] = useState([])
-    const [weblink,setWeblink] = useState({
-        facebook:"",
-        instagram:"",
-        twitter:"",
-        youtube:""
+    const [clients, setClients] = useState(null);
+
+    const [weblink, setWeblink] = useState({
+        facebook: "",
+        instagram: "",
+        twitter: "",
+        youtube: ""
     })
+
+
 
     useEffect(() => {
         getpermissioninfo()
+        getsettingdetail()
     }, [])
+
+
 
     const getpermissioninfo = async () => {
         try {
@@ -30,15 +37,30 @@ const Profile = () => {
             console.log("error", error);
         }
     };
-     
-    
+
+
+    const getsettingdetail = async () => {
+        try {
+            const response = await basicsettinglist(token);
+            if (response.status) {
+                setWeblink(response.data);
+            }
+        } catch (error) {
+            console.log('error', error);
+        }
+    };
+   
+    console.log("weblink",weblink)
 
     const Updateweblink = async () => {
         try {
-            const data = {facebook : weblink.facebook ,instagram : weblink.instagram ,twitter :weblink.twitter , youtube :weblink.youtube}
+            const data = { facebook: weblink.facebook,
+                 instagram: weblink.instagram , 
+                 twitter: weblink.twitter,
+                  youtube: weblink.youtube }
             const response = await WebLinkforMedia(data, token);
             if (response.status) {
-                setData([response.data]);
+                console.log("sucess", response.data)
 
             }
         } catch (error) {
@@ -49,7 +71,7 @@ const Profile = () => {
     // const handler=()=>{
     //     const [key] : value
     // }
-  
+
 
     return (
         <div>
@@ -132,7 +154,7 @@ const Profile = () => {
                                                     </div>
 
                                                 </h6>
-                                                <input type="text" className='form-control' placeholder='https://www.youtube.com/' style={{ width: "auto" }} value={weblink.youtube} onChange={(e)=>{setWeblink({...weblink,youtube:e.target.value})}} />
+                                                <input type="text" className='form-control' placeholder='https://www.youtube.com/' style={{ width: "auto" }} value={weblink.youtube} onChange={(e) => { setWeblink({ ...weblink, youtube: e.target.value }) }} />
 
                                             </li>
 
@@ -154,7 +176,7 @@ const Profile = () => {
                                                     </svg>
 
                                                 </h6>
-                                                <input type="text" className='form-control' placeholder='https://x.com/?lang=en' style={{ width: "auto" }} value={weblink.twitter} onChange={(e)=>{setWeblink({...weblink,twitter:e.target.value})}} />
+                                                <input type="text" className='form-control' placeholder='https://x.com/?lang=en' style={{ width: "auto" }} value={weblink.twitter} onChange={(e) => { setWeblink({ ...weblink, twitter: e.target.value }) }} />
                                             </li>
                                             <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                 <h6 className="mb-0">
@@ -176,7 +198,7 @@ const Profile = () => {
                                                     </svg>
 
                                                 </h6>
-                                                <input type="text" className='form-control' placeholder='https://www.instagram.com/accounts/login/?hl=en' style={{ width: "auto" }} value={weblink.instagram} onChange={(e)=>{setWeblink({...weblink,instagram:e.target.value})}} />
+                                                <input type="text" className='form-control' placeholder='https://www.instagram.com/accounts/login/?hl=en' style={{ width: "auto" }} value={weblink.instagram} onChange={(e) => { setWeblink({ ...weblink, instagram: e.target.value }) }} />
                                             </li>
                                             <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                 <h6 className="mb-0">
@@ -196,7 +218,7 @@ const Profile = () => {
                                                     </svg>
 
                                                 </h6>
-                                                <input type="text" className='form-control' placeholder='https://www.facebook.com/help' style={{ width: "auto" }} value={weblink.facebook} onChange={(e)=>{setWeblink({...weblink,facebook:e.target.value})}} />
+                                                <input type="text" className='form-control' placeholder='https://www.facebook.com/help' style={{ width: "auto" }} value={weblink.facebook} onChange={(e) => { setWeblink({ ...weblink, facebook: e.target.value }) }} />
                                             </li>
                                         </ul>
                                     </div>
