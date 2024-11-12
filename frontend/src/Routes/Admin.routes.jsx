@@ -67,6 +67,7 @@ import { UpdateCondition } from '../Services/Admin';
 import Editfreeclient from '../layout/Admin/Admin_client/Editfreeclient';
 import Autosquareoff from '../layout/Admin/BasicSetting/Autosquareoff';
 import Planexpiry from '../layout/Admin/PlanExpiry/Planexpiry';
+import Cash from '../layout/Admin/Admin_perfom/Cash';
 
 
 
@@ -124,13 +125,10 @@ function MainApp() {
 
 
                     <Route path="/perfom" element={<Perfom />} />
+                    <Route path="/cash" element={<Cash />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/service" element={<Service />} />
                     <Route path="/kyc" element={<Kyc />} />
-
-
-
-
                     <Route path="/staff" element={<Staff />} />
                     <Route path="/addstaff" element={<AddStaff />} />
                     <Route path="/staff/updatestaff/:id" element={<Update />} />

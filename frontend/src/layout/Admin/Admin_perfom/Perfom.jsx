@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getPerformerstatus, GetService , getperformacebysegment } from '../../../Services/Admin';
+import { getPerformerstatus, GetService, getperformacebysegment } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import Swal from 'sweetalert2';
 import { fDateTime } from '../../../Utils/Date_formate';
@@ -9,9 +9,9 @@ const Perform = () => {
     const token = localStorage.getItem('token');
     const [clients, setClients] = useState([]);
     const [searchInput, setSearchInput] = useState("");
-    const [activeTab, setActiveTab] = useState(null); 
+    const [activeTab, setActiveTab] = useState(null);
     const [servicedata, setServicedata] = useState([]);
-    const [closesignal,setClosesignal] = useState([])
+    const [closesignal, setClosesignal] = useState([])
 
 
 
@@ -26,12 +26,12 @@ const Perform = () => {
             const response = await GetService(token);
             if (response.status) {
                 setServicedata(response.data);
-                
+
                 const cashService = response.data.find(service => service.title === "Cash");
                 const defaultService = cashService || response.data[0];
-                
+
                 if (defaultService) {
-                    setActiveTab(defaultService._id); 
+                    setActiveTab(defaultService._id);
                     getperformdata(defaultService._id);
                     getdatabysegment(defaultService._id);
                 }
@@ -49,7 +49,7 @@ const Perform = () => {
             const response = await getPerformerstatus(token, service_id);
             if (response.status) {
                 setClients([response.data]);
-               
+
             }
         } catch (error) {
             console.log("Error fetching performance data:", error);
@@ -61,7 +61,7 @@ const Perform = () => {
 
     const getdatabysegment = async (service_id) => {
         try {
-            const response = await getperformacebysegment({token,service_id});
+            const response = await getperformacebysegment({ token, service_id });
             if (response.status) {
                 setClosesignal(response.data);
                 console.log("response.data", response.data);
@@ -70,12 +70,6 @@ const Perform = () => {
             console.log("Error fetching performance data:", error);
         }
     };
-
-
-
-
-
-
     const columns = [
         {
             name: 'S.No',
@@ -128,11 +122,11 @@ const Perform = () => {
             name: 'totalProfit',
             selector: row => row.totalProfit.toFixed(3),
             sortable: true,
-            width:"200px"
+            width: "200px"
         },
     ];
 
-  
+
 
     const columns1 = [
         {
@@ -142,54 +136,54 @@ const Perform = () => {
             width: '100px',
         },
         {
-            name: 'Tradesymbol',
+            name: 'Stock Name',
             selector: row => row.tradesymbol,
             sortable: true,
             width: '200px',
         },
         {
-            name: 'calltype',
+            name: 'Entry Type',
             selector: row => row.calltype,
             sortable: true,
             width: '200px',
         },
         {
-            name: 'price',
+            name: 'Entry Date',
             selector: row => row.price,
             sortable: true,
             width: '200px',
         },
         {
-            name: 'Target1',
+            name: 'Entry Price',
             selector: row => row.tag1,
             sortable: true,
             width: '200px',
         },
         {
-            name: 'Target2',
+            name: 'Exit Date',
             selector: row => row.tag2,
             sortable: true,
             width: '200px',
         },
         {
-            name: 'Target3',
+            name: 'Exit Price',
             selector: row => row.tag3,
             sortable: true,
             width: '200px',
         },
         {
-            name: 'StopLoss',
+            name: 'Net Gain/ Loss',
             selector: row => row.stoploss,
             sortable: true,
             width: '200px',
         },
         {
-            name: 'ExitLoss',
+            name: 'Discription',
             selector: row => row.closeprice,
             sortable: true,
             width: '200px',
         },
-  
+
     ];
 
 
@@ -205,7 +199,7 @@ const Perform = () => {
         );
     };
 
-  
+
     const renderTable1 = () => {
         const activeService = servicedata.find(service => service._id === activeTab);
         return (
@@ -221,7 +215,7 @@ const Perform = () => {
 
     const handleTabClick = (serviceId) => {
         setActiveTab(serviceId);
-        getperformdata(serviceId);  
+        getperformdata(serviceId);
         getdatabysegment(serviceId)
     };
 
@@ -281,10 +275,61 @@ const Perform = () => {
                                     </ul>
 
                                     <div className="tab-content">
-                                        <div id="navpills" className="tab-pane active">
-                                            {renderTable()}
-                                            {renderTable1()}
+                                        <div className="row">
+                                            <div className="col-4">
+
+                                                <div className="card radius-10 w-100" style={{ border: "1px solid grey" }}>
+                                                    <div className="card-body p-0">
+                                                        <div className="row g-0 row-group text-center" style={{ borderBottom: "1px solid grey" }}>
+                                                            <div className="col-lg-6">
+                                                                <div className="p-3">
+                                                                    <b className="mb-0">Avg.return / trade</b>
+                                                                    <small className="mb-0">
+                                                                        ₹102.85
+                                                                    </small>
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-lg-6">
+                                                                <div className="p-3">
+                                                                    <b className="mb-0">  Avg.return / month</b>
+                                                                    <small className="mb-0">
+                                                                        ₹1645
+                                                                    </small>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div className='p-3'>
+                                                            <b className='text-black p-0'>Ideal Hit Accuracy</b><br />
+
+
+                                                        </div>
+
+                                                        <div className="d-flex p-3 justify-content-between align-items-center ms-auto font-13 gap-2">
+                                                            <span className="border px-1 rounded cursor-pointer">
+                                                                <i className="bx bxs-circle me-1 text-success" />
+                                                                Hit: 14
+                                                            </span>
+                                                            <span className="border px-1 rounded cursor-pointer">
+                                                                <i className="bx bxs-circle me-1 text-danger" />
+                                                                Miss: 2
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
                                         </div>
+                                        <div className="table-responsive d-flex justify-content-center">
+                                            <Table
+
+                                                columns={columns1}
+                                                data={clients}
+                                            />
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
