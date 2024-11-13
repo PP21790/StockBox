@@ -319,6 +319,16 @@ const Freeclient = () => {
             width: '160px',
         },
         {
+            name: 'Status',
+            selector: row => (
+                <span style={{ color: row.status === "active" ? "green" : "red" }}> 
+                    {row.status === "active" ? "Active" : "Expired"}
+                </span>
+            ),
+            sortable: true,
+            width: '200px',
+        },
+        {
             name: 'Start Date',
             selector: row => fDateTime(row.startdate),
             sortable: true,
