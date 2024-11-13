@@ -345,7 +345,8 @@ async getSignal(req, res) {
       let closeprice = null;
       let closedate = null;
      
-  
+      let  notificationTitle;
+      let notificationBody;
       if (closetype === "1") {
         // Close at target price
         close_status = true;
@@ -353,8 +354,8 @@ async getSignal(req, res) {
         closedate = new Date();
       
 
-        const notificationTitle = 'Important Update';
-        const notificationBody = 'Signal fully Closed......';
+         notificationTitle = 'Important Update';
+         notificationBody = 'Signal fully Closed......';
 
 
 
@@ -370,8 +371,8 @@ async getSignal(req, res) {
         }
 
 
-        const notificationTitle = 'Important Update';
-        const notificationBody = 'Signal Partially Closed......';
+         notificationTitle = 'Important Update';
+         notificationBody = 'Signal Partially Closed......';
       
       } else if (closetype === "3") {
         // Close at stop-loss price
@@ -379,8 +380,8 @@ async getSignal(req, res) {
         closeprice = slprice;
         closedate = new Date();
       
-        const notificationTitle = 'Important Update';
-        const notificationBody = 'Signal Closed For Sl......';
+         notificationTitle = 'Important Update';
+         notificationBody = 'Signal Closed For Sl......';
 
 
 
@@ -390,8 +391,8 @@ async getSignal(req, res) {
         closeprice = exitprice;
         closedate = new Date();
 
-        const notificationTitle = 'Important Update';
-        const notificationBody = 'Signal Closed ......';
+         notificationTitle = 'Important Update';
+         notificationBody = 'Signal Closed ......';
 
 
       }
