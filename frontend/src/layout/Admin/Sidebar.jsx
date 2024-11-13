@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { image_baseurl } from '../../Utils/config';
+import { basicsettinglist } from '../../Services/Admin';
 
 const menuItems = [
   { title: 'Dashboard', icon: 'bx-home-alt', link: '/admin/dashboard' },
@@ -64,6 +65,13 @@ const menuItems = [
 const Sidebar = ({ onToggleClick }) => {
   const [activeIndex, setActiveIndex] = useState(null);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [clients, setClients] = useState([]);
+  
+  const token = localStorage.getItem('token');
+  const user_id = localStorage.getItem('id');
+
+
+  
 
   const handleItemClick = (index) => () => {
     setActiveIndex(index);
@@ -75,6 +83,25 @@ const Sidebar = ({ onToggleClick }) => {
     setActiveIndex(index);
   };
 
+   
+
+  const getsettinglist = async () => {
+    try {
+        const response = await basicsettinglist(token);
+        if (response.status) {
+            setClients(response.data);
+        }
+    } catch (error) {
+        console.log('error', error);
+    }
+};
+
+useEffect(() => {
+    getsettinglist();
+}, []);
+
+console.log("clients",clients)
+
   return (
     <div>
       <div data-simplebar="init">
@@ -83,14 +110,15 @@ const Sidebar = ({ onToggleClick }) => {
             <div className="sidebar-header">
               <div>
                 <img
-                  src={`${image_baseurl}uploads/basicsetting/logo-icon.png`}
+                  src={`${image_baseurl}uploads/basicsetting/${clients[0]?.logo}`}
+                  // src='assets/images/fav5.png'
                   className="logo-icon"
                   alt="logo icon"
                 />
 
               </div>
               <div>
-                <h4 className="logo-text">STOCK RA</h4>
+                <h4 className="logo-text">{clients[0]?.from_name}</h4>
               </div>
               <div className="toggle-icon ms-auto" onClick={onToggleClick}>
                 <i className="bx bx-arrow-back" />

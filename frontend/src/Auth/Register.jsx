@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import { Link} from 'react-router-dom';
+import { basicsettinglist } from '../Services/Admin';
 
 const Register = () => {
 
@@ -8,7 +9,9 @@ const Register = () => {
   
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+    const [clients, setClients] = useState([]);
+    const token = localStorage.getItem('token');
+    
     
     const togglePasswordVisibility = (e) => {
         e.preventDefault();
@@ -19,6 +22,24 @@ const Register = () => {
         e.preventDefault(); 
         setShowConfirmPassword(!showConfirmPassword);
     };
+
+
+    const getsettinglist = async () => {
+        try {
+            const response = await basicsettinglist(token);
+            if (response.status) {
+                setClients(response.data);
+            }
+        } catch (error) {
+            console.log('error', error);
+        }
+    };
+    
+    useEffect(() => {
+        getsettinglist();
+    }, []);
+
+   
 
     return (
         <div>

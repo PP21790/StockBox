@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getstaffperuser } from '../../Services/Admin';
+import { basicsettinglist } from '../../Services/Admin';
+import { image_baseurl } from '../../Utils/config';
+
 
 const Sidebar = ({ onToggleClick }) => {
 
@@ -9,12 +12,29 @@ const Sidebar = ({ onToggleClick }) => {
 
   const [permission, setPermission] = useState([]);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  
+
+  const [clients, setClients] = useState([]);
+  
+  
+  
+      useEffect(() => {
+        getpermissioninfo();
+        getsettinglist()
+      }, []);
 
 
+  const getsettinglist = async () => {
+    try {
+        const response = await basicsettinglist(token);
+        if (response.status) {
+            setClients(response.data);
+        }
+    } catch (error) {
+        console.log('error', error);
+    }
+};
 
-  useEffect(() => {
-    getpermissioninfo();
-  }, []);
 
 
 
@@ -81,7 +101,7 @@ const Sidebar = ({ onToggleClick }) => {
       <div data-simplebar="init">
         <div className="sidebar-header">
           <div>
-            <img src="/assets/images/logo-icon.png" className="logo-icon" alt="logo icon" />
+            <img  src={`${image_baseurl}uploads/basicsetting/${clients[0].logo}`} />
           </div>
           <div>
             <h4 className="logo-text">STOCK RA</h4>
