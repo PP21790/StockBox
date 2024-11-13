@@ -147,103 +147,60 @@ class List {
       
     async getPlansByPlancategoryId(req, res) {
       try {
-        const pipeline = [
-          // Match all plancategories
-          {
-            $match: {
-              del: false,
-              status: true,
+      const pipeline = [
+      // Match all plancategories
+      {
+        $match: {
+          del: false,
+          status: true,
+        },
+      },
+      // Lookup to get associated plans
+      {
+        $lookup: {
+          from: 'plans', // Collection name for plans
+          let: { categoryId: '$_id' }, // Define a variable for the category ID
+          pipeline: [
+            // Match plans with specific category and additional filters
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ['$category', '$$categoryId'] }, // Match by category
+                    { $eq: ['$status', 'active'] }, // Status must be 'active'
+                    { $eq: ['$del', false] }, // del must be false
+                  ],
+                },
+              },
             },
-          },
-          // Lookup to get associated plans
-          {
-            $lookup: {
-              from: 'plans', // Collection name for plans
-              let: { categoryId: '$_id' }, // Define a variable for the category ID
-              pipeline: [
-                // Match plans with specific category and additional filters
-                {
-                  $match: {
-                    $expr: {
-                      $and: [
-                        { $eq: ['$category', '$$categoryId'] }, // Match by category
-                        { $eq: ['$status', 'active'] }, // Status must be 'active'
-                        { $eq: ['$del', false] }, // del must be false
-                      ],
-                    },
+            // Calculate price per month based on validity
+            {
+              $addFields: {
+                pricePerMonth: {
+                  $switch: {
+                    branches: [
+                      { case: { $eq: ['$validity', '1 month'] }, then: 1 },
+                      { case: { $eq: ['$validity', '3 months'] }, then: 3 },
+                      { case: { $eq: ['$validity', '6 months'] }, then: 6 },
+                      { case: { $eq: ['$validity', '9 months'] }, then: 9 },
+                      { case: { $eq: ['$validity', '1 year'] }, then: 12 },
+                      { case: { $eq: ['$validity', '2 years'] }, then: 24 },
+                      { case: { $eq: ['$validity', '3 years'] }, then: 36 },
+                      { case: { $eq: ['$validity', '4 years'] }, then: 48 },
+                      { case: { $eq: ['$validity', '5 years'] }, then: 60 }, // 5 years = 60 months
+                    ],
+                    default: '$price', // Fallback to total price if validity doesn't match
                   },
                 },
-                // Calculate price per month based on validity
-                {
-                  $addFields: {
-                    pricePerMonth: {
-                      $switch: {
-                        branches: [
-                          { case: { $eq: ['$validity', '1 month'] }, then: { $divide: ['$price', 1] } },
-                          { case: { $eq: ['$validity', '3 months'] }, then: { $divide: ['$price', 3] } },
-                          { case: { $eq: ['$validity', '6 months'] }, then: { $divide: ['$price', 6] } },
-                          { case: { $eq: ['$validity', '9 months'] }, then: { $divide: ['$price', 9] } },
-                          { case: { $eq: ['$validity', '1 year'] }, then: { $divide: ['$price', 12] } },
-                          { case: { $eq: ['$validity', '2 years'] }, then: { $divide: ['$price', 24] } },
-                          { case: { $eq: ['$validity', '3 years'] }, then: { $divide: ['$price', 36] } },
-                          { case: { $eq: ['$validity', '4 years'] }, then: { $divide: ['$price', 48] } },
-                          { case: { $eq: ['$validity', '5 years'] }, then: { $divide: ['$price', 60] } }, // 5 years = 60 months
-                        ],
-                        default: '$price', // Fallback to total price if validity doesn't match
-                      },
-                    },
-                  },
-                },
-                // Optionally project fields in the plans
-                {
-                  $project: {
-                    _id: 1, // Plan ID
-                    title: 1, // Plan title
-                    description: 1, // Plan description
-                    price: 1, // Plan price
-                    validity: 1, // Plan validity
-                    pricePerMonth: 1, // Price per month
-                  },
-                },
-              ],
-              as: 'plans', // Name of the array field to add
+              },
             },
-          },
-          // Lookup to get associated services
-          {
-            $lookup: {
-              from: 'services', // Collection name for services
-              let: { serviceIds: { $split: ['$service', ','] } }, // Split service string into array
-              pipeline: [
-                {
-                  $match: {
-                    $expr: {
-                      $and: [
-                        {
-                          $in: ['$_id', { $map: { input: '$$serviceIds', as: 'id', in: { $toObjectId: '$$id' } } }],
-                        },
-                        { $eq: ['$status', true] }, // Status must be true
-                        { $eq: ['$del', false] }, // del must be false
-                      ],
-                    },
-                  },
-                },
-                // Optionally project fields in the services
-                {
-                  $project: {
-                    _id: 1, // Service ID
-                    title: 1, // Service title
-                  },
-                },
-              ],
-              as: 'services', // Name of the array field to add
+            // Sort by pricePerMonth or validity for ascending order
+            {
+              $sort: { pricePerMonth: 1 }, // Sorting by price per month in ascending order
             },
-          },
-          // Project only the necessary fields
-          {
-            $project: {
-              title: 1, // Plancategory title
-              plans: {
+            // Optionally project fields in the plans
+            {
+              $project: {
                 _id: 1, // Plan ID
                 title: 1, // Plan title
                 description: 1, // Plan description
@@ -251,14 +208,60 @@ class List {
                 validity: 1, // Plan validity
                 pricePerMonth: 1, // Price per month
               },
-              services: {
+            },
+          ],
+          as: 'plans', // Name of the array field to add
+        },
+      },
+      // Lookup to get associated services
+      {
+        $lookup: {
+          from: 'services', // Collection name for services
+          let: { serviceIds: { $split: ['$service', ','] } }, // Split service string into array
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    {
+                      $in: ['$_id', { $map: { input: '$$serviceIds', as: 'id', in: { $toObjectId: '$$id' } } }],
+                    },
+                    { $eq: ['$status', true] }, // Status must be true
+                    { $eq: ['$del', false] }, // del must be false
+                  ],
+                },
+              },
+            },
+            // Optionally project fields in the services
+            {
+              $project: {
                 _id: 1, // Service ID
                 title: 1, // Service title
               },
             },
+          ],
+          as: 'services', // Name of the array field to add
+        },
+      },
+      // Project only the necessary fields
+      {
+        $project: {
+          title: 1, // Plancategory title
+          plans: {
+            _id: 1, // Plan ID
+            title: 1, // Plan title
+            description: 1, // Plan description
+            price: 1, // Plan price
+            validity: 1, // Plan validity
+            pricePerMonth: 1, // Price per month
           },
-        ];
-  
+          services: {
+            _id: 1, // Service ID
+            title: 1, // Service title
+          },
+        },
+      },
+    ];
         const result = await Plancategory_Modal.aggregate(pipeline);
   
         return res.json({
@@ -276,64 +279,87 @@ class List {
 
 async getallPlan(req, res) {
     try {
-        const plans = await Plan_Modal.aggregate([
-            {
-                $match: { del: false, status: "active" } // Match plans where 'del' is false and status is 'active'
-            },
-            {
-                $lookup: {
-                    from: 'plancategories', // Join with plancategories collection
-                    localField: 'category', // Field from the Plan_Modal
-                    foreignField: '_id', // Field from the plancategories
-                    as: 'category' // Name for the output array field
-                }
-            },
-            {
-                $unwind: {
-                    path: '$category',
-                    preserveNullAndEmptyArrays: true // If no matching category, keep the plan in the results
-                }
-            },
-            {
-                $lookup: {
-                    from: 'services', // Collection name for services
-                    let: { serviceIds: { $split: ['$category.service', ','] } }, // Split service string into array
-                    pipeline: [
-                        {
-                            $match: {
-                                $expr: {
-                                    $and: [
-                                        {
-                                            $in: ['$_id', { $map: { input: '$$serviceIds', as: 'id', in: { $toObjectId: '$$id' } } }],
-                                        },
-                                        { $eq: ['$status', true] }, // Match only active services
-                                        { $eq: ['$del', false] }, // Match only non-deleted services
-                                    ],
-                                },
-                            },
-                        },
-                        {
-                            $project: {
-                                _id: 1, // Service ID
-                                title: 1, // Service title
-                            },
-                        },
+      const plans = await Plan_Modal.aggregate([
+        {
+          $match: { del: false, status: "active" } // Match plans where 'del' is false and status is 'active'
+        },
+        {
+          $lookup: {
+            from: 'plancategories', // Join with plancategories collection
+            localField: 'category', // Field from the Plan_Modal
+            foreignField: '_id', // Field from the plancategories
+            as: 'category' // Name for the output array field
+          }
+        },
+        {
+          $unwind: {
+            path: '$category',
+            preserveNullAndEmptyArrays: true // If no matching category, keep the plan in the results
+          }
+        },
+        {
+          $lookup: {
+            from: 'services', // Collection name for services
+            let: { serviceIds: { $split: ['$category.service', ','] } }, // Split service string into array
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      {
+                        $in: ['$_id', { $map: { input: '$$serviceIds', as: 'id', in: { $toObjectId: '$$id' } } }],
+                      },
+                      { $eq: ['$status', true] }, // Match only active services
+                      { $eq: ['$del', false] }, // Match only non-deleted services
                     ],
-                    as: 'services' // Name of the new array field to hold the services
-                }
-            },
-            {
+                  },
+                },
+              },
+              {
                 $project: {
-                    _id: 1,
-                    title: 1,
-                    validity: 1, 
-                    price:1,
-                    category: 1, // Include the category details
-                    services: 1 // Include the matched services
-                }
+                  _id: 1, // Service ID
+                  title: 1, // Service title
+                },
+              },
+            ],
+            as: 'services' // Name of the new array field to hold the services
+          }
+        },
+        {
+          $addFields: {
+            validityValue: {
+              $switch: {
+                branches: [
+                  { case: { $eq: ['$validity', '1 month'] }, then: 1 },
+                  { case: { $eq: ['$validity', '3 months'] }, then: 3 },
+                  { case: { $eq: ['$validity', '6 months'] }, then: 6 },
+                  { case: { $eq: ['$validity', '9 months'] }, then: 9 },
+                  { case: { $eq: ['$validity', '1 year'] }, then: 12 },
+                  { case: { $eq: ['$validity', '2 years'] }, then: 24 },
+                  { case: { $eq: ['$validity', '3 years'] }, then: 36 },
+                  { case: { $eq: ['$validity', '4 years'] }, then: 48 },
+                  { case: { $eq: ['$validity', '5 years'] }, then: 60 },
+                ],
+                default: 0 // Default value if validity is not matched
+              }
             }
-        ]);
-
+          }
+        },
+        {
+          $sort: { validityValue: 1 } // Sort by the numeric validity value in ascending order
+        },
+        {
+          $project: {
+            _id: 1,
+            title: 1,
+            validity: 1, 
+            price: 1,
+            category: 1, // Include the category details
+            services: 1 // Include the matched services
+          }
+        }
+      ]);
+      
         return res.json({
             status: true,
             message: "Plans fetched successfully",
@@ -794,6 +820,7 @@ async Couponlist(req, res) {
     const result = await Coupon_Modal.find({
       del: false,
       status: true,
+      startdate: { $lte: new Date() }, // Only include coupons that have started
       enddate: { $gt: new Date() } // Filter out expired coupons
     });
 
@@ -897,7 +924,10 @@ async showSignalsToClients(req, res) {
 
 
     try {
-      const { service_id, client_id } = req.body;
+      const { service_id, client_id, search, page = 1 } = req.body;
+      const limit = 10;
+      const skip = (parseInt(page) - 1) * parseInt(limit); // Calculate how many items to skip
+    const limitValue = parseInt(limit); // Items per page
 
       const plans = await Planmanage.find({ serviceid: service_id, clientid: client_id });
       if (plans.length === 0) {
@@ -926,9 +956,24 @@ async showSignalsToClients(req, res) {
 
    const baseUrl = `${protocol}://${req.headers.host}`; // Construct the base URL
 
+
+
+   if (search && search.trim() !== '') {
+    query.$or = [
+        { tradesymbol: { $regex: search, $options: 'i' } },
+        { calltype: { $regex: search, $options: 'i' } },
+        { price: { $regex: search, $options: 'i' } },
+        { closeprice: { $regex: search, $options: 'i' } }
+    ];
+}
+
+
+
   // const signals = await Signal_Modal.find(query).lean(); // Use lean() to return plain JavaScript objects
    const signals = await Signal_Modal.find(query)
-   .sort({ created_at: -1 }) // Change "createdAt" to the field you want to sort by
+   .sort({ created_at: -1 })
+   .skip(skip)
+   .limit(limitValue)
    .lean();
 /*
    const signalsWithReportUrls = signals.map(signal => {
@@ -939,6 +984,9 @@ async showSignalsToClients(req, res) {
     };
 });
 */
+
+
+const totalSignals = await Signal_Modal.countDocuments(query);
 
 const signalsWithReportUrls = await Promise.all(signals.map(async (signal) => {
   // Check if the signal was bought by the client
@@ -981,6 +1029,8 @@ else
 }
 */
 
+
+
   return {
     ...signal,
     report_full_path: signal.report ? `${baseUrl}/uploads/report/${signal.report}` : null, // Append full report URL
@@ -994,12 +1044,16 @@ else
 }));
 
 
-
-
       return res.json({
           status: true,
           message: "Signals retrieved successfully",
-          data: signalsWithReportUrls
+          data: signalsWithReportUrls,
+          pagination: {
+            total: totalSignals,
+            page: parseInt(page), // Current page
+            limit: parseInt(limit), // Items per page
+            totalPages: Math.ceil(totalSignals / limit), // Total number of pages
+          }
       });
 
   } catch (error) {
@@ -1013,7 +1067,7 @@ async showSignalsToClientsCloses(req, res) {
 
 
   try {
-    const { service_id, client_id } = req.body;
+    const { service_id, client_id, search } = req.body;
 
     const plans = await Planmanage.find({ serviceid: service_id, clientid: client_id });
     if (plans.length === 0) {
@@ -1041,6 +1095,18 @@ async showSignalsToClientsCloses(req, res) {
  const protocol = req.protocol; // Will be 'http' or 'https'
 
  const baseUrl = `${protocol}://${req.headers.host}`; // Construct the base URL
+
+
+ if (search && search.trim() !== '') {
+  query.$or = [
+      { tradesymbol: { $regex: search, $options: 'i' } },
+      { calltype: { $regex: search, $options: 'i' } },
+      { price: { $regex: search, $options: 'i' } },
+      { closeprice: { $regex: search, $options: 'i' } }
+  ];
+}
+
+
 
 // const signals = await Signal_Modal.find(query).lean(); // Use lean() to return plain JavaScript objects
  const signals = await Signal_Modal.find(query)
@@ -1179,12 +1245,22 @@ async showSignalsToClientsClose(req, res) {
 
 async CloseSignal(req, res) {
   try {
-      const { service_id } = req.body;
+      const { service_id, search } = req.body;
 
       const query = {
           service: service_id,
           close_status: true,
       };
+
+      if (search && search.trim() !== '') {
+        query.$or = [
+            { tradesymbol: { $regex: search, $options: 'i' } },
+            { calltype: { $regex: search, $options: 'i' } },
+            { price: { $regex: search, $options: 'i' } },
+            { closeprice: { $regex: search, $options: 'i' } }
+        ];
+    }
+
       // Fetch signals and sort by createdAt in descending order
       const signals = await Signal_Modal.find(query).sort({ created_at: -1 }).lean(); 
 

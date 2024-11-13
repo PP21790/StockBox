@@ -166,7 +166,6 @@ class Plan {
  
 
 
-
     async activePlan(req, res) {
       try {
 
