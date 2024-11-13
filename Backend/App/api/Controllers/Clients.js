@@ -16,7 +16,6 @@ const Helpdesk_Modal = db.Helpdesk;
 const Order_Modal = db.Order;
 const Signal_Modal = db.Signal;
 
-
 class Clients {
 
 
@@ -847,7 +846,7 @@ async  clientKycAndAgreement(req, res) {
     await page.setContent(htmlContent);
 
     // Define the path to save the PDF
-    const pdfDir = path.join(__dirname, '../../../../stockboxpnp.pnpuniverse.com/uploads', 'pdf');
+    const pdfDir = path.join(__dirname, `../../../../${process.env.DOMAIN}/uploads`, 'pdf');
     const pdfPath = path.join(pdfDir, `kyc-agreement-${phone}.pdf`);
     
     // Generate PDF and save to the specified path
@@ -954,7 +953,7 @@ async uploadDocument(req, res) {
 
   // Path to the PDF document
   const filename = client.pdf;
-  const dir = path.join(__dirname, '../../../../stockboxpnp.pnpuniverse.com/uploads/pdf', filename);
+  const dir = path.join(__dirname, `../../../../${process.env.DOMAIN}/uploads/pdf`, filename);
 
   if (!fs.existsSync(dir)) {
       return res.status(400).json({
@@ -1067,7 +1066,7 @@ async downloadDocument(req, res) {
 
       // Generate a unique filename
       const fileName = `kyc-agreement-${client.PhoneNo}.pdf`;
-      const tempPath = path.join(__dirname, '../../../../stockboxpnp.pnpuniverse.com/uploads/pdf', fileName);
+      const tempPath = path.join(__dirname, `../../../../${process.env.DOMAIN}/uploads/pdf`, fileName);
 
       // Ensure the directory exists
       await fs.promises.mkdir(path.dirname(tempPath), { recursive: true });

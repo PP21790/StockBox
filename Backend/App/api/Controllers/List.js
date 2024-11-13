@@ -65,7 +65,7 @@ class List {
 
     async Blogslist(req, res) {
         try {
-
+         
           const blogs = await Blogs_Modal.find({ del: false, status: true })
           .sort({ created_at: -1 });
             const protocol = req.protocol; // Will be 'http' or 'https'
