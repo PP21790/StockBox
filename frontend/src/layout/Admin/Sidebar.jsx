@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { image_baseurl } from '../../Utils/config';
 
 const menuItems = [
   { title: 'Dashboard', icon: 'bx-home-alt', link: '/admin/dashboard' },
@@ -82,10 +83,11 @@ const Sidebar = ({ onToggleClick }) => {
             <div className="sidebar-header">
               <div>
                 <img
-                  src="/assets/images/logo-icon.png"
+                  src={`${image_baseurl}uploads/basicsetting/logo-icon.png`}
                   className="logo-icon"
                   alt="logo icon"
                 />
+
               </div>
               <div>
                 <h4 className="logo-text">STOCK RA</h4>
