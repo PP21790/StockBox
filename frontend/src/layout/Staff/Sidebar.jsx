@@ -104,7 +104,7 @@ const Sidebar = ({ onToggleClick }) => {
             <img  src={`${image_baseurl}uploads/basicsetting/${clients[0].logo}`} />
           </div>
           <div>
-            <h4 className="logo-text">STOCK RA</h4>
+            <h4 className="logo-text">{clients[0]?.from_name}</h4>
           </div>
           <div className="toggle-icon ms-auto" onClick={onToggleClick}>
             <i className="bx bx-arrow-back" />

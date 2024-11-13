@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { getHelpMessagelist, gettradestatus, basicsettinglist, UpdateLogin_status } from '../../Services/Admin';
 import { formatDistanceToNow } from 'date-fns';
 import Swal from 'sweetalert2';
-
+import $ from "jquery"; 
 
 
 const Header = () => {
@@ -50,6 +50,8 @@ const Header = () => {
     try {
       const response = await basicsettinglist(token);
       if (response.status) {
+        console.log("response",response.data[0].favicon)
+        
         setGetstatus(response.data);
       }
     } catch (error) {

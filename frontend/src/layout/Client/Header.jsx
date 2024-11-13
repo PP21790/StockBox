@@ -1,7 +1,35 @@
-import React from 'react'
+import React, { useEffect , useState} from 'react'
 import { Link } from 'react-router-dom'
+import { basicsettinglist } from '../../Services/Admin'
+
+
 
 const Header = () => {
+  
+  const token = localStorage.getItem('token');
+  const userid = localStorage.getItem('id');
+  const [clients, setClients] = useState([]);
+  
+
+
+  const getsettinglist = async () => {
+    try {
+        const response = await basicsettinglist(token);
+        if (response.status) {
+               console.log("response",response.data[0].favicon)
+            setClients(response.data);
+        }
+    } catch (error) {
+        console.log('error', error);
+    }
+};
+
+
+useEffect(()=>{
+  getsettinglist()
+},[])
+
+
   return (
     <div>
       <>
