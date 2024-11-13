@@ -95,13 +95,13 @@ const Client = () => {
 
 
 
-        const resethandle = () => {
-            setSearchkyc("")
-            setSearchInput("")
-            setStatuscreatedby("")
+    const resethandle = () => {
+        setSearchkyc("")
+        setSearchInput("")
+        setStatuscreatedby("")
 
 
-        }
+    }
 
     useEffect(() => {
         getplanlistbyadmin()
@@ -407,12 +407,51 @@ const Client = () => {
             sortable: true,
             width: '200px',
         },
+
         {
             name: 'Email',
             selector: row => row.Email,
             sortable: true,
             width: '350px',
         },
+        {
+            name: 'Plan Status',
+            cell: row => {
+                const hasActive = row?.plansStatus?.some(item => item.status === 'active');
+                return (
+                    <span style={{ color: hasActive ? 'green' : 'red' }}>
+                        {hasActive ? 'Active' : 'Expired'}
+                    </span>
+                );
+            },
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'Client Plan',
+            cell: row => (
+                <>
+                    {Array.isArray(row?.plansStatus) ? (
+                        row.plansStatus.map((item, index) => (
+                            <span
+                                key={index}
+                                style={{
+                                    color: item.status === 'active' ? 'green' : item.status === 'expired' ? 'red' : 'inherit',
+                                    marginRight: '5px',
+                                }}
+                            >
+                                {item.serviceName || "-"}
+                            </span>
+                        ))
+                    ) : (
+                        <span>-</span>
+                    )}
+                </>
+            ),
+            sortable: true,
+            width: '200px',
+        }
+        ,
         {
             name: 'Phone No',
             selector: row => row.PhoneNo,

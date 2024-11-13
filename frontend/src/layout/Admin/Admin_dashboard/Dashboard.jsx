@@ -383,6 +383,146 @@ const Dashbord = () => {
                             </div>
                         </div>
                     </div>
+                    <div className="col-md-3">
+                        <div className="card radius-10 bg-gradient-deepblue">
+                            <div className="card-body">
+                                <div className="d-flex align-items-center">
+                                    <h5 className="mb-0 text-white">{data.activePlanclient && data.activePlanclient}</h5>
+                                    <div className="ms-auto">
+                                        <i className="bx bx-wifi-2 fs-3 text-white" />
+                                    </div>
+                                </div>
+                                <div
+                                    className="progress my-2 bg-opacity-25 bg-white"
+                                    style={{ height: 4 }}
+                                >
+                                    <div
+                                        className="progress-bar bg-white"
+                                        role="progressbar"
+                                        style={{ width: "55%" }}
+                                        aria-valuenow={25}
+                                        aria-valuemin={0}
+                                        aria-valuemax={100}
+                                    />
+                                </div>
+                                <div className="d-flex align-items-center text-white">
+                                    <p className="mb-0">Total Plan Active </p>
+                                    <p className="mb-0 ms-auto">
+
+                                        <span>
+                                            <Link to="/admin/closesignal"><i className="bx bx-up-arrow-alt text-white" /></Link>
+                                            {/* <i className="bx bx-up-arrow-alt" /> */}
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-3">
+                        <div className="card radius-10 bg-gradient-deepblue">
+                            <div className="card-body">
+                                <div className="d-flex align-items-center">
+                                    <h5 className="mb-0 text-white">{data.inActivePlanclient && data.inActivePlanclient}</h5>
+                                    <div className="ms-auto">
+                                        <i className="bx bx-wifi-2 fs-3 text-white" />
+                                    </div>
+                                </div>
+                                <div
+                                    className="progress my-2 bg-opacity-25 bg-white"
+                                    style={{ height: 4 }}
+                                >
+                                    <div
+                                        className="progress-bar bg-white"
+                                        role="progressbar"
+                                        style={{ width: "55%" }}
+                                        aria-valuenow={25}
+                                        aria-valuemin={0}
+                                        aria-valuemax={100}
+                                    />
+                                </div>
+                                <div className="d-flex align-items-center text-white">
+                                    <p className="mb-0">Total Plan Expired </p>
+                                    <p className="mb-0 ms-auto">
+
+                                        <span>
+                                            <Link to="/admin/closesignal"><i className="bx bx-up-arrow-alt text-white" /></Link>
+                                            {/* <i className="bx bx-up-arrow-alt" /> */}
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-3">
+                        <div className="card radius-10 bg-gradient-deepblue">
+                            <div className="card-body">
+                                <div className="d-flex align-items-center">
+                                    <h5 className="mb-0 text-white">{data.activeFreetrial && data.activeFreetrial}</h5>
+                                    <div className="ms-auto">
+                                        <i className="bx bx-wifi-2 fs-3 text-white" />
+                                    </div>
+                                </div>
+                                <div
+                                    className="progress my-2 bg-opacity-25 bg-white"
+                                    style={{ height: 4 }}
+                                >
+                                    <div
+                                        className="progress-bar bg-white"
+                                        role="progressbar"
+                                        style={{ width: "55%" }}
+                                        aria-valuenow={25}
+                                        aria-valuemin={0}
+                                        aria-valuemax={100}
+                                    />
+                                </div>
+                                <div className="d-flex align-items-center text-white">
+                                    <p className="mb-0">Total Active Free Client</p>
+                                    <p className="mb-0 ms-auto">
+
+                                        <span>
+                                            <Link to="/admin/closesignal"><i className="bx bx-up-arrow-alt text-white" /></Link>
+                                            {/* <i className="bx bx-up-arrow-alt" /> */}
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-3">
+                        <div className="card radius-10 bg-gradient-deepblue">
+                            <div className="card-body">
+                                <div className="d-flex align-items-center">
+                                    <h5 className="mb-0 text-white">{data.inActiveFreetrial && data.inActiveFreetrial}</h5>
+                                    <div className="ms-auto">
+                                        <i className="bx bx-wifi-2 fs-3 text-white" />
+                                    </div>
+                                </div>
+                                <div
+                                    className="progress my-2 bg-opacity-25 bg-white"
+                                    style={{ height: 4 }}
+                                >
+                                    <div
+                                        className="progress-bar bg-white"
+                                        role="progressbar"
+                                        style={{ width: "55%" }}
+                                        aria-valuenow={25}
+                                        aria-valuemin={0}
+                                        aria-valuemax={100}
+                                    />
+                                </div>
+                                <div className="d-flex align-items-center text-white">
+                                    <p className="mb-0">Total InActive Free Client</p>
+                                    <p className="mb-0 ms-auto">
+
+                                        <span>
+                                            <Link to="/admin/closesignal"><i className="bx bx-up-arrow-alt text-white" /></Link>
+                                            {/* <i className="bx bx-up-arrow-alt" /> */}
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div className="card radius-10">
                     <div className="card-body">

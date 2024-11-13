@@ -181,6 +181,12 @@ const Coupon = () => {
             sortable: true,
             width: '150px',
         },
+        {
+            name: 'Fixed/Percent Value',
+            selector: row => row.type === "fixed" ? row.value : `${row.value}%`,
+            sortable: true,
+            width: '300px',
+        },
         // {
         //     name: 'Image',
         //     cell: row => <img src={`${image_baseurl}/uploads/coupon/${row.image}`} alt="Image" width="50" height="50" />,
