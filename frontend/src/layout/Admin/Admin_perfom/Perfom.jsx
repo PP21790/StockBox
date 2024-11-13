@@ -14,7 +14,7 @@ const Perform = () => {
     const [activeTab, setActiveTab] = useState(null);
     const [servicedata, setServicedata] = useState([]);
     const [closesignal, setClosesignal] = useState([])
-
+    const [description,setDescription] = useState([])
 
 
     useEffect(() => {
@@ -73,6 +73,10 @@ const Perform = () => {
         }
     };
 
+
+    const handleViewClick = (description) => {
+        setDescription({ description });
+    };
 
 
 
@@ -159,7 +163,8 @@ const Perform = () => {
                     <Tooltip title="view">
                         <Eye
 
-                            data-bs-toggle="modal" data-bs-target="#exampleModal" />
+                            data-bs-toggle="modal" data-bs-target="#exampleModal"
+                            onClick={() => handleViewClick([row.description])} />
                     </Tooltip>
 
 
@@ -175,7 +180,7 @@ const Perform = () => {
 
 
 
-
+    console.log("clients", clients)
 
 
     const renderTable1 = () => {
@@ -322,20 +327,17 @@ const Perform = () => {
                     </div>
                 </div>
 
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Discription</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title" id="exampleModalLabel">Description</h5>
+                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <div class="modal-body">
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum quibusdam, placeat, molestias eius ducimus voluptas quod minima ratione odit fugit quisquam velit sint, cupiditate dignissimos.
+                            <div className="modal-body">
+                                {description?.description}
                             </div>
-                            <div class="modal-footer">
-
-                                <button type="button" class="btn btn-primary">Save</button>
-                            </div>
+                           
                         </div>
                     </div>
                 </div>
