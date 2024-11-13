@@ -897,7 +897,10 @@ async showSignalsToClients(req, res) {
 
 
     try {
-      const { service_id, client_id } = req.body;
+      const { service_id, client_id, search, page = 1, limit = 10 } = req.body;
+      
+      const skip = (parseInt(page) - 1) * parseInt(limit); // Calculate how many items to skip
+    const limitValue = parseInt(limit); // Items per page
 
       const plans = await Planmanage.find({ serviceid: service_id, clientid: client_id });
       if (plans.length === 0) {
@@ -926,9 +929,24 @@ async showSignalsToClients(req, res) {
 
    const baseUrl = `${protocol}://${req.headers.host}`; // Construct the base URL
 
+
+
+   if (search && search.trim() !== '') {
+    query.$or = [
+        { tradesymbol: { $regex: search, $options: 'i' } },
+        { calltype: { $regex: search, $options: 'i' } },
+        { price: { $regex: search, $options: 'i' } },
+        { closeprice: { $regex: search, $options: 'i' } }
+    ];
+}
+
+
+
   // const signals = await Signal_Modal.find(query).lean(); // Use lean() to return plain JavaScript objects
    const signals = await Signal_Modal.find(query)
-   .sort({ created_at: -1 }) // Change "createdAt" to the field you want to sort by
+   .sort({ created_at: -1 })
+   .skip(skip)
+   .limit(limitValue)
    .lean();
 /*
    const signalsWithReportUrls = signals.map(signal => {
@@ -939,6 +957,9 @@ async showSignalsToClients(req, res) {
     };
 });
 */
+
+
+const totalSignals = await Signal_Modal.countDocuments(query);
 
 const signalsWithReportUrls = await Promise.all(signals.map(async (signal) => {
   // Check if the signal was bought by the client
@@ -981,6 +1002,8 @@ else
 }
 */
 
+
+
   return {
     ...signal,
     report_full_path: signal.report ? `${baseUrl}/uploads/report/${signal.report}` : null, // Append full report URL
@@ -994,12 +1017,16 @@ else
 }));
 
 
-
-
       return res.json({
           status: true,
           message: "Signals retrieved successfully",
-          data: signalsWithReportUrls
+          data: signalsWithReportUrls,
+          pagination: {
+            total: totalSignals,
+            page: parseInt(page), // Current page
+            limit: parseInt(limit), // Items per page
+            totalPages: Math.ceil(totalSignals / limit), // Total number of pages
+          }
       });
 
   } catch (error) {
@@ -1013,7 +1040,7 @@ async showSignalsToClientsCloses(req, res) {
 
 
   try {
-    const { service_id, client_id } = req.body;
+    const { service_id, client_id, search } = req.body;
 
     const plans = await Planmanage.find({ serviceid: service_id, clientid: client_id });
     if (plans.length === 0) {
@@ -1041,6 +1068,18 @@ async showSignalsToClientsCloses(req, res) {
  const protocol = req.protocol; // Will be 'http' or 'https'
 
  const baseUrl = `${protocol}://${req.headers.host}`; // Construct the base URL
+
+
+ if (search && search.trim() !== '') {
+  query.$or = [
+      { tradesymbol: { $regex: search, $options: 'i' } },
+      { calltype: { $regex: search, $options: 'i' } },
+      { price: { $regex: search, $options: 'i' } },
+      { closeprice: { $regex: search, $options: 'i' } }
+  ];
+}
+
+
 
 // const signals = await Signal_Modal.find(query).lean(); // Use lean() to return plain JavaScript objects
  const signals = await Signal_Modal.find(query)
@@ -1179,12 +1218,22 @@ async showSignalsToClientsClose(req, res) {
 
 async CloseSignal(req, res) {
   try {
-      const { service_id } = req.body;
+      const { service_id, search } = req.body;
 
       const query = {
           service: service_id,
           close_status: true,
       };
+
+      if (search && search.trim() !== '') {
+        query.$or = [
+            { tradesymbol: { $regex: search, $options: 'i' } },
+            { calltype: { $regex: search, $options: 'i' } },
+            { price: { $regex: search, $options: 'i' } },
+            { closeprice: { $regex: search, $options: 'i' } }
+        ];
+    }
+
       // Fetch signals and sort by createdAt in descending order
       const signals = await Signal_Modal.find(query).sort({ created_at: -1 }).lean(); 
 
