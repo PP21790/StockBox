@@ -100,7 +100,7 @@ useEffect(() => {
     getsettinglist();
 }, []);
 
-console.log("clients",clients)
+
 
   return (
     <div>

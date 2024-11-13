@@ -180,7 +180,7 @@ const Perform = () => {
 
 
 
-    console.log("clients", clients)
+    
 
 
     const renderTable1 = () => {
