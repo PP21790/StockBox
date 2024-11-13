@@ -46,7 +46,7 @@ const Dashbord = () => {
     }, [])
 
 
-    
+
 
 
     const columns = [
@@ -75,7 +75,7 @@ const Dashbord = () => {
             sortable: true,
             width: '200px',
         },
-     
+
 
         {
             name: 'Created By',
@@ -83,14 +83,14 @@ const Dashbord = () => {
             sortable: true,
             width: '165px',
         },
-       
+
         {
             name: 'CreatedAt',
             selector: row => fDateTime(row.createdAt),
             sortable: true,
 
         },
-       
+
     ];
 
 
@@ -410,7 +410,7 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <Link to="/admin/closesignal"><i className="bx bx-up-arrow-alt text-white" /></Link>
+                                            <Link><i className="bx bx-up-arrow-alt text-white" /></Link>
                                             {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
@@ -445,7 +445,7 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <Link to="/admin/closesignal"><i className="bx bx-up-arrow-alt text-white" /></Link>
+                                            <Link ><i className="bx bx-up-arrow-alt text-white" /></Link>
                                             {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
@@ -515,7 +515,7 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <Link to="/admin/closesignal"><i className="bx bx-up-arrow-alt text-white" /></Link>
+                                            <Link><i className="bx bx-up-arrow-alt text-white" /></Link>
                                             {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
@@ -534,12 +534,12 @@ const Dashbord = () => {
                         </div>
                         <hr />
 
-<div className="table-responsive d-flex justify-content-center">
-                        <Table
-                       
-                            columns={columns}
-                            data={clients}
-                        />
+                        <div className="table-responsive d-flex justify-content-center">
+                            <Table
+
+                                columns={columns}
+                                data={clients}
+                            />
                         </div>
                     </div>
                 </div>
