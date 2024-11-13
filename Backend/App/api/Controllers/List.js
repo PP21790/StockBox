@@ -1067,7 +1067,13 @@ async showSignalsToClientsCloses(req, res) {
 
 
   try {
-    const { service_id, client_id, search } = req.body;
+
+    const { service_id, client_id, search, page = 1 } = req.body;
+    const limit = 10;
+    const skip = (parseInt(page) - 1) * parseInt(limit); 
+    const limitValue = parseInt(limit); 
+
+
 
     const plans = await Planmanage.find({ serviceid: service_id, clientid: client_id });
     if (plans.length === 0) {
@@ -1110,7 +1116,9 @@ async showSignalsToClientsCloses(req, res) {
 
 // const signals = await Signal_Modal.find(query).lean(); // Use lean() to return plain JavaScript objects
  const signals = await Signal_Modal.find(query)
- .sort({ closedate: -1 }) // Change "createdAt" to the field you want to sort by
+ .sort({ closedate: -1 })
+ .skip(skip)
+ .limit(limitValue)
  .lean();
 /*
  const signalsWithReportUrls = signals.map(signal => {
@@ -1121,6 +1129,9 @@ async showSignalsToClientsCloses(req, res) {
   };
 });
 */
+
+const totalSignals = await Signal_Modal.countDocuments(query);
+
 
 const signalsWithReportUrls = await Promise.all(signals.map(async (signal) => {
 // Check if the signal was bought by the client
@@ -1181,7 +1192,13 @@ return {
     return res.json({
         status: true,
         message: "Signals retrieved successfully",
-        data: signalsWithReportUrls
+        data: signalsWithReportUrls,
+        pagination: {
+          total: totalSignals,
+          page: parseInt(page), // Current page
+          limit: parseInt(limit), // Items per page
+          totalPages: Math.ceil(totalSignals / limit), // Total number of pages
+        }
     });
 
 } catch (error) {
@@ -1231,7 +1248,13 @@ async showSignalsToClientsClose(req, res) {
     return res.json({
         status: true,
         message: "Signals retrieved successfully",
-        data: signals
+        data: signals,
+        pagination: {
+          total: totalSignals,
+          page: parseInt(page), // Current page
+          limit: parseInt(limit), // Items per page
+          totalPages: Math.ceil(totalSignals / limit), // Total number of pages
+        }
     });
 
 } catch (error) {
@@ -1245,7 +1268,12 @@ async showSignalsToClientsClose(req, res) {
 
 async CloseSignal(req, res) {
   try {
-      const { service_id, search } = req.body;
+      const { service_id, search, page = 1 } = req.body;
+
+      const limit = 15;
+      const skip = (parseInt(page) - 1) * parseInt(limit); 
+      const limitValue = parseInt(limit); 
+
 
       const query = {
           service: service_id,
@@ -1262,8 +1290,15 @@ async CloseSignal(req, res) {
     }
 
       // Fetch signals and sort by createdAt in descending order
-      const signals = await Signal_Modal.find(query).sort({ created_at: -1 }).lean(); 
+      const signals = await Signal_Modal.find(query).sort({ created_at: -1 })
+      .skip(skip)
+      .limit(limitValue)
+      .lean(); 
 
+
+      const totalSignals = await Signal_Modal.countDocuments(query);
+
+      
       return res.json({
           status: true,
           message: "Signals retrieved successfully",
