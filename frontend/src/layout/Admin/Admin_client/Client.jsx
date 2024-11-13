@@ -434,7 +434,7 @@ const Client = () => {
             width: '200px',
         },
         {
-            name: 'Client Plan',
+            name: 'Client Segment',
             cell: row => (
                 <>
                     {Array.isArray(row?.plansStatus) ? (

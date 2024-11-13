@@ -49,6 +49,8 @@ const Sidebar = ({ onToggleClick }) => {
     }
   };
 
+
+
   const toggleDropdown = (dropdownName) => (e) => {
     e.preventDefault();
     setActiveDropdown(activeDropdown === dropdownName ? null : dropdownName);
@@ -101,7 +103,7 @@ const Sidebar = ({ onToggleClick }) => {
       <div data-simplebar="init">
         <div className="sidebar-header">
           <div>
-            <img  src={`${image_baseurl}uploads/basicsetting/${clients[0].logo}`} />
+            <img  src={`${image_baseurl}uploads/basicsetting/${clients[0]?.favicon}`} />
           </div>
           <div>
             <h4 className="logo-text">{clients[0]?.from_name}</h4>

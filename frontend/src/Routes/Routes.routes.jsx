@@ -6,7 +6,7 @@ import Register from '../Auth/Register';
 import AdminRouting from './Admin.routes';
 // import Staff from './Staff.routes';
 import Staffrouting from './Staff.routes';
-import Client from './Client.routes';
+// import Client from './Client.routes';
 import Forgetpassword from '../Auth/Forgetpassword';
 import Resetpassword from '../Auth/Resetpassword';
 
@@ -59,11 +59,7 @@ const Routing = () => {
                     navigate("/staff/dashboard");
                 }
                 break;
-            case "3":
-                if (location.pathname === "/login" || location.pathname === "/" || !location.pathname.startsWith("/client")) {
-                    navigate("/client/dashboard");
-                }
-                break;
+            
             default:
                 break;
         }
@@ -77,7 +73,7 @@ const Routing = () => {
 
             <Route path="/admin/*" element={(roles === "1") ? <AdminRouting /> : <Login />} />
             <Route path="/Staff/*" element={(roles === "2") ? <Staffrouting /> : <Login />} />
-            <Route path="/client/*" element={(roles === "3") ? <Client /> : <Login />} />
+            {/* <Route path="/client/*" element={(roles === "3") ? <Client /> : <Login />} /> */}
 
 
 

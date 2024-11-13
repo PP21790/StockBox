@@ -110,7 +110,7 @@ useEffect(() => {
             <div className="sidebar-header">
               <div>
                 <img
-                  src={`${image_baseurl}uploads/basicsetting/${clients[0]?.logo}`}
+                  src={`${image_baseurl}uploads/basicsetting/${clients[0]?.favicon}`}
                   // src='assets/images/fav5.png'
                   className="logo-icon"
                   alt="logo icon"

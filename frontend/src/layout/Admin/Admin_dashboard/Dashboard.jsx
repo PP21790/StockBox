@@ -70,6 +70,43 @@ const Dashbord = () => {
 
         },
         {
+            name: 'Plan Status',
+            cell: row => {
+                const hasActive = row?.plansStatus?.some(item => item.status === 'active');
+                return (
+                    <span style={{ color: hasActive ? 'green' : 'red' }}>
+                        {hasActive ? 'Active' : 'Expired'}
+                    </span>
+                );
+            },
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'Client Segment',
+            cell: row => (
+                <>
+                    {Array.isArray(row?.plansStatus) ? (
+                        row.plansStatus.map((item, index) => (
+                            <span
+                                key={index}
+                                style={{
+                                    color: item.status === 'active' ? 'green' : item.status === 'expired' ? 'red' : 'inherit',
+                                    marginRight: '5px',
+                                }}
+                            >
+                                {item.serviceName || "-"}
+                            </span>
+                        ))
+                    ) : (
+                        <span>-</span>
+                    )}
+                </>
+            ),
+            sortable: true,
+            width: '200px',
+        },
+        {
             name: 'Phone No',
             selector: row => row.PhoneNo,
             sortable: true,
