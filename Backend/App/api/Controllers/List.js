@@ -897,8 +897,8 @@ async showSignalsToClients(req, res) {
 
 
     try {
-      const { service_id, client_id, search, page = 1, limit = 10 } = req.body;
-      
+      const { service_id, client_id, search, page = 1 } = req.body;
+      const limit = 10;
       const skip = (parseInt(page) - 1) * parseInt(limit); // Calculate how many items to skip
     const limitValue = parseInt(limit); // Items per page
 
