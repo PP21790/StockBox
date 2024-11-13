@@ -12,6 +12,10 @@ const Addcoupon = () => {
     const user_id = localStorage.getItem("id");
     const token = localStorage.getItem("token");
 
+    const today = new Date().toISOString().slice(0, 10);
+  
+
+    
     const validate = (values) => {
         let errors = {};
 
@@ -29,6 +33,18 @@ const Addcoupon = () => {
             }
         }
 
+        if (values.minpurchasevalue && values.minpurchasevalue < values.mincouponvalue) {
+            errors.minpurchasevalue = "Please Enter Value Less Than  Max Discount Value "
+        }
+        if (values.mincouponvalue && values.minpurchasevalue > values.mincouponvalue) {
+            errors.mincouponvalue = "Please Enter Value Less Than Min Purchase Value "
+        }
+        if(values.value && values.minpurchasevalue < values.value){
+            errors.minpurchasevalue = "Please Enter Greater Than Discount value";
+        }
+        if(values.enddate &&  values.startdate > values.enddate){
+            errors.enddate = "Please Enter greater Than Startdate";
+        }
         if (!values.type) {
             errors.type = "Please enter type";
         }
@@ -47,11 +63,11 @@ const Addcoupon = () => {
         if (values.mincouponvalue && !values.mincouponvalue) {
             errors.mincouponvalue = "Please enter Min Coupon value";
         }
-        
-
 
         return errors;
     };
+
+
 
     const onSubmit = async (values) => {
         const req = {
@@ -80,7 +96,7 @@ const Addcoupon = () => {
                     timerProgressBar: true,
                 });
                 setTimeout(() => {
-                    navigate("/staff/coupon");
+                    navigate("/admin/coupon");
                 }, 1500);
             } else {
                 Swal.fire({
@@ -108,7 +124,7 @@ const Addcoupon = () => {
             code: '',
             type: '',
             value: '',
-            startdate: '',
+            startdate: today,
             enddate: '',
             minpurchasevalue: '',
             mincouponvalue: '',
@@ -146,19 +162,30 @@ const Addcoupon = () => {
             disable: false,
             options: [
                 { value: "percentage", label: "Percentage" },
-                { value: "fixed", label: "Fixed" },  
-            ]  
+                { value: "fixed", label: "Fixed" },
+            ]
         },
+
         {
             name: "value",
-            label: "Value",
+            label: "Percent/Fixed Discount",
             type: "number",
             label_size: 12,
             col_size: 6,
             disable: false,
+            showWhen: (values) => values.type === "fixed"
+        },
+        {
+            name: "value",
+            label: "Percentage/Fixed Discount",
+            type: "text4",
+            label_size: 12,
+            col_size: 6,
+            disable: false,
+            showWhen: (values) => values.type === "percentage"
         },
 
-         {
+        {
             name: "minpurchasevalue",
             label: "Min Purchase Value",
             type: "text",
@@ -166,22 +193,23 @@ const Addcoupon = () => {
             col_size: 6,
             disable: false,
         },
-         {
+        {
             name: "mincouponvalue",
             label: "Max Discount Value",
             type: "text",
             label_size: 12,
             col_size: 6,
             disable: false,
-          showWhen: (values) => values.type === "percentage"
-        } ,
+            showWhen: (values) => values.type === "percentage"
+        },
         {
             name: "startdate",
             label: "Start Date",
-            type: "date",
+            type: "date1",
             label_size: 12,
             col_size: 6,
             disable: false,
+
         },
         {
             name: "enddate",
@@ -212,16 +240,18 @@ const Addcoupon = () => {
 
     ];
 
+    console.log("formik", formik.values.startdate)
+
     return (
         <div style={{ marginTop: "100px" }}>
             <DynamicForm
-                 fields={fields.filter(field => !field.showWhen || field.showWhen(formik.values))}
+                fields={fields.filter(field => !field.showWhen || field.showWhen(formik.values))}
                 formik={formik}
                 page_title="Add Coupon Code"
                 btn_name="Add Coupon"
                 btn_name1="Cancel"
                 sumit_btn={true}
-                btn_name1_route={"/staff/coupon"}
+                btn_name1_route={"/admin/coupon"}
                 additional_field={<></>}
 
             />

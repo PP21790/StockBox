@@ -1034,14 +1034,14 @@ const DynamicForm = ({
                                                                                                 min={1}
                                                                                                 onChange={(e) => {
                                                                                                     let value = e.target.value;
-                                                                                                    // Remove any leading zeros
+                                                                                        
                                                                                                     value = value.replace(/^0+/, "");
-                                                                                                    // If value is empty, set it to 0
+                                                                                            
                                                                                                     if (value === "") {
                                                                                                         value = "";
                                                                                                     }
-                                                                                                    // Enforce maximum value of 100
-                                                                                                    value = Math.min(parseInt(value), 100);
+                                                                                                   
+                                                                                                    value = Math.min(parseFloat(value), 100);
                                                                                                     // Update input value
                                                                                                     e.target.value = value;
                                                                                                     formik.handleChange(e);

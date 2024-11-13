@@ -42,6 +42,12 @@ const Addcoupon = () => {
         if (values.mincouponvalue && values.minpurchasevalue > values.mincouponvalue) {
             errors.mincouponvalue = "Please Enter Value Less Than Min Purchase Value "
         }
+        if(values.value && values.minpurchasevalue < values.value){
+            errors.minpurchasevalue = "Please Enter Greater Than Discount value";
+        }
+        if(values.enddate &&  values.startdate > values.enddate){
+            errors.enddate = "Please Enter greater Than Startdate";
+        }
         if (!values.type) {
             errors.type = "Please enter type";
         }
@@ -60,8 +66,6 @@ const Addcoupon = () => {
         if (values.mincouponvalue && !values.mincouponvalue) {
             errors.mincouponvalue = "Please enter Min Coupon value";
         }
-
-
 
         return errors;
     };
@@ -176,7 +180,7 @@ const Addcoupon = () => {
         },
         {
             name: "value",
-            label: "Percent/Fixed Discount",
+            label: "Percentage/Fixed Discount",
             type: "text4",
             label_size: 12,
             col_size: 6,
@@ -204,16 +208,16 @@ const Addcoupon = () => {
         {
             name: "startdate",
             label: "Start Date",
-            type: "date",
+            type: "date1",
             label_size: 12,
             col_size: 6,
-            disable: true,
+            disable: false,
 
         },
         {
             name: "enddate",
             label: "End Date",
-            type: "date1",
+            type: "date",
             label_size: 12,
             col_size: 6,
             disable: false,

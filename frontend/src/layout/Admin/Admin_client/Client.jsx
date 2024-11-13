@@ -5,7 +5,7 @@ import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine, RefreshCcw } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { deleteClient, UpdateClientStatus, PlanSubscription, getplanlist, BasketSubscription, BasketAllList, getcategoryplan } from '../../../Services/Admin';
+import { deleteClient, UpdateClientStatus, PlanSubscription, getplanlist, BasketSubscription, BasketAllList, getcategoryplan , getPlanbyUser } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
 import { fDateTime } from '../../../Utils/Date_formate';
 import { image_baseurl } from '../../../Utils/config';
@@ -36,7 +36,7 @@ const Client = () => {
     const [statuscreatedby, setStatuscreatedby] = useState("");
 
 
-
+     
 
 
     const handleDownload = (row) => {
@@ -187,15 +187,19 @@ const Client = () => {
 
     const getplanlistbyadmin = async () => {
         try {
-            const response = await getplanlist(token);
+
+            const response = await getplanlist(client._id,token);
             if (response.status) {
 
                 setPlanlist(response.data);
+                console.log("response.data",response.data)
             }
         } catch (error) {
             console.log("error");
         }
     }
+
+    console.log("client",client)
 
 
     const getbasketlist = async () => {
@@ -789,7 +793,12 @@ const Client = () => {
                                                                                                 aria-expanded={selectedPlanId === item._id}
                                                                                                 aria-controls={`collapse-${item._id}`}
                                                                                             >
+                                                                                                <div className='d-flex justify-content-between'>
+                                                                                                    <div>
                                                                                                 <strong className="text-secondary m-2">Detail</strong>
+                                                                                                {/* <strong className="text-success m-2 activestrong">{item?.subscription.status=== "active" ? "Active" : ""}</strong> */}
+                                                                                                </div>
+                                                                                                </div>
                                                                                             </button>
                                                                                         </h2>
                                                                                         <div
@@ -808,6 +817,7 @@ const Client = () => {
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Validity:</strong>
                                                                                                     <span>{item.validity}</span>
+                                                                                                    {console.log("item",item)}
                                                                                                 </div>
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Created At:</strong>
