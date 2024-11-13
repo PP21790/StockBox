@@ -90,6 +90,83 @@ class Plan {
     }
    
 
+
+    async getPlanByClient(req, res) {
+      try {
+
+        const { id } = req.params;
+        const clientId = new mongoose.Types.ObjectId(id); // Convert to ObjectId
+        const plans = await Plan_Modal.aggregate([
+          {
+              $match: { del: false,status:"active" } // Match plans where 'del' is false
+          },
+          {
+              $lookup: {
+                  from: 'plancategories', // The name of the collection to join with
+                  localField: 'category', // The field from the Plan_Modal
+                  foreignField: '_id', // The field from the category
+                  as: 'category' // The name of the new array field to add to the output documents
+              }
+          },
+          {
+              $unwind: {
+                  path: '$category',
+                  preserveNullAndEmptyArrays: true // If a plan does not have a matching category, it will still appear in the result
+              }
+          },
+          {
+    $lookup: {
+      from: 'plansubscriptions',
+      let: { planId: '$_id', clientId: clientId }, // Pass clientId as a variable
+      pipeline: [
+        {
+          $match: {
+            $expr: {
+              $and: [
+                { $eq: ['$plan_id', '$$planId'] }, // Match subscription to the current plan ID
+                { $gte: ['$plan_end', new Date()] }, // Check if subscription is still active
+                { $eq: ['$del', false] }, // Ensure the subscription is not deleted
+                { $eq: ['$client_id', '$$clientId'] } // Match the client ID
+              ]
+            }
+          }
+        },
+        { $sort: { created_at: -1 } }, // Sort by creation date in descending order
+        { $limit: 1 }, // Get only the latest subscription if multiple exist
+        { $project: { status: 1 } } // Only include the status field
+      ],
+      as: 'subscription'
+    }
+  },
+          {
+            $unwind: {
+              path: '$subscription',
+              preserveNullAndEmptyArrays: true // Retain plans without a matching active subscription
+            }
+          },
+          {
+            $sort: { created_at: -1 } // Sort by created_at in descending order
+          }
+      ]);
+  
+          return res.json({
+              status: true,
+              message: "Plans fetched successfully",
+              data: plans
+          });
+  
+      } catch (error) {
+          return res.json({ 
+              status: false, 
+              message: "Server error", 
+              data: [] 
+          });
+      }
+  }
+ 
+
+
+
     async activePlan(req, res) {
       try {
 
