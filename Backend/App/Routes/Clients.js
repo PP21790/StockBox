@@ -1,7 +1,7 @@
 const router = require("express").Router()
 const { checkPermission } = require('../Middleware/permissionMiddleware');
 
-const {AddClient,getClient,updateClient,deleteClient,detailClient,statusChange,activeClient,processPayoutRequest,payoutList,freetrialList,deleteFreetrial,helpdeskList,deleteHelpdesk,myPlan,myService,deActiveClient} = require('../Controllers/Clients')
+const {AddClient,getClient,updateClient,deleteClient,detailClient,statusChange,activeClient,processPayoutRequest,payoutList,freetrialList,deleteFreetrial,helpdeskList,deleteHelpdesk,myPlan,myService,deActiveClient,getClientWithFilter} = require('../Controllers/Clients')
 
 
 
@@ -18,6 +18,8 @@ const PERMISSIONS = {
 
 router.post('/client/add', AddClient);
 router.get('/client/list', getClient);
+router.post('/client/listwithfilter', getClientWithFilter);
+
 router.put('/client/update', updateClient);
 router.get('/client/delete/:id', deleteClient);
 router.get('/client/detail/:id', detailClient);
