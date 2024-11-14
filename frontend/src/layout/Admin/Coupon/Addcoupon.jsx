@@ -35,9 +35,9 @@ const Addcoupon = () => {
                 errors.code = "Code must contain only numbers and letters.";
             }
         }
-
+       
         if (values.minpurchasevalue && parseFloat(values.minpurchasevalue) < parseFloat(values.mincouponvalue)) {
-            errors.minpurchasevalue = "Please Enter Value Less Than  Max Discount Value "
+            errors.minpurchasevalue = "Please Enter Value Greater Than  Max Discount Value "
         }
         if (values.mincouponvalue && parseFloat(values.minpurchasevalue) < parseFloat(values.mincouponvalue)) {
             errors.mincouponvalue = "Please Enter Value Less Than Min Purchase Value "
@@ -191,7 +191,7 @@ const Addcoupon = () => {
         {
             name: "minpurchasevalue",
             label: "Min Purchase Value",
-            type: "text",
+            type: "number",
             label_size: 12,
             col_size: 6,
             disable: false,
