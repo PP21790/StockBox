@@ -230,7 +230,7 @@ const Client = () => {
 
     const getAdminclient = async () => {
         try {
-            const data = { page: currentPage , kyc_verification:searchkyc}
+            const data = { page: currentPage , kyc_verification:searchkyc }
             const response = await AllclientFilter(data, token);
             console.log("response", response)
             if (response.status) {

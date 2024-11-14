@@ -347,6 +347,7 @@ class Clients {
 async getClientWithFilter(req, res) {
   try {
     const { status,kyc_verification, createdby, planStatus, page = 1 } = req.body;
+    console.log("req",req.body)
 
     const limit = 10;
     const skip = (parseInt(page) - 1) * parseInt(limit); // Calculate how many items to skip
@@ -354,7 +355,7 @@ async getClientWithFilter(req, res) {
     const matchConditions = { del: 0 }; // Initialize match conditions
 
     // Filter by KYC verification if specified
-    if (kyc_verification !== undefined) {
+    if (kyc_verification !== "") {
       matchConditions.kyc_verification = parseInt(kyc_verification);
     }
 
@@ -362,7 +363,7 @@ async getClientWithFilter(req, res) {
       matchConditions.add_by = createdby === "app" ? null : { $ne: null };
     }
 
-    if (status) {
+    if (status !== "") {
       matchConditions.ActiveStatus = parseInt(status);
     }
 

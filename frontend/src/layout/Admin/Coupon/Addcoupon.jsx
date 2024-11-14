@@ -36,13 +36,13 @@ const Addcoupon = () => {
             }
         }
 
-        if (values.minpurchasevalue && values.minpurchasevalue < values.mincouponvalue) {
+        if (values.minpurchasevalue && parseFloat(values.minpurchasevalue) < parseFloat(values.mincouponvalue)) {
             errors.minpurchasevalue = "Please Enter Value Less Than  Max Discount Value "
         }
-        if (values.mincouponvalue && values.minpurchasevalue > values.mincouponvalue) {
+        if (values.mincouponvalue && parseFloat(values.minpurchasevalue) < parseFloat(values.mincouponvalue)) {
             errors.mincouponvalue = "Please Enter Value Less Than Min Purchase Value "
         }
-        if(values.value && values.minpurchasevalue < values.value){
+        if(values.value && parseFloat(values.minpurchasevalue) < parseFloat(values.value)){
             errors.minpurchasevalue = "Please Enter Greater Than Discount value";
         }
         if(values.enddate &&  values.startdate > values.enddate){
