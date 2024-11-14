@@ -5,6 +5,8 @@ import Swal from 'sweetalert2';
 import { Link, useNavigate } from 'react-router-dom';
 import { image_baseurl } from '../../../Utils/config';
 
+
+
 const Generalsettings = () => {
     const token = localStorage.getItem('token');
     const user_id = localStorage.getItem('id');
@@ -12,6 +14,7 @@ const Generalsettings = () => {
 
     const [clients, setClients] = useState(null);
     const [isModified, setIsModified] = useState(false); 
+    const [istoggle,setToggle] = useState([])
 
     const getsettinglist = async () => {
         try {
@@ -31,6 +34,9 @@ const Generalsettings = () => {
     if (!clients) {
         return <div>Loading...</div>;
     }
+
+
+
 
     return (
         <div className="page-content">
@@ -63,6 +69,7 @@ const Generalsettings = () => {
                                 email_address: clients[0].email_address || '',
                                 favicon: null,
                                 logo: null,
+                               
                             }}
                             onSubmit={async (values) => {
                                 const req = {
@@ -73,6 +80,7 @@ const Generalsettings = () => {
                                     favicon: values.favicon,
                                     logo: values.logo,
                                     id: user_id,
+                                   
                                 };
 
                                 try {
@@ -107,8 +115,12 @@ const Generalsettings = () => {
                             }}
                         >
                             {({ setFieldValue, values }) => (
-                                <Form className="card-body p-4" onChange={() => setIsModified(true)}> {/* Track changes */}
-                                    <div className="p-4 border radius-15">
+                                      <>
+                                     
+
+                                <Form className="card-body p-4" onChange={() => setIsModified(true)}> 
+                                    <div className="p-4 border radius-15 ">
+                                  
                                         <div className="row mb-3 align-items-center">
                                             <label htmlFor="from_name" className="col-sm-3 col-form-label">
                                                 <b> Company Name</b>
@@ -118,7 +130,12 @@ const Generalsettings = () => {
                                                     <span className="input-group-text">
                                                         <i className="fadeIn animated bx bx-building" />
                                                     </span>
-                                                    <Field name="from_name" type="text" className="form-control" placeholder="Your Name" />
+                                                    <Field name="from_name"
+                                                     type="text"
+                                                      className="form-control"
+                                                      placeholder="Your Name"
+                                                     
+                                                       />
                                                 </div>
                                             </div>
                                         </div>
@@ -132,7 +149,11 @@ const Generalsettings = () => {
                                                     <span className="input-group-text">
                                                         <i className="fadeIn animated bx bx-phone" />
                                                     </span>
-                                                    <Field name="contact_number" type="text" className="form-control" placeholder="Phone No" />
+                                                    <Field name="contact_number" 
+                                                     type="text" className="form-control" 
+                                                     placeholder="Phone No"
+                                                     
+                                                      />
                                                 </div>
                                             </div>
                                         </div>
@@ -146,7 +167,12 @@ const Generalsettings = () => {
                                                     <span className="input-group-text">
                                                         <i className="bx bx-envelope" />
                                                     </span>
-                                                    <Field name="email_address" type="email" className="form-control" placeholder="Email" />
+                                                    <Field name="email_address" 
+                                                    type="email" 
+                                                    className="form-control" 
+                                                    placeholder="Email"
+                                                   
+                                                     />
                                                 </div>
                                             </div>
                                         </div>
@@ -160,13 +186,16 @@ const Generalsettings = () => {
                                                     name="favicon"
                                                     type="file"
                                                     className="form-control"
+                                                   
                                                     onChange={(event) => setFieldValue("favicon", event.currentTarget.files[0])}
                                                 />
                                             </div>
                                             <div className="col-sm-1">
                                                 {clients[0].favicon && (
                                                     <div className="file-preview">
-                                                        <img src={`${image_baseurl}uploads/basicsetting/${clients[0].favicon}`} alt="Favicon Preview" className="image-preview" />
+                                                        <img src={`${image_baseurl}uploads/basicsetting/${clients[0].favicon}`} alt="Favicon Preview" className="image-preview"
+                                                         
+                                                         />
                                                     </div>
                                                 )}
                                             </div>
@@ -182,6 +211,7 @@ const Generalsettings = () => {
                                                     type="file"
                                                     className="form-control"
                                                     onChange={(event) => setFieldValue("logo", event.currentTarget.files[0])}
+                                                   
                                                 />
                                             </div>
                                             <div className="col-sm-1">
@@ -197,7 +227,7 @@ const Generalsettings = () => {
                                             <label className="col-sm-3 col-form-label" />
                                             <div className="col-sm-9">
                                                 <div className="d-md-flex d-grid align-items-center justify-content-end gap-3">
-                                                    <button type="submit" className="btn btn-primary px-4" disabled={!isModified}>
+                                                    <button type="submit" className="btn btn-primary px-4" disabled={!isModified } >
                                                         Update
                                                     </button>
                                                 </div>
@@ -205,7 +235,9 @@ const Generalsettings = () => {
                                         </div>
                                     </div>
                                 </Form>
+                                </>
                             )}
+                           
                         </Formik>
                     </div>
                 </div>

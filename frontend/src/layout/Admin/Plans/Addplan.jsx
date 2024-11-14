@@ -16,7 +16,7 @@ const Addplan = () => {
     const [clients, setClients] = useState([]);
     const [plan, setPlan] = useState([]);
 
-    console.log("plan",plan)
+    
 
     const getcategoryplanlist = async () => {
         try {

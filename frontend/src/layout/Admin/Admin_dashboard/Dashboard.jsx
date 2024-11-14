@@ -73,20 +73,34 @@ const Dashbord = () => {
             name: 'Plan Status',
             cell: row => {
                 const hasActive = row?.plansStatus?.some(item => item.status === 'active');
+                const hasExpired = row?.plansStatus?.some(item => item.status === 'expired');
+
+                let statusText = 'N/A';
+                let color = 'red';
+
+                if (hasActive) {
+                    statusText = 'Active';
+                    color = 'green';
+                } else if (hasExpired) {
+                    statusText = 'Expired';
+                    color = 'orange';
+                }
+
                 return (
-                    <span style={{ color: hasActive ? 'green' : 'red' }}>
-                        {hasActive ? 'Active' : 'Expired'}
+                    <span style={{ color }}>
+                        {statusText}
                     </span>
                 );
             },
             sortable: true,
             width: '200px',
         },
+
         {
             name: 'Client Segment',
             cell: row => (
                 <>
-                    {Array.isArray(row?.plansStatus) ? (
+                    {Array.isArray(row?.plansStatus) && row.plansStatus.length > 0 ? (
                         row.plansStatus.map((item, index) => (
                             <span
                                 key={index}
@@ -95,11 +109,11 @@ const Dashbord = () => {
                                     marginRight: '5px',
                                 }}
                             >
-                                {item.serviceName || "-"}
+                                {item.serviceName || "N/A"}
                             </span>
                         ))
                     ) : (
-                        <span>-</span>
+                        <span>No service available</span>
                     )}
                 </>
             ),
@@ -165,7 +179,7 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <Link to="/admin/client"><i className="bx bx-up-arrow-alt text-white" /> </Link>
+                                            <Link to="/admin/client" ><i className="bx bx-up-arrow-alt text-white" /> </Link>
                                         </span>
 
                                     </p>
@@ -201,7 +215,12 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <Link to="/admin/client"><i className="bx bx-up-arrow-alt text-white" /></Link>
+                                            <Link to="/admin/client" state={{ clientStatus: "ActiveClient" }}>
+                                                <i className="bx bx-up-arrow-alt text-white" />
+                                            </Link>
+
+
+
                                             {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
@@ -517,7 +536,7 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <Link to="/admin/closesignal"><i className="bx bx-up-arrow-alt text-white" /></Link>
+                                            <Link to="/admin/freeclient"><i className="bx bx-up-arrow-alt text-white" /></Link>
                                             {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
@@ -552,7 +571,7 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <Link><i className="bx bx-up-arrow-alt text-white" /></Link>
+                                            <Link to="/admin/freeclient"><i className="bx bx-up-arrow-alt text-white" /></Link>
                                             {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>

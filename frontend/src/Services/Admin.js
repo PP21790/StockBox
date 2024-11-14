@@ -1606,6 +1606,7 @@ export async function Updatebasicsettings(data, token) {
     formData.append('contact_number', data.contact_number);
     formData.append('favicon', data.favicon);
     formData.append('logo', data.logo);
+   
 
     try {
         const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
@@ -1622,6 +1623,29 @@ export async function Updatebasicsettings(data, token) {
     }
 }
 
+
+// update kyc status
+
+
+
+export async function UpdateKycstatus(data, token) {
+    const formData = new FormData();
+    formData.append('kyc', data.kyc);
+
+    try {
+        const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
 
 
 // update email setting

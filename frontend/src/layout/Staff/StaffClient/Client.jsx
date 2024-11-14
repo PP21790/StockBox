@@ -5,7 +5,7 @@ import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import { Settings2, Eye, UserPen, Trash2, Download, ArrowDownToLine , RefreshCcw } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { deleteClient, UpdateClientStatus, PlanSubscription, getplanlist, BasketSubscription, BasketAllList, getcategoryplan } from '../../../Services/Admin';
+import { deleteClient, UpdateClientStatus, PlanSubscription, getplanlist, BasketSubscription, BasketAllList, getcategoryplan , getPlanbyUser } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
 import { fDateTime, fDate } from '../../../Utils/Date_formate';
 import { image_baseurl } from '../../../Utils/config';
@@ -40,6 +40,9 @@ const Client = () => {
     const [ForGetCSV, setForGetCSV] = useState([])
     const [searchkyc, setSearchkyc] = useState("");
     const [statuscreatedby, setStatuscreatedby] = useState("");
+
+
+    
 
     const handleDownload = (row) => {
 
@@ -400,20 +403,34 @@ const Client = () => {
             name: 'Plan Status',
             cell: row => {
                 const hasActive = row?.plansStatus?.some(item => item.status === 'active');
+                const hasExpired = row?.plansStatus?.some(item => item.status === 'expired');
+
+                let statusText = 'N/A';
+                let color = 'red';
+
+                if (hasActive) {
+                    statusText = 'Active';
+                    color = 'green';
+                } else if (hasExpired) {
+                    statusText = 'Expired';
+                    color = 'orange';
+                }
+
                 return (
-                    <span style={{ color: hasActive ? 'green' : 'red' }}>
-                        {hasActive ? 'Active' : 'Expired'}
+                    <span style={{ color }}>
+                        {statusText}
                     </span>
                 );
             },
             sortable: true,
             width: '200px',
         },
+
         {
-            name: 'Client Plan',
+            name: 'Client Segment',
             cell: row => (
                 <>
-                    {Array.isArray(row?.plansStatus) ? (
+                    {Array.isArray(row?.plansStatus) && row.plansStatus.length > 0 ? (
                         row.plansStatus.map((item, index) => (
                             <span
                                 key={index}
@@ -422,11 +439,11 @@ const Client = () => {
                                     marginRight: '5px',
                                 }}
                             >
-                                {item.serviceName || "-"}
+                                {item.serviceName || "N/A"}
                             </span>
                         ))
                     ) : (
-                        <span>-</span>
+                        <span>No service available</span>
                     )}
                 </>
             ),

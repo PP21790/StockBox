@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table';
@@ -18,10 +18,15 @@ import ExportToExcel from '../../../Utils/ExportCSV';
 const Client = () => {
 
 
-    
+
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
-
+   
+    const location = useLocation();
+    const clientStatus = location?.state?.clientStatus;
+    
+    console.log("clientStatus",clientStatus)
+   
 
     const [category, setCategory] = useState([]);
     const [checkedIndex, setCheckedIndex] = useState(0);
@@ -157,6 +162,7 @@ const Client = () => {
         try {
             const response = await GetClient(token);
             if (response.status) {
+                
                 const filterdata = response.data.filter((item) => {
                     const matchesSearchInput =
                         searchInput === "" ||
@@ -201,7 +207,7 @@ const Client = () => {
         }
     }
 
-    console.log("client", client)
+    
 
 
     const getbasketlist = async () => {
@@ -424,20 +430,34 @@ const Client = () => {
             name: 'Plan Status',
             cell: row => {
                 const hasActive = row?.plansStatus?.some(item => item.status === 'active');
+                const hasExpired = row?.plansStatus?.some(item => item.status === 'expired');
+
+                let statusText = 'N/A';
+                let color = 'red';
+
+                if (hasActive) {
+                    statusText = 'Active';
+                    color = 'green';
+                } else if (hasExpired) {
+                    statusText = 'Expired';
+                    color = 'orange';
+                }
+
                 return (
-                    <span style={{ color: hasActive ? 'green' : 'red' }}>
-                        {hasActive ? 'Active' : 'Expired'}
+                    <span style={{ color }}>
+                        {statusText}
                     </span>
                 );
             },
             sortable: true,
             width: '200px',
         },
+
         {
             name: 'Client Segment',
             cell: row => (
                 <>
-                    {Array.isArray(row?.plansStatus) ? (
+                    {Array.isArray(row?.plansStatus) && row.plansStatus.length > 0 ? (
                         row.plansStatus.map((item, index) => (
                             <span
                                 key={index}
@@ -446,17 +466,18 @@ const Client = () => {
                                     marginRight: '5px',
                                 }}
                             >
-                                {item.serviceName || "-"}
+                                {item.serviceName || "N/A"}
                             </span>
                         ))
                     ) : (
-                        <span>-</span>
+                        <span>No service available</span>
                     )}
                 </>
             ),
             sortable: true,
             width: '200px',
         }
+
         ,
         {
             name: 'Phone No',
