@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
-// import Table from '../../../components/Table';
+import Table from '../../../components/Table';
 import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine, RefreshCcw } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { deleteClient, UpdateClientStatus, PlanSubscription, getplanlist, BasketSubscription, BasketAllList, getcategoryplan, getPlanbyUser, AllclientFilter } from '../../../Services/Admin';
@@ -11,7 +11,7 @@ import { fDateTime } from '../../../Utils/Date_formate';
 import { image_baseurl } from '../../../Utils/config';
 import { IndianRupee } from 'lucide-react';
 import ExportToExcel from '../../../Utils/ExportCSV';
-import Table from '../../../components/Table1';
+// import Table from '../../../components/Table1';
 
 
 
@@ -172,86 +172,86 @@ const Client = () => {
     };
 
 
-    // const getAdminclient = async () => {
-    //     try {
-    //         const response = await GetClient(token);
-    //         if (response.status) {
-    //             let filterdata = [];
-
-    //             if (clientStatus === "ActiveClient") {
-    //                 const activclient = response.data.filter((item) => item.ActiveStatus =="1");
-    //                 filterdata = activclient?.filter((item) => {
-    //                     const matchesSearchInput =
-    //                         searchInput === "" ||
-    //                         item.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
-    //                         item.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
-    //                         item.PhoneNo.toLowerCase().includes(searchInput.toLowerCase());
-
-    //                     const matchesKycFilter =
-    //                         searchkyc === "" ||
-    //                         item.kyc_verification === Number(searchkyc);
-
-    //                     const filterCreatedBy =
-    //                         statuscreatedby === "" ||
-    //                         item.clientcome.toString() === statuscreatedby;
-
-    //                     return matchesSearchInput && matchesKycFilter && filterCreatedBy;
-    //                 });
-    //             } else {
-
-    //                 filterdata = response.data.filter((item) => {
-    //                     const matchesSearchInput =
-    //                         searchInput === "" ||
-    //                         item.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
-    //                         item.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
-    //                         item.PhoneNo.toLowerCase().includes(searchInput.toLowerCase());
-
-    //                     const matchesKycFilter =
-    //                         searchkyc === "" ||
-    //                         item.kyc_verification === Number(searchkyc);
-
-    //                     const filterCreatedBy =
-    //                         statuscreatedby === "" ||
-    //                         item.clientcome.toString() === statuscreatedby;
-
-    //                     return matchesSearchInput && matchesKycFilter && filterCreatedBy;
-    //                 });
-    //             }
-
-    //             setClients(searchInput || searchkyc || statuscreatedby || clientStatus ? filterdata : response.data);
-    //         }
-    //     } catch (error) {
-    //         console.log("Error fetching clients:", error);
-    //     }
-    // };
-
-   console.log("searchkyc",searchkyc)
-   console.log("currentPage",currentPage)
-
-    const getAdminclient = async () => {
-        try {
-            const data = { page: currentPage , kyc_verification:searchkyc }
-            const response = await AllclientFilter(data, token);
-            console.log("response", response)
+   const getAdminclient = async () => {
+         try {
+            const response = await GetClient(token);
             if (response.status) {
-                const filterdata = response.data.filter((item) => {
-                    const matchesSearchInput =
-                        !searchInput ||
-                        item.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
-                        item.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
-                        item.PhoneNo.toLowerCase().includes(searchInput.toLowerCase());
+                let filterdata = [];
 
-                    return matchesSearchInput 
-                });
+                if (clientStatus === "ActiveClient") {
+                    const activclient = response.data.filter((item) => item.ActiveStatus =="1");
+                    filterdata = activclient?.filter((item) => {
+                        const matchesSearchInput =
+                            searchInput === "" ||
+                            item.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
+                            item.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
+                            item.PhoneNo.toLowerCase().includes(searchInput.toLowerCase());
 
-                setClients(searchInput ? filterdata : response.data);
-                setTotalRows(response.pagination.total)
-                
+                        const matchesKycFilter =
+                            searchkyc === "" ||
+                            item.kyc_verification === Number(searchkyc);
+
+                        const filterCreatedBy =
+                            statuscreatedby === "" ||
+                            item.clientcome.toString() === statuscreatedby;
+
+                        return matchesSearchInput && matchesKycFilter && filterCreatedBy;
+                    });
+                } else {
+
+                    filterdata = response.data.filter((item) => {
+                        const matchesSearchInput =
+                            searchInput === "" ||
+                            item.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
+                            item.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
+                            item.PhoneNo.toLowerCase().includes(searchInput.toLowerCase());
+
+                        const matchesKycFilter =
+                            searchkyc === "" ||
+                            item.kyc_verification === Number(searchkyc);
+
+                        const filterCreatedBy =
+                            statuscreatedby === "" ||
+                            item.clientcome.toString() === statuscreatedby;
+
+                        return matchesSearchInput && matchesKycFilter && filterCreatedBy;
+                    });
+                }
+
+                setClients(searchInput || searchkyc || statuscreatedby || clientStatus ? filterdata : response.data);
             }
         } catch (error) {
             console.log("Error fetching clients:", error);
         }
     };
+
+   console.log("searchkyc",searchkyc)
+   console.log("currentPage",currentPage)
+
+    // const getAdminclient = async () => {
+    //     try {
+    //         const data = { page: currentPage , status:            }
+    //         const response = await AllclientFilter(data, token);
+    //         console.log("response", response)
+    //         if (response.status) {
+    //             const filterdata = response.data.filter((item) => {
+    //                 const matchesSearchInput =
+    //                     !searchInput ||
+    //                     item.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
+    //                     item.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
+    //                     item.PhoneNo.toLowerCase().includes(searchInput.toLowerCase());
+
+    //                 return matchesSearchInput 
+    //             });
+
+    //             setClients(searchInput ? filterdata : response.data);
+    //             setTotalRows(response.pagination.total)
+                
+    //         }
+    //     } catch (error) {
+    //         console.log("Error fetching clients:", error);
+    //     }
+    // };
 
 
 
@@ -544,7 +544,7 @@ const Client = () => {
                             </span>
                         ))
                     ) : (
-                        <span>No service available</span>
+                        <span>N/A</span>
                     )}
                 </>
             ),

@@ -113,7 +113,7 @@ const Dashbord = () => {
                             </span>
                         ))
                     ) : (
-                        <span>No service available</span>
+                        <span>N/A</span>
                     )}
                 </>
             ),

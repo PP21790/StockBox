@@ -42,7 +42,7 @@ const Client = () => {
     const [statuscreatedby, setStatuscreatedby] = useState("");
 
 
-    
+
 
     const handleDownload = (row) => {
 
@@ -443,7 +443,7 @@ const Client = () => {
                             </span>
                         ))
                     ) : (
-                        <span>No service available</span>
+                        <span>N/A</span>
                     )}
                 </>
             ),
