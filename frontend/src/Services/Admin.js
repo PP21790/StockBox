@@ -2398,3 +2398,22 @@ export async function getPlanbyUser(_id,token) {
         return err.response?.data || err.message;
     }
 }
+
+
+// client filter
+
+export async function AllclientFilter(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}client/listwithfilter`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}

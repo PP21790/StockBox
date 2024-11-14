@@ -2,16 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
-import Table from '../../../components/Table';
+// import Table from '../../../components/Table';
 import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine, RefreshCcw } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { deleteClient, UpdateClientStatus, PlanSubscription, getplanlist, BasketSubscription, BasketAllList, getcategoryplan, getPlanbyUser } from '../../../Services/Admin';
+import { deleteClient, UpdateClientStatus, PlanSubscription, getplanlist, BasketSubscription, BasketAllList, getcategoryplan, getPlanbyUser, AllclientFilter } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
 import { fDateTime } from '../../../Utils/Date_formate';
 import { image_baseurl } from '../../../Utils/config';
 import { IndianRupee } from 'lucide-react';
 import ExportToExcel from '../../../Utils/ExportCSV';
-
+import Table from '../../../components/Table1';
 
 
 
@@ -25,8 +25,8 @@ const Client = () => {
     const location = useLocation();
     const clientStatus = location?.state?.clientStatus;
 
- 
- 
+
+
 
     const [category, setCategory] = useState([]);
     const [checkedIndex, setCheckedIndex] = useState(0);
@@ -44,14 +44,20 @@ const Client = () => {
     const [header, setheader] = useState("Client");
 
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalRows, setTotalRows] = useState(0);
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
 
-    useEffect(()=>{
-        if(clientStatus === "ActiveClient"){
+
+    useEffect(() => {
+        if (clientStatus === "ActiveClient") {
             setheader("Active Client")
-        }else if(clientStatus === "DeactiveClient"){
+        } else if (clientStatus === "DeactiveClient") {
             setheader("Deactive Client")
         }
-    },[clientStatus])
+    }, [clientStatus])
 
 
     const handleDownload = (row) => {
@@ -130,7 +136,7 @@ const Client = () => {
     useEffect(() => {
         getAdminclient();
 
-    }, [searchInput, searchkyc, statuscreatedby]);
+    }, [searchInput, searchkyc, statuscreatedby, currentPage]);
 
 
     useEffect(() => {
@@ -166,59 +172,86 @@ const Client = () => {
     };
 
 
+    // const getAdminclient = async () => {
+    //     try {
+    //         const response = await GetClient(token);
+    //         if (response.status) {
+    //             let filterdata = [];
+
+    //             if (clientStatus === "ActiveClient") {
+    //                 const activclient = response.data.filter((item) => item.ActiveStatus =="1");
+    //                 filterdata = activclient?.filter((item) => {
+    //                     const matchesSearchInput =
+    //                         searchInput === "" ||
+    //                         item.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
+    //                         item.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
+    //                         item.PhoneNo.toLowerCase().includes(searchInput.toLowerCase());
+
+    //                     const matchesKycFilter =
+    //                         searchkyc === "" ||
+    //                         item.kyc_verification === Number(searchkyc);
+
+    //                     const filterCreatedBy =
+    //                         statuscreatedby === "" ||
+    //                         item.clientcome.toString() === statuscreatedby;
+
+    //                     return matchesSearchInput && matchesKycFilter && filterCreatedBy;
+    //                 });
+    //             } else {
+
+    //                 filterdata = response.data.filter((item) => {
+    //                     const matchesSearchInput =
+    //                         searchInput === "" ||
+    //                         item.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
+    //                         item.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
+    //                         item.PhoneNo.toLowerCase().includes(searchInput.toLowerCase());
+
+    //                     const matchesKycFilter =
+    //                         searchkyc === "" ||
+    //                         item.kyc_verification === Number(searchkyc);
+
+    //                     const filterCreatedBy =
+    //                         statuscreatedby === "" ||
+    //                         item.clientcome.toString() === statuscreatedby;
+
+    //                     return matchesSearchInput && matchesKycFilter && filterCreatedBy;
+    //                 });
+    //             }
+
+    //             setClients(searchInput || searchkyc || statuscreatedby || clientStatus ? filterdata : response.data);
+    //         }
+    //     } catch (error) {
+    //         console.log("Error fetching clients:", error);
+    //     }
+    // };
+
+   console.log("searchkyc",searchkyc)
+   console.log("currentPage",currentPage)
+
     const getAdminclient = async () => {
         try {
-            const response = await GetClient(token);
+            const data = { page: currentPage , kyc_verification:searchkyc}
+            const response = await AllclientFilter(data, token);
+            console.log("response", response)
             if (response.status) {
-                let filterdata = [];
+                const filterdata = response.data.filter((item) => {
+                    const matchesSearchInput =
+                        !searchInput ||
+                        item.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
+                        item.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
+                        item.PhoneNo.toLowerCase().includes(searchInput.toLowerCase());
 
-                if (clientStatus === "ActiveClient") {
-                    const activclient = response.data.filter((item) => item.ActiveStatus =="1");
-                    filterdata = activclient?.filter((item) => {
-                        const matchesSearchInput =
-                            searchInput === "" ||
-                            item.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
-                            item.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
-                            item.PhoneNo.toLowerCase().includes(searchInput.toLowerCase());
+                    return matchesSearchInput 
+                });
 
-                        const matchesKycFilter =
-                            searchkyc === "" ||
-                            item.kyc_verification === Number(searchkyc);
-
-                        const filterCreatedBy =
-                            statuscreatedby === "" ||
-                            item.clientcome.toString() === statuscreatedby;
-
-                        return matchesSearchInput && matchesKycFilter && filterCreatedBy;
-                    });
-                } else {
-                  
-                    filterdata = response.data.filter((item) => {
-                        const matchesSearchInput =
-                            searchInput === "" ||
-                            item.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
-                            item.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
-                            item.PhoneNo.toLowerCase().includes(searchInput.toLowerCase());
-
-                        const matchesKycFilter =
-                            searchkyc === "" ||
-                            item.kyc_verification === Number(searchkyc);
-
-                        const filterCreatedBy =
-                            statuscreatedby === "" ||
-                            item.clientcome.toString() === statuscreatedby;
-
-                        return matchesSearchInput && matchesKycFilter && filterCreatedBy;
-                    });
-                }
-
-                setClients(searchInput || searchkyc || statuscreatedby || clientStatus ? filterdata : response.data);
+                setClients(searchInput ? filterdata : response.data);
+                setTotalRows(response.pagination.total)
+                
             }
         } catch (error) {
             console.log("Error fetching clients:", error);
         }
     };
-
 
 
 
@@ -740,9 +773,16 @@ const Client = () => {
                             </div>
 
 
-                            <Table
+                            {/* <Table
                                 columns={columns}
                                 data={clients}
+                            /> */}
+                            <Table
+                                columns={columns}    
+                                data={clients}
+                                totalRows={totalRows}
+                                currentPage={currentPage}
+                                onPageChange={handlePageChange}
                             />
                         </div>
                     </div>
