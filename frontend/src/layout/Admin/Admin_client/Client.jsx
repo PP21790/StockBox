@@ -21,12 +21,12 @@ const Client = () => {
 
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
-   
+
     const location = useLocation();
     const clientStatus = location?.state?.clientStatus;
-    
-    console.log("clientStatus",clientStatus)
-   
+
+ 
+ 
 
     const [category, setCategory] = useState([]);
     const [checkedIndex, setCheckedIndex] = useState(0);
@@ -41,9 +41,17 @@ const Client = () => {
     const [ForGetCSV, setForGetCSV] = useState([])
     const [searchkyc, setSearchkyc] = useState("");
     const [statuscreatedby, setStatuscreatedby] = useState("");
+    const [header, setheader] = useState("Client");
 
 
 
+    useEffect(()=>{
+        if(clientStatus === "ActiveClient"){
+            setheader("Active Client")
+        }else if(clientStatus === "DeactiveClient"){
+            setheader("Deactive Client")
+        }
+    },[clientStatus])
 
 
     const handleDownload = (row) => {
@@ -162,28 +170,49 @@ const Client = () => {
         try {
             const response = await GetClient(token);
             if (response.status) {
-                
-                const filterdata = response.data.filter((item) => {
-                    const matchesSearchInput =
-                        searchInput === "" ||
-                        item.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
-                        item.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
-                        item.PhoneNo.toLowerCase().includes(searchInput.toLowerCase());
+                let filterdata = [];
 
-                    const matchesKycFilter =
-                        searchkyc === "" ||
-                        item.kyc_verification === Number(searchkyc);
+                if (clientStatus === "ActiveClient") {
+                    const activclient = response.data.filter((item) => item.ActiveStatus =="1");
+                    filterdata = activclient?.filter((item) => {
+                        const matchesSearchInput =
+                            searchInput === "" ||
+                            item.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
+                            item.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
+                            item.PhoneNo.toLowerCase().includes(searchInput.toLowerCase());
 
+                        const matchesKycFilter =
+                            searchkyc === "" ||
+                            item.kyc_verification === Number(searchkyc);
 
+                        const filterCreatedBy =
+                            statuscreatedby === "" ||
+                            item.clientcome.toString() === statuscreatedby;
 
-                    const filterCreatedBy =
-                        statuscreatedby === "" ||
-                        item.clientcome.toString() === statuscreatedby;
+                        return matchesSearchInput && matchesKycFilter && filterCreatedBy;
+                    });
+                } else {
+                  
+                    filterdata = response.data.filter((item) => {
+                        const matchesSearchInput =
+                            searchInput === "" ||
+                            item.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
+                            item.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
+                            item.PhoneNo.toLowerCase().includes(searchInput.toLowerCase());
 
-                    return matchesSearchInput && matchesKycFilter && filterCreatedBy;
-                });
+                        const matchesKycFilter =
+                            searchkyc === "" ||
+                            item.kyc_verification === Number(searchkyc);
 
-                setClients(searchInput || searchkyc || statuscreatedby ? filterdata : response.data);
+                        const filterCreatedBy =
+                            statuscreatedby === "" ||
+                            item.clientcome.toString() === statuscreatedby;
+
+                        return matchesSearchInput && matchesKycFilter && filterCreatedBy;
+                    });
+                }
+
+                setClients(searchInput || searchkyc || statuscreatedby || clientStatus ? filterdata : response.data);
             }
         } catch (error) {
             console.log("Error fetching clients:", error);
@@ -198,16 +227,28 @@ const Client = () => {
 
             const response = await getplanlist(client._id, token);
             if (response.status) {
-
                 setPlanlist(response.data);
-                console.log("response.data", response.data)
             }
         } catch (error) {
             console.log("error");
         }
     }
 
-    
+
+    //  const getplanlistbyadmin = async () => {
+    //     try {
+
+    //         const response = await getplanlist(client._id, token);
+    //         if (response.status) {
+    //             setPlanlist(response.data);
+    //         }
+    //     } catch (error) {
+    //         console.log("error");
+    //     }
+    // } 
+
+
+
 
 
     const getbasketlist = async () => {
@@ -587,7 +628,7 @@ const Client = () => {
                 <div className="page-content">
 
                     <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                        <div className="breadcrumb-title pe-3">Client</div>
+                        <div className="breadcrumb-title pe-3">{header}</div>
                         <div className="ps-3">
                             <nav aria-label="breadcrumb">
                                 <ol className="breadcrumb mb-0 p-0">

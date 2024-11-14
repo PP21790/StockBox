@@ -255,7 +255,7 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <Link to="/admin/client"><i className="bx bx-up-arrow-alt text-white" /></Link>
+                                            <Link to="/admin/client" state={{ clientStatus: " DeactiveClient" }}><i className="bx bx-up-arrow-alt text-white" /></Link>
                                             {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
