@@ -215,7 +215,7 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <Link to="/admin/client" state={{ clientStatus: "ActiveClient" }}>
+                                            <Link to="/admin/client" state={{ clientStatus: 1 }}>
                                                 <i className="bx bx-up-arrow-alt text-white" />
                                             </Link>
 
@@ -255,7 +255,7 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <Link to="/admin/client" state={{ clientStatus: " DeactiveClient" }}><i className="bx bx-up-arrow-alt text-white" /></Link>
+                                            <Link to="/admin/client" state={{ clientStatus: 0 }}><i className="bx bx-up-arrow-alt text-white" /></Link>
                                             {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
@@ -462,11 +462,13 @@ const Dashbord = () => {
                                     />
                                 </div>
                                 <div className="d-flex align-items-center text-white">
-                                    <p className="mb-0">Total Plan Active </p>
+                                    <p className="mb-0">Total Plan Active Client </p>
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <Link><i className="bx bx-up-arrow-alt text-white" /></Link>
+                                        <Link to="/admin/client" state={{ clientStatus: "active" }}>
+                                                <i className="bx bx-up-arrow-alt text-white" />
+                                            </Link>
                                             {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
@@ -501,7 +503,9 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <Link ><i className="bx bx-up-arrow-alt text-white" /></Link>
+                                        <Link to="/admin/client" state={{ clientStatus: "expired" }}>
+                                                <i className="bx bx-up-arrow-alt text-white" />
+                                            </Link>
                                             {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>

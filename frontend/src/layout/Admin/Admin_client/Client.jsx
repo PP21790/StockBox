@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
-import Table from '../../../components/Table';
+// import Table from '../../../components/Table';
 import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine, RefreshCcw } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { deleteClient, UpdateClientStatus, PlanSubscription, getplanlist, BasketSubscription, BasketAllList, getcategoryplan, getPlanbyUser, AllclientFilter } from '../../../Services/Admin';
@@ -11,7 +11,7 @@ import { fDateTime } from '../../../Utils/Date_formate';
 import { image_baseurl } from '../../../Utils/config';
 import { IndianRupee } from 'lucide-react';
 import ExportToExcel from '../../../Utils/ExportCSV';
-// import Table from '../../../components/Table1';
+import Table from '../../../components/Table1';
 
 
 
@@ -24,7 +24,6 @@ const Client = () => {
 
     const location = useLocation();
     const clientStatus = location?.state?.clientStatus;
-
 
 
 
@@ -42,20 +41,27 @@ const Client = () => {
     const [searchkyc, setSearchkyc] = useState("");
     const [statuscreatedby, setStatuscreatedby] = useState("");
     const [header, setheader] = useState("Client");
+    const [expired, setExpired] = useState("");
 
 
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
+
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };
 
 
     useEffect(() => {
-        if (clientStatus === "ActiveClient") {
+        if (clientStatus == 1) {
             setheader("Active Client")
-        } else if (clientStatus === "DeactiveClient") {
+        } else if (clientStatus == 0) {
             setheader("Deactive Client")
+        } else if (clientStatus === "active") {
+            setheader("Total Plan Active Client")
+
+        }else if(clientStatus === "expired"){
+            setheader("Total Plan Expired Client")
         }
     }, [clientStatus])
 
@@ -88,6 +94,8 @@ const Client = () => {
         client_id: "",
         price: ""
     });
+
+
 
 
 
@@ -125,7 +133,7 @@ const Client = () => {
     }
 
     useEffect(() => {
-        getplanlistbyadmin()
+        // getplanlistbyadmin()
         getbasketlist()
         getcategoryplanlist()
     }, []);
@@ -136,7 +144,7 @@ const Client = () => {
     useEffect(() => {
         getAdminclient();
 
-    }, [searchInput, searchkyc, statuscreatedby, currentPage]);
+    }, [searchInput, searchkyc, statuscreatedby, currentPage, expired]);
 
 
     useEffect(() => {
@@ -172,113 +180,63 @@ const Client = () => {
     };
 
 
-   const getAdminclient = async () => {
-         try {
-            const response = await GetClient(token);
+
+    const getAdminclient = async () => {
+        try {
+            const data = {
+                page: currentPage,
+                kyc_verification: searchkyc,
+                status: clientStatus == 1 ? 1 : clientStatus == 0 ? 0 : "" ,
+                createdby: statuscreatedby,
+                planStatus: expired || clientStatus == "active" ? "active" :  clientStatus == "expired" ? "expired" : ""
+            };
+
+            const response = await AllclientFilter(data, token);
+        
             if (response.status) {
-                let filterdata = [];
+                const filterdata = response.data.filter((item) => {
+                    return (
+                        !searchInput ||
+                        item.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
+                        item.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
+                        item.PhoneNo.toLowerCase().includes(searchInput.toLowerCase())
+                    );
+                });
 
-                if (clientStatus === "ActiveClient") {
-                    const activclient = response.data.filter((item) => item.ActiveStatus =="1");
-                    filterdata = activclient?.filter((item) => {
-                        const matchesSearchInput =
-                            searchInput === "" ||
-                            item.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
-                            item.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
-                            item.PhoneNo.toLowerCase().includes(searchInput.toLowerCase());
-
-                        const matchesKycFilter =
-                            searchkyc === "" ||
-                            item.kyc_verification === Number(searchkyc);
-
-                        const filterCreatedBy =
-                            statuscreatedby === "" ||
-                            item.clientcome.toString() === statuscreatedby;
-
-                        return matchesSearchInput && matchesKycFilter && filterCreatedBy;
-                    });
-                } else {
-
-                    filterdata = response.data.filter((item) => {
-                        const matchesSearchInput =
-                            searchInput === "" ||
-                            item.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
-                            item.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
-                            item.PhoneNo.toLowerCase().includes(searchInput.toLowerCase());
-
-                        const matchesKycFilter =
-                            searchkyc === "" ||
-                            item.kyc_verification === Number(searchkyc);
-
-                        const filterCreatedBy =
-                            statuscreatedby === "" ||
-                            item.clientcome.toString() === statuscreatedby;
-
-                        return matchesSearchInput && matchesKycFilter && filterCreatedBy;
-                    });
-                }
-
-                setClients(searchInput || searchkyc || statuscreatedby || clientStatus ? filterdata : response.data);
+                setClients(searchInput ? filterdata : response.data);
+                setTotalRows(response.pagination.total);
             }
         } catch (error) {
-            console.log("Error fetching clients:", error);
+            console.error("Error fetching clients:", error);
         }
     };
 
-   console.log("searchkyc",searchkyc)
-   console.log("currentPage",currentPage)
 
-    // const getAdminclient = async () => {
+
+    // const getplanlistbyadmin = async () => {
     //     try {
-    //         const data = { page: currentPage , status:            }
-    //         const response = await AllclientFilter(data, token);
-    //         console.log("response", response)
+
+    //         const response = await getplanlist(client._id, token);
     //         if (response.status) {
-    //             const filterdata = response.data.filter((item) => {
-    //                 const matchesSearchInput =
-    //                     !searchInput ||
-    //                     item.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
-    //                     item.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
-    //                     item.PhoneNo.toLowerCase().includes(searchInput.toLowerCase());
-
-    //                 return matchesSearchInput 
-    //             });
-
-    //             setClients(searchInput ? filterdata : response.data);
-    //             setTotalRows(response.pagination.total)
-                
+    //             // setPlanlist(response.data);
     //         }
     //     } catch (error) {
-    //         console.log("Error fetching clients:", error);
+    //         console.log("error");
     //     }
-    // };
+    // }
 
 
-
-    const getplanlistbyadmin = async () => {
+     const getplanlistassinstatus = async (_id) => {
         try {
 
-            const response = await getplanlist(client._id, token);
+            const response = await getPlanbyUser(_id, token);
             if (response.status) {
                 setPlanlist(response.data);
             }
         } catch (error) {
             console.log("error");
         }
-    }
-
-
-    //  const getplanlistbyadmin = async () => {
-    //     try {
-
-    //         const response = await getplanlist(client._id, token);
-    //         if (response.status) {
-    //             setPlanlist(response.data);
-    //         }
-    //     } catch (error) {
-    //         console.log("error");
-    //     }
-    // } 
+    } 
 
 
 
@@ -625,7 +583,7 @@ const Client = () => {
 
 
                     <Tooltip placement="top" overlay="Package Assign">
-                        <span onClick={(e) => { showModal(true); setClientid(row); }} style={{ cursor: 'pointer' }}>
+                        <span onClick={(e) => { showModal(true); setClientid(row);getplanlistassinstatus(row._id) }} style={{ cursor: 'pointer' }}>
                             <Settings2 />
                         </span>
                     </Tooltip>
@@ -743,8 +701,8 @@ const Client = () => {
                                             onChange={(e) => setStatuscreatedby(e.target.value)}
                                         >
                                             <option value="">Select Created By</option>
-                                            <option value="1">Web</option>
-                                            <option value="0">App</option>
+                                            <option value="web">Web</option>
+                                            <option value="app">App</option>
                                         </select>
                                     </div>
                                 </div>
@@ -754,12 +712,12 @@ const Client = () => {
                                         <select
                                             id="CreatedBy"
                                             className="form-control radius-10"
-                                            value={statuscreatedby}
-                                            onChange={(e) => setStatuscreatedby(e.target.value)}
+                                            value={expired}
+                                            onChange={(e) => setExpired(e.target.value)}
                                         >
                                             <option value="">Select Client</option>
-                                            <option value="">Active</option>
-                                            <option value="">Expired</option>
+                                            <option value="active">Active</option>
+                                            <option value="expired">Expired</option>
                                         </select>
                                     </div>
 
@@ -778,7 +736,7 @@ const Client = () => {
                                 data={clients}
                             /> */}
                             <Table
-                                columns={columns}    
+                                columns={columns}
                                 data={clients}
                                 totalRows={totalRows}
                                 currentPage={currentPage}
@@ -834,7 +792,7 @@ const Client = () => {
                                             <>
                                                 <div className='row mt-3'>
                                                     {category && category
-                                                        .filter(cat => planlist.some(plan => plan.category === cat._id))
+                                                        .filter(cat => planlist.some(plan => plan.category._id === cat._id))
                                                         .map((item, index) => (
                                                             <div className='col-lg-4' key={index}>
                                                                 <input
@@ -858,7 +816,7 @@ const Client = () => {
                                                     <form className='card-body mt-3' style={{ height: "40vh", overflowY: "scroll" }} >
                                                         <div className="row">
                                                             {planlist
-                                                                .filter(item => item.category === selectcategory)
+                                                                .filter(item => item.category._id === selectcategory)
                                                                 .map((item, index) => (
                                                                     <div className="col-md-6" key={index}>
                                                                         <div className="card mb-0 my-2">
@@ -896,7 +854,7 @@ const Client = () => {
                                                                                                 <div className='d-flex justify-content-between'>
                                                                                                     <div>
                                                                                                         <strong className="text-secondary m-2">Detail</strong>
-                                                                                                        {/* <strong className="text-success m-2 activestrong">{item?.subscription.status=== "active" ? "Active" : ""}</strong> */}
+                                                                                                        <strong className="text-success m-2 activestrong">{item?.subscription?.status=== "active" ? "Active" : ""}</strong>
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </button>

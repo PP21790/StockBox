@@ -13,9 +13,9 @@ const Addcoupon = () => {
     const token = localStorage.getItem("token");
 
     const today = new Date().toISOString().slice(0, 10);
-  
 
-    
+
+
 
 
 
@@ -35,17 +35,17 @@ const Addcoupon = () => {
                 errors.code = "Code must contain only numbers and letters.";
             }
         }
-       
+
         if (values.minpurchasevalue && parseFloat(values.minpurchasevalue) < parseFloat(values.mincouponvalue)) {
             errors.minpurchasevalue = "Please Enter Value Greater Than  Max Discount Value "
         }
         if (values.mincouponvalue && parseFloat(values.minpurchasevalue) < parseFloat(values.mincouponvalue)) {
             errors.mincouponvalue = "Please Enter Value Less Than Min Purchase Value "
         }
-        if(values.value && parseFloat(values.minpurchasevalue) < parseFloat(values.value)){
+        if (values.value && parseFloat(values.minpurchasevalue) < parseFloat(values.value)) {
             errors.minpurchasevalue = "Please Enter Greater Than Discount value";
         }
-        if(values.enddate &&  values.startdate > values.enddate){
+        if (values.enddate && values.startdate > values.enddate) {
             errors.enddate = "Please Enter greater Than Startdate";
         }
         if (!values.type) {
@@ -69,7 +69,6 @@ const Addcoupon = () => {
 
         return errors;
     };
-
 
 
     const onSubmit = async (values) => {
@@ -199,7 +198,7 @@ const Addcoupon = () => {
         {
             name: "mincouponvalue",
             label: "Max Discount Value",
-            type: "text",
+            type: "number",
             label_size: 12,
             col_size: 6,
             disable: false,
