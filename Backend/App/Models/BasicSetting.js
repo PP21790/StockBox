@@ -210,6 +210,11 @@ const BasicSettingSchema = new Schema({
         type: Number,
         enum: [1, 0],
         default: 0
+    },
+    paymentstatus: {
+        type: Number,
+        enum: [1, 0],
+        default: 1
     }
 
 }, {

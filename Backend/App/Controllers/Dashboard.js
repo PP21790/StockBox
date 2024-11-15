@@ -547,6 +547,52 @@ async CloseSignal(req, res) {
 }
 
 
+async CloseSignalWithFilter(req, res) {
+  try {
+      const { service_id, page = 1 } = req.body;
+       let limit = 10;
+      // Calculate the number of records to skip based on the page and limit
+      const skip = (parseInt(page) - 1) * parseInt(limit);
+      const limitValue = parseInt(limit);
+
+      // Define the query for closed signals by service
+      const query = {
+          service: service_id,
+          close_status: true,
+      };
+
+      // Get the total number of matching records
+      const totalRecords = await Signal_Modal.countDocuments(query);
+
+      // Fetch signals with pagination and sorting
+      const signals = await Signal_Modal.find(query)
+          .sort({ created_at: -1 })
+          .skip(skip)
+          .limit(limitValue)
+          .lean();
+
+      // Calculate total pages
+      const totalPages = Math.ceil(totalRecords / limitValue);
+
+      // Return the response with pagination info
+      return res.json({
+          status: true,
+          message: "Signals retrieved successfully",
+          data: signals,
+          pagination: {
+              totalRecords,
+              currentPage: page,
+              limit: limitValue,
+              totalPages
+          }
+      });
+  } catch (error) {
+      console.error("Error fetching signals:", error);
+      return res.json({ status: false, message: "Server error", data: [] });
+  }
+}
+
+
 async PlanExipreList(req, res) {
   try {
     const { serviceid } = req.query;  

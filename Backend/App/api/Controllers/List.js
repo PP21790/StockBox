@@ -1301,6 +1301,12 @@ async CloseSignal(req, res) {
           status: true,
           message: "Signals retrieved successfully",
           data: signals,
+          pagination: {
+            total: totalSignals,
+            page: parseInt(page),
+            limit: parseInt(limit),
+            totalPages: Math.ceil(totalSignals / limit),
+          }
       });
   } catch (error) {
       console.error("Error fetching signals:", error);
