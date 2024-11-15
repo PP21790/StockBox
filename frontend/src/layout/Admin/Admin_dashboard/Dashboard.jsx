@@ -150,7 +150,7 @@ const Dashbord = () => {
         <div>
 
             <div className="page-content">
-                <div className="row">
+                <div className="row newbg">
                     <div className="col-md-3">
                         <div className="card radius-10 bg-gradient-deepblue">
                             <div className="card-body">

@@ -5755,7 +5755,9 @@ ul li {
 }
 
 
-
+.newbg .card{
+	   background-image: url(../images/bg-themes/4.png) !important;
+}
 
 .activestrong{
 	
