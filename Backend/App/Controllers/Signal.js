@@ -250,7 +250,7 @@ async getSignal(req, res) {
 
 async getSignalWithFilter(req, res) {
   try {
-    const { from, to, service, stock, page = 1 } = req.body;
+    const { from, to, service, stock, closestatus, page = 1 } = req.body;
     let limit = 10;
     // Date filtering
     let fromDate;
@@ -263,6 +263,9 @@ async getSignalWithFilter(req, res) {
       toDate = new Date(to);
       toDate.setHours(23, 59, 59, 999); // Set to the end of the specified date
     }
+
+
+   
 
     // Build the query object with dynamic filters
     let query = { del: 0 };
@@ -279,6 +282,16 @@ async getSignalWithFilter(req, res) {
       query.stock = stock;
     }
 
+    if (closestatus) {
+      query.close_status = closestatus;
+    }
+
+
+    let sortCriteria = { created_at: -1 }; // Default sorting by created_at in descending order
+    if (closestatus === true) {
+      sortCriteria = { closedate: -1 }; // Sort by close_date in descending order if closestatus is true
+    }
+
     // Convert page and limit to integers and calculate skip
     const pageNumber = parseInt(page);
     const limitValue = parseInt(limit);
@@ -292,7 +305,7 @@ async getSignalWithFilter(req, res) {
     const result = await Signal_Modal.find(query)
       .populate({ path: 'service', select: 'title' }) // Populate only the title from service
       .populate({ path: 'stock', select: 'title' })
-      .sort({ created_at: -1 }) // Sort in descending order
+      .sort(sortCriteria) // Sort in descending order
       .skip(skip) // Pagination: skip items
       .limit(limitValue); // Pagination: limit items
 
