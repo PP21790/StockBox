@@ -68,6 +68,12 @@ import Editfreeclient from '../layout/Admin/Admin_client/Editfreeclient';
 import Autosquareoff from '../layout/Admin/BasicSetting/Autosquareoff';
 import Planexpiry from '../layout/Admin/PlanExpiry/Planexpiry';
 import Cash from '../layout/Admin/Admin_perfom/Cash';
+import Bankdetail from '../layout/Admin/BasicSetting/BankDetaildata/Bankdetail';
+import Addbankdetail from '../layout/Admin/BasicSetting/BankDetaildata/Addbankdetail';
+import Updatebankdetail from '../layout/Admin/BasicSetting/BankDetaildata/Updatebankdetail';
+import QRDetails from '../layout/Admin/BasicSetting/QRDetails/QRDetails';
+
+
 
 
 
@@ -195,8 +201,13 @@ function MainApp() {
                     <Route path="/emailtemplate" element={<Emailtemplate />} />
                     <Route path="/referandearn" element={<ReferAndEarn />} />
                     <Route path="/autosquareoff" element={<Autosquareoff />} />
-
-
+                   
+                    <Route path="/bankdetail" element={<Bankdetail/>} />
+                    <Route path="/addbankdetail" element={<Addbankdetail/>} />
+                    <Route path="/updatebankdetail/:id" element={<Updatebankdetail/>} />
+                       
+                    <Route path="/QRdetails" element={<QRDetails/>} />
+                     
 
 
                     <Route path="/message" element={<Message />} />

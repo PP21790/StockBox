@@ -2417,3 +2417,227 @@ export async function AllclientFilter(data, token) {
         return err.response?.data || err.message;
     }
 }
+
+
+
+// add bank detail api 
+
+export async function AddBankDetailbyadmin(data, token) {
+    const formData = new FormData();
+
+    formData.append('name', data.name);
+    formData.append('branch', data.branch);
+    formData.append('accountno', data.accountno);
+    formData.append('ifsc', data.ifsc);
+    formData.append('image', data.image);
+
+    try {
+        const res = await axios.post(`${Config.base_url}bank/add`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+// update bank detail
+
+
+
+export async function UpdateBankDetailbyadmin(data, token) {
+    const formData = new FormData();
+
+    formData.append('name', data.name);
+    formData.append('branch', data.branch);
+    formData.append('accountno', data.accountno);
+    formData.append('ifsc', data.ifsc);
+    formData.append('id', data.id);
+
+    try {
+        const res = await axios.post(`${Config.base_url}bank/update`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+// bank detail
+
+export async function BankDetailListbyadmin(token) {
+    try {
+        const res = await axios.get(`${Config.base_url}bank/list`,{
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+
+// update bank account status
+
+export async function BankStatusdetail(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}bank/change-status`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+// delete bank detail
+
+export async function DeleteBankDetail(_id, token) {
+    try {
+        const res = await axios.get(`${Config.base_url}bank/delete/${_id}`, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+// QR detail
+
+
+export async function AddQRdetaildata(data, token) {
+    const formData = new FormData();
+    formData.append('image', data.image);
+ 
+    try {
+        const res = await axios.post(`${Config.base_url}qrcode/add`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// get qr detail
+
+
+export async function getQrdetails(token) {
+
+    try {
+        const res = await axios.get(`${Config.base_url}qrcode/list`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
+
+
+// update qr code 
+
+// update  banner
+
+export async function UpdateQrcodelist(data, token) {
+    const formData = new FormData();
+    formData.append('image', data.image);
+    formData.append('id', data.id);
+    try {
+        const res = await axios.post(`${Config.base_url}qrcode/update`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+// delete Qr status
+
+export async function DeleteQRCode(_id, token) {
+    try {
+        const res = await axios.get(`${Config.base_url}qrcode/delete/${_id}`, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// changet status of qr code 
+
+export async function changeQRstatuscode(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}qrcode/change-status`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}

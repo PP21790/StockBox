@@ -48,7 +48,9 @@ const menuItems = [
       { title: 'Payment Gateway', icon: 'bx-radio-circle', link: '/admin/paymentgeteway' },
       { title: 'Email Template', icon: 'bx-radio-circle', link: '/admin/emailtemplate' },
       { title: 'Refer And Earn', icon: 'bx-radio-circle', link: '/admin/referandearn' },
-      { title: 'Auto SquareOff', icon: 'bx-radio-circle', link: '/admin/autosquareoff' }
+      { title: 'Auto SquareOff', icon: 'bx-radio-circle', link: '/admin/autosquareoff' },
+      { title: 'Bank Detail', icon: 'bx-radio-circle', link: '/admin/bankdetail' },
+      { title: 'QR Detail', icon: 'bx-radio-circle', link: '/admin/QRdetails' }
     ]
   },
   { title: 'Broadcast SMS', icon: 'bx-conversation', link: '/admin/message' },
