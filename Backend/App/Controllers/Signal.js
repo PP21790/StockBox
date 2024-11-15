@@ -32,13 +32,18 @@ class Signal {
             const report = req.files['report'] ? req.files['report'][0].filename : null;
 
             var service;
+            var serviceName;
 // Set the service value based on the segment
 if (segment == "C") {
   service = "66d2c3bebf7e6dc53ed07626";
+  serviceName = "Cash";
+
 } else if (segment == "O") {
   service = "66dfeef84a88602fbbca9b79";
+  serviceName = "Option";
 } else {
   service = "66dfede64a88602fbbca9b72";
+  serviceName = "Future";
 }
 
 
@@ -115,8 +120,7 @@ if (!stocks) {
 
   
             const notificationTitle = 'Important Update';
-            const notificationBody = 'New Signal Added......';
-        
+            const notificationBody =`${serviceName} ${stock} ${calltype} AT ${price} OPEN`;
               const resultn = new Notification_Modal({
                 segmentid:result._id,
                 type:'open signal',
@@ -424,6 +428,28 @@ async getSignalWithFilter(req, res) {
       const { id, targethit1,targethit2,targethit3,targetprice1,targetprice2,targetprice3,slprice,exitprice,closestatus,closetype, close_description } = req.body;
      
 
+      const Signal = await Signal_Modal.findById(id);
+
+      if (!Signal) {
+          return res.status(404).json({
+              status: false,
+              message: "Signal not found"
+          });
+      }
+    let serviceName;
+      if (Signal.segment == "C") {
+        serviceName = "Cash";
+      
+      } else if (Signal.segment == "O") {
+        serviceName = "Option";
+      } else {
+        serviceName = "Future";
+      }
+
+      let stock = serviceName.stock;
+
+
+
       let close_status = false;
       let closeprice = null;
       let closedate = null;
@@ -438,7 +464,7 @@ async getSignalWithFilter(req, res) {
       
 
          notificationTitle = 'Important Update';
-         notificationBody = 'Signal fully Closed......';
+         notificationBody =`${serviceName} ${stock} CLOSED All Target Achieved`;
 
 
 
@@ -453,10 +479,34 @@ async getSignalWithFilter(req, res) {
           closedate = new Date();
         }
 
+        if(targetprice3)
+        {
+          notificationBody =`${serviceName} ${stock} CLOSED All Target Achieved`;
+        }
+        else 
+        if(targetprice2)
+        {
+          var targetachive ="2nd";
+          if(closestatus) {
+           notificationBody =`${serviceName} ${stock} CLOSED Book Partial Profits ${targetachive} Target Achived`;
+           }
+          else {
+          notificationBody =`${serviceName} ${stock} PARTIALLY CLOSED Book Partial Profits ${targetachive} Target Achived`;
+          }
+        }
+        else
+        {
+          var targetachive ="1st";
+          if(closestatus) {
+              notificationBody =`${serviceName} ${stock} CLOSED Book Partial Profits ${targetachive} Target Achived`;
+               }
+              else {
+              notificationBody =`${serviceName} ${stock} PARTIALLY CLOSED Book Partial Profits ${targetachive} Target Achived`;
+              }
+        }
 
          notificationTitle = 'Important Update';
-         notificationBody = 'Signal Partially Closed......';
-      
+
       } else if (closetype === "3") {
         // Close at stop-loss price
         close_status = true;
@@ -464,9 +514,8 @@ async getSignalWithFilter(req, res) {
         closedate = new Date();
       
          notificationTitle = 'Important Update';
-         notificationBody = 'Signal Closed For Sl......';
-
-
+        notificationBody =`${serviceName} ${stock} CLOSED SL Triggered`;
+          
 
       } else if (closetype === "4") {
         // Close at exit price
@@ -475,8 +524,7 @@ async getSignalWithFilter(req, res) {
         closedate = new Date();
 
          notificationTitle = 'Important Update';
-         notificationBody = 'Signal Closed ......';
-
+         notificationBody =`${serviceName} ${stock} CLOSED Exit Position AT ${exitprice}`;
 
       }
       

@@ -94,8 +94,9 @@ class Coupon {
 
 
             const notificationTitle = 'Important Update';
-            const notificationBody = 'New Coupon Added......';
+            const notificationBody =`Discount Offer: Get up to ${value} off! Use code: ${code}.`;
 
+            
             const resultn = new Notification_Modal({
               segmentid:result._id,
               type:3,

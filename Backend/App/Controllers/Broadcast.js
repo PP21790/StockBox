@@ -9,8 +9,6 @@ const { sendFCMNotification } = require('./Pushnotification'); // Adjust if nece
 class BroadcastController {
     async AddBroadcast(req, res) {
 
-        console.log(req.body);
-
         try {
 
             const { subject, message, service } = req.body;
@@ -63,8 +61,8 @@ class BroadcastController {
   
     
                 const notificationTitle = 'Important Update';
-                const notificationBody = 'New Broadcast Added......';
-          
+                const notificationBody = `Broadcast Alert ${subject}`;
+
                 const resultn = new Notification_Modal({
                   segmentid:result._id,
                   type:2,
