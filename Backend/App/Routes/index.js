@@ -22,6 +22,7 @@ module.exports = function (app) {
     app.use(require("./Aliceblue"))
     app.use(require("./Broadcast"))
     app.use(require("./Cron"))
+    app.use(require("./Bank"))
 
 
 

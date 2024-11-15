@@ -248,6 +248,76 @@ async getSignal(req, res) {
 }
 
 
+async getSignalWithFilter(req, res) {
+  try {
+    const { from, to, service, stock, page = 1 } = req.body;
+    let limit = 10;
+    // Date filtering
+    let fromDate;
+    if (from) {
+      fromDate = new Date(from);
+    }
+
+    let toDate;
+    if (to) {
+      toDate = new Date(to);
+      toDate.setHours(23, 59, 59, 999); // Set to the end of the specified date
+    }
+
+    // Build the query object with dynamic filters
+    let query = { del: 0 };
+
+    if (fromDate && toDate) {
+      query.created_at = { $gte: fromDate, $lt: toDate };
+    }
+
+    if (service) {
+      query.service = service;
+    }
+
+    if (stock) {
+      query.stock = stock;
+    }
+
+    // Convert page and limit to integers and calculate skip
+    const pageNumber = parseInt(page);
+    const limitValue = parseInt(limit);
+    const skip = (pageNumber - 1) * limitValue;
+
+    // Get total count for pagination
+    const totalRecords = await Signal_Modal.countDocuments(query);
+    const totalPages = Math.ceil(totalRecords / limitValue);
+
+    // Fetch data with pagination
+    const result = await Signal_Modal.find(query)
+      .populate({ path: 'service', select: 'title' }) // Populate only the title from service
+      .populate({ path: 'stock', select: 'title' })
+      .sort({ created_at: -1 }) // Sort in descending order
+      .skip(skip) // Pagination: skip items
+      .limit(limitValue); // Pagination: limit items
+
+    return res.json({
+      status: true,
+      message: "Signals fetched successfully",
+      data: result,
+      pagination: {
+        totalRecords,
+        page: pageNumber,
+        limit: limitValue,
+        totalPages
+      }
+    });
+  } catch (error) {
+    return res.json({
+      status: false,
+      message: "Server error",
+      data: []
+    });
+  }
+}
+
+
+
 
   async detailSignal(req, res) {
     try {

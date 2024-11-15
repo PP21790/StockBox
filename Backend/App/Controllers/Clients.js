@@ -354,7 +354,7 @@ async getClientWithFilter(req, res) {
     const matchConditions = { del: 0 }; // Initialize match conditions
 
     // Filter by KYC verification if specified
-    if (kyc_verification !== undefined) {
+    if (kyc_verification !== "") {
       matchConditions.kyc_verification = parseInt(kyc_verification);
     }
 
@@ -362,7 +362,7 @@ async getClientWithFilter(req, res) {
       matchConditions.add_by = createdby === "app" ? null : { $ne: null };
     }
 
-    if (status) {
+    if (status !== "") {
       matchConditions.ActiveStatus = parseInt(status);
     }
 
@@ -1144,6 +1144,104 @@ async getClientWithFilter(req, res) {
         return res.json({ status: false, message: "Server error", data: [] });
     }
 }
+
+
+async freetrialListWithFilter(req, res) {
+  try {
+    const { page = 1 } = req.body; // Extract page and limit from the request body with default values
+     let  limit = 10;
+    const skip = (parseInt(page) - 1) * parseInt(limit); // Calculate the number of items to skip based on page and limit
+    const today = new Date(); // Get today's date
+    
+    const totalCountPipeline = [
+      {
+          $match: { del: false } // Only active free trials
+      },
+      {
+          $addFields: {
+              clientid: { $toObjectId: "$clientid" } // Convert clientid to ObjectId
+          }
+      },
+      {
+          $lookup: {
+              from: 'clients', 
+              localField: 'clientid', 
+              foreignField: '_id', 
+              as: 'clientDetails'
+          }
+      },
+      {
+          $unwind: {
+              path: '$clientDetails',
+              preserveNullAndEmptyArrays: true 
+          }
+      },
+      {
+          $lookup: {
+              from: 'plansubscriptions',
+              localField: 'clientid', // Converted clientid in Freetrial_Modal
+              foreignField: 'client_id',
+              as: 'subscriptionDetails'
+          }
+      },
+      {
+          $addFields: {
+              subscriptionCount: { $size: "$subscriptionDetails" } // Check subscription array size
+          }
+      },
+      {
+          $match: {
+              subscriptionCount: 0 // Only clients without any subscriptions
+          }
+      },
+      {
+          $addFields: {
+              status: {
+                  $cond: {
+                      if: { $gte: ["$enddate", today] }, // Check if enddate is today or later
+                      then: "active",
+                      else: "expired"
+                  }
+              }
+          }
+      },
+      {
+          $count: "totalCount" // Count the total number of matching documents
+      }
+  ];
+  
+  // Get the total count
+  const totalCountResult = await Freetrial_Modal.aggregate(totalCountPipeline);
+  const totalCount = totalCountResult[0] ? totalCountResult[0].totalCount : 0;
+  
+  // Now get the paginated result
+  const result = await Freetrial_Modal.aggregate([
+      ...totalCountPipeline.slice(0, -1), // Use the same pipeline but exclude $count for paginated results
+      { $sort: { created_at: -1 } },
+      { $skip: skip },
+      { $limit: parseInt(limit) }
+  ]);
+  
+
+    return res.json({
+        status: true,
+        message: "get",
+        data: result,
+        pagination: {
+          totalRecords:totalCount,
+          totalPages:Math.ceil(totalCount / limit),
+          page: parseInt(page),
+          limit: parseInt(limit)
+        }
+    });
+
+  } catch (error) {
+      console.error("Error fetching free trials:", error); // Log the error for debugging
+      return res.json({ status: false, message: "Server error", data: [] });
+  }
+}
+
+
 
 
 async deleteFreetrial(req, res) {

@@ -42,11 +42,12 @@ class BasicSetting {
                     razorpay_secret,
                     digio_template_name,
                     freetrial,
-                    kyc
+                    kyc,
+                    paymentstatus
 
                 } = req.body;
 
-                // Get the uploaded file paths
+
 
                 const existingSetting = await BasicSetting_Modal.findOne({});
 
@@ -70,7 +71,7 @@ class BasicSetting {
                 const update = {
                     favicon,
                     logo,
-                    website_title,
+                    website_title:from_name,
                     email_address,
                     contact_number,
                     address,
@@ -80,7 +81,7 @@ class BasicSetting {
                     encryption,
                     smtp_username,
                     smtp_password,
-                    from_mail,
+                    from_mail:to_mail,
                     from_name,
                     to_mail,
                     refer_title,
@@ -95,10 +96,10 @@ class BasicSetting {
                     razorpay_secret,
                     digio_template_name,
                     freetrial,
-                    kyc
+                    kyc,
+                    paymentstatus
                 };
 
-                // Upsert the setting
                 const options = {
                     new: true,
                     upsert: true,

@@ -31,6 +31,7 @@ module.exports = {
     Broadcast: require("./Broadcast"),
     License: require("./License"),
     Notification: require("./Notification"),
+    Bank: require("./Bank"),
 
 
 
