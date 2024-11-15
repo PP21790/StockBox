@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getnewslist, AddNewsbyadmin, UpdateNewsbyadmin, changeNewsStatus, DeleteNews, getPayementhistory } from '../../../Services/Admin';
-import Table from '../../../components/Table';
+import { getPayementhistory , getPayementhistorywithfilter } from '../../../Services/Admin';
+// import Table from '../../../components/Table';
+import Table from '../../../components/Table1';
 import { SquarePen, Trash2, PanelBottomOpen, Eye , RefreshCcw } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { image_baseurl } from '../../../Utils/config';
@@ -24,6 +25,14 @@ const History = () => {
     const [ForGetCSV, setForGetCSV] = useState([])
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalRows, setTotalRows] = useState(0);
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
 
     const [updatetitle, setUpdatetitle] = useState({
         title: "",
@@ -101,12 +110,47 @@ const History = () => {
     // };
 
 
+    // const gethistory = async () => {
+    //     try {
+    //         const response = await getPayementhistory(token);
+    //         if (response.status) {
+    //             let filteredData = response.data;
+
+    //             if (searchInput) {
+    //                 filteredData = filteredData.filter((item) =>
+    //                     item.title?.toLowerCase().includes(searchInput.toLowerCase()) ||
+    //                     item.clientName?.toLowerCase().includes(searchInput.toLowerCase()) ||
+    //                     item.clientEmail?.toLowerCase().includes(searchInput.toLowerCase()) ||
+    //                     item.clientPhoneNo?.toLowerCase().includes(searchInput.toLowerCase()) ||
+    //                     item.orderid?.toLowerCase().includes(searchInput.toLowerCase()) ||
+    //                     item.planDetails?.validity?.toLowerCase().includes(searchInput.toLowerCase())
+    //                 );
+    //             }
+
+    //             if (startDate && endDate) {
+    //                 filteredData = filteredData.filter((item) => {
+    //                     const itemDate = new Date(item.created_at);
+    //                     return itemDate >= new Date(startDate) && itemDate <= new Date(endDate);
+    //                 });
+    //             }
+
+    //             setClients(filteredData);
+    //         }
+    //     } catch (error) {
+    //         console.log("Error fetching services:", error);
+    //     }
+    // };
+
+
     const gethistory = async () => {
         try {
-            const response = await getPayementhistory(token);
+            const data = {page: 1,fromDate:"" , toDate:""}
+            const response = await getPayementhistorywithfilter(data,token);
+            console.log("data",data)
             if (response.status) {
                 let filteredData = response.data;
-
+                setTotalRows(response.pagination.total)
+                console.log("filteredData",filteredData)
                 if (searchInput) {
                     filteredData = filteredData.filter((item) =>
                         item.title?.toLowerCase().includes(searchInput.toLowerCase()) ||
@@ -116,13 +160,6 @@ const History = () => {
                         item.orderid?.toLowerCase().includes(searchInput.toLowerCase()) ||
                         item.planDetails?.validity?.toLowerCase().includes(searchInput.toLowerCase())
                     );
-                }
-
-                if (startDate && endDate) {
-                    filteredData = filteredData.filter((item) => {
-                        const itemDate = new Date(item.created_at);
-                        return itemDate >= new Date(startDate) && itemDate <= new Date(endDate);
-                    });
                 }
 
                 setClients(filteredData);
@@ -341,10 +378,9 @@ const History = () => {
                             <Table
                                 columns={columns}
                                 data={clients}
-                                pagination
-                                striped
-                                highlightOnHover
-                                dense
+                                totalRows={totalRows}
+                                currentPage={currentPage}
+                                onPageChange={handlePageChange}
                             />
                         </div>
                     </div>

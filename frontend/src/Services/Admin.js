@@ -1900,6 +1900,25 @@ export async function getPayementhistory(token) {
     }
 }
 
+
+// get plan payment history
+
+export async function getPayementhistorywithfilter(data,token) {
+    try {
+        const res = await axios.post(`${Config.base_url}plan/paymenthistorywithfilter`,data, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}
+
+
+
+
 // get freelist client 
 
 export async function FreeClientList(token) {
