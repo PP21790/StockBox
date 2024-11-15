@@ -162,6 +162,12 @@ const Bankdetail = () => {
             width: '100px',
         },
         {
+            name: 'Image',
+            cell: row => <img src={`${image_baseurl}/uploads/bank/${row.image}`} alt="Image" width="50" height="50" />,
+            sortable: true,
+            width: '110px',
+        },
+        {
             name: 'Name',
             selector: row => row.name,
             sortable: true,
@@ -208,13 +214,6 @@ const Bankdetail = () => {
             sortable: true,
             width: '156px',
         },
-        {
-            name: 'Image',
-            cell: row => <img src={`${image_baseurl}/uploads/bank/${row.image}`} alt="Image" width="50" height="50" />,
-            sortable: true,
-            width: '110px',
-        },
-
         {
             name: 'Actions',
             cell: row => {
