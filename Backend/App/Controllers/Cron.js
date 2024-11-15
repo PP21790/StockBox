@@ -627,15 +627,26 @@ async function PlanExpire(req, res) {
             const timeDifference = planEndDate - currentDate;
             const daysRemaining = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
          
+
+
+            if (plan.serviceid == "66d2c3bebf7e6dc53ed07626") {
+                serviceName = "Cash";
+              
+              } else if (plan.serviceid == "66dfeef84a88602fbbca9b79") {
+                serviceName = "Option";
+              } else {
+                serviceName = "Future";
+              }
+              
             let message;
-            const title = 'Plan Expiry Notification';
+            const titles = 'Plan Expiry Notification';
     
             if (daysRemaining === 5) {
-                message = 'Your plan will expire in 5 days.';
+                message = `Your plan ${serviceName} service will expire in 5 days.`;
             } else if (daysRemaining === 3) {
-                message = 'Your plan will expire in 3 days.';
+                message = `Your plan ${serviceName} service will expire in 3 days.`;
             } else if (daysRemaining === 1) {
-                message = 'Your plan will expire tomorrow.';
+                message = `Your plan ${serviceName} service will expire tomorrow.`;
             }
     
              if (message) {
@@ -647,7 +658,7 @@ async function PlanExpire(req, res) {
                     clientid: plan.clientid,
                     segmentid:plan._id,
                     type:4,
-                    title: title,
+                    title: titles,
                     message: message
                 });
     

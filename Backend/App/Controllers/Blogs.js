@@ -58,7 +58,8 @@ class BlogController {
 
 
             const notificationTitle = 'Important Update';
-            const notificationBody = 'New Blog Added......';
+            const notificationBody = `Blogs Alert ${title}`;
+
             const clients = await Clients_Modal.find({
                 del: 0,
                 ActiveStatus: 1,
