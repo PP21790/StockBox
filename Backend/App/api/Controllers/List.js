@@ -2099,7 +2099,7 @@ async Notification(req, res) {
             },
             // For 'no subscribe', ensure the client has no plans
             {
-              clienttype: 'no subscribe',
+              clienttype: 'nonsubscribe',
               segmentid: { 
                 $nin: await Planmanage.find({ clientid: id }).distinct('serviceid') 
               }
