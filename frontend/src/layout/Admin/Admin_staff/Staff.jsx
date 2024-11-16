@@ -17,15 +17,28 @@ const Staff = () => {
 
     const [clients, setClients] = useState([]);
     const [ForGetCSV, setForGetCSV] = useState([])
-    
+    const [searchInput, setSearchInput] = useState("");
+     
     const token = localStorage.getItem('token');
     
 
     const getAdminclient = async () => {
         try {
             const response = await GetStaff(token);
-            if (response.status) {
-                setClients(response.data);
+            if (response.status) { 
+
+                const filterdata = response?.data?.filter((item) => {
+                    return (
+                        !searchInput ||
+                        item?.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
+                        item?.UserName.toLowerCase().includes(searchInput.toLowerCase()) ||
+                        item?.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
+                        item?.PhoneNo.toLowerCase().includes(searchInput.toLowerCase())
+                      
+                    );
+                });
+
+                setClients(searchInput ? filterdata : response.data);
             }
         } catch (error) {
             console.log("error");
@@ -35,7 +48,7 @@ const Staff = () => {
 
     useEffect(() => {
         getAdminclient();
-    }, []);
+    }, [searchInput]);
 
     useEffect(() => {
         forCSVdata()
@@ -288,11 +301,13 @@ const Staff = () => {
                             <div className="card-body">
                                 <div className="d-lg-flex align-items-center mb-4 gap-3">
                                     <div className="position-relative">
-                                        <input
-                                            type="text"
-                                            className="form-control ps-5 radius-10"
-                                            placeholder="Search Staff"
-                                        />
+                                    <input
+                                        type="text"
+                                        className="form-control ps-5 radius-10"
+                                        placeholder="Search free  Client"
+                                        onChange={(e) => setSearchInput(e.target.value)}
+                                        value={searchInput}
+                                    />
                                         <span className="position-absolute top-50 product-show translate-middle-y">
                                             <i className="bx bx-search" />
                                         </span>
@@ -309,9 +324,7 @@ const Staff = () => {
                                             Add Staff
                                         </Link>
                                     </div>
-                                    <div
-                                        className="ms-2"
-                                    >
+                                    <div className="ms-2" >
                                         <ExportToExcel
                                             className="btn btn-primary "
                                             apiData={ForGetCSV}

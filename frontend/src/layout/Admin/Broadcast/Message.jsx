@@ -23,6 +23,7 @@ const Message = () => {
     const [servicedata, setServicedata] = useState({});
     const [chatMessages, setChatMessages] = useState([]);
 
+
     const getservice = async () => {
         try {
             const response = await GetService(token);
@@ -33,6 +34,8 @@ const Message = () => {
             console.log("Error fetching services:", error);
         }
     };
+
+
 
     const sendmessagedetail = async () => {
         try {
@@ -152,6 +155,7 @@ const Message = () => {
                                                         </h4>
                                                         <hr />
                                                         <p><strong>Subject:</strong> {item.subject}</p>
+                                                        <p><strong>Type:</strong> {item.type}</p>
                                                         <p className="card-text">
                                                             <strong>Message:</strong>
                                                             <span

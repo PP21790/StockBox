@@ -60,7 +60,7 @@ const Freeclient = () => {
 
     useEffect(() => {
         forCSVdata()
-    }, [client]);
+    }, [clients]);
 
 
 
@@ -91,15 +91,17 @@ const Freeclient = () => {
     const forCSVdata = () => {
         if (clients?.length > 0) {
             const csvArr = clients.map((item) => ({
-                FullName: item.clientDetails?.FullName,
-                Email: item.clientDetails?.Email || '',
-                PhoneNo: item?.clientDetails?.PhoneNo || '',
+              
+                FullName: item.clientDetails?.FullName || '-',
+                Email: item.clientDetails?.Email || '-',
+                PhoneNo: item?.clientDetails?.PhoneNo || '-',
                 Kyc : item?.clientDetails?.kyc_verification == 1 ? "Verified" : "Not Verified" ,
                 Status:item?.status === "active" ? "Active" : "Expired",
-                StartDate: item?.startdate || '',
-                EndDate: item?.enddate || '',
-
+                StartDate: item?.startdate || '-',
+                EndDate: item?.enddate || '-',
+                
             }));
+
             setForGetCSV(csvArr);
         }
     };

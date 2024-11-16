@@ -370,7 +370,7 @@ const Banner = () => {
                 <div className="card">
                     <div className="card-body">
                         <div className="d-lg-flex align-items-center mb-4 gap-3">
-                            <div className="position-relative">
+                            {/* <div className="position-relative">
                                 <input
                                     type="text"
                                     className="form-control ps-5 radius-10"
@@ -381,7 +381,7 @@ const Banner = () => {
                                 <span className="position-absolute top-50 product-show translate-middle-y">
                                     <i className="bx bx-search" />
                                 </span>
-                            </div>
+                            </div> */}
                             <div className="ms-auto">
                                 <button
                                     type="button"

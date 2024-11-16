@@ -46,7 +46,7 @@ const Addbroadcast = () => {
             errors.message = "Please enter message";
         }
         if (!values.type) {
-            errors.message = "Please enter message";
+            errors.type = "Please enter Type";
         }
         return errors;
     };
@@ -112,7 +112,7 @@ const Addbroadcast = () => {
             label: "Select Service",
             type: "select",       //selectchecbox  for multiple
             label_size: 6,
-            col_size: 6,
+            col_size: 4,
             disable: false,
             options: servicedata?.map((item) => ({
                 label: item?.title,
@@ -124,7 +124,7 @@ const Addbroadcast = () => {
             label: "Subject",
             type: "text",
             label_size: 12,
-            col_size: 6,
+            col_size: 4,
             disable: false,
         },
         {
@@ -132,7 +132,7 @@ const Addbroadcast = () => {
             label: "Select Type",
             type: "select",
             label_size: 6,
-            col_size: 6,
+            col_size: 4,
             disable: false,
             options:[
                 { value: "all", label: "All" },

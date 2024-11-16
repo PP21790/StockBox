@@ -67,16 +67,16 @@ const History = () => {
     const forCSVdata = () => {
         if (clients?.length > 0) {
             const csvArr = clients.map((item) => ({
-                Name: item.clientName || "",
-                Email: item.clientEmail || "",
-                Phone: item.clientPhoneNo || "",
-                OerderId: item.orderid || "",
-                PlanDiscount: item.discount || "",
-                PlanAmount: item.plan_price || "",
-                Title: item.planDetails?.title || '',
-                Total: item.planDetails?.price || '',
-                Validity: item.planDetails?.validity || '',
-                PurchaseDate: item.created_at || '',
+                Name: item.clientName || "-",
+                Email: item.clientEmail || "-",
+                Phone: item.clientPhoneNo || "-",
+                Title: item.planDetails?.title || '-',
+                OerderId: item.orderid ? item.orderid : "Make By Admin",
+                PlanDiscount: item.discount || 0,
+                PlanAmount: item.plan_price || 0,
+                Total: item?.segment || '-',
+                Validity: item.planDetails?.validity || '-',
+                PurchaseDate: item.created_at || '-',
 
             }));
             setForGetCSV(csvArr);
@@ -89,11 +89,9 @@ const History = () => {
         try {
             const data = { page: currentPage ,fromDate:startDate , toDate:endDate}
             const response = await getPayementhistorywithfilter(data,token);
-            console.log("data",data)
             if (response.status) {
                 let filteredData = response.data;
                 setTotalRows(response.pagination.total)
-                console.log("filteredData",filteredData)
                 if (searchInput) {
                     filteredData = filteredData.filter((item) =>
                         item.title?.toLowerCase().includes(searchInput.toLowerCase()) ||
@@ -116,7 +114,6 @@ const History = () => {
 
     useEffect(() => {
         gethistory();
-        forCSVdata()
     }, [searchInput, startDate, endDate , currentPage]);
 
     
@@ -154,7 +151,7 @@ const History = () => {
 
         {
             name: 'Title',
-            selector: row => row.planDetails.title,
+            selector: row => row?.planDetails?.title,
             sortable: true,
             width: '200px',
         },

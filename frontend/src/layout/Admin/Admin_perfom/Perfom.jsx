@@ -6,6 +6,9 @@ import { fDateTime } from '../../../Utils/Date_formate';
 import { Link } from 'react-router-dom';
 import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine, RefreshCcw } from 'lucide-react';
 import { Tooltip } from 'antd';
+import ExportToExcel from '../../../Utils/ExportCSV';
+
+
 
 const Perform = () => {
     const token = localStorage.getItem('token');
@@ -14,12 +17,56 @@ const Perform = () => {
     const [activeTab, setActiveTab] = useState(null);
     const [servicedata, setServicedata] = useState([]);
     const [closesignal, setClosesignal] = useState([])
-    const [description,setDescription] = useState([])
+    const [description, setDescription] = useState([])
+    const [ForGetCSV, setForGetCSV] = useState([])
 
 
     useEffect(() => {
         getServiceData();
+        forCSVdata()
     }, []);
+
+
+
+
+    useEffect(() => {
+        forCSVdata()
+    }, [closesignal]);
+
+
+    const forCSVdata = () => {
+        if (closesignal?.length > 0) {
+            const csvArr = closesignal.map((item) => {
+                const entryPrice = item?.price || 0;
+                const exitPrice = item?.closeprice || 0;
+                const lotSize = item?.lotsize || 0;
+
+                let totalPL = 0;
+                let plPercent = 0;
+
+                if (item.calltype === "BUY") {
+                    totalPL = ((exitPrice - entryPrice) * lotSize).toFixed(2);
+                    plPercent = (((exitPrice - entryPrice) / entryPrice) * 100).toFixed(2);
+                } else if (item.calltype === "SELL") {
+                    totalPL = ((entryPrice - exitPrice) * lotSize).toFixed(2);
+                    plPercent = (((entryPrice - exitPrice) / entryPrice) * 100).toFixed(2);
+                }
+
+                return {
+                    Tradesymbol: item?.tradesymbol || "-",
+                    EntryType: item?.calltype || "-",
+                    EntryPrice: entryPrice || "-",
+                    ExitPrice: exitPrice || "-",
+                    TotalProfitAndLoss: `${totalPL} (${plPercent}%)`,
+                    EntryDate: item.created_at,
+                    ExitDate: item.closedate,
+                };
+            });
+
+            setForGetCSV(csvArr);
+        }
+    };
+
 
 
 
@@ -51,7 +98,7 @@ const Perform = () => {
             const response = await getPerformerstatus(token, service_id);
             if (response.status) {
                 setClients([response.data]);
-                console.log(response.data)
+            
             }
         } catch (error) {
             console.log("Error fetching performance data:", error);
@@ -66,7 +113,7 @@ const Perform = () => {
             const response = await getperformacebysegment({ token, service_id });
             if (response.status) {
                 setClosesignal(response.data);
-                console.log("response.data", response.data);
+
             }
         } catch (error) {
             console.log("Error fetching performance data:", error);
@@ -180,7 +227,7 @@ const Perform = () => {
 
 
 
-    
+
 
 
     const renderTable1 = () => {
@@ -230,7 +277,7 @@ const Perform = () => {
                             <div className="tab-pane fade show active" id="NavPills">
                                 <div className="card-body pt-0">
                                     <div className="d-lg-flex align-items-center mb-4 gap-3">
-                                        <div className="position-relative">
+                                        {/* <div className="position-relative">
                                             <input
                                                 type="text"
                                                 className="form-control ps-5 radius-10"
@@ -241,7 +288,7 @@ const Perform = () => {
                                             <span className="position-absolute top-50 product-show translate-middle-y">
                                                 <i className="bx bx-search" />
                                             </span>
-                                        </div>
+                                        </div> */}
                                     </div>
 
                                     <ul className="nav nav-pills nav-pills1 mb-4 light">
@@ -310,12 +357,20 @@ const Perform = () => {
 
 
                                                     </div>
-
                                                 </div>
+
 
                                             </div>
                                         </div>
+                                        <div className="d-flex justify-content-end " >
+                                            <ExportToExcel
+                                                className="btn btn-primary "
+                                                apiData={ForGetCSV}
+                                                fileName={'All Users'} />
+
+                                        </div>
                                     </div>
+
                                     <div className="tab-content">
                                         <div id="navpills" className="tab-pane active">
                                             {renderTable1()}
@@ -337,7 +392,7 @@ const Perform = () => {
                             <div className="modal-body">
                                 {description?.description}
                             </div>
-                           
+
                         </div>
                     </div>
                 </div>

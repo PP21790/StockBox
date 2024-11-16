@@ -156,7 +156,7 @@ const Client = () => {
         if (clients?.length > 0) {
             const csvArr = clients.map((item) => ({
                 FullName: item.FullName,
-                Email: item?.Email || '',
+                Email: item?.Email || '-',
                 kyc_verification: item?.kyc_verification == 1 ? "Verfied" : "Not Verified",
                 PlanStatus : item?.plansStatus?.some(statusItem => statusItem.status === 'active') 
                 ? 'Active' 
@@ -166,8 +166,8 @@ const Client = () => {
               ,
                CientSegment: item?.plansStatus?.map(statusItem => statusItem.serviceName || 'N/A').join(', '),
                CreatedBy: item.addedByDetails?.FullName ?? (item.clientcome === 1 ? "WEB" : "APP") ,
-               PhoneNo: item?.PhoneNo || '',
-               Created_at: item?.createdAt || '',
+               PhoneNo: item?.PhoneNo || '-',
+               Created_at: item?.createdAt || '-',
 
             }));
             setForGetCSV(csvArr);
