@@ -11,7 +11,7 @@ class BroadcastController {
 
         try {
 
-            const { subject, message, service } = req.body;
+            const { subject, message, service, type } = req.body;
            
               if (!subject) {
                 return res.status(400).json({ status: false, message: "subject is required" });
@@ -25,19 +25,20 @@ class BroadcastController {
               }
              
              
-              let services;
-              if (Array.isArray(service)) {
-                  services = service.join(',');  // Convert array to comma-separated string
-              } else if (typeof service === 'string') {
-                  services = service;  // If it's already a string, use it directly
-              } else {
-                  return res.status(400).json({ status: false, message: "Invalid service format" });
-              }
+            //   let services;
+            //   if (Array.isArray(service)) {
+            //       services = service.join(',');  // Convert array to comma-separated string
+            //   } else if (typeof service === 'string') {
+            //       services = service;  // If it's already a string, use it directly
+            //   } else {
+            //       return res.status(400).json({ status: false, message: "Invalid service format" });
+            //   }
     
             // Create a new News record
             const result = new Broadcast_Modal({
                 subject: subject,
-                service: services,
+                service: service,
+                type: type,
                 message:message,
             });
             
@@ -49,12 +50,67 @@ class BroadcastController {
 
 
 
-            const clients = await Clients_Modal.find({
-                del: 0,
-                ActiveStatus: 1,
-                devicetoken: { $exists: true, $ne: null }
-              }).select('devicetoken');
-  
+            // const clients = await Clients_Modal.find({
+            //     del: 0,
+            //     ActiveStatus: 1,
+            //     devicetoken: { $exists: true, $ne: null }
+            //   }).select('devicetoken');
+
+
+            const today = new Date();
+if(type=="active")
+    {
+        const clients = await Clients_Modal.find({
+            del: 0,
+            ActiveStatus: 1,
+            devicetoken: { $exists: true, $ne: null },
+            _id: {
+              $in: await Planmanage.find({
+                serviceid: service,  // Replace `service` with your actual service value
+                enddate: { $gte: today }
+              }).distinct('clientid')  // Assuming 'clientid' is the field linking to Clients_Modal
+            }
+          }).select('devicetoken');
+
+    }
+   else if(type=="expired")
+        {
+            
+        const clients = await Clients_Modal.find({
+            del: 0,
+            ActiveStatus: 1,
+            devicetoken: { $exists: true, $ne: null },
+            _id: {
+              $in: await Planmanage.find({
+                serviceid: service,  // Replace `service` with your actual service value
+                enddate: { $lt: today }
+              }).distinct('clientid')  // Assuming 'clientid' is the field linking to Clients_Modal
+            }
+          }).select('devicetoken');
+          
+        }
+        else if(type=="nonsubscribe"){
+            
+   const clients = await Clients_Modal.find({
+    del: 0,
+    ActiveStatus: 1,
+    devicetoken: { $exists: true, $ne: null },
+    _id: {
+      $nin: await Planmanage.find({
+        serviceid: service,  // Replace `service` with your actual service value
+      }).distinct('clientid')  // Get client IDs that have active plans
+    }
+  }).select('devicetoken');
+
+       }
+       else{
+           const clients = await Clients_Modal.find({
+              del: 0,
+              ActiveStatus: 1,
+              devicetoken: { $exists: true, $ne: null }
+            }).select('devicetoken');
+
+       }
               const tokens = clients.map(client => client.devicetoken);
   
               if (tokens.length > 0) {
