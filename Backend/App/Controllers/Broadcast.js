@@ -123,6 +123,7 @@ if(type=="active")
 
                 const resultn = new Notification_Modal({
                   segmentid:result._id,
+                  clienttype:type,
                   type:2,
                   title: notificationTitle,
                   message: notificationBody
