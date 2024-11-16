@@ -124,7 +124,7 @@ if(type=="active")
                 const resultn = new Notification_Modal({
                   segmentid:result._id,
                   clienttype:type,
-                  type:2,
+                  type:"add broadcast",
                   title: notificationTitle,
                   message: notificationBody
               });

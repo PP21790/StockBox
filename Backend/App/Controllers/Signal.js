@@ -468,7 +468,7 @@ async getSignalWithFilter(req, res) {
         service = "66dfede64a88602fbbca9b72";
       }
 
-      let stock = serviceName.stock;
+      let stock = Signal.stock;
 
 
 
@@ -496,7 +496,7 @@ async getSignalWithFilter(req, res) {
         // Close based on closestatus and target price
         close_status = closestatus;
       
-        if (closestatus) {
+        if (close_status=="true") {
           closeprice = targetprice3 || targetprice2 || targetprice1;
           closedate = new Date();
         }
@@ -509,8 +509,8 @@ async getSignalWithFilter(req, res) {
         if(targetprice2)
         {
           var targetachive ="2nd";
-          if(closestatus) {
-           notificationBody =`${serviceName} ${stock} CLOSED Book Partial Profits ${targetachive} Target Achived`;
+          if(close_status=="true") {
+           notificationBody =`${serviceName} ${stock} CLOSED Book Profits ${targetachive} Target Achived`;
            }
           else {
           notificationBody =`${serviceName} ${stock} PARTIALLY CLOSED Book Partial Profits ${targetachive} Target Achived`;
@@ -519,8 +519,9 @@ async getSignalWithFilter(req, res) {
         else
         {
           var targetachive ="1st";
-          if(closestatus) {
-              notificationBody =`${serviceName} ${stock} CLOSED Book Partial Profits ${targetachive} Target Achived`;
+          
+          if(close_status=="true") {
+              notificationBody =`${serviceName} ${stock} CLOSED Book Profits ${targetachive} Target Achived`;
                }
               else {
               notificationBody =`${serviceName} ${stock} PARTIALLY CLOSED Book Partial Profits ${targetachive} Target Achived`;
@@ -607,7 +608,7 @@ async getSignalWithFilter(req, res) {
   
         const resultn = new Notification_Modal({
           segmentid:service,
-          type:5,
+          type:"close signal",
           title: notificationTitle,
           message: notificationBody
       });

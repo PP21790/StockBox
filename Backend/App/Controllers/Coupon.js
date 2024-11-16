@@ -99,7 +99,7 @@ class Coupon {
             
             const resultn = new Notification_Modal({
               segmentid:result._id,
-              type:3,
+              type:"add coupon",
               title: notificationTitle,
               message: notificationBody
           });
