@@ -16,6 +16,9 @@ const Editplan = () => {
     const [clients, setClients] = useState([]);
     const [info, setInfo] = useState({});
 
+
+
+
     const getcategoryplanlist = async () => {
         try {
             const response = await getcategoryplan(token);
@@ -26,6 +29,9 @@ const Editplan = () => {
             console.log("error");
         }
     };
+
+
+
 
     const getplaninfo = async () => {
         try {
@@ -45,7 +51,6 @@ const Editplan = () => {
 
     const validate = (values) => {
         let errors = {};
-        if (!values.title) errors.title = "Please enter Title";
         if (!values.description) errors.description = "Please enter Description";
         if (!values.price) errors.price = "Please enter Price";
         if (!values.validity) errors.validity = "Please enter Validity";
@@ -55,7 +60,6 @@ const Editplan = () => {
 
     const onSubmit = async (values) => {
         const req = {
-            title: values.title,
             description: values.description,
             price: values.price,
             validity: values.validity,
@@ -75,7 +79,7 @@ const Editplan = () => {
                     timerProgressBar: true,
                 });
                 setTimeout(() => {
-                    navigate("/staff/plan");
+                    navigate("/admin/plan");
                 }, 1500);
             } else {
                 Swal.fire({
@@ -99,7 +103,6 @@ const Editplan = () => {
 
     const formik = useFormik({
         initialValues: {
-            title: info.title || "",
             description: info.description || "",
             price: info.price || "",
             validity: info.validity ? info.validity : "",
@@ -131,21 +134,13 @@ const Editplan = () => {
             type: "select",
             label_size: 12,
             col_size: 6,
-            disable: false,
+            disable: true,
             options: [
                 { value: "1 month", label: "1 month" },
                 { value: "3 months", label: "3 months" },
                 { value: "6 months", label: "6 months" },
                 { value: "1 year", label: "1 year" },
             ]
-        },
-        {
-            name: "title",
-            label: "Title",
-            type: "text",
-            label_size: 6,
-            col_size: 6,
-            disable: false,
         },
         {
             name: "price",
@@ -174,7 +169,7 @@ const Editplan = () => {
                 btn_name="Edit Plan"
                 btn_name1="Cancel"
                 sumit_btn={true}
-                btn_name1_route={"/staff/plan"}
+                btn_name1_route={"/admin/plan"}
                 additional_field={<></>}
             />
         </div>

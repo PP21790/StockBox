@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Table from '../../../components/Table';
+import Table from '../../../components/Table1';
 import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { FreeClientList, PlanSubscription, DeleteFreeClient, getcategoryplan, getplanlist } from '../../../Services/Admin';
+import { FreeClientList, FreeClientListWithFilter, PlanSubscription, DeleteFreeClient, getcategoryplan, getplanlist } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
 import { image_baseurl } from '../../../Utils/config';
-import { fDate,fDateTime } from '../../../Utils/Date_formate';
+import { fDate, fDateTime } from '../../../Utils/Date_formate';
 import { IndianRupee } from 'lucide-react';
 import ExportToExcel from '../../../Utils/ExportCSV';
 
@@ -28,7 +28,15 @@ const Freeclient = () => {
     const [category, setCategory] = useState([]);
     const [client, setClientid] = useState({});
     const [ForGetCSV, setForGetCSV] = useState([])
+    const [searchInput, setSearchInput] = useState("");
+    
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalRows, setTotalRows] = useState(0);
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
 
     const [updatetitle, setUpdatetitle] = useState({
         plan_id: "",
@@ -42,19 +50,37 @@ const Freeclient = () => {
         getdemoclient();
         getcategoryplanlist()
         getplanlistbyadmin()
-
     }, []);
+
+
+    useEffect(() => {
+        getdemoclient();
+    }, [client, currentPage ,searchInput ]);
+
 
     useEffect(() => {
         forCSVdata()
     }, [client]);
 
 
+
+
     const getdemoclient = async () => {
         try {
-            const response = await FreeClientList(token);
+            const data = { page: currentPage}
+            const response = await FreeClientListWithFilter(data , token);
             if (response.status) {
-                setClients(response.data && response.data);
+                setTotalRows(response.pagination.total)
+                const filterdata = response?.data?.filter((item) => {
+                    return (
+                        !searchInput ||
+                        item.clientDetails?.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
+                        item.clientDetails?.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
+                        item.clientDetails?.PhoneNo.toLowerCase().includes(searchInput.toLowerCase())
+                    );
+                });
+                setClients(searchInput ? filterdata : response.data);
+
             }
         } catch (error) {
             console.log("error");
@@ -326,7 +352,7 @@ const Freeclient = () => {
         {
             name: 'Status',
             selector: row => (
-                <span style={{ color: row.status === "active" ? "green" : "red" }}> 
+                <span style={{ color: row.status === "active" ? "green" : "red" }}>
                     {row.status === "active" ? "Active" : "Expired"}
                 </span>
             ),
@@ -427,11 +453,13 @@ const Freeclient = () => {
                             <div className="card-body">
                                 <div className="d-lg-flex align-items-center mb-4 gap-3 justify-content-between">
                                     <div className="position-relative">
-                                        <input
-                                            type="text"
-                                            className="form-control ps-5 radius-10"
-                                            placeholder="Search Free Trial Client"
-                                        />
+                                    <input
+                                        type="text"
+                                        className="form-control ps-5 radius-10"
+                                        placeholder="Search free  Client"
+                                        onChange={(e) => setSearchInput(e.target.value)}
+                                        value={searchInput}
+                                    />
                                         <span className="position-absolute top-50 product-show translate-middle-y">
                                             <i className="bx bx-search" />
                                         </span>
@@ -452,6 +480,9 @@ const Freeclient = () => {
                                 <Table
                                     columns={columns}
                                     data={clients}
+                                    totalRows={totalRows}
+                                    currentPage={currentPage}
+                                    onPageChange={handlePageChange}
                                 />
                             </div>
                         </div>

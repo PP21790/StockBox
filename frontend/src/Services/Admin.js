@@ -369,6 +369,21 @@ export async function GetSignallist(data, token) {
 
 
 
+// getsignal by signal filter
+
+export async function GetSignallistWithFilter(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}signal/listwithfilter`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err.response?.data || err.message;
+    }
+}
 
 
 // get signal detailperuser
@@ -1933,6 +1948,26 @@ export async function FreeClientList(token) {
         return err;
     }
 }
+
+
+
+// get free client with fillter
+
+
+export async function FreeClientListWithFilter(data,token) {
+    try {
+        const res = await axios.post(`${Config.base_url}client/freetriallistwithfilter`,data, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}
+
+
 
 
 // delete free client 

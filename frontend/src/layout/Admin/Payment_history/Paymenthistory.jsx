@@ -44,7 +44,6 @@ const History = () => {
 
 
 
-
     const [title, setTitle] = useState({
         title: "",
         description: "",
@@ -86,65 +85,9 @@ const History = () => {
 
 
 
-
-    // Getting services
-    //    const gethistory = async () => {
-    //     try {
-    //         const response = await getPayementhistory(token);
-    //         if (response.status) {
-    //             const filterdata = response.data.filter((item) =>
-    //                 searchInput === "" ||
-    //                 item.title?.toLowerCase().includes(searchInput.toLowerCase()) ||
-    //                 item.clientName?.toLowerCase().includes(searchInput.toLowerCase()) ||
-    //                 item.clientEmail?.toLowerCase().includes(searchInput.toLowerCase()) ||
-    //                 item.clientPhoneNo?.toLowerCase().includes(searchInput.toLowerCase()) ||
-    //                 item.orderid?.toLowerCase().includes(searchInput.toLowerCase()) ||
-    //                 item.planDetails?.validity?.toLowerCase().includes(searchInput.toLowerCase())
-    //             );
-    //             setClients(searchInput ? filterdata : response.data);
-
-    //         }
-    //     } catch (error) {
-    //         console.log("Error fetching services:", error);
-    //     }
-    // };
-
-
-    // const gethistory = async () => {
-    //     try {
-    //         const response = await getPayementhistory(token);
-    //         if (response.status) {
-    //             let filteredData = response.data;
-
-    //             if (searchInput) {
-    //                 filteredData = filteredData.filter((item) =>
-    //                     item.title?.toLowerCase().includes(searchInput.toLowerCase()) ||
-    //                     item.clientName?.toLowerCase().includes(searchInput.toLowerCase()) ||
-    //                     item.clientEmail?.toLowerCase().includes(searchInput.toLowerCase()) ||
-    //                     item.clientPhoneNo?.toLowerCase().includes(searchInput.toLowerCase()) ||
-    //                     item.orderid?.toLowerCase().includes(searchInput.toLowerCase()) ||
-    //                     item.planDetails?.validity?.toLowerCase().includes(searchInput.toLowerCase())
-    //                 );
-    //             }
-
-    //             if (startDate && endDate) {
-    //                 filteredData = filteredData.filter((item) => {
-    //                     const itemDate = new Date(item.created_at);
-    //                     return itemDate >= new Date(startDate) && itemDate <= new Date(endDate);
-    //                 });
-    //             }
-
-    //             setClients(filteredData);
-    //         }
-    //     } catch (error) {
-    //         console.log("Error fetching services:", error);
-    //     }
-    // };
-
-
     const gethistory = async () => {
         try {
-            const data = {page: 1,fromDate:"" , toDate:""}
+            const data = { page: currentPage ,fromDate:startDate , toDate:endDate}
             const response = await getPayementhistorywithfilter(data,token);
             console.log("data",data)
             if (response.status) {
@@ -174,7 +117,9 @@ const History = () => {
     useEffect(() => {
         gethistory();
         forCSVdata()
-    }, [searchInput, startDate, endDate]);
+    }, [searchInput, startDate, endDate , currentPage]);
+
+    
 
     useEffect(() => {
         forCSVdata()

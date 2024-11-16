@@ -5,17 +5,19 @@ import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import { Eye, RefreshCcw, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { GetSignallist, DeleteSignal, SignalCloseApi, GetService, GetStockDetail } from '../../../Services/Admin';
+import { GetSignallist,GetSignallistWithFilter , DeleteSignal, SignalCloseApi, GetService, GetStockDetail } from '../../../Services/Admin';
 import { fDateTimeSuffix, fDateTimeH } from '../../../Utils/Date_formate'
 import { getstaffperuser } from '../../../Services/Admin';
 import ExportToExcel from '../../../Utils/ExportCSV';
+import Select from 'react-select';
 
 
 const Closesignal = () => {
 
     const token = localStorage.getItem('token');
     const [searchInput, setSearchInput] = useState("");
-
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalRows, setTotalRows] = useState(0);
 
     const userid = localStorage.getItem('id');
 
@@ -36,20 +38,38 @@ const Closesignal = () => {
     const [searchstock, setSearchstock] = useState("");
     const [ForGetCSV, setForGetCSV] = useState([])
 
+    
+    const options = clients.map((item) => ({
+        value: item.stock,
+        label: item.stock,
+      }));
+
+      const handleChange = (selectedOption) => {
+        setSearchstock(selectedOption ? selectedOption.value : "");
+      };
+
 
 
     const navigate = useNavigate();
     const [clients, setClients] = useState([]);
 
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
 
 
     const getAllSignal = async () => {
         try {
-            const response = await GetSignallist(filters, token);
+            const data = {page:currentPage , from :filters.from , to:filters.to , service:filters.service, stock:searchstock, closestatus: "true"}
+            const response = await GetSignallistWithFilter(data, token);
             if (response && response.status) {
+                setTotalRows(response.pagination.totalRecords);
+                 
                 const filterdata = response.data.filter((item) => {
-                    return item.close_status == true
-                })
+                    return item.close_status === true;
+                });
+
                 const searchInputMatch = filterdata.filter((item) => {
                     const searchInputMatch =
                         searchInput === "" ||
@@ -64,6 +84,7 @@ const Closesignal = () => {
                 });
 
                 setClients(searchInput || searchstock ? searchInputMatch : filterdata);
+
             }
         } catch (error) {
             console.log("error", error);
@@ -143,7 +164,7 @@ const Closesignal = () => {
 
     useEffect(() => {
         getAllSignal();
-    }, [filters, searchInput, searchstock]);
+    }, [filters, searchInput, searchstock , currentPage ]);
 
 
     const handleFilterChange = (e) => {
@@ -356,18 +377,14 @@ const Closesignal = () => {
                                 <div className="col-md-3 d-flex">
                                     <div style={{ width: "80%" }}>
                                         <label>Select Stock</label>
-                                        <select
+                                        <Select
+                                            options={options}
+                                            value={options.find((option) => option.value === searchstock)}
+                                            onChange={handleChange}
                                             className="form-control radius-10"
-                                            value={searchstock}
-                                            onChange={(e) => setSearchstock(e.target.value)}
-                                        >
-                                            <option value="">Select Stock</option>
-                                            {clients.map((item) => (
-                                                <option key={item._id} value={item.stock}>
-                                                    {item.stock}
-                                                </option>
-                                            ))}
-                                        </select>
+                                            isClearable
+                                            placeholder="Select Stock"
+                                        />
                                     </div>
                                     <div className='rfreshicon'>
                                         <RefreshCcw onClick={resethandle} />
@@ -383,6 +400,9 @@ const Closesignal = () => {
                         <Table
                             columns={columns}
                             data={clients}
+                            totalRows={totalRows}
+                            currentPage={currentPage}
+                            onPageChange={handlePageChange}
                         />
 
                     </div>
