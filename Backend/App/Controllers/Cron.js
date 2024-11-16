@@ -657,7 +657,7 @@ async function PlanExpire(req, res) {
                   const resultn = new Notification_Modal({
                     clientid: plan.clientid,
                     segmentid:plan._id,
-                    type:4,
+                    type:"plan expire",
                     title: titles,
                     message: message
                 });

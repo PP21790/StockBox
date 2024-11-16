@@ -2045,7 +2045,72 @@ async myService(req, res) {
 async Notification(req, res) {
   try {
     const { id } = req.params;
-      const result = await Notification_Modal.find({ clientid: id }).sort({ createdAt: -1 });
+    //  const result = await Notification_Modal.find({ clientid: id }).sort({ createdAt: -1 });
+    const today = new Date();
+
+    // Fetch active plans for the client
+    const activePlans = await Planmanage.find({
+      clientid: id,
+      enddate: { $gte: today }
+    }).select('serviceid');
+    
+    const activeServiceIds = activePlans.map(plan => plan.serviceid);
+    
+    // Query to fetch notifications
+    const result = await Notification_Modal.find({
+      $or: [
+        // Notifications specific to the client
+        { clientid: id },
+        // Global notifications (null clientid)
+        {
+          clientid: null,
+          $or: [
+            // Global notifications with type `close signal` or `open signal`
+            {
+              type: { $in: ['close signal', 'open signal'] },
+              segmentid: { $in: activeServiceIds } // Match serviceid with active plans
+            },
+            // Global notifications with other types
+            { type: { $nin: ['close signal', 'open signal'] } }
+          ]
+        },
+        // Broadcast notifications
+        {
+          clienttype: {
+            $in: [
+              'active', // Active clients
+              'expired', // Expired clients
+              'no subscribe', // Clients without a subscription
+              'all' // All clients
+            ]
+          },
+          $or: [
+            // For 'active' type, ensure the client has active plans
+            { clienttype: 'active', segmentid: { $in: activeServiceIds } },
+            // For 'expired' type, check for expired plans
+            { 
+              clienttype: 'expired', 
+              segmentid: { 
+                $in: await Planmanage.find({
+                  clientid: id,
+                  enddate: { $lt: today } // Expired plans
+                }).distinct('serviceid') 
+              }
+            },
+            // For 'no subscribe', ensure the client has no plans
+            {
+              clienttype: 'nonsubscribe',
+              segmentid: { 
+                $nin: await Planmanage.find({ clientid: id }).distinct('serviceid') 
+              }
+            },
+            // 'all' type applies to all clients
+            { clienttype: 'all' }
+          ]
+        }
+      ]
+    }).sort({ createdAt: -1 });
+    
 
       return res.json({
         status: true,
