@@ -140,7 +140,7 @@ if (!stocks) {
             const notificationTitle = 'Important Update';
             const notificationBody =`${serviceName} ${stock} ${calltype} AT ${price} OPEN`;
               const resultn = new Notification_Modal({
-                segmentid:result._id,
+                segmentid:service,
                 type:'open signal',
                 title: notificationTitle,
                 message: notificationBody
@@ -455,13 +455,17 @@ async getSignalWithFilter(req, res) {
           });
       }
     let serviceName;
+    let service;
       if (Signal.segment == "C") {
         serviceName = "Cash";
+        service = "66d2c3bebf7e6dc53ed07626";
       
       } else if (Signal.segment == "O") {
         serviceName = "Option";
+        service = "66dfeef84a88602fbbca9b79";
       } else {
         serviceName = "Future";
+        service = "66dfede64a88602fbbca9b72";
       }
 
       let stock = serviceName.stock;
@@ -574,18 +578,35 @@ async getSignalWithFilter(req, res) {
 
 
 
+      // const clients = await Clients_Modal.find({
+      //   del: 0,
+      //   ActiveStatus: 1,
+      //   devicetoken: { $exists: true, $ne: null }
+      // }).select('devicetoken');
+
+
+      
+      const today = new Date();
+
       const clients = await Clients_Modal.find({
         del: 0,
         ActiveStatus: 1,
-        devicetoken: { $exists: true, $ne: null }
+        devicetoken: { $exists: true, $ne: null },
+        _id: {
+          $in: await Planmanage.find({
+            serviceid: service,  // Replace `service` with your actual service value
+            enddate: { $gte: today }
+          }).distinct('clientid')  // Assuming 'clientid' is the field linking to Clients_Modal
+        }
       }).select('devicetoken');
+
 
       const tokens = clients.map(client => client.devicetoken);
 
       if (tokens.length > 0) {
   
         const resultn = new Notification_Modal({
-          segmentid:id,
+          segmentid:service,
           type:5,
           title: notificationTitle,
           message: notificationBody

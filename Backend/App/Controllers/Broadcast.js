@@ -58,9 +58,10 @@ class BroadcastController {
 
 
             const today = new Date();
+            let clients;
 if(type=="active")
     {
-        const clients = await Clients_Modal.find({
+         clients = await Clients_Modal.find({
             del: 0,
             ActiveStatus: 1,
             devicetoken: { $exists: true, $ne: null },
@@ -76,7 +77,7 @@ if(type=="active")
    else if(type=="expired")
         {
             
-        const clients = await Clients_Modal.find({
+         clients = await Clients_Modal.find({
             del: 0,
             ActiveStatus: 1,
             devicetoken: { $exists: true, $ne: null },
@@ -91,7 +92,7 @@ if(type=="active")
         }
         else if(type=="nonsubscribe"){
             
-   const clients = await Clients_Modal.find({
+    clients = await Clients_Modal.find({
     del: 0,
     ActiveStatus: 1,
     devicetoken: { $exists: true, $ne: null },
@@ -104,7 +105,7 @@ if(type=="active")
 
        }
        else{
-           const clients = await Clients_Modal.find({
+            clients = await Clients_Modal.find({
               del: 0,
               ActiveStatus: 1,
               devicetoken: { $exists: true, $ne: null }
