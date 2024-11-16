@@ -45,6 +45,9 @@ const Addbroadcast = () => {
         if (!values.message) {
             errors.message = "Please enter message";
         }
+        if (!values.type) {
+            errors.message = "Please enter message";
+        }
         return errors;
     };
 
@@ -53,10 +56,12 @@ const Addbroadcast = () => {
             service: values.service,
             subject: values.subject,
             message: values.message,
+            type:  values.type 
         };
 
         try {
             const response = await SendBroadCast(req, token);
+            console.log("response",response)
             if (response.status) {
                 Swal.fire({
                     title: "Send Successful!",
@@ -93,7 +98,9 @@ const Addbroadcast = () => {
         initialValues: {
             service: "",
             subject: "",
-            message: "", 
+            message: "",
+            type:"" 
+            
         },
         validate,
         onSubmit,
@@ -103,11 +110,11 @@ const Addbroadcast = () => {
         {
             name: "service",
             label: "Select Service",
-            type: "selectchecbox",
+            type: "select",       //selectchecbox  for multiple
             label_size: 6,
             col_size: 6,
             disable: false,
-            options: servicedata  && servicedata.length > 0 && servicedata?.map((item) => ({
+            options: servicedata?.map((item) => ({
                 label: item?.title,
                 value: item?._id,
             })),
@@ -119,6 +126,20 @@ const Addbroadcast = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
+        },
+        {
+            name: "type",
+            label: "Select Type",
+            type: "select",
+            label_size: 6,
+            col_size: 6,
+            disable: false,
+            options:[
+                { value: "all", label: "All" },
+                { value: "active", label: "Active" },
+                { value: "expired", label: "Expired" },
+                { value: "nonsubscribe", label: "Non Subscribe" },
+            ]
         },
         {
             name: "message",
