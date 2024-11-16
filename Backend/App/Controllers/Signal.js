@@ -3,6 +3,8 @@ const upload = require('../Utils/multerHelper');
 const Signal_Modal = db.Signal;
 const Stock_Modal = db.Stock;
 const Notification_Modal = db.Notification;
+const Planmanage = db.Planmanage;
+
 mongoose  = require('mongoose');
 const Clients_Modal = db.Clients;
 const { sendFCMNotification } = require('./Pushnotification'); // Adjust if necessary
@@ -108,14 +110,30 @@ if (!stocks) {
             await result.save();
     
            
+            // const clients = await Clients_Modal.find({
+            //   del: 0,
+            //   ActiveStatus: 1,
+            //   devicetoken: { $exists: true, $ne: null }
+            // }).select('devicetoken');
+
+
+
+            const today = new Date();
+
             const clients = await Clients_Modal.find({
               del: 0,
               ActiveStatus: 1,
-              devicetoken: { $exists: true, $ne: null }
+              devicetoken: { $exists: true, $ne: null },
+              _id: {
+                $in: await Planmanage.find({
+                  serviceid: service,  // Replace `service` with your actual service value
+                  enddate: { $gte: today }
+                }).distinct('clientid')  // Assuming 'clientid' is the field linking to Clients_Modal
+              }
             }).select('devicetoken');
 
             const tokens = clients.map(client => client.devicetoken);
-
+            
             if (tokens.length > 0) {
 
   

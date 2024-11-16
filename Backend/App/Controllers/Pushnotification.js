@@ -10,13 +10,16 @@ if (!admin.apps.length) {
   console.log('Firebase Admin SDK initialized.');
 }
 
-// Function to send FCM notification to multiple clients
-async function sendFCMNotification(title, body, tokens) {
-  // Create an array of message objects for each token
-  const results = [];
 
-  for (const token of tokens) {
-    const message = {
+
+async function sendFCMNotification(title, body, tokens) {
+  try {
+
+   const tokenss = [...new Set(tokens)];
+
+   
+    // Create the message object for each token using map
+    const messages = tokenss.map(token => ({
       token: token,
       notification: {
         title: title,
@@ -25,21 +28,19 @@ async function sendFCMNotification(title, body, tokens) {
       data: {
         additional_data: 'value',
       },
-    };
+    }));
 
-    try {
-      const response = await admin.messaging().send(message);
-      console.log('Notification sent successfully:', response);
-      results.push({ token, success: true });
+    // Send the notifications to all tokens using Promise.all
+    const response = await Promise.all(
+      messages.map(message => admin.messaging().send(message))
+    );
 
-    } catch (error) {
-      console.error(`Error sending notification to ${token}:`, error);
-      results.push({ token, success: false, error });
-    }
+    console.log('Notifications sent successfully:', response);
+  } catch (error) {
+    console.error('Error sending notifications:', error);
   }
-
-  return results;
-  
 }
 
+
+// Export the sendFCMNotification function
 module.exports = { sendFCMNotification };
