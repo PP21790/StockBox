@@ -158,13 +158,25 @@ const Client = () => {
                 FullName: item.FullName,
                 Email: item?.Email || '',
                 kyc_verification: item?.kyc_verification == 1 ? "Verfied" : "Not Verified",
-                PhoneNo: item?.PhoneNo || '',
-                Created_at: item?.createdAt || '',
+                PlanStatus : item?.plansStatus?.some(statusItem => statusItem.status === 'active') 
+                ? 'Active' 
+                : item?.plansStatus?.some(statusItem => statusItem.status === 'expired') 
+                  ? 'Expired' 
+                  : 'N/A'
+              ,
+               CientSegment: item?.plansStatus?.map(statusItem => statusItem.serviceName || 'N/A').join(', '),
+               CreatedBy: item.addedByDetails?.FullName ?? (item.clientcome === 1 ? "WEB" : "APP") ,
+               PhoneNo: item?.PhoneNo || '',
+               Created_at: item?.createdAt || '',
 
             }));
             setForGetCSV(csvArr);
         }
     };
+
+
+
+
 
     const getcategoryplanlist = async () => {
         try {

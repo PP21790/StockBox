@@ -94,6 +94,8 @@ const Freeclient = () => {
                 FullName: item.clientDetails?.FullName,
                 Email: item.clientDetails?.Email || '',
                 PhoneNo: item?.clientDetails?.PhoneNo || '',
+                Kyc : item?.clientDetails?.kyc_verification == 1 ? "Verified" : "Not Verified" ,
+                Status:item?.status === "active" ? "Active" : "Expired",
                 StartDate: item?.startdate || '',
                 EndDate: item?.enddate || '',
 
