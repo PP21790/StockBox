@@ -2371,6 +2371,22 @@ export async function getperformacebysegment(data, token) {
 }
 
 
+export async function getperformacebysegmentwithfilter(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}dashboard/closesignalwithfilter`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
 
 /// web link for socila media 
 

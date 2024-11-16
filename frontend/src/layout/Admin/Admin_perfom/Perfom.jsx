@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { getPerformerstatus, GetService, getperformacebysegment } from '../../../Services/Admin';
-import Table from '../../../components/Table';
+import { getPerformerstatus, GetService, getperformacebysegment , getperformacebysegmentwithfilter } from '../../../Services/Admin';
+import Table from '../../../components/Table1';
 import Swal from 'sweetalert2';
 import { fDateTime } from '../../../Utils/Date_formate';
 import { Link } from 'react-router-dom';
@@ -19,12 +19,14 @@ const Perform = () => {
     const [closesignal, setClosesignal] = useState([])
     const [description, setDescription] = useState([])
     const [ForGetCSV, setForGetCSV] = useState([])
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalRows, setTotalRows] = useState(0);
 
+ 
 
     useEffect(() => {
         getServiceData();
-        forCSVdata()
-    }, []);
+    }, [currentPage]);
 
 
 
@@ -67,7 +69,11 @@ const Perform = () => {
         }
     };
 
+     
 
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
 
 
     const getServiceData = async () => {
@@ -108,12 +114,26 @@ const Perform = () => {
 
 
 
+    // const getdatabysegment = async (service_id) => {
+    //     try {
+    //         const response = await getperformacebysegment({ token, service_id });
+    //         if (response.status) {
+    //             setClosesignal(response.data);
+
+    //         }
+    //     } catch (error) {
+    //         console.log("Error fetching performance data:", error);
+    //     }
+    // };
+  
+  
     const getdatabysegment = async (service_id) => {
         try {
-            const response = await getperformacebysegment({ token, service_id });
+            const data = {service_id ,page: currentPage }
+            const response = await getperformacebysegmentwithfilter(data , token);
             if (response.status) {
                 setClosesignal(response.data);
-
+                setTotalRows(response.pagination.totalRecords)
             }
         } catch (error) {
             console.log("Error fetching performance data:", error);
@@ -235,7 +255,12 @@ const Perform = () => {
         return (
             <div className="table-responsive">
                 <h5>{activeService ? `Performance for ${activeService.title}` : 'Performance'}</h5>
-                <Table columns={columns1} data={closesignal} />
+                <Table columns={columns1}
+                 data={closesignal}
+                 totalRows={totalRows}
+                 currentPage={currentPage}
+                 onPageChange={handlePageChange} 
+                />
             </div>
         );
     };
