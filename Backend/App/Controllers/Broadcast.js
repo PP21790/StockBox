@@ -2,6 +2,7 @@ const db = require("../Models");
 const Broadcast_Modal = db.Broadcast;
 const Clients_Modal = db.Clients;
 const Notification_Modal = db.Notification;
+const Planmanage = db.Planmanage;
 
 const { sendFCMNotification } = require('./Pushnotification'); // Adjust if necessary
 
