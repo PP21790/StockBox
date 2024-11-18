@@ -18,7 +18,6 @@ const AddSignal = () => {
 
   const [loading, setLoading] = useState(false);
 
-
   const [serviceList, setServiceList] = useState([]);
   const [stockList, setStockList] = useState([]);
   const [expirydate, setExpirydate] = useState([]);

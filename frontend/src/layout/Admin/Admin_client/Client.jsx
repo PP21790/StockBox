@@ -144,13 +144,14 @@ const Client = () => {
 
     useEffect(() => {
         getAdminclient();
-
     }, [searchInput, searchkyc, statuscreatedby, currentPage, expired ]);
 
 
     useEffect(() => {
         forCSVdata()
     }, [searchInput, clients]);
+
+
 
 
     const forCSVdata = () => {
@@ -183,9 +184,7 @@ const Client = () => {
         try {
             const response = await getcategoryplan(token);
             if (response.status) {
-
                 setCategory(response.data);
-
             }
         } catch (error) {
             console.log("error");
@@ -254,8 +253,6 @@ const Client = () => {
             console.log("error");
         }
     } 
-
-
 
 
 
