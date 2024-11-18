@@ -43,7 +43,8 @@ class BasicSetting {
                     digio_template_name,
                     freetrial,
                     kyc,
-                    paymentstatus
+                    paymentstatus,
+                    officepaymenystatus
 
                 } = req.body;
 
@@ -97,7 +98,8 @@ class BasicSetting {
                     digio_template_name,
                     freetrial,
                     kyc,
-                    paymentstatus
+                    paymentstatus,
+                    officepaymenystatus
                 };
 
                 const options = {

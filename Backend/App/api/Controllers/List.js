@@ -22,6 +22,7 @@ const Broadcast_Modal = db.Broadcast;
 const Order_Modal = db.Order;
 const License_Modal = db.License;
 const Notification_Modal = db.Notification;
+const Bank_Modal = db.Bank;
 
 
 mongoose  = require('mongoose');
@@ -2256,6 +2257,48 @@ async Notification(req, res) {
   }
 }
 
+
+
+async Bank(req, res) {
+  try {
+
+      const Bank = await Bank_Modal.find({ del: false,status: true,type:1 });
+
+      return res.status(200).json({
+          status: true,
+          message: "Bank retrieved successfully",
+          data: Bank
+      });
+  } catch (error) {
+      console.log("Error retrieving Bank:", error);
+      return res.status(500).json({
+          status: false,
+          message: "Server error",
+          error: error.message
+      });
+  }
+}
+
+
+async Qrcode(req, res) {
+  try {
+
+      const Bank = await Bank_Modal.find({ del: false,status: true,type:2 });
+
+      return res.status(200).json({
+          status: true,
+          message: "Bank retrieved successfully",
+          data: Bank
+      });
+  } catch (error) {
+      console.log("Error retrieving Bank:", error);
+      return res.status(500).json({
+          status: false,
+          message: "Server error",
+          error: error.message
+      });
+  }
+}
 
 
 }
