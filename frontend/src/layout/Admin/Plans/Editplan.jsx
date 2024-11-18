@@ -51,10 +51,10 @@ const Editplan = () => {
 
     const validate = (values) => {
         let errors = {};
-        if (!values.description) errors.description = "Please enter Description";
-        if (!values.price) errors.price = "Please enter Price";
-        if (!values.validity) errors.validity = "Please enter Validity";
-        if (!values.category) errors.category = "Please enter Category";
+        if (!values.description) errors.description = "Please Enter Description";
+        if (!values.price) errors.price = "Please Enter Price";
+        if (!values.validity) errors.validity = "Please Enter Validity";
+        if (!values.category) errors.category = "Please Enter Category";
         return errors;
     };
 

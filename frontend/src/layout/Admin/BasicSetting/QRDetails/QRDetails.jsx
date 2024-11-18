@@ -116,7 +116,7 @@ const QRDetails = () => {
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
-                    text: response.message || 'Banner added successfully.',
+                    text: response.message || 'QR added successfully.',
                     icon: 'success',
                     confirmButtonText: 'OK',
                     timer: 2000,

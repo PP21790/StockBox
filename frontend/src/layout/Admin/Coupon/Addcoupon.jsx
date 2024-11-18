@@ -23,16 +23,16 @@ const Addcoupon = () => {
         let errors = {};
 
         if (!values.name) {
-            errors.name = "Please enter  Name";
+            errors.name = "Please Enter  Name";
         }
         if (!values.code) {
-            errors.code = "Please enter code";
+            errors.code = "Please Enter code";
         }
         if (values.code) {
             if (values.code.length < 6 || values.code.length > 8) {
-                errors.code = "Please enter between 6 and 8 characters.";
+                errors.code = "Please Enter Between 6 and 8 Characters.";
             } else if (!/^[a-zA-Z0-9]+$/.test(values.code)) {
-                errors.code = "Code must contain only numbers and letters.";
+                errors.code = "Code Must contain Only Numbers and Letters.";
             }
         }
 
@@ -46,25 +46,25 @@ const Addcoupon = () => {
             errors.minpurchasevalue = "Please Enter Greater Than Discount value";
         }
         if (values.enddate && values.startdate > values.enddate) {
-            errors.enddate = "Please Enter greater Than Startdate";
+            errors.enddate = "Please Enter Greater Than Startdate";
         }
         if (!values.type) {
-            errors.type = "Please enter type";
+            errors.type = "Please Enter type";
         }
         if (!values.value) {
-            errors.value = "Please enter value";
+            errors.value = "Please Enter value";
         }
         if (!values.startdate) {
-            errors.startdate = "Please enter Startdate";
+            errors.startdate = "Please Enter Startdate";
         }
         if (!values.enddate) {
-            errors.enddate = "Please enter Enddate";
+            errors.enddate = "Please Enter Enddate";
         }
         if (!values.minpurchasevalue) {
-            errors.minpurchasevalue = "Please enter Min Purchase value";
+            errors.minpurchasevalue = "Please Enter Min Purchase Value";
         }
         if (values.mincouponvalue && !values.mincouponvalue) {
-            errors.mincouponvalue = "Please enter Min Coupon value";
+            errors.mincouponvalue = "Please Enter Min Coupon Value";
         }
 
         return errors;

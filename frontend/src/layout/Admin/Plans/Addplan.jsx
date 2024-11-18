@@ -42,19 +42,19 @@ const Addplan = () => {
 
 
         if (!values.description) {
-            errors.description = "Please enter Description";
+            errors.description = "Please Enter Description";
         }
         if (!values.price) {
-            errors.price = "Please enter Price";
+            errors.price = "Please Enter Price";
         }
         if (values.price && values.price < 0) {
-            errors.price = "Please Enter Price greater Than 0";
+            errors.price = "Please Enter Price Greater Than 0";
         }
         if (!values.validity) {
-            errors.validity = "Please enter Validity";
+            errors.validity = "Please Enter Validity";
         }
         if (!values.category) {
-            errors.category = "Please enter Category";
+            errors.category = "Please Enter Category";
         }
 
         return errors;

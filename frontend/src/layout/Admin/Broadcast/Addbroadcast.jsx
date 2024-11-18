@@ -37,16 +37,16 @@ const Addbroadcast = () => {
     const validate = (values) => {
         let errors = {};
         if (!values.service) {
-            errors.service = "Please enter service";
+            errors.service = "Please Enter Service";
         }
         if (!values.subject) {
-            errors.subject = "Please enter subject";
+            errors.subject = "Please Enter Subject";
         }
         if (!values.message) {
-            errors.message = "Please enter message";
+            errors.message = "Please Enter Message";
         }
         if (!values.type) {
-            errors.type = "Please enter Type";
+            errors.type = "Please Enter Type";
         }
         return errors;
     };

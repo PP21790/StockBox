@@ -19,25 +19,25 @@ const Addbankdetail = () => {
         let errors = {};
 
         if (!values.name) {
-            errors.name = "Please enter Bank Name";
+            errors.name = "Please Enter Bank Name";
         }
         if (!values.branch) {
-            errors.branch = "Please enter Branch Name";
+            errors.branch = "Please Enter Branch Name";
         }
         if (!values.Confirmnumber) {
-            errors.Confirmnumber = "Please confirm your Account Number";
+            errors.Confirmnumber = "Please Confirm Your Account Number";
           } else if (values.accountno !== values.Confirmnumber) {
-            errors.Confirmnumber = "Accout Number must match";
+            errors.Confirmnumber = "Accout Number Must Match";
           }
     
         if (!values.accountno) {
-            errors.accountno = "Please Account Number type";
+            errors.accountno = "Please Account Number Type";
         }
         if (!values.ifsc) {
-            errors.ifsc = "Please enter IFSC Code";
+            errors.ifsc = "Please Enter IFSC Code";
         }
         if (!values.image) {
-            errors.image = "Please enter Image";
+            errors.image = "Please Enter Image";
         }
 
         return errors;

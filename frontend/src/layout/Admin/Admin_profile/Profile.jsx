@@ -52,7 +52,7 @@ const Profile = () => {
         }
     };
 
-    console.log("weblink", weblink)
+    
 
     const Updateweblink = async () => {
         try {
@@ -147,10 +147,10 @@ const Profile = () => {
                                 <div className="card">
                                     <div className="card-body">
                                         <div className="row ">
-                                            <div className="col-12 d-flex justify-content-end">
+                                            {/* <div className="col-12 d-flex justify-content-end">
                                                 <i className="fadeIn animated bx bx-edit-alt" style={{ fontSize: "1.3rem" }} data-bs-toggle="modal"
                                                     data-bs-target="#example2" />
-                                            </div>
+                                            </div> */}
 
 
                                         </div>

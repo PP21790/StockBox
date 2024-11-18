@@ -634,7 +634,7 @@ async PlanExipreListWithFilter(req, res) {
     const { serviceid, page = 1 } = req.body; // Default values for pagination
     let limit = 10;
     const filter = serviceid ? { serviceid } : {};
-console.log(page);
+console.log("req.body",req.body);
     // Fetch paginated plans
     const plans = await Planmanage.find(filter)
       .sort({ enddate: -1 })

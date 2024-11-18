@@ -49,10 +49,10 @@ const Planexpiry = () => {
             const response = await getclientPlanexpirywithfilter(data, token);
             if (response && response.status) {
                 const filteredData = response.data.filter((item) =>
-                    (searchInput === "" || item.clientFullName.toLowerCase().includes(searchInput.toLowerCase())) &&
-                    (searchstock === "" || item.serviceTitle.toLowerCase().includes(searchstock.toLowerCase()))
+                    (searchInput === "" || item.clientFullName.toLowerCase().includes(searchInput.toLowerCase())) ||
+                    (searchstock === "" || item.serviceTitle.toLowerCase().includes(searchstock.toLowerCase())) 
                 );
-                setClients(filteredData);
+                setClients(searchstock ? filteredData : response.data);
                 setTotalRows(response.pagination.total);
 
             }
@@ -195,7 +195,7 @@ const Planexpiry = () => {
                             >
                                 <option value="">Select Service</option>
                                 {serviceList.map((service) => (
-                                    <option key={service._id} value={service.title}>
+                                    <option key={service._id} value={service._id}>
                                         {service.title}
                                     </option>
                                 ))}

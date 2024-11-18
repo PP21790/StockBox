@@ -23,13 +23,13 @@ const Addblogs = () => {
         let errors = {};
 
         if (!values.title) {
-            errors.title = "Please enter title";
+            errors.title = "Please Enter Title";
         }
         if (!values.description) {
-            errors.description = "Please enter description";
+            errors.description = "Please Enter Description";
         }
         if (!values.image) {
-            errors.image = "Please enter image";
+            errors.image = "Please Enter Image";
         }
         console.log("errors",errors)
 

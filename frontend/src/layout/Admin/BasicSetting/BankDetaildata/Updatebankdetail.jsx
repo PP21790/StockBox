@@ -21,9 +21,9 @@ const Updatebankdetail = () => {
     let errors = {};
 
     if (!values.Confirmnumber) {
-        errors.Confirmnumber = "Please confirm your Account Number";
+        errors.Confirmnumber = "Please Confirm Your Account Number";
       } else if (values.accountno !== values.Confirmnumber) {
-        errors.Confirmnumber = "Accout Number must match";
+        errors.Confirmnumber = "Accout Number Must Match";
       }
 
     return errors;
