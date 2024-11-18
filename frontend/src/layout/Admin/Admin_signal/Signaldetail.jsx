@@ -5,6 +5,8 @@ import { Signalperdetail } from '../../../Services/Admin';
 import { image_baseurl } from '../../../Utils/config';
 import { fDateTime, fDateTimeH } from '../../../Utils/Date_formate';
 import { Tooltip } from 'antd';
+import { ArrowDownToLine, } from 'lucide-react';
+
 
 const Signaldetail = () => {
 
@@ -18,7 +20,22 @@ const Signaldetail = () => {
     useEffect(() => {
         getsignaldetail();
     }, []);
+   
 
+
+    const handleDownload = (row) => {
+
+        const url = `${image_baseurl}uploads/pdf/${row.pdf}`;
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = url;
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+
+    };
 
 
     const getsignaldetail = async () => {
@@ -154,7 +171,12 @@ const Signaldetail = () => {
                                                             <h6 className="mb-0">Uploaded Document</h6>
                                                             <span>
                                                                 {item.report ? (
-                                                                    <img src={`${image_baseurl}uploads/report/${item.image}`} alt={item.report} width="50" height="50" />
+                                                                    //   <img src={`${image_baseurl}uploads/report/${item.image}`} alt={item.report} width="50" height="50" />
+                                                                    <div style={{ color: "green", cursor: "pointer" }} onClick={() => handleDownload(item)}>
+                                                                    <Tooltip placement="top" overlay="Download">
+                                                                         <ArrowDownToLine />
+                                                                    </Tooltip>
+                                                                </div>
                                                                 ) : (
                                                                     "-"
                                                                 )}
