@@ -1789,13 +1789,17 @@ async basicSetting(req, res) {
 
 
     const result = await BasicSetting_Modal.find({ _id: "66bb3c19542b26b6357bbf4f" })
-    .select('freetrial website_title logo contact_number address refer_image receiver_earn refer_title sender_earn refer_description razorpay_key	razorpay_secret') 
+    .select('freetrial website_title logo contact_number address refer_image receiver_earn refer_title sender_earn refer_description razorpay_key	razorpay_secret kyc paymentstatus officepaymenystatus') 
     .exec();
 
     if (result.length > 0) {
       result[0].logo = `${baseUrl}/uploads/basicsetting/${result[0].logo}`;
       result[0].refer_image = `${baseUrl}/uploads/basicsetting/${result[0].refer_image}`;
   }
+
+
+
+
 
 
     return res.json({
@@ -2262,12 +2266,23 @@ async Notification(req, res) {
 async Bank(req, res) {
   try {
 
-      const Bank = await Bank_Modal.find({ del: false,status: true,type:1 });
+    const banks = await Bank_Modal.find({ del: false, status: true, type: 1 });
+
+    const protocol = req.protocol; // 'http' or 'https'
+    const baseUrl = `${protocol}://${req.headers.host}`; // Construct base URL dynamically
+    console.log(baseUrl);
+    const bankWithImageUrls = banks.map(bank => {
+      return {
+        ...bank._doc, // Spread the original document
+        image: bank.image ? `${baseUrl}/uploads/bank/${bank.image}` : null, // Append full image URL
+      };
+    });
+    
 
       return res.status(200).json({
           status: true,
           message: "Bank retrieved successfully",
-          data: Bank
+          data: bankWithImageUrls
       });
   } catch (error) {
       console.log("Error retrieving Bank:", error);
@@ -2283,12 +2298,23 @@ async Bank(req, res) {
 async Qrcode(req, res) {
   try {
 
-      const Bank = await Bank_Modal.find({ del: false,status: true,type:2 });
+    const banks = await Bank_Modal.find({ del: false, status: true, type: 2 });
+
+    const protocol = req.protocol; // 'http' or 'https'
+    const baseUrl = `${protocol}://${req.headers.host}`; // Construct base URL dynamically
+    
+    const bankWithImageUrls = banks.map(bank => {
+      return {
+        ...bank._doc, // Spread the original document
+        image: bank.image ? `${baseUrl}/uploads/bank/${bank.image}` : null, // Append full image URL
+      };
+    });
+    
 
       return res.status(200).json({
           status: true,
-          message: "Bank retrieved successfully",
-          data: Bank
+          message: "Qrcode retrieved successfully",
+          data: bankWithImageUrls
       });
   } catch (error) {
       console.log("Error retrieving Bank:", error);

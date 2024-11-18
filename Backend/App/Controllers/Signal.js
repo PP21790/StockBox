@@ -31,7 +31,26 @@ class Signal {
 
             const { price,calltype,stock,tag1,tag2,tag3,stoploss,description,callduration,callperiod,add_by,expirydate,segment,optiontype,strikeprice,tradesymbol,lotsize } = req.body;
         
-            const report = req.files['report'] ? req.files['report'][0].filename : null;
+        //    const report = req.files['report'] ? req.files['report'][0].filename : null;
+
+
+
+        const allowedMimeTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+
+const reportFile = req.files['report'] ? req.files['report'][0] : null;
+
+if (reportFile) {
+    const fileMimeType = reportFile.mimetype; // Get the MIME type of the uploaded file
+    if (!allowedMimeTypes.includes(fileMimeType)) {
+        return res.status(400).json({
+            status: false,
+            message: "Invalid file type. Only PDF and Word files are allowed.",
+        });
+    }
+}
+
+// If validation passes, extract the filename
+const report = reportFile ? reportFile.filename : null;
 
             var service;
             var serviceName;
@@ -367,9 +386,19 @@ async getSignalWithFilter(req, res) {
             });
         }
 
-        const Signal = await Signal_Modal.findById(id);
+        const signals = await Signal_Modal.findById(id);
 
-        if (!Signal) {
+
+        const protocol = req.protocol; // 'http' or 'https'
+        const baseUrl = `${protocol}://${req.headers.host}`; // Construct base URL dynamically
+        const signalss = signals.map(signal => {
+          return {
+            ...signal._doc, // Spread the original document
+            report: signal.report ? `${baseUrl}/uploads/bank/${signal.report}` : null, // Append full image URL
+          };
+        });
+
+        if (!signalss) {
             return res.status(404).json({
                 status: false,
                 message: "Signal not found"
@@ -379,7 +408,7 @@ async getSignalWithFilter(req, res) {
         return res.json({
             status: true,
             message: "Signal details fetched successfully",
-            data: Signal
+            data: signalss
         });
 
     } catch (error) {

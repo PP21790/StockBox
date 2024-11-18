@@ -138,7 +138,38 @@ const clientsModel = new Schema({
         type: String,
         trim: true,
         default: null
+    },
+    usernamekotak: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    passwordkotak: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    oneTimeToken: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    kotakneo_sid: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    kotakneo_userd: {
+        type: String,
+        trim: true,
+        default: null
     }
+    , hserverid: {
+        type: String,
+        trim: true,
+        default: null
+    }
+
 }, {
     timestamps: true
 });
