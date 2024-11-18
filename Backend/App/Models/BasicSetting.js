@@ -215,6 +215,11 @@ const BasicSettingSchema = new Schema({
         type: Number,
         enum: [1, 0],
         default: 1
+    },
+    officepaymenystatus: {
+        type: Number,
+        enum: [1, 0],
+        default: 1
     }
 
 }, {

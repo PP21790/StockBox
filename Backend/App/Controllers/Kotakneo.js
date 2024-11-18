@@ -8,13 +8,14 @@ const Clients_Modal = db.Clients;
 const Signal_Modal = db.Signal;
 const Stock_Modal = db.Stock;
 const Order_Modal = db.Order;
+const qs = require("querystring");
 
 
 class Kotakneo {
 
     async GetAccessToken(req, res) {
         try {
-            const { id, apikey, apisecret } = req.body;
+            const { id, apikey, apisecret, user_name, pass_word } = req.body;
 
             const client = await Clients_Modal.findOne({ _id: id }); 
             // Check if the client exists
@@ -35,57 +36,260 @@ class Kotakneo {
 
 
 
-            // Check for authCode in the request
-            const data = JSON.stringify({
-                secretKey: apikey,
-                appKey: apisecret,
-                source: "WebAPI"
-            });
-
-            const config = {
-                method: 'post',
-                maxBodyLength: Infinity,
-                url: 'https://webtrade.mandotsecurities.com/interactive/user/session',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                data: data
+            const qs = require("qs");
+            const apiUrl = "https://napi.kotaksecurities.com/oauth2/token";
+            // const dematepassword = Get_User[0].app_id;
+            const consumerKey = apikey;
+            const consumerSecret = apikey;
+            const username = user_name;
+            const password = pass_word; //trade Api pass
+            const authString = `${consumerKey}:${consumerSecret}`;
+            const authHeaderValue = `Basic ${Buffer.from(authString).toString(
+              "base64"
+            )}`;
+            const requestData = {
+              grant_type: "password",
+              username: username,
+              password: password,
             };
+  
+            if (consumerKey == "" || consumerKey == null) {
 
-            const response = await axios.request(config);
-         
+                return res.status(404).json({
+                    status: false,
+                    message: "Please Update Consumer Key in Broker key..."
+                });
 
-            if (response.data.type == "success") {
-                
+             
+            }
+            if (username == "" || username == null) {
 
-                const brokerlink = await Clients_Modal.findByIdAndUpdate(
-                    key, 
-                    { 
-                        authtoken: response.data.result.token,  
-                        apisecret: apisecret,
-                        apikey: apikey,
-                        dlinkstatus: 1,                      
-                        tradingstatus: 1                       
-                    }, 
-                    { 
-                        new: true, // Return the updated document
-                        useFindAndModify: false // Prevent deprecation warning (optional)
-                    }
-                );
+
+                return res.status(404).json({
+                    status: false,
+                    message: "Please Update User Name in Broker key..."
+                });
+
+            
+            }
+  
+            if (consumerSecret == "" || consumerSecret == null) {
+
+                return res.status(404).json({
+                    status: false,
+                    message: "Please Update Consumer Secret in Broker key..."
+                });
+
+            }
+            if (password == "" || password == null) {
+
+                return res.status(404).json({
+                    status: false,
+                    message: "Please Update Trade Api Password in Broker key..."
+                });
+
+             
+            }
+  
+            const url = "https://napi.kotaksecurities.com/oauth2/token";
+            const data = "grant_type=client_credentials";
+            const headers = {
+              Authorization: authHeaderValue,
+            };
+            axios
+              .post(url, data, { headers })
+              .then((response) => {
+                var access_token = response.data.access_token;
+                if (response.data.access_token) {
+                  var data5 = JSON.stringify({
+                    mobileNumber: client.PhoneNo.includes("+91")
+                      ? client.PhoneNo
+                      : "+91" + client.PhoneNo,
+                    password: password,
+                  });
+  
+                  var config = {
+                    method: "post",
+                    maxBodyLength: Infinity,
+                    url: "https://gw-napi.kotaksecurities.com/login/1.0/login/v2/validate",
+                    headers: {
+                      accept: "*/*",
+                      "Content-Type": "application/json",
+                      Authorization: "Bearer " + access_token,
+                    },
+                    data: data5,
+                  };
+  
+                  axios(config)
+                    .then(function (response) {
+                      var stepOneToken = response.data.data.token;
+                      var stepOneSID = response.data.data.sid;
+                      var stepHsServerId = response.data.data.hsServerId;
+                      var decodeAccessToken = jwt.decode(
+                        response.data.data.token
+                      );
+  
+                      if (response.data.data.token) {
+                        var data1 = JSON.stringify({
+                          userId: decodeAccessToken.sub,
+                          sendEmail: true,
+                          isWhitelisted: true,
+                        });
+                        var config1 = {
+                          method: "post",
+                          maxBodyLength: Infinity,
+                          url: "https://gw-napi.kotaksecurities.com/login/1.0/login/otp/generate",
+                          headers: {
+                            accept: "*/*",
+                            "Content-Type": "application/json",
+                            Authorization: "Bearer " + access_token,
+                          },
+                          data: data1,
+                        };
+  
+                        axios(config1)
+                          .then(async function (response) {
+                            if (response.status == 201) {
+                            
+                              const result = await Clients_Modal.findByIdAndUpdate(
+                                id, 
+                                { 
+                                    oneTimeToken: access_token,
+                                    kotakneo_sid: stepOneSID,
+                                    kotakneo_userd: decodeAccessToken.sub,
+                                    hserverid: stepHsServerId,
+                                    authtoken: stepOneToken,  
+                                    apisecret: apisecret,
+                                    apikey: apikey,
+                                    usernamekotak: username,
+                                    passwordkotak: password,
+                                    dlinkstatus: 1,                      
+                                    tradingstatus: 1                       
+                                }, 
+                                { 
+                                    new: true, // Return the updated document
+                                    useFindAndModify: false // Prevent deprecation warning (optional)
+                                }
+                            );
+            
+
+
+                            
+                            } else {
+                              const message = JSON.stringify(response).replace(
+                                /["',]/g,
+                                ""
+                              );
+
+                              return res.status(404).json({
+                                status: false,
+                                message: message
+                            });
+                            }
+                          })
+                          .catch(function (error) {
+                            if (error) {
+                              if (error.response) {
+                                if (error.response.data.error != undefined) {
+                                  const message = JSON.stringify(
+                                    error.response.data.error[0].message
+                                  ).replace(/["',]/g, "");
+  
+                                
+                              return res.status(404).json({
+                                status: false,
+                                message: message
+                            });
+                                } else {
+                                  const message = JSON.stringify(
+                                    error.response.data
+                                  ).replace(/["',]/g, "");
+                                 
+                              return res.status(404).json({
+                                status: false,
+                                message: message
+                            });
+                                }
+                              }
+                            }
+                          });
+                      } else {
+                        const message = JSON.stringify(response.data).replace(
+                          /["',]/g,
+                          ""
+                        );
+                     
+                        return res.status(404).json({
+                            status: false,
+                            message: message
+                        });
+                      }
+                    })
+                    .catch(function (error) {
+                      if (error.response.data.error != undefined) {
+                        const message = JSON.stringify(
+                          error.response.data.error[0]
+                        ).replace(/["',]/g, "");
+  
+                        
+                        return res.status(404).json({
+                            status: false,
+                            message: message
+                        });
+
+                      } else {
+                        const message = JSON.stringify(
+                          error.response.data
+                        ).replace(/["',]/g, "");
+                       
+                              return res.status(404).json({
+                                status: false,
+                                message: message
+                            });
+                      }
+                    });
+                } else {
+                  const message = JSON.stringify(response.data).replace(
+                    /["',]/g,
+                    ""
+                  );
+                 
+                  return res.status(404).json({
+                    status: false,
+                    message: message
+                });
+                }
+              })
+              .catch((error) => {
+                if (error.response != undefined) {
+                  const message = JSON.stringify(error.response.data).replace(
+                    /["',]/g,
+                    ""
+                  );
+  
+                 
+                  return res.status(404).json({
+                    status: false,
+                    message: message
+                });
+                } else {
+                  const message = JSON.stringify(error.response.data).replace(
+                    /["',]/g,
+                    ""
+                  );
+                 
+                  return res.status(404).json({
+                    status: false,
+                    message: message
+                });
+                }
+              });
 
                 return res.json({
                     status: true,
                     message: "Broker login successfully",
                 });
-            } 
-            else {
-             
-
-                return res.status(404).json({
-                    status: false,
-                    message: response.data.message
-                });
-            } 
+           
           
         } catch (error) {
             return res.status(500).json({ status: false, message: error.message || "Server error" });
