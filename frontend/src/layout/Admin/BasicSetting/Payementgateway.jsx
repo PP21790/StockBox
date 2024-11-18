@@ -10,11 +10,17 @@ const Payementgateway = () => {
     const [clients, setClients] = useState(null);
     const [initialValues, setInitialValues] = useState({
         razorpay_secret: "",
-        razorpay_key: ""
+        razorpay_key: "",
+        paymentstatus: "",
+        officepaymenystatus: ""
     });
+
+
     const [updateapi, setUpdateapi] = useState({
         razorpay_secret: "",
-        razorpay_key: ""
+        razorpay_key: "",
+        paymentstatus: "",
+        officepaymenystatus: "",
     });
 
     const getApidetail = async () => {
@@ -25,11 +31,15 @@ const Payementgateway = () => {
                 setClients(clientData);
                 setInitialValues({
                     razorpay_key: clientData.razorpay_key || "",
-                    razorpay_secret: clientData.razorpay_secret || ""
+                    razorpay_secret: clientData.razorpay_secret || "",
+                    paymentstatus: clientData.paymentstatus || "",
+                    officepaymenystatus: clientData.officepaymenystatus || ""
                 });
                 setUpdateapi({
                     razorpay_key: clientData.razorpay_key || "",
-                    razorpay_secret: clientData.razorpay_secret || ""
+                    razorpay_secret: clientData.razorpay_secret || "",
+                    paymentstatus: clientData.paymentstatus || "",
+                    officepaymenystatus: clientData.officepaymenystatus || ""
                 });
             }
         } catch (error) {
@@ -44,7 +54,10 @@ const Payementgateway = () => {
     const hasChanges = () => {
         return (
             initialValues.razorpay_key !== updateapi.razorpay_key ||
-            initialValues.razorpay_secret !== updateapi.razorpay_secret
+            initialValues.razorpay_secret !== updateapi.razorpay_secret ||
+            initialValues.paymentstatus !== updateapi.paymentstatus ||
+            initialValues.officepaymenystatus !== updateapi.officepaymenystatus 
+
         );
     };
 
@@ -64,8 +77,12 @@ const Payementgateway = () => {
             const data = {
                 id: user_id,
                 razorpay_key: updateapi.razorpay_key,
-                razorpay_secret: updateapi.razorpay_secret
+                razorpay_secret: updateapi.razorpay_secret,
+                paymentstatus: updateapi.paymentstatus,
+                officepaymenystatus: updateapi.officepaymenystatus
             };
+            
+            console.log("data",data)
 
             const response = await updatePayementgateway(data, token);
             if (response?.status) {
@@ -76,7 +93,7 @@ const Payementgateway = () => {
                     timer: 1500,
                     timerProgressBar: true,
                 });
-                setInitialValues(updateapi); 
+                setInitialValues(updateapi);
             }
         } catch (error) {
             Swal.fire({
@@ -88,6 +105,8 @@ const Payementgateway = () => {
             });
         }
     };
+
+   
 
     return (
         <div>
@@ -139,7 +158,49 @@ const Payementgateway = () => {
                                                 onChange={(e) => setUpdateapi({ ...updateapi, razorpay_secret: e.target.value })}
                                             />
                                         </div>
+                                        <div className="col-md-6 d-flex justify-content-start *: mt-3">
+                                            <label htmlFor="payment-status" className="form-label">
+                                                Online Payment Status
+                                            </label>
+                                            <div className="form-check form-switch form-check-info">
+                                                <input
+                                                    id="payment-status"
+                                                    className="form-check-input toggleswitch"
+                                                    type="checkbox"
+                                                    checked={updateapi.paymentstatus === 1}
+                                                    onChange={(e) =>
+                                                        setUpdateapi({
+                                                            ...updateapi,
+                                                            paymentstatus: e.target.checked ? 1 : 0,
+                                                        })
+                                                    }
+                                                />
+                                                <label htmlFor="payment-status" className="checktoggle checkbox-bg"></label>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-6 d-flex justify-content-end mt-3">
+                                            <label htmlFor="office-payment-status" className="form-label">
+                                                Offline Payment Status
+                                            </label>
+                                            <div className="form-check form-switch form-check-info">
+                                                <input
+                                                    id="office-payment-status"
+                                                    className="form-check-input toggleswitch"
+                                                    type="checkbox"
+                                                    checked={updateapi.officepaymenystatus === 1}
+                                                    onChange={(e) =>
+                                                        setUpdateapi({
+                                                            ...updateapi,
+                                                            officepaymenystatus: e.target.checked ? 1 : 0,
+                                                        })
+                                                    }
+                                                />
+                                                <label htmlFor="office-payment-status" className="checktoggle checkbox-bg"></label>
+                                            </div>
+                                        </div>
+
                                     </div>
+
                                 </form>
                             </div>
                             <div className="card-footer text-center">
@@ -147,7 +208,7 @@ const Payementgateway = () => {
                                     type="button"
                                     className="btn btn-primary mb-2"
                                     onClick={UpdateApi}
-                                    disabled={!hasChanges()} 
+                                   disabled={!hasChanges()}
                                 >
                                     Update
                                 </button>

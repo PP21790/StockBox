@@ -192,6 +192,7 @@ const Stock = () => {
 
     // delete sevices
 
+    
     // delete plan cartegory 
 
     const DeleteStockbyadmin = async (_id) => {

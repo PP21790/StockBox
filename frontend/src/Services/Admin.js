@@ -1726,6 +1726,8 @@ export async function updatePayementgateway(data, token) {
 
     formData.append('razorpay_key', data.razorpay_key);
     formData.append('razorpay_secret', data.razorpay_secret);
+    formData.append('paymentstatus', data.paymentstatus);
+    formData.append('officepaymenystatus', data.officepaymenystatus);
 
     try {
         const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
