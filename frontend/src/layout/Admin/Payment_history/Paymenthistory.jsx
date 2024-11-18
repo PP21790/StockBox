@@ -15,7 +15,6 @@ import ExportToExcel from '../../../Utils/ExportCSV';
 const History = () => {
 
 
-
     const navigate = useNavigate();
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
@@ -126,7 +125,7 @@ const History = () => {
     const columns = [
         {
             name: 'S.No',
-            selector: (row, index) => index + 1,
+            selector: (row, index) => (currentPage - 1) * 10 + index + 1,
             sortable: false,
             width: '100px',
         },

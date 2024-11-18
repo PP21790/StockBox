@@ -264,15 +264,16 @@ const Category = () => {
             }
         });
     };
-
+  
+   
 
     const columns = [
-        {
-            name: 'S.No',
-            selector: (row, index) => index + 1,
-            sortable: false,
-            width: '78px',
-        },
+        // {
+        //     name: 'S.No',
+        //     selector: (row, index) => 10 + index + 1,
+        //     sortable: false,
+        //     width: '78px',
+        // },
         {
             name: 'Title',
             selector: row => row.title,

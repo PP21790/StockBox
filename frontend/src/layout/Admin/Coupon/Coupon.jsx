@@ -163,12 +163,12 @@ const Coupon = () => {
 
 
     const columns = [
-        {
-            name: 'S.No',
-            selector: (row, index) => index + 1,
-            sortable: false,
-            width: '100px',
-        },
+        // {
+        //     name: 'S.No',
+        //     selector: (row, index) => index + 1,
+        //     sortable: false,
+        //     width: '100px',
+        // },
         {
             name: 'Name',
             selector: row => row.name,

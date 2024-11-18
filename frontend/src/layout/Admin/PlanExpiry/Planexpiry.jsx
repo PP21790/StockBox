@@ -6,6 +6,8 @@ import ExportToExcel from '../../../Utils/ExportCSV';
 import { getclientPlanexpiry, GetService } from '../../../Services/Admin';
 import { fDateTimeH } from '../../../Utils/Date_formate';
 
+
+
 const Planexpiry = () => {
 
 
@@ -98,12 +100,12 @@ const Planexpiry = () => {
 
 
     const columns = [
-        {
-            name: 'S.No',
-            selector: (row, index) => index + 1,
-            sortable: false,
-            width: '100px',
-        },
+        // {
+        //     name: 'S.No',
+        //     selector: (row, index) => index + 1,
+        //     sortable: false,
+        //     width: '100px',
+        // },
         {
             name: 'Full Name',
             selector: row => row.clientFullName,

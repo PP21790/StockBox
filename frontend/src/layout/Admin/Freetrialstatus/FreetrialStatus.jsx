@@ -104,12 +104,12 @@ const FreetrialStatus = () => {
   };
 
   const columns = [
-    {
-      name: 'S.No',
-      selector: (row, index) => index + 1,
-      sortable: false,
-      width: '200px',
-    },
+    // {
+    //   name: 'S.No',
+    //   selector: (row, index) => index + 1,
+    //   sortable: false,
+    //   width: '200px',
+    // },
     {
       name: 'Previous Status',
       selector: (row) => `${row.olddays} Day`,

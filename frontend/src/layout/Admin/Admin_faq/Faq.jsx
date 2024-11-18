@@ -239,12 +239,12 @@ const Faq = () => {
 
 
     const columns = [
-        {
-            name: 'S.No',
-            selector: (row, index) => index + 1,
-            sortable: false,
-            width: '100px',
-        },
+        // {
+        //     name: 'S.No',
+        //     selector: (row, index) => index + 1,
+        //     sortable: false,
+        //     width: '100px',
+        // },
         {
             name: 'Title',
             selector: row => row.title,

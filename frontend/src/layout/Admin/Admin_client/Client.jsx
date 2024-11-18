@@ -145,7 +145,7 @@ const Client = () => {
     useEffect(() => {
         getAdminclient();
 
-    }, [searchInput, searchkyc, statuscreatedby, currentPage, expired]);
+    }, [searchInput, searchkyc, statuscreatedby, currentPage, expired ]);
 
 
     useEffect(() => {
@@ -213,14 +213,12 @@ const Client = () => {
             const response = await AllclientFilter(data, token);
         
             if (response.status) {
-                const filterdata = response.data.filter((item) => {
-                    return (
-                        !searchInput ||
-                        item.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
-                        item.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
-                        item.PhoneNo.toLowerCase().includes(searchInput.toLowerCase())
-                    );
-                });
+                const filterdata = response.data.filter((item) =>
+                    searchInput === "" ||
+                    item.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
+                    item.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
+                    item.PhoneNo.toLowerCase().includes(searchInput.toLowerCase())
+                );
 
                 setClients(searchInput ? filterdata : response.data);
                 setTotalRows(response.pagination.total);
@@ -230,7 +228,7 @@ const Client = () => {
         }
     };
 
-
+  
 
     // const getplanlistbyadmin = async () => {
     //     try {
@@ -460,10 +458,10 @@ const Client = () => {
     const columns = [
         {
             name: 'S.No',
-            selector: (row, index) => index + 1,
+            selector: (row, index) => (currentPage - 1) * 10 + index + 1,
             sortable: false,
             width: '100px',
-        },
+        },                
         {
             name: 'Full Name',
             selector: row => row.FullName,

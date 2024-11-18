@@ -442,7 +442,7 @@ const Signal = () => {
     let columns = [
         {
             name: 'S.No',
-            selector: (row, index) => index + 1,
+            selector: (row, index) => (currentPage - 1) * 10 + index + 1,
             sortable: false,
             width: '78px',
         },

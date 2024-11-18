@@ -172,12 +172,12 @@ const Staff = () => {
 
 
     const columns = [
-        {
-            name: 'S.No',
-            selector: (row, index) => index + 1,
-            sortable: false,
-            width: '100px',
-        },
+        // {
+        //     name: 'S.No',
+        //     selector: (row, index) => index + 1,
+        //     sortable: false,
+        //     width: '100px',
+        // },
         {
             name: 'Full Name',
             selector: row => row.FullName,

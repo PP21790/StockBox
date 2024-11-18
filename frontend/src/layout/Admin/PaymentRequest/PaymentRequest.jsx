@@ -84,12 +84,12 @@ const PaymentRequest = () => {
 
 
     const columns = [
-        {
-            name: 'S.No',
-            selector: (row, index) => index + 1,
-            sortable: false,
-            width: '78px',
-        },
+        // {
+        //     name: 'S.No',
+        //     selector: (row, index) => index + 1,
+        //     sortable: false,
+        //     width: '78px',
+        // },
         {
             name: 'Amount',
             selector: row => row.amount,
