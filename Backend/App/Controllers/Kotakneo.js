@@ -233,6 +233,14 @@ class Kotakneo {
                 });
 
 
+if(signal.calltype=="BUY")
+{
+    calltype="B"
+}
+else{
+     calltype="S"
+}
+
                 var data =  JSON.stringify({
                     "am":"YES", 
                     "dq":"0",
@@ -246,7 +254,7 @@ class Kotakneo {
                     "rt":"DAY", 
                     "tp":"0",
                     "ts":stock.tradesymbol,
-                    "tt":"B"
+                    "tt":calltype
                 });
               
                 let url = `https://gw-napi.kotaksecurities.com/Orders/2.0/quick/order/rule/ms/place?sId=${client.hserverid}`    
