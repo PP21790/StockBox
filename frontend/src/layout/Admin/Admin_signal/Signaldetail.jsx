@@ -23,9 +23,9 @@ const Signaldetail = () => {
    
 
 
-    const handleDownload = (row) => {
+    const handleDownload = (item) => {
 
-        const url = `${image_baseurl}uploads/pdf/${row.pdf}`;
+        const url = item.report;
         const link = document.createElement('a');
         link.href = url;
         link.download = url;
