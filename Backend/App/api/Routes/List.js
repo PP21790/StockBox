@@ -1,10 +1,14 @@
 const router = require("express").Router()
 
-const {Blogslist,Newslist,Bannerlist,Plancategorysist,getPlansByPlancategoryId,addPlanSubscription,myPlan,Couponlist,Signallist,applyCoupon,showSignalsToClients,Servicelist,Faqlist,detailContent,showSignalsToClientsClose,BasketList,pastPerformance,addBasketSubscription,getallPlan,addFreeTrail,BroadcastList,myFreetrial,basicSetting,pastPerformances,myService,CloseSignal,showSignalsToClientsCloses,Notification,Bank,Qrcode} = require('../Controllers/List')
+const {Blogslist,Newslist,Bannerlist,Plancategorysist,getPlansByPlancategoryId,addPlanSubscription,myPlan,Couponlist,Signallist,applyCoupon,showSignalsToClients,Servicelist,Faqlist,detailContent,showSignalsToClientsClose,BasketList,pastPerformance,addBasketSubscription,getallPlan,addFreeTrail,BroadcastList,myFreetrial,basicSetting,pastPerformances,myService,CloseSignal,showSignalsToClientsCloses,Notification,Bank,Qrcode,BlogslistwithPagination,NewslistwithPagination} = require('../Controllers/List')
 
 
 router.get('/api/list/blogs',Blogslist);
+router.get('/api/list/blogspagination',BlogslistwithPagination);
+
 router.get('/api/list/news', Newslist);
+router.get('/api/list/newspagination', NewslistwithPagination);
+
 router.get('/api/list/banner', Bannerlist); 
 router.get('/api/list/plancategory', Plancategorysist); 
 router.get('/api/list/planbycategory', getPlansByPlancategoryId); 
