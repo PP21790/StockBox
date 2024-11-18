@@ -15,6 +15,8 @@ const Updatebroadcast = () => {
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
 
+
+    
     const getservice = async () => {
         try {
             const response = await GetService(token);
@@ -29,6 +31,8 @@ const Updatebroadcast = () => {
     useEffect(() => {
         getservice();
     }, []);
+
+
 
     const formik = useFormik({
         initialValues: {

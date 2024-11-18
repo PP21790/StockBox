@@ -150,12 +150,13 @@ const Message = () => {
                                                                             {service.segment === "F" && <span>FUTURE </span>}
                                                                         </span>
                                                                     ))
+                                                                   
                                                                 ) : ""}
-                                                            </span>
+                                                            </span>({item.type})
                                                         </h4>
                                                         <hr />
                                                         <p><strong>Subject:</strong> {item.subject}</p>
-                                                        <p><strong>Type:</strong> {item.type}</p>
+                                                        {/* <p><strong>Type:</strong> {item.type}</p> */}
                                                         <p className="card-text">
                                                             <strong>Message:</strong>
                                                             <span
