@@ -14,37 +14,58 @@ class Kotakneo {
 
     async GetAccessToken(req, res) {
         try {
-            var keystr = req.query.key;
+            const { id, apikey, apisecret } = req.body;
 
-            
-            if (keystr != undefined) {
-                var key = keystr.split('?auth_token=')[0];
+            const client = await Clients_Modal.findOne({ _id: id }); 
+            // Check if the client exists
+            if (!client) {
+                return res.status(404).json({
+                    status: false,
+                    message: "Client not found"
+                });
+            }
 
-                const client = await Clients_Modal.findById(key);
 
-                if (!client) {
-                    return res.status(404).json({
-                        status: false,
-                        message: "Client not found"
-                    });
-                }
+            if (client.tradingstatus === "1") {
+                return res.json({
+                    status: true,
+                    message: "Broker login successfully",
+                });
+            }
 
-              
-                var auth_token = keystr.split('?auth_token=')[1];
 
-                if (!auth_token) {
-                    return res.status(404).json({
-                        status: false,
-                        message: "Auth Token is required"
-                    });
-                }
+
+            // Check for authCode in the request
+            const data = JSON.stringify({
+                secretKey: apikey,
+                appKey: apisecret,
+                source: "WebAPI"
+            });
+
+            const config = {
+                method: 'post',
+                maxBodyLength: Infinity,
+                url: 'https://webtrade.mandotsecurities.com/interactive/user/session',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: data
+            };
+
+            const response = await axios.request(config);
+         
+
+            if (response.data.type == "success") {
+                
 
                 const brokerlink = await Clients_Modal.findByIdAndUpdate(
                     key, 
                     { 
-                        authtoken: auth_token,  // Update authtoken
-                        dlinkstatus: 1,                        // Update dlinkstatus
-                        tradingstatus: 1                       // Update tradingstatus
+                        authtoken: response.data.result.token,  
+                        apisecret: apisecret,
+                        apikey: apikey,
+                        dlinkstatus: 1,                      
+                        tradingstatus: 1                       
                     }, 
                     { 
                         new: true, // Return the updated document
@@ -52,21 +73,25 @@ class Kotakneo {
                     }
                 );
 
-                  return res.json({
+                return res.json({
                     status: true,
                     message: "Broker login successfully",
                 });
-               
-            } else {
+            } 
+            else {
+             
 
-                return res.status(500).json({ status: false, message: "Server error" });
-            }
+                return res.status(404).json({
+                    status: false,
+                    message: response.data.message
+                });
+            } 
+          
         } catch (error) {
-            return res.status(500).json({ status: false, message: error });
-
+            return res.status(500).json({ status: false, message: error.message || "Server error" });
         }
-      
     }
+
 
     async placeOrder(req, res) {
         

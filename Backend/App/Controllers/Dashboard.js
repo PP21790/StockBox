@@ -632,10 +632,10 @@ async PlanExipreList(req, res) {
 
 async PlanExipreListWithFilter(req, res) {
   try {
-    const { serviceid, page = 1 } = req.query; // Default values for pagination
+    const { serviceid, page = 1 } = req.body; // Default values for pagination
     let limit = 10;
     const filter = serviceid ? { serviceid } : {};
-
+console.log(page);
     // Fetch paginated plans
     const plans = await Planmanage.find(filter)
       .sort({ enddate: -1 })

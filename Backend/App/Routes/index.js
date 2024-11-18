@@ -26,7 +26,7 @@ module.exports = function (app) {
     // app.use(require("./Mastertrust"))
     // app.use(require("./Markethub"))
     app.use(require("./Mandot"))
-    // app.use(require("./Kotakneo"))
+    app.use(require("./Kotakneo"))
 
 
 

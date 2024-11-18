@@ -9,7 +9,7 @@ router.post('/dashboard/closesignal', CloseSignal);
 router.post('/dashboard/closesignalwithfilter', CloseSignalWithFilter);
 
 router.get('/dashboard/planexiprelist', PlanExipreList);
-router.get('/dashboard/planexiprelistwithfilter', PlanExipreListWithFilter);
+router.post('/dashboard/planexiprelistwithfilter', PlanExipreListWithFilter);
 
 
 module.exports = router;
