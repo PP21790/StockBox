@@ -78,7 +78,7 @@ const FreetrialStatus = () => {
         Swal.fire({
           icon: 'success',
           title: 'Free Trial Update Successful!',
-          text: 'Your API information was updated successfully.',
+          text: 'Your Free Trial Status updated successfully.',
           timer: 1500,
           timerProgressBar: true,
         });

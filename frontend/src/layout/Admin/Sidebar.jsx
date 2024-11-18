@@ -31,7 +31,7 @@ const menuItems = [
 
 
   { title: 'Payment History', icon: 'bx-credit-card', link: '/admin/paymenthistory' },
-  { title: 'Payment Request', icon: 'bx-credit-card', link: '/admin/paymentrequest' },
+  { title: 'Withdrawal Request', icon: 'bx-credit-card', link: '/admin/paymentrequest' },
   { title: 'Blogs', icon: 'bx-comment-detail', link: '/admin/blogs' },
   { title: 'News', icon: 'bx-news', link: '/admin/news' },
   { title: 'Coupon', icon: 'bx-edit-alt', link: '/admin/coupon' },

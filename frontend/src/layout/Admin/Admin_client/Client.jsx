@@ -63,7 +63,7 @@ const Client = () => {
         }else if(clientStatus === "expired"){
             setheader("Total Plan Expired Client")
         }
-    }, [clientStatus])
+    }, [clientStatus , clients])
 
 
     const handleDownload = (row) => {
@@ -128,6 +128,7 @@ const Client = () => {
         setSearchkyc("")
         setSearchInput("")
         setStatuscreatedby("")
+        setExpired("")
 
 
     }
@@ -191,16 +192,22 @@ const Client = () => {
         }
     };
 
-
+    
 
     const getAdminclient = async () => {
         try {
-            const data = {
+           const data = {
                 page: currentPage,
                 kyc_verification: searchkyc,
-                status: clientStatus == 1 ? 1 : clientStatus == 0 ? 0 : "" ,
+                 status: clientStatus == 1 ? 1 : clientStatus == 0 ? 0 : "" ,
                 createdby: statuscreatedby,
-                planStatus: expired || clientStatus == "active" ? "active" :  clientStatus == "expired" ? "expired" : ""
+                planStatus :
+                expired === "active" ? "active" : 
+                expired === "expired" ? "expired" : 
+                clientStatus === "active" ? "active" : 
+                clientStatus === "expired" ? "expired" : 
+                ""
+            
             };
 
             const response = await AllclientFilter(data, token);
