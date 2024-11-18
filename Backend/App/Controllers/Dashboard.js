@@ -629,5 +629,54 @@ async PlanExipreList(req, res) {
   }
 }
 
+
+async PlanExipreListWithFilter(req, res) {
+  try {
+    const { serviceid, page = 1 } = req.query; // Default values for pagination
+    let limit = 10;
+    const filter = serviceid ? { serviceid } : {};
+
+    // Fetch paginated plans
+    const plans = await Planmanage.find(filter)
+      .sort({ enddate: -1 })
+      .skip((page - 1) * limit)
+      .limit(parseInt(limit));
+
+    // Get total count of matching plans for pagination metadata
+    const totalCount = await Planmanage.countDocuments(filter);
+
+    // Prepare an array to store the enriched data
+    const enrichedPlans = [];
+
+    for (let plan of plans) {
+      const service = await Service_Modal.findById(plan.serviceid).select('title');
+      const client = await Clients_Modal.findById(plan.clientid).select('FullName PhoneNo Email');
+
+      enrichedPlans.push({
+        ...plan.toObject(),
+        serviceTitle: service ? service.title : null,
+        clientFullName: client ? client.FullName : null,
+        clientMobile: client ? client.PhoneNo : null,
+        clientEmail: client ? client.Email : null
+      });
+    }
+
+    return res.json({
+      status: true,
+      message: "get",
+      data: enrichedPlans,
+      pagination: {
+        total: totalCount,
+        page: parseInt(page),
+        limit: parseInt(limit),
+        totalPages: Math.ceil(totalCount / limit)
+      }
+    });
+  } catch (error) {
+    return res.json({ status: false, message: "Server error", data: [] });
+  }
+}
+
+
 }
 module.exports = new Dashboard();
