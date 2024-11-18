@@ -2333,7 +2333,7 @@ export async function getclientPlanexpiry(token) {
 
 export async function getclientPlanexpirywithfilter(data, token) {
     try {
-        const res = await axios.post(`${Config.base_url}planexiprelistwithfilter`, data, {
+        const res = await axios.get(`${Config.base_url}dashboard/planexiprelistwithfilter`, data, {
             headers: {
                 data: {},
                 'Authorization': `${token}`,

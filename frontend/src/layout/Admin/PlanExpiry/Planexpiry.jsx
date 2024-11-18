@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { RefreshCcw } from 'lucide-react';
-import Table from '../../../components/Table';
+// import Table from '../../../components/Table';
+import Table from '../../../components/Table1';
 import ExportToExcel from '../../../Utils/ExportCSV';
-import { getclientPlanexpiry, getclientPlanexpirywithfilter , GetService } from '../../../Services/Admin';
+import { getclientPlanexpiry, getclientPlanexpirywithfilter, GetService } from '../../../Services/Admin';
 import { fDateTimeH } from '../../../Utils/Date_formate';
 
 
@@ -39,11 +40,13 @@ const Planexpiry = () => {
     };
 
 
-    
+
     const getclientdata = async () => {
         try {
-            const data = {page : 1}
-            const response = await getclientPlanexpirywithfilter(data , token);
+            const data = { page: currentPage , serviceid : searchstock }
+
+            console.log("data",data)
+            const response = await getclientPlanexpirywithfilter(data, token);
             if (response && response.status) {
                 const filteredData = response.data.filter((item) =>
                     (searchInput === "" || item.clientFullName.toLowerCase().includes(searchInput.toLowerCase())) &&
@@ -86,7 +89,7 @@ const Planexpiry = () => {
 
     useEffect(() => {
         getclientdata();
-    }, [searchInput, searchstock]);
+    }, [searchInput, searchstock , currentPage]);
 
 
 
@@ -108,12 +111,12 @@ const Planexpiry = () => {
 
 
     const columns = [
-        // {
-        //     name: 'S.No',
-        //     selector: (row, index) => index + 1,
-        //     sortable: false,
-        //     width: '100px',
-        // },
+        {
+            name: 'S.No',
+            selector: (row, index) => (currentPage - 1) * 10 + index + 1,
+            sortable: false,
+            width: '100px',
+        },
         {
             name: 'Full Name',
             selector: row => row.clientFullName,
@@ -202,7 +205,13 @@ const Planexpiry = () => {
                             <RefreshCcw className="refresh-icon" onClick={resetFilters} />
                         </div>
                     </div>
-                    <Table columns={columns} data={clients} />
+                    <Table
+                        columns={columns}
+                        data={clients}
+                        totalRows={totalRows}
+                        currentPage={currentPage}
+                        onPageChange={handlePageChange}
+                    />
                 </div>
             </div>
         </div>
