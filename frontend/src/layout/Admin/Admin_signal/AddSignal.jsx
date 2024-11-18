@@ -169,6 +169,8 @@ const AddSignal = () => {
             navigate('/admin/signal');
             
           }, 2000);
+       
+
         } else {
           Swal.fire({
             title: 'Alert',
@@ -177,8 +179,12 @@ const AddSignal = () => {
             timer: 1500,
             timerProgressBar: true,
           });
+           
+          setLoading(false)
         }
       } catch (error) {
+        setLoading(false)
+
         Swal.fire({
           title: 'Error',
           text: 'An unexpected error occurred. Please try again later.',
@@ -248,7 +254,7 @@ const AddSignal = () => {
 
         const expiryResponse = await getexpirydate(data);
         if (expiryResponse.status) {
-          setExpirydate(expiryResponse.data);
+             setExpirydate(expiryResponse.data);
         } else {
           console.log("Failed to fetch expiry date", expiryResponse);
         }
