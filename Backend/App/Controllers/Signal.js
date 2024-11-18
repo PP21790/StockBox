@@ -373,52 +373,52 @@ async getSignalWithFilter(req, res) {
 
 
 
-  async detailSignal(req, res) {
-    try {
-        // Extract ID from request parameters
-        const { id } = req.params;
+  async detailSignal(req, res) {try {
+    // Extract ID from request parameters
+    const { id } = req.params;
 
-        // Check if ID is provided
-        if (!id) {
-            return res.status(400).json({
-                status: false,
-                message: "Signal ID is required"
-            });
-        }
-
-        const signals = await Signal_Modal.findById(id);
-
-
-        const protocol = req.protocol; // 'http' or 'https'
-        const baseUrl = `${protocol}://${req.headers.host}`; // Construct base URL dynamically
-        const signalss = signals.map(signal => {
-          return {
-            ...signal._doc, // Spread the original document
-            report: signal.report ? `${baseUrl}/uploads/bank/${signal.report}` : null, // Append full image URL
-          };
-        });
-
-        if (!signalss) {
-            return res.status(404).json({
-                status: false,
-                message: "Signal not found"
-            });
-        }
-
-        return res.json({
-            status: true,
-            message: "Signal details fetched successfully",
-            data: signalss
-        });
-
-    } catch (error) {
-        console.error("Error fetching Signal details:", error);
-        return res.status(500).json({
+    // Check if ID is provided
+    if (!id) {
+        return res.status(400).json({
             status: false,
-            message: "Server error",
-            data: []
+            message: "Signal ID is required",
         });
     }
+
+    // Fetch the signal document by ID
+    const signal = await Signal_Modal.findById(id);
+
+    // Check if signal exists
+    if (!signal) {
+        return res.status(404).json({
+            status: false,
+            message: "Signal not found",
+        });
+    }
+
+    // Construct the full URL for the report file
+    const protocol = req.protocol; // 'http' or 'https'
+    const baseUrl = `${protocol}://${req.headers.host}`; // Construct base URL dynamically
+    const enrichedSignal = {
+        ...signal._doc, // Spread the original signal document
+        report: signal.report ? `${baseUrl}/uploads/signal/${signal.report}` : null, // Append full report URL
+    };
+
+    // Return the enriched signal
+    return res.json({
+        status: true,
+        message: "Signal details fetched successfully",
+        data: enrichedSignal,
+    });
+
+} catch (error) {
+    console.error("Error fetching Signal details:", error);
+    return res.status(500).json({
+        status: false,
+        message: "Server error",
+        data: [],
+    });
+}
 }
 
 
