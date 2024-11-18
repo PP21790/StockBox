@@ -9,292 +9,126 @@ const Signal_Modal = db.Signal;
 const Stock_Modal = db.Stock;
 const Order_Modal = db.Order;
 const qs = require("querystring");
+const jwt = require("jsonwebtoken");
 
 
 class Kotakneo {
 
-    async GetAccessToken(req, res) {
+    async  GetAccessToken(req, res) {
         try {
-            const { id, apikey, apisecret, user_name, pass_word } = req.body;
-
-            const client = await Clients_Modal.findOne({ _id: id }); 
-            // Check if the client exists
-            if (!client) {
-                return res.status(404).json({
-                    status: false,
-                    message: "Client not found"
-                });
+          const { id, apikey, apisecret, user_name, pass_word } = req.body;
+      
+          // Validate inputs
+          if (!id || !apikey || !apisecret || !user_name || !pass_word) {
+            return res.status(400).json({
+              status: false,
+              message: "All fields (id, apikey, apisecret, user_name, pass_word) are required",
+            });
+          }
+      
+          // Find client by ID
+          const client = await Clients_Modal.findById(id);
+          if (!client) {
+            return res.status(404).json({ status: false, message: "Client not found" });
+          }
+      
+          // Check trading status
+          if (client.tradingstatus === "1") {
+            return res.json({ status: true, message: "Broker login successfully" });
+          }
+      
+          // Prepare API credentials
+          const authString = `${apikey}:${apisecret}`;
+          const authHeaderValue = `Basic ${Buffer.from(authString).toString("base64")}`;
+          const tokenUrl = "https://napi.kotaksecurities.com/oauth2/token";
+      
+          // Validate API credentials
+          if (!apikey || !apisecret || !user_name || !pass_word) {
+            return res.status(400).json({
+              status: false,
+              message: "Please provide valid API key, secret, username, and password",
+            });
+          }
+      
+          // Step 1: Get Access Token
+          const tokenResponse = await axios.post(
+            tokenUrl,
+            "grant_type=client_credentials",
+            { headers: { Authorization: authHeaderValue } }
+          );
+          const access_token = tokenResponse.data.access_token;
+      
+          if (!access_token) {
+            return res.status(500).json({ status: false, message: "Failed to obtain access token" });
+          }
+      
+          // Step 2: Login with Access Token
+          const loginResponse = await axios.post(
+            "https://gw-napi.kotaksecurities.com/login/1.0/login/v2/validate",
+            {
+              mobileNumber: client.PhoneNo.includes("+91") ? client.PhoneNo : "+91" + client.PhoneNo,
+              password: pass_word,
+            },
+            {
+              headers: { Authorization: `Bearer ${access_token}`, "Content-Type": "application/json" },
             }
+          );
 
 
-            if (client.tradingstatus === "1") {
-                return res.json({
-                    status: true,
-                    message: "Broker login successfully",
-                });
+          console.log(loginResponse);
+      
+          const { token: stepOneToken, sid: stepOneSID, hsServerId: stepHsServerId } = loginResponse.data.data;
+          const decodeAccessToken = jwt.decode(stepOneToken);
+      
+          // Step 3: Generate OTP
+          const otpResponse = await axios.post(
+            "https://gw-napi.kotaksecurities.com/login/1.0/login/otp/generate",
+            {
+              userId: decodeAccessToken.sub,
+              sendEmail: true,
+              isWhitelisted: true,
+            },
+            {
+              headers: { Authorization: `Bearer ${access_token}`, "Content-Type": "application/json" },
             }
-
-
-
-            const qs = require("qs");
-            const apiUrl = "https://napi.kotaksecurities.com/oauth2/token";
-            // const dematepassword = Get_User[0].app_id;
-            const consumerKey = apikey;
-            const consumerSecret = apikey;
-            const username = user_name;
-            const password = pass_word; //trade Api pass
-            const authString = `${consumerKey}:${consumerSecret}`;
-            const authHeaderValue = `Basic ${Buffer.from(authString).toString(
-              "base64"
-            )}`;
-            const requestData = {
-              grant_type: "password",
-              username: username,
-              password: password,
-            };
-  
-            if (consumerKey == "" || consumerKey == null) {
-
-                return res.status(404).json({
-                    status: false,
-                    message: "Please Update Consumer Key in Broker key..."
-                });
-
-             
-            }
-            if (username == "" || username == null) {
-
-
-                return res.status(404).json({
-                    status: false,
-                    message: "Please Update User Name in Broker key..."
-                });
-
-            
-            }
-  
-            if (consumerSecret == "" || consumerSecret == null) {
-
-                return res.status(404).json({
-                    status: false,
-                    message: "Please Update Consumer Secret in Broker key..."
-                });
-
-            }
-            if (password == "" || password == null) {
-
-                return res.status(404).json({
-                    status: false,
-                    message: "Please Update Trade Api Password in Broker key..."
-                });
-
-             
-            }
-  
-            const url = "https://napi.kotaksecurities.com/oauth2/token";
-            const data = "grant_type=client_credentials";
-            const headers = {
-              Authorization: authHeaderValue,
-            };
-            axios
-              .post(url, data, { headers })
-              .then((response) => {
-                var access_token = response.data.access_token;
-                if (response.data.access_token) {
-                  var data5 = JSON.stringify({
-                    mobileNumber: client.PhoneNo.includes("+91")
-                      ? client.PhoneNo
-                      : "+91" + client.PhoneNo,
-                    password: password,
-                  });
-  
-                  var config = {
-                    method: "post",
-                    maxBodyLength: Infinity,
-                    url: "https://gw-napi.kotaksecurities.com/login/1.0/login/v2/validate",
-                    headers: {
-                      accept: "*/*",
-                      "Content-Type": "application/json",
-                      Authorization: "Bearer " + access_token,
-                    },
-                    data: data5,
-                  };
-  
-                  axios(config)
-                    .then(function (response) {
-                      var stepOneToken = response.data.data.token;
-                      var stepOneSID = response.data.data.sid;
-                      var stepHsServerId = response.data.data.hsServerId;
-                      var decodeAccessToken = jwt.decode(
-                        response.data.data.token
-                      );
-  
-                      if (response.data.data.token) {
-                        var data1 = JSON.stringify({
-                          userId: decodeAccessToken.sub,
-                          sendEmail: true,
-                          isWhitelisted: true,
-                        });
-                        var config1 = {
-                          method: "post",
-                          maxBodyLength: Infinity,
-                          url: "https://gw-napi.kotaksecurities.com/login/1.0/login/otp/generate",
-                          headers: {
-                            accept: "*/*",
-                            "Content-Type": "application/json",
-                            Authorization: "Bearer " + access_token,
-                          },
-                          data: data1,
-                        };
-  
-                        axios(config1)
-                          .then(async function (response) {
-                            if (response.status == 201) {
-                            
-                              const result = await Clients_Modal.findByIdAndUpdate(
-                                id, 
-                                { 
-                                    oneTimeToken: access_token,
-                                    kotakneo_sid: stepOneSID,
-                                    kotakneo_userd: decodeAccessToken.sub,
-                                    hserverid: stepHsServerId,
-                                    authtoken: stepOneToken,  
-                                    apisecret: apisecret,
-                                    apikey: apikey,
-                                    usernamekotak: username,
-                                    passwordkotak: password,
-                                    dlinkstatus: 1,                      
-                                    tradingstatus: 1                       
-                                }, 
-                                { 
-                                    new: true, // Return the updated document
-                                    useFindAndModify: false // Prevent deprecation warning (optional)
-                                }
-                            );
-            
-
-
-                            
-                            } else {
-                              const message = JSON.stringify(response).replace(
-                                /["',]/g,
-                                ""
-                              );
-
-                              return res.status(404).json({
-                                status: false,
-                                message: message
-                            });
-                            }
-                          })
-                          .catch(function (error) {
-                            if (error) {
-                              if (error.response) {
-                                if (error.response.data.error != undefined) {
-                                  const message = JSON.stringify(
-                                    error.response.data.error[0].message
-                                  ).replace(/["',]/g, "");
-  
-                                
-                              return res.status(404).json({
-                                status: false,
-                                message: message
-                            });
-                                } else {
-                                  const message = JSON.stringify(
-                                    error.response.data
-                                  ).replace(/["',]/g, "");
-                                 
-                              return res.status(404).json({
-                                status: false,
-                                message: message
-                            });
-                                }
-                              }
-                            }
-                          });
-                      } else {
-                        const message = JSON.stringify(response.data).replace(
-                          /["',]/g,
-                          ""
-                        );
-                     
-                        return res.status(404).json({
-                            status: false,
-                            message: message
-                        });
-                      }
-                    })
-                    .catch(function (error) {
-                      if (error.response.data.error != undefined) {
-                        const message = JSON.stringify(
-                          error.response.data.error[0]
-                        ).replace(/["',]/g, "");
-  
-                        
-                        return res.status(404).json({
-                            status: false,
-                            message: message
-                        });
-
-                      } else {
-                        const message = JSON.stringify(
-                          error.response.data
-                        ).replace(/["',]/g, "");
-                       
-                              return res.status(404).json({
-                                status: false,
-                                message: message
-                            });
-                      }
-                    });
-                } else {
-                  const message = JSON.stringify(response.data).replace(
-                    /["',]/g,
-                    ""
-                  );
-                 
-                  return res.status(404).json({
-                    status: false,
-                    message: message
-                });
-                }
-              })
-              .catch((error) => {
-                if (error.response != undefined) {
-                  const message = JSON.stringify(error.response.data).replace(
-                    /["',]/g,
-                    ""
-                  );
-  
-                 
-                  return res.status(404).json({
-                    status: false,
-                    message: message
-                });
-                } else {
-                  const message = JSON.stringify(error.response.data).replace(
-                    /["',]/g,
-                    ""
-                  );
-                 
-                  return res.status(404).json({
-                    status: false,
-                    message: message
-                });
-                }
-              });
-
-                return res.json({
-                    status: true,
-                    message: "Broker login successfully",
-                });
-           
-          
+          );
+      
+          if (otpResponse.status === 201) {
+            // Update Client Information
+            await Clients_Modal.findByIdAndUpdate(
+              id,
+              {
+                oneTimeToken: access_token,
+                kotakneo_sid: stepOneSID,
+                kotakneo_userd: decodeAccessToken.sub,
+                hserverid: stepHsServerId,
+                authtoken: stepOneToken,
+                apisecret,
+                apikey,
+                usernamekotak: user_name,
+                passwordkotak: pass_word,
+                brokerid: 1,
+                dlinkstatus: 1,
+                tradingstatus: 1,
+              },
+              { new: true }
+            );
+      
+            return res.json({ status: true, message: "Broker login successfully" });
+          } else {
+            return res.status(500).json({ status: false, message: "OTP generation failed" });
+          }
         } catch (error) {
-            return res.status(500).json({ status: false, message: error.message || "Server error" });
+          // Handle Errors
+          if (error.response && error.response.data) {
+            const errorMessage = error.response.data.error
+              ? error.response.data.error[0]?.message || "Error occurred"
+              : JSON.stringify(error.response.data);
+            return res.status(500).json({ status: false, message: errorMessage });
+          }
+          return res.status(500).json({ status: false, message: error.message || "Server error" });
         }
-    }
+      }
 
 
     async placeOrder(req, res) {
@@ -398,46 +232,39 @@ class Kotakneo {
                 "quantity":quantity
                 });
 
+
+                var data =  JSON.stringify({
+                    "am":"YES", 
+                    "dq":"0",
+                    "es":"nse_cm",
+                    "mp":"0", 
+                    "pc":"CNC", 
+                    "pf":"N", 
+                    "pr":price,
+                    "pt":"MKT", 
+                    "qt":quantity, 
+                    "rt":"DAY", 
+                    "tp":"0",
+                    "ts":stock.tradesymbol,
+                    "tt":"B"
+                });
               
-                // var config = {
-                //     method: 'get',
-                //     url: 'https://apiconnect.angelone.in/rest/secure/angelbroking/portfolio/v1/getAllHolding',
-                // //    url: 'https://apiconnect.angelbroking.com/rest/secure/angelbroking/order/v1/getPosition',
-                //     headers: {
-                //         'Authorization': `Bearer ${authToken}`,
-                //         'Content-Type': 'application/json',
-                //         'Accept': 'application/json',
-                //         'X-UserType': 'USER',
-                //         'X-SourceID': 'WEB',
-                //         'X-ClientLocalIP': 'CLIENT_LOCAL_IP',
-                //         'X-ClientPublicIP': 'CLIENT_PUBLIC_IP',
-                //         'X-MACAddress': 'MAC_ADDRESS',
-                //         'X-PrivateKey': client.apikey
-                //     },
-                // };
+                let url = `https://gw-napi.kotaksecurities.com/Orders/2.0/quick/order/rule/ms/place?sId=${client.hserverid}`    
+                let config = {
+                    method: 'post',
+                    maxBodyLength: Infinity,
+                    url: url,
+                    headers: {
+                        'accept': 'application/json',
+                        'Sid': client.kotakneo_sid,
+                        'Auth': item.stepOneToken,
+                        'neo-fin-key': 'neotradeapi',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Bearer ' + item.oneTimeToken
+                    },
+                    data: data
+                };
 
-
-
-            const config = {
-                method: 'post',
-                url: 'https://apiconnect.angelone.in/rest/secure/angelbroking/order/v1/placeOrder',
-              //  url: 'https://apiconnect.angelone.in/rest/secure/angelbroking/order/v1/getOrderBook',
-              
-                headers: { 
-                    'Authorization': `Bearer ${authToken}`,
-                    'Content-Type': 'application/json', 
-                    'Accept': 'application/json', 
-                    'X-UserType': 'USER', 
-                    'X-SourceID': 'WEB', 
-                    'X-ClientLocalIP': 'CLIENT_LOCAL_IP', // Replace with actual IP
-                    'X-ClientPublicIP': 'CLIENT_PUBLIC_IP', // Replace with actual IP
-                    'X-MACAddress': 'MAC_ADDRESS', // Replace with actual MAC address
-                    'X-PrivateKey': client.apikey // Replace with actual API key
-                },
-                data: data
-            };
-
-          //  const response = await axios(config);
 
             axios(config)
             .then(async (response) => {
@@ -451,7 +278,7 @@ class Kotakneo {
                         signalid:signal._id,
                         orderid:response.data.data.orderid,
                         uniqueorderid:response.data.data.uniqueorderid,
-                        borkerid:1,
+                        borkerid:2,
                         quantity:quantity,
                     });
 
@@ -467,13 +294,8 @@ class Kotakneo {
                 });
             }
             else{
-                let url;
-                if(response.data.message=="Invalid Token") {
-                  url = `https://smartapi.angelone.in/publisher-login?api_key=${client.apikey}`;
-                }
                    return res.status(500).json({ 
                     status: false, 
-                    url: url, 
                     message: response.data.message 
                 });
             }
