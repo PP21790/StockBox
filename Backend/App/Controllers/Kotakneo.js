@@ -168,19 +168,18 @@ class Kotakneo {
              let optiontype, exchange, producttype;
 
              if (signal.segment === "C") {
-                 optiontype = "EQ";
-                 exchange = "NSE";
+                 exchange = "nse_cm";
              } else {
                  optiontype = signal.segment === "F" ? "UT" : signal.optiontype;
-                 exchange = "NFO";
+                 exchange = "nse_fo";
              }
              
              // Determine product type based on segment and call duration
              if (signal.callduration === "Intraday") {
-                 producttype = "INTRADAY";
-             } else {
-                 producttype = signal.segment === "C" ? "DELIVERY" : "CARRYFORWARD";
-             }
+                producttype = "MIS";
+            } else {
+                producttype = signal.segment === "C" ? "CNC" : "NRML";
+            }
              
              // Query Stock_Modal based on segment type
              let stock;
@@ -217,36 +216,22 @@ class Kotakneo {
 
 
 
-            var data = JSON.stringify({
-                "variety":"NORMAL",
-                "tradingsymbol":stock.tradesymbol,
-                "symboltoken":stock.instrument_token,
-                "transactiontype":signal.calltype,
-                "exchange":exchange,
-                "ordertype":"MARKET",
-                "producttype":producttype,
-                "duration":"DAY",
-                "price":price,
-                "squareoff":"0",
-                "stoploss":"0",
-                "quantity":quantity
-                });
 
-
-if(signal.calltype=="BUY")
-{
-    calltype="B"
-}
-else{
-     calltype="S"
-}
+             if(signal.calltype=="BUY")
+               {
+                 calltype="B"
+               }
+              else{
+                calltype="S"
+               }
 
                 var data =  JSON.stringify({
+                    "tk":stock.instrument_token,
                     "am":"YES", 
                     "dq":"0",
-                    "es":"nse_cm",
+                    "es":exchange,
                     "mp":"0", 
-                    "pc":"CNC", 
+                    "pc":producttype, 
                     "pf":"N", 
                     "pr":price,
                     "pt":"MKT", 
@@ -268,7 +253,7 @@ else{
                         'Auth': item.stepOneToken,
                         'neo-fin-key': 'neotradeapi',
                         'Content-Type': 'application/x-www-form-urlencoded',
-                        'Authorization': 'Bearer ' + item.oneTimeToken
+                        'Authorization': 'Bearer ' + client.oneTimeToken
                     },
                     data: data
                 };
@@ -277,21 +262,15 @@ else{
             axios(config)
             .then(async (response) => {
               
-                if (response.data.message == 'SUCCESS') {
-
-
+                if (response.data.stat == 'Ok') {
 
                     const order = new Order_Modal({
                         clientid: client._id,
                         signalid:signal._id,
-                        orderid:response.data.data.orderid,
-                        uniqueorderid:response.data.data.uniqueorderid,
-                        borkerid:2,
+                        orderid:response.data.nOrdNo,
+                        borkerid:3,
                         quantity:quantity,
-                    });
-
-
-    
+                    });    
     
                    await order.save();
     
@@ -365,19 +344,18 @@ else{
              let optiontype, exchange, producttype;
 
              if (signal.segment === "C") {
-                 optiontype = "EQ";
-                 exchange = "NSE";
-             } else {
-                 optiontype = signal.segment === "F" ? "UT" : signal.optiontype;
-                 exchange = "NFO";
-             }
-             
-             // Determine product type based on segment and call duration
-             if (signal.callduration === "Intraday") {
-                 producttype = "INTRADAY";
-             } else {
-                 producttype = signal.segment === "C" ? "DELIVERY" : "CARRYFORWARD";
-             }
+                exchange = "nse_cm";
+            } else {
+                optiontype = signal.segment === "F" ? "UT" : signal.optiontype;
+                exchange = "nse_fo";
+            }
+            
+            // Determine product type based on segment and call duration
+            if (signal.callduration === "Intraday") {
+               producttype = "MIS";
+           } else {
+               producttype = signal.segment === "C" ? "CNC" : "NRML";
+           }
              
              // Query Stock_Modal based on segment type
              let stock;
@@ -438,61 +416,68 @@ else{
                     let calltypes;
                     if(signal.calltype === 'BUY')
                     {
-                        calltypes = "SELL";
+                        calltypes = "S";
                     }
                     else {
-                        calltypes = "BUY";
+                        calltypes = "B";
                     }
         
                     if(totalValue>=quantity) { 
-                    var data = JSON.stringify({
-                        "variety":"NORMAL",
-                        "tradingsymbol":stock.tradesymbol,
-                        "symboltoken":stock.instrument_token,
-                        "transactiontype":calltypes,
-                        "exchange":exchange,
-                        "ordertype":"MARKET",
-                        "producttype":producttype,
-                        "duration":"DAY",
-                        "price":price,
-                        "squareoff":"0",
-                        "stoploss":"0",
-                        "quantity":quantity
+                  
+
+
+
+                        var data =  JSON.stringify({
+                            "tk":stock.instrument_token,
+                            "am":"YES", 
+                            "dq":"0",
+                            "es":exchange,
+                            "mp":"0", 
+                            "pc":producttype, 
+                            "pf":"N", 
+                            "pr":price,
+                            "pt":"MKT", 
+                            "qt":quantity, 
+                            "rt":"DAY", 
+                            "tp":"0",
+                            "ts":stock.tradesymbol,
+                            "tt":calltypes
                         });
+                      
+                       
 
+                        let url = `https://gw-napi.kotaksecurities.com/Orders/2.0/quick/order/rule/ms/place?sId=${client.hserverid}`
 
-           const config = {
-                method: 'post',
-                url: 'https://apiconnect.angelone.in/rest/secure/angelbroking/order/v1/placeOrder',
-              
-                headers: { 
-                    'Authorization': `Bearer ${authToken}`,
-                    'Content-Type': 'application/json', 
-                    'Accept': 'application/json', 
-                    'X-UserType': 'USER', 
-                    'X-SourceID': 'WEB', 
-                    'X-ClientLocalIP': 'CLIENT_LOCAL_IP', 
-                    'X-ClientPublicIP': 'CLIENT_PUBLIC_IP', 
-                    'X-MACAddress': 'MAC_ADDRESS',
-                    'X-PrivateKey': client.apikey 
-                },
-                data: data
-            };
+                        let config = {
+                            method: 'post',
+                            maxBodyLength: Infinity,
+                            url: url,
+                            headers: {
+                                'accept': 'application/json',
+                                'Sid': client.kotakneo_sid,
+                                'Auth': client.stepOneToken,
+                                'neo-fin-key': 'neotradeapi',
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                                'Authorization': 'Bearer ' + client.oneTimeToken
+                            },
+                            data: data
+                        };
+                    
+
+        
 
             axios(config)
             .then(async (response) => {
               
-                if (response.data.message == 'SUCCESS') {
-
+                if (response.data.stat == 'Ok') {
 
                     const order = new Order_Modal({
                         clientid: client._id,
                         signalid:signal._id,
-                        orderid:response.data.data.orderid,
-                        uniqueorderid:response.data.data.uniqueorderid,
-                        borkerid:1,
-                    });
-    
+                        orderid:response.data.nOrdNo,
+                        borkerid:3,
+                        quantity:quantity,
+                    });    
     
                    await order.save();
     
@@ -503,13 +488,9 @@ else{
                 });
             }
             else{
-                let url;
-                if(response.data.message=="Invalid Token") {
-                  url = `https://smartapi.angelone.in/publisher-login?api_key=${client.apikey}`;
-                }
+              
                    return res.status(500).json({ 
                     status: false, 
-                    url: url, 
                     message: response.data.message 
                 });
             }

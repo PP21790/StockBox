@@ -95,6 +95,64 @@ class List {
         }
     }
 
+
+    async BlogslistwithPagination(req, res) {
+      try {
+          const { page = 1 } = req.query; // Default page is 1, and limit is 10
+            let limit = 10;
+          // Parse page and limit as integers
+          const pageNumber = parseInt(page, 10);
+          const pageSize = parseInt(limit, 10);
+  
+          // Ensure page and limit are valid
+          if (pageNumber < 1 || pageSize < 1) {
+              return res.status(400).json({
+                  status: false,
+                  message: "Invalid page or limit value. Both must be positive integers.",
+              });
+          }
+  
+          // Get total count of blogs
+          const totalBlogs = await Blogs_Modal.countDocuments({ del: false, status: true });
+  
+          // Fetch paginated blogs
+          const blogs = await Blogs_Modal.find({ del: false, status: true })
+              .sort({ created_at: -1 })
+              .skip((pageNumber - 1) * pageSize)
+              .limit(pageSize);
+  
+          const protocol = req.protocol; // 'http' or 'https'
+          const baseUrl = `${protocol}://${req.headers.host}`;
+  
+          const blogsWithImageUrls = blogs.map(blog => {
+              return {
+                  ...blog._doc, // Spread the original blog document
+                  image: blog.image ? `${baseUrl}/uploads/blogs/${blog.image}` : null, // Append full image URL
+              };
+          });
+  
+          return res.status(200).json({
+              status: true,
+              message: "Blogs retrieved successfully",
+              data: blogsWithImageUrls,
+              pagination: {
+                  totalBlogs,
+                  currentPage: pageNumber,
+                  totalPages: Math.ceil(totalBlogs / pageSize),
+                  pageSize,
+              },
+          });
+      } catch (error) {
+          console.log("Error retrieving blogs:", error);
+          return res.status(500).json({
+              status: false,
+              message: "Server error",
+              error: error.message,
+          });
+      }
+  }
+  
+
     async Newslist(req, res) {
       
         try {
@@ -127,6 +185,63 @@ class List {
         }
     }
 
+
+    async NewslistwithPagination(req, res) {
+      try {
+          const { page = 1} = req.query; // Default page is 1, and limit is 10
+          let limit = 10;
+          // Parse page and limit as integers
+          const pageNumber = parseInt(page, 10);
+          const pageSize = parseInt(limit, 10);
+  
+          // Ensure page and limit are valid
+          if (pageNumber < 1 || pageSize < 1) {
+              return res.status(400).json({
+                  status: false,
+                  message: "Invalid page or limit value. Both must be positive integers.",
+              });
+          }
+  
+          // Get total count of news
+          const totalNews = await News_Modal.countDocuments({ del: false, status: true });
+  
+          // Fetch paginated news
+          const news = await News_Modal.find({ del: false, status: true })
+              .sort({ created_at: -1 })
+              .skip((pageNumber - 1) * pageSize)
+              .limit(pageSize);
+  
+          const protocol = req.protocol; // 'http' or 'https'
+          const baseUrl = `${protocol}://${req.headers.host}`;
+  
+          const newsWithImageUrls = news.map(newss => {
+              return {
+                  ...newss._doc, // Spread the original news document
+                  image: newss.image ? `${baseUrl}/uploads/news/${newss.image}` : null, // Append full image URL
+              };
+          });
+  
+          return res.status(200).json({
+              status: true,
+              message: "News retrieved successfully",
+              data: newsWithImageUrls,
+              pagination: {
+                  totalNews,
+                  currentPage: pageNumber,
+                  totalPages: Math.ceil(totalNews / pageSize),
+                  pageSize,
+              },
+          });
+      } catch (error) {
+          console.log("Error retrieving news:", error);
+          return res.status(500).json({
+              status: false,
+              message: "Server error",
+              error: error.message,
+          });
+      }
+  }
+  
 
     async Plancategorysist(req, res) {
         try {
