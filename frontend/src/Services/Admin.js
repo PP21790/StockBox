@@ -2331,6 +2331,24 @@ export async function getclientPlanexpiry(token) {
 }
 
 
+export async function getclientPlanexpirywithfilter(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}planexiprelistwithfilter`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
 // get performaer data 
 
 export async function getPerformerstatus(token ,_id) {

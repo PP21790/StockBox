@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { RefreshCcw } from 'lucide-react';
 import Table from '../../../components/Table';
 import ExportToExcel from '../../../Utils/ExportCSV';
-import { getclientPlanexpiry, GetService } from '../../../Services/Admin';
+import { getclientPlanexpiry, getclientPlanexpirywithfilter , GetService } from '../../../Services/Admin';
 import { fDateTimeH } from '../../../Utils/Date_formate';
 
 
@@ -19,7 +19,12 @@ const Planexpiry = () => {
     const [clients, setClients] = useState([]);
     const [serviceList, setServiceList] = useState([]);
     const [ForGetCSV, setForGetCSV] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalRows, setTotalRows] = useState(0);
 
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
 
 
     const fetchAdminServices = async () => {
@@ -37,13 +42,16 @@ const Planexpiry = () => {
     
     const getclientdata = async () => {
         try {
-            const response = await getclientPlanexpiry(token);
+            const data = {page : 1}
+            const response = await getclientPlanexpirywithfilter(data , token);
             if (response && response.status) {
                 const filteredData = response.data.filter((item) =>
                     (searchInput === "" || item.clientFullName.toLowerCase().includes(searchInput.toLowerCase())) &&
                     (searchstock === "" || item.serviceTitle.toLowerCase().includes(searchstock.toLowerCase()))
                 );
                 setClients(filteredData);
+                setTotalRows(response.pagination.total);
+
             }
         } catch (error) {
             console.log("Error fetching client data:", error);
