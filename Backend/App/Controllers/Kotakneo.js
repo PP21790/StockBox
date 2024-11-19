@@ -105,9 +105,93 @@ class Kotakneo {
                 authtoken: stepOneToken,
                 apisecret,
                 apikey,
-                usernamekotak: user_name,
-                passwordkotak: pass_word,
-                brokerid: 1,
+                brokerid: 3
+             
+              },
+              { new: true }
+            );
+      
+            return res.json({ status: true, message: "Otp Generate Successfully" });
+          } else {
+            return res.status(500).json({ status: false, message: "OTP generation failed" });
+          }
+        } catch (error) {
+          // Handle Errors
+          if (error.response && error.response.data) {
+            const errorMessage = error.response.data.error
+              ? error.response.data.error[0]?.message || "Error occurred"
+              : JSON.stringify(error.response.data);
+            return res.status(500).json({ status: false, message: errorMessage });
+          }
+          return res.status(500).json({ status: false, message: error.message || "Server error" });
+        }
+      }
+
+
+      async  checkOtp(req, res) {
+        try {
+          const { id, otp } = req.body;
+      
+          // Validate inputs
+          if (!id || !otp ) {
+            return res.status(400).json({
+              status: false,
+              message: "All fields (id, otp) are required",
+            });
+          }
+      
+          // Find client by ID
+          const client = await Clients_Modal.findById(id);
+          if (!client) {
+            return res.status(404).json({ status: false, message: "Client not found" });
+          }
+      
+          // Check trading status
+          if (client.tradingstatus === "1") {
+            return res.json({ status: true, message: "Broker login successfully" });
+          }
+      
+          // Prepare API credentials
+        
+      
+          // Validate API credentials
+          if (!client.apikey || !client.apisecret) {
+            return res.status(400).json({
+              status: false,
+              message: "Please provide valid API key, secret, username, and password",
+            });
+          }
+      
+
+
+          var data2 = JSON.stringify({
+            userId: client.kotakneo_userd,
+            otp: otp,
+          });
+
+          var config = {
+            method: "post",
+            maxBodyLength: Infinity,
+            url: "https://gw-napi.kotaksecurities.com/login/1.0/login/v2/validate",
+            headers: {
+              accept: "*/*",
+              sid: client.kotakneo_sid,
+              Auth: client.authtoken,
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + client.oneTimeToken,
+            },
+            data: data2,
+          };
+      
+
+          const response = await axios.request(config);
+          if (response.status === 201) {
+            // Update Client Information
+            let AccessToken = response.data.data.token;
+            await Clients_Modal.findByIdAndUpdate(
+              id,
+              { 
+                oneTimeToken: AccessToken,
                 dlinkstatus: 1,
                 tradingstatus: 1,
               },
@@ -129,6 +213,8 @@ class Kotakneo {
           return res.status(500).json({ status: false, message: error.message || "Server error" });
         }
       }
+
+
 
 
     async placeOrder(req, res) {
@@ -250,7 +336,7 @@ class Kotakneo {
                     headers: {
                         'accept': 'application/json',
                         'Sid': client.kotakneo_sid,
-                        'Auth': item.stepOneToken,
+                        'Auth': client.authtoken,
                         'neo-fin-key': 'neotradeapi',
                         'Content-Type': 'application/x-www-form-urlencoded',
                         'Authorization': 'Bearer ' + client.oneTimeToken
@@ -455,7 +541,7 @@ class Kotakneo {
                             headers: {
                                 'accept': 'application/json',
                                 'Sid': client.kotakneo_sid,
-                                'Auth': client.stepOneToken,
+                                'Auth': client.authtoken,
                                 'neo-fin-key': 'neotradeapi',
                                 'Content-Type': 'application/x-www-form-urlencoded',
                                 'Authorization': 'Bearer ' + client.oneTimeToken
@@ -598,7 +684,7 @@ const uniorderId = order.orderid;
         headers: {
           accept: "application/json",
           Sid: client.kotakneo_sid,
-          Auth: client.stepOneToken,
+          Auth: client.authtoken,
           "neo-fin-key": "neotradeapi",
           "Content-Type": "application/x-www-form-urlencoded",
           Authorization: "Bearer " + client.oneTimeToken,
@@ -650,7 +736,7 @@ async function CheckPosition(userId, authToken, segment, instrument_token, produ
                     headers: {
                         'accept': 'application/json',
                         'Sid': client.kotakneo_sid,
-                        'Auth': client.stepOneToken,
+                        'Auth': client.authtoken,
                         'neo-fin-key': 'neotradeapi',
                         'Content-Type': 'application/x-www-form-urlencoded',
                         'Authorization': 'Bearer ' + client.oneTimeToken
@@ -729,7 +815,7 @@ async function CheckHolding(userId, authToken, segment, instrument_token, produc
         headers: {
             'accept': 'application/json',
             'Sid': client.kotakneo_sid,
-            'Auth': client.stepOneToken,
+            'Auth': client.authtoken,
             'neo-fin-key': 'neotradeapi',
             'Content-Type': 'application/x-www-form-urlencoded',
             'Authorization': 'Bearer ' + client.oneTimeToken
@@ -743,7 +829,7 @@ async function CheckHolding(userId, authToken, segment, instrument_token, produc
 
         if (response.data.message == "SUCCESS") {
 
-            const existEntryOrder = response.data.data.holdings.find(item1 => item1.symboltoken === instrument_token && item1.product === producttype);
+            const existEntryOrder = response.data.find(item1 => item1.instrumentToken === instrument_token);
 let possition_qty = 0;
             if (existEntryOrder != undefined) {
                 if (segment.toUpperCase() == 'C') {

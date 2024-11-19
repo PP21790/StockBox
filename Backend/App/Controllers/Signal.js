@@ -410,7 +410,7 @@ async getSignalWithFilter(req, res) {
     const baseUrl = `${protocol}://${req.headers.host}`; // Construct base URL dynamically
     const enrichedSignal = {
         ...signal._doc, // Spread the original signal document
-        report: signal.report ? `${baseUrl}/uploads/signal/${signal.report}` : null, // Append full report URL
+        report: signal.report ? `${baseUrl}/uploads/report/${signal.report}` : null, // Append full report URL
     };
 
     // Return the enriched signal
