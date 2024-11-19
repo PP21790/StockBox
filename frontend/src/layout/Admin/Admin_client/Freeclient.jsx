@@ -67,19 +67,11 @@ const Freeclient = () => {
 
     const getdemoclient = async () => {
         try {
-            const data = { page: currentPage}
+            const data = { page: currentPage , search:searchInput}
             const response = await FreeClientListWithFilter(data , token);
             if (response.status) {
                 setTotalRows(response.pagination.total)
-                const filterdata = response?.data?.filter((item) => {
-                    return (
-                        !searchInput ||
-                        item.clientDetails?.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
-                        item.clientDetails?.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
-                        item.clientDetails?.PhoneNo.toLowerCase().includes(searchInput.toLowerCase())
-                    );
-                });
-                setClients(searchInput ? filterdata : response.data);
+                setClients(response.data);
 
             }
         } catch (error) {

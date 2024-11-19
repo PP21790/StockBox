@@ -42,13 +42,14 @@ const Planexpiry = () => {
         }
     };
 
-
-
+  
+    console.log("startDate",startDate)
+    console.log("endDate",endDate)
 
 
     const getclientdata = async () => {
         try {
-            const data = { page: currentPage, serviceid: searchstock  ,startDate: startDate , endDate:endDate,  search : searchInput , }
+            const data = { page: currentPage, serviceid: searchstock  ,startDate: startDate || "" , endDate:endDate || "",  search : searchInput , }
 
             const response = await getclientPlanexpirywithfilter(data, token);
             if (response && response.status) {

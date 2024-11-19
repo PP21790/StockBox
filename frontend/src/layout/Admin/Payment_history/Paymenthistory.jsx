@@ -86,22 +86,11 @@ const History = () => {
 
     const gethistory = async () => {
         try {
-            const data = { page: currentPage ,fromDate:startDate , toDate:endDate}
+            const data = { page: currentPage ,fromDate:startDate , toDate:endDate , search:searchInput}
             const response = await getPayementhistorywithfilter(data,token);
             if (response.status) {
                 let filteredData = response.data;
                 setTotalRows(response.pagination.total)
-                if (searchInput) {
-                    filteredData = filteredData.filter((item) =>
-                        item.title?.toLowerCase().includes(searchInput.toLowerCase()) ||
-                        item.clientName?.toLowerCase().includes(searchInput.toLowerCase()) ||
-                        item.clientEmail?.toLowerCase().includes(searchInput.toLowerCase()) ||
-                        item.clientPhoneNo?.toLowerCase().includes(searchInput.toLowerCase()) ||
-                        item.orderid?.toLowerCase().includes(searchInput.toLowerCase()) ||
-                        item.planDetails?.validity?.toLowerCase().includes(searchInput.toLowerCase())
-                    );
-                }
-
                 setClients(filteredData);
             }
         } catch (error) {

@@ -207,6 +207,7 @@ const Client = () => {
                 kyc_verification: searchkyc,
                 status: clientStatus == 1 ? 1 : clientStatus == 0 ? 0 : "",
                 createdby: statuscreatedby,
+                search : searchInput ,
                 planStatus:
                     expired === "active" ? "active" :
                         expired === "expired" ? "expired" :
@@ -219,14 +220,7 @@ const Client = () => {
             const response = await AllclientFilter(data, token);
 
             if (response.status) {
-                const filterdata = response.data.filter((item) =>
-                    searchInput === "" ||
-                    item.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
-                    item.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
-                    item.PhoneNo.toLowerCase().includes(searchInput.toLowerCase())
-                );
-
-                setClients(searchInput ? filterdata : response.data);
+                setClients(response.data);
                 setTotalRows(response.pagination.total);
             }
         } catch (error) {

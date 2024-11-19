@@ -146,7 +146,14 @@ const Signal = () => {
 
     const getAllSignal = async () => {
         try {
-            const data = {page:currentPage , from :filters.from , to:filters.to , service:filters.service, stock:searchstock, closestatus: "false"}
+            const data = {page:currentPage ,
+                 from :filters.from , 
+                 to:filters.to , 
+                 service:filters.service,
+                  stock:searchstock, 
+                  closestatus: "false" ,
+                  search:searchInput  
+                }
             const response = await GetSignallistWithFilter(data, token);
             if (response && response.status) {
                 setTotalRows(response.pagination.totalRecords);
@@ -155,20 +162,7 @@ const Signal = () => {
                     return item.close_status === false;
                 });
 
-                const searchInputMatch = filterdata.filter((item) => {
-                    const searchInputMatch =
-                        searchInput === "" ||
-                        item.stock.toLowerCase().includes(searchInput.toLowerCase()) ||
-                        item.calltype.toLowerCase().includes(searchInput.toLowerCase());
-
-                    const searchstockMatch =
-                        searchstock === "" ||
-                        item.stock.toLowerCase().includes(searchstock.toLowerCase());
-
-                    return searchstockMatch && searchInputMatch;
-                });
-
-                setClients(searchInput || searchstock ? searchInputMatch : filterdata);
+                setClients(filterdata);
 
             }
         } catch (error) {
