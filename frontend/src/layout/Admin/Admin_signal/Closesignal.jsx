@@ -145,7 +145,6 @@ const Closesignal = () => {
                 return {
                     Symbol: item.tradesymbol || "",
                     segment: item?.segment || '',
-                    Price: item?.price || '',
                     EntryType: item?.calltype || '',
                     EntryPrice: item?.price || '',
                     ExitPrice: item?.closeprice || "",

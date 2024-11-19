@@ -256,7 +256,6 @@ const Signal = () => {
             const csvArr = clients.map((item) => ({
                 Symbol: item.tradesymbol || "",
                 segment: item?.segment || '',
-                Price: item?.price || '',
                 EntryType: item?.calltype || '',
                 EntryPrice: item?.price || '',
                 EntryDate: fDateTimeH(item?.created_at) || '',
