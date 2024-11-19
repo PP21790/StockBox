@@ -572,7 +572,7 @@ if(client.tradingstatus == 0)
     }
 
 
-    if (order.borkerid!=1) {
+    if (order.borkerid!=3) {
         return res.status(404).json({
             status: false,
             message: "Order not found for this Broker"
@@ -584,22 +584,27 @@ const authToken = client.authtoken;
 const userId = client.apikey;
 
 
-const uniorderId = order.uniqueorderid;
-            const config = {
-                method: 'get',
-                url: `https://apiconnect.angelone.in/rest/secure/angelbroking/order/v1/details/${uniorderId}`, // Use dynamic orderid
-                headers: {
-                    'Authorization': 'Bearer ' + authToken,
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-UserType': 'USER',
-                    'X-SourceID': 'WEB',
-                    'X-ClientLocalIP': 'CLIENT_LOCAL_IP',
-                    'X-ClientPublicIP': 'CLIENT_PUBLIC_IP',
-                    'X-MACAddress': 'MAC_ADDRESS',
-                    'X-PrivateKey': userId
-                },
-            };
+const uniorderId = order.orderid;
+           
+      var data_orderHistory = qs.stringify({
+        jData: '{"nOrdNo":"' + uniorderId + '"}',
+      });
+      let url1 = `https://gw-napi.kotaksecurities.com/Orders/2.0/quick/order/history?sId=${client.hserverid}`;
+
+      let config = {
+        method: "post",
+        maxBodyLength: Infinity,
+        url: url1,
+        headers: {
+          accept: "application/json",
+          Sid: client.kotakneo_sid,
+          Auth: client.stepOneToken,
+          "neo-fin-key": "neotradeapi",
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: "Bearer " + client.oneTimeToken,
+        },
+        data: data_orderHistory,
+      };
     
             const response = await axios(config); // Use await with axios
 

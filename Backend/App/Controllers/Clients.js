@@ -346,7 +346,7 @@ class Clients {
 
 async getClientWithFilter(req, res) {
   try {
-    const { status,kyc_verification, createdby, planStatus, page = 1 } = req.body;
+    const { status,kyc_verification, createdby, planStatus, search, page = 1 } = req.body;
 
     const limit = 10;
     const skip = (parseInt(page) - 1) * parseInt(limit); // Calculate how many items to skip
@@ -364,6 +364,17 @@ async getClientWithFilter(req, res) {
 
     if (status !== "") {
       matchConditions.ActiveStatus = parseInt(status);
+    }
+
+
+
+    
+    if (search && search.trim() !== "") {
+      matchConditions.$or = [
+        { FullName: { $regex: search, $options: "i" } }, // Search in name
+        { Email: { $regex: search, $options: "i" } },    // Search in email
+        { PhoneNo: { $regex: search, $options: "i" } }  // Search in mobile
+      ];
     }
 
 
@@ -1148,11 +1159,23 @@ async getClientWithFilter(req, res) {
 
 async freetrialListWithFilter(req, res) {
   try {
-    const { page = 1 } = req.body; // Extract page and limit from the request body with default values
+    const { search, page = 1 } = req.body; // Extract page and limit from the request body with default values
      let  limit = 10;
     const skip = (parseInt(page) - 1) * parseInt(limit); // Calculate the number of items to skip based on page and limit
     const today = new Date(); // Get today's date
     
+
+    const searchMatch = search && search.trim() !== "" ? {
+      $or: [
+        { "clientDetails.FullName": { $regex: search, $options: "i" } },
+        { "clientDetails.Email": { $regex: search, $options: "i" } },
+        { "clientDetails.PhoneNo": { $regex: search, $options: "i" } }
+      ]
+    } : {};
+
+
+
+
     const totalCountPipeline = [
       {
           $match: { del: false } // Only active free trials
@@ -1175,6 +1198,9 @@ async freetrialListWithFilter(req, res) {
               path: '$clientDetails',
               preserveNullAndEmptyArrays: true 
           }
+      },
+      {
+        $match: searchMatch // Apply the search filter dynamically
       },
       {
           $lookup: {
@@ -1211,8 +1237,12 @@ async freetrialListWithFilter(req, res) {
   ];
   
   // Get the total count
-  const totalCountResult = await Freetrial_Modal.aggregate(totalCountPipeline);
+  const totalCountResult = await Freetrial_Modal.aggregate([
+    ...totalCountPipeline,
+    { $count: "totalCount" } // Count the total number of matching documents
+  ]);
   const totalCount = totalCountResult[0] ? totalCountResult[0].totalCount : 0;
+
   
   // Now get the paginated result
   const result = await Freetrial_Modal.aggregate([
