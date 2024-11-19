@@ -176,7 +176,7 @@ const History = () => {
         // },
         {
             name: 'Validity',
-            selector: row => row.planDetails.validity,
+            selector: row => row.validity,
             sortable: true,
             width: '200px',
         },
