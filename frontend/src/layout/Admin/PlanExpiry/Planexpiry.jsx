@@ -43,20 +43,20 @@ const Planexpiry = () => {
     };
 
 
-    
+
 
 
     const getclientdata = async () => {
         try {
-            const data = { page: currentPage , serviceid : searchstock  }
+            const data = { page: currentPage, serviceid: searchstock  ,startDate: startDate , endDate:endDate,  search : searchInput , }
 
             const response = await getclientPlanexpirywithfilter(data, token);
             if (response && response.status) {
-                const filteredData = response.data.filter((item) =>
-                    (searchInput === "" || item.clientFullName.toLowerCase().includes(searchInput.toLowerCase())) ||
-                    (searchstock === "" || item.serviceTitle.toLowerCase().includes(searchstock.toLowerCase())) 
-                );
-                setClients(searchstock ? filteredData : response.data);
+                // const filteredData = response.data.filter((item) =>
+                //     (searchInput === "" || item.clientFullName.toLowerCase().includes(searchInput.toLowerCase())) ||
+                //     (searchstock === "" || item.serviceTitle.toLowerCase().includes(searchstock.toLowerCase()))
+                // );
+                setClients(response.data);
                 setTotalRows(response.pagination.total);
 
             }
@@ -93,7 +93,7 @@ const Planexpiry = () => {
 
     useEffect(() => {
         getclientdata();
-    }, [searchInput, searchstock , currentPage]);
+    }, [searchInput, searchstock, currentPage]);
 
 
 
@@ -111,7 +111,7 @@ const Planexpiry = () => {
         setStartDate("")
         setEndDate("")
         getclientdata();
-     
+
     };
 
 
@@ -163,6 +163,8 @@ const Planexpiry = () => {
     ];
 
     return (
+
+
         <div className="page-content">
             <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
                 <div className="breadcrumb-title pe-3">Plan Expiry</div>
@@ -171,6 +173,7 @@ const Planexpiry = () => {
                 </div>
             </div>
             <hr />
+
             <div className="card">
                 <div className="card-body">
                     <div className="d-lg-flex align-items-center mb-4 gap-3">
@@ -193,27 +196,25 @@ const Planexpiry = () => {
                         />
                     </div>
                     <div className='row mb-2'>
-                            <div className="col-md-3">
-                                <input
-                                    type="date"
-                                    className="form-control"
-                                    onChange={(e) => setStartDate(e.target.value)}
-                                    value={startDate}
-                                />
-                            </div>
-
-
-                            <div className='col-md-3'>
-                                <input
-                                    type="date"
-                                    className="form-control"
-                                    onChange={(e) => setEndDate(e.target.value)}
-                                    value={endDate}
-                                />
-                            </div>
-                        </div>
-                    <div className="row mb-4">
                         <div className="col-md-3">
+                        <label>Select From Date</label>
+                            <input
+                                type="date"
+                                className="form-control"
+                                onChange={(e) => setStartDate(e.target.value)}
+                                value={startDate}
+                            />
+                        </div>
+                        <div className='col-md-3'>
+                        <label>Select To Date</label>
+                            <input
+                                type="date"
+                                className="form-control"
+                                onChange={(e) => setEndDate(e.target.value)}
+                                value={endDate}
+                            />
+                        </div>
+                        <div className="col-md-3 ">
                             <label>Select Service</label>
                             <select
                                 className="form-control radius-10"
@@ -227,12 +228,15 @@ const Planexpiry = () => {
                                     </option>
                                 ))}
                             </select>
-                            
+                            <div>
+                                <div className="col-md-3 d-flex align-items-end">
+                                    <RefreshCcw className="refresh-icon" onClick={resetFilters} />
+                                </div>
+                            </div>
                         </div>
-                        <div className="col-md-3 d-flex align-items-end">
-                            <RefreshCcw className="refresh-icon" onClick={resetFilters} />
-                        </div>
+
                     </div>
+
                     <Table
                         columns={columns}
                         data={clients}
