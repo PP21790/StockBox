@@ -634,22 +634,29 @@ const uniorderId = order.orderid;
 
 async function CheckPosition(userId, authToken, segment, instrument_token, producttype, calltype, trading_symbol) {
     
+    const client = await Clients_Modal.findOne({ apikey: userId });
+        if (!client) {
+        return res.status(404).json({
+            status: false,
+            message: "Client not found"
+        });
+    }
 
-    var config = {
-        method: 'get',
-        url: 'https://apiconnect.angelbroking.com/rest/secure/angelbroking/order/v1/getPosition',
-        headers: {
-            'Authorization': 'Bearer ' + authToken,
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'X-UserType': 'USER',
-            'X-SourceID': 'WEB',
-            'X-ClientLocalIP': 'CLIENT_LOCAL_IP',
-            'X-ClientPublicIP': 'CLIENT_PUBLIC_IP',
-            'X-MACAddress': 'MAC_ADDRESS',
-            'X-PrivateKey': userId
-        },
-    };
+    var position_url = `https://gw-napi.kotaksecurities.com/Orders/2.0/quick/user/positions?sId=${client.hserverid}`
+                let config = {
+                    method: 'get',
+                    maxBodyLength: Infinity,
+                    url: position_url,
+                    headers: {
+                        'accept': 'application/json',
+                        'Sid': client.kotakneo_sid,
+                        'Auth': client.stepOneToken,
+                        'neo-fin-key': 'neotradeapi',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Bearer ' + client.oneTimeToken
+                    }
+
+                };
 
     axios(config)
     .then(async (response) => {
