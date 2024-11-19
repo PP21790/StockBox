@@ -633,6 +633,7 @@ async PlanExipreListWithFilter(req, res) {
   try {
     const { serviceid, startdate, enddate, search, page = 1 } = req.body; // Added startdate and enddate
     let limit = 10;
+   
     // Build the filter object dynamically
     const filter = {};
     if (serviceid) {

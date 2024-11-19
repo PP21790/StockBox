@@ -1,89 +1,77 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { RefreshCcw } from 'lucide-react';
-// import Table from '../../../components/Table';
 import Table from '../../../components/Table1';
 import ExportToExcel from '../../../Utils/ExportCSV';
-import { getclientPlanexpiry, getclientPlanexpirywithfilter, GetService } from '../../../Services/Admin';
+import { getclientPlanexpirywithfilter, GetService } from '../../../Services/Admin';
 import { fDateTimeH } from '../../../Utils/Date_formate';
 
-
-
 const Planexpiry = () => {
-
-
     const token = localStorage.getItem('token');
 
-
-    const [searchInput, setSearchInput] = useState("");
-    const [searchstock, setSearchstock] = useState("");
+    const [searchInput, setSearchInput] = useState('');
+    const [searchStock, setSearchStock] = useState('');
     const [clients, setClients] = useState([]);
     const [serviceList, setServiceList] = useState([]);
     const [ForGetCSV, setForGetCSV] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
-    const [startDate, setStartDate] = useState("");
-    const [endDate, setEndDate] = useState("");
-
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };
 
-
     const fetchAdminServices = async () => {
         try {
             const response = await GetService(token);
-            if (response.status) {
+            if (response?.status) {
                 setServiceList(response.data);
             }
         } catch (error) {
-            console.log('Error fetching services:', error);
+            console.error('Error fetching services:', error);
         }
     };
 
-
-    console.log("startDate", startDate)
-    console.log("endDate", endDate)
-
-
-    const getclientdata = async () => {
+    const getClientData = async () => {
         try {
-            const data = { page: currentPage, serviceid: searchstock, startDate: startDate || "", endDate: endDate || "", search: searchInput, }
-
+            const data = {
+                page: currentPage,
+                serviceid: searchStock,
+                startDate: startDate || '',
+                endDate: endDate || '',
+                search: searchInput,
+            };
             const response = await getclientPlanexpirywithfilter(data, token);
-            if (response && response.status) {
-                // const filteredData = response.data.filter((item) =>
-                //     (searchInput === "" || item.clientFullName.toLowerCase().includes(searchInput.toLowerCase())) ||
-                //     (searchstock === "" || item.serviceTitle.toLowerCase().includes(searchstock.toLowerCase()))
-                // );
+            if (response?.status) {
                 setClients(response.data);
                 setTotalRows(response.pagination.total);
-
             }
         } catch (error) {
-            console.log("Error fetching client data:", error);
+            console.error('Error fetching client data:', error);
         }
     };
 
-
-
-
-    const forCSVdata = () => {
-        if (clients.length > 0) {
-            const csvArr = clients.map((item) => ({
-                FullName: item.clientFullName || "",
-                Email: item.clientEmail || "",
-                PhoneNo: item.clientMobile || "",
-                Segment: item.serviceTitle || '',
-                StartDate: item.startdate || '',
-                EndDate: item.enddate || '',
-            }));
-            setForGetCSV(csvArr);
-        }
+    const prepareCSVData = () => {
+        const csvArr = clients.map((item) => ({
+            FullName: item.clientFullName || '',
+            Email: item.clientEmail || '',
+            PhoneNo: item.clientMobile || '',
+            Segment: item.serviceTitle || '',
+            StartDate: fDateTimeH(item.startdate) || '',
+            EndDate: fDateTimeH(item.enddate) || '',
+        }));
+        setForGetCSV(csvArr);
     };
 
-
+    const resetFilters = () => {
+        setSearchInput('');
+        setSearchStock('');
+        setStartDate('');
+        setEndDate('');
+        setCurrentPage(1);
+    };
 
     useEffect(() => {
         fetchAdminServices();
@@ -91,32 +79,13 @@ const Planexpiry = () => {
 
 
 
+    useEffect(() => {
+        getClientData();
+    }, [searchInput, searchStock, currentPage, startDate, endDate]);
 
     useEffect(() => {
-        getclientdata();
-    }, [searchInput, searchstock, currentPage]);
-
-
-
-
-    useEffect(() => {
-        forCSVdata();
+        prepareCSVData();
     }, [clients]);
-
-
-
-
-    const resetFilters = () => {
-        setSearchInput("");
-        setSearchstock("");
-        setStartDate("")
-        setEndDate("")
-        getclientdata();
-
-    };
-
-
-
 
     const columns = [
         {
@@ -127,54 +96,47 @@ const Planexpiry = () => {
         },
         {
             name: 'Full Name',
-            selector: row => row.clientFullName,
-            sortable: true,
-            width: '200px',
+            selector: (row) => row.clientFullName,
+            sortable: true, width: '200px'
         },
         {
             name: 'Email',
-            selector: row => row.clientEmail,
-            sortable: true,
-            width: '300px',
+            selector: (row) => row.clientEmail,
+            sortable: true, width: '300px'
         },
         {
             name: 'Mobile',
-            selector: row => row.clientMobile,
-            sortable: true,
-            width: '200px',
+            selector: (row) => row.clientMobile,
+            sortable: true, width: '200px'
         },
         {
             name: 'Segment',
-            selector: row => row.serviceTitle,
-            sortable: true,
-            width: '200px',
+            selector: (row) => row.serviceTitle,
+            sortable: true, width: '200px'
         },
         {
             name: 'Start Date',
-            selector: row => fDateTimeH(row.startdate),
-            sortable: true,
-            width: '200px',
+            selector: (row) => fDateTimeH(row.startdate),
+            sortable: true, width: '200px'
         },
         {
             name: 'End Date',
-            selector: row => fDateTimeH(row.enddate),
-            sortable: true,
-            width: '200px',
+            selector: (row) => fDateTimeH(row.enddate),
+            sortable: true, width: '200px'
         },
     ];
 
     return (
-
-
         <div className="page-content">
             <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
                 <div className="breadcrumb-title pe-3">Plan Expiry</div>
                 <div className="ps-3">
-                    <Link to="/admin/dashboard"><i className="bx bx-home-alt" /></Link>
+                    <Link to="/admin/dashboard">
+                        <i className="bx bx-home-alt" />
+                    </Link>
                 </div>
             </div>
             <hr />
-
             <div className="card">
                 <div className="card-body">
                     <div className="d-lg-flex align-items-center mb-4 gap-3">
@@ -193,10 +155,10 @@ const Planexpiry = () => {
                         <ExportToExcel
                             className="btn btn-primary ms-2"
                             apiData={ForGetCSV}
-                            fileName="All_Users"
+                            fileName="Plan_Expiry_Clients"
                         />
                     </div>
-                    <div className='row mb-2'>
+                    <div className="row mb-2">
                         <div className="col-md-3">
                             <label>Select From Date</label>
                             <input
@@ -206,7 +168,7 @@ const Planexpiry = () => {
                                 value={startDate}
                             />
                         </div>
-                        <div className='col-md-3'>
+                        <div className="col-md-3">
                             <label>Select To Date</label>
                             <input
                                 type="date"
@@ -215,12 +177,12 @@ const Planexpiry = () => {
                                 value={endDate}
                             />
                         </div>
-                        <div className="col-md-3 ">
+                        <div className="col-md-3">
                             <label>Select Service</label>
                             <select
                                 className="form-control radius-10"
-                                value={searchstock}
-                                onChange={(e) => setSearchstock(e.target.value)}
+                                value={searchStock}
+                                onChange={(e) => setSearchStock(e.target.value)}
                             >
                                 <option value="">Select Service</option>
                                 {serviceList.map((service) => (
@@ -229,14 +191,11 @@ const Planexpiry = () => {
                                     </option>
                                 ))}
                             </select>
-
                         </div>
                         <div className="col-md-3 d-flex align-items-center mt-3">
                             <RefreshCcw className="refresh-icon" onClick={resetFilters} />
                         </div>
-
                     </div>
-
                     <Table
                         columns={columns}
                         data={clients}
