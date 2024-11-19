@@ -713,23 +713,29 @@ async function CheckPosition(userId, authToken, segment, instrument_token, produ
 
 
 async function CheckHolding(userId, authToken, segment, instrument_token, producttype, calltype) {
+    const client = await Clients_Modal.findOne({ apikey: userId });
+    if (!client) {
+    return res.status(404).json({
+        status: false,
+        message: "Client not found"
+    });
+}
    
-   
-     var config = {
-                    method: 'get',
-                    url: 'https://apiconnect.angelone.in/rest/secure/angelbroking/portfolio/v1/getAllHolding',
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`,
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'X-UserType': 'USER',
-                        'X-SourceID': 'WEB',
-                        'X-ClientLocalIP': 'CLIENT_LOCAL_IP',
-                        'X-ClientPublicIP': 'CLIENT_PUBLIC_IP',
-                        'X-MACAddress': 'MAC_ADDRESS',
-                        'X-PrivateKey': userId
-                    },
-                };
+    var holding_url = `https://gw-napi.kotaksecurities.com/Portfolio/1.0/portfolio/v1/holdings?alt=false`
+    let config = {
+        method: 'get',
+        maxBodyLength: Infinity,
+        url: holding_url,
+        headers: {
+            'accept': 'application/json',
+            'Sid': client.kotakneo_sid,
+            'Auth': client.stepOneToken,
+            'neo-fin-key': 'neotradeapi',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': 'Bearer ' + client.oneTimeToken
+        }
+
+    };
    
     try {
         const response = await axios(config);
