@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { basicsettinglist, updatePayementgateway } from '../../../Services/Admin';
+import { basicsettinglist, updatePayementgateway, UpdatePaymentstatus } from '../../../Services/Admin';
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 
@@ -8,62 +8,96 @@ const Payementgateway = () => {
     const user_id = localStorage.getItem('id');
 
     const [clients, setClients] = useState(null);
+    
+    
+    
     const [initialValues, setInitialValues] = useState({
         razorpay_secret: "",
         razorpay_key: "",
         paymentstatus: "",
         officepaymenystatus: ""
     });
+    
+    const [updateapi, setUpdateapi] = useState(initialValues);
 
-
-    const [updateapi, setUpdateapi] = useState({
-        razorpay_secret: "",
-        razorpay_key: "",
-        paymentstatus: "",
-        officepaymenystatus: "",
-    });
+   
 
     const getApidetail = async () => {
         try {
             const response = await basicsettinglist(token);
-            if (response?.status && response?.data) {
+            if (response?.status && response?.data?.length) {
                 const clientData = response.data[0];
                 setClients(clientData);
-                setInitialValues({
-                    razorpay_key: clientData.razorpay_key || "",
-                    razorpay_secret: clientData.razorpay_secret || "",
-                    paymentstatus: clientData.paymentstatus || "",
-                    officepaymenystatus: clientData.officepaymenystatus || ""
-                });
-                setUpdateapi({
-                    razorpay_key: clientData.razorpay_key || "",
-                    razorpay_secret: clientData.razorpay_secret || "",
-                    paymentstatus: clientData.paymentstatus || "",
-                    officepaymenystatus: clientData.officepaymenystatus || ""
-                });
+                setInitialValues(clientData);
+                setUpdateapi(clientData);
             }
         } catch (error) {
             console.error('Error fetching API details:', error);
         }
     };
 
+
     useEffect(() => {
         getApidetail();
     }, []);
 
-    const hasChanges = () => {
-        return (
-            initialValues.razorpay_key !== updateapi.razorpay_key ||
-            initialValues.razorpay_secret !== updateapi.razorpay_secret ||
-            initialValues.paymentstatus !== updateapi.paymentstatus ||
-            initialValues.officepaymenystatus !== updateapi.officepaymenystatus 
 
-        );
+
+    const hasChanges = () =>
+        JSON.stringify(initialValues) !== JSON.stringify(updateapi);
+
+
+
+
+    const handleInputChange = (field, value) => {
+        setUpdateapi((prev) => ({ ...prev, [field]: value }));
+    };
+
+
+
+
+    const handleSwitchChange = async (event, type) => {
+        const user_active_status = event.target.checked ? 1 : 0;
+        const data =
+            type === "paymentstatus"
+                ? { paymentstatus: user_active_status, officepaymenystatus: clients?.officepaymenystatus }
+                : { paymentstatus: clients?.paymentstatus, officepaymenystatus: user_active_status };
+
+        const result = await Swal.fire({
+            title: "Do you want to save the changes?",
+            showCancelButton: true,
+            confirmButtonText: "Save",
+            cancelButtonText: "Cancel",
+            allowOutsideClick: false,
+        });
+
+        if (result.isConfirmed) {
+            try {
+                const response = await UpdatePaymentstatus(data, token);
+                if (response?.status) {
+                    Swal.fire({
+                        title: "Saved!",
+                        icon: "success",
+                        timer: 1000,
+                        timerProgressBar: true,
+                    });
+                    getApidetail()
+
+                }
+            } catch (error) {
+                Swal.fire(
+                    "Error",
+                    "There was an error processing your request.",
+                    "error"
+                );
+            }
+            getApidetail()
+        }
     };
 
     const UpdateApi = async () => {
         try {
-            if (!updateapi.razorpay_key?.trim() || !updateapi.razorpay_secret?.trim()) {
+            if (!updateapi.razorpay_key.trim() || !updateapi.razorpay_secret.trim()) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Update Failed',
@@ -74,16 +108,7 @@ const Payementgateway = () => {
                 return;
             }
 
-            const data = {
-                id: user_id,
-                razorpay_key: updateapi.razorpay_key,
-                razorpay_secret: updateapi.razorpay_secret,
-                paymentstatus: updateapi.paymentstatus,
-                officepaymenystatus: updateapi.officepaymenystatus
-            };
-            
-            console.log("data",data)
-
+            const data = { ...updateapi, id: user_id };
             const response = await updatePayementgateway(data, token);
             if (response?.status) {
                 Swal.fire({
@@ -106,113 +131,95 @@ const Payementgateway = () => {
         }
     };
 
-   
+    const FormField = ({ label, id, value, onChange }) => (
+        <div className="col-md-12 mb-2">
+            <label htmlFor={id} className="form-label">{label}</label>
+            <input
+                type="text"
+                className="form-control"
+                id={id}
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+            />
+        </div>
+    );
+
+    const SwitchField = ({ label, checked, onChange }) => (
+        <div className="col-md-6 d-flex justify-content-between align-items-center mb-3">
+            <label className="form-label">{label}</label>
+            <div className="form-check form-switch form-check-info">
+                <input
+                    className="form-check-input toggleswitch"
+                    type="checkbox"
+                    checked={checked}
+                    onChange={onChange}
+                />
+            </div>
+        </div>
+    );
 
     return (
-        <div>
-            <div className="page-content">
-                <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                    <div className="breadcrumb-title pe-3">Payment Gateway Detail</div>
-                    <div className="ps-3">
-                        <nav aria-label="breadcrumb">
-                            <ol className="breadcrumb mb-0 p-0">
-                                <li className="breadcrumb-item">
-                                    <Link to="/admin/dashboard">
-                                        <i className="bx bx-home-alt" />
-                                    </Link>
-                                </li>
-                            </ol>
-                        </nav>
+        <div className="page-content">
+            <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+                <div className="breadcrumb-title pe-3">Payment Gateway Detail</div>
+                <nav aria-label="breadcrumb" className="ps-3">
+                    <ol className="breadcrumb mb-0 p-0">
+                        <li className="breadcrumb-item">
+                            <Link to="/admin/dashboard">
+                                <i className="bx bx-home-alt" />
+                            </Link>
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+            <hr />
+            <div className="row justify-content-center">
+                <div className="col-lg-6">
+                    <div className="card mb-4">
+                        <div className="card-header">Payment Status</div>
+                        <div className="card-body">
+                            <form className="row">
+                                <SwitchField
+                                    label="Online Payment Status"
+                                    checked={clients?.paymentstatus === 1}
+                                    onChange={(e) => handleSwitchChange(e, "paymentstatus")}
+                                />
+                                <SwitchField
+                                    label="Offline Payment Status"
+                                    checked={clients?.officepaymenystatus === 1}
+                                    onChange={(e) => handleSwitchChange(e, "officepaymenystatus")}
+                                />
+                            </form>
+                        </div>
                     </div>
-                </div>
-                <hr />
-                <div className="row row-cols-1 row-cols-md-3 row-cols-lg-3 row-cols-xl-3 justify-content-center">
-                    <div className="col" style={{ width: "50%" }}>
-                        <div className="card">
-                            <div className="card-header mt-2">
-                                <h5>Razorpay</h5></div>
-                            <div className="card-body mt-2">
-                                <form className="row g-3 mt-2 mb-3">
-                                    <div className="row">
-                                        <div className="col-md-12 mb-2">
-                                            <label htmlFor="input3" className="form-label">
-                                                Razorpay Key
-                                            </label>
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                id="input3"
-                                                value={updateapi.razorpay_key}
-                                                onChange={(e) => setUpdateapi({ ...updateapi, razorpay_key: e.target.value })}
-                                            />
-                                        </div>
-                                        <div className="col-md-12 mb-2">
-                                            <label htmlFor="input3" className="form-label">
-                                                Razorpay Secret Key
-                                            </label>
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                id="input3"
-                                                value={updateapi.razorpay_secret}
-                                                onChange={(e) => setUpdateapi({ ...updateapi, razorpay_secret: e.target.value })}
-                                            />
-                                        </div>
-                                        <div className="col-md-6 d-flex justify-content-start *: mt-3">
-                                            <label htmlFor="payment-status" className="form-label">
-                                                Online Payment Status
-                                            </label>
-                                            <div className="form-check form-switch form-check-info">
-                                                <input
-                                                    id="payment-status"
-                                                    className="form-check-input toggleswitch"
-                                                    type="checkbox"
-                                                    checked={updateapi.paymentstatus === 1}
-                                                    onChange={(e) =>
-                                                        setUpdateapi({
-                                                            ...updateapi,
-                                                            paymentstatus: e.target.checked ? 1 : 0,
-                                                        })
-                                                    }
-                                                />
-                                                <label htmlFor="payment-status" className="checktoggle checkbox-bg"></label>
-                                            </div>
-                                        </div>
-                                        <div className="col-md-6 d-flex justify-content-end mt-3">
-                                            <label htmlFor="office-payment-status" className="form-label">
-                                                Offline Payment Status
-                                            </label>
-                                            <div className="form-check form-switch form-check-info">
-                                                <input
-                                                    id="office-payment-status"
-                                                    className="form-check-input toggleswitch"
-                                                    type="checkbox"
-                                                    checked={updateapi.officepaymenystatus === 1}
-                                                    onChange={(e) =>
-                                                        setUpdateapi({
-                                                            ...updateapi,
-                                                            officepaymenystatus: e.target.checked ? 1 : 0,
-                                                        })
-                                                    }
-                                                />
-                                                <label htmlFor="office-payment-status" className="checktoggle checkbox-bg"></label>
-                                            </div>
-                                        </div>
 
-                                    </div>
-
-                                </form>
-                            </div>
-                            <div className="card-footer text-center">
-                                <button
-                                    type="button"
-                                    className="btn btn-primary mb-2"
-                                    onClick={UpdateApi}
-                                   disabled={!hasChanges()}
-                                >
-                                    Update
-                                </button>
-                            </div>
+                    <div className="card">
+                        <div className="card-header">Razorpay</div>
+                        <div className="card-body">
+                            <form className="row">
+                                <FormField
+                                    label="Razorpay Key"
+                                    id="razorpay_key"
+                                    value={updateapi.razorpay_key}
+                                    onChange={(value) => handleInputChange("razorpay_key", value)}
+                                />
+                                <FormField
+                                    label="Razorpay Secret Key"
+                                    id="razorpay_secret"
+                                    value={updateapi.razorpay_secret}
+                                    onChange={(value) => handleInputChange("razorpay_secret", value)}
+                                />
+                            </form>
+                        </div>
+                        <div className="card-footer text-center">
+                            <button
+                                type="button"
+                                className="btn btn-primary"
+                                onClick={UpdateApi}
+                                disabled={!hasChanges()}
+                            >
+                                Update
+                            </button>
                         </div>
                     </div>
                 </div>

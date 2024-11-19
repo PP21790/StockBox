@@ -1745,6 +1745,30 @@ export async function updatePayementgateway(data, token) {
 }
 
 
+// status payment update  
+
+export async function UpdatePaymentstatus(data, token) {
+    const formData = new FormData();
+    formData.append('paymentstatus', data.paymentstatus);
+    formData.append('officepaymenystatus', data.officepaymenystatus);
+
+    try {
+        const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
 // get email template page
 
 export async function getemailtemplate(token) {

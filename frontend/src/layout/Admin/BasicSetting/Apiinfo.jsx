@@ -100,6 +100,7 @@ const Apiinfo = () => {
     };
 
     const handleSwitchChange = async (event) => {
+
         const originalChecked = event.target.checked;
         const user_active_status = originalChecked ? 1 : 0;
         const data = { kyc: user_active_status };
@@ -164,11 +165,11 @@ const Apiinfo = () => {
                     <div className="col" style={{ width: "50%" }}>
                         <div className="card">
                             <div className="card-header mt-2">
-                            <div className="row justify-content-end mb-3">
-                                <div className="col-md-6">
-                                <h5>Digio API Key</h5>
-                                </div>
-                                
+                                <div className="row justify-content-end mb-3">
+                                    <div className="col-md-6">
+                                        <h5>Kyc Status</h5>
+                                    </div>
+
                                     <div className="col-md-6 d-flex justify-content-end">
                                         <div className="form-check form-switch form-check-info">
                                             <input
@@ -185,6 +186,15 @@ const Apiinfo = () => {
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div className="card">
+                            <div className="card-header mt-2">
+                                <div className="row justify-content-end mb-3">
+
+                                    <h5>Digio API Key</h5>
+                                </div>
+
                             </div>
 
                             <div className="card-body mt-2">
