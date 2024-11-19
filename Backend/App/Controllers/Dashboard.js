@@ -631,10 +631,19 @@ async PlanExipreList(req, res) {
 
 async PlanExipreListWithFilter(req, res) {
   try {
-    const { serviceid, page = 1 } = req.body; // Default values for pagination
+    const { serviceid, startdate, enddate, search, page = 1 } = req.body; // Added startdate and enddate
     let limit = 10;
-    const filter = serviceid ? { serviceid } : {};
-console.log("req.body",req.body);
+    // Build the filter object dynamically
+    const filter = {};
+    if (serviceid) {
+      filter.serviceid = serviceid;
+    }
+    if (startdate) {
+      filter.startdate = { $gte: new Date(startdate) }; // Start date greater than or equal
+    }
+    if (enddate) {
+      filter.enddate = { ...filter.enddate, $lte: new Date(enddate) }; // End date less than or equal
+    }
     // Fetch paginated plans
     const plans = await Planmanage.find(filter)
       .sort({ enddate: -1 })
@@ -650,6 +659,20 @@ console.log("req.body",req.body);
     for (let plan of plans) {
       const service = await Service_Modal.findById(plan.serviceid).select('title');
       const client = await Clients_Modal.findById(plan.clientid).select('FullName PhoneNo Email');
+
+
+      if (search && search.trim() !== "") {
+        const regex = new RegExp(search, "i");
+        const matchesClient =
+          regex.test(client?.FullName || "") ||
+          regex.test(client?.PhoneNo || "") ||
+          regex.test(client?.Email || "");
+        if (!matchesClient) continue; // Skip adding if no match
+      }
+
+
+
+
 
       enrichedPlans.push({
         ...plan.toObject(),

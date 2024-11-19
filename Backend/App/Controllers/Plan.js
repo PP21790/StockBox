@@ -751,86 +751,102 @@ try {
 
   async paymentHistoryWithFilter(req, res) {
     try {
-      const { fromDate, toDate, page = 1 } = req.body; // Extract fromDate, toDate, page, and limit from the request body
+      const { fromDate, toDate, search, page = 1 } = req.body; // Extract fromDate, toDate, page, and limit from the request body
       let limit = 10;
       const skip = (parseInt(page) - 1) * parseInt(limit); // Calculate the number of items to skip based on page and limit
   
       // Build match conditions based on the date range
       const matchConditions = { del: false };
-      if (fromDate && toDate) {
-        matchConditions.created_at = { 
-          $gte: new Date(fromDate), 
-          $lte: new Date(toDate) 
-        };
+
+    // Date range filter
+    if (fromDate && toDate) {
+      matchConditions.created_at = {
+        $gte: new Date(fromDate),
+        $lte: new Date(toDate)
+      };
+    }
+
+    // Search filter for client details
+    const searchMatch = search && search.trim() !== "" ? {
+      $or: [
+        { "clientDetails.FullName": { $regex: search, $options: "i" } }, // Search by client name
+        { "clientDetails.Email": { $regex: search, $options: "i" } },    // Search by client email
+        { "clientDetails.PhoneNo": { $regex: search, $options: "i" } }   // Search by client mobile
+      ]
+    } : {};
+
+    // Aggregation pipeline
+    const result = await PlanSubscription_Modal.aggregate([
+      { $match: matchConditions }, // Apply base filters
+      {
+        $lookup: {
+          from: 'plans', // Join with plans collection
+          localField: 'plan_id',
+          foreignField: '_id',
+          as: 'planDetails'
+        }
+      },
+      { $unwind: '$planDetails' }, // Unwind plan details
+      {
+        $lookup: {
+          from: 'clients', // Join with clients collection
+          localField: 'client_id',
+          foreignField: '_id',
+          as: 'clientDetails'
+        }
+      },
+      { $unwind: '$clientDetails' }, // Unwind client details
+      { $match: searchMatch }, // Apply search filter
+      {
+        $project: {
+          orderid: 1,
+          created_at: 1,
+          plan_price: 1,
+          total: 1,
+          coupon: 1,
+          discount: 1,
+          "planDetails.plan_name": 1, // Include specific fields from plans
+          clientName: '$clientDetails.FullName',
+          clientEmail: '$clientDetails.Email',
+          clientPhoneNo: '$clientDetails.PhoneNo',
+        }
+      },
+      { $sort: { created_at: -1 } }, // Sort by creation date (descending)
+      { $skip: skip }, // Pagination: Skip records
+      { $limit: parseInt(limit) } // Pagination: Limit records
+    ]);
+
+    // Total records for pagination
+    const totalRecordsPipeline = [
+      { $match: matchConditions },
+      {
+        $lookup: {
+          from: 'clients',
+          localField: 'client_id',
+          foreignField: '_id',
+          as: 'clientDetails'
+        }
+      },
+      { $unwind: '$clientDetails' },
+      { $match: searchMatch },
+      { $count: 'total' }
+    ];
+    const totalRecordsResult = await PlanSubscription_Modal.aggregate(totalRecordsPipeline);
+    const totalRecords = totalRecordsResult[0] ? totalRecordsResult[0].total : 0;
+    const totalPages = Math.ceil(totalRecords / limit);
+
+    // Response
+    return res.json({
+      status: true,
+      message: "Payment history retrieved successfully",
+      data: result,
+      pagination: {
+        total: totalRecords,
+        page: parseInt(page),
+        limit: parseInt(limit),
+        totalPages
       }
-  
-      const result = await PlanSubscription_Modal.aggregate([
-        {
-          $match: matchConditions
-        },
-        {
-          $lookup: {
-            from: 'plans', // The name of the plans collection
-            localField: 'plan_id', // The field in PlanSubscription_Modal that references the plans
-            foreignField: '_id', // The field in the plans collection that is referenced
-            as: 'planDetails' // The name of the field in the result that will hold the joined data
-          }
-        },
-        {
-          $unwind: '$planDetails' // Optional: Unwind the result if you expect only one matching plan per subscription
-        },
-        {
-          $lookup: {
-            from: 'clients', // The name of the clients collection
-            localField: 'client_id', // The field in PlanSubscription_Modal that references the client
-            foreignField: '_id', // The field in the clients collection that is referenced
-            as: 'clientDetails' // The name of the field in the result that will hold the joined client data
-          }
-        },
-        {
-          $unwind: '$clientDetails' // Optional: Unwind the result if you expect only one matching client per subscription
-        },
-        {
-          $project: {
-            orderid: 1,
-            created_at: 1,
-            plan_price: 1,
-            total: 1,
-            coupon: 1,
-            discount: 1,
-            planDetails: 1,
-            clientName: '$clientDetails.FullName',
-            clientEmail: '$clientDetails.Email',
-            clientPhoneNo: '$clientDetails.PhoneNo',
-          }
-        },
-        {
-          $sort: { created_at: -1 } // Sort by created_at in descending order
-        },
-        {
-          $skip: skip // Pagination: Skip the first 'skip' number of items
-        },
-        {
-          $limit: parseInt(limit) // Limit the result to 'limit' items
-        }
-      ]);
-  
-      // Get the total count for pagination
-      const totalRecords = await PlanSubscription_Modal.countDocuments(matchConditions);
-      const totalPages = Math.ceil(totalRecords / limit);
-  
-      // Respond with the retrieved subscriptions
-      return res.json({
-        status: true,
-        message: "Subscriptions retrieved successfully",
-        data: result,
-        pagination: {
-          total:totalRecords,
-          page: parseInt(page),
-          limit: parseInt(limit),
-          totalPages,
-        }
-      });
+    });
   
     } catch (error) {
       console.error(error);

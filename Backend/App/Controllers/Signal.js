@@ -291,7 +291,7 @@ async getSignal(req, res) {
 
 async getSignalWithFilter(req, res) {
   try {
-    const { from, to, service, stock, closestatus, page = 1 } = req.body;
+    const { from, to, service, stock, closestatus, search, page = 1 } = req.body;
     let limit = 10;
     // Date filtering
     let fromDate;
@@ -327,6 +327,15 @@ async getSignalWithFilter(req, res) {
       query.close_status = closestatus;
     }
 
+
+    if (search && search.trim() !== '') {
+      query.$or = [
+          { tradesymbol: { $regex: search, $options: 'i' } },
+          { calltype: { $regex: search, $options: 'i' } },
+          { price: { $regex: search, $options: 'i' } },
+          { closeprice: { $regex: search, $options: 'i' } }
+      ];
+  }
 
     let sortCriteria = { created_at: -1 }; // Default sorting by created_at in descending order
     if (closestatus === true) {
