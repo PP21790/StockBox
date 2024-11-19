@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table1';
 import { Eye, Trash2, RefreshCcw } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { GetSignallist,GetSignallistWithFilter , DeleteSignal, SignalCloseApi, GetService, GetStockDetail } from '../../../Services/Admin';
+import { GetSignallist, GetSignallistWithFilter, DeleteSignal, SignalCloseApi, GetService, GetStockDetail } from '../../../Services/Admin';
 import { fDateTimeH } from '../../../Utils/Date_formate'
 import ExportToExcel from '../../../Utils/ExportCSV';
 import Select from 'react-select';
@@ -19,8 +19,18 @@ const Signal = () => {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
+    const [header, setheader] = useState("Open Signal");
 
-  
+    const location = useLocation();
+    const clientStatus = location?.state?.clientStatus;
+
+   
+
+    useEffect(() => {
+        if (clientStatus == "todayopensignal") {
+            setheader("Todays Open Signal")
+        }
+    }, [clientStatus])
 
 
     const [filters, setFilters] = useState({
@@ -36,7 +46,7 @@ const Signal = () => {
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
 
-    
+
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };
@@ -67,7 +77,7 @@ const Signal = () => {
     const [ForGetCSV, setForGetCSV] = useState([])
 
     const [checkedIndex, setCheckedIndex] = useState(null);
-    
+
 
     const handleTabChange = (index) => {
         setCheckedIndex(index);
@@ -136,39 +146,80 @@ const Signal = () => {
     const options = clients.map((item) => ({
         value: item.stock,
         label: item.stock,
-      }));
+    }));
 
-      const handleChange1 = (selectedOption) => {
+    const handleChange1 = (selectedOption) => {
         setSearchstock(selectedOption ? selectedOption.value : "");
-      };
+    };
+
+
+
+    // const getAllSignal = async () => {
+    //     try {
+    //         const data = {
+    //             page: currentPage,
+    //             from: filters.from,
+    //             to: filters.to,
+    //             service: filters.service,
+    //             stock: searchstock,
+    //             closestatus: "false",
+    //             search: searchInput
+    //         }
+    //         const response = await GetSignallistWithFilter(data, token);
+    //         if (response && response.status) {
+    //             setTotalRows(response.pagination.totalRecords);
+    //             const filterdata = response.data.filter((item) => {
+    //                 return item.close_status === false;
+    //             });
+    //             if (clientStatus == "todayopensignal") {
+    //                 filterdata
+    //             } else {
+    //                 filterdata
+    //             }
+
+    //             setClients(filterdata);
+
+    //         }
+    //     } catch (error) {
+    //         console.log("error", error);
+    //     }
+    // }; 
+
 
 
 
     const getAllSignal = async () => {
         try {
-            const data = {page:currentPage ,
-                 from :filters.from , 
-                 to:filters.to , 
-                 service:filters.service,
-                  stock:searchstock, 
-                  closestatus: "false" ,
-                  search:searchInput  
-                }
+            const data = {
+                page: currentPage,
+                from: filters.from,
+                to: filters.to,
+                service: filters.service,
+                stock: searchstock,
+                closestatus: "false",
+                search: searchInput,
+            };
+
             const response = await GetSignallistWithFilter(data, token);
+
             if (response && response.status) {
                 setTotalRows(response.pagination.totalRecords);
-                 
-                const filterdata = response.data.filter((item) => {
-                    return item.close_status === false;
-                });
+                let filterdata = response.data.filter((item) => item.close_status === false);
+                if (clientStatus === "todayopensignal") {
+                    const today = new Date().toISOString().split("T")[0];
+                    filterdata = filterdata.filter((item) => {
+                        const createdDate = new Date(item.created_at).toISOString().split("T")[0];
+                        return createdDate === today;
+                    });
+                }
 
                 setClients(filterdata);
-
             }
         } catch (error) {
-            console.log("error", error);
+            console.log("Error:", error);
         }
     };
+
 
 
 
@@ -223,14 +274,14 @@ const Signal = () => {
         fetchAdminServices()
         fetchStockList()
         forCSVdata()
-    }, [filters,clients]);
+    }, [filters, clients]);
 
 
     useEffect(() => {
         getAllSignal();
-    }, [filters, searchInput, searchstock , currentPage ]);
+    }, [filters, searchInput, searchstock, currentPage]);
 
-   
+
 
 
 
@@ -319,7 +370,7 @@ const Signal = () => {
                 ...prevState,
                 closestatus: true,
             }));
-        }else{
+        } else {
             setClosedata(prevState => ({
                 ...prevState,
                 closestatus: false,
@@ -341,7 +392,7 @@ const Signal = () => {
                     confirmButtonText: 'OK'
                 });
             };
-    
+
 
             if (index === 1) {
                 if (closedata.targetprice2 && !closedata.targetprice1) {
@@ -373,25 +424,25 @@ const Signal = () => {
                     return;
                 }
             }
-    
+
             // Data preparation based on index
             const data = {
                 id: serviceid._id,
                 closestatus: index === 1 ? checkstatus : "",
                 closetype: index === 0 ? "1" : index === 1 ? "2" : index === 2 ? "3" : "4",
                 close_description: closedata.close_description,
-    
+
                 targethit1: index === 1 && closedata.targetprice1 ? checkedTargets1.target1 : "",
                 targethit2: index === 1 && closedata.targetprice2 ? checkedTargets1.target2 : "",
                 targethit3: index === 1 && closedata.targetprice3 ? checkedTargets1.target3 : "",
-    
+
                 targetprice1: index === 0 ? closedata.tag1 : index === 1 ? closedata.targetprice1 : "",
                 targetprice2: index === 0 ? closedata.tag2 : index === 1 ? closedata.targetprice2 : "",
                 targetprice3: index === 0 ? closedata.tag3 : index === 1 ? closedata.targetprice3 : "",
                 slprice: index === 2 ? closedata.slprice : closedata.stoploss,
                 exitprice: index === 3 ? closedata.exitprice : ""
             };
-    
+
 
             const response = await SignalCloseApi(data, token);
 
@@ -428,7 +479,7 @@ const Signal = () => {
             });
         }
     };
-    
+
 
 
 
@@ -523,7 +574,7 @@ const Signal = () => {
             button: true,
 
         },
-       
+
 
     ];
 
@@ -552,7 +603,7 @@ const Signal = () => {
             <div>
                 <div className="page-content">
                     <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                        <div className="breadcrumb-title pe-3">Open Signal</div>
+                        <div className="breadcrumb-title pe-3">{header}</div>
                         <div className="ps-3">
                             <nav aria-label="breadcrumb">
                                 <ol className="breadcrumb mb-0 p-0">
@@ -963,7 +1014,7 @@ const Signal = () => {
                                                             type="number"
                                                             className='form-control'
                                                             style={{ width: "50%" }}
-                                                            defaultValue={closedata.slprice }
+                                                            defaultValue={closedata.slprice}
                                                             onChange={(e) =>
                                                                 setClosedata({
                                                                     ...closedata,

@@ -325,8 +325,10 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <Link to="/admin/signal"><i className="bx bx-up-arrow-alt text-white" /></Link>
-                                            {/* <i className="bx bx-up-arrow-alt" /> */}
+                                            {/* <Link to="/admin/signal"><i className="bx bx-up-arrow-alt text-white" /></Link> */}
+                                            <Link to="/admin/signal" state={{ clientStatus: "todayopensignal" }}>
+                                                <i className="bx bx-up-arrow-alt text-white" />
+                                            </Link>
                                         </span>
                                     </p>
                                 </div>
@@ -360,8 +362,10 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <Link to="/admin/closesignal"><i className="bx bx-up-arrow-alt text-white" /></Link>
-                                            {/* <i className="bx bx-up-arrow-alt" /> */}
+                                            {/* <Link to="/admin/closesignal"><i className="bx bx-up-arrow-alt text-white" /></Link> */}
+                                            <Link to="/admin/closesignal" state={{ clientStatus: "todayclosesignal" }}>
+                                                <i className="bx bx-up-arrow-alt text-white" />
+                                            </Link>
                                         </span>
                                     </p>
                                 </div>

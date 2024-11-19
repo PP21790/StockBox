@@ -304,7 +304,7 @@ const Staff = () => {
                                     <input
                                         type="text"
                                         className="form-control ps-5 radius-10"
-                                        placeholder="Search free  Client"
+                                        placeholder="Search Staff"
                                         onChange={(e) => setSearchInput(e.target.value)}
                                         value={searchInput}
                                     />

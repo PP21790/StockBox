@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table1';
@@ -18,6 +18,18 @@ const Closesignal = () => {
     const [searchInput, setSearchInput] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
+    const [header, setheader] = useState("Open Signal");
+
+    const location = useLocation();
+    const clientStatus = location?.state?.clientStatus;
+
+   
+
+    useEffect(() => {
+        if (clientStatus == "todayclosesignal") {
+            setheader("Todays Close Signal")
+        }
+    }, [clientStatus])
 
 
 
@@ -73,10 +85,15 @@ const Closesignal = () => {
             const response = await GetSignallistWithFilter(data, token);
             if (response && response.status) {
                 setTotalRows(response.pagination.totalRecords);
+                let filterdata = response.data.filter((item) => item.close_status === true);
 
-                const filterdata = response.data.filter((item) => {
-                    return item.close_status === true;
-                });
+                if (clientStatus === "todayclosesignal") {
+                    const today = new Date().toISOString().split("T")[0];
+                    filterdata = filterdata.filter((item) => {
+                        const createdDate = new Date(item.created_at).toISOString().split("T")[0];
+                        return createdDate === today;
+                    });
+                }
 
                 setClients(filterdata);
 
@@ -284,7 +301,7 @@ const Closesignal = () => {
             <div>
                 <div className="page-content">
                     <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                        <div className="breadcrumb-title pe-3">Close Signal</div>
+                        <div className="breadcrumb-title pe-3">{header}</div>
                         <div className="ps-3">
                             <nav aria-label="breadcrumb">
                                 <ol className="breadcrumb mb-0 p-0">
