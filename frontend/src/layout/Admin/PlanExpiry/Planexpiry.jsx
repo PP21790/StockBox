@@ -42,14 +42,14 @@ const Planexpiry = () => {
         }
     };
 
-  
-    console.log("startDate",startDate)
-    console.log("endDate",endDate)
+
+    console.log("startDate", startDate)
+    console.log("endDate", endDate)
 
 
     const getclientdata = async () => {
         try {
-            const data = { page: currentPage, serviceid: searchstock  ,startDate: startDate || "" , endDate:endDate || "",  search : searchInput , }
+            const data = { page: currentPage, serviceid: searchstock, startDate: startDate || "", endDate: endDate || "", search: searchInput, }
 
             const response = await getclientPlanexpirywithfilter(data, token);
             if (response && response.status) {
@@ -198,7 +198,7 @@ const Planexpiry = () => {
                     </div>
                     <div className='row mb-2'>
                         <div className="col-md-3">
-                        <label>Select From Date</label>
+                            <label>Select From Date</label>
                             <input
                                 type="date"
                                 className="form-control"
@@ -207,7 +207,7 @@ const Planexpiry = () => {
                             />
                         </div>
                         <div className='col-md-3'>
-                        <label>Select To Date</label>
+                            <label>Select To Date</label>
                             <input
                                 type="date"
                                 className="form-control"
@@ -229,11 +229,10 @@ const Planexpiry = () => {
                                     </option>
                                 ))}
                             </select>
-                            <div>
-                                <div className="col-md-3 d-flex align-items-end">
-                                    <RefreshCcw className="refresh-icon" onClick={resetFilters} />
-                                </div>
-                            </div>
+
+                        </div>
+                        <div className="col-md-3 d-flex align-items-center mt-3">
+                            <RefreshCcw className="refresh-icon" onClick={resetFilters} />
                         </div>
 
                     </div>
