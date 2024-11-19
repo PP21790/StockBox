@@ -22,6 +22,9 @@ const Planexpiry = () => {
     const [ForGetCSV, setForGetCSV] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
@@ -40,12 +43,13 @@ const Planexpiry = () => {
     };
 
 
+    
+
 
     const getclientdata = async () => {
         try {
-            const data = { page: currentPage , serviceid : searchstock }
+            const data = { page: currentPage , serviceid : searchstock  }
 
-            console.log("data",data)
             const response = await getclientPlanexpirywithfilter(data, token);
             if (response && response.status) {
                 const filteredData = response.data.filter((item) =>
@@ -104,7 +108,10 @@ const Planexpiry = () => {
     const resetFilters = () => {
         setSearchInput("");
         setSearchstock("");
+        setStartDate("")
+        setEndDate("")
         getclientdata();
+     
     };
 
 
@@ -185,6 +192,26 @@ const Planexpiry = () => {
                             fileName="All_Users"
                         />
                     </div>
+                    <div className='row mb-2'>
+                            <div className="col-md-3">
+                                <input
+                                    type="date"
+                                    className="form-control"
+                                    onChange={(e) => setStartDate(e.target.value)}
+                                    value={startDate}
+                                />
+                            </div>
+
+
+                            <div className='col-md-3'>
+                                <input
+                                    type="date"
+                                    className="form-control"
+                                    onChange={(e) => setEndDate(e.target.value)}
+                                    value={endDate}
+                                />
+                            </div>
+                        </div>
                     <div className="row mb-4">
                         <div className="col-md-3">
                             <label>Select Service</label>
@@ -200,6 +227,7 @@ const Planexpiry = () => {
                                     </option>
                                 ))}
                             </select>
+                            
                         </div>
                         <div className="col-md-3 d-flex align-items-end">
                             <RefreshCcw className="refresh-icon" onClick={resetFilters} />

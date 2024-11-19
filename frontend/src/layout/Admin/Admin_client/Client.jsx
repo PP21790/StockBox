@@ -60,10 +60,10 @@ const Client = () => {
         } else if (clientStatus === "active") {
             setheader("Total Plan Active Client")
 
-        }else if(clientStatus === "expired"){
+        } else if (clientStatus === "expired") {
             setheader("Total Plan Expired Client")
         }
-    }, [clientStatus , clients])
+    }, [clientStatus, clients])
 
 
     const handleDownload = (row) => {
@@ -144,7 +144,7 @@ const Client = () => {
 
     useEffect(() => {
         getAdminclient();
-    }, [searchInput, searchkyc, statuscreatedby, currentPage, expired ]);
+    }, [searchInput, searchkyc, statuscreatedby, currentPage, expired]);
 
 
     useEffect(() => {
@@ -153,28 +153,35 @@ const Client = () => {
 
 
 
-
     const forCSVdata = () => {
         if (clients?.length > 0) {
             const csvArr = clients.map((item) => ({
-                FullName: item.FullName,
-                Email: item?.Email || '-',
-                kyc_verification: item?.kyc_verification == 1 ? "Verfied" : "Not Verified",
-                PlanStatus : item?.plansStatus?.some(statusItem => statusItem.status === 'active') 
-                ? 'Active' 
-                : item?.plansStatus?.some(statusItem => statusItem.status === 'expired') 
-                  ? 'Expired' 
-                  : 'N/A'
-              ,
-               CientSegment: item?.plansStatus?.map(statusItem => statusItem.serviceName || 'N/A').join(', '),
-               CreatedBy: item.addedByDetails?.FullName ?? (item.clientcome === 1 ? "WEB" : "APP") ,
-               PhoneNo: item?.PhoneNo || '-',
-               Created_at: item?.createdAt || '-',
-
+                FullName: item?.FullName || 'N/A',
+                Email: item?.Email || 'N/A',
+                kyc_verification: item?.kyc_verification === 1 ? "Verified" : "Not Verified",
+                PlanStatus: item?.plansStatus?.some(statusItem => statusItem.status === 'active')
+                    ? 'Active'
+                    : item?.plansStatus?.some(statusItem => statusItem.status === 'expired')
+                        ? 'Expired'
+                        : 'N/A',
+                ClientActiveSegment: item?.plansStatus
+                    ?.filter(statusItem => statusItem.status === 'active')
+                    .map(statusItem => statusItem.serviceName || 'N/A')
+                    .join(', ') || 'N/A',
+                ClientExpiredSegment: item?.plansStatus
+                    ?.filter(statusItem => statusItem.status === 'expired')
+                    .map(statusItem => statusItem.serviceName || 'N/A')
+                    .join(', ') || 'N/A',
+                CreatedBy: item?.addedByDetails?.FullName ||
+                    (item?.clientcome === 1 ? "WEB" : "APP") ||
+                    'N/A',
+                PhoneNo: item?.PhoneNo || 'N/A',
+                Created_at: item?.createdAt || 'N/A',
             }));
             setForGetCSV(csvArr);
         }
     };
+
 
 
 
@@ -191,26 +198,26 @@ const Client = () => {
         }
     };
 
-    
+
 
     const getAdminclient = async () => {
         try {
-           const data = {
+            const data = {
                 page: currentPage,
                 kyc_verification: searchkyc,
-                 status: clientStatus == 1 ? 1 : clientStatus == 0 ? 0 : "" ,
+                status: clientStatus == 1 ? 1 : clientStatus == 0 ? 0 : "",
                 createdby: statuscreatedby,
-                planStatus :
-                expired === "active" ? "active" : 
-                expired === "expired" ? "expired" : 
-                clientStatus === "active" ? "active" : 
-                clientStatus === "expired" ? "expired" : 
-                ""
-            
+                planStatus:
+                    expired === "active" ? "active" :
+                        expired === "expired" ? "expired" :
+                            clientStatus === "active" ? "active" :
+                                clientStatus === "expired" ? "expired" :
+                                    ""
+
             };
 
             const response = await AllclientFilter(data, token);
-        
+
             if (response.status) {
                 const filterdata = response.data.filter((item) =>
                     searchInput === "" ||
@@ -227,7 +234,7 @@ const Client = () => {
         }
     };
 
-  
+
 
     // const getplanlistbyadmin = async () => {
     //     try {
@@ -242,7 +249,7 @@ const Client = () => {
     // }
 
 
-     const getplanlistassinstatus = async (_id) => {
+    const getplanlistassinstatus = async (_id) => {
         try {
 
             const response = await getPlanbyUser(_id, token);
@@ -252,7 +259,7 @@ const Client = () => {
         } catch (error) {
             console.log("error");
         }
-    } 
+    }
 
 
 
@@ -458,7 +465,7 @@ const Client = () => {
             selector: (row, index) => (currentPage - 1) * 10 + index + 1,
             sortable: false,
             width: '100px',
-        },                
+        },
         {
             name: 'Full Name',
             selector: row => row.FullName,
@@ -597,7 +604,7 @@ const Client = () => {
 
 
                     <Tooltip placement="top" overlay="Package Assign">
-                        <span onClick={(e) => { showModal(true); setClientid(row);getplanlistassinstatus(row._id) }} style={{ cursor: 'pointer' }}>
+                        <span onClick={(e) => { showModal(true); setClientid(row); getplanlistassinstatus(row._id) }} style={{ cursor: 'pointer' }}>
                             <Settings2 />
                         </span>
                     </Tooltip>
@@ -868,7 +875,7 @@ const Client = () => {
                                                                                                 <div className='d-flex justify-content-between'>
                                                                                                     <div>
                                                                                                         <strong className="text-secondary m-2">Detail</strong>
-                                                                                                        <strong className="text-success m-2 activestrong">{item?.subscription?.status=== "active" ? "Active" : ""}</strong>
+                                                                                                        <strong className="text-success m-2 activestrong">{item?.subscription?.status === "active" ? "Active" : ""}</strong>
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </button>

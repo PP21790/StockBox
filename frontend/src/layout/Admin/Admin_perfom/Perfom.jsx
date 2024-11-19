@@ -301,21 +301,6 @@ const Perform = () => {
                         <div className="tab-content" id="myTabContent3">
                             <div className="tab-pane fade show active" id="NavPills">
                                 <div className="card-body pt-0">
-                                    <div className="d-lg-flex align-items-center mb-4 gap-3">
-                                        {/* <div className="position-relative">
-                                            <input
-                                                type="text"
-                                                className="form-control ps-5 radius-10"
-                                                placeholder="Search Payment Request"
-                                                value={searchInput}
-                                                onChange={(e) => setSearchInput(e.target.value)}
-                                            />
-                                            <span className="position-absolute top-50 product-show translate-middle-y">
-                                                <i className="bx bx-search" />
-                                            </span>
-                                        </div> */}
-                                    </div>
-
                                     <ul className="nav nav-pills nav-pills1 mb-4 light">
                                         {servicedata.map((service) => (
                                             <li className="nav-item" key={service._id}>
