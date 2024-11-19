@@ -1150,12 +1150,11 @@ else
   return {
     ...signal,
     report_full_path: signal.report ? `${baseUrl}/uploads/report/${signal.report}` : null, // Append full report URL
-   // purchased: order ? true : false ,
-    purchased: false ,
+    purchased: order ? true : false,
 
   //  lot: lot,
   //  tradesymbol: tradesymbol,
-    order_quantity: order ? order.quantity : 0 
+  order_quantity: order ? order.quantity : 0 
   };
 }));
 
@@ -1180,15 +1179,12 @@ else
 
 
 async showSignalsToClientsCloses(req, res) {
-
-
   try {
 
     const { service_id, client_id, search, page = 1 } = req.body;
     const limit = 10;
     const skip = (parseInt(page) - 1) * parseInt(limit); 
     const limitValue = parseInt(limit); 
-
 
 
     const plans = await Planmanage.find({ serviceid: service_id, clientid: client_id });
@@ -1257,6 +1253,7 @@ const order = await Order_Modal.findOne({
 }).lean();
 
 
+
 /*
 
 let lot = 0;
@@ -1290,13 +1287,20 @@ tradesymbol = lots.tradesymbol;
 }
 */
 
+const orders = await Order_Modal.find({
+  clientid: client_id,
+  signalid: signal._id
+}).lean();  // .lean() to return plain JavaScript objects
+
+// Sum the quantity field from the orders
+const totalQuantity = orders.reduce((sum, order) => sum + order.quantity, 0);
 return {
   ...signal,
   report_full_path: signal.report ? `${baseUrl}/uploads/report/${signal.report}` : null, // Append full report URL
   purchased: order ? true : false ,
 //  lot: lot,
 //  tradesymbol: tradesymbol,
-  order_quantity: order ? order.quantity : 0 
+order_quantity: totalQuantity ? totalQuantity : 0 
 };
 }));
 

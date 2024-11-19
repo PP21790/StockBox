@@ -628,12 +628,11 @@ async PlanExipreList(req, res) {
     return res.json({ status: false, message: "Server error", data: [] });  // Error handling
   }
 }
-
-
 async PlanExipreListWithFilter(req, res) {
   try {
-    const { serviceid, startdate, enddate, search, page = 1 } = req.body; // Added startdate and enddate
+    const { serviceid, startdate, enddate, search, page = 1 } = req.body;
     let limit = 10;
+
     // Build the filter object dynamically
     const filter = {};
     if (serviceid) {
@@ -643,9 +642,44 @@ async PlanExipreListWithFilter(req, res) {
       filter.startdate = { $gte: new Date(startdate) }; // Start date greater than or equal
     }
     if (enddate) {
-      filter.enddate = { ...filter.enddate, $lte: new Date(enddate) }; // End date less than or equal
+      filter.enddate = { $lte: new Date(enddate) }; // End date less than or equal
     }
-    // Fetch paginated plans
+
+    // If search term is provided, apply it to client fields (FullName, PhoneNo, Email)
+    let clientFilter = {};
+    if (search && search.trim() !== "") {
+      const regex = new RegExp(search, "i"); // Case-insensitive search
+      clientFilter = {
+        $or: [
+          { FullName: regex },
+          { PhoneNo: regex },
+          { Email: regex }
+        ]
+      };
+    }
+
+    // Fetch matching client IDs based on the search filter
+    const matchingClients = await Clients_Modal.find(clientFilter).select('_id');
+
+    // If there are no clients that match the search criteria, return an empty response
+    if (matchingClients.length === 0) {
+      return res.json({
+        status: true,
+        message: "No plans found for the given search criteria",
+        data: [],
+        pagination: {
+          total: 0,
+          page: parseInt(page),
+          limit: parseInt(limit),
+          totalPages: 0
+        }
+      });
+    }
+
+    // Add clientid filter to the plan query based on matching clients
+    filter.clientid = { $in: matchingClients.map(client => client._id) };
+
+    // Fetch paginated plans that match the filter
     const plans = await Planmanage.find(filter)
       .sort({ enddate: -1 })
       .skip((page - 1) * limit)
@@ -660,20 +694,6 @@ async PlanExipreListWithFilter(req, res) {
     for (let plan of plans) {
       const service = await Service_Modal.findById(plan.serviceid).select('title');
       const client = await Clients_Modal.findById(plan.clientid).select('FullName PhoneNo Email');
-
-
-      if (search && search.trim() !== "") {
-        const regex = new RegExp(search, "i");
-        const matchesClient =
-          regex.test(client?.FullName || "") ||
-          regex.test(client?.PhoneNo || "") ||
-          regex.test(client?.Email || "");
-        if (!matchesClient) continue; // Skip adding if no match
-      }
-
-
-
-
 
       enrichedPlans.push({
         ...plan.toObject(),
@@ -699,6 +719,7 @@ async PlanExipreListWithFilter(req, res) {
     return res.json({ status: false, message: "Server error", data: [] });
   }
 }
+
 
 
 }
