@@ -177,7 +177,7 @@ const Freeclient = () => {
 
 
     const updateClient = async (row) => {
-        navigate("/admin/editfreeclient/" + row.clientid, { state: { row } })
+        navigate("/staff/editfreeclient/" + row.clientid, { state: { row } })
     }
 
 
@@ -451,7 +451,7 @@ const Freeclient = () => {
                                 <nav aria-label="breadcrumb">
                                     <ol className="breadcrumb mb-0 p-0">
                                         <li className="breadcrumb-item">
-                                            <Link to="/admin/dashboard">
+                                            <Link to="/staff/dashboard">
                                                 <i className="bx bx-home-alt" />
                                             </Link>
                                         </li>

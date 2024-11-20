@@ -153,44 +153,46 @@ const Dashbord = () => {
                 <div className="row newbg">
                     <div className="col-md-3">
                         <div className="card radius-10 bg-gradient-deepblue">
-                            <div className="card-body">
-                                <div className="d-flex align-items-center">
-                                    <h5 className="mb-0 text-white">{data.clientCountTotal && data.clientCountTotal}</h5>
-                                    <div className="ms-auto">
-                                        <i className="bx bx-user fs-3 text-white" />
+                            <Link to="/admin/client" className="text-decoration-none">
+                                <div className="card-body">
+                                    <div className="d-flex align-items-center">
+                                        <h5 className="mb-0 text-white">
+                                            {data.clientCountTotal && data.clientCountTotal}
+                                        </h5>
+                                        <div className="ms-auto">
+                                            <i className="bx bx-user fs-3 text-white" />
+                                        </div>
+                                    </div>
+                                    <div
+                                        className="progress my-2 bg-opacity-25 bg-white"
+                                        style={{ height: 4 }}
+                                    >
+                                        <div
+                                            className="progress-bar bg-white"
+                                            role="progressbar"
+                                            style={{ width: "55%" }}
+                                            aria-valuenow={25}
+                                            aria-valuemin={0}
+                                            aria-valuemax={100}
+                                        />
+                                    </div>
+                                    <div className="d-flex align-items-center text-white">
+                                        <p className="mb-0">Total Clients</p>
+                                        <p className="mb-0 ms-auto">
+                                            <span>
+                                                <i className="bx bx-up-arrow-alt text-white" />
+                                            </span>
+                                        </p>
                                     </div>
                                 </div>
-                                <div
-                                    className="progress my-2 bg-opacity-25 bg-white"
-                                    style={{ height: 4 }}
-                                >
-                                    <div
-                                        className="progress-bar bg-white"
-                                        role="progressbar"
-                                        style={{ width: "55%" }}
-                                        aria-valuenow={25}
-                                        aria-valuemin={0}
-                                        aria-valuemax={100}
-                                    />
-                                </div>
-                                <div className="d-flex align-items-center text-white">
-                                    <p className="mb-0">Total Clients</p>
+                            </Link>
 
-                                    <p className="mb-0 ms-auto">
-
-                                        <span>
-                                            <Link to="/admin/client" ><i className="bx bx-up-arrow-alt text-white" /> </Link>
-                                        </span>
-
-                                    </p>
-
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div className="col-md-3">
                         <div className="card radius-10 bg-gradient-ohhappiness">
-                            <div className="card-body">
+                        <Link to="/admin/client" state={{ clientStatus: 1 }}>  
+                        <div className="card-body">
                                 <div className="d-flex align-items-center">
                                     <h5 className="mb-0 text-white">{data.clientCountActive && data.clientCountActive}</h5>
                                     <div className="ms-auto">
@@ -215,9 +217,9 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <Link to="/admin/client" state={{ clientStatus: 1 }}>
+                                          
                                                 <i className="bx bx-up-arrow-alt text-white" />
-                                            </Link>
+                                          
 
 
 
@@ -226,11 +228,13 @@ const Dashbord = () => {
                                     </p>
                                 </div>
                             </div>
+                            </Link>  
                         </div>
                     </div>
                     <div className="col-md-3">
                         <div className="card radius-10 bg-gradient-ibiza">
-                            <div className="card-body">
+                        <Link to="/admin/client" state={{ clientStatus: 0 }}>  
+                        <div className="card-body">
                                 <div className="d-flex align-items-center">
                                     <h5 className="mb-0 text-white">{data.clientCountTotal - data.clientCountActive}</h5>
                                     <div className="ms-auto">
@@ -255,17 +259,18 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <Link to="/admin/client" state={{ clientStatus: 0 }}><i className="bx bx-up-arrow-alt text-white" /></Link>
-                                            {/* <i className="bx bx-up-arrow-alt" /> */}
-                                        </span>
+                                          
+                                        <i className="bx bx-up-arrow-alt text-white" />                                        </span>
                                     </p>
                                 </div>
                             </div>
+                            </Link>
                         </div>
                     </div>
                     <div className="col-md-3">
                         <div className="card radius-10 bg-gradient-moonlit">
-                            <div className="card-body">
+                        <Link to="/admin/staff">  
+                        <div className="card-body">
                                 <div className="d-flex align-items-center">
                                     <h5 className="mb-0 text-white">{data.userCountTotal && data.userCountTotal}</h5>
                                     <div className="ms-auto">
@@ -290,17 +295,20 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <Link to="/admin/staff"><i className="bx bx-up-arrow-alt text-white" /></Link>
+                                            <i className="bx bx-up-arrow-alt text-white" />
                                             {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
                                 </div>
                             </div>
+                            </Link>
+
                         </div>
                     </div>
                     <div className="col-md-3">
                         <div className="card radius-10 bg-gradient-moonlit ">
-                            <div className="card-body">
+                        <Link to="/admin/signal" state={{ clientStatus: "todayopensignal" }}> 
+                         <div className="card-body">
                                 <div className="d-flex align-items-center">
                                     <h5 className="mb-0 text-white">{data.todayOpenSignal && data.todayOpenSignal}</h5>
                                     <div className="ms-auto">
@@ -325,19 +333,22 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            {/* <Link to="/admin/signal"><i className="bx bx-up-arrow-alt text-white" /></Link> */}
-                                            <Link to="/admin/signal" state={{ clientStatus: "todayopensignal" }}>
+                                            
+        
+                                           
                                                 <i className="bx bx-up-arrow-alt text-white" />
-                                            </Link>
+                                           
                                         </span>
                                     </p>
                                 </div>
                             </div>
+                            </Link>
                         </div>
                     </div>
                     <div className="col-md-3">
                         <div className="card radius-10 bg-gradient-ibiza ">
-                            <div className="card-body">
+                        <Link to="/admin/closesignal" state={{ clientStatus: "todayclosesignal" }}>  
+                        <div className="card-body">
                                 <div className="d-flex align-items-center">
                                     <h5 className="mb-0 text-white">{data.todayCloseSignal && data.todayCloseSignal}</h5>
                                     <div className="ms-auto">
@@ -362,20 +373,22 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            {/* <Link to="/admin/closesignal"><i className="bx bx-up-arrow-alt text-white" /></Link> */}
-                                            <Link to="/admin/closesignal" state={{ clientStatus: "todayclosesignal" }}>
+                                            
+                                            
                                                 <i className="bx bx-up-arrow-alt text-white" />
-                                            </Link>
+                                           
                                         </span>
                                     </p>
                                 </div>
                             </div>
+                        </Link>
                         </div>
                     </div>
 
                     <div className="col-md-3">
                         <div className="card radius-10 bg-gradient-ohhappiness">
-                            <div className="card-body">
+                        <Link to="/admin/signal">  
+                        <div className="card-body">
                                 <div className="d-flex align-items-center">
                                     <h5 className="mb-0 text-white">{data.OpensignalCountTotal && data.OpensignalCountTotal}</h5>
                                     <div className="ms-auto">
@@ -400,17 +413,19 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <Link to="/admin/signal"><i className="bx bx-up-arrow-alt text-white" /></Link>
+                                          <i className="bx bx-up-arrow-alt text-white" />
                                             {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
                                 </div>
                             </div>
+                            </Link>
                         </div>
                     </div>
                     <div className="col-md-3">
                         <div className="card radius-10 bg-gradient-deepblue">
-                            <div className="card-body">
+                        <Link to="/admin/closesignal"> 
+                         <div className="card-body">
                                 <div className="d-flex align-items-center">
                                     <h5 className="mb-0 text-white">{data.CloseSignalCountTotal && data.CloseSignalCountTotal}</h5>
                                     <div className="ms-auto">
@@ -435,17 +450,19 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <Link to="/admin/closesignal"><i className="bx bx-up-arrow-alt text-white" /></Link>
+                                           <i className="bx bx-up-arrow-alt text-white" />
                                             {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
                                 </div>
                             </div>
+                          </Link>
                         </div>
                     </div>
                     <div className="col-md-3">
                         <div className="card radius-10 bg-gradient-deepblue">
-                            <div className="card-body">
+                        <Link to="/admin/client" state={{ clientStatus: "active" }}>  
+                        <div className="card-body">
                                 <div className="d-flex align-items-center">
                                     <h5 className="mb-0 text-white">{data.activePlanclient && data.activePlanclient}</h5>
                                     <div className="ms-auto">
@@ -470,19 +487,21 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                        <Link to="/admin/client" state={{ clientStatus: "active" }}>
+                                         
                                                 <i className="bx bx-up-arrow-alt text-white" />
-                                            </Link>
+                                           
                                             {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
                                 </div>
                             </div>
+                            </Link>
                         </div>
                     </div>
                     <div className="col-md-3">
                         <div className="card radius-10 bg-gradient-deepblue">
-                            <div className="card-body">
+                        <Link to="/admin/client" state={{ clientStatus: "expired" }}> 
+                          <div className="card-body">
                                 <div className="d-flex align-items-center">
                                     <h5 className="mb-0 text-white">{data.inActivePlanclient && data.inActivePlanclient}</h5>
                                     <div className="ms-auto">
@@ -507,19 +526,20 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                        <Link to="/admin/client" state={{ clientStatus: "expired" }}>
                                                 <i className="bx bx-up-arrow-alt text-white" />
-                                            </Link>
+                                           
                                             {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
                                 </div>
                             </div>
+                            </Link>
                         </div>
                     </div>
                     <div className="col-md-3">
                         <div className="card radius-10 bg-gradient-deepblue">
-                            <div className="card-body">
+                        <Link to="/admin/freeclient"> 
+                          <div className="card-body">
                                 <div className="d-flex align-items-center">
                                     <h5 className="mb-0 text-white">{data.activeFreetrial && data.activeFreetrial}</h5>
                                     <div className="ms-auto">
@@ -544,17 +564,19 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <Link to="/admin/freeclient"><i className="bx bx-up-arrow-alt text-white" /></Link>
+                                           <i className="bx bx-up-arrow-alt text-white" />
                                             {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
                                 </div>
                             </div>
+                            </Link>
                         </div>
                     </div>
                     <div className="col-md-3">
                         <div className="card radius-10 bg-gradient-deepblue">
-                            <div className="card-body">
+                        <Link to="/admin/freeclient"> 
+                           <div className="card-body">
                                 <div className="d-flex align-items-center">
                                     <h5 className="mb-0 text-white">{data.inActiveFreetrial && data.inActiveFreetrial}</h5>
                                     <div className="ms-auto">
@@ -579,12 +601,13 @@ const Dashbord = () => {
                                     <p className="mb-0 ms-auto">
 
                                         <span>
-                                            <Link to="/admin/freeclient"><i className="bx bx-up-arrow-alt text-white" /></Link>
+                                          <i className="bx bx-up-arrow-alt text-white" />
                                             {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
                                     </p>
                                 </div>
                             </div>
+                            </Link>
                         </div>
                     </div>
                 </div>

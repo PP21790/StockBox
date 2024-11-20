@@ -84,18 +84,19 @@ const Closesignal = () => {
                 }
             const response = await GetSignallistWithFilter(data, token);
             if (response && response.status) {
-                setTotalRows(response.pagination.totalRecords);
+               
                 let filterdata = response.data.filter((item) => item.close_status === true);
 
                 if (clientStatus === "todayclosesignal") {
                     const today = new Date().toISOString().split("T")[0];
                     filterdata = filterdata.filter((item) => {
-                        const createdDate = new Date(item.created_at).toISOString().split("T")[0];
+                        const createdDate = new Date(item.closedate).toISOString().split("T")[0];
                         return createdDate === today;
                     });
                 }
 
                 setClients(filterdata);
+                setTotalRows(response.pagination.totalRecords);
 
             }
         } catch (error) {
