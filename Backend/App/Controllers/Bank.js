@@ -243,7 +243,7 @@ class BankController {
     
             // Handle the image upload
             await new Promise((resolve, reject) => {
-                upload('Bank').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
+                upload('bank').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
                     if (err) {
                         console.log('File upload error:', err);
                         return reject(err);
@@ -329,13 +329,12 @@ class BankController {
     
             // Handle the image upload
             await new Promise((resolve, reject) => {
-                upload('Bank').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
+                upload('bank').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
                     if (err) {
                         console.log('File upload error:', err);
                         return reject(err);
                     }
 
-                 
                     resolve();
                 });
             });

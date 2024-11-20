@@ -68,7 +68,7 @@ const QRDetails = () => {
     // // Update service
     const updateQr = async () => {
         try {
-            const data = { id: serviceid._id, image: updatetitle.image, hyperlink: updatetitle.hyperlink };
+            const data = { id: serviceid._id, image: updatetitle.image};
 
             const response = await UpdateQrcodelist(data, token);
 
