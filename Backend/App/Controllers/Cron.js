@@ -39,6 +39,16 @@ cron.schedule('0 8 * * *', async () => {
 });
 
 
+
+
+cron.schedule('0 6 * * *', async () => {
+    await downloadKotakNeotoken();
+}, {
+    scheduled: true,
+    timezone: "Asia/Kolkata"
+});
+
+
 cron.schedule('0 4 * * *', async () => {
     await TradingStatusOff();
 }, {
@@ -684,10 +694,11 @@ async function PlanExpire(req, res) {
 }
 
 
-async function downloadKotakNeotoken (req, res) {
+
+
+async function downloadKotakNeotoken(req, res) {
     try {
         const currentDate = new Date();
-
         const year = currentDate.getFullYear();
         const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-indexed, so add 1
         const day = currentDate.getDate().toString().padStart(2, '0');
@@ -695,7 +706,7 @@ async function downloadKotakNeotoken (req, res) {
         // Format the date
         const formattedDate = `${year}-${month}-${day}`;
 
-        var TokenUrl = [
+        const TokenUrl = [
             {
                 url: `https://lapi.kotaksecurities.com/wso2-scripmaster/v1/prod/${formattedDate}/transformed/nse_fo.csv`,
                 key: "KOTAK_NFO"
@@ -704,36 +715,43 @@ async function downloadKotakNeotoken (req, res) {
                 url: `https://lapi.kotaksecurities.com/wso2-scripmaster/v1/prod/${formattedDate}/transformed/nse_cm.csv`,
                 key: "KOTAK_NSE"
             },
-           
         ];
 
-        TokenUrl.forEach((data) => {
+        // Use Promise.all to handle all download requests concurrently
+        const downloadPromises = TokenUrl.map((data) => {
             const filePath = path.join(__dirname, '../../', 'tokenkotakneo', `${data.key}.csv`);
-          console.log("filePath",filePath);
             const fileUrl = data.url;
-            console.log("fileUrl",fileUrl);
-            axios({
+            
+            return axios({
                 method: 'get',
                 url: fileUrl,
                 responseType: 'stream',
             })
-                .then(function (response) {
-                    // Pipe the HTTP response stream to a local file
-                    response.data.pipe(fs.createWriteStream(filePath));
-
-                    response.data.on('end', function () {
-
+                .then((response) => {
+                    return new Promise((resolve, reject) => {
+                        const writer = fs.createWriteStream(filePath);
+                        response.data.pipe(writer);
+                        writer.on('finish', resolve);
+                        writer.on('error', reject);
                     });
                 })
-                .catch(function (error) {
+                .catch((error) => {
                     console.log(`Error downloading file from ${fileUrl}:`, error);
-                    return
+                    throw new Error(`Error downloading file from ${fileUrl}`);
                 });
         });
+
+        // Wait for all downloads to complete
+        await Promise.all(downloadPromises);
+
+        // Send the response once all files are downloaded
+        res.status(200).json({ message: "Successfully downloaded all files." });
+
     } catch (error) {
         console.log('An unexpected error occurred:', error);
-        return
+        res.status(500).json({ error: error.message });
     }
 }
+
 
   module.exports = { AddBulkStockCron,DeleteTokenAliceToken,TradingStatusOff,CheckExpireSignalCash,CheckExpireSignalFutureOption,PlanExpire,downloadKotakNeotoken };

@@ -373,25 +373,10 @@ class Kotakneo {
                         "pr":price,
                         "tp":"0",
                         "qt":quantity,
-                        "no":"220106000000185",
                         "es":exchange,
                         "pt":"MKT"
                     });
-                // var data =  JSON.stringify({
-                //     "am":"YES", 
-                //     "dq":"0",
-                //     "es":exchange,
-                //     "mp":"0", 
-                //     "pc":producttype, 
-                //     "pf":"N", 
-                //     "pr":price,
-                //     "pt":"MKT", 
-                //     "qt":quantity, 
-                //     "rt":"DAY", 
-                //     "tp":"0",
-                //     "ts":ts,
-                //     "tt":calltype
-                // });
+                    const requestData = `jData=${data}`;
               
                 let url = `https://gw-napi.kotaksecurities.com/Orders/2.0/quick/order/rule/ms/place?sId=${client.hserverid}`;
 
@@ -407,52 +392,66 @@ class Kotakneo {
                         'Content-Type': 'application/x-www-form-urlencoded',
                         'Authorization': 'Bearer ' + client.oneTimeToken
                     },
-                    data: data
+                    data: requestData
                 };
 
 
                 
-                axios(config)
-                    .then(async (response) => {
-                      //  console.log("1", response);
-                
-                        if (response.data.stat === 'Ok') {
-                            const order = new Order_Modal({
-                                clientid: client._id,
-                                signalid: signal._id,
-                                orderid: response.data.nOrdNo,
-                                borkerid: 3,
-                                quantity: quantity,
-                            });
-                
-                            await order.save();
-                
-                            return res.json({
-                                status: true,
-                                data: response.data,
-                                message: "Order Placed Successfully"
-                            });
-                        } else {
-                           // console.log("2", response);
-                            return res.status(500).json({
-                                status: false,
-                                message: response.data.message
-                            });
-                        }
-                    })
-                    .catch(async (error) => {
-                       // console.log("3", error); // Correctly log the error
-                
-                        // Handle error gracefully
-                        let errorMessage = error.response && error.response.data
-                            ? error.response.data.message
-                            : error.message;
-                console.log(error.response);
-                        return res.status(500).json({
-                            status: false,
-                            message: errorMessage
-                        });
-                    });
+axios(config)
+.then(async (response) => {
+    // Log full response for debugging purposes
+
+    if (response.data.stat === 'Ok') {
+        const order = new Order_Modal({
+            clientid: client._id,
+            signalid: signal._id,
+            orderid: response.data.nOrdNo,
+            borkerid: 3,
+            quantity: quantity,
+        });
+
+        await order.save();
+
+        return res.json({
+            status: true,
+            data: response.data,
+            message: "Order Placed Successfully"
+        });
+    } else {
+        // Log response if the status isn't 'Ok'
+        console.log("Error in response:", response);
+        return res.status(500).json({
+            status: false,
+            message: response.data.message || 'Unknown error in response'
+        });
+    }
+})
+.catch(async (error) => {
+    // Log full error for debugging purposes
+    console.log("Full Error:", error);
+
+    let errorMessage = "An unknown error occurred.";
+
+    // If the error has a response (e.g., 4xx or 5xx HTTP error)
+    if (error.response) {
+        console.log("Error Response Data:", error.response.data); // Log full error response
+        errorMessage = error.response.data.message || "Unknown error in response";
+    } else if (error.request) {
+        // If the error doesn't have a response, it could be network-related
+        console.log("Error Request Data:", error.request);
+        errorMessage = "No response received from server. Please check your network connection.";
+    } else {
+        // Any other errors, such as Axios config issues
+        console.log("Error Message:", error.message);
+        errorMessage = error.message;
+    }
+
+    // Return the error message to the client
+    return res.status(500).json({
+        status: false,
+        message: errorMessage
+    });
+});
         }
              
     });
@@ -553,7 +552,7 @@ class Kotakneo {
 
                 let positionData=0;
                 try {
-                  const positionData = await CheckPosition(client.apikey, authToken, stock.segment,stock.instrument_token,producttype,signal.calltype,stock.tradesymbol);
+                  const positionData = await CheckPosition(client.apikey, stock.segment,stock.instrument_token);
                 } catch (error) {
                   console.error('Error in CheckPosition:', error.message);
                 
@@ -562,7 +561,7 @@ class Kotakneo {
                 let holdingData=0;
                 if(stock.segment=="C") {
                         try {
-                            const holdingData = await CheckHolding(client.apikey, authToken , stock.segment,stock.instrument_token,producttype,signal.calltype);
+                            const holdingData = await CheckHolding(client.apikey , stock.segment,stock.instrument_token);
                         } catch (error) {
                             console.error('Error in CheckHolding:', error.message);
                         }
@@ -584,96 +583,122 @@ class Kotakneo {
         
                     if(totalValue>=quantity) { 
                   
-
-
-
-                        var data =  JSON.stringify({
-                            "tk":stock.instrument_token,
-                            "am":"YES", 
-                            "dq":"0",
-                            "es":exchange,
-                            "mp":"0", 
-                            "pc":producttype, 
-                            "pf":"N", 
-                            "pr":price,
-                            "pt":"MKT", 
-                            "qt":quantity, 
-                            "rt":"DAY", 
-                            "tp":"0",
-                            "ts":stock.tradesymbol,
-                            "tt":calltypes
-                        });
-                      
-                       
-
-                        let url = `https://gw-napi.kotaksecurities.com/Orders/2.0/quick/order/rule/ms/place?sId=${client.hserverid}`
-
-                        let config = {
-                            method: 'post',
-                            maxBodyLength: Infinity,
-                            url: url,
-                            headers: {
-                                'accept': 'application/json',
-                                'Sid': client.kotakneo_sid,
-                                'Auth': client.authtoken,
-                                'neo-fin-key': 'neotradeapi',
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                                'Authorization': 'Bearer ' + client.oneTimeToken
-                            },
-                            data: data
-                        };
-                    
-
-        
-
-            axios(config)
-            .then(async (response) => {
-              
-                if (response.data.stat == 'Ok') {
-
-                    const order = new Order_Modal({
-                        clientid: client._id,
-                        signalid:signal._id,
-                        orderid:response.data.nOrdNo,
-                        borkerid:3,
-                        quantity:quantity,
-                    });    
-    
+                          const pattern = stock.instrument_token;
+                          let ts = null; // Initialize `ts` with a default value
+           
+                          let filePath_token;
+           
+                          if (signal.segment.toLowerCase() === 'o') {
+                              filePath_token = '../../tokenkotakneo/KOTAK_NFO.csv';
+                          } else if (signal.segment.toLowerCase() === 'f') {
+                              filePath_token = '../../tokenkotakneo/KOTAK_NFO.csv';
+                          } else {
+                              filePath_token = '../../tokenkotakneo/KOTAK_NSE.csv';
+                          }
+                          
+                          const filePath1 = path.join(__dirname, filePath_token);
+                          
+                          fs.readFile(filePath1, 'utf8', (err, data) => {
+                              if (err) {
+                                  console.error(`Error reading file: ${err}`);
+                                  return;
+                              }
+                          
+                              const lines = data.split('\n');
+                              let matchedLines;
+                          
+                              if (signal.segment.toLowerCase() === 'o') {
+                                  matchedLines = lines.filter(line => 
+                                      new RegExp(`.*(${pattern}).*.*(nse_fo).*.*(${input_symbol}).*.*(${optiontype}).*`, 'i').test(line)
+                                  );
+                              } else if (signal.segment.toLowerCase() === 'f') {
+                                  matchedLines = lines.filter(line => 
+                                      new RegExp(`.*(${pattern}).*.*(nse_fo).*`, 'i').test(line)
+                                  );
+                              } else {
+                                  matchedLines = lines.filter(line => 
+                                      new RegExp(`.*(${pattern}).*.*(nse_cm).*`, 'i').test(line)
+                                  );
+                              }
+                          
+                              if (matchedLines.length > 0) {
+                               const parts = matchedLines[0].split(','); // Extract parts from the first (and only) matched line
+                               ts = parts[5]; // Get the value from the 6th column (index 5)
+                        
+           
+                               var data =  JSON.stringify({
+                                   "tk":stock.instrument_token,
+                                   "mp":"0",
+                                   "pc":producttype,
+                                   "dd":"NA",
+                                   "dq":"0",
+                                   "vd":"DAY",
+                                   "ts":ts,
+                                   "tt":calltype,
+                                   "pr":price,
+                                   "tp":"0",
+                                   "qt":quantity,
+                                   "es":exchange,
+                                   "pt":"MKT"
+                               });
+                               const requestData = `jData=${data}`;
+                         
+                           let url = `https://gw-napi.kotaksecurities.com/Orders/2.0/quick/order/rule/ms/place?sId=${client.hserverid}`;
+           
+                           let config = {
+                               method: 'post',
+                               maxBodyLength: Infinity,
+                               url: url,
+                               headers: {
+                                   'accept': 'application/json',
+                                   'Sid': client.kotakneo_sid,
+                                   'Auth': client.authtoken,
+                                   'neo-fin-key': 'neotradeapi',
+                                   'Content-Type': 'application/x-www-form-urlencoded',
+                                   'Authorization': 'Bearer ' + client.oneTimeToken
+                               },
+                               data: requestData
+                           };
+           
+           
+                           
+           axios(config)
+           .then(async (response) => {
+               if (response.data.stat === 'Ok') {
+                   const order = new Order_Modal({
+                       clientid: client._id,
+                       signalid: signal._id,
+                       orderid: response.data.nOrdNo,
+                       borkerid: 3,
+                       quantity: quantity,
+                   });
+           
                    await order.save();
-    
-                return res.json({
-                    status: true,
-                    data: response.data ,
-                    message: "Order Placed Successfully" 
-                });
+           
+                   return res.json({
+                       status: true,
+                       data: response.data,
+                       message: "Order Placed Successfully"
+                   });
+               } else {
+                   // Log response if the status isn't 'Ok'
+                   console.log("Error in response:", response);
+                   return res.status(500).json({
+                       status: false,
+                       message: response.data.message || 'Unknown error in response'
+                   });
+               }
+           })
+           .catch(async (error) => {
+                          return res.status(500).json({
+                   status: false,
+                   message: error
+               });
+           });
+                   }
+                        
+               });
             }
-            else{
-              
-                   return res.status(500).json({ 
-                    status: false, 
-                    message: response.data.message 
-                });
-            }
-    
-            })
-            .catch(async (error) => {
-                return res.status(500).json({ 
-                    status: false, 
-                    message: response.data.message 
-                });
-    
-            });
-        
-        }
-        else{
-
-            return res.status(500).json({ 
-                status: false, 
-                message: "Sorry, the requested quantity is not available." 
-            });
-
-        }
-
         } catch (error) {
             console.error("Error placing order:", error); // Log the error
             return res.status(500).json({ 
@@ -701,10 +726,6 @@ class Kotakneo {
                     message: "Order not found for this client"
                 });
             }
-
-
-          
-
 
 
             const client = await Clients_Modal.findById(clientid);
@@ -784,15 +805,10 @@ const uniorderId = order.orderid;
             });
         }
     }
-    
-
-    
+        
 }
 
-
-
-
-async function CheckPosition(userId, authToken, segment, instrument_token, producttype, calltype, trading_symbol) {
+async function CheckPosition(userId, segment, instrument_token) {
     
     const client = await Clients_Modal.findOne({ apikey: userId });
         if (!client) {
@@ -822,16 +838,14 @@ async function CheckPosition(userId, authToken, segment, instrument_token, produ
     .then(async (response) => {
 
 
-        if (response.data.data != null && response.data.message == "SUCCESS") {
-            const Exist_entry_order = response.data.data.find(item1 => item1.symboltoken === instrument_token);
+        if (response.data.stat == "Ok") {
+            const Exist_entry_order = response.data.data.find(item1 => item1.tok === instrument_token);
 
             if (Exist_entry_order !== undefined) {
                 let possition_qty;
-                if (segment.toUpperCase() === 'C') {
-                    possition_qty = parseInt(Exist_entry_order.buyqty) - parseInt(Exist_entry_order.sellqty);
-                } else {
-                    possition_qty = Exist_entry_order.netqty;
-                }
+              
+                    possition_qty = parseInt(Exist_entry_order.flBuyQty) - parseInt(Exist_entry_order.flSellQty);
+               
 
                 if (possition_qty === 0) {
                     return {
@@ -872,7 +886,7 @@ async function CheckPosition(userId, authToken, segment, instrument_token, produ
 
 
 
-async function CheckHolding(userId, authToken, segment, instrument_token, producttype, calltype) {
+async function CheckHolding(userId, segment, instrument_token) {
     const client = await Clients_Modal.findOne({ apikey: userId });
     if (!client) {
     return res.status(404).json({
