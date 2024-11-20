@@ -684,4 +684,56 @@ async function PlanExpire(req, res) {
 }
 
 
-  module.exports = { AddBulkStockCron,DeleteTokenAliceToken,TradingStatusOff,CheckExpireSignalCash,CheckExpireSignalFutureOption,PlanExpire };
+async function downloadKotakNeotoken (req, res) {
+    try {
+        const currentDate = new Date();
+
+        const year = currentDate.getFullYear();
+        const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-indexed, so add 1
+        const day = currentDate.getDate().toString().padStart(2, '0');
+
+        // Format the date
+        const formattedDate = `${year}-${month}-${day}`;
+
+        var TokenUrl = [
+            {
+                url: `https://lapi.kotaksecurities.com/wso2-scripmaster/v1/prod/${formattedDate}/transformed/nse_fo.csv`,
+                key: "KOTAK_NFO"
+            },
+            {
+                url: `https://lapi.kotaksecurities.com/wso2-scripmaster/v1/prod/${formattedDate}/transformed/nse_cm.csv`,
+                key: "KOTAK_NSE"
+            },
+           
+        ];
+
+        TokenUrl.forEach((data) => {
+            const filePath = path.join(__dirname, '../../', 'tokenkotakneo', `${data.key}.csv`);
+          console.log("filePath",filePath);
+            const fileUrl = data.url;
+            console.log("fileUrl",fileUrl);
+            axios({
+                method: 'get',
+                url: fileUrl,
+                responseType: 'stream',
+            })
+                .then(function (response) {
+                    // Pipe the HTTP response stream to a local file
+                    response.data.pipe(fs.createWriteStream(filePath));
+
+                    response.data.on('end', function () {
+
+                    });
+                })
+                .catch(function (error) {
+                    console.log(`Error downloading file from ${fileUrl}:`, error);
+                    return
+                });
+        });
+    } catch (error) {
+        console.log('An unexpected error occurred:', error);
+        return
+    }
+}
+
+  module.exports = { AddBulkStockCron,DeleteTokenAliceToken,TradingStatusOff,CheckExpireSignalCash,CheckExpireSignalFutureOption,PlanExpire,downloadKotakNeotoken };
