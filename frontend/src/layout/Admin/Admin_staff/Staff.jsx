@@ -18,6 +18,7 @@ const Staff = () => {
     const [clients, setClients] = useState([]);
     const [ForGetCSV, setForGetCSV] = useState([])
     const [searchInput, setSearchInput] = useState("");
+    const [allsearchInput, setAllSearchInput] = useState([]);
      
     const token = localStorage.getItem('token');
     
@@ -26,19 +27,8 @@ const Staff = () => {
         try {
             const response = await GetStaff(token);
             if (response.status) { 
-
-                const filterdata = response?.data?.filter((item) => {
-                    return (
-                        !searchInput ||
-                        item?.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
-                        item?.UserName.toLowerCase().includes(searchInput.toLowerCase()) ||
-                        item?.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
-                        item?.PhoneNo.toLowerCase().includes(searchInput.toLowerCase())
-                      
-                    );
-                });
-
-                setClients(searchInput ? filterdata : response.data);
+                setClients(response.data);
+                setAllSearchInput(response.data)
             }
         } catch (error) {
             console.log("error");
@@ -46,9 +36,24 @@ const Staff = () => {
     }
 
 
+    
+    useEffect(() => {
+        const filteredData = allsearchInput?.filter((item) =>
+            !searchInput ||
+            item?.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
+            item?.UserName.toLowerCase().includes(searchInput.toLowerCase()) ||
+            item?.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
+            item?.PhoneNo.toLowerCase().includes(searchInput.toLowerCase())
+        );
+        setClients(filteredData); 
+    }, [searchInput, allsearchInput]); 
+
+
+
+
     useEffect(() => {
         getAdminclient();
-    }, [searchInput]);
+    }, []);
 
     useEffect(() => {
         forCSVdata()

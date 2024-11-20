@@ -14,22 +14,20 @@ const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-     const [clients, setClients] = useState([]);
+    const [clients, setClients] = useState([]);
     
     const token = localStorage.getItem('token');
     const user_id = localStorage.getItem('id');
-
+   
+   
 
     const getsettinglist = async () => {
         try {
             const response = await basicsettinglist(token);
             if (response.status) {
-                console.log("response", response.data[0].favicon);
-                
-                // Ensure there is an element with the correct selector to target the favicon link
                 const faviconElement = document.querySelector("link[rel='icon']");
                 if (faviconElement) {
-                    console.log(image_baseurl + "uploads/basicsetting/" + response.data)
+                   
                     
                     faviconElement.href = image_baseurl + "uploads/basicsetting/" + response.data[0].favicon;
 

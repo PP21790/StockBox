@@ -3,21 +3,24 @@ import { Link } from 'react-router-dom';
 import { getHelpMessagelist, gettradestatus, basicsettinglist, UpdateLogin_status } from '../../Services/Admin';
 import { formatDistanceToNow } from 'date-fns';
 import Swal from 'sweetalert2';
-import $ from "jquery"; 
+import $ from "jquery";
+import { image_baseurl } from '../../Utils/config';
+
+
 
 
 const Header = () => {
 
-
   const token = localStorage.getItem('token');
   const FullName = localStorage.getItem('FullName');
+  
 
 
   const [clients, setClients] = useState([]);
   const [isDisabled, setIsDisabled] = useState(false);
 
 
-  
+
   const [model, setModel] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [getstatus, setGetstatus] = useState([]);
@@ -50,9 +53,17 @@ const Header = () => {
     try {
       const response = await basicsettinglist(token);
       if (response.status) {
-        console.log("response",response.data[0].favicon)
-        
         setGetstatus(response.data);
+        const faviconElement = document.querySelector("link[rel='icon']");
+        if (faviconElement) {
+
+          faviconElement.href = image_baseurl + "uploads/basicsetting/" + response.data[0].favicon;
+          $('.companyName').html(response.data[0].from_name)
+
+        } else {
+          console.log("Favicon element not found");
+        }
+
       }
     } catch (error) {
       console.log("Error fetching services:", error);

@@ -314,9 +314,9 @@ const Perform = () => {
                                         ))}
                                     </ul>
                                     <div className="row">
-                                        <div className="col-4">
+                                        <div className="col-6">
                                             <div className="row">
-                                                <div >
+                                                <div>
 
                                                     <div className="card radius-10 w-100" style={{ border: "1px solid grey" }}>
                                                         {clients && clients.map((item) => (
@@ -325,14 +325,14 @@ const Perform = () => {
                                                                     <div className="col-lg-6">
 
                                                                         <div className="p-3">
-                                                                            <b className="mb-0">Avg.return / trade</b>
+                                                                            <b className="mb-0">Avg.return / trade</b> 
                                                                             <small className="mb-0">
                                                                                 {item?.avgreturnpertrade?.toFixed(2)}
 
                                                                             </small>
                                                                         </div>
                                                                     </div>
-                                                                    <div className="col-lg-6">
+                                                                    <div className="col-lg-6 ">
                                                                         <div className="p-3">
                                                                             <b className="mb-0">  Avg.return / month</b>
                                                                             <small className="mb-0">

@@ -138,7 +138,7 @@ const Updatebankdetail = () => {
       image: true,
       imageWidth: "60px",
       imageHeight: "auto",
-      src: `${image_baseurl}/uploads/news/${row.image}`
+      src: `${image_baseurl}/uploads/bank/${row.image}`
   },
    
 

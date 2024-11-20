@@ -2573,6 +2573,8 @@ export async function UpdateBankDetailbyadmin(data, token) {
     formData.append('accountno', data.accountno);
     formData.append('ifsc', data.ifsc);
     formData.append('id', data.id);
+    formData.append('image', data.image);
+
 
     try {
         const res = await axios.post(`${Config.base_url}bank/update`, formData, {

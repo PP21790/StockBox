@@ -9,10 +9,7 @@ import { fDate ,fDateTime } from '../../../Utils/Date_formate';
 
 const Faq = () => {
 
-
-
     const navigate = useNavigate();
-
 
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
@@ -41,7 +38,7 @@ const Faq = () => {
    
 
 
-    // Getting blogs
+    // Getting faq
     const getFaq = async () => {
         try {
             const response = await getFaqlist(token);
@@ -53,7 +50,7 @@ const Faq = () => {
                 setClients(searchInput ? filterdata : response.data);
             }
         } catch (error) {
-            console.log("Error fetching blogs:", error);
+            console.log("Error fetching Faq:", error);
         }
     };
 
@@ -86,7 +83,7 @@ const Faq = () => {
             } else {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'There was an error updating the blogs.',
+                    text: 'There was an error updating the Faq.',
                     icon: 'error',
                     confirmButtonText: 'Try Again',
                 });
@@ -94,7 +91,7 @@ const Faq = () => {
         } catch (error) {
             Swal.fire({
                 title: 'Error!',
-                text: 'There was an error updating the blogs.',
+                text: 'There was an error updating the Faq.',
                 icon: 'error',
                 confirmButtonText: 'Try Again',
             });
@@ -105,7 +102,7 @@ const Faq = () => {
 
 
 
-    // Add blogs
+    // Add Faq
     const addfaqbyadmin = async () => {
         try {
             const data = { title: title.title, description: title.description, add_by: userid };
@@ -113,7 +110,7 @@ const Faq = () => {
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
-                    text: 'blogs added successfully.',
+                    text: 'Faq added successfully.',
                     icon: 'success',
                     confirmButtonText: 'OK',
                     timer: 2000,
@@ -190,7 +187,7 @@ const Faq = () => {
 
 
 
-    // delete blogs
+    // delete faq
 
 
     const DeleteFaq = async (_id) => {

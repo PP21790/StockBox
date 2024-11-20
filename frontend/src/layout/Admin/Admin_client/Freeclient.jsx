@@ -29,7 +29,7 @@ const Freeclient = () => {
     const [client, setClientid] = useState({});
     const [ForGetCSV, setForGetCSV] = useState([])
     const [searchInput, setSearchInput] = useState("");
-    
+
 
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
@@ -55,7 +55,7 @@ const Freeclient = () => {
 
     useEffect(() => {
         getdemoclient();
-    }, [client, currentPage ,searchInput ]);
+    }, [client, currentPage, searchInput]);
 
 
     useEffect(() => {
@@ -67,8 +67,8 @@ const Freeclient = () => {
 
     const getdemoclient = async () => {
         try {
-            const data = { page: currentPage , search:searchInput}
-            const response = await FreeClientListWithFilter(data , token);
+            const data = { page: currentPage, search: searchInput }
+            const response = await FreeClientListWithFilter(data, token);
             if (response.status) {
                 setTotalRows(response.pagination.total)
                 setClients(response.data);
@@ -83,15 +83,15 @@ const Freeclient = () => {
     const forCSVdata = () => {
         if (clients?.length > 0) {
             const csvArr = clients.map((item) => ({
-              
+
                 FullName: item.clientDetails?.FullName || '-',
                 Email: item.clientDetails?.Email || '-',
                 PhoneNo: item?.clientDetails?.PhoneNo || '-',
-                Kyc : item?.clientDetails?.kyc_verification == 1 ? "Verified" : "Not Verified" ,
-                Status:item?.status === "active" ? "Active" : "Expired",
+                Kyc: item?.clientDetails?.kyc_verification == 1 ? "Verified" : "Not Verified",
+                Status: item?.status === "active" ? "Active" : "Expired",
                 StartDate: item?.startdate || '-',
                 EndDate: item?.enddate || '-',
-                
+
             }));
 
             setForGetCSV(csvArr);
@@ -103,7 +103,6 @@ const Freeclient = () => {
         try {
             const response = await getplanlist(token);
             if (response.status) {
-
                 setPlanlist(response.data);
             }
         } catch (error) {
@@ -117,7 +116,6 @@ const Freeclient = () => {
             const response = await getcategoryplan(token);
             if (response.status) {
                 setCategory(response.data);
-
             }
         } catch (error) {
             console.log("error");
@@ -125,13 +123,17 @@ const Freeclient = () => {
     };
 
 
+
     const handleTabChange = (index) => {
         setCheckedIndex(index);
     };
 
+
     const showModal = () => {
         setIsModalVisible(true);
     };
+
+    
     const handleCancel = () => {
         setIsModalVisible(false);
         setSelectcategory("")
@@ -449,13 +451,13 @@ const Freeclient = () => {
                             <div className="card-body">
                                 <div className="d-lg-flex align-items-center mb-4 gap-3 justify-content-between">
                                     <div className="position-relative">
-                                    <input
-                                        type="text"
-                                        className="form-control ps-5 radius-10"
-                                        placeholder="Search free  Client"
-                                        onChange={(e) => setSearchInput(e.target.value)}
-                                        value={searchInput}
-                                    />
+                                        <input
+                                            type="text"
+                                            className="form-control ps-5 radius-10"
+                                            placeholder="Search free  Client"
+                                            onChange={(e) => setSearchInput(e.target.value)}
+                                            value={searchInput}
+                                        />
                                         <span className="position-absolute top-50 product-show translate-middle-y">
                                             <i className="bx bx-search" />
                                         </span>
