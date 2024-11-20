@@ -526,24 +526,37 @@ async getClientWithFilter(req, res) {
           plansStatus: 1, // Updated to include service name and status
           clientStatus: {
             $cond: {
-              if: {
-                $gt: [
-                  {
-                    $size: {
-                      $filter: {
-                        input: "$plansStatus",
-                        as: "plan",
-                        cond: { $eq: ["$$plan.status", "active"] }
-                      }
+                if: {
+                    $gt: [
+                        {
+                            $size: {
+                                $filter: {
+                                    input: {
+                                        $ifNull: ["$plansStatus", []] // Default to an empty array if plansStatus is null or missing
+                                    },
+                                    as: "plan",
+                                    cond: { $eq: ["$$plan.status", "active"] }
+                                }
+                            }
+                        },
+                        0
+                    ]
+                },
+                then: "active", // At least one "active" plan
+                else: {
+                    $cond: {
+                        if: {
+                            $or: [
+                                { $eq: ["$plansStatus", null] }, // Check if plansStatus is null
+                                { $eq: [{ $size: "$plansStatus" }, 0] } // Check if plansStatus is an empty array
+                            ]
+                        },
+                        then: "NA", // Default to "NA" if plansStatus is empty or missing
+                        else: "expired" // Otherwise, set to "expired"
                     }
-                  },
-                  0
-                ]
-              },
-              then: "active", // If there's at least one "active" plan, set the status to "active"
-              else: "expired" // Otherwise, set the status to "expired"
+                }
             }
-          }
+        }
         }
       },
       ...(planStatus ? [{
@@ -687,24 +700,36 @@ async getClientWithFilter(req, res) {
           plansStatus: 1, // Include the plans status
           clientStatus: {
             $cond: {
-              if: {
-                $gt: [
-                  {
-                    $size: {
-                      $filter: {
-                        input: "$plansStatus",
-                        as: "plan",
-                        cond: { $eq: ["$$plan.status", "active"] }
-                      }
+                if: {
+                    $or: [
+                        { $eq: ["$plansStatus", null] }, // Check if plansStatus is null
+                        { $eq: [{ $size: "$plansStatus" }, 0] } // Check if plansStatus is an empty array
+                    ]
+                },
+                then: "NA", // Default to "NA" if plansStatus is null or empty
+                else: {
+                    $cond: {
+                        if: {
+                            $gt: [
+                                {
+                                    $size: {
+                                        $filter: {
+                                            input: "$plansStatus",
+                                            as: "plan",
+                                            cond: { $eq: ["$$plan.status", "active"] }
+                                        }
+                                    }
+                                },
+                                0
+                            ]
+                        },
+                        then: "active", // At least one "active" plan
+                        else: "expired" // No active plans, set to "expired"
                     }
-                  },
-                  0
-                ]
-              },
-              then: "active", // If there's at least one "active" plan, set the status to "active"
-              else: "expired" // Otherwise, set the status to "expired"
+                }
             }
-          }
+        }
+        
         }
       },
       ...(planStatus ? [{
@@ -1159,7 +1184,7 @@ async getClientWithFilter(req, res) {
 
 async freetrialListWithFilter(req, res) {
   try {
-    const { search, page = 1 } = req.body; // Extract page and limit from the request body with default values
+    const { freestatus, search, page = 1 } = req.body; // Extract page and limit from the request body with default values
      let  limit = 10;
     const skip = (parseInt(page) - 1) * parseInt(limit); // Calculate the number of items to skip based on page and limit
     const today = new Date(); // Get today's date
@@ -1173,6 +1198,9 @@ async freetrialListWithFilter(req, res) {
       ]
     } : {};
 
+    const statusMatch = freestatus && freestatus.trim() !== "" ? {
+      status: freestatus // Match only the given status (active or expired)
+    } : {};
 
 
 
@@ -1230,6 +1258,9 @@ async freetrialListWithFilter(req, res) {
                   }
               }
           }
+      },
+      {
+        $match: statusMatch // Filter by freestatus
       },
       {
           $count: "totalCount" // Count the total number of matching documents
