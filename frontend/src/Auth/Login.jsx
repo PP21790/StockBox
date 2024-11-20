@@ -62,7 +62,7 @@ const Login = () => {
            
             if (login_data.data.status) {
                 Swal.fire({
-                    title: "Login Successful!",
+                    title: login_data.data.message || "Login Successful!",
                     text: "You will be redirected to the dashboard.",
                     icon: "success",
                     showConfirmButton: false,
@@ -86,7 +86,7 @@ const Login = () => {
         } catch (error) {
             Swal.fire({
                 title: "Error!",
-                text: "Something went wrong during login. Please try again later.",
+                text: error.message || "Something went wrong during login. Please try again later.",
                 icon: "error",
                 showConfirmButton: false,
                 timer: 2000,
