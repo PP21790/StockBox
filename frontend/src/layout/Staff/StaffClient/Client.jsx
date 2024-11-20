@@ -1,28 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
-import Table from '../../../components/Table';
-import { Settings2, Eye, UserPen, Trash2, Download, ArrowDownToLine , RefreshCcw } from 'lucide-react';
+// import Table from '../../../components/Table';
+import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine, RefreshCcw } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { deleteClient, UpdateClientStatus, PlanSubscription, getplanlist, BasketSubscription, BasketAllList, getcategoryplan , getPlanbyUser } from '../../../Services/Admin';
+import { deleteClient, UpdateClientStatus, PlanSubscription, getplanlist, BasketSubscription, BasketAllList, getcategoryplan, getPlanbyUser, AllclientFilter } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
-import { fDateTime, fDate } from '../../../Utils/Date_formate';
+import { fDateTime } from '../../../Utils/Date_formate';
 import { image_baseurl } from '../../../Utils/config';
 import { IndianRupee } from 'lucide-react';
+import ExportToExcel from '../../../Utils/ExportCSV';
+import Table from '../../../components/Table1';
 import { getstaffperuser } from '../../../Services/Admin';
-
-
-
 
 
 const Client = () => {
 
 
-    
     const userid = localStorage.getItem('id');
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
+
+    const location = useLocation();
+    const clientStatus = location?.state?.clientStatus;
+
+
 
     const [category, setCategory] = useState([]);
     const [checkedIndex, setCheckedIndex] = useState(0);
@@ -34,15 +37,47 @@ const Client = () => {
     const [selectcategory, setSelectcategory] = useState(null)
     const [searchInput, setSearchInput] = useState("");
     const [selectedPlanId, setSelectedPlanId] = useState(null)
-
-    const [permission, setPermission] = useState([]);
-    
     const [ForGetCSV, setForGetCSV] = useState([])
     const [searchkyc, setSearchkyc] = useState("");
     const [statuscreatedby, setStatuscreatedby] = useState("");
+    const [header, setheader] = useState("Client");
+    const [expired, setExpired] = useState("");
+
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalRows, setTotalRows] = useState(0);
+    const [permission, setPermission] = useState([]);
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
+
+    useEffect(() => {
+        if (clientStatus == 1) {
+            setheader("Active Client")
+        } else if (clientStatus == 0) {
+            setheader("Deactive Client")
+        } else if (clientStatus === "active") {
+            setheader("Total Plan Active Client")
+
+        } else if (clientStatus === "expired") {
+            setheader("Total Plan Expired Client")
+        }
+    }, [clientStatus, clients])
 
 
 
+    const getpermissioninfo = async () => {
+        try {
+            const response = await getstaffperuser(userid, token);
+            if (response.status) {
+                setPermission(response.data.permissions);
+            }
+        } catch (error) {
+            console.log("error", error);
+        }
+    }
 
     const handleDownload = (row) => {
 
@@ -58,7 +93,6 @@ const Client = () => {
     };
 
 
-
     const [basketdetail, setBasketdetail] = useState({
         plan_id: "",
         client_id: "",
@@ -66,31 +100,29 @@ const Client = () => {
         discount: ""
     });
 
+
+
     const [updatetitle, setUpdatetitle] = useState({
         plan_id: "",
         client_id: "",
         price: ""
     });
 
-     
-    const resethandle = () => {
-        setSearchkyc("")
-        setSearchInput("")
-        setStatuscreatedby("")
 
 
-    }
 
-   
 
 
     const handleTabChange = (index) => {
         setCheckedIndex(index);
     };
 
+
     const showModal = () => {
         setIsModalVisible(true);
     };
+
+
     const handleCancel = () => {
         setIsModalVisible(false);
         setSelectcategory("")
@@ -105,28 +137,68 @@ const Client = () => {
 
 
 
+    const resethandle = () => {
+        setSearchkyc("")
+        setSearchInput("")
+        setStatuscreatedby("")
+        setExpired("")
+
+
+    }
 
     useEffect(() => {
-        getAdminclient();
-        getplanlistbyadmin()
+        // getplanlistbyadmin()
         getbasketlist()
         getcategoryplanlist()
         getpermissioninfo()
-    }, [searchInput]);
+    }, []);
 
 
 
 
-    const getpermissioninfo = async () => {
-        try {
-            const response = await getstaffperuser(userid, token);
-            if (response.status) {
-                setPermission(response.data.permissions);
-            }
-        } catch (error) {
-            console.log("error", error);
+    useEffect(() => {
+        getAdminclient();
+    }, [searchInput, searchkyc, statuscreatedby, currentPage, expired]);
+
+
+
+
+    useEffect(() => {
+        forCSVdata()
+    }, [searchInput, clients]);
+
+
+
+    const forCSVdata = () => {
+        if (clients?.length > 0) {
+            const csvArr = clients.map((item) => ({
+                FullName: item?.FullName || 'N/A',
+                Email: item?.Email || 'N/A',
+                kyc_verification: item?.kyc_verification === 1 ? "Verified" : "Not Verified",
+                PlanStatus: item?.plansStatus?.some(statusItem => statusItem.status === 'active')
+                    ? 'Active'
+                    : item?.plansStatus?.some(statusItem => statusItem.status === 'expired')
+                        ? 'Expired'
+                        : 'N/A',
+                ClientActiveSegment: item?.plansStatus
+                    ?.filter(statusItem => statusItem.status === 'active')
+                    .map(statusItem => statusItem.serviceName || 'N/A')
+                    .join(', ') || 'N/A',
+                ClientExpiredSegment: item?.plansStatus
+                    ?.filter(statusItem => statusItem.status === 'expired')
+                    .map(statusItem => statusItem.serviceName || 'N/A')
+                    .join(', ') || 'N/A',
+                CreatedBy: item?.addedByDetails?.FullName ||
+                    (item?.clientcome === 1 ? "WEB" : "APP") ||
+                    'N/A',
+                PhoneNo: item?.PhoneNo || 'N/A',
+                Created_at: item?.createdAt || 'N/A',
+            }));
+            setForGetCSV(csvArr);
         }
-    }
+    };
+
+
 
 
 
@@ -136,7 +208,6 @@ const Client = () => {
             const response = await getcategoryplan(token);
             if (response.status) {
                 setCategory(response.data);
-
             }
         } catch (error) {
             console.log("error");
@@ -147,32 +218,52 @@ const Client = () => {
 
     const getAdminclient = async () => {
         try {
-            const response = await GetClient(token);
-            if (response.status) {
-                const clientdata = response.data.filter((item) => item.add_by === userid);
-                const filterdata = clientdata.filter((item) =>
-                    searchInput === "" ||
-                    item.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
-                    item.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
-                    item.PhoneNo.toLowerCase().includes(searchInput.toLowerCase())
-                );
+            const data = {
+                page: currentPage,
+                kyc_verification: searchkyc,
+                status: clientStatus == 1 ? 1 : clientStatus == 0 ? 0 : "",
+                createdby: statuscreatedby,
+                search: searchInput,
+                planStatus:
+                    expired === "active" ? "active" :
+                        expired === "expired" ? "expired" :
+                            clientStatus === "active" ? "active" :
+                                clientStatus === "expired" ? "expired" :
+                                    ""
 
-                setClients(searchInput ? filterdata : clientdata);
+            };
+
+            const response = await AllclientFilter(data, token);
+
+            if (response.status) {
+                setClients(response.data);
+                setTotalRows(response.pagination.total);
             }
         } catch (error) {
-            console.log("error");
+            console.error("Error fetching clients:", error);
         }
     };
 
 
 
+    // const getplanlistbyadmin = async () => {
+    //     try {
+
+    //         const response = await getplanlist(client._id, token);
+    //         if (response.status) {
+    //             // setPlanlist(response.data);
+    //         }
+    //     } catch (error) {
+    //         console.log("error");
+    //     }
+    // }
 
 
-    const getplanlistbyadmin = async () => {
+    const getplanlistassinstatus = async (_id) => {
         try {
-            const response = await getplanlist(token);
-            if (response.status) {
 
+            const response = await getPlanbyUser(_id, token);
+            if (response.status) {
                 setPlanlist(response.data);
             }
         } catch (error) {
@@ -194,8 +285,6 @@ const Client = () => {
     }
 
 
-
-
     const updateClient = async (row) => {
         navigate("/staff/client/updateclient/" + row._id, { state: { row } })
     }
@@ -204,7 +293,6 @@ const Client = () => {
     const Clientdetail = async (row) => {
         navigate("/staff/clientdetail/" + row._id, { state: { row } })
     }
-
 
 
 
@@ -253,9 +341,8 @@ const Client = () => {
 
 
 
+
     // update status 
-
-
 
     const handleSwitchChange = async (event, id) => {
         const originalChecked = event.target.checked;
@@ -298,6 +385,8 @@ const Client = () => {
             getAdminclient();
         }
     };
+
+
 
 
 
@@ -383,7 +472,7 @@ const Client = () => {
     const columns = [
         {
             name: 'S.No',
-            selector: (row, index) => index + 1,
+            selector: (row, index) => (currentPage - 1) * 10 + index + 1,
             sortable: false,
             width: '100px',
         },
@@ -393,11 +482,12 @@ const Client = () => {
             sortable: true,
             width: '200px',
         },
+
         {
             name: 'Email',
             selector: row => row.Email,
             sortable: true,
-            width: '300px',
+            width: '350px',
         },
         {
             name: 'Plan Status',
@@ -449,21 +539,23 @@ const Client = () => {
             ),
             sortable: true,
             width: '200px',
-        },
+        }
+
+        ,
         {
             name: 'Phone No',
             selector: row => row.PhoneNo,
             sortable: true,
-            width: '200px',
         },
 
 
         {
             name: 'Created By',
-            selector: row => row.addedByDetails?.FullName ?? (row.clientcome == 1 ? "WEB" : "APP"),
+            selector: row => row.addedByDetails?.FullName ?? (row.clientcome === 1 ? "WEB" : "APP"),
             sortable: true,
             width: '165px',
         },
+
         // {
         // name: 'Date',
         // selector: row => row.Status,
@@ -515,7 +607,7 @@ const Client = () => {
             sortable: true,
             width: '200px',
         },
-        permission.includes("assignPackage") ||
+          permission.includes("assignPackage") ||
             permission.includes("viewdetail") ||
             permission.includes("editclient") ?
             {
@@ -523,22 +615,24 @@ const Client = () => {
                 selector: (row) => (
                     <div className='d-flex'>
 
+                        {permission.includes("assignPackage") ?
+                            <Tooltip placement="top" overlay="Package Assign">
+                                <span onClick={(e) => { showModal(true); setClientid(row); getplanlistassinstatus(row._id) }} style={{ cursor: 'pointer' }}>
+                                    <Settings2 />
+                                </span>
+                            </Tooltip> : ""}
 
-                        {permission.includes("assignPackage") ? <Tooltip placement="top" overlay="Package Assign">
-                            <span onClick={(e) => { showModal(true); setClientid(row); }} style={{ cursor: 'pointer' }}>
-                                <Settings2 />
-                            </span>
-                        </Tooltip> : ""}
+                        {permission.includes("viewdetail") ?
+                            <Tooltip title="view">
+                                <Eye
 
-                        {permission.includes("viewdetail") ? <Tooltip title="view">
-                            <Eye
+                                    onClick={() => Clientdetail(row)} />
+                            </Tooltip> : ""}
 
-                                onClick={() => Clientdetail(row)} />
-                        </Tooltip> : ""}
-
-                        {permission.includes("editclient") ? <Tooltip title="Update">
-                            <UserPen onClick={() => updateClient(row)} />
-                        </Tooltip> : ""}
+                        {permission.includes("editclient") ?
+                            <Tooltip title="Update">
+                                <SquarePen className='ms-3' onClick={() => updateClient(row)} />
+                            </Tooltip> : ""}
                         {/* <Tooltip title="delete">
                         <Trash2 onClick={() => DeleteClient(row._id)} />
                     </Tooltip> */}
@@ -561,7 +655,7 @@ const Client = () => {
                 <div className="page-content">
 
                     <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                        <div className="breadcrumb-title pe-3">Client</div>
+                        <div className="breadcrumb-title pe-3">{header}</div>
                         <div className="ps-3">
                             <nav aria-label="breadcrumb">
                                 <ol className="breadcrumb mb-0 p-0">
@@ -591,6 +685,7 @@ const Client = () => {
                                         <i className="bx bx-search" />
                                     </span>
                                 </div>
+
                                 {permission.includes("addclient") ? <div className="ms-auto">
                                     <Link
                                         to="/staff/addclient"
@@ -603,6 +698,17 @@ const Client = () => {
                                         Add Client
                                     </Link>
                                 </div> : ""}
+                                <div
+                                    className="ms-2"
+                                >
+                                    <ExportToExcel
+                                        className="btn btn-primary "
+                                        apiData={ForGetCSV}
+                                        fileName={'All Users'} />
+
+
+                                </div>
+
                             </div>
                             <div className="row">
                                 <div className="col-md-4 ">
@@ -630,8 +736,8 @@ const Client = () => {
                                             onChange={(e) => setStatuscreatedby(e.target.value)}
                                         >
                                             <option value="">Select Created By</option>
-                                            <option value="1">Web</option>
-                                            <option value="0">App</option>
+                                            <option value="web">Web</option>
+                                            <option value="app">App</option>
                                         </select>
                                     </div>
                                 </div>
@@ -641,12 +747,12 @@ const Client = () => {
                                         <select
                                             id="CreatedBy"
                                             className="form-control radius-10"
-                                            value={statuscreatedby}
-                                            onChange={(e) => setStatuscreatedby(e.target.value)}
+                                            value={expired}
+                                            onChange={(e) => setExpired(e.target.value)}
                                         >
                                             <option value="">Select Client</option>
-                                            <option value="">Active</option>
-                                            <option value="">Expired</option>
+                                            <option value="active">Active</option>
+                                            <option value="expired">Expired Or N/A</option>
                                         </select>
                                     </div>
 
@@ -657,15 +763,19 @@ const Client = () => {
                                     </div>
                                 </div>
 
-
-
-
-
                             </div>
 
+
+                            {/* <Table
+                                columns={columns}
+                                data={clients}
+                            /> */}
                             <Table
                                 columns={columns}
                                 data={clients}
+                                totalRows={totalRows}
+                                currentPage={currentPage}
+                                onPageChange={handlePageChange}
                             />
                         </div>
                     </div>
@@ -717,7 +827,7 @@ const Client = () => {
                                             <>
                                                 <div className='row mt-3'>
                                                     {category && category
-                                                        .filter(cat => planlist.some(plan => plan.category === cat._id))
+                                                        .filter(cat => planlist.some(plan => plan.category._id === cat._id))
                                                         .map((item, index) => (
                                                             <div className='col-lg-4' key={index}>
                                                                 <input
@@ -728,8 +838,10 @@ const Client = () => {
                                                                     id={`proplus-${index}`}
                                                                     onClick={() => handleCategoryChange(item._id)}
                                                                 />
-                                                                <label className="form-check-label" htmlFor={`proplus-${index}`} style={{fontSize:"12px"}}>
-                                                                    {item.title}
+                                                                <label className="form-check-label" htmlFor={`proplus-${index}`} style={{ fontSize: "12px" }}>
+                                                                    {item.title} (
+                                                                    {item.servicesDetails.map((service) => service.title).join(", ")}
+                                                                    )
                                                                 </label>
                                                             </div>
                                                         ))}
@@ -739,7 +851,7 @@ const Client = () => {
                                                     <form className='card-body mt-3' style={{ height: "40vh", overflowY: "scroll" }} >
                                                         <div className="row">
                                                             {planlist
-                                                                .filter(item => item.category === selectcategory)
+                                                                .filter(item => item.category._id === selectcategory)
                                                                 .map((item, index) => (
                                                                     <div className="col-md-6" key={index}>
                                                                         <div className="card mb-0 my-2">
@@ -759,6 +871,7 @@ const Client = () => {
                                                                                     />
                                                                                     <label className="form-check-label mx-1" style={{ fontSize: "13px", fontWeight: "800" }} htmlFor={`input-plan-${index}`}>
                                                                                         {item.validity}
+
                                                                                     </label>
                                                                                 </h5>
 
@@ -773,7 +886,12 @@ const Client = () => {
                                                                                                 aria-expanded={selectedPlanId === item._id}
                                                                                                 aria-controls={`collapse-${item._id}`}
                                                                                             >
-                                                                                                <strong className="text-secondary m-2">Detail</strong>
+                                                                                                <div className='d-flex justify-content-between'>
+                                                                                                    <div>
+                                                                                                        <strong className="text-secondary m-2">Detail</strong>
+                                                                                                        <strong className="text-success m-2 activestrong">{item?.subscription?.status === "active" ? "Active" : ""}</strong>
+                                                                                                    </div>
+                                                                                                </div>
                                                                                             </button>
                                                                                         </h2>
                                                                                         <div
@@ -785,12 +903,14 @@ const Client = () => {
                                                                                             <div className="accordion-body">
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Price:</strong>
-                                                                                                    <span><IndianRupee /> {item.price}</span>
+                                                                                                    <span><IndianRupee /> {item.price && item.price}</span>
+
 
                                                                                                 </div>
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Validity:</strong>
                                                                                                     <span>{item.validity}</span>
+                                                                                                    {console.log("item", item)}
                                                                                                 </div>
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Created At:</strong>
@@ -841,10 +961,6 @@ const Client = () => {
                     </div>
                 </>
             )}
-
-
-
-
 
         </div >
 

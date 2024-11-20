@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Table from '../../../components/Table';
 import { Tooltip } from 'antd';
-import { clientdetailbyid, clientplandatabyid, getcategoryplan, getclientsubscription  } from '../../../Services/Admin';
+import { clientdetailbyid, clientplandatabyid, getcategoryplan, getclientsubscription } from '../../../Services/Admin';
 import { fDate, fDateTime } from '../../../Utils/Date_formate';
 
 

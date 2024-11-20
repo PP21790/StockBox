@@ -1,23 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-// import Table from '../../../components/Table';
 import Table from '../../../components/Table1';
-import { Settings2, Eye, UserPen, Trash2, Download, ArrowDownToLine } from 'lucide-react';
+import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { FreeClientList,FreeClientListWithFilter , PlanSubscription, DeleteFreeClient, getcategoryplan, getplanlist } from '../../../Services/Admin';
+import { FreeClientList, FreeClientListWithFilter, PlanSubscription, DeleteFreeClient, getcategoryplan, getplanlist } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
 import { image_baseurl } from '../../../Utils/config';
-import { fDate , fDateTime} from '../../../Utils/Date_formate';
+import { fDate, fDateTime } from '../../../Utils/Date_formate';
 import { IndianRupee } from 'lucide-react';
+import ExportToExcel from '../../../Utils/ExportCSV';
 import { getstaffperuser } from '../../../Services/Admin';
-
-
 
 const Freeclient = () => {
 
     const userid = localStorage.getItem('id');
-   
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
 
@@ -30,10 +27,10 @@ const Freeclient = () => {
     const [checkedIndex, setCheckedIndex] = useState(0);
     const [category, setCategory] = useState([]);
     const [client, setClientid] = useState({});
-    const [permission, setPermission] = useState([]);
+    const [ForGetCSV, setForGetCSV] = useState([])
     const [searchInput, setSearchInput] = useState("");
+    const [permission, setPermission] = useState([]);
 
-      
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
 
@@ -47,16 +44,24 @@ const Freeclient = () => {
         price: ""
     });
 
-    useEffect(() => {
-        getcategoryplanlist()
-        getplanlistbyadmin()
-        getpermissioninfo()
 
-    }, []);
 
     useEffect(() => {
         getdemoclient();
-    }, [client, currentPage ,searchInput ]);
+        getcategoryplanlist()
+        getplanlistbyadmin()
+        getpermissioninfo()
+    }, []);
+
+
+    useEffect(() => {
+        getdemoclient();
+    }, [client, currentPage, searchInput]);
+
+
+    useEffect(() => {
+        forCSVdata()
+    }, [clients]);
 
    
 
@@ -72,14 +77,14 @@ const Freeclient = () => {
     }
 
 
-
     const getdemoclient = async () => {
         try {
-            const response = await FreeClientList(token);
+            const data = { page: currentPage, search: searchInput }
+            const response = await FreeClientListWithFilter(data, token);
             if (response.status) {
                 setTotalRows(response.pagination.total)
+                setClients(response.data);
 
-                setClients(response.data && response.data);
             }
         } catch (error) {
             console.log("error");
@@ -87,12 +92,29 @@ const Freeclient = () => {
     }
 
 
+    const forCSVdata = () => {
+        if (clients?.length > 0) {
+            const csvArr = clients.map((item) => ({
+
+                FullName: item.clientDetails?.FullName || '-',
+                Email: item.clientDetails?.Email || '-',
+                PhoneNo: item?.clientDetails?.PhoneNo || '-',
+                Kyc: item?.clientDetails?.kyc_verification == 1 ? "Verified" : "Not Verified",
+                Status: item?.status === "active" ? "Active" : "Expired",
+                StartDate: item?.startdate || '-',
+                EndDate: item?.enddate || '-',
+
+            }));
+
+            setForGetCSV(csvArr);
+        }
+    };
+
 
     const getplanlistbyadmin = async () => {
         try {
             const response = await getplanlist(token);
             if (response.status) {
-
                 setPlanlist(response.data);
             }
         } catch (error) {
@@ -106,7 +128,6 @@ const Freeclient = () => {
             const response = await getcategoryplan(token);
             if (response.status) {
                 setCategory(response.data);
-
             }
         } catch (error) {
             console.log("error");
@@ -114,13 +135,17 @@ const Freeclient = () => {
     };
 
 
+
     const handleTabChange = (index) => {
         setCheckedIndex(index);
     };
 
+
     const showModal = () => {
         setIsModalVisible(true);
     };
+
+    
     const handleCancel = () => {
         setIsModalVisible(false);
         setSelectcategory("")
@@ -152,7 +177,7 @@ const Freeclient = () => {
 
 
     const updateClient = async (row) => {
-        navigate("/staff/editfreeclient/" + row.clientid, { state: { row } })
+        navigate("/admin/editfreeclient/" + row.clientid, { state: { row } })
     }
 
 
@@ -294,7 +319,7 @@ const Freeclient = () => {
     const columns = [
         {
             name: 'S.No',
-            selector: (row, index) => index + 1,
+            selector: (row, index) => (currentPage - 1) * 10 + index + 1,
             sortable: false,
             width: '78px',
         },
@@ -302,18 +327,19 @@ const Freeclient = () => {
             name: 'Full Name',
             selector: row => row.clientDetails?.FullName,
             sortable: true,
-            width: '165px',
+            width: '200px',
         },
         {
             name: 'Email',
             selector: row => row.clientDetails?.Email,
             sortable: true,
-            width: '243px',
+            width: '300px',
         },
         {
             name: 'Phone No',
             selector: row => row.clientDetails?.PhoneNo,
             sortable: true,
+            width: '200px',
         },
         {
             name: 'Kyc',
@@ -331,12 +357,12 @@ const Freeclient = () => {
                 )
             ),
             sortable: true,
-            width: '160px',
+            width: '200px',
         },
         {
             name: 'Status',
             selector: row => (
-                <span style={{ color: row.status === "active" ? "green" : "red" }}> 
+                <span style={{ color: row.status === "active" ? "green" : "red" }}>
                     {row.status === "active" ? "Active" : "Expired"}
                 </span>
             ),
@@ -347,13 +373,13 @@ const Freeclient = () => {
             name: 'Start Date',
             selector: row => fDateTime(row.startdate),
             sortable: true,
-            width: '230px',
+            width: '200px',
         },
         {
             name: 'End Start',
             selector: row => fDateTime(row.enddate),
             sortable: true,
-            width: '230px',
+            width: '200px',
         },
 
         // {
@@ -378,7 +404,7 @@ const Freeclient = () => {
         // },
         {
             name: 'CreatedAt',
-            selector: row => row.clientDetails?.createdAt,
+            selector: row => fDateTime(row.clientDetails?.createdAt),
             sortable: true,
             width: '220px',
         },
@@ -391,15 +417,16 @@ const Freeclient = () => {
                         {row.clientDetails?.kyc_verification === "1" ? <Download onClick={() => handleDownload(row)} /> : ""}
 
                     </Tooltip> */}
-                    <Tooltip placement="top" overlay="Package Assign">
+                     <Tooltip placement="top" overlay="Package Assign">
                         <span onClick={(e) => { showModal(true); setClientid(row); }} style={{ cursor: 'pointer' }}>
                             <Settings2 />
                         </span>
                     </Tooltip>
 
-                   {permission.includes("editfreeclient") && (<Tooltip title="Update">
-                        <UserPen onClick={() => updateClient(row)} />
-                    </Tooltip> ) }
+                   {permission.includes("editfreeclient") && 
+                   (<Tooltip title="Update">
+                    <SquarePen className='ms-2' onClick={() => updateClient(row)} />
+                </Tooltip> ) }
                     {/* <Tooltip title="delete">
                         <Trash2 onClick={() => DeleteClient(row._id)} />
 
@@ -418,13 +445,13 @@ const Freeclient = () => {
             <div>
                 <div>
                     <div className="page-content">
-                        <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+                        <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3 ">
                             <div className="breadcrumb-title pe-3">Free Trial Client</div>
                             <div className="ps-3">
                                 <nav aria-label="breadcrumb">
                                     <ol className="breadcrumb mb-0 p-0">
                                         <li className="breadcrumb-item">
-                                            <Link to="/staff/dashboard">
+                                            <Link to="/admin/dashboard">
                                                 <i className="bx bx-home-alt" />
                                             </Link>
                                         </li>
@@ -435,20 +462,30 @@ const Freeclient = () => {
                         <hr />
                         <div className="card">
                             <div className="card-body">
-                                <div className="d-lg-flex align-items-center mb-4 gap-3">
+                                <div className="d-lg-flex align-items-center mb-4 gap-3 justify-content-between">
                                     <div className="position-relative">
-                                    <input
-                                        type="text"
-                                        className="form-control ps-5 radius-10"
-                                        placeholder="Search free  Client"
-                                        onChange={(e) => setSearchInput(e.target.value)}
-                                        value={searchInput}
-                                    />
+                                        <input
+                                            type="text"
+                                            className="form-control ps-5 radius-10"
+                                            placeholder="Search free  Client"
+                                            onChange={(e) => setSearchInput(e.target.value)}
+                                            value={searchInput}
+                                        />
                                         <span className="position-absolute top-50 product-show translate-middle-y">
                                             <i className="bx bx-search" />
                                         </span>
                                     </div>
 
+                                    <div
+                                        className="ms-2"
+                                    >
+                                        <ExportToExcel
+                                            className="btn btn-primary "
+                                            apiData={ForGetCSV}
+                                            fileName={'All Users'} />
+
+
+                                    </div>
                                 </div>
 
                                 <Table
