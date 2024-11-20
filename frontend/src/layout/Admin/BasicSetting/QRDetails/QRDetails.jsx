@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 import { fDateTime } from '../../../../Utils/Date_formate';
 import { image_baseurl } from '../../../../Utils/config';
 import { Tooltip } from 'antd';
-import { AddQRdetaildata , getQrdetails , UpdateQrcodelist , DeleteQRCode , changeQRstatuscode} from '../../../../Services/Admin';
+import { AddQRdetaildata, getQrdetails, UpdateQrcodelist, DeleteQRCode, changeQRstatuscode } from '../../../../Services/Admin';
 
 
 const QRDetails = () => {
@@ -50,7 +50,7 @@ const QRDetails = () => {
         try {
             const response = await getQrdetails(token);
             if (response.status) {
-                console.log("image",response.data)
+                console.log("image", response.data)
                 setClients(response.data);
             }
         } catch (error) {
@@ -63,7 +63,7 @@ const QRDetails = () => {
     }, []);
 
 
-   
+
 
     // // Update service
     const updateQr = async () => {
@@ -109,7 +109,7 @@ const QRDetails = () => {
     // Add service
     const AddQR = async () => {
         try {
-            const data = { image: title.image};
+            const data = { image: title.image };
 
 
             const response = await AddQRdetaildata(data, token);
@@ -304,7 +304,7 @@ const QRDetails = () => {
                                 onClick={() => {
                                     setModel(true);
                                     setServiceid(row);
-                                    setUpdatetitle({  id: row._id, image: row.image, });
+                                    setUpdatetitle({ id: row._id, image: row.image, });
                                 }}
                             />
                         </Tooltip>
@@ -423,7 +423,7 @@ const QRDetails = () => {
                                                                 onChange={(e) => setTitle({ ...title, image: e.target.files[0] })}
                                                             />
                                                         </div>
-                                                      
+
                                                     </div>
                                                 </form>
                                             </div>
@@ -485,19 +485,19 @@ const QRDetails = () => {
                                                                             if (file) {
                                                                                 updateServiceTitle({ image: file });
                                                                             }
-                                                                            
+
                                                                         }}
                                                                     />
                                                                 </div>
                                                                 <div className="col-md-2">
-                            
+
                                                                     {updatetitle.image && (
                                                                         <div className="file-preview">
                                                                             <img
                                                                                 src={
                                                                                     typeof updatetitle.image === 'string'
-                                                                                        ? `${image_baseurl}uploads/bank/${updatetitle.image}` 
-                                                                                        : URL.createObjectURL(updatetitle.image) 
+                                                                                        ? `${image_baseurl}uploads/bank/${updatetitle.image}`
+                                                                                        : URL.createObjectURL(updatetitle.image)
                                                                                 }
                                                                                 alt="Image Preview"
                                                                                 className="image-preview mt-4"
@@ -507,7 +507,7 @@ const QRDetails = () => {
                                                                     )}
                                                                 </div>
                                                             </div>
-                                                            
+
                                                         </form>
 
 
