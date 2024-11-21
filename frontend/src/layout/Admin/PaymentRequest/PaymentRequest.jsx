@@ -34,14 +34,14 @@ const PaymentRequest = () => {
 
 
 
-
-
+    
     const Updatestatus = async (id, status) => {
+        console.log("status",status)
         try {
             const data = {
                 payoutRequestId: id,
                 remark: status == 0 ? "Pending" : status == 1 ? "Complete" : "Reject",
-                status: status
+                status: status 
             };
             const response = await ChangePaymentStatus(data, token);
             if (response.status) {
