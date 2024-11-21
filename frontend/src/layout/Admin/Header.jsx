@@ -227,7 +227,7 @@ const Header = () => {
                     </div>
                   </div>
                 </li>
-                <li className="nav-item dropdown dropdown-large">
+                {/* <li className="nav-item dropdown dropdown-large">
                   <a
                     className="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative"
                     href="#"
@@ -282,7 +282,7 @@ const Header = () => {
                       </Link>
                     </div>
                   </div>
-                </li>
+                </li> */}
               </ul>
             </div>
             <div className="user-box dropdown px-3">

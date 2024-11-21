@@ -219,9 +219,7 @@ const Dashbord = () => {
                                         <span>
                                           
                                                 <i className="bx bx-up-arrow-alt text-white" />
-                                          
-
-
+                            
 
                                             {/* <i className="bx bx-up-arrow-alt" /> */}
                                         </span>
