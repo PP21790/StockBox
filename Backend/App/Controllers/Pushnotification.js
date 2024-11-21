@@ -10,16 +10,12 @@ if (!admin.apps.length) {
   console.log('Firebase Admin SDK initialized.');
 }
 
-
-
 async function sendFCMNotification(title, body, tokens) {
   try {
 
    const tokenss = [...new Set(tokens)];
 
-   
-    // Create the message object for each token using map
-    const messages = tokenss.map(token => ({
+       const messages = tokenss.map(token => ({
       token: token,
       notification: {
         title: title,
@@ -35,12 +31,11 @@ async function sendFCMNotification(title, body, tokens) {
       messages.map(message => admin.messaging().send(message))
     );
 
-    console.log('Notifications sent successfully:', response);
+   // console.log('Notifications sent successfully:', response);
   } catch (error) {
-    console.error('Error sending notifications:', error);
+   // console.error('Error sending notifications:', error);
   }
 }
 
 
-// Export the sendFCMNotification function
 module.exports = { sendFCMNotification };

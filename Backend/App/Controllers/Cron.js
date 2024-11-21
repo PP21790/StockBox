@@ -478,12 +478,10 @@ async function CheckExpireSignalFutureOption(req, res) {
                 });
             }
         } catch (sessionError) {
-            console.error('Socket session error:', sessionError);
             return res.status(500).json({ error: "Failed to create socket session." });
         }
 
     } catch (error) {
-        console.error('Error:', error);
         return res.status(500).json({ error: "An error occurred while processing signals." });
     }
 }
