@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Table from '../../../components/Table1';
 import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine } from 'lucide-react';
@@ -17,6 +17,10 @@ const Freeclient = () => {
 
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
+     
+
+    const location = useLocation()
+    const clientStatus = location?.state?.clientStatus;
 
 
     const [clients, setClients] = useState([]);
@@ -29,7 +33,8 @@ const Freeclient = () => {
     const [client, setClientid] = useState({});
     const [ForGetCSV, setForGetCSV] = useState([])
     const [searchInput, setSearchInput] = useState("");
-
+    const [header, setheader] = useState("Free Trial Client");
+    
 
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
@@ -43,6 +48,15 @@ const Freeclient = () => {
         client_id: "",
         price: ""
     });
+   
+
+    useEffect(() => {
+        if (clientStatus == "active") {
+            setheader("Free Trial Active Client")
+        } else if (clientStatus == "expired") {
+            setheader("Free  Trial Deactive Client")
+        } 
+    }, [clientStatus, clients])
 
 
 
@@ -67,7 +81,7 @@ const Freeclient = () => {
 
     const getdemoclient = async () => {
         try {
-            const data = { page: currentPage, search: searchInput }
+            const data = { page: currentPage, search: searchInput , freestatus : clientStatus || ""}
             const response = await FreeClientListWithFilter(data, token);
             if (response.status) {
                 setTotalRows(response.pagination.total)
@@ -433,7 +447,7 @@ const Freeclient = () => {
                 <div>
                     <div className="page-content">
                         <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3 ">
-                            <div className="breadcrumb-title pe-3">Free Trial Client</div>
+                            <div className="breadcrumb-title pe-3">{header}</div>
                             <div className="ps-3">
                                 <nav aria-label="breadcrumb">
                                     <ol className="breadcrumb mb-0 p-0">

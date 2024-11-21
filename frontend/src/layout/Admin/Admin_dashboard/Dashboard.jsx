@@ -538,7 +538,7 @@ const Dashbord = () => {
                     </div>
                     <div className="col-md-3">
                         <div className="card radius-10 bg-gradient-deepblue">
-                        <Link to="/admin/freeclient"> 
+                        <Link to="/admin/freeclient" state={{ clientStatus: "active" }}> 
                           <div className="card-body">
                                 <div className="d-flex align-items-center">
                                     <h5 className="mb-0 text-white">{data.activeFreetrial && data.activeFreetrial}</h5>
@@ -575,7 +575,7 @@ const Dashbord = () => {
                     </div>
                     <div className="col-md-3">
                         <div className="card radius-10 bg-gradient-deepblue">
-                        <Link to="/admin/freeclient"> 
+                        <Link to="/admin/freeclient"  state={{ clientStatus: "expired" }}> 
                            <div className="card-body">
                                 <div className="d-flex align-items-center">
                                     <h5 className="mb-0 text-white">{data.inActiveFreetrial && data.inActiveFreetrial}</h5>

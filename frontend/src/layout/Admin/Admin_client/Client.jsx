@@ -734,7 +734,8 @@ const Client = () => {
                                         >
                                             <option value="">Select Client</option>
                                             <option value="active">Active</option>
-                                            <option value="expired">Expired Or N/A</option>
+                                            <option value="expired">Expired </option>
+                                          0
                                         </select>
                                     </div>
 
