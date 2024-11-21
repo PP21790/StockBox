@@ -34,7 +34,7 @@ const Closesignal = () => {
   
     const today = new Date();
     const formattedDate = today.toISOString().slice(0, 10);
-    console.log(formattedDate);
+   
     
   
 
