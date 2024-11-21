@@ -361,20 +361,21 @@ class Kotakneo {
                     ts = parts[5]; // Get the value from the 6th column (index 5)
              
 
+                  
                     var data =  JSON.stringify({
-                        "tk":stock.instrument_token,
+                        "am":"NO",
+                        "dq":"0",
+                        "es":exchange,
                         "mp":"0",
                         "pc":producttype,
-                        "dd":"NA",
-                        "dq":"0",
-                        "vd":"DAY",
-                        "ts":ts,
-                        "tt":calltype,
+                        "pf":"N",
                         "pr":price,
-                        "tp":"0",
+                        "pt":"MKT",
                         "qt":quantity,
-                        "es":exchange,
-                        "pt":"MKT"
+                        "rt":"DAY",
+                        "tp":"0",
+                        "ts":ts,
+                        "tt":calltype
                     });
                     const requestData = `jData=${data}`;
               
@@ -428,29 +429,12 @@ axios(config)
 })
 .catch(async (error) => {
     // Log full error for debugging purposes
-    console.log("Full Error:", error);
-
-    let errorMessage = "An unknown error occurred.";
-
-    // If the error has a response (e.g., 4xx or 5xx HTTP error)
-    if (error.response) {
-        console.log("Error Response Data:", error.response.data); // Log full error response
-        errorMessage = error.response.data.message || "Unknown error in response";
-    } else if (error.request) {
-        // If the error doesn't have a response, it could be network-related
-        console.log("Error Request Data:", error.request);
-        errorMessage = "No response received from server. Please check your network connection.";
-    } else {
-        // Any other errors, such as Axios config issues
-        console.log("Error Message:", error.message);
-        errorMessage = error.message;
-    }
-
-    // Return the error message to the client
     return res.status(500).json({
         status: false,
-        message: errorMessage
+        message: error
     });
+
+    
 });
         }
              
@@ -626,21 +610,40 @@ axios(config)
                                ts = parts[5]; // Get the value from the 6th column (index 5)
                         
            
+                            //    var data =  JSON.stringify({
+                            //        "tk":stock.instrument_token,
+                            //        "mp":"0",
+                            //        "pc":producttype,
+                            //        "dd":"NA",
+                            //        "dq":"0",
+                            //        "vd":"DAY",
+                            //        "ts":ts,
+                            //        "tt":calltype,
+                            //        "pr":price,
+                            //        "tp":"0",
+                            //        "qt":quantity,
+                            //        "es":exchange,
+                            //        "pt":"MKT"
+                            //    });
+
+
+
                                var data =  JSON.stringify({
-                                   "tk":stock.instrument_token,
-                                   "mp":"0",
-                                   "pc":producttype,
-                                   "dd":"NA",
-                                   "dq":"0",
-                                   "vd":"DAY",
-                                   "ts":ts,
-                                   "tt":calltype,
-                                   "pr":price,
-                                   "tp":"0",
-                                   "qt":quantity,
-                                   "es":exchange,
-                                   "pt":"MKT"
-                               });
+                                "am":"NO",
+                                "dq":"0",
+                                "es":exchange,
+                                "mp":"0",
+                                "pc":producttype,
+                                "pf":"N",
+                                "pr":price,
+                                "pt":"MKT",
+                                "qt":quantity,
+                                "rt":"DAY",
+                                "tp":"0",
+                                "ts":ts,
+                                "tt":calltype
+                            });
+
                                const requestData = `jData=${data}`;
                          
                            let url = `https://gw-napi.kotaksecurities.com/Orders/2.0/quick/order/rule/ms/place?sId=${client.hserverid}`;
