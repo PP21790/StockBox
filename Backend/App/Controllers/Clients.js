@@ -765,6 +765,205 @@ async getClientWithFilter(req, res) {
 
 
 
+
+async getClientWithFilterExcel(req, res) {
+  try {
+    const matchConditions = { del: 0 }; // Base condition to exclude deleted clients
+
+    const result = await Clients_Modal.aggregate([
+      {
+        $match: matchConditions // Match only non-deleted clients
+      },
+      {
+        $lookup: {
+          from: 'users', // Join with users collection
+          let: { userId: { $toObjectId: "$add_by" } }, // Convert `add_by` to ObjectId
+          pipeline: [
+            { $match: { $expr: { $eq: ["$_id", "$$userId"] } } }
+          ],
+          as: 'addedByDetails'
+        }
+      },
+      {
+        $unwind: {
+          path: '$addedByDetails',
+          preserveNullAndEmptyArrays: true // Keep clients without a matching user
+        }
+      },
+      {
+        $lookup: {
+          from: 'planmanages', // Join with planmanages collection
+          let: { clientId: { $toObjectId: "$_id" } }, // Convert `_id` to ObjectId
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $eq: [{ $toObjectId: "$clientid" }, "$$clientId"] // Match clientid
+                }
+              }
+            }
+          ],
+          as: 'plans'
+        }
+      },
+      {
+        $lookup: {
+          from: 'services', // Join with services collection
+          localField: 'plans.serviceid', // Match serviceid from plans
+          foreignField: '_id', // Match `_id` in services
+          as: 'serviceDetails'
+        }
+      },
+      {
+        $addFields: {
+          activePlans: {
+            $filter: {
+              input: "$plans",
+              as: "plan",
+              cond: { $gte: ["$$plan.enddate", new Date()] } // Active plans if enddate >= today
+            }
+          },
+          expiredPlans: {
+            $filter: {
+              input: "$plans",
+              as: "plan",
+              cond: { $lt: ["$$plan.enddate", new Date()] } // Expired plans if enddate < today
+            }
+          },
+          plansStatus: {
+            $map: {
+              input: "$plans",
+              as: "plan",
+              in: {
+                planId: "$$plan._id", // Include plan ID
+                serviceName: {
+                  $switch: {
+                    branches: [
+                      { case: { $eq: [{ $toString: "$$plan.serviceid" }, "66d2c3bebf7e6dc53ed07626"] }, then: "Cash" },
+                      { case: { $eq: [{ $toString: "$$plan.serviceid" }, "66dfede64a88602fbbca9b72"] }, then: "Future" },
+                      { case: { $eq: [{ $toString: "$$plan.serviceid" }, "66dfeef84a88602fbbca9b79"] }, then: "Option" }
+                    ],
+                    default: "Unknown Service" // Default to "Unknown Service"
+                  }
+                },
+                status: {
+                  $cond: {
+                    if: { $gte: ["$$plan.enddate", new Date()] }, // Active if enddate >= today
+                    then: "active",
+                    else: "expired"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        $addFields: {
+          clientStatus: {
+            $cond: {
+              if: {
+                $gt: [
+                  {
+                    $size: {
+                      $filter: {
+                        input: { $ifNull: ["$plansStatus", []] }, // Default to empty array if missing
+                        as: "plan",
+                        cond: { $eq: ["$$plan.status", "active"] }
+                      }
+                    }
+                  },
+                  0
+                ]
+              },
+              then: "active", // At least one "active" plan
+              else: {
+                $cond: {
+                  if: {
+                    $or: [
+                      { $eq: ["$plansStatus", null] }, // No plans found
+                      { $eq: [{ $size: "$plansStatus" }, 0] } // Empty plans array
+                    ]
+                  },
+                  then: "NA", // No plans associated
+                  else: "expired" // All plans are expired
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        $sort: { createdAt: -1 } // Sort by creation date (descending)
+      },
+      {
+        $project: {
+          _id: 1,
+          FullName: 1,
+          Email: 1,
+          PhoneNo: 1,
+          password: 1,
+          token: 1,
+          panno: 1,
+          aadhaarno: 1,
+          kyc_verification: 1,
+          pdf: 1,
+          add_by: 1,
+          apikey: 1,
+          apisecret: 1,
+          alice_userid: 1,
+          brokerid: 1,
+          authtoken: 1,
+          dlinkstatus: 1,
+          tradingstatus: 1,
+          wamount: 1,
+          del: 1,
+          clientcome: 1,
+          ActiveStatus: 1,
+          freetrial: 1,
+          refer_token: 1,
+          forgotPasswordToken: 1,
+          forgotPasswordTokenExpiry: 1,
+          devicetoken: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          'addedByDetails.FullName': 1, // Include addedBy user details
+          plansStatus: 1,
+          clientStatus: 1
+        }
+      }
+    ]);
+    
+    
+
+
+
+
+    return res.json({
+      status: true,
+      message: "Clients with their plan statuses fetched",
+      data: result
+    });
+
+  } catch (error) {
+    return res.json({ status: false, message: "Server error", data: [] });
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   async activeClient(req, res) {
     try {
 
@@ -1035,12 +1234,13 @@ async getClientWithFilter(req, res) {
       if (!client) {
         return res.status(404).json({ status: false, message: 'Client not found or inactive.' });
       }
+     let  notificationBody;
       const notificationTitle = 'Important Update';
 
       if (status === '1') {
         // Approve the payout request
         payoutRequest.status = '1';
-        const notificationBody = 'Your Payout Approved......';
+         notificationBody = 'Your Payout Approved......';
 
 
       } else if (status === '2') {
@@ -1050,7 +1250,7 @@ async getClientWithFilter(req, res) {
         client.wamount += payoutRequest.amount; // Refund amount back to client's wamount
         await client.save();
 
-        const notificationBody = 'Your Payout Reject......';
+         notificationBody = 'Your Payout Reject......';
 
       }
   

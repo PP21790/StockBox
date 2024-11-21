@@ -408,26 +408,38 @@ async getallPlan(req, res) {
     try {
       const plans = await Plan_Modal.aggregate([
         {
-          $match: { del: false, status: "active" } // Match plans where 'del' is false and status is 'active'
+          $match: { del: false, status: "active" }
         },
         {
           $lookup: {
-            from: 'plancategories', // Join with plancategories collection
-            localField: 'category', // Field from the Plan_Modal
-            foreignField: '_id', // Field from the plancategories
-            as: 'category' // Name for the output array field
+            from: 'plancategories',
+            let: { categoryId: { $toObjectId: '$category' } }, // Ensure category is cast to ObjectId
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ['$_id', '$$categoryId'] },
+                      { $eq: ['$del', false] },
+                      { $eq: ['$status', true] }
+                    ]
+                  }
+                }
+              }
+            ],
+            as: 'category'
           }
         },
         {
           $unwind: {
             path: '$category',
-            preserveNullAndEmptyArrays: true // If no matching category, keep the plan in the results
+            preserveNullAndEmptyArrays: false // Exclude plans with no matching category
           }
         },
         {
           $lookup: {
-            from: 'services', // Collection name for services
-            let: { serviceIds: { $split: ['$category.service', ','] } }, // Split service string into array
+            from: 'services',
+            let: { serviceIds: { $split: ['$category.service', ','] } },
             pipeline: [
               {
                 $match: {
@@ -436,20 +448,20 @@ async getallPlan(req, res) {
                       {
                         $in: ['$_id', { $map: { input: '$$serviceIds', as: 'id', in: { $toObjectId: '$$id' } } }],
                       },
-                      { $eq: ['$status', true] }, // Match only active services
-                      { $eq: ['$del', false] }, // Match only non-deleted services
-                    ],
-                  },
-                },
+                      { $eq: ['$status', true] },
+                      { $eq: ['$del', false] }
+                    ]
+                  }
+                }
               },
               {
                 $project: {
-                  _id: 1, // Service ID
-                  title: 1, // Service title
-                },
-              },
+                  _id: 1,
+                  title: 1
+                }
+              }
             ],
-            as: 'services' // Name of the new array field to hold the services
+            as: 'services'
           }
         },
         {
@@ -465,27 +477,28 @@ async getallPlan(req, res) {
                   { case: { $eq: ['$validity', '2 years'] }, then: 24 },
                   { case: { $eq: ['$validity', '3 years'] }, then: 36 },
                   { case: { $eq: ['$validity', '4 years'] }, then: 48 },
-                  { case: { $eq: ['$validity', '5 years'] }, then: 60 },
+                  { case: { $eq: ['$validity', '5 years'] }, then: 60 }
                 ],
-                default: 0 // Default value if validity is not matched
+                default: 0
               }
             }
           }
         },
         {
-          $sort: { validityValue: 1 } // Sort by the numeric validity value in ascending order
+          $sort: { validityValue: 1 }
         },
         {
           $project: {
             _id: 1,
             title: 1,
-            validity: 1, 
+            validity: 1,
             price: 1,
-            category: 1, // Include the category details
-            services: 1 // Include the matched services
+            category: 1,
+            services: 1
           }
         }
       ]);
+      
       
         return res.json({
             status: true,
@@ -872,7 +885,7 @@ async  myPlan(req, res) {
           plan_end: { $first: '$plan_end' }, // Keep the plan_end
           planDetails: { $first: '$planDetails' }, // First instance of planDetails
           categoryDetails: { $first: '$categoryDetails' }, // First instance of categoryDetails
-          serviceNames: { $push: '$serviceDetails.title' } // Create an array of service titles
+          serviceNames: { $push: '$serviceDetails.title' }
         }
       },
 
@@ -893,7 +906,10 @@ async  myPlan(req, res) {
           plan_end: 1, // Plan end date
           planDetails: 1, // Details from the plans collection
           categoryDetails: 1, // Details from the plan categories collection
-          serviceNames: 1 // All service titles
+          serviceNames: 1, // All service titles
+          categoryDetails: { 
+            title: 1 // Include only the title from the category details
+          },
         }
       }
     ]);
