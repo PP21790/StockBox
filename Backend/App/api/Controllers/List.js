@@ -293,19 +293,30 @@ class List {
             {
               $addFields: {
                 pricePerMonth: {
-                  $switch: {
-                    branches: [
-                      { case: { $eq: ['$validity', '1 month'] }, then: 1 },
-                      { case: { $eq: ['$validity', '3 months'] }, then: 3 },
-                      { case: { $eq: ['$validity', '6 months'] }, then: 6 },
-                      { case: { $eq: ['$validity', '9 months'] }, then: 9 },
-                      { case: { $eq: ['$validity', '1 year'] }, then: 12 },
-                      { case: { $eq: ['$validity', '2 years'] }, then: 24 },
-                      { case: { $eq: ['$validity', '3 years'] }, then: 36 },
-                      { case: { $eq: ['$validity', '4 years'] }, then: 48 },
-                      { case: { $eq: ['$validity', '5 years'] }, then: 60 }, // 5 years = 60 months
-                    ],
-                    default: '$price', // Fallback to total price if validity doesn't match
+                  $cond: {
+                    if: { $ne: ['$validity', null] }, // Check if validity is not null
+                    then: {
+                      $divide: [
+                        '$price', // Total price
+                        {
+                          $switch: {
+                            branches: [
+                              { case: { $eq: ['$validity', '1 month'] }, then: 1 },
+                              { case: { $eq: ['$validity', '3 months'] }, then: 3 },
+                              { case: { $eq: ['$validity', '6 months'] }, then: 6 },
+                              { case: { $eq: ['$validity', '9 months'] }, then: 9 },
+                              { case: { $eq: ['$validity', '1 year'] }, then: 12 },
+                              { case: { $eq: ['$validity', '2 years'] }, then: 24 },
+                              { case: { $eq: ['$validity', '3 years'] }, then: 36 },
+                              { case: { $eq: ['$validity', '4 years'] }, then: 48 },
+                              { case: { $eq: ['$validity', '5 years'] }, then: 60 },
+                            ],
+                            default: 1, // Default to 1 month if validity doesn't match
+                          },
+                        },
+                      ],
+                    },
+                    else: '$price', // If no validity is specified, fallback to the full price
                   },
                 },
               },
@@ -1882,11 +1893,21 @@ async myFreetrial(req, res) {
 
     const result = await Freetrial_Modal.find({ clientid: id }).exec();
 
+    const today = new Date();
+    
+    // Add `status` field based on `enddate`
+    const updatedResult = result.map(item => {
+      const status = item.enddate && new Date(item.enddate) >= today ? "active" : "expired";
+      return {
+        ...item.toObject(), // Convert the Mongoose document to a plain object
+        status, // Add the new status field
+      };
+    });
     // Respond with the retrieved subscriptions and client details
     return res.json({
       status: true,
       message: "Subscriptions and client details retrieved successfully",
-      data: result
+      data: updatedResult
     });
 
   } catch (error) {
