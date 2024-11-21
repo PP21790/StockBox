@@ -32,6 +32,11 @@ const Signal = () => {
         }
     }, [clientStatus])
 
+   
+    const today = new Date();
+    const formattedDate = today.toISOString().slice(0, 10);
+    console.log(formattedDate);
+
 
     const [filters, setFilters] = useState({
         from: '',
@@ -192,8 +197,8 @@ const Signal = () => {
         try {
             const data = {
                 page: currentPage,
-                from: filters.from,
-                to: filters.to,
+                from: filters.from ||  clientStatus == "todayopensignal" ? formattedDate :"",
+                to: filters.to ||  clientStatus == "todayopensignal" ? formattedDate :"",
                 service: filters.service,
                 stock: searchstock,
                 closestatus: "false",
@@ -205,14 +210,6 @@ const Signal = () => {
             if (response && response.status) {
                 setTotalRows(response.pagination.totalRecords);
                 let filterdata = response.data.filter((item) => item.close_status === false);
-                if (clientStatus === "todayopensignal") {
-                    const today = new Date().toISOString().split("T")[0];
-                    filterdata = filterdata.filter((item) => {
-                        const createdDate = new Date(item.created_at).toISOString().split("T")[0];
-                        return createdDate === today;
-                    });
-                }
-
                 setClients(filterdata);
             }
         } catch (error) {

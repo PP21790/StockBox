@@ -18,7 +18,7 @@ const Closesignal = () => {
     const [searchInput, setSearchInput] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
-    const [header, setheader] = useState("Open Signal");
+    const [header, setheader] = useState("Close Signal");
 
     const location = useLocation();
     const clientStatus = location?.state?.clientStatus;
@@ -28,10 +28,15 @@ const Closesignal = () => {
     useEffect(() => {
         if (clientStatus == "todayclosesignal") {
             setheader("Todays Close Signal")
+            
         }
     }, [clientStatus])
-
-
+  
+    const today = new Date();
+    const formattedDate = today.toISOString().slice(0, 10);
+    console.log(formattedDate);
+    
+  
 
     const [filters, setFilters] = useState({
         from: '',
@@ -75,8 +80,8 @@ const Closesignal = () => {
     const getAllSignal = async () => {
         try {
             const data = { page: currentPage,
-                 from: filters.from, 
-                 to: filters.to,
+                 from: filters.from || clientStatus == "todayclosesignal" ? formattedDate :"", 
+                 to: filters.to || clientStatus == "todayclosesignal" ? formattedDate : "" ,
                   service: filters.service, 
                   stock: searchstock, 
                   closestatus: "true",
@@ -86,14 +91,6 @@ const Closesignal = () => {
             if (response && response.status) {
                
                 let filterdata = response.data.filter((item) => item.close_status === true);
-
-                if (clientStatus === "todayclosesignal") {
-                    const today = new Date().toISOString().split("T")[0];
-                    filterdata = filterdata.filter((item) => {
-                        const createdDate = new Date(item.closedate).toISOString().split("T")[0];
-                        return createdDate === today;
-                    });
-                }
 
                 setClients(filterdata);
                 setTotalRows(response.pagination.totalRecords);
