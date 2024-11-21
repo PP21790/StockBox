@@ -682,7 +682,6 @@ axios(config)
                    });
                } else {
                    // Log response if the status isn't 'Ok'
-                   console.log("Error in response:", response);
                    return res.status(500).json({
                        status: false,
                        message: response.data.message || 'Unknown error in response'
@@ -700,7 +699,6 @@ axios(config)
                });
             }
         } catch (error) {
-            console.error("Error placing order:", error); // Log the error
             return res.status(500).json({ 
                 status: false, 
                 message: error.response ? error.response.data : "An error occurred while placing the order" 
