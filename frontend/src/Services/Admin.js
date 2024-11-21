@@ -2514,6 +2514,28 @@ export async function getPlanbyUser(_id,token) {
 }
 
 
+// get client export file 
+
+export async function getclientExportfile(data,token) {
+  
+    try {
+        const res = await axios.get(`${Config.base_url}client/listwithfilterexcel`,data ,{
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
 // client filter
 
 export async function AllclientFilter(data, token) {

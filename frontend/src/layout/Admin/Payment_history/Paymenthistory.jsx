@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getPayementhistory , getPayementhistorywithfilter } from '../../../Services/Admin';
+import { getPayementhistory, getPayementhistorywithfilter } from '../../../Services/Admin';
 // import Table from '../../../components/Table';
 import Table from '../../../components/Table1';
-import { SquarePen, Trash2, PanelBottomOpen, Eye , RefreshCcw } from 'lucide-react';
+import { SquarePen, Trash2, PanelBottomOpen, Eye, RefreshCcw } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
 import { fDateTime } from '../../../Utils/Date_formate';
-import ExportToExcel from '../../../Utils/ExportCSV';
+import { exportToCSV } from '../../../Utils/ExportData';
+
 
 
 
@@ -52,7 +53,7 @@ const History = () => {
 
     const token = localStorage.getItem('token');
     const userid = localStorage.getItem('id');
-  
+
 
     const resethandle = () => {
         setSearchInput("")
@@ -61,6 +62,38 @@ const History = () => {
 
 
     }
+
+
+
+    const getexportfile = async () => {
+        try {
+            const response = await getPayementhistory(token);
+            if (response.status) {
+                if (response.data?.length > 0) {
+                    const csvArr = response.data?.map((item) => ({
+                        Name: item.clientName || "-",
+                        Email: item.clientEmail || "-",
+                        Phone: item.clientPhoneNo || "-",
+                        Title: item.planDetails?.title || '-',
+                        OerderId: item.orderid ? item.orderid : "Make By Admin",
+                        PlanDiscount: item.discount || 0,
+                        PlanAmount: item.plan_price || 0,
+                        Total: item?.segment || '-',
+                        Validity: item.planDetails?.validity || '-',
+                        PurchaseDate: item.created_at || '-',
+                    }));
+                    exportToCSV(csvArr, 'Payment History')
+                } else {
+                    console.log("No data available.");
+                }
+            } else {
+                console.error("Failed to fetch data:", response.status);
+            }
+        } catch (error) {
+            console.error("Error fetching clients:", error);
+        }
+    };
+
 
 
     const forCSVdata = () => {
@@ -86,8 +119,8 @@ const History = () => {
 
     const gethistory = async () => {
         try {
-            const data = { page: currentPage ,fromDate:startDate , toDate:endDate , search:searchInput}
-            const response = await getPayementhistorywithfilter(data,token);
+            const data = { page: currentPage, fromDate: startDate, toDate: endDate, search: searchInput }
+            const response = await getPayementhistorywithfilter(data, token);
             if (response.status) {
                 let filteredData = response.data;
                 setTotalRows(response.pagination.total)
@@ -102,13 +135,8 @@ const History = () => {
 
     useEffect(() => {
         gethistory();
-    }, [searchInput, startDate, endDate , currentPage]);
+    }, [searchInput, startDate, endDate, currentPage]);
 
-    
-
-    useEffect(() => {
-        forCSVdata()
-    }, [searchInput, clients]);
 
 
     const columns = [
@@ -264,17 +292,22 @@ const History = () => {
                             <div>
 
                                 <div
-                                    className="dropdown dropdown-action"
-                                    data-bs-toggle="tooltip"
-                                    data-bs-placement="bottom"
-                                    title="Download"
+                                    className="ms-2"
+                                    onClick={(e) => getexportfile()}
                                 >
-                                    <ExportToExcel
-                                        className="btn btn-primary "
-                                        apiData={ForGetCSV}
-                                        fileName={'All Users'} />
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary float-end"
+                                        data-toggle="tooltip"
+                                        data-placement="top"
+                                        title="Export To Excel"
+                                        delay={{ show: "0", hide: "100" }}
 
+                                    >
+                                        <i className="bx bxs-download" aria-hidden="true"></i>
 
+                                        Export-Excel
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -299,10 +332,10 @@ const History = () => {
                             </div>
 
                             <div className="col-md-1">
-                                    <div className="refresh-icon mt-1">
-                                        <RefreshCcw onClick={resethandle} />
-                                    </div>
+                                <div className="refresh-icon mt-1">
+                                    <RefreshCcw onClick={resethandle} />
                                 </div>
+                            </div>
                         </div>
                         <div className="table-responsive">
                             <Table

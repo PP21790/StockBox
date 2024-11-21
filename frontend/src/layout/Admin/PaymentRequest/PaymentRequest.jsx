@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { PaymentRequestlist, ChangePaymentStatus } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import Swal from 'sweetalert2';
-import { fDateTime ,fDate} from '../../../Utils/Date_formate';
+import { fDateTime, fDate } from '../../../Utils/Date_formate';
 import { Link } from 'react-router-dom';
+
+
 
 const PaymentRequest = () => {
     const token = localStorage.getItem('token');
@@ -34,14 +36,14 @@ const PaymentRequest = () => {
 
 
 
-    
+
+
     const Updatestatus = async (id, status) => {
-        console.log("status",status)
         try {
             const data = {
                 payoutRequestId: id,
                 remark: status == 0 ? "Pending" : status == 1 ? "Complete" : "Reject",
-                status: status 
+                status: status
             };
             const response = await ChangePaymentStatus(data, token);
             if (response.status) {
@@ -152,12 +154,40 @@ const PaymentRequest = () => {
 
 
     const handleSelectChange = async (rowId, event) => {
-        const newSelectedValues = {
-            ...selectedValues,
-            [rowId]: event.target.value,
+        const selectedValue = event.target.value;
+        const statusMap = {
+            0: 'Pending',
+            1: 'Complete',
+            2: 'Reject',
         };
-        setSelectedValues(newSelectedValues);
-        await Updatestatus(rowId, newSelectedValues[rowId]);
+
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: `Do you want to change the status to "${statusMap[selectedValue]}"?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, update it!',
+            cancelButtonText: 'No, cancel!',
+        });
+
+        if (result.isConfirmed) {
+            try {
+                await Updatestatus(rowId, selectedValue);
+                setSelectedValues((prevValues) => ({
+                    ...prevValues,
+                    [rowId]: selectedValue,
+                }));
+                Swal.fire('Updated!', 'The status has been updated.', 'success');
+            } catch (error) {
+                Swal.fire('Error!', 'There was a problem updating the status.', 'error');
+            }
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            window.location.reload()
+
+
+        }
     };
 
 
@@ -209,7 +239,7 @@ const PaymentRequest = () => {
                         </nav>
                     </div>
                 </div>
-                <hr/>
+                <hr />
 
                 <div className='card'>
                     <div className='card-body'>
@@ -236,7 +266,7 @@ const PaymentRequest = () => {
                                                 <i className="bx bx-search" />
                                             </span>
                                         </div> */}
-                                        
+
                                     </div>
 
                                     <ul className="nav nav-pills nav-pills1 mb-4 light">

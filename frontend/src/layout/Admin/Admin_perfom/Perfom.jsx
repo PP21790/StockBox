@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { getPerformerstatus, GetService, getperformacebysegment , getperformacebysegmentwithfilter } from '../../../Services/Admin';
+import { getPerformerstatus, GetService, getperformacebysegment, getperformacebysegmentwithfilter } from '../../../Services/Admin';
 import Table from '../../../components/Table1';
 import Swal from 'sweetalert2';
 import { fDateTime } from '../../../Utils/Date_formate';
 import { Link } from 'react-router-dom';
 import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine, RefreshCcw } from 'lucide-react';
 import { Tooltip } from 'antd';
-import ExportToExcel from '../../../Utils/ExportCSV';
+import { exportToCSV } from '../../../Utils/ExportData';
 
 
 
@@ -21,8 +21,9 @@ const Perform = () => {
     const [ForGetCSV, setForGetCSV] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
+    const [service, setserviceid] = useState("66d2c3bebf7e6dc53ed07626");
 
- 
+
 
     useEffect(() => {
         getServiceData();
@@ -30,46 +31,50 @@ const Perform = () => {
 
 
 
+    const getexportfile = async () => {
+        try {
+            const data = { service_id: service }
+            const response = await getperformacebysegment(data, token);
+            if (response.status) {
+                if (response.data?.length > 0) {
+                    const csvArr = response.data?.map((item) => {
+                        const entryPrice = item?.price || 0;
+                        const exitPrice = item?.closeprice || 0;
+                        const lotSize = item?.lotsize || 0;
 
-    useEffect(() => {
-        forCSVdata()
-    }, [closesignal]);
+                        let totalPL = 0;
+                        let plPercent = 0;
 
+                        if (item.calltype === "BUY") {
+                            totalPL = ((exitPrice - entryPrice) * lotSize).toFixed(2);
+                            plPercent = (((exitPrice - entryPrice) / entryPrice) * 100).toFixed(2);
+                        } else if (item.calltype === "SELL") {
+                            totalPL = ((entryPrice - exitPrice) * lotSize).toFixed(2);
+                            plPercent = (((entryPrice - exitPrice) / entryPrice) * 100).toFixed(2);
+                        }
 
-    const forCSVdata = () => {
-        if (closesignal?.length > 0) {
-            const csvArr = closesignal.map((item) => {
-                const entryPrice = item?.price || 0;
-                const exitPrice = item?.closeprice || 0;
-                const lotSize = item?.lotsize || 0;
-
-                let totalPL = 0;
-                let plPercent = 0;
-
-                if (item.calltype === "BUY") {
-                    totalPL = ((exitPrice - entryPrice) * lotSize).toFixed(2);
-                    plPercent = (((exitPrice - entryPrice) / entryPrice) * 100).toFixed(2);
-                } else if (item.calltype === "SELL") {
-                    totalPL = ((entryPrice - exitPrice) * lotSize).toFixed(2);
-                    plPercent = (((entryPrice - exitPrice) / entryPrice) * 100).toFixed(2);
+                        return {
+                            Tradesymbol: item?.tradesymbol || "-",
+                            EntryType: item?.calltype || "-",
+                            EntryPrice: entryPrice || "-",
+                            ExitPrice: exitPrice || "-",
+                            TotalProfitAndLoss: `${totalPL} (${plPercent}%)`,
+                            EntryDate: item.created_at,
+                            ExitDate: item.closedate,
+                        };
+                    });
+                    exportToCSV(csvArr, 'Performance');
                 }
-
-                return {
-                    Tradesymbol: item?.tradesymbol || "-",
-                    EntryType: item?.calltype || "-",
-                    EntryPrice: entryPrice || "-",
-                    ExitPrice: exitPrice || "-",
-                    TotalProfitAndLoss: `${totalPL} (${plPercent}%)`,
-                    EntryDate: item.created_at,
-                    ExitDate: item.closedate,
-                };
-            });
-
-            setForGetCSV(csvArr);
+            }
+        } catch (error) {
+            console.log("Error:", error);
         }
-    };
+    }
 
-     
+
+
+
+
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
@@ -104,7 +109,7 @@ const Perform = () => {
             const response = await getPerformerstatus(token, service_id);
             if (response.status) {
                 setClients([response.data]);
-            
+
             }
         } catch (error) {
             console.log("Error fetching performance data:", error);
@@ -114,23 +119,10 @@ const Perform = () => {
 
 
 
-    // const getdatabysegment = async (service_id) => {
-    //     try {
-    //         const response = await getperformacebysegment({ token, service_id });
-    //         if (response.status) {
-    //             setClosesignal(response.data);
-
-    //         }
-    //     } catch (error) {
-    //         console.log("Error fetching performance data:", error);
-    //     }
-    // };
-  
-  
     const getdatabysegment = async (service_id) => {
         try {
-            const data = {service_id ,page: currentPage }
-            const response = await getperformacebysegmentwithfilter(data , token);
+            const data = { service_id, page: currentPage }
+            const response = await getperformacebysegmentwithfilter(data, token);
             if (response.status) {
                 setClosesignal(response.data);
                 setTotalRows(response.pagination.totalRecords)
@@ -256,10 +248,10 @@ const Perform = () => {
             <div className="table-responsive">
                 <h5>{activeService ? `Performance for ${activeService.title}` : 'Performance'}</h5>
                 <Table columns={columns1}
-                 data={closesignal}
-                 totalRows={totalRows}
-                 currentPage={currentPage}
-                 onPageChange={handlePageChange} 
+                    data={closesignal}
+                    totalRows={totalRows}
+                    currentPage={currentPage}
+                    onPageChange={handlePageChange}
                 />
             </div>
         );
@@ -272,6 +264,7 @@ const Perform = () => {
         setActiveTab(serviceId);
         getperformdata(serviceId);
         getdatabysegment(serviceId)
+        setserviceid(serviceId)
     };
 
 
@@ -325,7 +318,7 @@ const Perform = () => {
                                                                     <div className="col-lg-6">
 
                                                                         <div className="p-3">
-                                                                            <b className="mb-0">Avg.return / trade</b> 
+                                                                            <b className="mb-0">Avg.return / trade</b>
                                                                             <small className="mb-0">
                                                                                 {item?.avgreturnpertrade?.toFixed(2)}
 
@@ -372,12 +365,23 @@ const Perform = () => {
 
                                             </div>
                                         </div>
-                                        <div className="d-flex justify-content-end " >
-                                            <ExportToExcel
-                                                className="btn btn-primary "
-                                                apiData={ForGetCSV}
-                                                fileName={'All Users'} />
+                                        <div
+                                            className="ms-2"
+                                            onClick={(e) => getexportfile()}
+                                        >
+                                            <button
+                                                type="button"
+                                                className="btn btn-primary float-end"
+                                                data-toggle="tooltip"
+                                                data-placement="top"
+                                                title="Export To Excel"
+                                                delay={{ show: "0", hide: "100" }}
 
+                                            >
+                                                <i className="bx bxs-download" aria-hidden="true"></i>
+
+                                                Export-Excel
+                                            </button>
                                         </div>
                                     </div>
 

@@ -2,11 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { RefreshCcw } from 'lucide-react';
 import Table from '../../../components/Table1';
-import ExportToExcel from '../../../Utils/ExportCSV';
-import { getclientPlanexpirywithfilter, GetService } from '../../../Services/Admin';
+import { exportToCSV } from '../../../Utils/ExportData';
+import { getclientPlanexpiry, getclientPlanexpirywithfilter, GetService } from '../../../Services/Admin';
 import { fDateTimeH } from '../../../Utils/Date_formate';
 
+
+
 const Planexpiry = () => {
+
+
     const token = localStorage.getItem('token');
 
     const [searchInput, setSearchInput] = useState('');
@@ -39,8 +43,8 @@ const Planexpiry = () => {
             const data = {
                 page: currentPage,
                 serviceid: searchStock,
-                startdate: startDate ,
-                enddsate: endDate ,
+                startdate: startDate,
+                enddsate: endDate,
                 search: searchInput,
             };
             const response = await getclientPlanexpirywithfilter(data, token);
@@ -53,17 +57,37 @@ const Planexpiry = () => {
         }
     };
 
-    const prepareCSVData = () => {
-        const csvArr = clients.map((item) => ({
-            FullName: item.clientFullName || '',
-            Email: item.clientEmail || '',
-            PhoneNo: item.clientMobile || '',
-            Segment: item.serviceTitle || '',
-            StartDate: fDateTimeH(item.startdate) || '',
-            EndDate: fDateTimeH(item.enddate) || '',
-        }));
-        setForGetCSV(csvArr);
+
+
+
+
+    const getexportfile = async () => {
+        try {
+            const response = await getclientPlanexpiry(token);
+            if (response.status) {
+                if (response.data?.length > 0) {
+                    const csvArr = response.data?.map((item) => ({
+                        FullName: item.clientFullName || '',
+                        Email: item.clientEmail || '',
+                        PhoneNo: item.clientMobile || '',
+                        Segment: item.serviceTitle || '',
+                        StartDate: fDateTimeH(item.startdate) || '',
+                        EndDate: fDateTimeH(item.enddate) || '',
+                    }));
+                    exportToCSV(csvArr, 'Client Plan Expiry')
+                } else {
+                    console.log("No data available.");
+                }
+            } else {
+                console.error("Failed to fetch data:", response.status);
+            }
+        } catch (error) {
+            console.error("Error fetching clients:", error);
+        }
     };
+
+
+
 
     const resetFilters = () => {
         setSearchInput('');
@@ -83,9 +107,7 @@ const Planexpiry = () => {
         getClientData();
     }, [searchInput, searchStock, currentPage, startDate, endDate]);
 
-    useEffect(() => {
-        prepareCSVData();
-    }, [clients]);
+
 
     const columns = [
         {
@@ -152,11 +174,29 @@ const Planexpiry = () => {
                                 <i className="bx bx-search" />
                             </span>
                         </div>
-                        <ExportToExcel
-                            className="btn btn-primary ms-2"
-                            apiData={ForGetCSV}
-                            fileName="Plan_Expiry_Clients"
-                        />
+
+
+                        <div
+                            className="ms-2"
+                            onClick={(e) => getexportfile()}
+                        >
+                            <button
+                                type="button"
+                                className="btn btn-primary float-end"
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                title="Export To Excel"
+                                delay={{ show: "0", hide: "100" }}
+
+                            >
+                                <i className="bx bxs-download" aria-hidden="true"></i>
+
+                                Export-Excel
+                            </button>
+                        </div>
+
+
+
                     </div>
                     <div className="row mb-2">
                         <div className="col-md-3">

@@ -7,7 +7,7 @@ import { Eye, Trash2, RefreshCcw } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { GetSignallist, GetSignallistWithFilter, DeleteSignal, SignalCloseApi, GetService, GetStockDetail } from '../../../Services/Admin';
 import { fDateTimeH } from '../../../Utils/Date_formate'
-import ExportToExcel from '../../../Utils/ExportCSV';
+import { exportToCSV } from '../../../Utils/ExportData';
 import Select from 'react-select';
 
 
@@ -24,7 +24,7 @@ const Signal = () => {
     const location = useLocation();
     const clientStatus = location?.state?.clientStatus;
 
-   
+
 
     useEffect(() => {
         if (clientStatus == "todayopensignal") {
@@ -32,10 +32,10 @@ const Signal = () => {
         }
     }, [clientStatus])
 
-   
+
     const today = new Date();
     const formattedDate = today.toISOString().slice(0, 10);
-    
+
 
     const [filters, setFilters] = useState({
         from: '',
@@ -158,37 +158,27 @@ const Signal = () => {
 
 
 
-    // const getAllSignal = async () => {
-    //     try {
-    //         const data = {
-    //             page: currentPage,
-    //             from: filters.from,
-    //             to: filters.to,
-    //             service: filters.service,
-    //             stock: searchstock,
-    //             closestatus: "false",
-    //             search: searchInput
-    //         }
-    //         const response = await GetSignallistWithFilter(data, token);
-    //         if (response && response.status) {
-    //             setTotalRows(response.pagination.totalRecords);
-    //             const filterdata = response.data.filter((item) => {
-    //                 return item.close_status === false;
-    //             });
-    //             if (clientStatus == "todayopensignal") {
-    //                 filterdata
-    //             } else {
-    //                 filterdata
-    //             }
-
-    //             setClients(filterdata);
-
-    //         }
-    //     } catch (error) {
-    //         console.log("error", error);
-    //     }
-    // }; 
-
+    const getexportfile = async () => {
+        try {
+            const response = await GetSignallist(token);
+            if (response.status) {
+                if (response.data?.length > 0) {
+                    let filterdata = response.data.filter((item) => item.close_status === false);
+                    const csvArr = filterdata.map((item) => ({
+                        Symbol: item.tradesymbol || "",
+                        segment: item?.segment || '',
+                        EntryType: item?.calltype || '',
+                        EntryPrice: item?.price || '',
+                        EntryDate: fDateTimeH(item?.created_at) || '',
+                    }));
+                    exportToCSV(csvArr, 'Open Signal');
+                }
+            }
+        } catch (error) {
+            console.log("Error:", error);
+        }
+    }
+    
 
 
 
@@ -196,8 +186,8 @@ const Signal = () => {
         try {
             const data = {
                 page: currentPage,
-                from: filters.from ||  clientStatus == "todayopensignal" ? formattedDate :"",
-                to: filters.to ||  clientStatus == "todayopensignal" ? formattedDate :"",
+                from: filters.from || clientStatus == "todayopensignal" ? formattedDate : "",
+                to: filters.to || clientStatus == "todayopensignal" ? formattedDate : "",
                 service: filters.service,
                 stock: searchstock,
                 closestatus: "false",
@@ -247,29 +237,13 @@ const Signal = () => {
 
 
 
-    const forCSVdata = () => {
-        if (clients?.length > 0) {
-            const csvArr = clients.map((item) => ({
-                Symbol: item.tradesymbol || "",
-                segment: item?.segment || '',
-                EntryType: item?.calltype || '',
-                EntryPrice: item?.price || '',
-                EntryDate: fDateTimeH(item?.created_at) || '',
-
-            }));
-
-            setForGetCSV(csvArr);
-        }
-    };
-
-
+    
 
 
     useEffect(() => {
         fetchAdminServices()
         fetchStockList()
-        forCSVdata()
-    }, [filters, clients]);
+    }, [filters ]);
 
 
     useEffect(() => {
@@ -642,26 +616,23 @@ const Signal = () => {
                                     </Link>
                                 </div>
 
-                                {/* <div className="ms-2">
-                                    <div
-                                        className="btn btn-primary"
-                                        apiData={ForGetCSV}
-                                        fileName={'All Users'}
-                                    >
-   
-                                      Export Excel
-                                    </div>
-                                </div> */}
-
                                 <div
                                     className="ms-2"
+                                    onClick={(e) => getexportfile()}
                                 >
-                                    <ExportToExcel
-                                        className="btn btn-primary "
-                                        apiData={ForGetCSV}
-                                        fileName={'All Users'} />
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary float-end"
+                                        data-toggle="tooltip"
+                                        data-placement="top"
+                                        title="Export To Excel"
+                                        delay={{ show: "0", hide: "100" }}
 
+                                    >
+                                        <i className="bx bxs-download" aria-hidden="true"></i>
 
+                                        Export-Excel
+                                    </button>
                                 </div>
 
                             </div>

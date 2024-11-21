@@ -5,12 +5,12 @@ import { GetClient } from '../../../Services/Admin';
 // import Table from '../../../components/Table';
 import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine, RefreshCcw } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { deleteClient, UpdateClientStatus, PlanSubscription, getplanlist, BasketSubscription, BasketAllList, getcategoryplan, getPlanbyUser, AllclientFilter } from '../../../Services/Admin';
+import { deleteClient, UpdateClientStatus, PlanSubscription, getplanlist, BasketSubscription, BasketAllList, getcategoryplan, getPlanbyUser, AllclientFilter, getclientExportfile } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
 import { fDateTime } from '../../../Utils/Date_formate';
 import { image_baseurl } from '../../../Utils/config';
 import { IndianRupee } from 'lucide-react';
-import ExportToExcel from '../../../Utils/ExportCSV';
+import { exportToCSV } from '../../../Utils/ExportData';
 import Table from '../../../components/Table1';
 
 
@@ -42,8 +42,6 @@ const Client = () => {
     const [statuscreatedby, setStatuscreatedby] = useState("");
     const [header, setheader] = useState("Client");
     const [expired, setExpired] = useState("");
-
-
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
 
@@ -146,13 +144,47 @@ const Client = () => {
         getAdminclient();
     }, [searchInput, searchkyc, statuscreatedby, currentPage, expired]);
 
-   
 
 
-    useEffect(() => {
-        forCSVdata()
-    }, [searchInput, clients]);
-
+    const getexportfile = async () => {
+        try {
+            const response = await getclientExportfile(token);
+            if (response.status) {
+                if (response.data?.length > 0) {
+                    const csvArr = response.data?.map((item) => ({
+                        FullName: item?.FullName || 'N/A',
+                        Email: item?.Email || 'N/A',
+                        kyc_verification: item?.kyc_verification === 1 ? "Verified" : "Not Verified",
+                        PlanStatus: item?.plansStatus?.some(statusItem => statusItem.status === 'active')
+                            ? 'Active'
+                            : item?.plansStatus?.some(statusItem => statusItem.status === 'expired')
+                                ? 'Expired'
+                                : 'N/A',
+                        ClientActiveSegment: item?.plansStatus
+                            ?.filter(statusItem => statusItem.status === 'active')
+                            .map(statusItem => statusItem.serviceName || 'N/A')
+                            .join(', ') || 'N/A',
+                        ClientExpiredSegment: item?.plansStatus
+                            ?.filter(statusItem => statusItem.status === 'expired')
+                            .map(statusItem => statusItem.serviceName || 'N/A')
+                            .join(', ') || 'N/A',
+                        CreatedBy: item?.addedByDetails?.FullName ||
+                            (item?.clientcome === 1 ? "WEB" : "APP") ||
+                            'N/A',
+                        PhoneNo: item?.PhoneNo || 'N/A',
+                        Created_at: item?.createdAt || 'N/A',
+                    }));
+                    exportToCSV(csvArr, 'All Clients')
+                } else {
+                    console.log("No data available.");
+                }
+            } else {
+                console.error("Failed to fetch data:", response.status);
+            }
+        } catch (error) {
+            console.error("Error fetching clients:", error);
+        }
+    };
 
 
     const forCSVdata = () => {
@@ -184,11 +216,6 @@ const Client = () => {
         }
     };
 
-
-
-
-
-
     const getcategoryplanlist = async () => {
         try {
             const response = await getcategoryplan(token);
@@ -200,8 +227,6 @@ const Client = () => {
         }
     };
 
-
-
     const getAdminclient = async () => {
         try {
             const data = {
@@ -209,7 +234,7 @@ const Client = () => {
                 kyc_verification: searchkyc,
                 status: clientStatus == 1 ? 1 : clientStatus == 0 ? 0 : "",
                 createdby: statuscreatedby,
-                search : searchInput ,
+                search: searchInput,
                 planStatus:
                     expired === "active" ? "active" :
                         expired === "expired" ? "expired" :
@@ -229,8 +254,6 @@ const Client = () => {
             console.error("Error fetching clients:", error);
         }
     };
-
-
 
     // const getplanlistbyadmin = async () => {
     //     try {
@@ -280,8 +303,6 @@ const Client = () => {
         navigate("/admin/client/clientdetail/" + row._id, { state: { row } })
     }
 
-
-
     const DeleteClient = async (_id) => {
         try {
             const result = await Swal.fire({
@@ -325,11 +346,7 @@ const Client = () => {
         }
     };
 
-
-
-
     // update status 
-
     const handleSwitchChange = async (event, id) => {
         const originalChecked = event.target.checked;
         const user_active_status = originalChecked ? "1" : "0";
@@ -372,10 +389,6 @@ const Client = () => {
         }
     };
 
-
-
-
-
     // Update service
     const Updateplansubscription = async () => {
 
@@ -414,9 +427,6 @@ const Client = () => {
         }
     };
 
-
-
-
     // assign basket 
     const UpdateBasketservice = async () => {
 
@@ -453,7 +463,6 @@ const Client = () => {
             });
         }
     };
-
 
     const columns = [
         {
@@ -626,10 +635,6 @@ const Client = () => {
         }
     ];
 
-
-
-
-
     return (
         <div>
             <div>
@@ -682,14 +687,29 @@ const Client = () => {
 
                                 <div
                                     className="ms-2"
+                                    onClick={(e) => getexportfile()}
                                 >
-                                    <ExportToExcel
-                                        className="btn btn-primary "
-                                        apiData={ForGetCSV}
-                                        fileName={'All Users'} />
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary float-end"
+                                        data-toggle="tooltip"
+                                        data-placement="top"
+                                        title="Export To Excel"
+                                        delay={{ show: "0", hide: "100" }}
+
+                                    >
+                                        <i className="bx bxs-download" aria-hidden="true"></i>
+
+                                        Export-Excel
+                                    </button>
+
 
 
                                 </div>
+
+
+
+
 
                             </div>
                             <div className="row">
@@ -735,7 +755,7 @@ const Client = () => {
                                             <option value="">Select Client</option>
                                             <option value="active">Active</option>
                                             <option value="expired">Expired </option>
-                                          0
+                                            0
                                         </select>
                                     </div>
 

@@ -7,12 +7,15 @@ import { Eye, RefreshCcw, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { GetSignallist, GetSignallistWithFilter, DeleteSignal, SignalCloseApi, GetService, GetStockDetail } from '../../../Services/Admin';
 import { fDateTimeSuffix, fDateTimeH } from '../../../Utils/Date_formate'
-import ExportToExcel from '../../../Utils/ExportCSV';
+import { exportToCSV } from '../../../Utils/ExportData';
 import Select from 'react-select';
 
 
 
 const Closesignal = () => {
+
+
+
 
     const token = localStorage.getItem('token');
     const [searchInput, setSearchInput] = useState("");
@@ -20,23 +23,25 @@ const Closesignal = () => {
     const [totalRows, setTotalRows] = useState(0);
     const [header, setheader] = useState("Close Signal");
 
+
+
     const location = useLocation();
     const clientStatus = location?.state?.clientStatus;
 
-   
+
 
     useEffect(() => {
         if (clientStatus == "todayclosesignal") {
             setheader("Todays Close Signal")
-            
+
         }
     }, [clientStatus])
-  
+
     const today = new Date();
     const formattedDate = today.toISOString().slice(0, 10);
-   
-    
-  
+
+
+
 
     const [filters, setFilters] = useState({
         from: '',
@@ -68,28 +73,63 @@ const Closesignal = () => {
     const options = clients.map((item) => ({
         value: item.stock,
         label: item.stock,
-      }));
+    }));
 
-      const handleChange = (selectedOption) => {
+    const handleChange = (selectedOption) => {
         setSearchstock(selectedOption ? selectedOption.value : "");
-      };
+    };
 
+
+    const getexportfile = async () => {
+        try {
+            const response = await GetSignallist(token);
+            if (response.status) {
+                if (response.data?.length > 0) {
+                    let filterdata = response.data.filter((item) => item.close_status === true);
+                    const csvArr = filterdata.map((item) => {
+                        let profitAndLoss = 0;
+                        if (item.calltype === "BUY") {
+                            profitAndLoss = ((item.closeprice - item.price) * item.lotsize).toFixed(2);
+                        } else if (item.calltype === "SELL") {
+                            profitAndLoss = ((item.price - item.closeprice) * item.lotsize).toFixed(2);
+                        }
+    
+                        return {
+                            Symbol: item.tradesymbol || "",
+                            segment: item?.segment || '',
+                            EntryType: item?.calltype || '',
+                            EntryPrice: item?.price || '',
+                            ExitPrice: item?.closeprice || "",
+                            ProfitAndLoss: profitAndLoss || "",
+                            EntryDate: fDateTimeH(item?.created_at) || '',
+                            ExitDate: fDateTimeH(item?.closedate) || ''
+                        };
+                    });
+                    exportToCSV(csvArr, 'Close Signal');
+                }
+            }
+        } catch (error) {
+            console.log("Error:", error);
+        }
+    }
+    
 
 
 
     const getAllSignal = async () => {
         try {
-            const data = { page: currentPage,
-                 from: filters.from || clientStatus == "todayclosesignal" ? formattedDate :"", 
-                 to: filters.to || clientStatus == "todayclosesignal" ? formattedDate : "" ,
-                  service: filters.service, 
-                  stock: searchstock, 
-                  closestatus: "true",
-                  search:searchInput
-                }
+            const data = {
+                page: currentPage,
+                from: filters.from || clientStatus == "todayclosesignal" ? formattedDate : "",
+                to: filters.to || clientStatus == "todayclosesignal" ? formattedDate : "",
+                service: filters.service,
+                stock: searchstock,
+                closestatus: "true",
+                search: searchInput
+            }
             const response = await GetSignallistWithFilter(data, token);
             if (response && response.status) {
-               
+
                 let filterdata = response.data.filter((item) => item.close_status === true);
 
                 setClients(filterdata);
@@ -101,8 +141,8 @@ const Closesignal = () => {
         }
     };
 
- 
-   
+
+
     const fetchAdminServices = async () => {
         try {
             const response = await GetService(token);
@@ -130,38 +170,10 @@ const Closesignal = () => {
 
 
 
-    const forCSVdata = () => {
-        if (clients?.length > 0) {
-            const csvArr = clients.map((item) => {
-                let profitAndLoss = 0;
-                if (item.calltype === "BUY") {
-                    profitAndLoss = ((item.closeprice - item.price) * item.lotsize).toFixed(2);
-                } else if (item.calltype === "SELL") {
-                    profitAndLoss = ((item.price - item.closeprice) * item.lotsize).toFixed(2);
-                }
-
-                return {
-                    Symbol: item.tradesymbol || "",
-                    segment: item?.segment || '',
-                    EntryType: item?.calltype || '',
-                    EntryPrice: item?.price || '',
-                    ExitPrice: item?.closeprice || "",
-                    ProfitAndLoss: profitAndLoss || "",
-                    EntryDate: fDateTimeH(item?.created_at) || '',
-                    ExitDate: fDateTimeH(item?.closedate) || ''
-                };
-            });
-
-            setForGetCSV(csvArr);
-        }
-    };
-
-
     useEffect(() => {
         fetchAdminServices()
         fetchStockList()
-        forCSVdata()
-    }, [filters, clients]);
+    }, [filters]);
 
 
 
@@ -331,13 +343,21 @@ const Closesignal = () => {
 
                                 <div
                                     className="ms-2"
+                                    onClick={(e) => getexportfile()}
                                 >
-                                    <ExportToExcel
-                                        className="btn btn-primary "
-                                        apiData={ForGetCSV}
-                                        fileName={'All Users'} />
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary float-end"
+                                        data-toggle="tooltip"
+                                        data-placement="top"
+                                        title="Export To Excel"
+                                        delay={{ show: "0", hide: "100" }}
 
+                                    >
+                                        <i className="bx bxs-download" aria-hidden="true"></i>
 
+                                        Export-Excel
+                                    </button>
                                 </div>
                             </div>
 

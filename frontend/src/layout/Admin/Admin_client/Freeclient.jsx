@@ -9,7 +9,7 @@ import { Tooltip } from 'antd';
 import { image_baseurl } from '../../../Utils/config';
 import { fDate, fDateTime } from '../../../Utils/Date_formate';
 import { IndianRupee } from 'lucide-react';
-import ExportToExcel from '../../../Utils/ExportCSV';
+import { exportToCSV } from '../../../Utils/ExportData';
 
 
 const Freeclient = () => {
@@ -72,13 +72,6 @@ const Freeclient = () => {
     }, [client, currentPage, searchInput]);
 
 
-    useEffect(() => {
-        forCSVdata()
-    }, [clients]);
-
-
-
-
     const getdemoclient = async () => {
         try {
             const data = { page: currentPage, search: searchInput , freestatus : clientStatus || ""}
@@ -89,28 +82,38 @@ const Freeclient = () => {
 
             }
         } catch (error) {
+            console.log("error")
+        }
+    }
+
+   
+
+    const getexportfile = async () => {
+        try {
+          
+            const response = await FreeClientListWithFilter(token);
+            if (response.status) {
+                if (response.data?.length > 0) {
+                    const csvArr = response.data?.map((item) => ({
+        
+                        FullName: item.clientDetails?.FullName || '-',
+                        Email: item.clientDetails?.Email || '-',
+                        PhoneNo: item?.clientDetails?.PhoneNo || '-',
+                        Kyc: item?.clientDetails?.kyc_verification == 1 ? "Verified" : "Not Verified",
+                        Status: item?.status === "active" ? "Active" : "Expired",
+                        StartDate: item?.startdate || '-',
+                        EndDate: item?.enddate || '-',
+        
+                    }));
+                    exportToCSV(csvArr, 'All Free Clients')
+                   
+                }
+            }
+        } catch (error) {
             console.log("error");
         }
     }
 
-
-    const forCSVdata = () => {
-        if (clients?.length > 0) {
-            const csvArr = clients.map((item) => ({
-
-                FullName: item.clientDetails?.FullName || '-',
-                Email: item.clientDetails?.Email || '-',
-                PhoneNo: item?.clientDetails?.PhoneNo || '-',
-                Kyc: item?.clientDetails?.kyc_verification == 1 ? "Verified" : "Not Verified",
-                Status: item?.status === "active" ? "Active" : "Expired",
-                StartDate: item?.startdate || '-',
-                EndDate: item?.enddate || '-',
-
-            }));
-
-            setForGetCSV(csvArr);
-        }
-    };
 
 
     const getplanlistbyadmin = async () => {
@@ -478,15 +481,26 @@ const Freeclient = () => {
                                     </div>
 
                                     <div
-                                        className="ms-2"
+                                    className="ms-2"
+                                    onClick={(e) => getexportfile()}
+                                >
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary float-end"
+                                        data-toggle="tooltip"
+                                        data-placement="top"
+                                        title="Export To Excel"
+                                        delay={{ show: "0", hide: "100" }}
+
                                     >
-                                        <ExportToExcel
-                                            className="btn btn-primary "
-                                            apiData={ForGetCSV}
-                                            fileName={'All Users'} />
+                                        <i className="bx bxs-download" aria-hidden="true"></i>
+
+                                        Export-Excel
+                                    </button>
+                                  </div>
 
 
-                                    </div>
+
                                 </div>
 
                                 <Table
