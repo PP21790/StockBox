@@ -227,6 +227,41 @@ clientStatusCounts.forEach(result => {
 }
 
 
+
+async CompanyStatus(req, res) {
+  try {
+    const { key, status } = req.body;
+console.log(req.body);
+    const basicSetting = await BasicSetting_Modal.findOne({ company_key: key });
+    
+if (!basicSetting) {
+
+    return res.status(500).json({
+      status: false,
+      message: "Company Key Not Forund",
+      error: error.message
+  });
+}   
+
+const update = {
+  staffstatus:status,
+};
+
+const options = { new: true, upsert: true, runValidators: true };
+const result = await BasicSetting_Modal.findOneAndUpdate({}, update, options);
+
+
+
+    return res.json({
+      status: true,
+    });
+  
+} catch (error) {
+  return res.json({ status: false, message: "Server error", data: [] });
+}
+}
+
+
 async pastPerformance(req, res) {
   try {
     const { id } = req.params;
