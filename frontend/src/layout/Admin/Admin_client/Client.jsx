@@ -64,18 +64,30 @@ const Client = () => {
     }, [clientStatus, clients])
 
 
-    const handleDownload = (row) => {
+    // const handleDownload = (row) => {
 
+    //     const url = `${image_baseurl}uploads/pdf/${row.pdf}`;
+    //     const link = document.createElement('a');
+    //     link.href = url;
+    //     link.download = url;
+
+    //     document.body.appendChild(link);
+    //     link.click();
+    //     document.body.removeChild(link);
+
+    // };
+
+    const handleDownload = (row) => {
         const url = `${image_baseurl}uploads/pdf/${row.pdf}`;
         const link = document.createElement('a');
         link.href = url;
-        link.download = url;
-
+        link.target = '_blank'; // Opens the URL in a new tab
+    
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-
     };
+    
 
 
     const [basketdetail, setBasketdetail] = useState({
