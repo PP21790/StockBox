@@ -1122,7 +1122,7 @@ async requestPayout(req, res) {
 
     // Check if the client has enough wamount
     if (client.wamount < amount) {
-      return res.status(400).json({ status: false, message: 'Insufficient funds in wamount.' });
+      return res.status(400).json({ status: false, message: 'Insufficient funds in wallet.' });
     }
 
     // Deduct the amount from client's wamount
