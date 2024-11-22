@@ -614,16 +614,11 @@ async getSignalWithFilter(req, res) {
         { signal: true, runValidators: true } // Options: return the updated document and run validators
       );
 
-
-
-
       // const clients = await Clients_Modal.find({
       //   del: 0,
       //   ActiveStatus: 1,
       //   devicetoken: { $exists: true, $ne: null }
       // }).select('devicetoken');
-
-
       
       const today = new Date();
 
@@ -664,15 +659,6 @@ async getSignalWithFilter(req, res) {
 
 
       }
-
-
-
-
-
-
-
-
-
   
       if (!updatedSignal) {
         return res.status(404).json({
@@ -744,7 +730,7 @@ async getSignalWithFilter(req, res) {
   }
 
 
-  async updateReport(req, res) {
+async updateReport(req, res) {
     try {
         // Handle file upload
         await new Promise((resolve, reject) => {

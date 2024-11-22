@@ -300,14 +300,14 @@ class Users {
       const { UserName, password } = req.body;  // Extract password here
       const settings = await BasicSetting_Modal.findOne();
       if (!settings.staffstatus) {
-        return res.status(400).json({ status: false, message: "Your panel has been deactivated. Please contact the administrator for assistance." });
+        return res.json({ status: false, message: "Your panel has been deactivated. Please contact the administrator for assistance." });
       }
 
       if (!UserName) {
-        return res.json({ status: false, message: "Username is required" });
+        return res.json({ status: false, message: "username is required" });
       }
       if (!password) {
-        return res.json({ status: false, message: "Password is required" });
+        return res.json({ status: false, message: "password is required" });
       }
 
       const user = await Users_Modal.findOne({
