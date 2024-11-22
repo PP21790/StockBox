@@ -1100,9 +1100,12 @@ async requestPayout(req, res) {
     const { clientId, amount } = req.body;
 
     // Validate input
-    if (!clientId || amount <= 0) {
-      return res.status(400).json({ status: false, message: 'Invalid client ID or amount.' });
+    if (!clientId) {
+      return res.status(400).json({ status: false, message: 'Invalid client ID' });
     }
+    if (amount <= 0) {
+      return res.status(400).json({ status: false, message: 'Enter Invalid Amount' });
+    } 
 
     // Fetch the client record
     const client = await Clients_Modal.findOne({ _id: clientId, del: 0, ActiveStatus: 1 });
