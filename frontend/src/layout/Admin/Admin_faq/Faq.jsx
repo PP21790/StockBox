@@ -416,6 +416,7 @@ const Faq = () => {
                                                     <div className="row">
                                                         <div className="col-md-12">
                                                             <label htmlFor="">Title</label>
+                                                            <span className="text-danger">*</span>
                                                             <input
                                                                 className="form-control mb-3"
                                                                 type="text"
@@ -429,6 +430,7 @@ const Faq = () => {
                                                     <div className="row">
                                                         <div className="col-md-12">
                                                             <label htmlFor="">description</label>
+                                                            <span className="text-danger">*</span>
                                                             <textarea
                                                                 className="form-control mb-3"
                                                                 type="text"
@@ -488,6 +490,7 @@ const Faq = () => {
                                                             <div className="row">
                                                                 <div className="col-md-12">
                                                                     <label htmlFor="">Title</label>
+                                                                    <span className="text-danger">*</span>
                                                                     <input
                                                                         className="form-control mb-2"
                                                                         type="text"
@@ -502,6 +505,7 @@ const Faq = () => {
                                                             <div className="row">
                                                                 <div className="col-md-12">
                                                                     <label htmlFor="">Description</label>
+                                                                    <span className="text-danger">*</span>
                                                                     <textarea
                                                                         className="form-control mb-2"
                                                                         type="text"

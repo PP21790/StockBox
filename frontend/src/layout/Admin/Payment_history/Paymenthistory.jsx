@@ -167,7 +167,7 @@ const History = () => {
 
         {
             name: 'Title',
-            selector: row => row?.planDetails?.title,
+            selector: row => row?.planDetails?.title ?  row?.planDetails?.title : "N/A",
             sortable: true,
             width: '200px',
         },
@@ -192,7 +192,7 @@ const History = () => {
         },
         {
             name: 'Coupon Id',
-            selector: row => row.coupon,
+            selector: row => row.coupon ? row.coupon : "N/A",
             sortable: true,
             width: '200px',
         },

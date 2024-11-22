@@ -418,6 +418,7 @@ const Banner = () => {
                                                     <div className="row">
                                                         <div className="col-md-12">
                                                             <label htmlFor="imageUpload">Upload Image</label>
+                                                            <span className="text-danger">*</span>
                                                             <input
                                                                 className="form-control mb-3"
                                                                 type="file"
@@ -488,6 +489,7 @@ const Banner = () => {
                                                             <div className="row">
                                                                 <div className="col-md-10">
                                                                     <label htmlFor="imageUpload">Image</label>
+                                                                    <span className="text-danger">*</span>
                                                                     <input
                                                                         className="form-control mb-3"
                                                                         type="file"

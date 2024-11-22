@@ -452,6 +452,7 @@ const Category = () => {
                                                     <div className="row">
                                                         <div className="col-md-12">
                                                             <label htmlFor="service">Segment</label>
+                                                            <span className="text-danger">*</span>
                                                             {servicedata.length > 0 && (
                                                                 <DropdownMultiselect
                                                                     options={servicedata.map((item) => ({
@@ -470,6 +471,7 @@ const Category = () => {
                                                         </div>
                                                         <div className="col-md-12">
                                                             <label htmlFor="categoryTitle">Category</label>
+                                                            <span className="text-danger">*</span>
                                                             <input
                                                                 id="categoryTitle"
                                                                 className="form-control mb-3"
@@ -532,6 +534,7 @@ const Category = () => {
                                                             <div className="row">
                                                                 <div className="col-md-12">
                                                                     <label htmlFor="category">Category</label>
+                                                                    <span className="text-danger">*</span>
                                                                     <input
                                                                         className="form-control mb-2"
                                                                         type="text"
@@ -571,6 +574,7 @@ const Category = () => {
                                                             <div className="row">
                                                                 <div className="col-md-12">
                                                                     <label htmlFor="service">Segment</label>
+                                                                    <span className="text-danger">*</span>
                                                                     {servicedata.length > 0 && (
                                                                         <div className="form-group">
                                                                             {servicedata.map((item) => (

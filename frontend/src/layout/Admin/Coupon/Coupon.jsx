@@ -223,7 +223,8 @@ const Coupon = () => {
             name: 'Active Status',
             selector: row => {
                 const currentDate = new Date();
-                const endDate = new Date(row.enddate);
+                const endDate = new Date(row.enddate );
+                endDate.setHours(23, 59, 59, 999);
                 if (currentDate > endDate) {
                     return <span className="text-danger" style={{ color: "red" }}>Expired</span>;
                 } else {

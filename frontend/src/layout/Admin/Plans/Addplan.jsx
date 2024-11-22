@@ -133,6 +133,7 @@ const Addplan = () => {
             label_size: 12,
             col_size: 4,
             disable: false,
+            star:true
         },
         {
             name: "validity",
@@ -148,7 +149,8 @@ const Addplan = () => {
                 { value: "1 year", label: "1 Year" }
             ].filter((option) => {
                 return !plan.some((item) => item?.validity === option.value);
-            })
+            }),
+            star:true
         },
         
         
@@ -159,6 +161,7 @@ const Addplan = () => {
             label_size: 12,
             col_size: 4,
             disable: false,
+            star:true
         },
 
         {
@@ -168,6 +171,7 @@ const Addplan = () => {
             label_size: 12,
             col_size: 12,
             disable: false,
+            star:true
         },
     ];
 

@@ -125,38 +125,42 @@ const Editplan = () => {
                 value: item._id,
             })),
             label_size: 12,
-            col_size: 6,
+            col_size: 4,
             disable: true,
+            star:true
         },
         {
             name: "validity",
             label: "Validity",
             type: "select",
             label_size: 12,
-            col_size: 6,
+            col_size: 4,
             disable: true,
             options: [
                 { value: "1 month", label: "1 month" },
                 { value: "3 months", label: "3 months" },
                 { value: "6 months", label: "6 months" },
                 { value: "1 year", label: "1 year" },
-            ]
+            ],
+            star:true
         },
         {
             name: "price",
             label: "Price",
             type: "number",
             label_size: 12,
-            col_size: 6,
+            col_size: 4,
             disable: false,
+            star:true
         },
         {
             name: "description",
             label: "Description",
             type: "text5",
             label_size: 12,
-            col_size: 6,
+            col_size: 12,
             disable: false,
+            star:true
         },
     ];
 

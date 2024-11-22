@@ -119,6 +119,7 @@ const AddUser = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
+      star:true
     },
     {
       name: "password",
@@ -127,6 +128,7 @@ const AddUser = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
+      star:true
     },
     {
       name: "ConfirmPassword",
@@ -135,6 +137,7 @@ const AddUser = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
+      star:true
     },
   ];
 

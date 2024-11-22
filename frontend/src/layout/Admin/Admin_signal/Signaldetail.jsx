@@ -23,19 +23,31 @@ const Signaldetail = () => {
    
 
 
-    const handleDownload = (item) => {
+    // const handleDownload = (item) => {
+         
+    //     const url = item.report;
+    //     const link = document.createElement('a');
+    //     link.href = url;
+    //     link.download = url;
 
+    //     document.body.appendChild(link);
+    //     link.click();
+    //     document.body.removeChild(link);
+    // };
+
+   
+
+    const handleDownload = (item) => {
         const url = item.report;
         const link = document.createElement('a');
         link.href = url;
-        link.download = url;
-
+        link.target = '_blank'; // Opens the link in a new tab
+    
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-
-
     };
+    
 
 
     const getsignaldetail = async () => {
