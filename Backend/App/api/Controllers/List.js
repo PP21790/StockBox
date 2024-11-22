@@ -720,8 +720,8 @@ if (existingPlans.length > 0) {
       const refertokens = await Refer_Modal.find({ user_id: client._id, status: 0 });
       if (refertokens.length > 0) {
           for (const refertoken of refertokens) {
-              const senderamount = (plan.price * refertoken.senderearn) / 100;
-              const receiveramount = (plan.price * refertoken.receiverearn) / 100;
+              const senderamount = (price * refertoken.senderearn) / 100;
+              const receiveramount = (price * refertoken.receiverearn) / 100;
       
               refertoken.senderamount = senderamount; 
               refertoken.receiveramount = receiveramount; 
