@@ -74,7 +74,9 @@ const History = () => {
                         Name: item.clientName || "-",
                         Email: item.clientEmail || "-",
                         Phone: item.clientPhoneNo || "-",
-                        Title: item.planDetails?.title || '-',
+                        // Title: item?.planCategoryTitle || '-',
+                        // Segment: item?.serviceNames.map(statusItem => statusItem || 'N/A')
+                        // .join(', ') || 'N/A',
                         OerderId: item.orderid ? item.orderid : "Make By Admin",
                         PlanDiscount: item.discount || 0,
                         CouponID: item.coupon || "N/A",
@@ -151,7 +153,31 @@ const History = () => {
 
         {
             name: 'Title',
-            selector: row => row?.planDetails?.title ?  row?.planDetails?.title : "N/A",
+            selector: row => row?.planCategoryTitle ?  row?.planCategoryTitle : "N/A",
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'Client Segment',
+            cell: row => (
+                <>
+                    {Array.isArray(row?.serviceNames) && row.serviceNames.length > 0 ? (
+                        row.serviceNames.map((item, index) => (
+                            <span
+                                key={index}
+                                style={{
+    
+                                    marginRight: '5px',
+                                }}
+                            >
+                                {item || "N/A"}
+                            </span>
+                        ))
+                    ) : (
+                        <span>N/A</span>
+                    )}
+                </>
+            ),
             sortable: true,
             width: '200px',
         },
