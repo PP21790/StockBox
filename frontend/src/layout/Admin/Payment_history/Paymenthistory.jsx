@@ -190,6 +190,13 @@ const History = () => {
             sortable: true,
             width: '200px',
         },
+        {
+            name: 'Coupon Id',
+            selector: row => row.coupon,
+            sortable: true,
+            width: '200px',
+        },
+        
 
         {
             name: 'Total',

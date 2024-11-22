@@ -15,6 +15,7 @@ import { exportToCSV } from '../../../Utils/ExportData';
 const Freeclient = () => {
 
 
+    
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
      
@@ -91,7 +92,7 @@ const Freeclient = () => {
     const getexportfile = async () => {
         try {
           
-            const response = await FreeClientListWithFilter(token);
+            const response = await FreeClientList(token);
             if (response.status) {
                 if (response.data?.length > 0) {
                     const csvArr = response.data?.map((item) => ({

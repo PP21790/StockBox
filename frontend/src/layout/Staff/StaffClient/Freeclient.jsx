@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Table from '../../../components/Table1';
 import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine } from 'lucide-react';
@@ -9,14 +9,19 @@ import { Tooltip } from 'antd';
 import { image_baseurl } from '../../../Utils/config';
 import { fDate, fDateTime } from '../../../Utils/Date_formate';
 import { IndianRupee } from 'lucide-react';
-import ExportToExcel from '../../../Utils/ExportCSV';
+import { exportToCSV } from '../../../Utils/ExportData';
 import { getstaffperuser } from '../../../Services/Admin';
 
 const Freeclient = () => {
 
+
     const userid = localStorage.getItem('id');
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
+     
+
+    const location = useLocation()
+    const clientStatus = location?.state?.clientStatus;
 
 
     const [clients, setClients] = useState([]);
@@ -29,6 +34,7 @@ const Freeclient = () => {
     const [client, setClientid] = useState({});
     const [ForGetCSV, setForGetCSV] = useState([])
     const [searchInput, setSearchInput] = useState("");
+    const [header, setheader] = useState("Free Trial Client");
     const [permission, setPermission] = useState([]);
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -43,6 +49,15 @@ const Freeclient = () => {
         client_id: "",
         price: ""
     });
+   
+
+    useEffect(() => {
+        if (clientStatus == "active") {
+            setheader("Free Trial Active Client")
+        } else if (clientStatus == "expired") {
+            setheader("Free  Trial Deactive Client")
+        } 
+    }, [clientStatus, clients])
 
 
 
@@ -57,13 +72,8 @@ const Freeclient = () => {
     useEffect(() => {
         getdemoclient();
     }, [client, currentPage, searchInput]);
-
-
-    useEffect(() => {
-        forCSVdata()
-    }, [clients]);
-
    
+
 
     const getpermissioninfo = async () => {
         try {
@@ -77,9 +87,10 @@ const Freeclient = () => {
     }
 
 
+
     const getdemoclient = async () => {
         try {
-            const data = { page: currentPage, search: searchInput }
+            const data = { page: currentPage, search: searchInput , freestatus : clientStatus || ""}
             const response = await FreeClientListWithFilter(data, token);
             if (response.status) {
                 setTotalRows(response.pagination.total)
@@ -87,28 +98,38 @@ const Freeclient = () => {
 
             }
         } catch (error) {
+            console.log("error")
+        }
+    }
+
+   
+
+    const getexportfile = async () => {
+        try {
+          
+            const response = await FreeClientList(token);
+            if (response.status) {
+                if (response.data?.length > 0) {
+                    const csvArr = response.data?.map((item) => ({
+        
+                        FullName: item.clientDetails?.FullName || '-',
+                        Email: item.clientDetails?.Email || '-',
+                        PhoneNo: item?.clientDetails?.PhoneNo || '-',
+                        Kyc: item?.clientDetails?.kyc_verification == 1 ? "Verified" : "Not Verified",
+                        Status: item?.status === "active" ? "Active" : "Expired",
+                        StartDate: item?.startdate || '-',
+                        EndDate: item?.enddate || '-',
+        
+                    }));
+                    exportToCSV(csvArr, 'All Free Clients')
+                   
+                }
+            }
+        } catch (error) {
             console.log("error");
         }
     }
 
-
-    const forCSVdata = () => {
-        if (clients?.length > 0) {
-            const csvArr = clients.map((item) => ({
-
-                FullName: item.clientDetails?.FullName || '-',
-                Email: item.clientDetails?.Email || '-',
-                PhoneNo: item?.clientDetails?.PhoneNo || '-',
-                Kyc: item?.clientDetails?.kyc_verification == 1 ? "Verified" : "Not Verified",
-                Status: item?.status === "active" ? "Active" : "Expired",
-                StartDate: item?.startdate || '-',
-                EndDate: item?.enddate || '-',
-
-            }));
-
-            setForGetCSV(csvArr);
-        }
-    };
 
 
     const getplanlistbyadmin = async () => {
@@ -417,16 +438,15 @@ const Freeclient = () => {
                         {row.clientDetails?.kyc_verification === "1" ? <Download onClick={() => handleDownload(row)} /> : ""}
 
                     </Tooltip> */}
-                     <Tooltip placement="top" overlay="Package Assign">
+                    <Tooltip placement="top" overlay="Package Assign">
                         <span onClick={(e) => { showModal(true); setClientid(row); }} style={{ cursor: 'pointer' }}>
                             <Settings2 />
                         </span>
                     </Tooltip>
 
-                   {permission.includes("editfreeclient") && 
-                   (<Tooltip title="Update">
-                    <SquarePen className='ms-2' onClick={() => updateClient(row)} />
-                </Tooltip> ) }
+                    {permission.includes("editfreeclient") && (<Tooltip title="Update">
+                        <SquarePen className='ms-2' onClick={() => updateClient(row)} />
+                    </Tooltip> ) }
                     {/* <Tooltip title="delete">
                         <Trash2 onClick={() => DeleteClient(row._id)} />
 
@@ -446,7 +466,7 @@ const Freeclient = () => {
                 <div>
                     <div className="page-content">
                         <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3 ">
-                            <div className="breadcrumb-title pe-3">Free Trial Client</div>
+                            <div className="breadcrumb-title pe-3">{header}</div>
                             <div className="ps-3">
                                 <nav aria-label="breadcrumb">
                                     <ol className="breadcrumb mb-0 p-0">
@@ -477,15 +497,26 @@ const Freeclient = () => {
                                     </div>
 
                                     <div
-                                        className="ms-2"
+                                    className="ms-2"
+                                    onClick={(e) => getexportfile()}
+                                >
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary float-end"
+                                        data-toggle="tooltip"
+                                        data-placement="top"
+                                        title="Export To Excel"
+                                        delay={{ show: "0", hide: "100" }}
+
                                     >
-                                        <ExportToExcel
-                                            className="btn btn-primary "
-                                            apiData={ForGetCSV}
-                                            fileName={'All Users'} />
+                                        <i className="bx bxs-download" aria-hidden="true"></i>
+
+                                        Export-Excel
+                                    </button>
+                                  </div>
 
 
-                                    </div>
+
                                 </div>
 
                                 <Table

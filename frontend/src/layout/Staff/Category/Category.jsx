@@ -7,17 +7,12 @@ import Swal from 'sweetalert2';
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 import { Tooltip } from 'antd';
 import styled from 'styled-components';
-import { fDate , fDateTime} from '../../../Utils/Date_formate';
+import { fDateTime } from '../../../Utils/Date_formate';
 import { getstaffperuser } from '../../../Services/Admin';
 
 
 
-
 const Category = () => {
-
-    
-   
-
     const navigate = useNavigate();
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
@@ -26,7 +21,6 @@ const Category = () => {
     const [searchInput, setSearchInput] = useState("");
     const [selectedServices, setSelectedServices] = useState([]);
     const [permission, setPermission] = useState([]);
-  
 
     const [updatetitle, setUpdatetitle] = useState({
         title: "",
@@ -64,7 +58,18 @@ const Category = () => {
             console.log("Error fetching services:", error);
         }
     };
+  
 
+    const getpermissioninfo = async () => {
+        try {
+            const response = await getstaffperuser(userid, token);
+            if (response.status) {
+                setPermission(response.data.permissions);
+            }
+        } catch (error) {
+            console.log("error", error);
+        }
+    }
 
 
     const getservice = async () => {
@@ -78,18 +83,6 @@ const Category = () => {
             console.log("Error fetching services:", error);
         }
     };
-   
-
-    const getpermissioninfo = async () => {
-        try {
-            const response = await getstaffperuser(userid, token);
-            if (response.status) {
-                setPermission(response.data.permissions);
-            }
-        } catch (error) {
-            console.log("error", error);
-        }
-    }
 
 
 
@@ -286,15 +279,16 @@ const Category = () => {
             }
         });
     };
-
+  
+   
 
     const columns = [
-        {
-            name: 'S.No',
-            selector: (row, index) => index + 1,
-            sortable: false,
-            width: '78px',
-        },
+        // {
+        //     name: 'S.No',
+        //     selector: (row, index) => 10 + index + 1,
+        //     sortable: false,
+        //     width: '78px',
+        // },
         {
             name: 'Title',
             selector: row => row.title,
@@ -307,7 +301,7 @@ const Category = () => {
             width: '200px',
             sortable: true,
         },
-        permission.includes("categorystatus") && {
+         permission.includes("categorystatus") ? {
             name: 'Active Status',
             selector: row => (
                 <div className="form-check form-switch form-check-info">
@@ -326,7 +320,7 @@ const Category = () => {
             ),
             sortable: true,
             width: '200px',
-        },
+        } : "" ,
         {
             name: 'Created At',
             selector: row => fDateTime(row.created_at),
@@ -344,8 +338,8 @@ const Category = () => {
             name: 'Actions',
             cell: row => (
                 <>
-                   { permission.includes("editcategory") && ( <div>
-                        <Tooltip placement="top" overlay="Update">
+                    <div>
+                    { permission.includes("editcategory") ? <Tooltip placement="top" overlay="Update">
                             <SquarePen
                                 onClick={() => {
                                     setModel(true);
@@ -357,8 +351,8 @@ const Category = () => {
                                     });
                                 }}
                             />
-                        </Tooltip>
-                    </div> )}
+                        </Tooltip> : "" }
+                    </div>
                     <div>
                         {/* <Tooltip placement="top" overlay="Delete">
                             <Trash2 onClick={() => DeleteCategory(row._id)} />
@@ -437,7 +431,7 @@ const Category = () => {
                                     <i className="bx bx-search" />
                                 </span>
                             </div>
-                            { permission.includes("addcategory") && ( <div className="ms-auto">
+                            { permission.includes("addcategory") ?  <div className="ms-auto">
                                 <button
                                     type="button"
                                     className="btn btn-primary"
@@ -521,7 +515,7 @@ const Category = () => {
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> : 
 
                                 {model && (
                                     <>
@@ -649,7 +643,7 @@ const Category = () => {
 
 
 
-                            </div> )}
+                            </div> : "" }
                         </div>
                         <div className="table-responsive">
                             <Table
