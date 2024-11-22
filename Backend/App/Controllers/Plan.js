@@ -790,6 +790,45 @@ try {
         },
         {
           $lookup: {
+            from: 'plancategories', // The name of the plancategories collection
+            localField: 'planDetails.category', // Field in plans referencing plancategories
+            foreignField: '_id', // The field in the plancategories collection that is referenced
+            as: 'planCategoryDetails' // The name of the field in the result that will hold the joined data
+          }
+        },
+        {
+          $unwind: '$planCategoryDetails' // Unwind if you expect only one matching category
+        },
+        {
+          $lookup: {
+            from: 'services',
+            let: { serviceIds: { $split: ['$planCategoryDetails.service', ','] } },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      {
+                        $in: ['$_id', { $map: { input: '$$serviceIds', as: 'id', in: { $toObjectId: '$$id' } } }]
+                      },
+                      { $eq: ['$status', true] }, // Match active services
+                      { $eq: ['$del', false] } // Match non-deleted services
+                    ]
+                  }
+                }
+              },
+              {
+                $project: {
+                  _id: 1,
+                  title: 1 // Service title
+                }
+              }
+            ],
+            as: 'serviceDetails'
+          }
+        },
+        {
+          $lookup: {
             from: 'clients', // The name of the clients collection
             localField: 'client_id', // The field in PlanSubscription_Modal that references the client
             foreignField: '_id', // The field in the clients collection that is referenced
@@ -813,6 +852,8 @@ try {
             clientName: '$clientDetails.FullName',
             clientEmail: '$clientDetails.Email',
             clientPhoneNo: '$clientDetails.PhoneNo',
+            planCategoryTitle: '$planCategoryDetails.title',
+            serviceNames: { $map: { input: '$serviceDetails', as: 'service', in: '$$service.title' } } // Extract service titles
           }
         },
         {
