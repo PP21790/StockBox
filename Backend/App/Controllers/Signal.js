@@ -744,27 +744,20 @@ async getSignalWithFilter(req, res) {
   }
 
 
-
   async updateReport(req, res) {
     try {
-
-
+        // Handle file upload
         await new Promise((resolve, reject) => {
             upload('report').fields([{ name: 'report', maxCount: 1 }])(req, res, (err) => {
                 if (err) {
                     console.log('File upload error:', err);
                     return reject(err);
                 }
-
-
                 resolve();
             });
         });
 
-
         const { id } = req.body;
-         
-        
 
         if (!id) {
             return res.status(400).json({
@@ -773,23 +766,23 @@ async getSignalWithFilter(req, res) {
             });
         }
 
-      
-      
+        // Extract the uploaded file information
         const reportFile = req.files && req.files['report'] ? req.files['report'][0].filename : null;
 
         // Prepare the update object
-        
+        const updateFields = {}; // Initialize as an empty object
         if (reportFile) {
             updateFields.report = reportFile;
         }
 
-
+        // Update the report in the database
         const updatedreport = await Signal_Modal.findByIdAndUpdate(
             id,
             updateFields,
-            { new: true, runValidators: true } // Options: return the updated document and run validators
+            { new: true, runValidators: true } // Options to return the updated document and run validators
         );
-        // If the news item is not found
+
+        // If the report is not found
         if (!updatedreport) {
             return res.status(404).json({
                 status: false,
@@ -813,6 +806,7 @@ async getSignalWithFilter(req, res) {
         });
     }
 }
+
 
 
 
