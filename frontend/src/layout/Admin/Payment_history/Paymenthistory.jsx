@@ -74,9 +74,9 @@ const History = () => {
                         Name: item.clientName || "-",
                         Email: item.clientEmail || "-",
                         Phone: item.clientPhoneNo || "-",
-                        // Title: item?.planCategoryTitle || '-',
-                        // Segment: item?.serviceNames.map(statusItem => statusItem || 'N/A')
-                        // .join(', ') || 'N/A',
+                        Title: item?.planCategoryTitle || '-',
+                        ClientSegment: item?.serviceNames.map(statusItem => statusItem || 'N/A')
+                        .join(', ') || 'N/A',
                         OerderId: item.orderid ? item.orderid : "Make By Admin",
                         PlanDiscount: item.discount || 0,
                         CouponID: item.coupon || "N/A",
