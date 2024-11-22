@@ -763,7 +763,8 @@ async getSignalWithFilter(req, res) {
 
 
         const { id } = req.body;
-      
+         
+        
 
         if (!id) {
             return res.status(400).json({

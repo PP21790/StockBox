@@ -5,7 +5,7 @@ import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table1';
 import { Eye, Trash2, RefreshCcw , SquarePen} from 'lucide-react';
 import Swal from 'sweetalert2';
-import { GetSignallist, GetSignallistWithFilter, DeleteSignal, SignalCloseApi, GetService, GetStockDetail } from '../../../Services/Admin';
+import { GetSignallist, GetSignallistWithFilter, DeleteSignal, SignalCloseApi, GetService, GetStockDetail , UpdatesignalReport} from '../../../Services/Admin';
 import { fDateTimeH } from '../../../Utils/Date_formate'
 import { exportToCSV } from '../../../Utils/ExportData';
 import Select from 'react-select';
@@ -21,7 +21,12 @@ const Signal = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
     const [header, setheader] = useState("Open Signal");
+    const [updatetitle, setUpdatetitle] = useState({
+          report: "",
+          id: "",
+       
 
+    });
     const location = useLocation();
     const clientStatus = location?.state?.clientStatus;
 
@@ -554,8 +559,8 @@ const Signal = () => {
                             <SquarePen
                                 onClick={() => {
                                     setModel1(true);
-                                    // setServiceid(row);
-                                    // setUpdatetitle({ title: row.title, id: row._id, description: row.description, image: row.image, hyperlink: row.hyperlink });
+                                    setServiceid(row);
+                                    setUpdatetitle({ report: row.report, id: row._id });
                                 }}
                             />
                         </Tooltip>
@@ -590,6 +595,54 @@ const Signal = () => {
         getAllSignal();
 
     }
+  
+
+
+      // Update service
+      const updateReportpdf = async () => {
+        try {
+            const data = { id: serviceid._id, report: updatetitle.report };
+       
+            const response = await UpdatesignalReport(data, token);
+
+              console.log("response",response)
+              console.log("data",data)
+            if (response && response.status) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: response.message || 'File updated successfully.',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    timer: 2000,
+                });
+
+                setUpdatetitle({ report: "", id: "", });
+                setModel1(false);
+            } else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: response.message || 'There was an error updating the file.',
+                    icon: 'error',
+                    confirmButtonText: 'Try Again',
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'server error',
+                icon: 'error',
+                confirmButtonText: 'Try Again',
+            });
+        }
+    };
+
+
+    const updateServiceTitle = (updatedField) => {
+        setUpdatetitle(prev => ({
+            ...prev,
+            ...updatedField
+        }));
+    };
 
 
 
@@ -1125,15 +1178,15 @@ const Signal = () => {
                                                                     <input
                                                                         className="form-control mb-3"
                                                                         type="file"
-                                                                        accept="image/*"
+                                                                        accept="pdf/*"
                                                                         id="imageUpload"
-                                                                        // onChange={(e) => {
-                                                                        //     const file = e.target.files[0];
-                                                                        //     if (file) {
-                                                                        //         updateServiceTitle({ image: file });
-                                                                        //     }
+                                                                        onChange={(e) => {
+                                                                            const file = e.target.files[0];
+                                                                            if (file) {
+                                                                                updateServiceTitle({ report: file });
+                                                                            }
                                                                             
-                                                                        // }}
+                                                                        }}
                                                                     />
                                                                 </div>
                                                                 <div className="col-md-2">
@@ -1157,7 +1210,7 @@ const Signal = () => {
                                                         <button
                                                             type="button"
                                                             className="btn btn-primary"
-                                                            // onClick={updatebanner}
+                                                            onClick={updateReportpdf}
                                                         >
                                                             Update File
                                                         </button>

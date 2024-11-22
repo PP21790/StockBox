@@ -2779,3 +2779,26 @@ export async function changeQRstatuscode(data, token) {
         return err.response?.data || err.message;
     }
 }
+
+
+
+/// update pdf in open and close file  in signal 
+
+export async function UpdatesignalReport(data, token) {
+    const formData = new FormData();
+    formData.append('report', data.report);
+    formData.append('id', data.id);
+    try {
+        const res = await axios.post(`${Config.base_url}signal/updatereport`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
