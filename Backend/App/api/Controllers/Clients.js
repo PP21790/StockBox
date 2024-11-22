@@ -1134,6 +1134,7 @@ async requestPayout(req, res) {
       clientid: clientId,
       amount: amount,
     });
+    
 
     await payoutRequest.save();
 
