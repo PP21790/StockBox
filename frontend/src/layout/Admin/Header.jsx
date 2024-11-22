@@ -13,7 +13,7 @@ const Header = () => {
 
   const token = localStorage.getItem('token');
   const FullName = localStorage.getItem('FullName');
-  
+
 
 
   const [clients, setClients] = useState([]);
@@ -52,23 +52,38 @@ const Header = () => {
   const gettradedetail = async () => {
     try {
       const response = await basicsettinglist(token);
-      if (response.status) {
-        setGetstatus(response.data);
-        const faviconElement = document.querySelector("link[rel='icon']");
-        if (faviconElement) {
+      if (response?.status) {
+        const data = response.data?.[0];
+        if (data) {
+          setGetstatus(response.data);
 
-          faviconElement.href = image_baseurl + "uploads/basicsetting/" + response.data[0].favicon;
-          $('.companyName').html(response.data[0].from_name)
+          const faviconElement = document.querySelector("link[rel='icon']");
+          if (faviconElement) {
+            faviconElement.href = `${image_baseurl}uploads/basicsetting/${data.favicon}`;
+          } else {
+            console.warn("Favicon element not found");
+          }
 
-        } else {
-          console.log("Favicon element not found");
+
+          const companyNameElement = document.querySelector(".companyName");
+          if (companyNameElement) {
+            companyNameElement.textContent = data.from_name;
+          }
+
+
+          console.log("data.staffstatus", data.staffstatus)
+          if (data.staffstatus === 0) {
+            localStorage.clear();
+          }
         }
-
+      } else {
+        console.error("Invalid response status:", response);
       }
     } catch (error) {
-      console.log("Error fetching services:", error);
+      console.error("Error fetching services:", error);
     }
   };
+
 
 
 
