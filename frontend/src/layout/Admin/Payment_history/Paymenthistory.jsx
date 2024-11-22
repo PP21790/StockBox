@@ -77,10 +77,11 @@ const History = () => {
                         Title: item.planDetails?.title || '-',
                         OerderId: item.orderid ? item.orderid : "Make By Admin",
                         PlanDiscount: item.discount || 0,
+                        CouponID: item.coupon || "N/A",
                         PlanAmount: item.plan_price || 0,
                         Total: item?.segment || '-',
                         Validity: item.planDetails?.validity || '-',
-                        PurchaseDate: item.created_at || '-',
+                        PurchaseDate: fDateTime(item.created_at) || '-',
                     }));
                     exportToCSV(csvArr, 'Payment History')
                 } else {
@@ -96,24 +97,7 @@ const History = () => {
 
 
 
-    const forCSVdata = () => {
-        if (clients?.length > 0) {
-            const csvArr = clients.map((item) => ({
-                Name: item.clientName || "-",
-                Email: item.clientEmail || "-",
-                Phone: item.clientPhoneNo || "-",
-                Title: item.planDetails?.title || '-',
-                OerderId: item.orderid ? item.orderid : "Make By Admin",
-                PlanDiscount: item.discount || 0,
-                PlanAmount: item.plan_price || 0,
-                Total: item?.segment || '-',
-                Validity: item.planDetails?.validity || '-',
-                PurchaseDate: item.created_at || '-',
-
-            }));
-            setForGetCSV(csvArr);
-        }
-    };
+   
 
 
 

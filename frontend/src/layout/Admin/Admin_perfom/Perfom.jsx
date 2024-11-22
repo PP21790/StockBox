@@ -59,8 +59,8 @@ const Perform = () => {
                             EntryPrice: entryPrice || "-",
                             ExitPrice: exitPrice || "-",
                             TotalProfitAndLoss: `${totalPL} (${plPercent}%)`,
-                            EntryDate: item.created_at,
-                            ExitDate: item.closedate,
+                            EntryDate: fDateTime(item.created_at),
+                            ExitDate: fDateTime(item.closedate),
                         };
                     });
                     exportToCSV(csvArr, 'Performance');

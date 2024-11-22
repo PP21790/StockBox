@@ -861,7 +861,7 @@ const DynamicForm = ({
                                                                                             className={`col-lg-${field.label}`}
                                                                                             htmlFor={field.name}
                                                                                         >
-                                                                                            {field.name}
+                                                                                            {field.label}
                                                                                             {field.star == true ? <span className="text-danger">*</span> : ""}
                                                                                         </label>
                                                                                         <input
@@ -889,7 +889,7 @@ const DynamicForm = ({
                                                                                 <div className="col-lg-12">
                                                                                     <div className="form-check custom-checkbox input-block ps-0 mb-3">
                                                                                         <label className={`col-lg-${field.label}`} htmlFor={field.name}>
-                                                                                            {field.name}
+                                                                                            {field.label}
                                                                                             {field.star == true ? <span className="text-danger">*</span> : ""}
                                                                                         </label>
                                                                                         <input
@@ -1039,6 +1039,7 @@ const DynamicForm = ({
                                                                                                 aria-describedby="basic-addon1"
                                                                                                 className="form-control"
                                                                                                 id={field.name}
+                                                                                                 step="0.01"
                                                                                                 placeholder={`Enter ${field.label}`}
                                                                                                 {...formik.getFieldProps(field.name)}
                                                                                                 min={1}

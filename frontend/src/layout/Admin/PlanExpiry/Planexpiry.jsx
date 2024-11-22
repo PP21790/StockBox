@@ -4,7 +4,7 @@ import { RefreshCcw } from 'lucide-react';
 import Table from '../../../components/Table1';
 import { exportToCSV } from '../../../Utils/ExportData';
 import { getclientPlanexpiry, getclientPlanexpirywithfilter, GetService } from '../../../Services/Admin';
-import { fDateTimeH } from '../../../Utils/Date_formate';
+import { fDateTime} from '../../../Utils/Date_formate';
 
 
 
@@ -71,8 +71,8 @@ const Planexpiry = () => {
                         Email: item.clientEmail || '',
                         PhoneNo: item.clientMobile || '',
                         Segment: item.serviceTitle || '',
-                        StartDate: fDateTimeH(item.startdate) || '',
-                        EndDate: fDateTimeH(item.enddate) || '',
+                        StartDate: fDateTime(item.startdate) || '',
+                        EndDate: fDateTime(item.enddate) || '',
                     }));
                     exportToCSV(csvArr, 'Client Plan Expiry')
                 } else {
@@ -138,12 +138,12 @@ const Planexpiry = () => {
         },
         {
             name: 'Start Date',
-            selector: (row) => fDateTimeH(row.startdate),
+            selector: (row) => fDateTime(row.startdate),
             sortable: true, width: '200px'
         },
         {
             name: 'End Date',
-            selector: (row) => fDateTimeH(row.enddate),
+            selector: (row) => fDateTime(row.enddate),
             sortable: true, width: '200px'
         },
     ];

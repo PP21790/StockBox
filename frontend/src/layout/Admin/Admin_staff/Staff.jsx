@@ -67,7 +67,7 @@ const Staff = () => {
             UserName: item?.UserName,
             Email: item?.Email || '',
             PhoneNo: item?.PhoneNo || '',
-            CreatedAt: item.createdAt || ""
+            CreatedAt: fDateTime(item.createdAt) || ""
     
           }));
           setForGetCSV(csvArr);

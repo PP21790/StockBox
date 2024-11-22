@@ -9,8 +9,8 @@ import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
 
 const Banner = () => {
-
-
+     
+ 
     const navigate = useNavigate();
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
@@ -58,6 +58,9 @@ const Banner = () => {
             console.log("Error fetching services:", error);
         }
     };
+
+
+
 
     useEffect(() => {
         getBanner();
@@ -343,6 +346,10 @@ const Banner = () => {
             ...updatedField
         }));
     };
+
+
+
+ 
 
 
 

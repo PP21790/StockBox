@@ -172,7 +172,7 @@ const Client = () => {
                             (item?.clientcome === 1 ? "WEB" : "APP") ||
                             'N/A',
                         PhoneNo: item?.PhoneNo || 'N/A',
-                        Created_at: item?.createdAt || 'N/A',
+                        Created_at: fDateTime(item?.createdAt) || 'N/A',
                     }));
                     exportToCSV(csvArr, 'All Clients')
                 } else {

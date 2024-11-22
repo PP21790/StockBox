@@ -102,8 +102,8 @@ const Freeclient = () => {
                         PhoneNo: item?.clientDetails?.PhoneNo || '-',
                         Kyc: item?.clientDetails?.kyc_verification == 1 ? "Verified" : "Not Verified",
                         Status: item?.status === "active" ? "Active" : "Expired",
-                        StartDate: item?.startdate || '-',
-                        EndDate: item?.enddate || '-',
+                        StartDate: fDateTime(item?.startdate) || '-',
+                        EndDate: fDateTime(item?.enddate) || '-',
         
                     }));
                     exportToCSV(csvArr, 'All Free Clients')
