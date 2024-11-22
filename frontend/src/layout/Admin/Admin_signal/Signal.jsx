@@ -604,9 +604,6 @@ const Signal = () => {
             const data = { id: serviceid._id, report: updatetitle.report };
        
             const response = await UpdatesignalReport(data, token);
-
-              console.log("response",response)
-              console.log("data",data)
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
