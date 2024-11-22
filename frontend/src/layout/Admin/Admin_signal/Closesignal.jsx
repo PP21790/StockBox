@@ -3,12 +3,13 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table1';
-import { Eye, RefreshCcw, Trash2 } from 'lucide-react';
+import { Eye, RefreshCcw, Trash2 , SquarePen} from 'lucide-react';
 import Swal from 'sweetalert2';
-import { GetSignallist, GetSignallistWithFilter, DeleteSignal, SignalCloseApi, GetService, GetStockDetail } from '../../../Services/Admin';
+import { GetSignallist, GetSignallistWithFilter, DeleteSignal, SignalCloseApi, GetService, GetStockDetail , UpdatesignalReport } from '../../../Services/Admin';
 import { fDateTimeSuffix, fDateTimeH } from '../../../Utils/Date_formate'
 import { exportToCSV } from '../../../Utils/ExportData';
 import Select from 'react-select';
+import { Tooltip } from 'antd';
 
 
 
@@ -22,12 +23,17 @@ const Closesignal = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
     const [header, setheader] = useState("Close Signal");
+    const [updatetitle, setUpdatetitle] = useState({
+        report: "",
+        id: "",
+     
 
+  });
 
 
     const location = useLocation();
     const clientStatus = location?.state?.clientStatus;
-
+   
 
 
     useEffect(() => {
@@ -57,8 +63,8 @@ const Closesignal = () => {
     const [stockList, setStockList] = useState([]);
     const [searchstock, setSearchstock] = useState("");
     const [ForGetCSV, setForGetCSV] = useState([])
-
-
+    const [model1, setModel1] = useState(false);
+    const [serviceid, setServiceid] = useState({});
 
     const navigate = useNavigate();
     const [clients, setClients] = useState([]);
@@ -283,6 +289,30 @@ const Closesignal = () => {
             button: true,
 
         },
+        {
+            name: 'Upload Pdf',
+            cell: row => (
+                <>
+                    <div>
+                        <Tooltip placement="top" overlay="Updaate">
+                            <SquarePen
+                                onClick={() => {
+                                    setModel1(true);
+                                    setServiceid(row);
+                                    setUpdatetitle({ report: row.report, id: row._id });
+                                }}
+                            />
+                        </Tooltip>
+                    </div>
+                    
+                </>
+            ),
+            ignoreRowClick: true,
+            allowOverflow: true,
+            button: true,
+
+        },
+        
 
     ];
 
@@ -302,6 +332,51 @@ const Closesignal = () => {
         getAllSignal();
 
     }
+ 
+   // Update service
+   const updateReportpdf = async () => {
+    try {
+        const data = { id: serviceid._id, report: updatetitle.report };
+   
+        const response = await UpdatesignalReport(data, token);
+        if (response && response.status) {
+            Swal.fire({
+                title: 'Success!',
+                text: response.message || 'File updated successfully.',
+                icon: 'success',
+                confirmButtonText: 'OK',
+                timer: 2000,
+            });
+
+            setUpdatetitle({ report: "", id: "", });
+            setModel1(false);
+        } else {
+            Swal.fire({
+                title: 'Error!',
+                text: response.message || 'There was an error updating the file.',
+                icon: 'error',
+                confirmButtonText: 'Try Again',
+            });
+        }
+    } catch (error) {
+        Swal.fire({
+            title: 'Error!',
+            text: 'server error',
+            icon: 'error',
+            confirmButtonText: 'Try Again',
+        });
+    }
+};
+
+
+const updateServiceTitle = (updatedField) => {
+    setUpdatetitle(prev => ({
+        ...prev,
+        ...updatedField
+    }));
+};
+
+ 
 
 
 
@@ -408,7 +483,7 @@ const Closesignal = () => {
                                         <label>Select Stock</label>
                                         <Select
                                             options={options}
-                                            value={options.find((option) => option.value === searchstock)}
+                                            value={options.find((option) => option.value === searchstock) || null}
                                             onChange={handleChange}
                                             className="form-control radius-10"
                                             isClearable
@@ -437,6 +512,80 @@ const Closesignal = () => {
                     </div>
                 </div>
             </div>
+             
+            {model1 && (
+                          <>
+                                        <div className="modal-backdrop fade show"></div>
+                                        <div
+                                            className="modal fade show"
+                                            style={{ display: 'block' }}
+                                            tabIndex={-1}
+                                            aria-labelledby="exampleModalLabel"
+                                            aria-hidden="true"
+                                        >
+                                            <div className="modal-dialog">
+                                                <div className="modal-content">
+                                                    <div className="modal-header">
+                                                        <h5 className="modal-title" id="exampleModalLabel">
+                                                            Upload Pdf
+                                                        </h5>
+                                                        <button
+                                                            type="button"
+                                                            className="btn-close"
+                                                            onClick={() => setModel1(false)}
+                                                        />
+                                                    </div>
+                                                    <div className="modal-body">
+                                                        <form>
+                                                            <div className="row">
+                                                                <div className="col-md-10">
+                                                                    <label htmlFor="imageUpload">Upload Pdf</label>
+                                                                    <span className="text-danger">*</span>
+                                                                    <input
+                                                                        className="form-control mb-3"
+                                                                        type="file"
+                                                                        accept="pdf/*"
+                                                                        id="imageUpload"
+                                                                        onChange={(e) => {
+                                                                            const file = e.target.files[0];
+                                                                            if (file) {
+                                                                                updateServiceTitle({ report: file });
+                                                                            }
+                                                                            
+                                                                        }}
+                                                                    />
+                                                                </div>
+                                                                <div className="col-md-2">
+                            
+                        
+                                                                </div>
+                                                            </div>
+    
+                                                        </form>
+
+
+                                                    </div>
+                                                    <div className="modal-footer">
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-secondary"
+                                                            onClick={() => setModel1(false)}
+                                                        >
+                                                            Close
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-primary"
+                                                            onClick={updateReportpdf}
+                                                        >
+                                                            Update File
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
 
         </div>
     );

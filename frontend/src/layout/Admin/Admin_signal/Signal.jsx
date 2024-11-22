@@ -155,7 +155,7 @@ const Signal = () => {
 
 
     const options = clients.map((item) => ({
-        value: item.stock,
+        value: item.stock ,
         label: item.stock,
     }));
 
@@ -593,6 +593,8 @@ const Signal = () => {
         fetchAdminServices()
         fetchStockList()
         getAllSignal();
+       
+        
 
     }
   
@@ -759,7 +761,7 @@ const Signal = () => {
                                         <label>Select Stock</label>
                                         <Select
                                             options={options}
-                                            value={options.find((option) => option.value === searchstock)}
+                                            value={options.find((option) => option.value === searchstock) || null}
                                             onChange={handleChange1}
                                             className="form-control radius-10"
                                             isClearable
