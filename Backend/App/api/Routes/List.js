@@ -46,6 +46,4 @@ router.get('/api/list/qrcode', Qrcode);
 router.get('/api/refer', Refer);
 
 
-
-
 module.exports = router;
