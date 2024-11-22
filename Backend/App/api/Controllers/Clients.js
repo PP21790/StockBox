@@ -1151,8 +1151,7 @@ async payoutList(req, res) {
   try {
 
     const { id } = req.body;  // Extract the client ID from the request parameters
-    const result = await Payout_Modal.find({ clientid: id });  // Fetch payouts for the given client ID
-
+    const result = await Payout_Modal.find({ clientid: id }).sort({ created_at: -1 }); // Sort by _id in descending order
     return res.json({
       status: true,
       message: "get",
@@ -1179,10 +1178,10 @@ async referEarn(req, res) {
 
     const result = await Refer_Modal.find({
       $or: [
-        { user_id: id },      // Check if user_id matches
-        { token: client.refer_token }  // Check if token matches
+        { user_id: id }, // Check if user_id matches
+        { token: client.refer_token } // Check if token matches
       ]
-    });
+    }).sort({ created_at: -1 });
     
     // Process result to show receiveramount or senderamount based on the condition
     const processedResult = await Promise.all(result.map(async (entry) => {

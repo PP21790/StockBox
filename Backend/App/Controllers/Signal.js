@@ -744,5 +744,76 @@ async getSignalWithFilter(req, res) {
   }
 
 
+
+  async updateReport(req, res) {
+    try {
+
+
+        await new Promise((resolve, reject) => {
+            upload('report').fields([{ name: 'report', maxCount: 1 }])(req, res, (err) => {
+                if (err) {
+                    console.log('File upload error:', err);
+                    return reject(err);
+                }
+
+
+                resolve();
+            });
+        });
+
+
+        const { id } = req.body;
+      
+
+        if (!id) {
+            return res.status(400).json({
+                status: false,
+                message: "Signal ID is required",
+            });
+        }
+
+      
+      
+        const reportFile = req.files && req.files['report'] ? req.files['report'][0].filename : null;
+
+        // Prepare the update object
+        
+        if (reportFile) {
+            updateFields.report = reportFile;
+        }
+
+
+        const updatedreport = await Signal_Modal.findByIdAndUpdate(
+            id,
+            updateFields,
+            { new: true, runValidators: true } // Options: return the updated document and run validators
+        );
+        // If the news item is not found
+        if (!updatedreport) {
+            return res.status(404).json({
+                status: false,
+                message: "Report not found",
+            });
+        }
+
+        console.log("Updated Report:", updatedreport);
+        return res.json({
+            status: true,
+            message: "Report updated successfully",
+            data: updatedreport,
+        });
+
+    } catch (error) {
+        console.log("Error updating Report:", error);
+        return res.status(500).json({
+            status: false,
+            message: "Server error",
+            error: error.message,
+        });
+    }
+}
+
+
+
 }
 module.exports = new Signal();

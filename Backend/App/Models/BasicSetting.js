@@ -136,6 +136,11 @@ const BasicSettingSchema = new Schema({
         trim: true,
         default: 0
     },
+    staffstatus: {
+        type: Number,
+        trim: true,
+        default: 1
+    },
     kyc: {
         type: Number,
         trim: true,
