@@ -801,6 +801,34 @@ try {
         },
         {
           $lookup: {
+            from: 'services',
+            let: { serviceIds: { $split: ['$planCategoryDetails.service', ','] } },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      {
+                        $in: ['$_id', { $map: { input: '$$serviceIds', as: 'id', in: { $toObjectId: '$$id' } } }]
+                      },
+                      { $eq: ['$status', true] }, // Match active services
+                      { $eq: ['$del', false] } // Match non-deleted services
+                    ]
+                  }
+                }
+              },
+              {
+                $project: {
+                  _id: 1,
+                  title: 1 // Service title
+                }
+              }
+            ],
+            as: 'serviceDetails'
+          }
+        },
+        {
+          $lookup: {
             from: 'clients', // The name of the clients collection
             localField: 'client_id', // The field in PlanSubscription_Modal that references the client
             foreignField: '_id', // The field in the clients collection that is referenced
@@ -824,7 +852,8 @@ try {
             clientName: '$clientDetails.FullName',
             clientEmail: '$clientDetails.Email',
             clientPhoneNo: '$clientDetails.PhoneNo',
-            planCategoryTitle: '$planCategoryDetails.title' // Include plan category title
+            planCategoryTitle: '$planCategoryDetails.title',
+            serviceNames: { $map: { input: '$serviceDetails', as: 'service', in: '$$service.title' } } // Extract service titles
           }
         },
         {
