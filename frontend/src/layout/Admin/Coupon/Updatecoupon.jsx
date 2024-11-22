@@ -139,6 +139,7 @@ const Updatecoupon = () => {
         label_size: 6,
         col_size: 6,
         disable: false,
+        star:true
     },
     {
         name: "code",
@@ -147,6 +148,7 @@ const Updatecoupon = () => {
         label_size: 12,
         col_size: 6,
         disable: false,
+        star:true
     },
     {
         name: "type",
@@ -155,10 +157,12 @@ const Updatecoupon = () => {
         label_size: 12,
         col_size: 6,
         disable: false,
+        star:true,
         options: [
             { value: "percentage", label: "Percentage" },
             { value: "fixed", label: "Fixed" },
         ]
+        
     },
 
     {
@@ -168,7 +172,8 @@ const Updatecoupon = () => {
         label_size: 12,
         col_size: 6,
         disable: false,
-        showWhen: (values) => values.type === "fixed"
+        showWhen: (values) => values.type === "fixed",
+        star:true
     },
     {
         name: "value",
@@ -177,7 +182,8 @@ const Updatecoupon = () => {
         label_size: 12,
         col_size: 6,
         disable: false,
-        showWhen: (values) => values.type === "percentage"
+        showWhen: (values) => values.type === "percentage",
+        star:true
     },
 
     {
@@ -187,6 +193,7 @@ const Updatecoupon = () => {
         label_size: 12,
         col_size: 6,
         disable: false,
+        star:true
     },
     {
         name: "mincouponvalue",
@@ -195,7 +202,8 @@ const Updatecoupon = () => {
         label_size: 12,
         col_size: 6,
         disable: false,
-        showWhen: (values) => values.type === "percentage"
+        showWhen: (values) => values.type === "percentage",
+        star:true
     },
     {
         name: "startdate",
@@ -204,6 +212,7 @@ const Updatecoupon = () => {
         label_size: 12,
         col_size: 6,
         disable: false,
+        star:true
 
     },
     {
@@ -213,6 +222,7 @@ const Updatecoupon = () => {
         label_size: 12,
         col_size: 6,
         disable: false,
+        star:true
     },
 
 

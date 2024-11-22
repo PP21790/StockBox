@@ -106,6 +106,7 @@ const Editfreeclient = () => {
       label_size: 12,
       col_size: 4,
       disable: false,
+      star:true
     },
     // {
     //   name: "UserName",
@@ -123,6 +124,7 @@ const Editfreeclient = () => {
       label_size: 12,
       col_size: 4,
       disable: false,
+      star:true
     },
     {
       name: "PhoneNo",

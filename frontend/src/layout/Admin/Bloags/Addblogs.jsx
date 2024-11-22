@@ -31,7 +31,7 @@ const Addblogs = () => {
         if (!values.image) {
             errors.image = "Please Enter Image";
         }
-        console.log("errors",errors)
+      
 
         return errors;
     };
@@ -96,6 +96,7 @@ const Addblogs = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
+            star:true
         },
         {
             name: "image",
@@ -104,6 +105,7 @@ const Addblogs = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
+            star:true
         },
         {
             name: "description",
@@ -112,6 +114,7 @@ const Addblogs = () => {
             label_size: 12,
             col_size: 12,
             disable: false,
+            star:true
         },
     ];
 

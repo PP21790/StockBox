@@ -15,16 +15,16 @@ const Update = () => {
   const validate = (values) => {
     const errors = {};
     if (!values.FullName) {
-      errors.FullName = "Please enter Full Name";
+      errors.FullName = "Please Enter Full Name";
     }
     if (!values.Email) {
-      errors.Email = "Please enter Email";
+      errors.Email = "Please Enter Email";
     }
     if (!values.UserName) {
-      errors.UserName = "Please enter Username";
+      errors.UserName = "Please Enter Username";
     }
     if (!values.PhoneNo) {
-      errors.PhoneNo = "Please enter Phone Number";
+      errors.PhoneNo = "Please Enter Phone Number";
     }
     return errors;
   };
@@ -94,6 +94,7 @@ const Update = () => {
       label_size: 6,
       col_size: 6,
       disable: false,
+      star:true
     },
     {
       name: "UserName",
@@ -102,6 +103,7 @@ const Update = () => {
       label_size: 12,
       col_size: 6,
       disable: true,
+      star:true
     },
     {
       name: "Email",
@@ -110,6 +112,7 @@ const Update = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
+      star:true
     },
     {
       name: "PhoneNo",
@@ -118,6 +121,7 @@ const Update = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
+      star:true
     },
     {
       name: "password",
@@ -126,6 +130,7 @@ const Update = () => {
       label_size: 12,
       col_size: 3,
       disable: false,
+      star:true
     },
   ];
 

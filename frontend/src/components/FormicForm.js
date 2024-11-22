@@ -242,7 +242,7 @@ const DynamicForm = ({
                                                             <div className="input-block mb-3 flex-column">
                                                                 <label className={`col-lg-${field.label_size}`}>
                                                                     {field.label}
-                                                                    <span className="text-danger">*</span>
+                                                                    {field.star == true ? <span className="text-danger">*</span> : ""}
                                                                 </label>
 
                                                                 {/* Convert input to textarea */}
@@ -273,7 +273,7 @@ const DynamicForm = ({
                                                             <div className="input-block mb-3 flex-column">
                                                                 <label className={`col-lg-${field.label_size}`}>
                                                                     {field.label}
-                                                                    <span className="text-danger">*</span>
+                                                                    {field.star == true ? <span className="text-danger">*</span> : ""}
                                                                 </label>
 
                                                                 <input
@@ -358,7 +358,7 @@ const DynamicForm = ({
                                                                     <div className="input-block mb-3">
                                                                         <label>
                                                                             {field.label}
-                                                                            {field.optional === false ? <span className="text-danger">*</span> : ""}
+                                                                            {field.star == true ? <span className="text-danger">*</span> : ""}
                                                                         </label>
 
                                                                         <input
@@ -391,7 +391,7 @@ const DynamicForm = ({
                                                                         <div style={{ flex: 1 }}>
                                                                             <label>
                                                                                 {field.label}
-                                                                                {field.optional === false ? <span className="text-danger">*</span> : ""}
+                                                                                {field.star == true ? <span className="text-danger">*</span> : ""}
                                                                             </label>
 
                                                                             <input
@@ -442,7 +442,7 @@ const DynamicForm = ({
                                                                                     htmlFor={field.name}
                                                                                 >
                                                                                     {field.label}
-                                                                                    <span className="text-danger">*</span>
+                                                                                    {field.star == true ? <span className="text-danger">*</span> : ""}
                                                                                 </label>
                                                                                 <input
                                                                                     type="file"
@@ -490,7 +490,7 @@ const DynamicForm = ({
                                                                                 htmlFor={field.name}
                                                                             >
                                                                                 {field.label}
-                                                                                <span className="text-danger">*</span>
+                                                                                {field.star == true ? <span className="text-danger">*</span> : ""}
                                                                             </label>
                                                                             <div
                                                                                 className={`col-lg-${title === "addgroup" ? 12 : 12
@@ -543,6 +543,7 @@ const DynamicForm = ({
                                                                                 htmlFor={field.name}
                                                                             >
                                                                                 {field.label}
+                                                                                {field.star == true ? <span className="text-danger">*</span> : ""}
                                                                             </label>
                                                                             <div
                                                                                 className={`col-lg-${title === "addgroup" ? 12 : 12
@@ -584,7 +585,9 @@ const DynamicForm = ({
                                                                         {/* First Column for Select Input */}
                                                                         <div className={`col-lg-6`}>
                                                                             <div className="input-block row">
+                                                                                
                                                                                 <label
+                                                                                
                                                                                     className={`col-lg-${title === "forlogin"
                                                                                         ? 3
                                                                                         : title === "update_theme"
@@ -593,7 +596,9 @@ const DynamicForm = ({
                                                                                         } col-form-label p-0 mx-3`}
                                                                                     htmlFor={field.name}
                                                                                 >
+                                                                                    
                                                                                     {field.label}
+                                                                                    {field.star == true ? <span className="text-danger">*</span> : ""}
                                                                                 </label>
                                                                                 <div className={`col-lg-${title === "addgroup" ? 12 : 12}`}>
                                                                                     <select
@@ -662,6 +667,7 @@ const DynamicForm = ({
                                                                                                         {formik.errors[field.name] && (
                                                                                                             <div style={{ color: "red" }}>
                                                                                                                 {formik.errors[field.name]}
+                                                                                                                {field.star == true ? <span className="text-danger">*</span> : ""}
                                                                                                             </div>
                                                                                                         )}
                                                                                                     </div>
@@ -714,6 +720,7 @@ const DynamicForm = ({
                                                                         htmlFor={field.parent_label}
                                                                     >
                                                                         {field.parent_label}
+                                                                        {field.star == true ? <span className="text-danger">*</span> : ""}
                                                                     </label>
 
                                                                     <div className={`d-flex`}>
@@ -764,7 +771,7 @@ const DynamicForm = ({
                                                                                 htmlFor={field.name}
                                                                             >
                                                                                 {field.label}
-                                                                                <span className="text-danger">*</span>
+                                                                                {field.star == true ? <span className="text-danger">*</span> : ""}
                                                                             </label>
                                                                             <div className="d-flex" style={{ position: 'relative' }}>
                                                                                 <input
@@ -808,7 +815,7 @@ const DynamicForm = ({
                                                                                 htmlFor={field.name}
                                                                             >
                                                                                 {field.label}
-                                                                                <span className="text-danger">*</span>
+                                                                                {field.star == true ? <span className="text-danger">*</span> : ""}
                                                                             </label>
                                                                             <div className="d-flex" style={{ position: 'relative' }}>
                                                                                 <input
@@ -855,6 +862,7 @@ const DynamicForm = ({
                                                                                             htmlFor={field.name}
                                                                                         >
                                                                                             {field.name}
+                                                                                            {field.star == true ? <span className="text-danger">*</span> : ""}
                                                                                         </label>
                                                                                         <input
                                                                                             type={field.type}
@@ -882,6 +890,7 @@ const DynamicForm = ({
                                                                                     <div className="form-check custom-checkbox input-block ps-0 mb-3">
                                                                                         <label className={`col-lg-${field.label}`} htmlFor={field.name}>
                                                                                             {field.name}
+                                                                                            {field.star == true ? <span className="text-danger">*</span> : ""}
                                                                                         </label>
                                                                                         <input
                                                                                             type={"date"}
@@ -918,6 +927,7 @@ const DynamicForm = ({
                                                                                                 for={field.name}
                                                                                             >
                                                                                                 {field.label}
+                                                                                                {field.star == true ? <span className="text-danger">*</span> : ""}
                                                                                             </label>
                                                                                             <textarea
                                                                                                 className="form-control"
@@ -946,7 +956,7 @@ const DynamicForm = ({
                                                                                         <div className="form-group input-block mb-3">
                                                                                             <label htmlFor={field.name}>
                                                                                                 {field.label}
-                                                                                                {field.optional === false ? <span className="text-danger">*</span> : ""}
+                                                                                                {field.star == true ? <span className="text-danger">*</span> : ""}
                                                                                             </label>
 
                                                                                             <input
@@ -980,7 +990,7 @@ const DynamicForm = ({
                                                                                             <label htmlFor={field.name}>
                                                                                                 {field.label}
                                                                                             </label>
-                                                                                            <span className="text-danger">*</span>
+                                                                                            {field.star == true ? <span className="text-danger">*</span> : ""}
                                                                                             <input
                                                                                                 type="text"
                                                                                                 name={field.name}
@@ -1021,7 +1031,7 @@ const DynamicForm = ({
                                                                                             <label htmlFor={field.name}>
                                                                                                 {field.label}
                                                                                             </label>
-                                                                                            <span className="text-danger">*</span>
+                                                                                            {field.star == true ? <span className="text-danger">*</span> : ""}
                                                                                             <input
                                                                                                 type="number"
                                                                                                 name={field.name}
@@ -1068,7 +1078,7 @@ const DynamicForm = ({
                                                                                             <label htmlFor={field.name}>
                                                                                                 {field.label}
                                                                                             </label>
-                                                                                            <span className="text-danger">*</span>
+                                                                                            {field.star == true ? <span className="text-danger">*</span> : ""}
                                                                                             <input
                                                                                                 type="number"
                                                                                                 name={field.name}
@@ -1114,6 +1124,7 @@ const DynamicForm = ({
                                                                             <>
                                                                                 <div style={{ marginTop: "20px" }}>
                                                                                     <label htmlFor={field.name}>{field.label}</label>
+                                                                                    {field.star == true ? <span className="text-danger">*</span> : ""}
                                                                                     <ReactQuill
                                                                                         value={formik.values[field.name]}
                                                                                         onChange={(value) => formik.setFieldValue(field.name, value)}
@@ -1152,7 +1163,7 @@ const DynamicForm = ({
                                                                             : field.type === "selectchecbox" ? (
                                                                                 <div className={`col-lg-${field.col_size}`}>
                                                                                     <label htmlFor={field.name}>{field.label}</label>
-
+                                                                                    {field.star == true ? <span className="text-danger">*</span> : ""}
                                                                                     {field.options && field.options.length > 0 && <DropdownMultiselect
                                                                                         options={field.options.map((item) => ({
                                                                                             key: item.value,
@@ -1180,6 +1191,7 @@ const DynamicForm = ({
                                                                                                 <label className={`col-lg-${field.label_size}`}>
                                                                                                     {field.label}
                                                                                                 </label>
+                                                                                                {field.star == true ? <span className="text-danger">*</span> : ""}
                                                                                             </div>
                                                                                         </div>
                                                                                     </>
@@ -1187,6 +1199,7 @@ const DynamicForm = ({
                                                                                     <>
                                                                                         <div key={index} className={`col-md-${field.col_size}`}>
                                                                                             <label htmlFor={field.name}>{field.label}</label>
+                                                                                            {field.star == true ? <span className="text-danger">*</span> : ""}
                                                                                             <input
                                                                                                 type="text"
                                                                                                 id={field.name}

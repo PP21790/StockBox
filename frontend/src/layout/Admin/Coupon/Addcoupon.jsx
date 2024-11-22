@@ -146,6 +146,7 @@ const Addcoupon = () => {
             label_size: 6,
             col_size: 6,
             disable: false,
+            star:true
         },
         {
             name: "code",
@@ -154,6 +155,7 @@ const Addcoupon = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
+            star:true
         },
         {
             name: "type",
@@ -162,6 +164,7 @@ const Addcoupon = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
+            star:true,
             options: [
                 { value: "percentage", label: "Percentage" },
                 { value: "fixed", label: "Fixed" },
@@ -175,6 +178,7 @@ const Addcoupon = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
+            star:true,
             showWhen: (values) => values.type === "fixed"
         },
         {
@@ -184,6 +188,7 @@ const Addcoupon = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
+            star:true,
             showWhen: (values) => values.type === "percentage"
         },
 
@@ -194,6 +199,7 @@ const Addcoupon = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
+            star:true
         },
         {
             name: "mincouponvalue",
@@ -202,6 +208,7 @@ const Addcoupon = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
+            star:true,
             showWhen: (values) => values.type === "percentage"
         },
         {
@@ -211,6 +218,7 @@ const Addcoupon = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
+            star:true
 
         },
         {
@@ -220,6 +228,7 @@ const Addcoupon = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
+            star:true
         },
 
 
@@ -242,7 +251,7 @@ const Addcoupon = () => {
 
     ];
 
-    console.log("formik", formik.values.startdate)
+  
 
     return (
         <div style={{ marginTop: "100px" }}>

@@ -72,61 +72,61 @@ const AddSignal = () => {
     },
     validate: (values) => {
       const errors = {};
-      if (!values.segment) errors.segment = 'Please select a segment';
-      if (!values.stock ) errors.stock = 'Please select a stock';
-      if (!values.price) errors.price = 'Please select a price';
-      if (!values.tag1) errors.tag1 = 'Please enter Target1';
+      if (!values.segment) errors.segment = 'Please Select a Segment';
+      if (!values.stock ) errors.stock = 'Please Select a Stock';
+      if (!values.price) errors.price = 'Please Select a Price';
+      if (!values.tag1) errors.tag1 = 'Please Enter Target1';
       if (values.calltype === "BUY") {
 
         if (values.price && values.tag1 && values.price > values.tag1) {
-          errors.tag1 = "Please Enter greater than Entry Price";
+          errors.tag1 = "Please Enter Greater Than Entry Price";
         }
 
         if (values.tag2 && values.tag1 > values.tag2) {
-          errors.tag2 = "Please Enter greater than Target1";
+          errors.tag2 = "Please Enter Greater Than Target1";
         }
 
         if (values.tag3 && values.tag2 && values.tag2 > values.tag3) {
-          errors.tag3 = "Please Enter greater than Target2";
+          errors.tag3 = "Please Enter Greater Than Target2";
         }
 
         if (values.stoploss && values.price < values.stoploss) {
-          errors.stoploss = "Please Enter less than Entry Price";
+          errors.stoploss = "Please Enter Less Than Entry Price";
         }
 
       } else if (values.calltype === "SELL") {
 
         if (values.price && values.tag1 && values.price < values.tag1) {
-          errors.tag1 = "Please Enter less than Entry Price";
+          errors.tag1 = "Please Enter Less Than Entry Price";
         }
 
         if (values.tag2 && values.tag1 < values.tag2) {
-          errors.tag2 = "Please Enter less than Target1";
+          errors.tag2 = "Please Enter Less Than Target1";
         }
 
         if (values.tag3 && values.tag2 && values.tag2 < values.tag3) {
-          errors.tag3 = "Please Enter less than Target2";
+          errors.tag3 = "Please Enter Less Than Target2";
         }
 
         if (values.stoploss && values.price > values.stoploss) {
-          errors.stoploss = "Please Enter greater than Entry Price";
+          errors.stoploss = "Please Enter Greater Than Entry Price";
         }
       }
 
-      if (!values.callduration) errors.callduration = 'Please enter Trade duration';
-      if (!values.calltype) errors.calltype = 'Please enter Call Calltype';
-      if (!values.description) errors.description = 'Please enter description';
+      if (!values.callduration) errors.callduration = 'Please Enter Trade Duration';
+      if (!values.calltype) errors.calltype = 'Please Enter Call Calltype';
+      if (!values.description) errors.description = 'Please Enter Description';
 
       if (values.segment === "O" && !values.optiontype) {
         errors.optiontype = 'Please enter option type';
       }
 
       if ((values.segment === "O" || values.segment === "F") && !values.expiry) {
-        errors.expiry = 'Please enter expiry date';
+        errors.expiry = 'Please Enter Expiry Date';
       }
 
       if (values.segment === "O" && !values.strikeprice) {
-        errors.strikePrice = 'Please select Strike Price';
+        errors.strikePrice = 'Please Select Strike Price';
       }
 
       return errors;
@@ -289,6 +289,7 @@ const AddSignal = () => {
       ],
       label_size: 12,
       col_size: 8,
+      star:true
     },
     
    
@@ -298,6 +299,7 @@ const AddSignal = () => {
       type: 'select',
       label_size: 12,
       col_size: 6,
+      star:true,
       options: expirydate.map((item) => ({
         label: item.expiry,
         value: item.expiry,
@@ -314,6 +316,7 @@ const AddSignal = () => {
       ],
       label_size: 12,
       col_size: 6,
+      star:true,
       showWhen: (values) => values.segment === "O",
     },
     {
@@ -326,6 +329,7 @@ const AddSignal = () => {
       ],
       label_size: 12,
       col_size: 6,
+      star:true
     },
     {
       name: 'strikeprice',
@@ -333,6 +337,7 @@ const AddSignal = () => {
       type: 'select',
       label_size: 12,
       col_size: 6,
+      star:true,
       options: strikePrice.map((item) => ({
         label: item.stock.strike,
         value: item.stock.strike,
@@ -374,6 +379,7 @@ const AddSignal = () => {
       })(),
       label_size: 12,
       col_size: 6,
+      star:true
     },
     {
       name: 'price',
@@ -381,6 +387,7 @@ const AddSignal = () => {
       type: 'number',
       label_size: 12,
       col_size: 6,
+      star:true
     },
     
    
@@ -390,6 +397,7 @@ const AddSignal = () => {
       type: 'number',
       label_size: 6,
       col_size: 3,
+      star:true
     },
     {
       name: 'tag2',
@@ -426,6 +434,7 @@ const AddSignal = () => {
       type: 'text5',
       label_size: 12,
       col_size: 6,
+      star:true
     },
   ];
 
@@ -468,6 +477,7 @@ const AddSignal = () => {
           <div className="mb-3">
             <div className="position-relative">
               <label className="form-label">Select Stock</label>
+              <span className="text-danger">*</span> 
               <input
                 type="text"
                 className="form-control"

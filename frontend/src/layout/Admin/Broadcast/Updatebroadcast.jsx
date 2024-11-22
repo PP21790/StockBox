@@ -95,6 +95,7 @@ const Updatebroadcast = () => {
                 label: item?.title,
                 value: item?._id,
             })),
+            star:true
         },
         {
             name: "subject",
@@ -103,6 +104,7 @@ const Updatebroadcast = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
+            star:true
         },
         {
             name: "message",
@@ -111,6 +113,7 @@ const Updatebroadcast = () => {
             label_size: 12,
             col_size: 12,
             disable: false,
+            star:true
         },
     ];
 

@@ -96,6 +96,7 @@ const Addnews = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
+            star:true
         },
         {
             name: "image",
@@ -104,6 +105,7 @@ const Addnews = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
+            star:true
         },
         {
             name: "description",
@@ -112,6 +114,7 @@ const Addnews = () => {
             label_size: 12,
             col_size: 12,
             disable: false,
+            star:true
         },
     ];
 

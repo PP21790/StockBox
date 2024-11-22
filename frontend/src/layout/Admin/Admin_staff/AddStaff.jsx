@@ -103,6 +103,7 @@ const AddStaff = () => {
       label_size: 6,
       col_size: 6,
       disable: false,
+      star:true
     },
     {
       name: "UserName",
@@ -111,6 +112,7 @@ const AddStaff = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
+      star:true
     },
     {
       name: "Email",
@@ -119,6 +121,7 @@ const AddStaff = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
+      star:true
     },
     {
       name: "PhoneNo",
@@ -127,6 +130,7 @@ const AddStaff = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
+      star:true
     },
     {
       name: "password",
@@ -135,6 +139,7 @@ const AddStaff = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
+      star:true
     },
     {
       name: "ConfirmPassword",
@@ -143,6 +148,7 @@ const AddStaff = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
+      star:true
     },
   ];
 

@@ -118,6 +118,7 @@ const Addbroadcast = () => {
                 label: item?.title,
                 value: item?._id,
             })),
+            star:true
         },
         {
             name: "subject",
@@ -126,6 +127,7 @@ const Addbroadcast = () => {
             label_size: 12,
             col_size: 4,
             disable: false,
+            star:true
         },
         {
             name: "type",
@@ -139,7 +141,8 @@ const Addbroadcast = () => {
                 { value: "active", label: "Active" },
                 { value: "expired", label: "Expired" },
                 { value: "nonsubscribe", label: "Non Subscribe" },
-            ]
+            ],
+            star:true
         },
         {
             name: "message",
@@ -148,6 +151,7 @@ const Addbroadcast = () => {
             label_size: 12,
             col_size: 12,
             disable: false,
+            star:true
         },
     ];
 
