@@ -2195,12 +2195,10 @@ export async function getHelpMessagelist(token) {
 
 
 export async function addfreeClient(data, token) {
-    const formData = new FormData();
-    formData.append('freetrial', data.freetrial);
     try {
-        const res = await axios.post(`${Config.base_url}basicsetting/updatefreetrail`, formData, {
+        const res = await axios.post(`${Config.base_url}basicsetting/updatefreetrail`, data, {
             headers: {
-                'Content-Type': 'multipart/form-data',
+                data: {},
                 'Authorization': `${token}`,
             },
         });
@@ -2211,6 +2209,7 @@ export async function addfreeClient(data, token) {
         return err.response?.data || err.message;
     }
 }
+
 
 
 // update refer and earn 

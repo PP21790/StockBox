@@ -240,7 +240,6 @@ class BasicSetting {
     async updateFreetrail(req, res) {
         try {
             const { freetrial } = req.body;
-    
             const update = {
                 freetrial,
             };

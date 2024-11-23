@@ -74,6 +74,8 @@ const FreetrialStatus = () => {
       };
 
       const response = await addfreeClient(data, token);
+      console.log("data",data)
+      console.log("response",response)
       if (response?.status) {
         Swal.fire({
           icon: 'success',
