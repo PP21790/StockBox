@@ -17,7 +17,6 @@ const BasicSetting_Modal = db.BasicSetting;
 const Notification_Modal = db.Notification;
 const Planmanage = db.Planmanage;
 const JsonFile = require("../../uploads/json/config.json");
-
 const { sendFCMNotification } = require('./Pushnotification'); 
 
 
@@ -37,9 +36,6 @@ cron.schedule('0 8 * * *', async () => {
     scheduled: true,
     timezone: "Asia/Kolkata"
 });
-
-
-
 
 cron.schedule('0 6 * * *', async () => {
     await downloadKotakNeotoken();
