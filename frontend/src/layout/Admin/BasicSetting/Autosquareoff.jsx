@@ -13,10 +13,12 @@ const Autosquareoff = () => {
 
 
 
+
   const token = localStorage.getItem('token');
   const navigate = useNavigate();
 
   const [clients, setClients] = useState(null);
+
 
   const getsettingdetail = async () => {
     try {
@@ -29,20 +31,47 @@ const Autosquareoff = () => {
     }
   };
 
+
+
   useEffect(() => {
     getsettingdetail();
   }, []);
 
+
+
   const validationSchema = Yup.object().shape({
-    cashexpiretime: Yup.string().required('Cash Expire Time is required'),
-    foexpiretime: Yup.string().required('FO Expire Time is required'),
-    cashexpirehours: Yup.string().required('Cash Expire Hours is required'),
-    foexpirehours: Yup.string().required('FO Expire Hours is required'),
+    cashexpirehours: Yup.string()
+      .required('Cash Expire Hours is required')
+      .matches(/^[0-9]+$/, 'Only numeric values are allowed')
+      .oneOf(['9', '10', '11', '12', '13', '14', '15'], 'Select a valid hour'),
+    cashexpiretime: Yup.string()
+      .required('Cash Expire Minutes is required')
+      .matches(/^[0-9]+$/, 'Only numeric values are allowed')
+      .test('is-valid-minute', 'Minutes must be between 0 and 59', (value) => {
+        const num = parseInt(value, 10);
+        return !isNaN(num) && num >= 0 && num <= 59;
+      }),
+    foexpirehours: Yup.string()
+      .required('F&O Expire Hours is required')
+      .matches(/^[0-9]+$/, 'Only numeric values are allowed')
+      .oneOf(['9', '10', '11', '12', '13', '14', '15'], 'Select a valid hour'),
+    foexpiretime: Yup.string()
+      .required('F&O Expire Minutes is required')
+      .matches(/^[0-9]+$/, 'Only numeric values are allowed')
+      .test('is-valid-minute', 'Minutes must be between 0 and 59', (value) => {
+        const num = parseInt(value, 10);
+        return !isNaN(num) && num >= 0 && num <= 59;
+      }),
   });
+
+
+
 
   if (!clients) {
     return <div>Loading...</div>;
   }
+
+
 
   return (
     <div className='page-content'>
@@ -118,11 +147,17 @@ const Autosquareoff = () => {
                 <Form className="card-body">
                   <div className='p-4 border radius-15'>
                     <div className="row">
-                      <div className="row mb-1 align-items-center">
-
+                      <div className="row mb-3 align-items-center">
                         <div className="col-sm-5">
-                          <label htmlFor="cashexpiretime" className="col-form-label"><b>Cash Expire Hours</b></label>
-                          <Field as="select" name="cashexpirehours" className="form-control custom-select">
+                          <label htmlFor="cashexpirehours" className="col-form-label">
+                            <b>Cash Expire Hours</b>
+                          </label>
+                          <Field
+                            as="select"
+                            name="cashexpirehours"
+                            className="form-control custom-select"
+                            aria-describedby="cashexpirehoursError"
+                          >
                             <option value="">Select Expiry Hours</option>
                             <option value="9">9</option>
                             <option value="10">10</option>
@@ -132,31 +167,34 @@ const Autosquareoff = () => {
                             <option value="14">2</option>
                             <option value="15">3</option>
                           </Field>
+                          <ErrorMessage name="cashexpirehours" component="div" className="error" id="cashexpirehoursError" />
                         </div>
-                        <ErrorMessage name="cashexpiretime" component="div" className="error" />
+
                         <div className="col-sm-5">
-                          <label htmlFor="cashexpiretime" className="col-form-label"><b>Cash Expire Minutes</b></label>
-                          <Field name="cashexpiretime" type="text" className="form-control mb-2" />
-                        </div>
-                        <ErrorMessage name="cashexpiretime" component="div" className="error" />
-                        <div className="col-sm-2 mt-2">
-
-                          <button
-                            type="submit"
-                            className="btn btn-primary px-4"
-
-                          >
-                            Submit
-                          </button>
-
+                          <label htmlFor="cashexpiretime" className="col-form-label">
+                            <b>Cash Expire Minutes</b>
+                          </label>
+                          <Field
+                            name="cashexpiretime"
+                            type="text"
+                            className="form-control"
+                            aria-describedby="cashexpiretimeError"
+                          />
+                          <ErrorMessage name="cashexpiretime" component="div" className="error" id="cashexpiretimeError" />
                         </div>
                       </div>
 
-                      <div className="row mb-1 align-items-center">
+                      <div className="row mb-3 align-items-center">
                         <div className="col-sm-5">
-                          <label htmlFor="foexpiretime" className="col-form-label"><b>F&O Expire Hours</b></label>
-                          <Field as="select" name="foexpirehours" className="form-control custom-select">
-
+                          <label htmlFor="foexpirehours" className="col-form-label">
+                            <b>F&O Expire Hours</b>
+                          </label>
+                          <Field
+                            as="select"
+                            name="foexpirehours"
+                            className="form-control custom-select"
+                            aria-describedby="foexpirehoursError"
+                          >
                             <option value="">Select Expiry Hours</option>
                             <option value="9">9</option>
                             <option value="10">10</option>
@@ -166,52 +204,44 @@ const Autosquareoff = () => {
                             <option value="14">2</option>
                             <option value="15">3</option>
                           </Field>
+                          <ErrorMessage name="foexpirehours" component="div" className="error" id="foexpirehoursError" />
                         </div>
-                        <ErrorMessage name="foexpirehours" component="div" className="error" />
+
                         <div className="col-sm-5">
-                          <label htmlFor="foexpiretime" className="col-form-label"><b>F&O Expire Minutes</b></label>
-                          <Field name="foexpiretime" type="text" className="form-control" />
-                        </div>
-                        <ErrorMessage name="foexpiretime" component="div" className="error" />
-                        <div className="col-sm-2 mt-3">
-
-                          <button
-                            type="submit"
-                            className="btn btn-primary px-4"
-
-                          >
-                            Submit
-                          </button>
-
+                          <label htmlFor="foexpiretime" className="col-form-label">
+                            <b>F&O Expire Minutes</b>
+                          </label>
+                          <Field
+                            name="foexpiretime"
+                            type="text"
+                            className="form-control"
+                            aria-describedby="foexpiretimeError"
+                          />
+                          <ErrorMessage name="foexpiretime" component="div" className="error" id="foexpiretimeError" />
                         </div>
                       </div>
 
-
-
-                      {/* <div className="row mt-2">
-                        <label className="col-sm-3 col-form-label" />
-                        <div className="col-sm-9">
-                          <div className="d-md-flex d-grid align-items-center justify-content-end gap-3">
-                            <button
-                              type="submit"
-                              className="btn btn-primary px-4"
-                              disabled={!dirty || isSubmitting}
-                            >
-                              {isSubmitting ? 'Updating...' : 'Update'}
-                            </button>
-                          </div>
-                        </div>
-                      </div> */}
+                      <div className="col-sm-12 mt-3 text-center">
+                        <button
+                          type="submit"
+                          className="btn btn-primary px-4"
+                          disabled={isSubmitting}
+                        >
+                          {isSubmitting ? 'Submitting...' : 'Submit'}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </Form>
+
               )}
             </Formik>
 
             <style jsx>{`
                           .error {
                             color: red;
-                            font-size: 30px;
+                            font-size: 15px;
+                            
                           }
                          .custom-select {
   appearance: none; /* Remove default arrow */
