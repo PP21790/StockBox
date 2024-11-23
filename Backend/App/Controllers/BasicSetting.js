@@ -245,8 +245,7 @@ class BasicSetting {
             };
     
             // Update the database
-            const options = { new: true, upsert: true, runValidators: true };
-            const result = await BasicSetting_Modal.findOneAndUpdate({}, update, options);
+         
         
            
     const existingSetting = await BasicSetting_Modal.findOne({});
@@ -262,6 +261,12 @@ class BasicSetting {
               });
               await newactivity.save();
         }
+
+        
+        const options = { new: true, upsert: true, runValidators: true };
+        const result = await BasicSetting_Modal.findOneAndUpdate({}, update, options);
+
+
         return res.status(200).json({
             status: true,
             message: "Social Link updated successfully",
