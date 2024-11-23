@@ -41,7 +41,6 @@ class BasicSetting {
                     razorpay_key,
                     razorpay_secret,
                     digio_template_name,
-                    freetrial,
                     kyc,
                     paymentstatus,
                     officepaymenystatus
@@ -53,16 +52,7 @@ class BasicSetting {
                 const existingSetting = await BasicSetting_Modal.findOne({});
 
 
-    if(existingSetting.freetrial !== freetrial)
-    {
-                 const message ="Free Trail Update";
-        const newactivity = new Activitylogs_Modal({
-            olddays : existingSetting.freetrial,
-            newdays : freetrial,
-            message,
-          });
-          await newactivity.save();
-    }
+  
  
 
             const favicon = req.files['favicon'] ? req.files['favicon'][0].filename : (existingSetting ? existingSetting.favicon : null);
@@ -96,7 +86,6 @@ class BasicSetting {
                     razorpay_key,
                     razorpay_secret,
                     digio_template_name,
-                    freetrial,
                     kyc,
                     paymentstatus,
                     officepaymenystatus
@@ -245,6 +234,48 @@ class BasicSetting {
             });
         }
     }
+
+
+    async updateFreetrail(req, res) {
+        try {
+            const { freetrial } = req.body;
+    
+            const update = {
+                freetrial,
+            };
+    
+            // Update the database
+            const options = { new: true, upsert: true, runValidators: true };
+            const result = await BasicSetting_Modal.findOneAndUpdate({}, update, options);
+        
+           
+    const existingSetting = await BasicSetting_Modal.findOne({});
+
+
+    if(existingSetting.freetrial !== freetrial)
+        {
+                     const message ="Free Trail Update";
+            const newactivity = new Activitylogs_Modal({
+                olddays : existingSetting.freetrial,
+                newdays : freetrial,
+                message,
+              });
+              await newactivity.save();
+        }
+        return res.status(200).json({
+            status: true,
+            message: "Social Link updated successfully",
+            data: result
+        });
+    } catch (error) {
+        console.error("Error updating social link:", error);
+        return res.status(500).json({
+            status: false,
+            message: "Server error",
+            error: error.message
+        });
+    }
+}
 
 
   }
