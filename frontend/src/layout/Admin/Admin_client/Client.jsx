@@ -212,6 +212,9 @@ const Client = () => {
         }
     };
 
+
+
+
     const getAdminclient = async () => {
         try {
             const data = {
@@ -691,9 +694,6 @@ const Client = () => {
 
 
                                 </div>
-
-
-
 
 
                             </div>

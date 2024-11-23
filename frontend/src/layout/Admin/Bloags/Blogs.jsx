@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+    import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getblogslist, Addblogsbyadmin, Updateblogsbyadmin, changeblogsstatus, DeleteBlog } from '../../../Services/Admin';
 import Table from '../../../components/Table';
@@ -6,8 +6,7 @@ import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
-import { fDate,fDateTime } from '../../../Utils/Date_formate';
-import { getstaffperuser } from '../../../Services/Admin';
+import { fDateTime} from '../../../Utils/Date_formate';
 
 
 const Blogs = () => {
@@ -17,8 +16,7 @@ const Blogs = () => {
     const navigate = useNavigate();
 
 
-    const [permission, setPermission] = useState([]);
-    
+
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
@@ -64,21 +62,8 @@ const Blogs = () => {
         }
     };
 
-
-    const getpermissioninfo = async () => {
-        try {
-            const response = await getstaffperuser(userid, token);
-            if (response.status) {
-                setPermission(response.data.permissions);
-            }
-        } catch (error) {
-            console.log("error", error);
-        }
-    }
-
     useEffect(() => {
         getblogs();
-        getpermissioninfo()
     }, [searchInput]);
 
 
@@ -122,11 +107,11 @@ const Blogs = () => {
     // };
 
     const updateblogs = async (row) => {
-        navigate("/staff/updatebolgs" ,{ state: { row } })
+        navigate("/admin/updatebolgs" ,{ state: { row } })
     }
 
     const viewblog = async (row) => {
-        navigate("/staff/viewblog", { state: { row } })
+        navigate("/admin/viewblog", { state: { row } })
     }
 
 
@@ -174,7 +159,7 @@ const Blogs = () => {
 
 
     const updateClient = async (row) => {
-        navigate("/staff/viewblog/" , { state: { row } })
+        navigate("/admin/viewblog/" , { state: { row } })
     }
 
 
@@ -271,19 +256,19 @@ const Blogs = () => {
 
 
     const columns = [
-        {
-            name: 'S.No',
-            selector: (row, index) => index + 1,
-            sortable: false,
-            width: '100px',
-        },
+        // {
+        //     name: 'S.No',
+        //     selector: (row, index) => index + 1,
+        //     sortable: false,
+        //     width: '100px',
+        // },
         {
             name: 'Title',
             selector: row => row.title,
             sortable: true,
             width: '300px',
         },
-        permission.includes("blogsstatus")? {
+        {
             name: 'Active Status',
             selector: row => (
                 <div className="form-check form-switch form-check-info">
@@ -302,7 +287,7 @@ const Blogs = () => {
             ),
             sortable: true,
             width: '200px',
-        } : "",
+        },
         {
             name: 'Image',
             cell: row => <img src={`${image_baseurl}/uploads/blogs/${row.image}`} alt="Image" width="50" height="50" />,
@@ -328,47 +313,43 @@ const Blogs = () => {
         //     sortable: true,
         // },
 
-            // permission.includes("blogsdetail") || permission.includes("editblogs") || permission.includes("deleteblogs") ? 
-            {
-                name: 'Actions',
-                cell: row => (
-                    <>
-                        {permission.includes("blogdetail") && (
-                            <div>
-                                <Tooltip placement="top" overlay="View">
-                                    <Eye style={{ marginRight: "10px" }} onClick={() => updateClient(row)} />
-                                </Tooltip>
-                            </div>
-                        )}
-                        {permission.includes("editblogs") && (
-                            <div>
-                                <Tooltip placement="top" overlay="Update">
-                                    <SquarePen onClick={() => updateblogs(row)} />
-                                </Tooltip>
-                            </div>
-                        )}
-                        {permission.includes("deleteblogs") && (
-                            <div>
-                                <Tooltip placement="top" overlay="Delete">
-                                    <Trash2 onClick={() => DeleteBlogs(row._id)} />
-                                </Tooltip>
-                            </div>
-                        )}
-                    </>
-                ),
-                ignoreRowClick: true,
-                allowOverflow: true,
-                button: true,
-            } 
-            // : null
-        
-        
+        {
+            name: 'Actions',
+            cell: row => (
+                <>
+                    <div>
+                        <Tooltip placement="top" overlay="View">
+                          
+                            <Eye style={{ marginRight: "10px" }} 
+                                onClick={() => {
+                                    updateClient(row)
+                                }}/>
+                            
+                        </Tooltip>
+                    </div>
+                    <div>
+                        <Tooltip placement="top" overlay="Update">
+                            <SquarePen
+                                onClick={() => {
+                                    updateblogs(row)
+                                }}
+                            />
+                        </Tooltip>
+                    </div>
+                    <div>
+                        <Tooltip placement="top" overlay="Delete">
+                            <Trash2 onClick={() => DeleteBlogs(row._id)} />
+                        </Tooltip>
+                    </div>
+                </>
+            ),
+            ignoreRowClick: true,
+            allowOverflow: true,
+            button: true,
+        }
     ];
 
-
-    console.log("permission",permission.includes("editblogs"))
-
-     
+   
     function stripHtml(html) {
         const div = document.createElement("div");
         div.innerHTML = html;
@@ -397,7 +378,7 @@ const Blogs = () => {
                         <nav aria-label="breadcrumb">
                             <ol className="breadcrumb mb-0 p-0">
                                 <li className="breadcrumb-item">
-                                    <Link to="/staff/dashboard">
+                                    <Link to="/admin/dashboard">
                                         <i className="bx bx-home-alt" />
                                     </Link>
                                 </li>
@@ -422,18 +403,17 @@ const Blogs = () => {
                                     <i className="bx bx-search" />
                                 </span>
                             </div>
-                            {permission.includes("addblogs")? 
                             <div className="ms-auto">
                                 <Link
-                                    to="/staff/addblogs"
+                                    to="/admin/addblogs"
                                     className="btn btn-primary"
 
                                 >
                                     <i className="bx bxs-plus-square" />
                                     Add Blog
                                 </Link>
-                                
-                                <div  
+
+                                <div
                                     className="modal fade"
                                     id="exampleModal"
                                     tabIndex={-1}
@@ -607,7 +587,7 @@ const Blogs = () => {
                                     </>
                                 )}
 
-                            </div>   : "" }
+                            </div>
                         </div>
                         <div className="table-responsive">
                             <Table
