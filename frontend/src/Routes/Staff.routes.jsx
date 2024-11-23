@@ -53,9 +53,9 @@ import Viewblog from '../layout/Staff/Bloags/Viewblog';
 import Addnews from '../layout/Staff/News/Addnews';
 import Updatenews from '../layout/Staff/News/Updatenews';
 import Changepass from '../Auth/Changepass';
-import History from '../layout/Staff/Payment_history copy/Paymenthistory';
 import Planexpiry from '../layout/Staff/PlanExpiry/Planexpiry';
 import Perform from '../layout/Staff/Perform/Perfom';
+import History from '../layout/Staff/Payment_history/Paymenthistory';
 
 
 
