@@ -18,7 +18,7 @@ const AddStaff = () => {
       errors.FullName = "Please Enter Full Name";
     }
     if (/\d/.test(values.FullName)) {
-      errors.FullName = "Numbers are not allowed in the Full Name";
+      errors.FullName = "Numbers Are Not Allowed In the Full Name";
     }
     if (!values.Email) {
       errors.Email = "Please Enter Email";

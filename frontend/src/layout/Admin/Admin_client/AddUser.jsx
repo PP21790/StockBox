@@ -30,7 +30,7 @@ const AddUser = () => {
       errors.PhoneNo = "Please Enter Phone Number";
     }
     if (!values.password) {
-      errors.password = "Please Enter password";
+      errors.password = "Please Enter Password";
     }
     if (!values.ConfirmPassword) {
       errors.ConfirmPassword = "Please Confirm Your Password";

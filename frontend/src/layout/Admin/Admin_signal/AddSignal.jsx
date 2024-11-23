@@ -117,7 +117,7 @@ const AddSignal = () => {
       if (!values.description) errors.description = 'Please Enter Description';
 
       if (values.segment === "O" && !values.optiontype) {
-        errors.optiontype = 'Please enter option type';
+        errors.optiontype = 'Please Enter Option Type';
       }
 
       if ((values.segment === "O" || values.segment === "F") && !values.expiry) {

@@ -49,10 +49,10 @@ const Addcoupon = () => {
             errors.enddate = "Please Enter Greater Than Startdate";
         }
         if (!values.type) {
-            errors.type = "Please Enter type";
+            errors.type = "Please Enter Type";
         }
         if (!values.value) {
-            errors.value = "Please Enter value";
+            errors.value = "Please Enter Value";
         }
         if (!values.startdate) {
             errors.startdate = "Please Enter Startdate";
