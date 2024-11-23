@@ -1070,7 +1070,7 @@ const Staffpermission = () => {
         },
         {
             name: 'coupondetail',
-            label: 'View coupon',
+            label: 'coupon Detail',
             type: 'checkbox',
             label_size: 12,
             col_size: 2,
