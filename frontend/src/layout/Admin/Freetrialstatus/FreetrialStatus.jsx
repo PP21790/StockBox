@@ -100,7 +100,7 @@ const FreetrialStatus = () => {
   const handleSelectChange = (event) => {
     const { value } = event.target;
     setAddStatus((prevState) => ({ ...prevState, freetrial: value }));
-    setDisableUpdate(value === initialFreeTrial); // Enable button only if selection changes
+    setDisableUpdate(value === initialFreeTrial); 
   };
 
   const columns = [

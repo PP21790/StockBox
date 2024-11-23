@@ -38,6 +38,7 @@ const AddStaff = () => {
     return errors;
   };
 
+
   const onSubmit = async (values) => {
     const req = {
       FullName: values.FullName,
@@ -81,6 +82,8 @@ const AddStaff = () => {
     }
   };
 
+
+
   const formik = useFormik({
     initialValues: {
       FullName: "",
@@ -94,6 +97,9 @@ const AddStaff = () => {
     validate,
     onSubmit,
   });
+
+
+
 
   const fields = [
     {

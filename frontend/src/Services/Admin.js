@@ -2198,7 +2198,7 @@ export async function addfreeClient(data, token) {
     const formData = new FormData();
     formData.append('freetrial', data.freetrial);
     try {
-        const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
+        const res = await axios.post(`${Config.base_url}basicsetting/updatefreetrail`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': `${token}`,

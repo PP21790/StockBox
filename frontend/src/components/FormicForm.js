@@ -115,7 +115,7 @@ const DynamicForm = ({
     };
 
 
-    
+
     const [selectedImage, setSelectedImage] = useState(null);
 
     // Function to handle image selection
@@ -585,9 +585,9 @@ const DynamicForm = ({
                                                                         {/* First Column for Select Input */}
                                                                         <div className={`col-lg-6`}>
                                                                             <div className="input-block row">
-                                                                                
+
                                                                                 <label
-                                                                                
+
                                                                                     className={`col-lg-${title === "forlogin"
                                                                                         ? 3
                                                                                         : title === "update_theme"
@@ -596,7 +596,7 @@ const DynamicForm = ({
                                                                                         } col-form-label p-0 mx-3`}
                                                                                     htmlFor={field.name}
                                                                                 >
-                                                                                    
+
                                                                                     {field.label}
                                                                                     {field.star == true ? <span className="text-danger">*</span> : ""}
                                                                                 </label>
@@ -783,7 +783,7 @@ const DynamicForm = ({
                                                                                     className="form-control"
                                                                                     style={{ paddingRight: '3rem' }}
                                                                                 />
-                                                                                {/* Eye Icon inside input */}
+
                                                                                 <FontAwesomeIcon
                                                                                     icon={passwordVisible ? faEyeSlash : faEye}
                                                                                     onClick={togglePasswordVisibility}
@@ -809,25 +809,24 @@ const DynamicForm = ({
                                                             ) : field.type === "password1" ? (
                                                                 <>
                                                                     <div className={`col-lg-${field.col_size}`}>
-                                                                        <div className=" input-block row">
+                                                                        <div className="input-block row">
                                                                             <label
-                                                                                className={`col-lg-${field.label_size} col-form-labelp-0 `}
+                                                                                className={`col-lg-${field.label_size} col-form-label p-0`}
                                                                                 htmlFor={field.name}
                                                                             >
                                                                                 {field.label}
-                                                                                {field.star == true ? <span className="text-danger">*</span> : ""}
+                                                                                {field.star ? <span className="text-danger">*</span> : ""}
                                                                             </label>
                                                                             <div className="d-flex" style={{ position: 'relative' }}>
                                                                                 <input
                                                                                     id={field.name}
                                                                                     autoComplete="new-password"
-                                                                                    type={passwordVisible1 ? 'text' : field.type}
+                                                                                    type={passwordVisible1 ? 'text' : 'password'}
                                                                                     placeholder={`Enter ${field.label}`}
                                                                                     {...formik.getFieldProps(field.name)}
                                                                                     className="form-control"
                                                                                     style={{ paddingRight: '3rem' }}
                                                                                 />
-                                                                                {/* Eye Icon inside input */}
                                                                                 <FontAwesomeIcon
                                                                                     icon={passwordVisible1 ? faEyeSlash : faEye}
                                                                                     onClick={togglePasswordVisibility1}
@@ -839,8 +838,6 @@ const DynamicForm = ({
                                                                                         cursor: 'pointer',
                                                                                     }}
                                                                                 />
-                                                                                {/* Formik validation error */}
-
                                                                             </div>
                                                                             {formik.touched[field.name] && formik.errors[field.name] ? (
                                                                                 <div style={{ color: 'red', marginTop: '5px' }}>
@@ -850,8 +847,65 @@ const DynamicForm = ({
                                                                         </div>
                                                                     </div>
                                                                 </>
-                                                            ) :
-                                                                field.type === "date" ? (
+                                                            ) : field.type === "password2" ? (
+                                                                <>
+                                                                    <div className={`col-lg-${field.col_size}`}>
+                                                                        <div className=" input-block row">
+                                                                            <label
+                                                                                className={`col-lg-${field.label_size} col-form-labelp-0 `}
+                                                                                htmlFor={field.name}
+                                                                            >
+                                                                                {field.label}
+                                                                                {field.star == true ? <span className="text-danger">*</span> : ""}
+                                                                            </label>
+                                                                            <div
+                                                                                // className={`col-lg-${field.col_size}`}
+                                                                                style={{ position: "relative" }}
+                                                                            >
+                                                                                <input
+                                                                                    id={field.name}
+                                                                                    autoComplete="new-password"
+                                                                                    type={
+                                                                                        passwordVisible[field.name]
+                                                                                            ? "text"
+                                                                                            : field.type
+                                                                                    }
+                                                                                    placeholder={`Enter ${field.label}`}
+                                                                                    {...formik.getFieldProps(field.name)}
+                                                                                    className={` form-control`}
+                                                                                />
+                                                                                <i
+                                                                                    className={`fa-solid ${passwordVisible[field.name]
+                                                                                        ? "fa-eye-slash"
+                                                                                        : "fa-eye"
+                                                                                        }`}
+                                                                                    style={{
+                                                                                        position: "absolute",
+                                                                                        top: "1.5px",
+                                                                                        right: "20px",
+                                                                                        padding: "12.4px 6.6px",
+                                                                                        borderRadius: "3px",
+                                                                                    }}
+                                                                                    onClick={() =>
+                                                                                        setPasswordVisible((prevState) => ({
+                                                                                            ...prevState,
+                                                                                            [field.name]: !prevState[field.name],
+                                                                                        }))
+                                                                                    }
+                                                                                ></i>
+                                                                                {formik.touched[field.name] &&
+                                                                                    formik.errors[field.name] ? (
+                                                                                    <div style={{ color: "red" }}>
+                                                                                        {formik.errors[field.name]}
+                                                                                    </div>
+                                                                                ) : null}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </>
+                                                            )
+
+                                                                : field.type === "date" ? (
                                                                     <>
                                                                         <div className={`col-lg-${field.col_size}`}>
                                                                             <div className="row d-flex">
@@ -898,7 +952,7 @@ const DynamicForm = ({
                                                                                             readOnly={field.disable}
                                                                                             className="form-control"
                                                                                             id={field.name}
-                                                                                            min={ new Date().toISOString().split("T")[0]
+                                                                                            min={new Date().toISOString().split("T")[0]
 
                                                                                             }
                                                                                             defaultValue={formik.values[field.name] || new Date().toISOString().split('T')[0]}
@@ -1039,19 +1093,19 @@ const DynamicForm = ({
                                                                                                 aria-describedby="basic-addon1"
                                                                                                 className="form-control"
                                                                                                 id={field.name}
-                                                                                                 step="0.01"
+                                                                                                step="0.01"
                                                                                                 placeholder={`Enter ${field.label}`}
                                                                                                 {...formik.getFieldProps(field.name)}
                                                                                                 min={1}
                                                                                                 onChange={(e) => {
                                                                                                     let value = e.target.value;
-                                                                                        
+
                                                                                                     value = value.replace(/^0+/, "");
-                                                                                            
+
                                                                                                     if (value === "") {
                                                                                                         value = "";
                                                                                                     }
-                                                                                                   
+
                                                                                                     value = Math.min(parseFloat(value), 100);
                                                                                                     // Update input value
                                                                                                     e.target.value = value;
