@@ -12,10 +12,12 @@ import { fDate , fDateTime} from '../../../Utils/Date_formate';
 
 
 const News = () => {
-
+    
     const navigate = useNavigate();
-
-    const [permission, setPermission] = useState([]);
+    
+    
+    const token = localStorage.getItem('token');
+    const userid = localStorage.getItem('id');
 
 
     const [clients, setClients] = useState([]);
@@ -40,8 +42,6 @@ const News = () => {
         add_by: "",
     });
 
-    const token = localStorage.getItem('token');
-    const userid = localStorage.getItem('id');
 
 
 

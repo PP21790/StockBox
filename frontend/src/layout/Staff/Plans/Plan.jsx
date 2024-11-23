@@ -244,7 +244,7 @@ const Plan = () => {
                                                             </div>
                                                         </div>
 
-                                                        <div className="row justify-content-end mb-3">
+                                                      { permission.includes("planstatus") ? <div className="row justify-content-end mb-3">
                                                             <div className="col-md-6 d-flex justify-content-start">
                                                                 <div className="form-check form-switch form-check-info">
                                                                     <input
@@ -260,7 +260,7 @@ const Plan = () => {
                                                                     ></label>
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        </div> : "" }
 
                                                         <div className="row justify-content-between align-items-center">
                                                             <div className="col-md-6">

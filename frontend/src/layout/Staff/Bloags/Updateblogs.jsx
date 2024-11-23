@@ -36,6 +36,7 @@ const Updateblogs = () => {
 
             try {
                 const response = await Updateblogsbyadmin(req, token);
+                 
                 if (response.status) {
                     Swal.fire({
                         title: "Update Successful!",
@@ -78,6 +79,7 @@ const Updateblogs = () => {
             label_size: 6,
             col_size: 6,
             disable: false,
+            star:true
             
         },
         {
@@ -90,7 +92,8 @@ const Updateblogs = () => {
             image: true,
             imageWidth: "60px",
             imageHeight: "auto",  
-            src: `${image_baseurl}/uploads/blogs/${row.image}`
+            src: `${image_baseurl}/uploads/blogs/${row.image}`,
+            star:true
         },
         {
             name: "description",
@@ -99,6 +102,7 @@ const Updateblogs = () => {
             label_size: 12,
             col_size: 12,
             disable: false,
+            star:true
         },
     ];
 

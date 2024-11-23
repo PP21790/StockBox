@@ -1,28 +1,51 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table1';
-import { Eye, Trash2, RefreshCcw } from 'lucide-react';
+import { Eye, Trash2, RefreshCcw , SquarePen} from 'lucide-react';
 import Swal from 'sweetalert2';
-import { GetSignallist,GetSignallistWithFilter , DeleteSignal, SignalCloseApi, GetService, GetStockDetail } from '../../../Services/Admin';
-import { fDateTimeSuffix , fDateTimeH } from '../../../Utils/Date_formate'
-import { getstaffperuser } from '../../../Services/Admin';
-import ExportToExcel from '../../../Utils/ExportCSV';
+import { GetSignallist, GetSignallistWithFilter, DeleteSignal, SignalCloseApi, GetService, GetStockDetail , UpdatesignalReport} from '../../../Services/Admin';
+import { fDateTimeH } from '../../../Utils/Date_formate'
+import { exportToCSV } from '../../../Utils/ExportData';
 import Select from 'react-select';
- 
+import { Tooltip } from 'antd';
+import { getstaffperuser } from '../../../Services/Admin';
 
 
 const Signal = () => {
 
+
+    const userid = localStorage.getItem('id');
     const token = localStorage.getItem('token');
     const [searchInput, setSearchInput] = useState("");
 
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
+    const [header, setheader] = useState("Open Signal");
+    const [updatetitle, setUpdatetitle] = useState({
+          report: "",
+          id: "",
+       
 
-    const userid = localStorage.getItem('id');
-    
+    });
+
+
+    const location = useLocation();
+    const clientStatus = location?.state?.clientStatus;
+
+
+
+    useEffect(() => {
+        if (clientStatus == "todayopensignal") {
+            setheader("Todays Open Signal")
+        }
+    }, [clientStatus])
+  
+
+    const today = new Date();
+    const formattedDate = today.toISOString().slice(0, 10);
+
 
     const [filters, setFilters] = useState({
         from: '',
@@ -35,11 +58,16 @@ const Signal = () => {
     const navigate = useNavigate();
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
+    const [model1, setModel1] = useState(false);
     const [serviceid, setServiceid] = useState({});
-    const [ForGetCSV, setForGetCSV] = useState([])
 
 
-  
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
+
+
     const [closedata, setClosedata] = useState({
         id: "",
         closestatus: "",
@@ -57,24 +85,14 @@ const Signal = () => {
 
 
 
-    const options = clients.map((item) => ({
-        value: item.stock,
-        label: item.stock,
-      }));
-
-      const handleChange1 = (selectedOption) => {
-        setSearchstock(selectedOption ? selectedOption.value : "");
-      };
-
-
-
 
     const [serviceList, setServiceList] = useState([]);
     const [stockList, setStockList] = useState([]);
     const [searchstock, setSearchstock] = useState("");
-    const [permission, setPermission] = useState([]);
-   
+    const [ForGetCSV, setForGetCSV] = useState([])
+    const [permission, setPermission] = useState([]); 
     const [checkedIndex, setCheckedIndex] = useState(null);
+
 
     const handleTabChange = (index) => {
         setCheckedIndex(index);
@@ -103,19 +121,14 @@ const Signal = () => {
         target3: 0,
     });
 
-    const handlePageChange = (page) => {
-        setCurrentPage(page);
-    };
-
-
 
     const handleCheckboxChange = (e, target) => {
 
         setCheckedTargets1((prevState) => ({
             ...prevState,
-            [target]: e.target.checked  ? 1 : 0,
+            [target]: e.target.checked ? 1 : 0,
         }));
-        
+
 
         setCheckedTargets((prev) => {
 
@@ -138,59 +151,74 @@ const Signal = () => {
             ...closedata,
             [field]: e.target.value
         });
-        
-        
-       
-    };
-   
 
-    const getpermissioninfo = async () => {
+
+
+    };
+
+
+
+    const options = clients.map((item) => ({
+        value: item.stock ,
+        label: item.stock,
+    }));
+
+    const handleChange1 = (selectedOption) => {
+        setSearchstock(selectedOption ? selectedOption.value : "");
+    };
+
+
+
+    const getexportfile = async () => {
         try {
-            const response = await getstaffperuser(userid, token);
+            const response = await GetSignallist(token);
             if (response.status) {
-                setPermission(response.data.permissions);
+                if (response.data?.length > 0) {
+                    let filterdata = response.data.filter((item) => item.close_status === false);
+                    const csvArr = filterdata.map((item) => ({
+                        Symbol: item.tradesymbol || "",
+                        segment: item?.segment || '',
+                        EntryType: item?.calltype || '',
+                        EntryPrice: item?.price || '',
+                        EntryDate: fDateTimeH(item?.created_at) || '',
+                    }));
+                    exportToCSV(csvArr, 'Open Signal');
+                }
             }
         } catch (error) {
-            console.log("error", error);
+            console.log("Error:", error);
         }
     }
+    
+
 
 
     const getAllSignal = async () => {
         try {
-            const data = {page:currentPage , from :filters.from , to:filters.to , service:filters.service, stock:searchstock, closestatus: "false"}
+            const data = {
+                page: currentPage,
+                from: filters.from || clientStatus == "todayopensignal" ? formattedDate : "",
+                to: filters.to || clientStatus == "todayopensignal" ? formattedDate : "",
+                service: filters.service,
+                stock: searchstock,
+                closestatus: "false",
+                search: searchInput,
+            };
+
             const response = await GetSignallistWithFilter(data, token);
+
             if (response && response.status) {
                 setTotalRows(response.pagination.totalRecords);
-                 
-                const filterdata = response.data.filter((item) => {
-                    return item.close_status === false;
-                });
-
-                const searchInputMatch = filterdata.filter((item) => {
-                    const searchInputMatch =
-                        searchInput === "" ||
-                        item.stock.toLowerCase().includes(searchInput.toLowerCase()) ||
-                        item.calltype.toLowerCase().includes(searchInput.toLowerCase());
-
-                    const searchstockMatch =
-                        searchstock === "" ||
-                        item.stock.toLowerCase().includes(searchstock.toLowerCase());
-
-                    return searchstockMatch && searchInputMatch;
-                });
-
-                setClients(searchInput || searchstock ? searchInputMatch : filterdata);
-
+                let filterdata = response.data.filter((item) => item.close_status === false);
+                setClients(filterdata);
             }
         } catch (error) {
-            console.log("error", error);
+            console.log("Error:", error);
         }
     };
 
-   
 
-    
+
 
 
     const fetchAdminServices = async () => {
@@ -217,36 +245,34 @@ const Signal = () => {
         }
     };
 
-      
 
-    const forCSVdata = () => {
-        if (clients?.length > 0) {
-            const csvArr = clients.map((item) => ({
-                Symbol: item.stock || "",
-                segment: item?.segment || '',
-                Price: item?.price || '',
-                EntryType: item?.calltype || '',
-                EntryPrice: item?.price || '',
-                EntryDate: fDateTimeH(item?.created_at) || '',
-
-            }));
-
-            setForGetCSV(csvArr);
+    const getpermissioninfo = async () => {
+        try {
+            const response = await getstaffperuser(userid, token);
+            if (response.status) {
+                setPermission(response.data.permissions);
+            }
+        } catch (error) {
+            console.log("error", error);
         }
-    };
+    }
+
+    
 
 
     useEffect(() => {
         fetchAdminServices()
         fetchStockList()
         getpermissioninfo()
-        forCSVdata()
-    }, [filters,clients]);
+    }, [filters ]);
 
 
     useEffect(() => {
         getAllSignal();
-    }, [filters, searchInput, searchstock , currentPage ]);
+    }, [filters, searchInput, searchstock, currentPage]);
+
+
+
 
 
 
@@ -307,7 +333,7 @@ const Signal = () => {
     };
 
     const checkstatus = closedata.closestatus == true ? "true" : "false"
-  
+
 
 
     const UpdateData = (row) => {
@@ -320,106 +346,94 @@ const Signal = () => {
         });
         setClosedata({
             ...row,
-            "targetprice1":  row.targetprice1,
-            "targetprice2":  row.targetprice2,
-            "targetprice3":  row.targetprice3,
+            "targetprice1": row.targetprice1,
+            "targetprice2": row.targetprice2,
+            "targetprice3": row.targetprice3,
+            "slprice": row.stoploss
         })
     }
+
+
+    useEffect(() => {
+        if (closedata.targetprice3) {
+            setClosedata(prevState => ({
+                ...prevState,
+                closestatus: true,
+            }));
+        } else {
+            setClosedata(prevState => ({
+                ...prevState,
+                closestatus: false,
+            }));
+        }
+    }, [closedata.targetprice3]);
+
 
 
 
 
     const closeSignalperUser = async (index) => {
         try {
-            if (index == 1) {
+            const showValidationError = (message) => {
+                Swal.fire({
+                    title: 'Error!',
+                    text: message,
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
+            };
+
+
+            if (index === 1) {
                 if (closedata.targetprice2 && !closedata.targetprice1) {
-                    Swal.fire({
-                        title: 'Validation Error!',
-                        text: 'Target 1 must be provided if Target 2 is entered.',
-                        icon: 'warning',
-                        confirmButtonText: 'OK'
-                    });
+                    showValidationError('Target 1 must be provided if Target 2 is entered.');
                     return;
                 }
-
                 if (closedata.targetprice3 && (!closedata.targetprice1 || !closedata.targetprice2)) {
-                    Swal.fire({
-                        title: 'Validation Error!',
-                        text: 'Target 1 and Target 2 must be provided if Target 3 is entered.',
-                        icon: 'warning',
-                        confirmButtonText: 'OK'
-                    });
+                    showValidationError('Target 1 and Target 2 must be provided if Target 3 is entered.');
                     return;
                 }
-
                 if (closedata.targetprice1 && closedata.targetprice2 && closedata.targetprice1 >= closedata.targetprice2) {
-                    Swal.fire({
-                        title: 'Validation Error!',
-                        text: 'Target 2 must be greater than Target 1.',
-                        icon: 'warning',
-                        confirmButtonText: 'OK'
-                    });
+                    showValidationError('Target 2 must be greater than Target 1.');
                     return;
                 }
-
                 if (closedata.targetprice3 && closedata.targetprice2 >= closedata.targetprice3) {
-                    Swal.fire({
-                        title: 'Validation Error!',
-                        text: 'Target 3 must be greater than Target 2.',
-                        icon: 'warning',
-                        confirmButtonText: 'OK'
-                    });
+                    showValidationError('Target 3 must be greater than Target 2.');
                     return;
                 }
-
-                if(checkedTargets1.target1 && !closedata.targetprice1){
-                    Swal.fire({
-                        title: 'Validation Error!',
-                        text: 'Please Fill the field or Uncheck it',
-                        icon: 'warning',
-                        confirmButtonText: 'OK'
-                    });
+                if (checkedTargets1.target1 && !closedata.targetprice1) {
+                    showValidationError('Please fill in Target 1 or uncheck it.');
                     return;
                 }
-
-                if(checkedTargets1.target2 && !closedata.targetprice2){
-                    Swal.fire({
-                        title: 'Validation Error!',
-                        text: 'Please Fill the Target 2 or Uncheck it',
-                        icon: 'warning',
-                        confirmButtonText: 'OK'
-                    });
+                if (checkedTargets1.target2 && !closedata.targetprice2) {
+                    showValidationError('Please fill in Target 2 or uncheck it.');
                     return;
                 }
-                if(checkedTargets1.target3 && !closedata.targetprice3){
-                    Swal.fire({
-                        title: 'Validation Error!',
-                        text: 'Please Fill the Target 3 or Uncheck it',
-                        icon: 'warning',
-                        confirmButtonText: 'OK'
-                    });
+                if (checkedTargets1.target3 && !closedata.targetprice3) {
+                    showValidationError('Please fill in Target 3 or uncheck it.');
                     return;
                 }
             }
-            
+
+            // Data preparation based on index
             const data = {
                 id: serviceid._id,
                 closestatus: index === 1 ? checkstatus : "",
-                closetype: (index === 0) ? "1" : (index === 1) ? "2" : (index === 2) ? "3" : "4",
+                closetype: index === 0 ? "1" : index === 1 ? "2" : index === 2 ? "3" : "4",
                 close_description: closedata.close_description,
-                
-                targethit1: index === 1 && closedata.targetprice1 ? checkedTargets1.target1 : "",
-                targethit2: index === 1 &&  closedata.targetprice2 ? checkedTargets1.target2 : "",
-                targethit3: index === 1 &&  closedata.targetprice3 ? checkedTargets1.target3 : "",
 
-                targetprice1: index === 0 ? closedata.tag1 : (index === 1 ? closedata.targetprice1 : ""),
-                targetprice2: index === 0 ? closedata.tag2 : (index === 1 ? closedata.targetprice2 : ""),
-                targetprice3: index === 0 ? closedata.tag3 : (index === 1 ? closedata.targetprice3 : ""),
+                targethit1: index === 1 && closedata.targetprice1 ? checkedTargets1.target1 : "",
+                targethit2: index === 1 && closedata.targetprice2 ? checkedTargets1.target2 : "",
+                targethit3: index === 1 && closedata.targetprice3 ? checkedTargets1.target3 : "",
+
+                targetprice1: index === 0 ? closedata.tag1 : index === 1 ? closedata.targetprice1 : "",
+                targetprice2: index === 0 ? closedata.tag2 : index === 1 ? closedata.targetprice2 : "",
+                targetprice3: index === 0 ? closedata.tag3 : index === 1 ? closedata.targetprice3 : "",
                 slprice: index === 2 ? closedata.slprice : closedata.stoploss,
                 exitprice: index === 3 ? closedata.exitprice : ""
             };
-           
-        
+
+
             const response = await SignalCloseApi(data, token);
 
             if (response && response.status) {
@@ -429,11 +443,12 @@ const Signal = () => {
                     icon: 'success',
                     confirmButtonText: 'OK',
                     timer: 2000,
+                    timerProgressBar: true
                 });
 
                 setClosedata({
-                    closeprice: "", close_description: "", targetprice1: "", targetprice1: "", targetprice2: "",
-                    targetprice3: "", targethit1: "", targethit2: "", targethit3: ""
+                    closeprice: "", close_description: "", targetprice1: "", targetprice2: "", targetprice3: "",
+                    targethit1: "", targethit2: "", targethit3: ""
                 });
                 getAllSignal();
                 setModel(!model);
@@ -442,7 +457,7 @@ const Signal = () => {
                     title: 'Error!',
                     text: response.message || 'There was an error closing the signal.',
                     icon: 'error',
-                    confirmButtonText: 'Try Again',
+                    confirmButtonText: 'Try Again'
                 });
             }
         } catch (error) {
@@ -450,19 +465,19 @@ const Signal = () => {
                 title: 'Error!',
                 text: 'There was an error updating the service.',
                 icon: 'error',
-                confirmButtonText: 'Try Again',
+                confirmButtonText: 'Try Again'
             });
         }
     };
 
 
 
-    // colums
 
+    // colums
     let columns = [
         {
             name: 'S.No',
-            selector: (row, index) => index + 1,
+            selector: (row, index) => (currentPage - 1) * 10 + index + 1,
             sortable: false,
             width: '78px',
         },
@@ -512,9 +527,7 @@ const Signal = () => {
         //     width: '160px',
         // },
 
-
-
-        permission.includes("signalstatus") &&  {
+        permission.includes("signalstatus") ? {
             name: 'Status',
             cell: row => (
                 <>
@@ -533,8 +546,8 @@ const Signal = () => {
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
-        },
-        permission.includes("signaldetail") && {
+        } : "" ,
+        permission.includes("signaldetail") ? {
             name: 'Actions',
             cell: row => (
                 <>
@@ -550,14 +563,37 @@ const Signal = () => {
             allowOverflow: true,
             button: true,
 
-        }
-       
+        }: "" ,
+        {
+            name: 'Upload Pdf',
+            cell: row => (
+                <>
+                    <div>
+                        <Tooltip placement="top" overlay="Updaate">
+                            <SquarePen
+                                onClick={() => {
+                                    setModel1(true);
+                                    setServiceid(row);
+                                    setUpdatetitle({ report: row.report, id: row._id });
+                                }}
+                            />
+                        </Tooltip>
+                    </div>
+                    
+                </>
+            ),
+            ignoreRowClick: true,
+            allowOverflow: true,
+            button: true,
+
+        },
+        
 
 
     ];
 
 
-  
+
 
     const resethandle = () => {
         setFilters({
@@ -571,8 +607,55 @@ const Signal = () => {
         fetchAdminServices()
         fetchStockList()
         getAllSignal();
+       
+        
 
     }
+  
+
+
+      // Update service
+      const updateReportpdf = async () => {
+        try {
+            const data = { id: serviceid._id, report: updatetitle.report };
+       
+            const response = await UpdatesignalReport(data, token);
+            if (response && response.status) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: response.message || 'File updated successfully.',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    timer: 2000,
+                });
+
+                setUpdatetitle({ report: "", id: "", });
+                setModel1(false);
+            } else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: response.message || 'There was an error updating the file.',
+                    icon: 'error',
+                    confirmButtonText: 'Try Again',
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'server error',
+                icon: 'error',
+                confirmButtonText: 'Try Again',
+            });
+        }
+    };
+
+
+    const updateServiceTitle = (updatedField) => {
+        setUpdatetitle(prev => ({
+            ...prev,
+            ...updatedField
+        }));
+    };
 
 
 
@@ -581,7 +664,7 @@ const Signal = () => {
             <div>
                 <div className="page-content">
                     <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                        <div className="breadcrumb-title pe-3">Open Signal</div>
+                        <div className="breadcrumb-title pe-3">{header}</div>
                         <div className="ps-3">
                             <nav aria-label="breadcrumb">
                                 <ol className="breadcrumb mb-0 p-0">
@@ -612,7 +695,7 @@ const Signal = () => {
                                     </span>
                                 </div>
 
-                               { permission.includes("addsignal")  && (<div className="ms-auto">
+                                { permission.includes("addsignal") ? <div className="ms-auto">
                                     <Link
                                         to="/staff/addsignal"
                                         className="btn btn-primary"
@@ -623,19 +706,29 @@ const Signal = () => {
                                         />
                                         Add Signal
                                     </Link>
-                                </div> )}
+                                </div> : "" }
+
                                 <div
                                     className="ms-2"
+                                    onClick={(e) => getexportfile()}
                                 >
-                                    <ExportToExcel
-                                        className="btn btn-primary "
-                                        apiData={ForGetCSV}
-                                        fileName={'All Users'} />
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary float-end"
+                                        data-toggle="tooltip"
+                                        data-placement="top"
+                                        title="Export To Excel"
+                                        delay={{ show: "0", hide: "100" }}
 
+                                    >
+                                        <i className="bx bxs-download" aria-hidden="true"></i>
 
+                                        Export-Excel
+                                    </button>
                                 </div>
+
                             </div>
-                           
+
                             <div className="row">
 
                                 <div className="col-md-3">
@@ -662,31 +755,32 @@ const Signal = () => {
                                 </div>
                                 <div className="col-md-3">
                                     <label>Select Service</label>
-                                    <Select
-                                            options={options}
-                                            value={options.find((option) => option.value === searchstock)}
-                                            onChange={handleChange1}
-                                            className="form-control radius-10"
-                                            isClearable
-                                            placeholder="Select Stock"
-                                        />
+                                    <select
+                                        name="service"
+                                        className="form-control radius-10"
+                                        value={filters.service}
+                                        onChange={handleFilterChange}
+                                    >
+                                        <option value="">Select Service</option>
+                                        {serviceList.map((service) => (
+                                            <option key={service._id} value={service._id}>
+                                                {service.title}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
 
                                 <div className="col-md-3 d-flex">
                                     <div style={{ width: "80%" }}>
                                         <label>Select Stock</label>
-                                        <select
+                                        <Select
+                                            options={options}
+                                            value={options.find((option) => option.value === searchstock) || null}
+                                            onChange={handleChange1}
                                             className="form-control radius-10"
-                                            value={searchstock}
-                                            onChange={(e) => setSearchstock(e.target.value)}
-                                        >
-                                            <option value="">Select Stock</option>
-                                            {clients.map((item) => (
-                                                <option key={item._id} value={item.stock}>
-                                                    {item.stock}
-                                                </option>
-                                            ))}
-                                        </select>
+                                            isClearable
+                                            placeholder="Select Stock"
+                                        />
                                     </div>
                                     <div className='rfreshicon'>
                                         <RefreshCcw onClick={resethandle} />
@@ -915,7 +1009,7 @@ const Signal = () => {
                                                                     type="number"
                                                                     style={{ width: "50%" }}
                                                                     id="targethit3"
-                                                                Value={closedata.targetprice3 || ""}
+                                                                    Value={closedata.targetprice3 || ""}
                                                                     onChange={(e) => handleChange(e, 'targetprice3')}
                                                                 />
                                                             </div>
@@ -978,7 +1072,7 @@ const Signal = () => {
                                                             type="number"
                                                             className='form-control'
                                                             style={{ width: "50%" }}
-                                                            defaultValue={closedata.slprice || closedata.stoploss}
+                                                            defaultValue={closedata.slprice}
                                                             onChange={(e) =>
                                                                 setClosedata({
                                                                     ...closedata,
@@ -1052,7 +1146,7 @@ const Signal = () => {
                                                     />
                                                 </div>
 
-                                                <button type="submit" className='btn btn-danger mt-2' onClick={() => closeSignalperUser(3) }>Submit</button>
+                                                <button type="submit" className='btn btn-danger mt-2' onClick={() => closeSignalperUser(3)}>Submit</button>
                                             </form>
                                         )}
                                     </div>
@@ -1065,6 +1159,80 @@ const Signal = () => {
                 </>
             )}
 
+            
+           {model1 && (
+                          <>
+                                        <div className="modal-backdrop fade show"></div>
+                                        <div
+                                            className="modal fade show"
+                                            style={{ display: 'block' }}
+                                            tabIndex={-1}
+                                            aria-labelledby="exampleModalLabel"
+                                            aria-hidden="true"
+                                        >
+                                            <div className="modal-dialog">
+                                                <div className="modal-content">
+                                                    <div className="modal-header">
+                                                        <h5 className="modal-title" id="exampleModalLabel">
+                                                            Upload Pdf
+                                                        </h5>
+                                                        <button
+                                                            type="button"
+                                                            className="btn-close"
+                                                            onClick={() => setModel1(false)}
+                                                        />
+                                                    </div>
+                                                    <div className="modal-body">
+                                                        <form>
+                                                            <div className="row">
+                                                                <div className="col-md-10">
+                                                                    <label htmlFor="imageUpload">Upload Pdf</label>
+                                                                    <span className="text-danger">*</span>
+                                                                    <input
+                                                                        className="form-control mb-3"
+                                                                        type="file"
+                                                                        accept="pdf/*"
+                                                                        id="imageUpload"
+                                                                        onChange={(e) => {
+                                                                            const file = e.target.files[0];
+                                                                            if (file) {
+                                                                                updateServiceTitle({ report: file });
+                                                                            }
+                                                                            
+                                                                        }}
+                                                                    />
+                                                                </div>
+                                                                <div className="col-md-2">
+                            
+                        
+                                                                </div>
+                                                            </div>
+    
+                                                        </form>
+
+
+                                                    </div>
+                                                    <div className="modal-footer">
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-secondary"
+                                                            onClick={() => setModel1(false)}
+                                                        >
+                                                            Close
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-primary"
+                                                            onClick={updateReportpdf}
+                                                        >
+                                                            Update File
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
 
 
         </div>

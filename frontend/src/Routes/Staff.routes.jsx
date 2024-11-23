@@ -53,6 +53,9 @@ import Viewblog from '../layout/Staff/Bloags/Viewblog';
 import Addnews from '../layout/Staff/News/Addnews';
 import Updatenews from '../layout/Staff/News/Updatenews';
 import Changepass from '../Auth/Changepass';
+import History from '../layout/Staff/Payment_history copy/Paymenthistory';
+import Planexpiry from '../layout/Staff/PlanExpiry/Planexpiry';
+import Perform from '../layout/Staff/Perform/Perfom';
 
 
 
@@ -133,14 +136,9 @@ function Staffrouting() {
                     {permission.includes("addclient") ? <Route path="/addclient" element={<Addclient />} /> : ""}
                     {permission.includes("editclient") ? <Route path="/client/updateclient/:id" element={<EditClient />} /> : ""}
                     {permission.includes("viewdetail") ? <Route path="/clientdetail/:id" element={<Viewclientdetail />} /> : ""}
-
                     {permission.includes("viewfreeclient") ? <Route path="/freeclient" element={<Freeclient />} /> : ""}
                     {permission.includes("editfreeclient") ? <Route path="/editfreeclient/:id" element={<Editfreeclient />} /> : ""}
-
                     <Route path="/profile" element={<Profile />} />
-
-
-
 
 
 
@@ -151,12 +149,7 @@ function Staffrouting() {
                     {/* {permission.includes("editstaff") ? <Route path="/staff/staffpermission/:id" element={<Staffpermission />} /> : ""} */}
 
 
-
-
-
                     {permission.includes("viewfaq") ? <Route path="/faq" element={<Faq />} /> : ""}
-
-
 
 
                     {permission.includes("viewsignal") ? <Route path="/signal" element={<Signal />} /> : ""}
@@ -198,6 +191,10 @@ function Staffrouting() {
 
 
                     {permission.includes("viewbanner") ? <Route path="/banner" element={<Banner />} /> : ""}
+
+                    {permission.includes("paymenthistory") ? <Route path="/paymenthistory" element={<History/>} /> : ""}
+                    {permission.includes("planexpiry") ? <Route path="/planexpiry" element={<Planexpiry/>} /> : ""}
+                    {permission.includes("perform") ? <Route path="/perform" element={<Perform/>} /> : ""}
 
 
                     <Route path="/paymentrequest" element={<PaymentRequest />} />

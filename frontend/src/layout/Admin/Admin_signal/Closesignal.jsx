@@ -23,6 +23,7 @@ const Closesignal = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
     const [header, setheader] = useState("Close Signal");
+    
     const [updatetitle, setUpdatetitle] = useState({
         report: "",
         id: "",

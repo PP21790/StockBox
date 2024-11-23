@@ -14,17 +14,16 @@ import { getstaffperuser } from '../../../Services/Admin';
 
 const Coupon = () => {
 
-    const userid = localStorage.getItem('id');
 
     const navigate = useNavigate();
+
+    const userid = localStorage.getItem('id');
+    const token = localStorage.getItem('token');
 
     const [clients, setClients] = useState([]);
     const [searchInput, setSearchInput] = useState("");
     const [viewpage, setViewpage] = useState({});
-
-
-
-    const token = localStorage.getItem('token');
+    const [datewise, setDatewise] = useState("")
     const [permission, setPermission] = useState([]);
 
 
@@ -40,14 +39,14 @@ const Coupon = () => {
                     item.description.toLowerCase().includes(searchInput.toLowerCase())
                 );
                 setClients(searchInput ? filterdata : response.data);
+                setDatewise(response.data)
                 // setClients(response.data);
             }
         } catch (error) {
             console.log("error");
         }
     }
-
-
+   
 
 
     const getpermissioninfo = async () => {
@@ -61,10 +60,13 @@ const Coupon = () => {
         }
     }
 
+    useEffect(() => {
+        getpermissioninfo();
+    }, []);
+
 
     useEffect(() => {
         getcoupon();
-        getpermissioninfo()
     }, [searchInput]);
 
 
@@ -128,8 +130,6 @@ const Coupon = () => {
 
         const user_active_status = event.target.checked === true ? "true" : "false"
 
-        // console.log("user_active_status", user_active_status)
-
         const data = { id: id, status: user_active_status }
         const result = await Swal.fire({
             title: "Do you want to save the changes?",
@@ -169,25 +169,34 @@ const Coupon = () => {
 
 
 
+    const expiredbydate = () => {
+        const data = datewise?.map((item) => {
+            console.log("datewise", item.enddate)
+            return item.enddate
+
+        })
+    }
+
+
 
     const columns = [
-        {
-            name: 'S.No',
-            selector: (row, index) => index + 1,
-            sortable: false,
-            width: '100px',
-        },
+        // {
+        //     name: 'S.No',
+        //     selector: (row, index) => index + 1,
+        //     sortable: false,
+        //     width: '100px',
+        // },
         {
             name: 'Name',
             selector: row => row.name,
             sortable: true,
-            width: '150px',
+            width: '200px',
         },
         {
             name: 'Code',
             selector: row => row.code,
             sortable: true,
-
+            width: '150px',
         },
         {
             name: 'Fixed/Percent Value',
@@ -205,13 +214,13 @@ const Coupon = () => {
             name: 'Min Purchase Value',
             selector: row => row.minpurchasevalue,
             sortable: true,
-            width: '206px',
+            width: '210px',
         },
         {
             name: 'Max Discount Value',
             selector: row => row.mincouponvalue ? row.mincouponvalue : "-",
             sortable: true,
-            width: '206px',
+            width: '210px',
         },
 
         // {
@@ -224,14 +233,15 @@ const Coupon = () => {
             name: 'Type',
             selector: row => row.type,
             sortable: true,
-            width: '115px',
+            width: '120px',
         },
 
-        permission.includes("couponstatus") && {
+        permission.includes("couponstatus") ? {
             name: 'Active Status',
             selector: row => {
                 const currentDate = new Date();
-                const endDate = new Date(row.enddate);
+                const endDate = new Date(row.enddate );
+                endDate.setHours(23, 59, 59, 999);
                 if (currentDate > endDate) {
                     return <span className="text-danger" style={{ color: "red" }}>Expired</span>;
                 } else {
@@ -254,9 +264,7 @@ const Coupon = () => {
             },
             sortable: true,
             width: '156px',
-        },
-
-
+        } : "",
         {
             name: 'Startdate',
             selector: row => fDateTime(row.startdate),
@@ -270,47 +278,40 @@ const Coupon = () => {
             width: '200px',
         },
 
-
-        permission.includes("editcoupon") ||
-            permission.includes("viewcoupon") ||
-            permission.includes("deletecoupon") ? {
+        permission.includes("editcoupon") || permission.includes("coupondetail") 
+        || permission.includes("deletecoupon") ? {
             name: 'Actions',
             cell: row => {
                 const currentDate = new Date();
                 const endDate = new Date(row.enddate);
+                endDate.setHours(23, 59, 59, 999);
                 return (
                     <>
                         {currentDate > endDate ? (
-                            <span className="text-danger">-</span>
+                            <span className="text-danger" >-</span>
                         ) : (
-                            <>
-                                {permission.includes("viewcoupon") && (
-                                    <div>
-                                        <Tooltip placement="top" overlay="View">
-                                            <Eye
-                                                style={{ marginRight: "10px" }}
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#example2"
-                                                onClick={(e) => { setViewpage(row); }}
-                                            />
-                                        </Tooltip>
-                                    </div>
-                                )}
-                                {permission.includes("editcoupon") && (
-                                    <div>
-                                        <Tooltip placement="top" overlay="Edit">
-                                            <Pencil onClick={() => updatecoupon(row)} />
-                                        </Tooltip>
-                                    </div>
-                                )}
-                                {permission.includes("deletecoupon") && (
-                                    <div>
-                                        <Tooltip placement="top" overlay="Delete">
-                                            <Trash2 onClick={() => DeleteCouponbyadmin(row._id)} />
-                                        </Tooltip>
-                                    </div>
-                                )}
-                            </>
+                             <div className='d-flex' >
+                                 {permission.includes("coupondetail") ?<div >
+                                    <Tooltip placement="top" overlay="View">
+                                        <Eye
+                                            style={{ marginRight: "10px" }}
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#example2"
+                                            onClick={() => setViewpage(row)}
+                                        />
+                                    </Tooltip>
+                                </div> : "" }
+                                {permission.includes("editcoupon") ? <div>
+                                    <Tooltip placement="top" overlay="Edit">
+                                        <Pencil onClick={() => updatecoupon(row)} />
+                                    </Tooltip>
+                                </div> : "" }
+                                {permission.includes("deletecoupon") ? <div>
+                                    <Tooltip placement="top" overlay="Delete">
+                                        <Trash2 onClick={() => DeleteCouponbyadmin(row._id)} />
+                                    </Tooltip>
+                                </div> : "" }
+                            </div>
                         )}
                     </>
                 );
@@ -318,8 +319,7 @@ const Coupon = () => {
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
-        } : ""
-
+        } : "" 
 
     ];
 
@@ -368,7 +368,7 @@ const Coupon = () => {
                                         />
                                         Add Coupon
                                     </Link>
-                                </div> : ""}
+                                </div> : "" }
                             </div>
 
                             <Table
@@ -477,6 +477,7 @@ const Coupon = () => {
                                                 <div className="col-md-6"></div>
                                             </div>
                                         </li>
+
                                         {/* <li>
                                             <div className="row justify-content-between">
                                                 <div className="col-md-6">

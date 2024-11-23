@@ -199,34 +199,7 @@ const Client = () => {
     };
 
 
-    const forCSVdata = () => {
-        if (clients?.length > 0) {
-            const csvArr = clients.map((item) => ({
-                FullName: item?.FullName || 'N/A',
-                Email: item?.Email || 'N/A',
-                kyc_verification: item?.kyc_verification === 1 ? "Verified" : "Not Verified",
-                PlanStatus: item?.plansStatus?.some(statusItem => statusItem.status === 'active')
-                    ? 'Active'
-                    : item?.plansStatus?.some(statusItem => statusItem.status === 'expired')
-                        ? 'Expired'
-                        : 'N/A',
-                ClientActiveSegment: item?.plansStatus
-                    ?.filter(statusItem => statusItem.status === 'active')
-                    .map(statusItem => statusItem.serviceName || 'N/A')
-                    .join(', ') || 'N/A',
-                ClientExpiredSegment: item?.plansStatus
-                    ?.filter(statusItem => statusItem.status === 'expired')
-                    .map(statusItem => statusItem.serviceName || 'N/A')
-                    .join(', ') || 'N/A',
-                CreatedBy: item?.addedByDetails?.FullName ||
-                    (item?.clientcome === 1 ? "WEB" : "APP") ||
-                    'N/A',
-                PhoneNo: item?.PhoneNo || 'N/A',
-                Created_at: item?.createdAt || 'N/A',
-            }));
-            setForGetCSV(csvArr);
-        }
-    };
+  
 
     const getcategoryplanlist = async () => {
         try {

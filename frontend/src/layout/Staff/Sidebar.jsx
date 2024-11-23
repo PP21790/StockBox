@@ -90,6 +90,8 @@ const Sidebar = ({ onToggleClick }) => {
 
 
     permission.includes('paymenthistory') && { title: 'Payment History', icon: 'bx bx-credit-card', link: '/staff/paymenthistory' },
+    permission.includes('planexpiry') && { title: 'Plan Expiry', icon: 'bx bx-credit-card', link: '/staff/planexpiry' },
+    permission.includes('perform') && { title: 'Performance', icon: 'bx bx-credit-card', link: '/staff/perform' },
     permission.includes('viewblogs') && { title: 'Blogs', icon: 'bx bx-comment-detail', link: '/staff/blogs' },
     permission.includes('viewnews') && { title: 'News', icon: 'bx bx-news', link: '/staff/news' },
     permission.includes('viewcoupon') && { title: 'Coupon', icon: 'bx bx-edit-alt', link: '/staff/coupon' },

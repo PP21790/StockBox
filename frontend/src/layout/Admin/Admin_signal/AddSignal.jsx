@@ -15,9 +15,8 @@ const AddSignal = () => {
   const user_id = localStorage.getItem('id');
   const token = localStorage.getItem('token');
 
-
+  
   const [loading, setLoading] = useState(false);
-
   const [serviceList, setServiceList] = useState([]);
   const [stockList, setStockList] = useState([]);
   const [expirydate, setExpirydate] = useState([]);

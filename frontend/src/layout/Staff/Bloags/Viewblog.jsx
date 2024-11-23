@@ -3,28 +3,41 @@ import { useFormik } from 'formik';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import { image_baseurl } from '../../../Utils/config';
+import { Tooltip } from 'antd';
 
 const Viewblog = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { row } = location.state;  
+    const { row } = location.state;
 
     return (
         <div className="page-content">
-            <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                <div className="breadcrumb-title pe-3">Blog Details</div>
-                <div className="ps-3">
-                    <nav aria-label="breadcrumb">
-                        <ol className="breadcrumb mb-0 p-0">
-                            <li className="breadcrumb-item">
-                                <Link to="/staff/dashboard">
-                                    <i className="bx bx-home-alt" />
-                                </Link>
-                            </li>
-                        </ol>
-                    </nav>
+            <div className="row">
+                <div className="col-md-6">
+                    <div className="page-breadcrumb d-none d-sm-flex align-items-center">
+                        <div className="breadcrumb-title pe-3">Blog Details</div>
+                        <div className="ps-3">
+                            <nav aria-label="breadcrumb">
+                                <ol className="breadcrumb mb-0 p-0">
+                                    <li className="breadcrumb-item">
+                                        <Link to="/staff/dashboard">
+                                            <i className="bx bx-home-alt" />
+                                        </Link>
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md-6 d-flex justify-content-end">
+                    <Link to="/staff/blogs">
+                        <Tooltip title="Back">
+                            <i className="lni lni-arrow-left-circle" style={{ fontSize: "2rem" }} />
+                        </Tooltip>
+                    </Link>
                 </div>
             </div>
+
             <hr />
             <div className="row">
                 <div className="col-lg-8 mx-auto">
@@ -61,6 +74,22 @@ const Viewblog = () => {
                                         </div>
 
 
+                                        {/* <div className="row mb-3 align-items-center">
+                                            <label htmlFor="description" className="col-sm-3 col-form-label">
+                                                <b>Description</b>
+                                            </label>
+                                            <div className="col-sm-9">
+                                                <div className="input-group">
+                                                    <textarea className="input-group-text" style={{ width: "100%" }}>
+                                                        <span
+                                                            dangerouslySetInnerHTML={{ __html: row.description }}
+
+                                                        />
+                                                    </textarea>
+                                                </div>
+                                            </div>
+                                        </div> */}
+
                                         <div className="row mb-3 align-items-center">
                                             <label htmlFor="description" className="col-sm-3 col-form-label">
                                                 <b>Description</b>
@@ -76,6 +105,7 @@ const Viewblog = () => {
                                                 </div>
                                             </div>
                                         </div>
+
 
 
                                         <div className="row mb-3 align-items-center">

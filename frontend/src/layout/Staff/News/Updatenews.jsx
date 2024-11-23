@@ -80,6 +80,7 @@ const Updatenews = () => {
             label_size: 6,
             col_size: 6,
             disable: false,
+            star:true
 
         },
         {
@@ -92,7 +93,8 @@ const Updatenews = () => {
             image: true,
             imageWidth: "60px",
             imageHeight: "auto",
-            src: `${image_baseurl}/uploads/news/${client.image}`
+            src: `${image_baseurl}/uploads/news/${client.image}`,
+            star:true
         },
         {
             name: "description",
@@ -101,6 +103,7 @@ const Updatenews = () => {
             label_size: 12,
             col_size: 12,
             disable: false,
+            star:true
         },
     ];
 

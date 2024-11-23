@@ -5,12 +5,12 @@ import { GetClient } from '../../../Services/Admin';
 // import Table from '../../../components/Table';
 import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine, RefreshCcw } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { deleteClient, UpdateClientStatus, PlanSubscription, getplanlist, BasketSubscription, BasketAllList, getcategoryplan, getPlanbyUser, AllclientFilter } from '../../../Services/Admin';
+import { deleteClient, UpdateClientStatus, PlanSubscription, getclientExportfile , getplanlist, BasketSubscription, BasketAllList, getcategoryplan, getPlanbyUser, AllclientFilter } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
 import { fDateTime } from '../../../Utils/Date_formate';
 import { image_baseurl } from '../../../Utils/config';
 import { IndianRupee } from 'lucide-react';
-import ExportToExcel from '../../../Utils/ExportCSV';
+import { exportToCSV } from '../../../Utils/ExportData';
 import Table from '../../../components/Table1';
 import { getstaffperuser } from '../../../Services/Admin';
 
@@ -80,18 +80,16 @@ const Client = () => {
     }
 
     const handleDownload = (row) => {
-
         const url = `${image_baseurl}uploads/pdf/${row.pdf}`;
         const link = document.createElement('a');
         link.href = url;
-        link.download = url;
-
+        link.target = '_blank'; 
+    
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-
     };
-
+    
 
     const [basketdetail, setBasketdetail] = useState({
         plan_id: "",
@@ -163,38 +161,46 @@ const Client = () => {
 
 
 
-    useEffect(() => {
-        forCSVdata()
-    }, [searchInput, clients]);
+    
 
 
-
-    const forCSVdata = () => {
-        if (clients?.length > 0) {
-            const csvArr = clients.map((item) => ({
-                FullName: item?.FullName || 'N/A',
-                Email: item?.Email || 'N/A',
-                kyc_verification: item?.kyc_verification === 1 ? "Verified" : "Not Verified",
-                PlanStatus: item?.plansStatus?.some(statusItem => statusItem.status === 'active')
-                    ? 'Active'
-                    : item?.plansStatus?.some(statusItem => statusItem.status === 'expired')
-                        ? 'Expired'
-                        : 'N/A',
-                ClientActiveSegment: item?.plansStatus
-                    ?.filter(statusItem => statusItem.status === 'active')
-                    .map(statusItem => statusItem.serviceName || 'N/A')
-                    .join(', ') || 'N/A',
-                ClientExpiredSegment: item?.plansStatus
-                    ?.filter(statusItem => statusItem.status === 'expired')
-                    .map(statusItem => statusItem.serviceName || 'N/A')
-                    .join(', ') || 'N/A',
-                CreatedBy: item?.addedByDetails?.FullName ||
-                    (item?.clientcome === 1 ? "WEB" : "APP") ||
-                    'N/A',
-                PhoneNo: item?.PhoneNo || 'N/A',
-                Created_at: item?.createdAt || 'N/A',
-            }));
-            setForGetCSV(csvArr);
+    const getexportfile = async () => {
+        try {
+            const response = await getclientExportfile(token);
+            if (response.status) {
+                if (response.data?.length > 0) {
+                    const csvArr = response.data?.map((item) => ({
+                        FullName: item?.FullName || 'N/A',
+                        Email: item?.Email || 'N/A',
+                        kyc_verification: item?.kyc_verification === 1 ? "Verified" : "Not Verified",
+                        PlanStatus: item?.plansStatus?.some(statusItem => statusItem.status === 'active')
+                            ? 'Active'
+                            : item?.plansStatus?.some(statusItem => statusItem.status === 'expired')
+                                ? 'Expired'
+                                : 'N/A',
+                        ClientActiveSegment: item?.plansStatus
+                            ?.filter(statusItem => statusItem.status === 'active')
+                            .map(statusItem => statusItem.serviceName || 'N/A')
+                            .join(', ') || 'N/A',
+                        ClientExpiredSegment: item?.plansStatus
+                            ?.filter(statusItem => statusItem.status === 'expired')
+                            .map(statusItem => statusItem.serviceName || 'N/A')
+                            .join(', ') || 'N/A',
+                        CreatedBy: item?.addedByDetails?.FullName ||
+                            (item?.clientcome === 1 ? "WEB" : "APP") ||
+                            'N/A',
+                        PhoneNo: item?.PhoneNo || 'N/A',
+                        Created_at: fDateTime(item?.createdAt) || 'N/A',
+                    }));
+                    exportToCSV(csvArr, 'All Clients')
+                } else {
+                    console.log("No data available.");
+                }
+            } else {
+                console.error("Failed to fetch data:", response.status);
+            }
+        } catch (error) {
+            console.error("Error fetching clients:", error);
         }
     };
 
@@ -700,11 +706,22 @@ const Client = () => {
                                 </div> : ""}
                                 <div
                                     className="ms-2"
+                                    onClick={(e) => getexportfile()}
                                 >
-                                    <ExportToExcel
-                                        className="btn btn-primary "
-                                        apiData={ForGetCSV}
-                                        fileName={'All Users'} />
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary float-end"
+                                        data-toggle="tooltip"
+                                        data-placement="top"
+                                        title="Export To Excel"
+                                        delay={{ show: "0", hide: "100" }}
+
+                                    >
+                                        <i className="bx bxs-download" aria-hidden="true"></i>
+
+                                        Export-Excel
+                                    </button>
+
 
 
                                 </div>

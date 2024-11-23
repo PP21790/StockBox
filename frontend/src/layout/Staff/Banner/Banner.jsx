@@ -4,22 +4,22 @@ import { getbannerlist, Addbanner, UpdateBanner, changeBannerStatus, DeleteBanne
 import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { fDate , fDateTime} from '../../../Utils/Date_formate';
+import { fDateTime } from '../../../Utils/Date_formate';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
 import { getstaffperuser } from '../../../Services/Admin';
 
-
 const Banner = () => {
-
-
+     
+    
     const navigate = useNavigate();
+    const token = localStorage.getItem('token');
+    const userid = localStorage.getItem('id');
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
     const [searchInput, setSearchInput] = useState("");
     const [permission, setPermission] = useState([]);
-    
 
     const [updatetitle, setUpdatetitle] = useState({
         title: "",
@@ -39,21 +39,10 @@ const Banner = () => {
         hyperlink: ""
     });
 
-    const token = localStorage.getItem('token');
-    const userid = localStorage.getItem('id');
 
 
 
-    const getpermissioninfo = async () => {
-        try {
-            const response = await getstaffperuser(userid, token);
-            if (response.status) {
-                setPermission(response.data.permissions);
-            }
-        } catch (error) {
-            console.log("error", error);
-        }
-    }
+
 
     // Getting services
     const getBanner = async () => {
@@ -71,14 +60,25 @@ const Banner = () => {
         }
     };
 
+    const getpermissioninfo = async () => {
+        try {
+            const response = await getstaffperuser(userid, token);
+            if (response.status) {
+                setPermission(response.data.permissions);
+            }
+        } catch (error) {
+            console.log("error", error);
+        }
+    }
+
+
     useEffect(() => {
         getBanner();
         getpermissioninfo()
     }, [searchInput]);
 
 
-    
-
+   
 
     // Update service
     const updatebanner = async () => {
@@ -256,13 +256,13 @@ const Banner = () => {
 
 
     const columns = [
-        {
-            name: 'S.No',
-            selector: (row, index) => index + 1,
-            sortable: false,
-            width: '150px',
+        // {
+        //     name: 'S.No',
+        //     selector: (row, index) => index + 1,
+        //     sortable: false,
+        //     width: '150px',
 
-        },
+        // },
         // {
         //     name: 'Title',
         //     selector: row => row.title,
@@ -275,7 +275,7 @@ const Banner = () => {
             width: '240px',
 
         },
-        permission.includes("bannerstatus") && {
+        permission.includes("bannerstatus")  ? {
             name: 'Active Status',
             selector: row => (
                 <div className="form-check form-switch form-check-info">
@@ -295,7 +295,7 @@ const Banner = () => {
             sortable: true,
             width: '240px',
 
-        },
+        } : "",
         {
             name: 'Created At',
             selector: row => fDateTime(row.created_at),
@@ -310,7 +310,7 @@ const Banner = () => {
         // },
 
 
-        {
+        permission.includes("editbanner") || permission.includes("deletebanner") ? {
             name: 'Actions',
             cell: row => (
                 <>
@@ -330,7 +330,7 @@ const Banner = () => {
                         <Tooltip placement="top" overlay="Delete">
                             <Trash2 onClick={() => Deletebannerlist(row._id)} />
                         </Tooltip>
-                    </div> : "" }
+                    </div> : ""}
                 </>
             ),
             ignoreRowClick: true,
@@ -338,7 +338,7 @@ const Banner = () => {
             button: true,
 
 
-        }
+        }: ""
     ];
 
 
@@ -357,6 +357,10 @@ const Banner = () => {
             ...updatedField
         }));
     };
+
+
+
+ 
 
 
 
@@ -384,7 +388,7 @@ const Banner = () => {
                 <div className="card">
                     <div className="card-body">
                         <div className="d-lg-flex align-items-center mb-4 gap-3">
-                            <div className="position-relative">
+                            {/* <div className="position-relative">
                                 <input
                                     type="text"
                                     className="form-control ps-5 radius-10"
@@ -395,8 +399,8 @@ const Banner = () => {
                                 <span className="position-absolute top-50 product-show translate-middle-y">
                                     <i className="bx bx-search" />
                                 </span>
-                            </div>
-                            {permission.includes("addbanner") ? <div className="ms-auto">
+                            </div> */}
+                            {permission.includes("addbanner") ?  <div className="ms-auto">
                                 <button
                                     type="button"
                                     className="btn btn-primary"
@@ -432,6 +436,7 @@ const Banner = () => {
                                                     <div className="row">
                                                         <div className="col-md-12">
                                                             <label htmlFor="imageUpload">Upload Image</label>
+                                                            <span className="text-danger">*</span>
                                                             <input
                                                                 className="form-control mb-3"
                                                                 type="file"
@@ -502,6 +507,7 @@ const Banner = () => {
                                                             <div className="row">
                                                                 <div className="col-md-10">
                                                                     <label htmlFor="imageUpload">Image</label>
+                                                                    <span className="text-danger">*</span>
                                                                     <input
                                                                         className="form-control mb-3"
                                                                         type="file"

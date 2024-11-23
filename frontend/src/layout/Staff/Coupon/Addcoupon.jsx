@@ -13,60 +13,62 @@ const Addcoupon = () => {
     const token = localStorage.getItem("token");
 
     const today = new Date().toISOString().slice(0, 10);
-  
 
-    
+
+
+
+
+
     const validate = (values) => {
         let errors = {};
 
         if (!values.name) {
-            errors.name = "Please enter  Name";
+            errors.name = "Please Enter  Name";
         }
         if (!values.code) {
-            errors.code = "Please enter code";
+            errors.code = "Please Enter code";
         }
         if (values.code) {
             if (values.code.length < 6 || values.code.length > 8) {
-                errors.code = "Please enter between 6 and 8 characters.";
+                errors.code = "Please Enter Between 6 and 8 Characters.";
             } else if (!/^[a-zA-Z0-9]+$/.test(values.code)) {
-                errors.code = "Code must contain only numbers and letters.";
+                errors.code = "Code Must contain Only Numbers and Letters.";
             }
         }
 
-        if (values.minpurchasevalue && values.minpurchasevalue < values.mincouponvalue) {
-            errors.minpurchasevalue = "Please Enter Value Less Than  Max Discount Value "
+        if (values.minpurchasevalue && parseFloat(values.minpurchasevalue) < parseFloat(values.mincouponvalue)) {
+            errors.minpurchasevalue = "Please Enter Value Greater Than  Max Discount Value "
         }
-        if (values.mincouponvalue && values.minpurchasevalue > values.mincouponvalue) {
+        if (values.mincouponvalue && parseFloat(values.minpurchasevalue) < parseFloat(values.mincouponvalue)) {
             errors.mincouponvalue = "Please Enter Value Less Than Min Purchase Value "
         }
-        if(values.value && values.minpurchasevalue < values.value){
+        if (values.value && parseFloat(values.minpurchasevalue) < parseFloat(values.value)) {
             errors.minpurchasevalue = "Please Enter Greater Than Discount value";
         }
-        if(values.enddate &&  values.startdate > values.enddate){
-            errors.enddate = "Please Enter greater Than Startdate";
+        if (values.enddate && values.startdate > values.enddate) {
+            errors.enddate = "Please Enter Greater Than Startdate";
         }
         if (!values.type) {
-            errors.type = "Please enter type";
+            errors.type = "Please Enter type";
         }
         if (!values.value) {
-            errors.value = "Please enter value";
+            errors.value = "Please Enter value";
         }
         if (!values.startdate) {
-            errors.startdate = "Please enter Startdate";
+            errors.startdate = "Please Enter Startdate";
         }
         if (!values.enddate) {
-            errors.enddate = "Please enter Enddate";
+            errors.enddate = "Please Enter Enddate";
         }
         if (!values.minpurchasevalue) {
-            errors.minpurchasevalue = "Please enter Min Purchase value";
+            errors.minpurchasevalue = "Please Enter Min Purchase Value";
         }
         if (values.mincouponvalue && !values.mincouponvalue) {
-            errors.mincouponvalue = "Please enter Min Coupon value";
+            errors.mincouponvalue = "Please Enter Min Coupon Value";
         }
 
         return errors;
     };
-
 
 
     const onSubmit = async (values) => {
@@ -96,7 +98,7 @@ const Addcoupon = () => {
                     timerProgressBar: true,
                 });
                 setTimeout(() => {
-                    navigate("/admin/coupon");
+                    navigate("/staff/coupon");
                 }, 1500);
             } else {
                 Swal.fire({
@@ -144,6 +146,7 @@ const Addcoupon = () => {
             label_size: 6,
             col_size: 6,
             disable: false,
+            star:true
         },
         {
             name: "code",
@@ -152,6 +155,7 @@ const Addcoupon = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
+            star:true
         },
         {
             name: "type",
@@ -160,6 +164,7 @@ const Addcoupon = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
+            star:true,
             options: [
                 { value: "percentage", label: "Percentage" },
                 { value: "fixed", label: "Fixed" },
@@ -173,6 +178,7 @@ const Addcoupon = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
+            star:true,
             showWhen: (values) => values.type === "fixed"
         },
         {
@@ -182,24 +188,27 @@ const Addcoupon = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
+            star:true,
             showWhen: (values) => values.type === "percentage"
         },
 
         {
             name: "minpurchasevalue",
             label: "Min Purchase Value",
-            type: "text",
+            type: "number",
             label_size: 12,
             col_size: 6,
             disable: false,
+            star:true
         },
         {
             name: "mincouponvalue",
             label: "Max Discount Value",
-            type: "text",
+            type: "number",
             label_size: 12,
             col_size: 6,
             disable: false,
+            star:true,
             showWhen: (values) => values.type === "percentage"
         },
         {
@@ -209,6 +218,7 @@ const Addcoupon = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
+            star:true
 
         },
         {
@@ -218,6 +228,7 @@ const Addcoupon = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
+            star:true
         },
 
 
@@ -240,7 +251,7 @@ const Addcoupon = () => {
 
     ];
 
-    console.log("formik", formik.values.startdate)
+  
 
     return (
         <div style={{ marginTop: "100px" }}>
@@ -251,7 +262,7 @@ const Addcoupon = () => {
                 btn_name="Add Coupon"
                 btn_name1="Cancel"
                 sumit_btn={true}
-                btn_name1_route={"/admin/coupon"}
+                btn_name1_route={"/staff/coupon"}
                 additional_field={<></>}
 
             />

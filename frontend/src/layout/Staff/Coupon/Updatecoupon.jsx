@@ -16,36 +16,56 @@ const Updatecoupon = () => {
 
 
 
-  // const validate = (values) => {
-  //   let errors = {};
+   const validate = (values) => {
+    let errors = {};
 
-  //   if (!values.name) {
-  //     errors.name = "Please enter Name";
-  //   }
-  //   if (!values.code) {
-  //     errors.code = "Please enter code";
-  //   }
-  //   if (!values.type) {
-  //     errors.type = "Please enter type";
-  //   }
-  //   if (!values.value) {
-  //     errors.value = "Please enter value";
-  //   }
-  //   if (!values.startdate) {
-  //     errors.startdate = "Please enter Start Date";
-  //   }
-  //   if (!values.enddate) {
-  //     errors.enddate = "Please enter End Date";
-  //   }
-  //   if (!values.minpurchasevalue) {
-  //     errors.minpurchasevalue = "Please enter Min Purchase value";
-  //   }
-  //   if (!values.mincouponvalue) {
-  //     errors.mincouponvalue = "Please enter Min Coupon value";
-  //   }
+    if (!values.name) {
+        errors.name = "Please Enter  Name";
+    }
+    if (!values.code) {
+        errors.code = "Please Enter code";
+    }
+    if (values.code) {
+        if (values.code.length < 6 || values.code.length > 8) {
+            errors.code = "Please Enter Between 6 and 8 Characters.";
+        } else if (!/^[a-zA-Z0-9]+$/.test(values.code)) {
+            errors.code = "Code Must Contain Only Numbers and Letters.";
+        }
+    }
 
-  //   return errors;
-  // };
+    if (values.minpurchasevalue && parseFloat(values.minpurchasevalue) < parseFloat(values.mincouponvalue)) {
+        errors.minpurchasevalue = "Please Enter Value Greater Than  Max Discount Value "
+    }
+    if (values.mincouponvalue && parseFloat(values.minpurchasevalue) < parseFloat(values.mincouponvalue)) {
+        errors.mincouponvalue = "Please Enter Value Less Than Min Purchase Value "
+    }
+    if (values.value && parseFloat(values.minpurchasevalue) < parseFloat(values.value)) {
+        errors.minpurchasevalue = "Please Enter Greater Than Discount value";
+    }
+    if (values.enddate && values.startdate > values.enddate) {
+        errors.enddate = "Please Enter greater Than Startdate";
+    }
+    if (!values.type) {
+        errors.type = "Please Enter Type";
+    }
+    if (!values.value) {
+        errors.value = "Please Enter Value";
+    }
+    if (!values.startdate) {
+        errors.startdate = "Please Enter Startdate";
+    }
+    if (!values.enddate) {
+        errors.enddate = "Please Enter Enddate";
+    }
+    if (!values.minpurchasevalue) {
+        errors.minpurchasevalue = "Please Enter Min Purchase Value";
+    }
+    if (values.mincouponvalue && !values.mincouponvalue) {
+        errors.mincouponvalue = "Please Enter Min Coupon Value";
+    }
+
+    return errors;
+  };
 
   const onSubmit = async (values) => {
     const req = {
@@ -107,82 +127,124 @@ const Updatecoupon = () => {
       mincouponvalue: row?.mincouponvalue || "",
       id: "",
     },
-    // validate,
+    validate,
     onSubmit,
   });
 
   const fields = [
     {
-      name: "name",
-      label: "Name",
-      type: "text",
-      label_size: 12,
-      col_size: 4,
-      disable: false,
+        name: "name",
+        label: "Name",
+        type: "text",
+        label_size: 6,
+        col_size: 6,
+        disable: false,
+        star:true
     },
     {
-      name: "code",
-      label: "Code",
-      type: "text",
-      label_size: 12,
-      col_size: 4,
-      disable: false,
+        name: "code",
+        label: "Coupon Code",
+        type: "text",
+        label_size: 12,
+        col_size: 6,
+        disable: false,
+        star:true
     },
     {
-      name: "type",
-      label: "Type",
-      type: "select",
-      label_size: 4,
-      col_size: 4,
-      disable: false,
-      options: [
-        { value: "percentage", label: "Percentage" },
-        { value: "fixed", label: "Fixed" },
-      ]
-    },
-    {
-      name: "value",
-      label: "Value",
-      type: "number",
-      label_size: 12,
-      col_size: 4,
-      disable: false,
-    },
-    {
-      name: "minpurchasevalue",
-      label: "Min Purchase Value",
-      type: "text",
-      label_size: 12,
-      col_size: 4,
-      disable: false,
-    },
-    {
-      name: "mincouponvalue",
-      label: "Min Discount Amount",
-      type: "text",
-      label_size: 12,
-      col_size: 4,
-      disable: false,
-      showWhen: (values) => values.type === "percentage"
-    },
-    {
-      name: "startdate",
-      label: "Start Date",
-      type: "date",
-      label_size: 122,
-      col_size: 4,
-      disable: false,
-    },
-    {
-      name: "enddate",
-      label: "End Date",
-      type: "date",
-      label_size: 122,
-      col_size: 4,
-      disable: false,
+        name: "type",
+        label: "Type",
+        type: "select",
+        label_size: 12,
+        col_size: 6,
+        disable: false,
+        star:true,
+        options: [
+            { value: "percentage", label: "Percentage" },
+            { value: "fixed", label: "Fixed" },
+        ]
+        
     },
 
-  ];
+    {
+        name: "value",
+        label: "Percent/Fixed Discount",
+        type: "number",
+        label_size: 12,
+        col_size: 6,
+        disable: false,
+        showWhen: (values) => values.type === "fixed",
+        star:true
+    },
+    {
+        name: "value",
+        label: "Percentage/Fixed Discount",
+        type: "text4",
+        label_size: 12,
+        col_size: 6,
+        disable: false,
+        showWhen: (values) => values.type === "percentage",
+        star:true
+    },
+
+    {
+        name: "minpurchasevalue",
+        label: "Min Purchase Value",
+        type: "number",
+        label_size: 12,
+        col_size: 6,
+        disable: false,
+        star:true
+    },
+    {
+        name: "mincouponvalue",
+        label: "Max Discount Value",
+        type: "number",
+        label_size: 12,
+        col_size: 6,
+        disable: false,
+        showWhen: (values) => values.type === "percentage",
+        star:true
+    },
+    {
+        name: "startdate",
+        label: "Start Date",
+        type: "date1",
+        label_size: 12,
+        col_size: 6,
+        disable: false,
+        star:true
+
+    },
+    {
+        name: "enddate",
+        label: "End Date",
+        type: "date",
+        label_size: 12,
+        col_size: 6,
+        disable: false,
+        star:true
+    },
+
+
+    // {
+    //     name: "image",
+    //     label: "Image",
+    //     type: "file2",
+    //     label_size: 12,
+    //     col_size: 6,
+    //     disable: false,
+    // },
+    // {
+    //     name: "description",
+    //     label: "Description",
+    //     type: "text",
+    //     label_size: 12,
+    //     col_size: 6,
+    //     disable: false,
+    // },
+
+];
+
 
   return (
     <div style={{ marginTop: "100px" }}>

@@ -169,6 +169,13 @@ const Staffpermission = () => {
             editfreeclient: false,
             viewfreeclient: false,
             freeclientstatus: false,
+
+            otherpermission: false,
+            paymenthistory: false,
+            planexpiry: false,
+            perform: false,
+           
+
            
 
         },
@@ -272,6 +279,13 @@ const Staffpermission = () => {
             formik.setFieldValue('editfreeclient', clients.includes('editfreeclient'));
             formik.setFieldValue('viewfreeclient', clients.includes('viewfreeclient'));
             formik.setFieldValue('freeclientstatus', clients.includes('freeclientstatus'));
+
+
+            formik.setFieldValue('otherpermission', clients.includes('otherpermission'));
+            formik.setFieldValue('paymenthistory', clients.includes('paymenthistory'));
+            formik.setFieldValue('planexpiry', clients.includes('planexpiry'));
+            formik.setFieldValue('perform', clients.includes('perform'));
+          
            
         }
     }, [clients]);
@@ -609,6 +623,35 @@ const Staffpermission = () => {
     }, [formik.values.addfreeclient ,formik.values.editfreeclient ,formik.values.freeclientstatus ]);
 
     
+  
+    useEffect(() => {
+        if (formik.values.otherpermission == true) {
+            formik.setFieldValue('paymenthistory', true);
+            formik.setFieldValue('planexpiry', true);   
+            formik.setFieldValue('perform', true);
+           
+         
+
+        }
+        else {
+            formik.setFieldValue('paymenthistory', false);
+            formik.setFieldValue('planexpiry', false);
+            formik.setFieldValue('perform', false);
+           
+            
+
+        }
+
+    }, [formik.values.otherpermission]) 
+
+      
+    // useEffect(() => {
+    //     if (formik.values.paymenthistory || formik.values.planexpiry ||  formik.values.perform  ) {
+    //         formik.setFieldValue('otherpermission', true);
+    //     }
+    // }, [formik.values.paymenthistory ,formik.values.planexpiry ,formik.values.perform ]);
+
+
 
     const fields = [
         {
@@ -1283,8 +1326,44 @@ const Staffpermission = () => {
             col_size: 2,
             // check_box_true: formik.values.deleteservice,
             check_box_true: formik.values.freeclientpermission || formik.values.freeclientstatus ? true : false,
-        }
+        },
+        {
+            name: 'otherpermission',
+            label: 'Others',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            check_box_true: formik.values.otherpermission,
+            bold: true
 
+        },
+        {
+            name: 'paymenthistory',
+            label: 'Payment History',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.viewservice,
+            check_box_true: formik.values.otherpermission || formik.values.paymenthistory ? true : false,
+        },
+        {
+            name: 'planexpiry',
+            label: 'Plan Expiry',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.viewservice,
+            check_box_true: formik.values.otherpermission || formik.values.planexpiry ? true : false,
+        },
+        {
+            name: 'perform',
+            label: 'Performance',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.viewservice,
+            check_box_true: formik.values.otherpermission || formik.values.perform ? true : false,
+        },
 
 
        

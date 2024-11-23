@@ -152,14 +152,6 @@ const Coupon = () => {
 
 
 
-    const expiredbydate = () => {
-        const data = datewise?.map((item) => {
-            console.log("datewise", item.enddate)
-            return item.enddate
-
-        })
-    }
-
 
 
     const columns = [
@@ -268,7 +260,7 @@ const Coupon = () => {
             cell: row => {
                 const currentDate = new Date();
                 const endDate = new Date(row.enddate);
-
+                endDate.setHours(23, 59, 59, 999);
                 return (
                     <>
                         {currentDate > endDate ? (
