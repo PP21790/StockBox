@@ -36,7 +36,7 @@ const Update = () => {
       UserName: values.UserName,
       Email: values.Email,
       PhoneNo: values.PhoneNo,
-      password: values.password,
+      // password: values.password,
       id: row._id,
     };
 
@@ -80,7 +80,7 @@ const Update = () => {
       UserName: row?.UserName || "",
       Email: row?.Email || "",
       PhoneNo: row?.PhoneNo || "",
-      password: "", 
+      // password: "", 
     },
     validate,
     onSubmit,
@@ -123,15 +123,15 @@ const Update = () => {
       disable: false,
       star:true
     },
-    {
-      name: "password",
-      label: "Password",
-      type: "password", 
-      label_size: 12,
-      col_size: 3,
-      disable: false,
-      star:true
-    },
+    // {
+    //   name: "password",
+    //   label: "Password",
+    //   type: "password", 
+    //   label_size: 12,
+    //   col_size: 3,
+    //   disable: false,
+    //   star:true
+    // },
   ];
 
   return (

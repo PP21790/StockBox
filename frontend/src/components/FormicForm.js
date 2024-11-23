@@ -351,39 +351,42 @@ const DynamicForm = ({
                                                             </div>
                                                         </>
                                                     ) :
-                                                        field.type === "file2" ? (
-                                                            <>
-
-                                                                <div className={`col-lg-${field.col_size}`}>
-                                                                    <div className="input-block mb-3">
-                                                                        <label>
-                                                                            {field.label}
-                                                                            {field.star == true ? <span className="text-danger">*</span> : ""}
-                                                                        </label>
-
-                                                                        <input
-                                                                            type="file"
-                                                                            id={field.name}
-                                                                            className="form-control"
-                                                                            onChange={(e) => handleFileChange2(e, index, field.name)}
-                                                                            name={field.name}
-                                                                        />
-                                                                    </div>
-
+                                                    field.type === "file2" ? (
+                                                        <>
+                                                            <div className={`col-lg-${field.col_size}`}>
+                                                                <div className="input-block mb-3">
+                                                                    <label>
+                                                                        {field.label}
+                                                                        {field.star ? <span className="text-danger">*</span> : ""}
+                                                                    </label>
+                                                    
+                                                                    <input
+                                                                        type="file"
+                                                                        id={field.name}
+                                                                        className={`form-control ${
+                                                                            formik.touched[field.name] && formik.errors[field.name] ? "is-invalid" : ""
+                                                                        }`}
+                                                                        onChange={(e) => {
+                                                                            handleFileChange2(e, index, field.name);
+                                                                            formik.setFieldValue(field.name, e.target.files[0]); 
+                                                                        }}
+                                                                        name={field.name}
+                                                                    />
+                                                                    {formik.touched[field.name] && formik.errors[field.name] && (
+                                                                        <div style={{ color: "red" }}>{formik.errors[field.name]}</div>
+                                                                    )}
                                                                 </div>
-
-                                                                {/* Additional content for image preview */}
-                                                                {field.additional_content && (
-                                                                    <div className={`col-lg-${field.col_size}`}>
-                                                                        {field.additional_content}
-                                                                    </div>
-                                                                )}
-
-
-
-                                                            </>
-
-                                                        ) : field.type === "file3" ? (
+                                                            </div>
+                                                    
+                                
+                                                            {field.additional_content && (
+                                                                <div className={`col-lg-${field.col_size}`}>
+                                                                    {field.additional_content}
+                                                                </div>
+                                                            )}
+                                                        </>
+                                                    ) : 
+                                                     field.type === "file3" ? (
                                                             <>
 
                                                                 <div className={`col-lg-${field.col_size}`}>

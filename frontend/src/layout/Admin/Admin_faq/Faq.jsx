@@ -593,7 +593,7 @@ const Faq = () => {
                                     </li>
                                     <li>
                                         <div className="row justify-content-between">
-                                            <div className="col-md-6">
+                                            <div className="">
                                                 <b>Discription : {item.description}</b>
                                             </div>
                                             <div className="col-md-6">

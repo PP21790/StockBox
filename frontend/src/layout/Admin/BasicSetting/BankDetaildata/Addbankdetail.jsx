@@ -21,9 +21,15 @@ const Addbankdetail = () => {
         if (!values.name) {
             errors.name = "Please Enter Bank Name";
         }
+        if (/\d/.test(values.name)) {
+            errors.name = "Numbers are not allowed in the Bank Name";
+          }
         if (!values.branch) {
             errors.branch = "Please Enter Branch Name";
         }
+        if (/\d/.test(values.branch)) {
+            errors.branch = "Numbers are not allowed in the Branch Name";
+          }
         if (!values.Confirmnumber) {
             errors.Confirmnumber = "Please Confirm Your Account Number";
           } else if (values.accountno !== values.Confirmnumber) {

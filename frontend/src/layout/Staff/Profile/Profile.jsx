@@ -26,6 +26,8 @@ const Profile = () => {
         getpermissioninfo()
     }, [])
 
+
+
     return (
         <div>
             <div className="page-content">
@@ -99,7 +101,7 @@ const Profile = () => {
 
                                         </div>
                                         <hr className="my-4" />
-                                        <ul className="list-group list-group-flush">
+                                        {/* <ul className="list-group list-group-flush">
                                             <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                 <h6 className="mb-0">
                                                     <div class="app-icon">
@@ -173,7 +175,7 @@ const Profile = () => {
                                                 </h6>
                                                 <input type="text" className='form-control' placeholder='https://www.facebook.com/help' style={{ width: "auto" }} />
                                             </li>
-                                        </ul>
+                                        </ul> */}
                                     </div>
                                 </div>
                             </div>
