@@ -82,12 +82,12 @@ const Client = () => {
         const link = document.createElement('a');
         link.href = url;
         link.target = '_blank'; // Opens the URL in a new tab
-    
+
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
     };
-    
+
 
 
     const [basketdetail, setBasketdetail] = useState({
@@ -199,7 +199,7 @@ const Client = () => {
     };
 
 
-  
+
 
     const getcategoryplanlist = async () => {
         try {
@@ -223,12 +223,7 @@ const Client = () => {
                 status: clientStatus == 1 ? 1 : clientStatus == 0 ? 0 : "",
                 createdby: statuscreatedby,
                 search: searchInput,
-                planStatus:
-                    expired === "active" ? "active" :
-                        expired === "expired" ? "expired" :
-                            clientStatus === "active" ? "active" :
-                                clientStatus === "expired" ? "expired" :
-                                    ""
+                planStatus: expired === "active" ? "active" : expired === "expired" ? "expired" : clientStatus === "active" ? "active" : clientStatus === "expired" ? "expired" : ""
 
             };
 
