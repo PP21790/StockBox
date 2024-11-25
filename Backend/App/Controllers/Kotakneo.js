@@ -609,25 +609,6 @@ axios(config)
                                const parts = matchedLines[0].split(','); // Extract parts from the first (and only) matched line
                                ts = parts[5]; // Get the value from the 6th column (index 5)
                         
-           
-                            //    var data =  JSON.stringify({
-                            //        "tk":stock.instrument_token,
-                            //        "mp":"0",
-                            //        "pc":producttype,
-                            //        "dd":"NA",
-                            //        "dq":"0",
-                            //        "vd":"DAY",
-                            //        "ts":ts,
-                            //        "tt":calltype,
-                            //        "pr":price,
-                            //        "tp":"0",
-                            //        "qt":quantity,
-                            //        "es":exchange,
-                            //        "pt":"MKT"
-                            //    });
-
-
-
                                var data =  JSON.stringify({
                                 "am":"NO",
                                 "dq":"0",
