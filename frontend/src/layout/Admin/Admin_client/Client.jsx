@@ -686,9 +686,18 @@ const Client = () => {
 
                                         Export-Excel
                                     </button>
-
-
-
+                                </div>
+                                <div className="">
+                                    <Link
+                                        to="/admin/clientdeletehistory"
+                                        className="btn btn-primary"
+                                    >
+                                        <i
+                                            className="bx bxs-trash"
+                                            aria-hidden="true"
+                                        />
+                                        Delete Client
+                                    </Link>
                                 </div>
 
 

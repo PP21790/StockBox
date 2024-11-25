@@ -72,6 +72,7 @@ import Bankdetail from '../layout/Admin/BasicSetting/BankDetaildata/Bankdetail';
 import Addbankdetail from '../layout/Admin/BasicSetting/BankDetaildata/Addbankdetail';
 import Updatebankdetail from '../layout/Admin/BasicSetting/BankDetaildata/Updatebankdetail';
 import QRDetails from '../layout/Admin/BasicSetting/QRDetails/QRDetails';
+import ClientDeleteHistory from '../layout/Admin/Admin_client/ClientDeleteHistory';
 
 
 
@@ -128,6 +129,7 @@ function MainApp() {
                     <Route path="/client/updateclient/:id" element={<EditClient />} />
                     <Route path="/client/clientdetail/:id" element={<Viewclientdetail />} />
                     <Route path="/editfreeclient/:id" element={<Editfreeclient />} />
+                    <Route path="/clientdeletehistory" element={<ClientDeleteHistory />} />
 
 
                     <Route path="/perfom" element={<Perfom />} />

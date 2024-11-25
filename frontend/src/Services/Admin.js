@@ -2175,6 +2175,23 @@ export async function getHelpMessagelist(token) {
 }
 
 
+
+// dashboard notification 
+
+export async function getDashboardNotification(token) {
+    try {
+        const res = await axios.get(`${Config.base_url}dashboard/notification`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}
+
+
 // // add freetrial client 
 
 // export async function addfreeClient(data, token) {
@@ -2192,6 +2209,26 @@ export async function getHelpMessagelist(token) {
 //         return err.response?.data || err.message;
 //     }
 // }
+
+// read status of notification
+
+
+export async function ReadNotificationStatus(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}dashboard/statuschangenotifiction`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
 
 
 export async function addfreeClient(data, token) {
@@ -2553,6 +2590,24 @@ export async function AllclientFilter(data, token) {
     }
 }
 
+
+// delete client history 
+
+export async function DeleteClientHistory(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}client/deletelistwithfilter`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
 
 
 // add bank detail api 

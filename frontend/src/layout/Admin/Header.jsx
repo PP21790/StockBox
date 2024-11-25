@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getHelpMessagelist, gettradestatus, basicsettinglist, UpdateLogin_status } from '../../Services/Admin';
+import { ReadNotificationStatus, getDashboardNotification, gettradestatus, basicsettinglist, UpdateLogin_status } from '../../Services/Admin';
 import { formatDistanceToNow } from 'date-fns';
 import Swal from 'sweetalert2';
 import $ from "jquery";
@@ -84,25 +84,68 @@ const Header = () => {
     }
   };
 
+     
+  const handleSwitchChange = async (event, id) => {
 
+    const originalChecked = event.target.checked;
+    console.log("originalChecked",originalChecked)
+    console.log("id",id)
+
+
+    const user_active_status = originalChecked ? "1" : "0";
+    const data = { id: id, status: user_active_status };
+
+    const result = await Swal.fire({
+        title: "Do you want to save the changes?",
+        showCancelButton: true,
+        confirmButtonText: "Save",
+        cancelButtonText: "Cancel",
+        allowOutsideClick: false,
+    });
+
+    if (result.isConfirmed) {
+        try {
+            const response = await ReadNotificationStatus(data, token);
+            if (response.status) {
+                Swal.fire({
+                    title: "Saved!",
+                    icon: "success",
+                    timer: 1000,
+                    timerProgressBar: true,
+                });
+                setTimeout(() => {
+                    Swal.close();
+                }, 1000);
+            }
+            // Reload the plan list
+  
+        } catch (error) {
+            Swal.fire(
+                "Error",
+                "There was an error processing your request.",
+                "error"
+            );
+        }
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+        event.target.checked = !originalChecked;
+       
+    }
+};
 
 
   const getdemoclient = async () => {
     try {
-      const response = await getHelpMessagelist(token);
+      const response = await getDashboardNotification(token);
       if (response.status) {
-        const today = new Date().toISOString().split('T')[0];
-        const todaysData = response.data.filter(item => {
-          if (!item.created_at) return false;
-          const itemDate = new Date(item.created_at);
-          return itemDate.toISOString().split('T')[0] === today;
-        });
-        setClients(todaysData);
+        console.log("res", response.data)
+        setClients(response.data);
       }
     } catch (error) {
       console.log("error", error);
     }
   };
+
+
 
 
 
@@ -242,7 +285,7 @@ const Header = () => {
                     </div>
                   </div>
                 </li>
-                {/* <li className="nav-item dropdown dropdown-large">
+                <li className="nav-item dropdown dropdown-large">
                   <a
                     className="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative"
                     href="#"
@@ -259,37 +302,42 @@ const Header = () => {
                     </div>
                     <div className="header-notifications-list" style={{ overflowY: "scroll " }}>
                       {clients.map((notification, index) => (
-                        <a key={index} className="dropdown-item" href="#">
-                          <div className="d-flex align-items-center">
-                            <div className="notify bg-light-danger text-danger">
-                              {notification.clientDetails.FullName.split(' ').map(word => word.charAt(0)).join('')}
-                            </div>
+                        <Link
+                          key={index}
+                          className="dropdown-item"
+                          to={notification.type === "payout" ? "/admin/paymentrequest" : "#"}
+                          onChange={(event) => handleSwitchChange(event, notification._id)}
+                        >
+
+                          <div className="d-flex align-items-center" >
+                            {/* Example for notification type badge, uncomment and style as needed */}
+                            {/* <div className={`notify bg-light-${notification.type} text-${notification.type}`}>
+                             {notification.type}
+                               </div> */}
                             <div className="flex-grow-1">
                               <h6 className="msg-name">
-                                {notification.clientDetails.FullName}
+                                {notification?.title}
                                 <span className="msg-time float-end">
-                                  {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
+                                  {notification.createdAt
+                                    ? formatDistanceToNow(new Date(notification.createdAt), {
+                                      addSuffix: true,
+                                    })
+                                    : "N/A"}
                                 </span>
                               </h6>
-                              <Link to="/admin/help">
+                             
                                 <p
-                                  className="msg-info"
-                                  style={{
-                                    display: "block",
-                                    maxWidth: "200px",
-                                    whiteSpace: "nowrap",
-                                    overflow: "hidden",
-                                    textOverflow: "ellipsis",
-                                    margin: 0
-                                  }}
+                                  className="msg-info text-truncate"
+                                  title={notification.message}
                                 >
                                   {notification.message}
                                 </p>
-                              </Link>
+                  
                             </div>
                           </div>
-                        </a>
+                        </Link>
                       ))}
+
                     </div>
                     <div className="text-center msg-footer">
                       <Link to="/admin/help">
@@ -297,7 +345,7 @@ const Header = () => {
                       </Link>
                     </div>
                   </div>
-                </li> */}
+                </li>
               </ul>
             </div>
             <div className="user-box dropdown px-3">
