@@ -23,6 +23,8 @@ const Planexpiry = () => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
 
+
+
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };
@@ -99,15 +101,17 @@ const Planexpiry = () => {
         setCurrentPage(1);
     };
 
+
+
     useEffect(() => {
         fetchAdminServices();
     }, []);
 
 
-
     useEffect(() => {
         getClientData();
     }, [searchInput, searchStock, currentPage, startDate, endDate]);
+
 
 
 
@@ -149,6 +153,8 @@ const Planexpiry = () => {
             sortable: true, width: '200px'
         },
     ];
+
+    
 
     return (
         <div className="page-content">
@@ -192,7 +198,6 @@ const Planexpiry = () => {
 
                             >
                                 <i className="bx bxs-download" aria-hidden="true"></i>
-
                                 Export-Excel
                             </button>
                         </div>
