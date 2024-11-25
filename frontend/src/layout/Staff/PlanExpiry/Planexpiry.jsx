@@ -44,7 +44,7 @@ const Planexpiry = () => {
                 page: currentPage,
                 serviceid: searchStock,
                 startdate: startDate,
-                enddsate: endDate,
+                endddate: endDate,
                 search: searchInput,
             };
             const response = await getclientPlanexpirywithfilter(data, token);

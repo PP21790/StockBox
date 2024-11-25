@@ -197,8 +197,8 @@ const Signal = () => {
         try {
             const data = {
                 page: currentPage,
-                from: filters.from || clientStatus == "todayopensignal" ? formattedDate : "",
-                to: filters.to || clientStatus == "todayopensignal" ? formattedDate : "",
+                from: clientStatus === "todayclosesignal" ? formattedDate : filters.from ? filters.from : "" ,
+                to: clientStatus === "todayclosesignal" ? formattedDate : filters.to ?  filters.to : "" ,
                 service: filters.service,
                 stock: searchstock,
                 closestatus: "false",

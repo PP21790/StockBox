@@ -3,9 +3,9 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table1';
-import { Eye, Trash2, RefreshCcw, SquarePen } from 'lucide-react';
+import { Eye, Trash2, RefreshCcw , SquarePen} from 'lucide-react';
 import Swal from 'sweetalert2';
-import { GetSignallist, GetSignallistWithFilter, DeleteSignal, SignalCloseApi, GetService, GetStockDetail, UpdatesignalReport } from '../../../Services/Admin';
+import { GetSignallist, GetSignallistWithFilter, DeleteSignal, SignalCloseApi, GetService, GetStockDetail , UpdatesignalReport} from '../../../Services/Admin';
 import { fDateTimeH } from '../../../Utils/Date_formate'
 import { exportToCSV } from '../../../Utils/ExportData';
 import Select from 'react-select';
@@ -22,9 +22,9 @@ const Signal = () => {
     const [totalRows, setTotalRows] = useState(0);
     const [header, setheader] = useState("Open Signal");
     const [updatetitle, setUpdatetitle] = useState({
-        report: "",
-        id: "",
-
+          report: "",
+          id: "",
+       
 
     });
     const location = useLocation();
@@ -155,7 +155,7 @@ const Signal = () => {
 
 
     const options = clients.map((item) => ({
-        value: item.stock,
+        value: item.stock ,
         label: item.stock,
     }));
 
@@ -185,25 +185,16 @@ const Signal = () => {
             console.log("Error:", error);
         }
     }
-
-
-    console.log("filters.from", filters.from)
-    console.log("filters.to", filters.to)
+    
+    
+  
 
     const getAllSignal = async () => {
         try {
             const data = {
                 page: currentPage,
-                from: filters.from
-                    ? filters.from
-                    : clientStatus === "todayopensignal"
-                        ? formattedDate
-                        : "",
-                to: filters.to
-                    ? filters.to
-                    : clientStatus === "todayopensignal"
-                        ? formattedDate
-                        : "",
+                from: clientStatus === "todayclosesignal" ? formattedDate : filters.from ? filters.from : "" ,
+                to: clientStatus === "todayclosesignal" ? formattedDate : filters.to ?  filters.to : "" ,
                 service: filters.service,
                 stock: searchstock,
                 closestatus: "false",
@@ -221,7 +212,6 @@ const Signal = () => {
             console.log("Error:", error);
         }
     };
-
 
 
 
@@ -254,13 +244,13 @@ const Signal = () => {
 
 
 
-
+    
 
 
     useEffect(() => {
         fetchAdminServices()
         fetchStockList()
-    }, [filters]);
+    }, [filters ]);
 
 
     useEffect(() => {
@@ -575,7 +565,7 @@ const Signal = () => {
                             />
                         </Tooltip>
                     </div>
-
+                    
                 </>
             ),
             ignoreRowClick: true,
@@ -583,7 +573,7 @@ const Signal = () => {
             button: true,
 
         },
-
+        
 
 
     ];
@@ -603,18 +593,18 @@ const Signal = () => {
         fetchAdminServices()
         fetchStockList()
         getAllSignal();
-
-
+       
+        
 
     }
+  
 
 
-
-    // Update service
-    const updateReportpdf = async () => {
+      // Update service
+      const updateReportpdf = async () => {
         try {
             const data = { id: serviceid._id, report: updatetitle.report };
-
+       
             const response = await UpdatesignalReport(data, token);
             if (response && response.status) {
                 Swal.fire({
@@ -1155,80 +1145,80 @@ const Signal = () => {
                 </>
             )}
 
+            
+           {model1 && (
+                          <>
+                                        <div className="modal-backdrop fade show"></div>
+                                        <div
+                                            className="modal fade show"
+                                            style={{ display: 'block' }}
+                                            tabIndex={-1}
+                                            aria-labelledby="exampleModalLabel"
+                                            aria-hidden="true"
+                                        >
+                                            <div className="modal-dialog">
+                                                <div className="modal-content">
+                                                    <div className="modal-header">
+                                                        <h5 className="modal-title" id="exampleModalLabel">
+                                                            Upload Pdf
+                                                        </h5>
+                                                        <button
+                                                            type="button"
+                                                            className="btn-close"
+                                                            onClick={() => setModel1(false)}
+                                                        />
+                                                    </div>
+                                                    <div className="modal-body">
+                                                        <form>
+                                                            <div className="row">
+                                                                <div className="col-md-10">
+                                                                    <label htmlFor="imageUpload">Upload Pdf</label>
+                                                                    <span className="text-danger">*</span>
+                                                                    <input
+                                                                        className="form-control mb-3"
+                                                                        type="file"
+                                                                        accept="pdf/*"
+                                                                        id="imageUpload"
+                                                                        onChange={(e) => {
+                                                                            const file = e.target.files[0];
+                                                                            if (file) {
+                                                                                updateServiceTitle({ report: file });
+                                                                            }
+                                                                            
+                                                                        }}
+                                                                    />
+                                                                </div>
+                                                                <div className="col-md-2">
+                            
+                        
+                                                                </div>
+                                                            </div>
+    
+                                                        </form>
 
-            {model1 && (
-                <>
-                    <div className="modal-backdrop fade show"></div>
-                    <div
-                        className="modal fade show"
-                        style={{ display: 'block' }}
-                        tabIndex={-1}
-                        aria-labelledby="exampleModalLabel"
-                        aria-hidden="true"
-                    >
-                        <div className="modal-dialog">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title" id="exampleModalLabel">
-                                        Upload Pdf
-                                    </h5>
-                                    <button
-                                        type="button"
-                                        className="btn-close"
-                                        onClick={() => setModel1(false)}
-                                    />
-                                </div>
-                                <div className="modal-body">
-                                    <form>
-                                        <div className="row">
-                                            <div className="col-md-10">
-                                                <label htmlFor="imageUpload">Upload Pdf</label>
-                                                <span className="text-danger">*</span>
-                                                <input
-                                                    className="form-control mb-3"
-                                                    type="file"
-                                                    accept="pdf/*"
-                                                    id="imageUpload"
-                                                    onChange={(e) => {
-                                                        const file = e.target.files[0];
-                                                        if (file) {
-                                                            updateServiceTitle({ report: file });
-                                                        }
 
-                                                    }}
-                                                />
-                                            </div>
-                                            <div className="col-md-2">
-
-
+                                                    </div>
+                                                    <div className="modal-footer">
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-secondary"
+                                                            onClick={() => setModel1(false)}
+                                                        >
+                                                            Close
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-primary"
+                                                            onClick={updateReportpdf}
+                                                        >
+                                                            Update File
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-
-                                    </form>
-
-
-                                </div>
-                                <div className="modal-footer">
-                                    <button
-                                        type="button"
-                                        className="btn btn-secondary"
-                                        onClick={() => setModel1(false)}
-                                    >
-                                        Close
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className="btn btn-primary"
-                                        onClick={updateReportpdf}
-                                    >
-                                        Update File
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </>
-            )}
+                                    </>
+                                )}
 
 
         </div>
