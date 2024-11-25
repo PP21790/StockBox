@@ -291,7 +291,7 @@ async getSignal(req, res) {
 
 async getSignalWithFilter(req, res) {
   try {
-    const { from, to, service, stock, closestatus, search, page = 1 } = req.body;
+    const { from, to, service, stock, closestatus, search, add_by, page = 1 } = req.body;
     let limit = 10;
     // Date filtering
     let fromDate;
@@ -306,7 +306,7 @@ async getSignalWithFilter(req, res) {
     }
 
 
-   
+
 
     // Build the query object with dynamic filters
     let query = { del: 0 };
@@ -327,6 +327,9 @@ async getSignalWithFilter(req, res) {
       query.close_status = closestatus;
     }
 
+    if (add_by) {
+      query.add_by = add_by;
+    }
 
     if (search && search.trim() !== '') {
       query.$or = [

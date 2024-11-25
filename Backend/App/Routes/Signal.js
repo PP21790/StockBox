@@ -12,7 +12,6 @@ const PERMISSIONS = {
     HIT: 'targethit',
   };
   
-
   
 router.post('/signal/add', AddSignal);
 router.get('/signal/list', getSignal);

@@ -346,7 +346,7 @@ class Clients {
 
 async getClientWithFilter(req, res) {
   try {
-    const { status,kyc_verification, createdby, planStatus, search, page = 1 } = req.body;
+    const { status,kyc_verification, createdby, planStatus, search, add_by, page = 1 } = req.body;
 
     const limit = 10;
     const skip = (parseInt(page) - 1) * parseInt(limit); // Calculate how many items to skip
@@ -364,6 +364,11 @@ async getClientWithFilter(req, res) {
 
     if (status !== "") {
       matchConditions.ActiveStatus = parseInt(status);
+    }
+
+
+    if (add_by !== "") {
+      matchConditions.add_by = parseInt(add_by);
     }
 
 
@@ -762,7 +767,6 @@ async getClientWithFilter(req, res) {
     return res.json({ status: false, message: "Server error", data: [] });
   }
 }
-
 
 
 
