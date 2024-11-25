@@ -340,9 +340,9 @@ const Header = () => {
 
                     </div>
                     <div className="text-center msg-footer">
-                      <Link to="/admin/help">
+                      {/* <Link to="/admin/help">
                         <button className="btn btn-primary w-100">View All Notifications</button>
-                      </Link>
+                      </Link> */}
                     </div>
                   </div>
                 </li>

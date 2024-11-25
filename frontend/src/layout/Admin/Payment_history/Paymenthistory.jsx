@@ -81,7 +81,7 @@ const History = () => {
                         PlanDiscount: item.discount || 0,
                         CouponID: item.coupon || "N/A",
                         PlanAmount: item.plan_price || 0,
-                        Total: item?.segment || '-',
+                        Total: item?.total || '-',
                         Validity: item.planDetails?.validity || '-',
                         PurchaseDate: fDateTime(item.created_at) || '-',
                     }));
