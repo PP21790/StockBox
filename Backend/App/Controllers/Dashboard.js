@@ -677,7 +677,7 @@ async PlanExipreListWithFilter(req, res) {
     if (startdate) {
       const startOfStartDate = new Date(startdate);
       startOfStartDate.setHours(0, 0, 0, 0); // दिन की शुरुआत (00:00:00)
-      filter.startdate = { $gte: startOfStartDate }; // Start date greater than or equal
+      filter.enddate = { $gte: startOfStartDate }; // Start date greater than or equal
     }
     
     if (enddate) {

@@ -261,7 +261,6 @@ class Aliceblue {
 
 
     async ExitplaceOrder(req, res) {
-        
         try {
             const { id, signalid, quantity, price } = req.body;
     
@@ -351,29 +350,33 @@ class Aliceblue {
              
                 
                                
-              let positionData=0;
-                  try {
-                    const positionData = await CheckPosition(userId, authToken, stock.segment,stock.instrument_token,producttype,signal.calltype,stock.tradesymbol);
-                  
-                } catch (error) {
-                    console.error('Error in CheckPosition:', error.message);
-                }
+           
+            let holdingData = { qty: 0 };  
+            let positionData = { qty: 0 };  
+            let totalValue = 0;  // Declare totalValue outside the blocks
+            try {
+                
+                positionData = await CheckPosition(userId, authToken, stock.segment, stock.instrument_token, producttype, signal.calltype, stock.tradesymbol);
+            } catch (error) {
+            }
 
-                let totalValue=0;
-          let holdingData=0;
-        if(stock.segment=="C") {
+            if (stock.segment === "C") {
                 try {
-                    const holdingData = await CheckHolding(userId, authToken, stock.segment,stock.instrument_token,producttype,signal.calltype);
+                   
+                    holdingData = await CheckHolding(userId, authToken, stock.segment, stock.instrument_token, producttype, signal.calltype);
+                    
+
                 } catch (error) {
-                    console.error('Error in CheckHolding:', error.message);
                 }
-                totalValue = Math.abs(positionData)+holdingData;
+                const validPositionData = !isNaN(Number(positionData.qty)) ? Number(positionData.qty) : 0;  // Validate positionData.qty
+                const validHoldingQty = !isNaN(Number(holdingData.qty)) ? Number(holdingData.qty) : 0;  // Validate holdingData.qty
+                 totalValue = validPositionData + validHoldingQty;  
+
             }
             else
             {
-                totalValue = Math.abs(positionData)
+                  totalValue = Math.abs(positionData.qty)
             }
-
 
             let calltypes;
                 if(signal.calltype === 'BUY')
@@ -702,11 +705,10 @@ async brokerLink(req, res) {
 
 
 async function CheckPosition(userId, authToken, segment, instrument_token, producttype, calltype, trading_symbol) {
-    
-
     var data_possition = {
         "ret": "NET"
-    }
+    };
+    
     var config = {
         method: 'post',
         url: 'https://ant.aliceblueonline.com/rest/AliceBlueAPIService/api/positionAndHoldings/positionBook',
@@ -716,80 +718,48 @@ async function CheckPosition(userId, authToken, segment, instrument_token, produ
         },
         data: JSON.stringify(data_possition)
     };
-    axios(config)
-        .then(async (response) => {
- 
-            if (Array.isArray(response.data)) {
 
-                const Exist_entry_order = response.data.find(item1 => item1.Token === instrument_token && item1.Pcode == producttype);
+    try {
+        const response = await axios(config);  // Wait for the response
 
-                if(Exist_entry_order != undefined){
-                    if (segment.toUpperCase() == 'C') {
+        if (Array.isArray(response.data)) {
+            const Exist_entry_order = response.data.find(item1 => item1.Token === instrument_token && item1.Pcode == producttype);
 
-                        const possition_qty = parseInt(Exist_entry_order.Bqty) - parseInt(Exist_entry_order.Sqty);
-                     
-                        if (possition_qty == 0) {
-                            return {
-                                status: false,
-                                qty: 0,
-                            };
+            if (Exist_entry_order != undefined) {
+                if (segment.toUpperCase() === 'C') {
+                    const possition_qty = parseInt(Exist_entry_order.Bqty) - parseInt(Exist_entry_order.Sqty);
 
-                        } else {
-
-                            return {
-                                status: true,
-                                qty: possition_qty,
-                            };                          
-                        }
-
-                    } else {
-                        const possition_qty = Exist_entry_order.Netqty;                         
-                        if (possition_qty == 0) {
-                            return {
-                                status: false,
-                                qty: 0,
-                            };
-                        } else {
-
-                            return {
-                                status: true,
-                                qty: possition_qty,
-                            };
-
-                        }
-
-                    }
-                }else{
                     return {
-                        status: false,
-                        qty: 0,
+                        status: possition_qty !== 0,
+                        qty: Math.abs(possition_qty)
+                    };
+                } else {
+                    const possition_qty = Exist_entry_order.Netqty;
+
+                    return {
+                        status: possition_qty !== 0,
+                        qty: Math.abs(possition_qty)
                     };
                 }
-
-               
             } else {
-
                 return {
                     status: false,
-                    qty: 0,
+                    qty: 0
                 };
-
             }
-
-
-
-
-        })
-        .catch(async (error) => {
-            
+        } else {
             return {
                 status: false,
-                message:err,
-                qty: 0,
+                qty: 0
             };
-
-            });
-
+        }
+    } catch (error) {
+        console.error('Error in CheckPosition:', error.message);
+        return {
+            status: false,
+            qty: 0
+        };
+    }
 }
 
 async function CheckHolding(userId, authToken, segment, instrument_token, producttype, calltype) {
@@ -797,7 +767,7 @@ async function CheckHolding(userId, authToken, segment, instrument_token, produc
         method: 'get',
         url: 'https://ant.aliceblueonline.com/rest/AliceBlueAPIService/api/positionAndHoldings/holdings',
         headers: {
-            'Authorization': `Bearer ${userId} ${authToken}`, // Ensure this format is correct for the API you're using
+            'Authorization': `Bearer ${userId} ${authToken}`,
             'Content-Type': 'application/json'
         }
     };
@@ -805,33 +775,41 @@ async function CheckHolding(userId, authToken, segment, instrument_token, produc
     try {
         const response = await axios(config);
 
-        if (response.data.stat == "Ok") {
+        // Check if the response is valid
+        if (response.data.stat === "Ok") {
 
+            // Find the matching entry in the holding data
             const existEntryOrder = response.data.HoldingVal.find(item1 => item1.Token1 === instrument_token && item1.Pcode === producttype);
-let possition_qty = 0;
-            if (existEntryOrder != undefined) {
-                if (segment.toUpperCase() == 'C') {
-                     possition_qty = parseInt(existEntryOrder.SellableQty);
-                } 
+
+            let position_qty = 0;
+
+            if (existEntryOrder !== undefined) {
+                // Check for the segment and get the appropriate quantity
+                if (segment.toUpperCase() === 'C') {
+                    position_qty = parseInt(existEntryOrder.SellableQty);
+                }
             }
+
             return {
                 status: true,
-                qty: possition_qty,
+                qty: Math.abs(position_qty)  // Ensure we return the absolute quantity
             };
         } else {
             return {
-                    status: false,
-                    qty: 0,
-                };
+                status: false,
+                qty: 0  // Return 0 if the status is not "Ok"
+            };
         }
     } catch (error) {
-        console.error('Error fetching position:', error.response ? error.response.data : error.message);
+        // Log the error and return a default response
+        console.error('Error fetching holdings:', error.response ? error.response.data : error.message);
         return {
             status: false,
-            qty: 0,
+            qty: 0  // Return 0 in case of an error
         };
     }
 }
+
 
 
 module.exports = new Aliceblue();

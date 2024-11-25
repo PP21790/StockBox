@@ -534,26 +534,27 @@ axios(config)
             }
 
 
-                let positionData=0;
+            let holdingData = { qty: 0 };  
+            let positionData = { qty: 0 };  
+            let totalValue = 0;  // Declare totalValue outside the blocks
                 try {
                   const positionData = await CheckPosition(client.apikey, stock.segment,stock.instrument_token);
                 } catch (error) {
                   console.error('Error in CheckPosition:', error.message);
                 
               }
-              let totalValue=0;
-                let holdingData=0;
+            
                 if(stock.segment=="C") {
                         try {
                             const holdingData = await CheckHolding(client.apikey , stock.segment,stock.instrument_token);
                         } catch (error) {
                             console.error('Error in CheckHolding:', error.message);
                         }
-                        totalValue = Math.abs(positionData)+holdingData;
+                        totalValue = Math.abs(positionData.qty)+holdingData.qty;
                     }
                     else
                     {
-                        totalValue = Math.abs(positionData)
+                        totalValue = Math.abs(positionData.qty)
                     }
 
                     let calltypes;
@@ -816,8 +817,9 @@ async function CheckPosition(userId, segment, instrument_token) {
 
                 };
 
-    axios(config)
-    .then(async (response) => {
+  
+                try {
+                    const response = await axios(config);  // Wait for the response
 
 
         if (response.data.stat == "Ok") {
@@ -855,14 +857,13 @@ async function CheckPosition(userId, segment, instrument_token) {
             };
 
         }
-    })
-    .catch(async (error) => {
+    }  catch (error) {
+        console.error('Error in CheckPosition:', error.message);
         return {
             status: false,
-            qty: 0,
+            qty: 0
         };
-          
-    });
+    }
 
 }
 

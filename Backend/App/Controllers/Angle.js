@@ -354,26 +354,28 @@ class Angle {
             }
 
 
-                let positionData=0;
+            let holdingData = { qty: 0 };  
+            let positionData = { qty: 0 };  
+            let totalValue = 0;  // Declare totalValue outside the blocks
                 try {
                   const positionData = await CheckPosition(client.apikey, authToken, stock.segment,stock.instrument_token,producttype,signal.calltype,stock.tradesymbol);
                 } catch (error) {
                   console.error('Error in CheckPosition:', error.message);
                 
               }
-              let totalValue=0;
-                let holdingData=0;
+
+           
                 if(stock.segment=="C") {
                         try {
                             const holdingData = await CheckHolding(client.apikey, authToken , stock.segment,stock.instrument_token,producttype,signal.calltype);
                         } catch (error) {
                             console.error('Error in CheckHolding:', error.message);
                         }
-                        totalValue = Math.abs(positionData)+holdingData;
+                        totalValue = Math.abs(positionData.qty)+holdingData.qty;
                     }
                     else
                     {
-                        totalValue = Math.abs(positionData)
+                        totalValue = Math.abs(positionData.qty)
                     }
 
                     let calltypes;
@@ -605,8 +607,8 @@ async function CheckPosition(userId, authToken, segment, instrument_token, produ
         },
     };
 
-    axios(config)
-    .then(async (response) => {
+    try {
+        const response = await axios(config);  // Wait for the response
 
 
         if (response.data.data != null && response.data.message == "SUCCESS") {
@@ -646,14 +648,13 @@ async function CheckPosition(userId, authToken, segment, instrument_token, produ
             };
 
         }
-    })
-    .catch(async (error) => {
+    }  catch (error) {
+        console.error('Error in CheckPosition:', error.message);
         return {
             status: false,
-            qty: 0,
+            qty: 0
         };
-          
-    });
+    }
 
 }
 
