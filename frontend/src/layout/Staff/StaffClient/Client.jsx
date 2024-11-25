@@ -220,6 +220,8 @@ const Client = () => {
         }
     };
 
+   
+  
 
 
     const getAdminclient = async () => {
@@ -230,12 +232,9 @@ const Client = () => {
                 status: clientStatus == 1 ? 1 : clientStatus == 0 ? 0 : "",
                 createdby: statuscreatedby,
                 search: searchInput,
-                planStatus:
-                    expired === "active" ? "active" :
-                        expired === "expired" ? "expired" :
-                            clientStatus === "active" ? "active" :
-                                clientStatus === "expired" ? "expired" :
-                                    ""
+                planStatus: expired === "active" ? "active" : expired === "expired" ? "expired" : clientStatus === "active" ? "active" : clientStatus === "expired" ? "expired" : "",
+                add_by : permission.includes("Ownclient") ? userid  : permission.length > 0 ? "No Client Available"  : ""
+               
 
             };
 

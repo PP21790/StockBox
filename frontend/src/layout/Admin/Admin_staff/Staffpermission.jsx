@@ -298,7 +298,7 @@ const Staffpermission = () => {
         if (formik.values.userPermissions == true ) {
             formik.setFieldValue('addclient', true);
             formik.setFieldValue('viewclient', true);
-            formik.setFieldValue('Ownclient', true);
+            // formik.setFieldValue('Ownclient', true);
             formik.setFieldValue('viewdetail', true);
             formik.setFieldValue('editclient', true);
             // formik.setFieldValue('deleteclient', true);
@@ -308,7 +308,7 @@ const Staffpermission = () => {
         else {
             formik.setFieldValue('addclient', false);
             formik.setFieldValue('viewclient', false);
-            formik.setFieldValue('Ownclient', false);
+            // formik.setFieldValue('Ownclient', true);
             formik.setFieldValue('viewdetail', false);
             formik.setFieldValue('editclient', false);
             // formik.setFieldValue('deleteclient', false);
@@ -702,7 +702,7 @@ const Staffpermission = () => {
             label_size: 12,
             col_size: 2,
             // check_box_true: formik.values.addclient,
-            check_box_true: formik.values.userPermissions ||  formik.values.Ownclient  ? true : false,
+            check_box_true:  formik.values.Ownclient  ? true : false,
         },
         {
             name: 'addclient',

@@ -38,13 +38,15 @@ const Planexpiry = () => {
         }
     };
 
+
+
     const getClientData = async () => {
         try {
             const data = {
                 page: currentPage,
                 serviceid: searchStock,
                 startdate: startDate,
-                enddsate: endDate,
+                enddate: endDate,
                 search: searchInput,
             };
             const response = await getclientPlanexpirywithfilter(data, token);
@@ -71,8 +73,8 @@ const Planexpiry = () => {
                         Email: item.clientEmail || '',
                         PhoneNo: item.clientMobile || '',
                         Segment: item.serviceTitle || '',
-                        StartDate: fDateTime(item.startdate) || '',
-                        EndDate: fDateTime(item.enddate) || '',
+                        startdate: fDateTime(item.startdate) || '',
+                        enddate: fDateTime(item.enddate) || '',
                     }));
                     exportToCSV(csvArr, 'Client Plan Expiry')
                 } else {

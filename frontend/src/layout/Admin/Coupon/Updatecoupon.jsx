@@ -211,7 +211,7 @@ const Updatecoupon = () => {
         type: "date1",
         label_size: 12,
         col_size: 6,
-        disable: false,
+        disable: true,
         star:true
 
     },
