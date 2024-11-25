@@ -100,6 +100,7 @@ const Staffpermission = () => {
             planstatus: false,
 
             signalstatus: false,
+            ownsignal: false,
             // deletesignal: false,
             editsignal: false,
             viewsignal: false,
@@ -212,6 +213,7 @@ const Staffpermission = () => {
             formik.setFieldValue('signaldetail', clients.includes('signaldetail'));
             // formik.setFieldValue('deletesignal', clients.includes('deletesignal'));
             formik.setFieldValue('signalstatus', clients.includes('signalstatus'));
+            formik.setFieldValue('ownsignal', clients.includes('ownsignal'));
 
 
 
@@ -331,6 +333,7 @@ const Staffpermission = () => {
     useEffect(() => {
         if (formik.values.Signalpermission == true) {
             formik.setFieldValue('signalstatus', true);
+            // formik.setFieldValue('ownsignal', true);
             formik.setFieldValue('viewsignal', true);
             formik.setFieldValue('signaldetail', true);
             formik.setFieldValue('addsignal', true);
@@ -340,6 +343,7 @@ const Staffpermission = () => {
         }
         else {
             formik.setFieldValue('signalstatus', false);
+            // formik.setFieldValue('ownsignal', false);
             formik.setFieldValue('viewsignal', false);
             formik.setFieldValue('signaldetail', false);
             formik.setFieldValue('addsignal', false);
@@ -352,10 +356,10 @@ const Staffpermission = () => {
     
     
     useEffect(() => {
-        if (formik.values.signalstatus || formik.values.signaldetail || formik.values.addsignal ||  formik.values.editsignal ) {
+        if (formik.values.signalstatus || formik.values.ownsignal|| formik.values.signaldetail || formik.values.addsignal ||  formik.values.editsignal ) {
             formik.setFieldValue('viewsignal', true);
         }
-    }, [formik.values.signalstatus, formik.values.signaldetail, formik.values.addsignal,formik.values.editsignal]);
+    }, [formik.values.signalstatus, formik.values.signaldetail, formik.values.addsignal,formik.values.editsignal , formik.values.ownsignal]);
     
 
 
@@ -832,7 +836,17 @@ const Staffpermission = () => {
             label_size: 12,
             col_size: 2,
             // check_box_true: formik.values.viewservice,
-            check_box_true: formik.values.Signalpermission || formik.values.signalstatus || formik.values.editsignal || formik.values.signaldetail ||formik.values.addsignal || formik.values.viewsignal ? true : false,
+            check_box_true: formik.values.Signalpermission ||  formik.values.ownsignal || formik.values.signalstatus  || formik.values.editsignal || formik.values.signaldetail ||formik.values.addsignal || formik.values.viewsignal ? true : false,
+        },
+        {
+            name: 'ownsignal',
+            label: 'Own Signal',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.addservice,
+            check_box_true:  formik.values.ownsignal ? true : false,
+
         },
         {
             name: 'addsignal',

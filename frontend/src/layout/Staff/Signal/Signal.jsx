@@ -203,6 +203,7 @@ const Signal = () => {
                 stock: searchstock,
                 closestatus: "false",
                 search: searchInput,
+                add_by: permission.includes("ownsignal") ? userid : ""
             };
 
             const response = await GetSignallistWithFilter(data, token);
@@ -269,7 +270,7 @@ const Signal = () => {
 
     useEffect(() => {
         getAllSignal();
-    }, [filters, searchInput, searchstock, currentPage]);
+    }, [filters, searchInput, searchstock, currentPage , permission]);
 
 
 

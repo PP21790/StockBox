@@ -245,13 +245,9 @@ const Client = () => {
                 search: searchInput,
                 planStatus: expired === "active" ? "active" : expired === "expired" ? "expired" : clientStatus === "active" ? "active" : clientStatus === "expired" ? "expired" : "",
                 add_by: permission.includes("Ownclient") ? userid : ""
-
-
-
             };
 
             const response = await AllclientFilter(data, token);
-
             if (response.status) {
                 setClients(response.data);
                 setTotalRows(response.pagination.total);

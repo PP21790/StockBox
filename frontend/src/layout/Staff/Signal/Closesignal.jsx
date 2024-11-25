@@ -133,7 +133,8 @@ const Closesignal = () => {
                 service: filters.service,
                 stock: searchstock,
                 closestatus: "true",
-                search: searchInput
+                search: searchInput , 
+                add_by: permission.includes("ownsignal") ? userid : ""
             }
             const response = await GetSignallistWithFilter(data, token);
             if (response && response.status) {
@@ -200,7 +201,7 @@ const Closesignal = () => {
 
     useEffect(() => {
         getAllSignal();
-    }, [filters, searchInput, searchstock, currentPage]);
+    }, [filters, searchInput, searchstock, currentPage , permission]);
 
 
     const handleFilterChange = (e) => {
