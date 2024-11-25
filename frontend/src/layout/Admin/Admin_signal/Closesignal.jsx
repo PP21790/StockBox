@@ -127,21 +127,13 @@ const Closesignal = () => {
         try {
             const data = {
                 page: currentPage,
-                from: filters.from
-                    ? filters.from
-                    : clientStatus === "todayopensignal"
-                        ? formattedDate
-                        : "",
-                to: filters.to
-                    ? filters.to
-                    : clientStatus === "todayopensignal"
-                        ? formattedDate
-                        : "",
+                from: filters.from || clientStatus == "todayclosesignal" ? formattedDate : "",
+                to: filters.to || clientStatus == "todayclosesignal" ? formattedDate : "",
                 service: filters.service,
                 stock: searchstock,
                 closestatus: "true",
-                search: searchInput,
-            };
+                search: searchInput
+            }
             const response = await GetSignallistWithFilter(data, token);
             if (response && response.status) {
 
