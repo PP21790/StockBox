@@ -675,12 +675,16 @@ async PlanExipreListWithFilter(req, res) {
       filter.serviceid = serviceid;
     }
     if (startdate) {
-      filter.startdate = { $gte: new Date(startdate) }; // Start date greater than or equal
+      const startOfStartDate = new Date(startdate);
+      startOfStartDate.setHours(0, 0, 0, 0); // दिन की शुरुआत (00:00:00)
+      filter.startdate = { $gte: startOfStartDate }; // Start date greater than or equal
     }
+    
     if (enddate) {
-      filter.enddate = { $lte: new Date(enddate) }; // End date less than or equal
+      const endOfEndDate = new Date(enddate);
+      endOfEndDate.setHours(23, 59, 59, 999); // दिन का अंत (23:59:59)
+      filter.enddate = { $lte: endOfEndDate }; // End date less than or equal
     }
-
     // If search term is provided, apply it to client fields (FullName, PhoneNo, Email)
     let clientFilter = {};
     if (search && search.trim() !== "") {

@@ -297,24 +297,23 @@ async getSignalWithFilter(req, res) {
     let fromDate;
     if (from) {
       fromDate = new Date(from);
+      fromDate.setHours(0, 0, 0, 0); // दिन की शुरुआत (00:00:00)
     }
-
+    
     let toDate;
     if (to) {
       toDate = new Date(to);
-      toDate.setHours(23, 59, 59, 999); // Set to the end of the specified date
+      toDate.setHours(23, 59, 59, 999); // दिन का अंत (23:59:59)
     }
-
-
-
-
-    // Build the query object with dynamic filters
+    
+    // Query को बनाएं
     let query = { del: 0 };
-
+    
     if (fromDate && toDate) {
-      query.created_at = { $gte: fromDate, $lt: toDate };
+      query.created_at = { $gte: fromDate, $lte: toDate }; // <= का उपयोग करें ताकि toDate के अंत तक डेटा मिले
     }
 
+    
     if (service) {
       query.service = service;
     }
@@ -350,6 +349,9 @@ async getSignalWithFilter(req, res) {
     const limitValue = parseInt(limit);
     const skip = (pageNumber - 1) * limitValue;
 
+
+    console.log(query);
+
     // Get total count for pagination
     const totalRecords = await Signal_Modal.countDocuments(query);
     const totalPages = Math.ceil(totalRecords / limitValue);
@@ -361,6 +363,10 @@ async getSignalWithFilter(req, res) {
       .sort(sortCriteria) // Sort in descending order
       .skip(skip) // Pagination: skip items
       .limit(limitValue); // Pagination: limit items
+
+
+
+
 
     return res.json({
       status: true,
