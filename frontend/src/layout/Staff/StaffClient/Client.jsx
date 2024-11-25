@@ -5,7 +5,7 @@ import { GetClient } from '../../../Services/Admin';
 // import Table from '../../../components/Table';
 import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine, RefreshCcw } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { deleteClient, UpdateClientStatus, PlanSubscription, getclientExportfile , getplanlist, BasketSubscription, BasketAllList, getcategoryplan, getPlanbyUser, AllclientFilter } from '../../../Services/Admin';
+import { deleteClient, UpdateClientStatus, PlanSubscription, getclientExportfile, getplanlist, BasketSubscription, BasketAllList, getcategoryplan, getPlanbyUser, AllclientFilter } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
 import { fDateTime } from '../../../Utils/Date_formate';
 import { image_baseurl } from '../../../Utils/config';
@@ -53,6 +53,8 @@ const Client = () => {
     };
 
 
+
+
     useEffect(() => {
         if (clientStatus == 1) {
             setheader("Active Client")
@@ -68,6 +70,8 @@ const Client = () => {
 
 
 
+
+
     const getpermissioninfo = async () => {
         try {
             const response = await getstaffperuser(userid, token);
@@ -79,17 +83,22 @@ const Client = () => {
         }
     }
 
+
+
     const handleDownload = (row) => {
         const url = `${image_baseurl}uploads/pdf/${row.pdf}`;
         const link = document.createElement('a');
         link.href = url;
-        link.target = '_blank'; 
-    
+        link.target = '_blank';
+
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
     };
-    
+
+
+
+
 
     const [basketdetail, setBasketdetail] = useState({
         plan_id: "",
@@ -105,7 +114,6 @@ const Client = () => {
         client_id: "",
         price: ""
     });
-
 
 
 
@@ -145,10 +153,11 @@ const Client = () => {
     }
 
     useEffect(() => {
+        getpermissioninfo()
+
         // getplanlistbyadmin()
         getbasketlist()
         getcategoryplanlist()
-        getpermissioninfo()
     }, []);
 
 
@@ -156,12 +165,12 @@ const Client = () => {
 
     useEffect(() => {
         getAdminclient();
-    }, [searchInput, searchkyc, statuscreatedby, currentPage, expired]);
+    }, [searchInput, searchkyc, statuscreatedby, currentPage, expired, permission]);
 
 
 
 
-    
+
 
 
     const getexportfile = async () => {
@@ -220,12 +229,14 @@ const Client = () => {
         }
     };
 
-   
-  
+
+
+    
 
 
     const getAdminclient = async () => {
         try {
+
             const data = {
                 page: currentPage,
                 kyc_verification: searchkyc,
@@ -233,8 +244,9 @@ const Client = () => {
                 createdby: statuscreatedby,
                 search: searchInput,
                 planStatus: expired === "active" ? "active" : expired === "expired" ? "expired" : clientStatus === "active" ? "active" : clientStatus === "expired" ? "expired" : "",
-                add_by : permission.includes("Ownclient") ? userid  : permission.length > 0 ? "No Client Available"  : ""
-               
+                add_by: permission.includes("Ownclient") ? userid : ""
+
+
 
             };
 
@@ -612,7 +624,7 @@ const Client = () => {
             sortable: true,
             width: '200px',
         },
-          permission.includes("assignPackage") ||
+        permission.includes("assignPackage") ||
             permission.includes("viewdetail") ||
             permission.includes("editclient") ?
             {
