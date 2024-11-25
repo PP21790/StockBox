@@ -285,7 +285,67 @@ const Header = () => {
                     </div>
                   </div>
                 </li>
-                
+                <li className="nav-item dropdown dropdown-large">
+                  <a
+                    className="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative"
+                    href="#"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    {clients.length ? <span className="alert-count">{clients.length}</span> : ""}
+                    <i className="bx bx-bell" />
+                  </a>
+                  <div className="dropdown-menu dropdown-menu-end">
+                    <div className="msg-header">
+                      <p className="msg-header-title">Notifications</p>
+                      <p className="msg-header-badge">{clients.length} New</p>
+                    </div>
+                    <div className="header-notifications-list" style={{ overflowY: "scroll " }}>
+                      {clients.map((notification, index) => (
+                        <Link
+                          key={index}
+                          className="dropdown-item"
+                          to={notification.type === "payout" ? "/admin/paymentrequest" : "#"}
+                          onChange={(event) => handleSwitchChange(event, notification._id)}
+                        >
+
+                          <div className="d-flex align-items-center" >
+                  
+                            {/* <div className={`notify bg-light-${notification.type} text-${notification.type}`}>
+                             {notification.type}
+                               </div> */}
+                            <div className="flex-grow-1">
+                              <h6 className="msg-name">
+                                {notification?.title}
+                                <span className="msg-time float-end">
+                                  {notification.createdAt
+                                    ? formatDistanceToNow(new Date(notification.createdAt), {
+                                      addSuffix: true,
+                                    })
+                                    : "N/A"}
+                                </span>
+                              </h6>
+                             
+                                <p
+                                  className="msg-info text-truncate"
+                                  title={notification.message}
+                                >
+                                  {notification.message}
+                                </p>
+                  
+                            </div>
+                          </div>
+                        </Link>
+                      ))}
+
+                    </div>
+                    <div className="text-center msg-footer">
+                      {/* <Link to="/admin/help">
+                        <button className="btn btn-primary w-100">View All Notifications</button>
+                      </Link> */}
+                    </div>
+                  </div>
+                </li>
               </ul>
             </div>
             <div className="user-box dropdown px-3">
