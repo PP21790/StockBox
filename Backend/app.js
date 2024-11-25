@@ -53,7 +53,7 @@ const Broadcast_Modal = db.Broadcast;
 const License_Modal = db.License;
 const Notification_Modal = db.Notification;
 const Bank_Modal = db.Bank;
-
+const Adminnotification_Modal = db.Adminnotification;
 
 
 const corsOpts = {

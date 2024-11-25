@@ -1,5 +1,5 @@
 const router = require("express").Router()
-const {getcount,getLicense,pastPerformance,pastPerformances,CloseSignal,PlanExipreList,CloseSignalWithFilter,PlanExipreListWithFilter,CompanyStatus} = require('../Controllers/Dashboard')
+const {getcount,getLicense,pastPerformance,pastPerformances,CloseSignal,PlanExipreList,CloseSignalWithFilter,PlanExipreListWithFilter,CompanyStatus,Notification,statusChangeNotifiction} = require('../Controllers/Dashboard')
 
 router.get('/dashboard/getcount', getcount);
 router.post('/dashboard/getlicense', getLicense);
@@ -12,6 +12,8 @@ router.get('/dashboard/planexiprelist', PlanExipreList);
 router.post('/dashboard/planexiprelistwithfilter', PlanExipreListWithFilter);
 
 router.post('/dashboard/companystatus', CompanyStatus);
+router.get('/dashboard/notification', Notification);
+router.post('/dashboard/statuschangenotifiction', statusChangeNotifiction);
 
 
 module.exports = router;

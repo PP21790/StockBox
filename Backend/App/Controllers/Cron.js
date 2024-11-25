@@ -18,6 +18,7 @@ const Notification_Modal = db.Notification;
 const Planmanage = db.Planmanage;
 const JsonFile = require("../../uploads/json/config.json");
 const { sendFCMNotification } = require('./Pushnotification'); 
+const Adminnotification_Modal = db.Adminnotification;
 
 
 let ws;
@@ -667,6 +668,22 @@ async function PlanExpire(req, res) {
                 });
     
                 await resultn.save();
+
+
+
+
+                const resultnm = new Adminnotification_Modal({
+                    clientid:plan.clientid,
+                    segmentid:plan._id,
+                    type:'plan expire',
+                    title: titles,
+                    message: message
+                });
+            
+            
+                await resultnm.save();
+            
+
     
                     if (client && client.devicetoken) {
                         const tokens = [client.devicetoken];

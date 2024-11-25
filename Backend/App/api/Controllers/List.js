@@ -23,6 +23,7 @@ const Order_Modal = db.Order;
 const License_Modal = db.License;
 const Notification_Modal = db.Notification;
 const Bank_Modal = db.Bank;
+const Adminnotification_Modal = db.Adminnotification;
 
 
 mongoose  = require('mongoose');
@@ -746,6 +747,22 @@ if (existingPlans.length > 0) {
       } else {
           console.log('No referral tokens found.');
       }
+
+
+    const  adminnotificationTitle ="Important Update";
+    const  adminnotificationBody ="new plan purchased......";
+      const resultnm = new Adminnotification_Modal({
+        clientid:client._id,
+        segmentid:savedSubscription._id,
+        type:'plan purchase',
+        title: adminnotificationTitle,
+        message: adminnotificationBody
+    });
+
+
+    await resultnm.save();
+
+
 
       // Return success response
       return res.status(201).json({
