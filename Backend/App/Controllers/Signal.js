@@ -305,14 +305,23 @@ async getSignalWithFilter(req, res) {
       toDate = new Date(to);
       toDate.setHours(23, 59, 59, 999); // दिन का अंत (23:59:59)
     }
+
+    
     
     // Query को बनाएं
     let query = { del: 0 };
+    console.log(typeof closestatus, closestatus);
     
-    if (fromDate && toDate) {
-      query.created_at = { $gte: fromDate, $lte: toDate }; // <= का उपयोग करें ताकि toDate के अंत तक डेटा मिले
+    if (closestatus === "true") {
+      if (fromDate && toDate) {
+        query.closedate = { $gte: fromDate, $lte: toDate }; 
+      }
     }
-
+    else {
+    if (fromDate && toDate) {
+      query.created_at = { $gte: fromDate, $lte: toDate }; 
+    }
+  }
     
     if (service) {
       query.service = service;
@@ -348,9 +357,6 @@ async getSignalWithFilter(req, res) {
     const pageNumber = parseInt(page);
     const limitValue = parseInt(limit);
     const skip = (pageNumber - 1) * limitValue;
-
-
-    console.log(query);
 
     // Get total count for pagination
     const totalRecords = await Signal_Modal.countDocuments(query);
