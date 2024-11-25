@@ -19,11 +19,21 @@ const Client = () => {
 
 
 
+    
+    useEffect(() => {
+        getbasketlist()
+        getcategoryplanlist()
+    }, []);
+
+
+    
+    
+    const location = useLocation();
+    const clientStatus = location?.state?.clientStatus;
+
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
 
-    const location = useLocation();
-    const clientStatus = location?.state?.clientStatus;
 
 
 
@@ -45,6 +55,8 @@ const Client = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
 
+
+
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };
@@ -64,24 +76,12 @@ const Client = () => {
     }, [clientStatus, clients])
 
 
-    // const handleDownload = (row) => {
-
-    //     const url = `${image_baseurl}uploads/pdf/${row.pdf}`;
-    //     const link = document.createElement('a');
-    //     link.href = url;
-    //     link.download = url;
-
-    //     document.body.appendChild(link);
-    //     link.click();
-    //     document.body.removeChild(link);
-
-    // };
-
+   
     const handleDownload = (row) => {
         const url = `${image_baseurl}uploads/pdf/${row.pdf}`;
         const link = document.createElement('a');
         link.href = url;
-        link.target = '_blank'; // Opens the URL in a new tab
+        link.target = '_blank'; 
 
         document.body.appendChild(link);
         link.click();
@@ -107,12 +107,10 @@ const Client = () => {
 
 
 
-
-
-
     const handleTabChange = (index) => {
         setCheckedIndex(index);
     };
+
 
 
     const showModal = () => {
@@ -120,10 +118,12 @@ const Client = () => {
     };
 
 
+
     const handleCancel = () => {
         setIsModalVisible(false);
         setSelectcategory("")
     };
+
 
 
     const handleCategoryChange = (categoryId) => {
@@ -143,11 +143,6 @@ const Client = () => {
 
     }
 
-    useEffect(() => {
-        // getplanlistbyadmin()
-        getbasketlist()
-        getcategoryplanlist()
-    }, []);
 
 
 
@@ -223,8 +218,8 @@ const Client = () => {
                 status: clientStatus == 1 ? 1 : clientStatus == 0 ? 0 : "",
                 createdby: statuscreatedby,
                 search: searchInput,
-                planStatus: expired === "active" ? "active" : expired === "expired" ? "expired" : clientStatus === "active" ? "active" : clientStatus === "expired" ? "expired" : "" ,
-                add_by:""
+                planStatus: expired === "active" ? "active" : expired === "expired" ? "expired" : clientStatus === "active" ? "active" : clientStatus === "expired" ? "expired" : "",
+                add_by: ""
 
             };
 
