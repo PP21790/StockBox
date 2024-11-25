@@ -799,10 +799,19 @@ try {
   
       // Build match conditions based on the date range
       const matchConditions = { del: false };
+
+
+      
       if (fromDate && toDate) {
-        matchConditions.created_at = { 
-          $gte: new Date(fromDate), 
-          $lte: new Date(toDate) 
+        const startOfFromDate = new Date(fromDate);
+        startOfFromDate.setHours(0, 0, 0, 0); 
+      
+        const endOfToDate = new Date(toDate);
+        endOfToDate.setHours(23, 59, 59, 999); 
+      
+        matchConditions.created_at = {
+          $gte: startOfFromDate,
+          $lte: endOfToDate,
         };
       }
 

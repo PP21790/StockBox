@@ -8,6 +8,7 @@ const License_Modal = db.License;
 const Planmanage = db.Planmanage;
 const BasicSetting_Modal = db.BasicSetting;
 const Freetrial_Modal = db.Freetrial;
+const Adminnotification_Modal = db.Adminnotification;
 
 class Dashboard {
     async getcount(req, res) {
@@ -674,12 +675,16 @@ async PlanExipreListWithFilter(req, res) {
       filter.serviceid = serviceid;
     }
     if (startdate) {
-      filter.startdate = { $gte: new Date(startdate) }; // Start date greater than or equal
+      const startOfStartDate = new Date(startdate);
+      startOfStartDate.setHours(0, 0, 0, 0); // दिन की शुरुआत (00:00:00)
+      filter.startdate = { $gte: startOfStartDate }; // Start date greater than or equal
     }
+    
     if (enddate) {
-      filter.enddate = { $lte: new Date(enddate) }; // End date less than or equal
+      const endOfEndDate = new Date(enddate);
+      endOfEndDate.setHours(23, 59, 59, 999); // दिन का अंत (23:59:59)
+      filter.enddate = { $lte: endOfEndDate }; // End date less than or equal
     }
-
     // If search term is provided, apply it to client fields (FullName, PhoneNo, Email)
     let clientFilter = {};
     if (search && search.trim() !== "") {
@@ -754,6 +759,63 @@ async PlanExipreListWithFilter(req, res) {
     return res.json({ status: false, message: "Server error", data: [] });
   }
 }
+
+
+
+
+async Notification(req, res) {
+  try {
+   
+    const result = await Adminnotification_Modal.find({})
+    .sort({ createdAt: -1 })
+    .lean();
+
+      return res.json({
+        status: true,
+        message: "get",
+        data:result
+      });
+
+    } catch (error) {
+      return res.json({ status: false, message: "Server error", data: [] });
+    }
+}
+
+
+async  statusChangeNotifiction(req, res) {
+  try {
+      const { id, status } = req.body;
+      // Find and update the plan
+      const result = await Adminnotification_Modal.findByIdAndUpdate(
+          id,
+          { status: status },
+          { new: true } // Return the updated document
+      );
+
+      if (!result) {
+          return res.status(404).json({
+              status: false,
+              message: "Notification not found"
+          });
+      }
+
+      return res.json({
+          status: true,
+          message: "Status updated successfully",
+          data: result
+      });
+
+  } catch (error) {
+      console.log("Error updating status:", error);
+      return res.status(500).json({
+          status: false,
+          message: "Server error",
+          data: []
+      });
+  }
+}
+
+
 
 
 

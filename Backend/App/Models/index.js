@@ -32,6 +32,7 @@ module.exports = {
     License: require("./License"),
     Notification: require("./Notification"),
     Bank: require("./Bank"),
+    Adminnotification: require("./Adminnotification"),
 
 
 

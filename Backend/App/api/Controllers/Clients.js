@@ -15,6 +15,8 @@ const Payout_Modal = db.Payout;
 const Helpdesk_Modal = db.Helpdesk;
 const Order_Modal = db.Order;
 const Signal_Modal = db.Signal;
+const Adminnotification_Modal = db.Adminnotification;
+
 
 class Clients {
 
@@ -112,6 +114,17 @@ class Clients {
 
   await result.save();
  
+
+  const titles = 'Important Update';
+      const message = `new client registration.......`;
+      const resultnm = new Adminnotification_Modal({
+        clientid:result._id,
+        type:'add client',
+        title: titles,
+        message: message
+    });
+    await resultnm.save();
+
 
       if(token) {
         const refertoken = await Clients_Modal.findOne({ refer_token:token,del:0,ActiveStatus:1 });
@@ -290,8 +303,8 @@ async loginClient(req, res) {
         PhoneNo: client.PhoneNo,
         id: client.id,
         token: token,
-        angleredirecturl: `http://${req.headers.host}/backend/angle/getaccesstoken?key=${client._id}`,
-        aliceredirecturl: `http://${req.headers.host}/backend/aliceblue/getaccesstoken?key=${client._id}` },
+        angleredirecturl: `https://${req.headers.host}/backend/angle/getaccesstoken?key=${client._id}`,
+        aliceredirecturl: `https://${req.headers.host}/backend/aliceblue/getaccesstoken?key=${client._id}` },
     });
   } catch (error) {
     return res.status(500).json({
@@ -599,7 +612,21 @@ async deleteClient(req, res) {
       });
     }
 
-    console.log("Deleted Client:", deletedClient);
+
+    const titles = 'Important Update';
+    const message = `Account deleted by Client`;
+    const resultnm = new Adminnotification_Modal({
+      clientid:client._id,
+      type:'delete client',
+      title: titles,
+      message: message
+  });
+
+
+  await resultnm.save();
+
+
+    
     return res.json({
       status: true,
       message: "Client deleted successfully",
@@ -1079,6 +1106,18 @@ async downloadDocument(req, res) {
       client.pdf = fileName;  // Set the PDF filename
       await client.save();
 
+      const titles = 'Important Update';
+      const message = `Kyc Verification Complete By Client`;
+      const resultnm = new Adminnotification_Modal({
+        clientid:client._id,
+        type:'kyc verification',
+        title: titles,
+        message: message
+    });
+
+
+    await resultnm.save();
+
       // Return the file name or path for further use
       res.json({
           status: true,
@@ -1137,6 +1176,21 @@ async requestPayout(req, res) {
     
 
     await payoutRequest.save();
+
+
+
+    const titles = 'Important Update';
+    const message = `Payout request By Client`;
+    const resultnm = new Adminnotification_Modal({
+      clientid:client._id,
+      segmentid:payoutRequest._id,
+      type:'payout',
+      title: titles,
+      message: message
+  });
+
+
+  await resultnm.save();
 
     return res.status(201).json({
       status: true,

@@ -23,6 +23,7 @@ const Order_Modal = db.Order;
 const License_Modal = db.License;
 const Notification_Modal = db.Notification;
 const Bank_Modal = db.Bank;
+const Adminnotification_Modal = db.Adminnotification;
 
 
 mongoose  = require('mongoose');
@@ -747,6 +748,22 @@ if (existingPlans.length > 0) {
           console.log('No referral tokens found.');
       }
 
+
+    const  adminnotificationTitle ="Important Update";
+    const  adminnotificationBody ="new plan purchased......";
+      const resultnm = new Adminnotification_Modal({
+        clientid:client._id,
+        segmentid:savedSubscription._id,
+        type:'plan purchase',
+        title: adminnotificationTitle,
+        message: adminnotificationBody
+    });
+
+
+    await resultnm.save();
+
+
+
       // Return success response
       return res.status(201).json({
         status: true,
@@ -960,11 +977,17 @@ async Couponlist(req, res) {
 
     //const result = await Coupon_Modal.find()
 
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0); // आज का स्टार्ट टाइम: 00:00:00
+    
+    const endOfToday = new Date();
+    endOfToday.setHours(23, 59, 59, 999); // आज का एंड टाइम: 23:59:59
+    
     const result = await Coupon_Modal.find({
       del: false,
       status: true,
-      startdate: { $lte: new Date() }, // Only include coupons that have started
-      enddate: { $gt: new Date() } // Filter out expired coupons
+      startdate: { $lte: endOfToday }, // आज के अंत तक शुरू हो चुके कूपन
+      enddate: { $gte: startOfToday } // आज के स्टार्ट से समाप्त होने वाले कूपन
     });
 
     const protocol = req.protocol; // Will be 'http' or 'https'
