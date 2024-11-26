@@ -13,75 +13,81 @@ const BasicSetting_Modal = db.BasicSetting;
 
 class Markethub {
 
-    async GetAccessToken(req, res) {
+    async  GetAccessToken(req, res) {
         try {
-            const alice_userid = req.query.userId;
-            const client = await Clients_Modal.findOne({ alice_userid });
-    
-            // Check if the client exists
-            if (!client) {
-                return res.status(404).json({
-                    status: false,
-                    message: "Client not found"
-                });
-            }
-    
-            // Check for authCode in the request
-            if (req.query.authCode) {
-                const authCode = req.query.authCode;
-                const appcode = req.query.appcode;
-    
-                // Create the encrypted data using sha256
-                const encryptedData = sha256(alice_userid + authCode + client.apisecret);
-                const data = { checkSum: encryptedData };
-    
-                // Axios configuration
-                const config = {
-                    method: "post",
-                    url: "https://ant.aliceblueonline.com/rest/AliceBlueAPIService/sso/getUserDetails",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    data: data,
-                };
-    
-                try {
-                    const response = await axios(config);
-                    // Check if the response status is not OK
-                    if (response.data.stat === "Not_ok") {
-                        return res.status(500).json({ status: false, message: response.data.emsg });
-                    }
-    
-                    // If userSession exists, update the client's data
-                    if (response.data.userSession) {
-                        const brokerlink = await Clients_Modal.findOneAndUpdate(
-                            { alice_userid }, // Find by alice_userid
-                            { 
-                                authtoken: response.data.userSession,  // Update authtoken
-                                dlinkstatus: 1,         // Update dlinkstatus
-                                tradingstatus: 1        // Update tradingstatus
-                            }, 
-                            { new: true }  // Return the updated document
-                        );
-    
-                        return res.json({
-                            status: true,
-                            message: "Broker login successfully",
-                        });
-                    }
-    
-                } catch (error) {
-                    return res.status(500).json({ status: false, message: "Server error" });
-                }
-    
-            } else {
-                return res.status(400).json({ status: false, message: "authCode is required" });
-            }
-        } catch (error) {
-            return res.status(500).json({ status: false, message: error.message || "Server error" });
-        }
-    }
+          const { id, apikey, apisecret, pass_word } = req.body;
+      console.log(req.body);
+          // Validate inputs
+          if (!id || !apikey || !apisecret || !pass_word) {
+            return res.status(400).json({
+              status: false,
+              message: "All fields (id, client id, varification code, password) are required",
+            });
+          }
+      
+          // Find client by ID
+          const client = await Clients_Modal.findById(id);
+          if (!client) {
+            return res.status(404).json({ status: false, message: "Client not found" });
+          }
+      
+          // Check trading status
+          if (client.tradingstatus === "1") {
+            return res.json({ status: true, message: "Broker login successfully" });
+          }
+      
+          // Validate API credentials
+          if (!apikey || !apisecret || !pass_word) {
+            return res.status(400).json({
+              status: false,
+              message: "Please provide valid client id, varification code, and password",
+            });
+          }
 
+          
+          var config = {
+            method: 'get',
+            url: 'http://trdapi.markethubonline.com:27005/api1/token?client_id='+apikey+'&password='+pass_word+'&verification='+apisecret
+        };
+
+        const response = await axios(config); 
+
+
+        if(response.data.token != undefined){
+            let AccessToken = response.data.token;
+
+
+            await Clients_Modal.findByIdAndUpdate(
+                id,
+                {
+                  authtoken: AccessToken,
+                  oneTimeToken:pass_word,
+                  apisecret,
+                  apikey,
+                  dlinkstatus: 1,      
+                  tradingstatus: 1,  
+                  brokerid: 4
+                },
+                { new: true }
+              );
+              return res.json({ status: true, message: "Broker login successfully" });
+  
+         }else{
+             return res.send({ status: false, msg: "Please Update correct credentials in Broker key..."});
+           
+         }
+
+        } catch (error) {
+          // Handle Errors
+          if (error.response && error.response.data) {
+            const errorMessage = error.response.data.error
+              ? error.response.data.error[0]?.message || "Error occurred"
+              : JSON.stringify(error.response.data);
+            return res.status(500).json({ status: false, message: errorMessage });
+          }
+          return res.status(500).json({ status: false, message: error.message || "Server error" });
+        }
+      }
     async placeOrder(req, res) {
         
         try {
@@ -584,118 +590,6 @@ const userId = client.apikey;
         }
     }
 
-    async GetAccessTokenAdmin(req, res) {
-        try {
-
-            const aliceuserid = req.query.userId;
-            const alice = await BasicSetting_Modal.findOne();
-    
-            // Check if the client exists
-            if (!alice.aliceuserid) {
-                return res.status(404).json({
-                    status: false,
-                    message: "Userid not found"
-                });
-            }
-    
-            if (req.query.authCode) {
-                const authCode = req.query.authCode;
-                const appcode = req.query.appcode;
-                const encryptedData = sha256(aliceuserid + authCode + alice.secretkey);
-                
-
-                const data = { checkSum: encryptedData };
-                // Axios configuration
-                const config = {
-                    method: "post",
-                    url: "https://ant.aliceblueonline.com/rest/AliceBlueAPIService/sso/getUserDetails",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    data: data,
-                };
-    
-                try {
-                    const response = await axios(config);
-                    // Check if the response status is not OK
-                    if (response.data.stat === "Not_ok") {
-                        return res.status(500).json({ status: false, message: response.data.emsg });
-                    }
-   
-                    if (response.data.userSession) {
-                        const brokerlink = await BasicSetting_Modal.findOneAndUpdate(
-                            { aliceuserid }, // Find by alice_userid
-                            { 
-                                authtoken: response.data.userSession,  // Update authtoken
-                                brokerloginstatus: 1        // Update tradingstatus
-                            }, 
-                            { new: true }  // Return the updated document
-                        );
-                        const dynamicUrl = `http://${req.headers.host}`;
-                        return res.redirect(dynamicUrl);
-                        // return res.json({
-                        //     status: true,
-                        //     message: "Broker login successfully",
-                        // });
-                    }
-    
-                } catch (error) {
-                    return res.status(500).json({ status: false, message: "Server error" });
-                }
-    
-            } else {
-                return res.status(400).json({ status: false, message: "authCode is required" });
-            }
-        } catch (error) {
-            return res.status(500).json({ status: false, message: error.message || "Server error" });
-        }
-    }
-
-async brokerLink(req, res) {
-  try {
-    const { apikey, secretkey, aliceuserid } = req.body;
-
-
-
-    if (!apikey && !secretkey && !aliceuserid) {
-        return res.status(404).json({
-          status: false,
-          message: "appcode,userid and secret is required",
-        });
-      }
-
-  const existingSetting = await BasicSetting_Modal.findOne({});
-
-    if (!existingSetting) {
-      return res.status(404).json({
-        status: false,
-        message: "Userid not found",
-      });
-    }
-
-    // Update client details
-    existingSetting.apikey = apikey;
-    existingSetting.secretkey = secretkey;
-    existingSetting.aliceuserid = aliceuserid;
-    await existingSetting.save();
-
-
-     let url =  `https://ant.aliceblueonline.com/?appcode=${apikey}`; 
-  
-     return res.json({
-        status: true,
-        url: url
-    });
-
-  } catch (error) {
-    // Handle server errors
-    return res.status(500).json({
-      status: false,
-      message: "Server error",
-      error: error.message,
-    });
-  }
-}
 
 
 }
