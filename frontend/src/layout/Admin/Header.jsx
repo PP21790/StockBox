@@ -91,7 +91,6 @@ const Header = () => {
     console.log("originalChecked",originalChecked)
     console.log("id",id)
 
-
     const user_active_status = originalChecked ? "1" : "0";
     const data = { id: id, status: user_active_status };
 
