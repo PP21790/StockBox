@@ -9,10 +9,17 @@ import { fDateTime} from '../../../Utils/Date_formate';
 
 
 const Planexpiry = () => {
+    
 
 
+    useEffect(() => {
+        fetchAdminServices();
+    }, []);
+    
+
+    
     const token = localStorage.getItem('token');
-
+    
     const [searchInput, setSearchInput] = useState('');
     const [searchStock, setSearchStock] = useState('');
     const [clients, setClients] = useState([]);
@@ -103,9 +110,6 @@ const Planexpiry = () => {
 
 
 
-    useEffect(() => {
-        fetchAdminServices();
-    }, []);
 
 
     useEffect(() => {

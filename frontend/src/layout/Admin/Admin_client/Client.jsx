@@ -26,7 +26,7 @@ const Client = () => {
     }, []);
 
 
-    
+
     
     const location = useLocation();
     const clientStatus = location?.state?.clientStatus;
@@ -222,9 +222,7 @@ const Client = () => {
                 add_by: ""
 
             };
-
             const response = await AllclientFilter(data, token);
-
             if (response.status) {
                 setClients(response.data);
                 setTotalRows(response.pagination.total);
@@ -234,18 +232,7 @@ const Client = () => {
         }
     };
 
-    // const getplanlistbyadmin = async () => {
-    //     try {
-
-    //         const response = await getplanlist(client._id, token);
-    //         if (response.status) {
-    //             // setPlanlist(response.data);
-    //         }
-    //     } catch (error) {
-    //         console.log("error");
-    //     }
-    // }
-
+   
 
     const getplanlistassinstatus = async (_id) => {
         try {
@@ -273,9 +260,11 @@ const Client = () => {
     }
 
 
+
     const updateClient = async (row) => {
         navigate("/admin/client/updateclient/" + row._id, { state: { row } })
     }
+
 
 
     const Clientdetail = async (row) => {
@@ -325,6 +314,8 @@ const Client = () => {
         }
     };
 
+
+
     // update status 
     const handleSwitchChange = async (event, id) => {
         const originalChecked = event.target.checked;
@@ -367,6 +358,9 @@ const Client = () => {
             getAdminclient();
         }
     };
+    
+
+
 
     // Update service
     const Updateplansubscription = async () => {
@@ -406,6 +400,9 @@ const Client = () => {
         }
     };
 
+
+
+
     // assign basket 
     const UpdateBasketservice = async () => {
 
@@ -442,6 +439,9 @@ const Client = () => {
             });
         }
     };
+
+
+
 
     const columns = [
         {
@@ -769,7 +769,6 @@ const Client = () => {
                     </div>
                 </div>
             </div>
-
 
 
             {isModalVisible && (

@@ -16,12 +16,16 @@ import Table from '../../../components/Table1';
 
 
 const ClientDeleteHistory = () => {
-
+    
+    useEffect(() => {
+        
+        getcategoryplanlist()
+    }, []);
 
 
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
-
+    
     const location = useLocation();
     const clientStatus = location?.state?.clientStatus;
 
@@ -40,7 +44,6 @@ const ClientDeleteHistory = () => {
     const [ForGetCSV, setForGetCSV] = useState([])
     const [searchkyc, setSearchkyc] = useState("");
     const [statuscreatedby, setStatuscreatedby] = useState("");
-    const [header, setheader] = useState("Client");
     const [expired, setExpired] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
@@ -79,10 +82,6 @@ const ClientDeleteHistory = () => {
 
     }
 
-    useEffect(() => {
-        
-        getcategoryplanlist()
-    }, []);
 
 
 
@@ -158,6 +157,7 @@ const ClientDeleteHistory = () => {
                 status: clientStatus == 1 ? 1 : clientStatus == 0 ? 0 : "",
                 createdby: statuscreatedby,
                 search: searchInput,
+                planStatus: expired === "active" ? "active" : expired === "expired" ? "expired" : clientStatus === "active" ? "active" : clientStatus === "expired" ? "expired" : "",
                 add_by:""
 
             };
@@ -348,7 +348,7 @@ const ClientDeleteHistory = () => {
                 <div className="page-content">
 
                     <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                        <div className="breadcrumb-title pe-3">{header}</div>
+                        <div className="breadcrumb-title pe-3">Client Delete History</div>
                         <div className="ps-3">
                             <nav aria-label="breadcrumb">
                                 <ol className="breadcrumb mb-0 p-0">
@@ -370,7 +370,7 @@ const ClientDeleteHistory = () => {
                                     <input
                                         type="text"
                                         className="form-control ps-5 radius-10"
-                                        placeholder="Search Client"
+                                        placeholder="Search delete client"
                                         onChange={(e) => setSearchInput(e.target.value)}
                                         value={searchInput}
                                     />
