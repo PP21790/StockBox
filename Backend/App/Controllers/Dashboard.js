@@ -815,6 +815,24 @@ async  statusChangeNotifiction(req, res) {
   }
 }
 
+async totalClient(req, res) {
+  try {
+
+    const license = await License_Modal.find()
+    .sort({ created_at: -1 })
+    .lean();
+
+    return res.json({
+      status: true,
+      message: "Data retrieved successfully",
+      data:license
+    });
+  
+} catch (error) {
+  return res.json({ status: false, message: "Server error", data: [] });
+}
+}
+
 
 
 
