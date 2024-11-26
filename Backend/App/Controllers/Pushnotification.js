@@ -26,14 +26,13 @@ async function sendFCMNotification(title, body, tokens) {
       },
     }));
 
-    // Send the notifications to all tokens using Promise.all
     const response = await Promise.all(
       messages.map(message => admin.messaging().send(message))
     );
 
-   // console.log('Notifications sent successfully:', response);
+ // console.log('Notifications sent successfully:', response);
   } catch (error) {
-   // console.error('Error sending notifications:', error);
+ // console.error('Error sending notifications:', error);
   }
 }
 

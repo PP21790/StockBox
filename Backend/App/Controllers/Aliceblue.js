@@ -355,19 +355,19 @@ class Aliceblue {
             let positionData = { qty: 0 };  
             let totalValue = 0;  // Declare totalValue outside the blocks
             try {
-                
                 positionData = await CheckPosition(userId, authToken, stock.segment, stock.instrument_token, producttype, signal.calltype, stock.tradesymbol);
             } catch (error) {
             }
 
             if (stock.segment === "C") {
                 try {
-                   
                     holdingData = await CheckHolding(userId, authToken, stock.segment, stock.instrument_token, producttype, signal.calltype);
-                    
-
                 } catch (error) {
                 }
+
+
+                console.log("positionData",positionData);
+                console.log("holdingData",holdingData);
                 const validPositionData = !isNaN(Number(positionData.qty)) ? Number(positionData.qty) : 0;  // Validate positionData.qty
                 const validHoldingQty = !isNaN(Number(holdingData.qty)) ? Number(holdingData.qty) : 0;  // Validate holdingData.qty
                  totalValue = validPositionData + validHoldingQty;  
