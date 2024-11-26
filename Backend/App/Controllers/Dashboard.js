@@ -632,18 +632,13 @@ async CloseSignalWithFilter(req, res) {
 
 async PlanExipreList(req, res) {
   try {
-    const { serviceid } = req.body;
+   
   
-    // Build the filter object dynamically
-    const filter = {};
-    if (serviceid) {
-      filter.serviceid = serviceid;
-    }
+   
   
     // Fetch all plans based on the filter
-    const plans = await Planmanage.find(filter);
+    const plans = await Planmanage.find();
   
-    // Initialize the enrichedPlans array
     const enrichedPlans = [];
   
     // Enrich plans with service and client details
@@ -670,6 +665,7 @@ async PlanExipreList(req, res) {
     return res.status(500).json({ status: false, message: "Server error", data: [] });
   }
 }
+
 async PlanExipreListWithFilter(req, res) {
   try {
     const { serviceid, startdate, enddate, search, page = 1 } = req.body;

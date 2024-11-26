@@ -16,7 +16,6 @@ class Markethub {
     async  GetAccessToken(req, res) {
         try {
           const { id, apikey, apisecret, pass_word } = req.body;
-      console.log(req.body);
           // Validate inputs
           if (!id || !apikey || !apisecret || !pass_word) {
             return res.status(400).json({
@@ -45,17 +44,38 @@ class Markethub {
           }
 
           
+
+
           var config = {
             method: 'get',
             url: 'http://trdapi.markethubonline.com:27005/api1/token?client_id='+apikey+'&password='+pass_word+'&verification='+apisecret
         };
+          
+          await axios.request(config)
+          .then(async(response) => {
 
-        const response = await axios(config); 
+             console.log("response",response);
 
 
-        if(response.data.token != undefined){
-            let AccessToken = response.data.token;
+        })
+        .catch((error) => {
+    
+          console.log(error.response);
+          if(error){
+           if(error.response.data == ""){
+           return res.send({ status: false, msg: "Please Update correct credentials in Broker key..."});
+           } 
+          }else{
+              return res.send({ status: false, msg: "unauthorized..."});
+          }
+        });
 
+        
+        return res.json({ status: true, message: "Broker login successfully" });
+
+      //  if(response.data.token != undefined){
+          //  let AccessToken = response.data.token;
+          let AccessToken ="";
 
             await Clients_Modal.findByIdAndUpdate(
                 id,
@@ -72,10 +92,10 @@ class Markethub {
               );
               return res.json({ status: true, message: "Broker login successfully" });
   
-         }else{
-             return res.send({ status: false, msg: "Please Update correct credentials in Broker key..."});
+        //  }else{
+        //      return res.send({ status: false, msg: "Please Update correct credentials in Broker key..."});
            
-         }
+        //  }
 
         } catch (error) {
           // Handle Errors
