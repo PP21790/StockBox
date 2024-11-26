@@ -27,7 +27,6 @@ const Planexpirymonth = () => {
         try {
             const response = await getExpiryByMonth(token);
             if (response.status) {
-                console.log("response.data",response.data)
                 setData(response.data);
             }
         } catch (error) {
