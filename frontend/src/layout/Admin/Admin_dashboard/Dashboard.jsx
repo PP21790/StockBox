@@ -173,7 +173,7 @@ const Dashbord = () => {
                                         <h5 className="mb-0 text-white">
                                             {monthexpiry.map((item) => {
                                                 if (fDateMonth(item.month) === currentMonthYear) {
-                                                    return item.noofclient; 
+                                                    return item.noofclient || 0; 
                                                 }
                                                 return null; 
                                             })}
