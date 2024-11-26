@@ -2856,3 +2856,25 @@ export async function UpdatesignalReport(data, token) {
         return err.response?.data || err.message;
     }
 }
+
+
+
+// get plan expiry month detail
+
+export async function getExpiryByMonth(token) {
+  
+    try {
+        const res = await axios.get(`${Config.base_url}dashboard/totalclientmonth`, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}

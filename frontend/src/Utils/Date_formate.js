@@ -17,6 +17,13 @@ export function fDateTime(date) {
   return format(new Date(date), 'dd MMM yyyy ');
 }
 
+export function  fDateMonth(monthYear){
+   
+  const month = monthYear.slice(0, 2); 
+  const year = monthYear.slice(2);   
+  const date = new Date(`${year}-${month}-01`); 
+  return date.toLocaleString('default', { month: 'long', year: 'numeric' });
+};
 export function fDateTimeH(date) {
   return format(new Date(date), 'dd MMM yyyy HH:mm:ss');
 }
