@@ -632,36 +632,42 @@ async CloseSignalWithFilter(req, res) {
 
 async PlanExipreList(req, res) {
   try {
-    const { serviceid } = req.query;  
-
-    const filter = serviceid ? { serviceid } : {}; 
-    const plans = await Planmanage.find(filter).sort({ enddate: -1 });
-
-    // Prepare an array to store the enriched data
+    const { serviceid } = req.body;
+  
+    // Build the filter object dynamically
+    const filter = {};
+    if (serviceid) {
+      filter.serviceid = serviceid;
+    }
+  
+    // Fetch all plans based on the filter
+    const plans = await Planmanage.find(filter);
+  
+    // Initialize the enrichedPlans array
     const enrichedPlans = [];
-
+  
+    // Enrich plans with service and client details
     for (let plan of plans) {
       const service = await Service_Modal.findById(plan.serviceid).select('title');
-
       const client = await Clients_Modal.findById(plan.clientid).select('FullName PhoneNo Email');
+  
       enrichedPlans.push({
-        ...plan.toObject(), 
-        serviceTitle: service ? service.title : null, 
+        ...plan.toObject(),
+        serviceTitle: service ? service.title : null,
         clientFullName: client ? client.FullName : null,
         clientMobile: client ? client.PhoneNo : null,
-        clientEmail: client ? client.Email : null 
-
+        clientEmail: client ? client.Email : null
       });
     }
-
-
+  
     return res.json({
       status: true,
       message: "get",
-      data: enrichedPlans  
+      data: enrichedPlans,
     });
   } catch (error) {
-    return res.json({ status: false, message: "Server error", data: [] });  // Error handling
+    console.error("Error fetching plans:", error);
+    return res.status(500).json({ status: false, message: "Server error", data: [] });
   }
 }
 async PlanExipreListWithFilter(req, res) {

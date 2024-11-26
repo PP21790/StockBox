@@ -365,9 +365,6 @@ class Aliceblue {
                 } catch (error) {
                 }
 
-
-                console.log("positionData",positionData);
-                console.log("holdingData",holdingData);
                 const validPositionData = !isNaN(Number(positionData.qty)) ? Number(positionData.qty) : 0;  // Validate positionData.qty
                 const validHoldingQty = !isNaN(Number(holdingData.qty)) ? Number(holdingData.qty) : 0;  // Validate holdingData.qty
                  totalValue = validPositionData + validHoldingQty;  
