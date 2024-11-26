@@ -74,6 +74,9 @@ const AddSignal = () => {
       const errors = {};
       if (!values.segment) errors.segment = 'Please Select a Segment';
       if (!values.stock ) errors.stock = 'Please Select a Stock';
+      if(values.price <= 0){
+        errors.price = 'Price Should Be Grater Than Zero'
+     }
       if (!values.price) errors.price = 'Please Select a Price';
       if (!values.tag1) errors.tag1 = 'Please Enter Target1';
       if (values.calltype === "BUY") {
