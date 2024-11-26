@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ReadNotificationStatus, getDashboardNotification, gettradestatus, basicsettinglist, UpdateLogin_status } from '../../Services/Admin';
 import { formatDistanceToNow } from 'date-fns';
 import Swal from 'sweetalert2';
@@ -10,6 +10,8 @@ import { image_baseurl } from '../../Utils/config';
 
 
 const Header = () => {
+
+  const navigate = useNavigate();
 
   const token = localStorage.getItem('token');
   const FullName = localStorage.getItem('FullName');
@@ -69,9 +71,6 @@ const Header = () => {
           if (companyNameElement) {
             companyNameElement.textContent = data.from_name;
           }
-
-
-          // console.log("data.staffstatus", data.staffstatus)
           if (data.staffstatus === 0) {
             localStorage.clear();
           }
@@ -84,68 +83,62 @@ const Header = () => {
     }
   };
 
-     
-  const handleSwitchChange = async (event, id) => {
 
-    const originalChecked = event.target.checked;
-    console.log("originalChecked",originalChecked)
-    console.log("id",id)
+  const handleNotificationClick = async (event, notification) => {
 
-    const user_active_status = originalChecked ? "1" : "0";
-    const data = { id: id, status: user_active_status };
+    const user_active_status = "1";
+    const data = { id: notification._id, status: user_active_status };
 
-    const result = await Swal.fire({
-        title: "Do you want to save the changes?",
-        showCancelButton: true,
-        confirmButtonText: "Save",
-        cancelButtonText: "Cancel",
-        allowOutsideClick: false,
-    });
+    try {
+      const response = await ReadNotificationStatus(data, token);
+      if (response.status) {
+        if (notification.type === "payout") {
+          navigate("/admin/paymentrequest")
+          getdemoclient()
+        } else if (notification.type === "add client") {
+          navigate("/admin/client")
+          getdemoclient()
+        } else if (notification.type === "plan purchase") {
+          navigate("/admin/paymenthistory")
+          getdemoclient()
+        } else {
+          navigate("/admin/client")
+          getdemoclient()
 
-    if (result.isConfirmed) {
-        try {
-            const response = await ReadNotificationStatus(data, token);
-            if (response.status) {
-                Swal.fire({
-                    title: "Saved!",
-                    icon: "success",
-                    timer: 1000,
-                    timerProgressBar: true,
-                });
-                setTimeout(() => {
-                    Swal.close();
-                }, 1000);
-            }
-            // Reload the plan list
-  
-        } catch (error) {
-            Swal.fire(
-                "Error",
-                "There was an error processing your request.",
-                "error"
-            );
         }
-    } else if (result.dismiss === Swal.DismissReason.cancel) {
-        event.target.checked = !originalChecked;
-       
+      } else {
+        Swal.fire(
+          "Error",
+          "Failed to update the notification status.",
+          "error"
+        );
+      }
+    } catch (error) {
+      Swal.fire(
+        "Error",
+        "There was an error processing your request.",
+        "error"
+      );
     }
-};
+  };
+
+
 
 
   const getdemoclient = async () => {
     try {
       const response = await getDashboardNotification(token);
       if (response.status) {
-        console.log("res", response.data)
-        setClients(response.data);
+        console.log(response.data);
+        const filterdata = response.data.filter((item) => item.status == 0);
+        setClients(filterdata);
+      } else {
+
       }
     } catch (error) {
       console.log("error", error);
     }
   };
-
-
-
 
 
 
@@ -279,8 +272,6 @@ const Header = () => {
                           }
                         }}
                       />
-
-
                     </div>
                   </div>
                 </li>
@@ -300,19 +291,13 @@ const Header = () => {
                       <p className="msg-header-badge">{clients.length} New</p>
                     </div>
                     <div className="header-notifications-list" style={{ overflowY: "scroll " }}>
-                      {clients.map((notification, index) => (
-                        <Link
+                      {clients.length > 0 ?  clients.map((notification, index) => (
+                        <a
                           key={index}
                           className="dropdown-item"
-                          to={notification.type === "payout" ? "/admin/paymentrequest" : "#"}
-                          onChange={(event) => handleSwitchChange(event, notification._id)}
+                          onClick={(event) => handleNotificationClick(event, notification)}
                         >
-
-                          <div className="d-flex align-items-center" >
-                  
-                            {/* <div className={`notify bg-light-${notification.type} text-${notification.type}`}>
-                             {notification.type}
-                               </div> */}
+                          <div className="d-flex align-items-center">
                             <div className="flex-grow-1">
                               <h6 className="msg-name">
                                 {notification?.title}
@@ -321,23 +306,21 @@ const Header = () => {
                                     ? formatDistanceToNow(new Date(notification.createdAt), {
                                       addSuffix: true,
                                     })
-                                    : "N/A"}
+                                    : "Empty Message"}
                                 </span>
                               </h6>
-                             
-                                <p
-                                  className="msg-info text-truncate"
-                                  title={notification.message}
-                                >
-                                  {notification.message}
-                                </p>
-                  
+                              <p
+                                className="msg-info text-truncate"
+                                title={notification.message}
+                              >
+                                {notification.message}
+                              </p>
                             </div>
                           </div>
-                        </Link>
-                      ))}
-
+                        </a>
+                      )): <span style={{display:"flex", justifyContent:"center" , alignItems:"center",marginTop:"50px"}}><h4>Empty Message</h4></span>}
                     </div>
+
                     <div className="text-center msg-footer">
                       {/* <Link to="/admin/help">
                         <button className="btn btn-primary w-100">View All Notifications</button>
@@ -428,7 +411,6 @@ const Header = () => {
                       value={statusinfo.secretkey}
                       onChange={(e) => setStatusinfo({ ...statusinfo, secretkey: e.target.value })}
                     />
-                    {/* <button type="button" className="btn btn-primary mt-2" onClick={getstatusdetaile}>Submit</button> */}
                   </form>
 
 

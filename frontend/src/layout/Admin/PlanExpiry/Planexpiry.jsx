@@ -77,7 +77,6 @@ const Planexpiry = () => {
         try {
             const response = await getclientPlanexpiry(token);
             if (response.status) {
-                console.log("response",response.data)
                 if (response.data?.length > 0) {
                     const csvArr = response.data?.map((item) => ({
                         FullName: item.clientFullName || '',
