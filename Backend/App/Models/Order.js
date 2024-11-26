@@ -33,6 +33,11 @@ const OrderModel = Schema({
         trim: true,
         default: 0
     },
+    ordertype: {
+        type: String,
+        trim: true,
+        default: null
+    },
     status: {
         type: Number,
         enum: [0, 1], // Example statuses

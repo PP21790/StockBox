@@ -122,7 +122,7 @@ if (!stocks) {
               segment:segment,
               optiontype: optiontype,
               tradesymbol:stocks.tradesymbol,
-              lotsize: lotsize,
+              lotsize: stocks.lotsize,
           });
     
 

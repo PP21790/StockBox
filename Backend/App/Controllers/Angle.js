@@ -163,12 +163,12 @@ class Angle {
                 "ordertype":"MARKET",
                 "producttype":producttype,
                 "duration":"DAY",
-                "price":price,
+                "price":0,
                 "squareoff":"0",
                 "stoploss":"0",
                 "quantity":quantity
                 });
-
+console.log(data);
               
                 // var config = {
                 //     method: 'get',
@@ -222,6 +222,7 @@ class Angle {
                         signalid:signal._id,
                         orderid:response.data.data.orderid,
                         uniqueorderid:response.data.data.uniqueorderid,
+                        ordertype:signal.calltype,
                         borkerid:1,
                         quantity:quantity,
                     });
@@ -358,7 +359,7 @@ class Angle {
             let positionData = { qty: 0 };  
             let totalValue = 0;  // Declare totalValue outside the blocks
                 try {
-                  const positionData = await CheckPosition(client.apikey, authToken, stock.segment,stock.instrument_token,producttype,signal.calltype,stock.tradesymbol);
+                   positionData = await CheckPosition(client.apikey, authToken, stock.segment,stock.instrument_token,producttype,signal.calltype,stock.tradesymbol);
                 } catch (error) {
                   console.error('Error in CheckPosition:', error.message);
                 
@@ -367,7 +368,8 @@ class Angle {
            
                 if(stock.segment=="C") {
                         try {
-                            const holdingData = await CheckHolding(client.apikey, authToken , stock.segment,stock.instrument_token,producttype,signal.calltype);
+                             holdingData = await CheckHolding(client.apikey, authToken , stock.segment,stock.instrument_token,producttype,signal.calltype);
+                      
                         } catch (error) {
                             console.error('Error in CheckHolding:', error.message);
                         }
@@ -377,6 +379,8 @@ class Angle {
                     {
                         totalValue = Math.abs(positionData.qty)
                     }
+
+
 
                     let calltypes;
                     if(signal.calltype === 'BUY')
@@ -397,7 +401,7 @@ class Angle {
                         "ordertype":"MARKET",
                         "producttype":producttype,
                         "duration":"DAY",
-                        "price":price,
+                        "price":0,
                         "squareoff":"0",
                         "stoploss":"0",
                         "quantity":quantity
@@ -433,6 +437,7 @@ class Angle {
                         signalid:signal._id,
                         orderid:response.data.data.orderid,
                         uniqueorderid:response.data.data.uniqueorderid,
+                        ordertype:calltypes,
                         borkerid:1,
                     });
     
@@ -682,11 +687,13 @@ async function CheckHolding(userId, authToken, segment, instrument_token, produc
     try {
         const response = await axios(config);
 
-
         if (response.data.message == "SUCCESS") {
 
             const existEntryOrder = response.data.data.holdings.find(item1 => item1.symboltoken === instrument_token && item1.product === producttype);
-let possition_qty = 0;
+                    let possition_qty = 0;
+
+                   
+
             if (existEntryOrder != undefined) {
                 if (segment.toUpperCase() == 'C') {
                      possition_qty = parseInt(existEntryOrder.quantity);
