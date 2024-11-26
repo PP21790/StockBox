@@ -10,6 +10,9 @@ const BasicSetting_Modal = db.BasicSetting;
 const Freetrial_Modal = db.Freetrial;
 const Adminnotification_Modal = db.Adminnotification;
 
+
+
+
 class Dashboard {
     async getcount(req, res) {
         try {
