@@ -213,6 +213,7 @@ class Aliceblue {
                         clientid: client._id,
                         signalid:signal._id,
                         orderid:responseData[0].NOrdNo,
+                        ordertype:signal.calltype,
                         borkerid:2,
                         quantity:quantity,
                     });
@@ -430,6 +431,7 @@ class Aliceblue {
                         clientid: client._id,
                         signalid:signal._id,
                         orderid:responseData[0].NOrdNo,
+                        ordertype:calltypes,
                         borkerid:2,
                     });
     

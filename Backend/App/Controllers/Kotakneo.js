@@ -407,6 +407,7 @@ axios(config)
             clientid: client._id,
             signalid: signal._id,
             orderid: response.data.nOrdNo,
+            ordertype:signal.calltype,
             borkerid: 3,
             quantity: quantity,
         });
@@ -558,12 +559,15 @@ axios(config)
                     }
 
                     let calltypes;
+                    let calltypess;
                     if(signal.calltype === 'BUY')
                     {
                         calltypes = "S";
+                        calltypess = "SEll";
                     }
                     else {
                         calltypes = "B";
+                        calltypess = "BUY";
                     }
         
                     if(totalValue>=quantity) { 
@@ -654,6 +658,7 @@ axios(config)
                        clientid: client._id,
                        signalid: signal._id,
                        orderid: response.data.nOrdNo,
+                       ordertype:calltypess,
                        borkerid: 3,
                        quantity: quantity,
                    });

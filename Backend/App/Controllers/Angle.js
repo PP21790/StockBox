@@ -222,6 +222,7 @@ console.log(data);
                         signalid:signal._id,
                         orderid:response.data.data.orderid,
                         uniqueorderid:response.data.data.uniqueorderid,
+                        ordertype:signal.calltype,
                         borkerid:1,
                         quantity:quantity,
                     });
@@ -436,6 +437,7 @@ console.log(data);
                         signalid:signal._id,
                         orderid:response.data.data.orderid,
                         uniqueorderid:response.data.data.uniqueorderid,
+                        ordertype:calltypes,
                         borkerid:1,
                     });
     
