@@ -129,7 +129,6 @@ const Header = () => {
     try {
       const response = await getDashboardNotification(token);
       if (response.status) {
-        console.log(response.data);
         const filterdata = response.data.filter((item) => item.status == 0);
         setClients(filterdata);
       } else {
