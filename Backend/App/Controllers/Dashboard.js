@@ -787,9 +787,10 @@ async Notification(req, res) {
 
 async NotificationList(req, res) {
   try {
-    // Extract page and limit from query parameters with default values
-    const page = parseInt(req.query.page) || 1; // Default to page 1
-    const limit = 5; // Default to 10 items per page
+
+    const { page } = req.params;
+
+    const limit = 10; // Default to 10 items per page
     const skip = (page - 1) * limit; // Calculate the number of documents to skip
 
     const result = await Adminnotification_Modal.find({})
