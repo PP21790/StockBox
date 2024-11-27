@@ -13,278 +13,219 @@ const BasicSetting_Modal = db.BasicSetting;
 
 class Markethub {
 
-    async  GetAccessToken(req, res) {
-        try {
-          const { id, apikey, apisecret, pass_word } = req.body;
-          // Validate inputs
-          if (!id || !apikey || !apisecret || !pass_word) {
-            return res.status(400).json({
-              status: false,
-              message: "All fields (id, client id, varification code, password) are required",
-            });
-          }
-      
-          // Find client by ID
-          const client = await Clients_Modal.findById(id);
-          if (!client) {
-            return res.status(404).json({ status: false, message: "Client not found" });
-          }
-      
-          // Check trading status
-          if (client.tradingstatus === "1") {
-            return res.json({ status: true, message: "Broker login successfully" });
-          }
-      
-          // Validate API credentials
-          if (!apikey || !apisecret || !pass_word) {
-            return res.status(400).json({
-              status: false,
-              message: "Please provide valid client id, varification code, and password",
-            });
-          }
 
-          
+async GetAccessToken(req, res) {
+  try {
+    const { id, apikey, apisecret, pass_word } = req.body;
 
-
-          var config = {
-            method: 'get',
-            url: 'http://trdapi.markethubonline.com:27005/api1/token?client_id='+apikey+'&password='+pass_word+'&verification='+apisecret
-        };
-          
-          await axios.request(config)
-          .then(async(response) => {
-
-             console.log("response",response);
-
-
-        })
-        .catch((error) => {
-    
-          console.log(error.response);
-          if(error){
-           if(error.response.data == ""){
-           return res.send({ status: false, msg: "Please Update correct credentials in Broker key..."});
-           } 
-          }else{
-              return res.send({ status: false, msg: "unauthorized..."});
-          }
-        });
-
-        
-        return res.json({ status: true, message: "Broker login successfully" });
-
-      //  if(response.data.token != undefined){
-          //  let AccessToken = response.data.token;
-          let AccessToken ="";
-
-            await Clients_Modal.findByIdAndUpdate(
-                id,
-                {
-                  authtoken: AccessToken,
-                  oneTimeToken:pass_word,
-                  apisecret,
-                  apikey,
-                  dlinkstatus: 1,      
-                  tradingstatus: 1,  
-                  brokerid: 4
-                },
-                { new: true }
-              );
-              return res.json({ status: true, message: "Broker login successfully" });
-  
-        //  }else{
-        //      return res.send({ status: false, msg: "Please Update correct credentials in Broker key..."});
-           
-        //  }
-
-        } catch (error) {
-          // Handle Errors
-          if (error.response && error.response.data) {
-            const errorMessage = error.response.data.error
-              ? error.response.data.error[0]?.message || "Error occurred"
-              : JSON.stringify(error.response.data);
-            return res.status(500).json({ status: false, message: errorMessage });
-          }
-          return res.status(500).json({ status: false, message: error.message || "Server error" });
-        }
-      }
-    async placeOrder(req, res) {
-        
-        try {
-            const { id, signalid, quantity, price } = req.body;
-    
-            const client = await Clients_Modal.findById(id);
-            if (!client) {
-                return res.status(404).json({
-                    status: false,
-                    message: "Client not found"
-                });
-            }
-
-
-            if(client.tradingstatus == 0)
-            {
-                return res.status(404).json({
-                    status: false,
-                    message: "Client Broker Not Login, Please Login With Broker"
-                });
-            }
-            
-    
-            const signal = await Signal_Modal.findById(signalid);
-            if (!signal) {
-                return res.status(404).json({
-                    status: false,
-                    message: "Signal not found"
-                });
-            }
-
-    
-    
-             const authToken = client.authtoken;
-             const userId = client.alice_userid;
-
-
-             let optiontype, exchange, producttype;
-
-             if (signal.segment === "C") {
-                 optiontype = "EQ";
-                 exchange = "NSE";
-             } else {
-                 optiontype = signal.segment === "F" ? "UT" : signal.optiontype;
-                 exchange = "NFO";
-             }
-             
-             // Determine product type based on segment and call duration
-             if (signal.callduration === "Intraday") {
-                 producttype = "MIS";
-             } else {
-                 producttype = signal.segment === "C" ? "CNC" : "NRML";
-             }
-             
-             // Query Stock_Modal based on segment type
-             let stock;
-             if (signal.segment === "C") {
-                 stock = await Stock_Modal.findOne({ 
-                     symbol: signal.stock, 
-                     segment: signal.segment, 
-                 //    option_type: optiontype 
-                 });
-             } else if (signal.segment === "F") {
-                 stock = await Stock_Modal.findOne({ 
-                     symbol: signal.stock, 
-                     segment: signal.segment, 
-                     expiry: signal.expirydate, 
-                 //    option_type: optiontype 
-                 });
-             } else {
-                 stock = await Stock_Modal.findOne({ 
-                     symbol: signal.stock, 
-                     segment: signal.segment, 
-                     expiry: signal.expirydate, 
-                     option_type: optiontype, 
-                     strike: signal.strikeprice 
-                 });
-             }
-
-
-             if (!stock) {
-                return res.status(404).json({
-                    status: false,
-                    message: "Stock not found"
-                });
-            }
-
-
-           
-                var data = JSON.stringify([
-                    {
-                      "complexty": "regular",
-                      "discqty": "0",
-                      "exch": exchange,
-                      "pCode": producttype,
-                      "prctyp": "MKT",
-                      "price": price,
-                      "qty": quantity,
-                      "ret": "DAY",
-                      "symbol_id": stock.instrument_token,
-                      "trading_symbol": stock.tradesymbol,
-                      "transtype": signal.calltype,
-                      "trigPrice": "00.00",
-                      "orderTag": "order1"
-                    }
-                  ]);
-
-                let config = {
-                    method: 'post',
-                    maxBodyLength: Infinity,
-                    url: 'https://ant.aliceblueonline.com/rest/AliceBlueAPIService/api/placeOrder/executePlaceOrder',
-                    headers: {
-                        'Authorization': 'Bearer ' + userId + ' ' + authToken,
-                        'Content-Type': 'application/json',
-                    },
-                    data: data
-                };
-
-                axios(config)
-                .then(async (response) => {
-                  
-                    const responseData = response.data;
-    
-    
-
-                if (responseData[0].stat == 'Ok') {
-    
-                    const order = new Order_Modal({
-                        clientid: client._id,
-                        signalid:signal._id,
-                        orderid:responseData[0].NOrdNo,
-                        borkerid:2,
-                        quantity:quantity,
-                    });
-    
-    
-                    
-                   await order.save();
-                    return res.json({
-                        status: true,
-                        data: response.data 
-                    });
-                }
-                else{
-                   
-                       return res.status(500).json({ 
-                        status: false, 
-                        message: response.data 
-                    });
-                }
-        
-                })
-                .catch(async (error) => {
-                    const message = (JSON.stringify(error.response.data)).replace(/["',]/g, '');
-
-                    let url;
-                    if(message=="") {
-                        url =  `https://ant.aliceblueonline.com/?appcode=${client.apikey}`; 
-                    }
-
-                    return res.status(500).json({ 
-                        status: false, 
-                        url: url, 
-                        message: message 
-                    });
-        
-                });
-
-            
-        } catch (error) {
-            return res.status(500).json({ 
-                status: false, 
-                message: error.response ? error.response.data : "An error occurred while placing the order" 
-            });
-        }
+    // Validate inputs
+    if (!id || !apikey || !apisecret || !pass_word) {
+      return res.status(400).json({
+        status: false,
+        message: "All fields (id, client id, verification code, password) are required",
+      });
     }
 
+    // Find client by ID
+    const client = await Clients_Modal.findById(id);
+    if (!client) {
+      return res.status(404).json({ status: false, message: "Client not found" });
+    }
+
+    // Check trading status
+    if (client.tradingstatus === "1") {
+      return res.json({ status: true, message: "Broker login successfully" });
+    }
+
+    // Prepare login data dynamically
+    const data = JSON.stringify({
+      LoginID: apikey,
+      Password: pass_word,
+      Dob: "", // Add if required
+      Pan: "", // Add if required
+      imei: "1234567890",
+      LoginDevice: "Android",
+      ApkVersion: "1.0.2",
+      Source: "MOB",
+      DevId: "1234",
+      factortwo: apisecret, // Assuming this is your verification code
+    });
+
+    // Axios config
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'https://fund.markethubonline.com/middleware/api/v2/Login',
+      headers: {
+        'AppKey': 'Xbk03o13AnxII=UMXz06+nrN',
+        'IsEncrypted': 'False',
+        'Content-Type': 'application/json',
+      },
+      data,
+    };
+
+    // Make API request
+    const response = await axios.request(config);
+    // Handle API response
+    if (response.data.data.jwtToken) {
+      const AccessToken = response.data.data.jwtToken;
+
+      await Clients_Modal.findByIdAndUpdate(
+        id,
+        {
+          authtoken: AccessToken,
+          oneTimeToken: pass_word,
+          apisecret,
+          apikey,
+          dlinkstatus: 1,
+          tradingstatus: 1,
+          brokerid: 4,
+        },
+        { new: true }
+      );
+
+      return res.json({ status: true, message: "Broker login successfully" });
+    } else {
+      return res.status(400).json({
+        status: false,
+        message: "Invalid credentials. Please check your broker key.",
+      });
+    }
+  } catch (error) {
+    console.error("Error:", error.message);
+
+    // Handle Axios errors or other errors
+    if (error.response) {
+      return res.status(500).json({
+        status: false,
+        message: error.response.data?.message || "External API error",
+      });
+    }
+
+    return res.status(500).json({
+      status: false,
+      message: "Server error. Please try again later.",
+    });
+  }
+}
+
+async placeOrder(req, res) {
+    try {
+      const { id, signalid, quantity, price } = req.body;
+  
+      // Validate client existence
+      const client = await Clients_Modal.findById(id);
+      if (!client) {
+        return res.status(404).json({ status: false, message: "Client not found" });
+      }
+  
+      // Validate trading status
+      if (client.tradingstatus == 0) {
+        return res.status(400).json({
+          status: false,
+          message: "Client Broker Not Login, Please Login With Broker",
+        });
+      }
+  
+      // Validate signal existence
+      const signal = await Signal_Modal.findById(signalid);
+      if (!signal) {
+        return res.status(404).json({ status: false, message: "Signal not found" });
+      }
+  
+      // Determine option type, exchange, and product type
+      const { segment, callduration, expirydate, stock: signalStock, optiontype: signalOptionType, strikeprice } = signal;
+      let optiontype = segment === "C" ? "EQ" : segment === "F" ? "UT" : signalOptionType;
+      let exchange = segment === "C" ? "NSE" : "NFO";
+      let producttype = callduration === "Intraday" ? "MIS" : segment === "C" ? "CNC" : "NRML";
+  
+      // Query stock details
+      const stockQuery = { symbol: signalStock, segment };
+      if (segment !== "C") {
+        stockQuery.expiry = expirydate;
+        if (segment !== "F") {
+          stockQuery.strike = strikeprice;
+        }
+      }
+      const stock = await Stock_Modal.findOne(stockQuery);
+  
+      if (!stock) {
+        return res.status(404).json({ status: false, message: "Stock not found" });
+      }
+  
+      // Prepare order data
+      const data = JSON.stringify({
+        variety: "NORMAL",
+        tradingsymbol: stock.tradesymbol,
+        symboltoken: stock.instrument_token,
+        transactiontype: signal.calltype,
+        exchange,
+        ordertype: "MARKET",
+        producttype,
+        duration: "DAY",
+        price,
+        quantity,
+        triggerprice: "0",
+        disclosedquantity: "0",
+        ordersource: null,
+        naicCode: null,
+        remarks: "_",
+        Confirm: false,
+        AlgoId: "0",
+        AlgoType: "0",
+      });
+  
+      // Axios request configuration
+      const config = {
+        method: "post",
+        maxBodyLength: Infinity,
+        url: "https://fund.markethubonline.com/middleware/api/v2/PlaceOrder",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: client.authtoken,
+        },
+        data,
+      };
+  
+      // Send order request
+      const response = await axios.request(config);
+  
+      const responseData = response.data;
+      if (response.data.user_order_number != undefined) {
+        // Save order in the database
+        const order = new Order_Modal({
+          clientid: client._id,
+          signalid: signal._id,
+          orderid:response.data.user_order_number,
+          ordertype: signal.calltype,
+          brokerid: 4,
+          quantity,
+        });
+  
+        await order.save();
+  
+        return res.json({ status: true, data: responseData });
+      } else {
+        return res.status(500).json({ status: false, message: responseData });
+      }
+    } catch (error) {
+      // Error handling
+      let errorMessage = "An error occurred while placing the order.";
+      let url = null;
+  
+      if (error.response) {
+        errorMessage = error.response.data?.message || error.response.data;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+  
+      // Handle specific error cases
+      if (!error.response?.data && client?.apikey) {
+      }
+  
+      return res.status(500).json({ status: false, message: errorMessage });
+    }
+  }
 
     async ExitplaceOrder(req, res) {
         
@@ -373,34 +314,32 @@ class Markethub {
             }
 
 
+            let holdingData = { qty: 0 };  
+            let positionData = { qty: 0 };  
+            let totalValue = 0;  // Declare totalValue outside the blocks
+                try {
+                   positionData = await CheckPosition(client.apikey, authToken, stock.segment,stock.instrument_token,producttype,signal.calltype,stock.tradesymbol);
+                } catch (error) {
+                  console.error('Error in CheckPosition:', error.message);
+                
+              }
+
            
+                if(stock.segment=="C") {
+                        try {
+                             holdingData = await CheckHolding(client.apikey, authToken , stock.segment,stock.instrument_token,producttype,signal.calltype);
+                      
+                        } catch (error) {
+                            console.error('Error in CheckHolding:', error.message);
+                        }
+                        totalValue = Math.abs(positionData.qty)+holdingData.qty;
+                    }
+                    else
+                    {
+                        totalValue = Math.abs(positionData.qty)
+                    }
              
                 
-                               
-              let positionData=0;
-                  try {
-                    const positionData = await CheckPosition(userId, authToken, stock.segment,stock.instrument_token,producttype,signal.calltype,stock.tradesymbol);
-                  
-                } catch (error) {
-                    console.error('Error in CheckPosition:', error.message);
-                }
-
-                let totalValue=0;
-          let holdingData=0;
-        if(stock.segment=="C") {
-                try {
-                    const holdingData = await CheckHolding(userId, authToken, stock.segment,stock.instrument_token,producttype,signal.calltype);
-                } catch (error) {
-                    console.error('Error in CheckHolding:', error.message);
-                }
-                totalValue = Math.abs(positionData)+holdingData;
-            }
-            else
-            {
-                totalValue = Math.abs(positionData)
-            }
-
-
             let calltypes;
                 if(signal.calltype === 'BUY')
                 {
@@ -413,52 +352,55 @@ class Markethub {
 
          if(totalValue>=quantity) {
 
-            var data = JSON.stringify([
-                {
-                  "complexty": "regular",
-                  "discqty": "0",
-                  "exch": exchange,
-                  "pCode": producttype,
-                  "prctyp": "MKT",
-                  "price": price,
-                  "qty": quantity,
-                  "ret": "DAY",
-                  "symbol_id": stock.instrument_token,
-                  "trading_symbol": stock.tradesymbol,
-                  "transtype": calltypes,
-                  "trigPrice": "00.00",
-                  "orderTag": "order1"
-                }
-              ]);
-
-
-
-                let config = {
-                    method: 'post',
-                    maxBodyLength: Infinity,
-                    url: 'https://ant.aliceblueonline.com/rest/AliceBlueAPIService/api/placeOrder/executePlaceOrder',
-                    headers: {
-                        'Authorization': 'Bearer ' + userId + ' ' + authToken,
-                        'Content-Type': 'application/json',
-                    },
-                    data: data
-                };
-
-                axios(config)
-                .then(async (response) => {
-                  
-                    const responseData = response.data;
-    
-    
-                if (responseData[0].stat == 'Ok') {
+            const data = JSON.stringify({
+                variety: "NORMAL",
+                tradingsymbol: stock.tradesymbol,
+                symboltoken: stock.instrument_token,
+                transactiontype: calltypes,
+                exchange,
+                ordertype: "MARKET",
+                producttype,
+                duration: "DAY",
+                price,
+                quantity,
+                triggerprice: "0",
+                disclosedquantity: "0",
+                ordersource: null,
+                naicCode: null,
+                remarks: "_",
+                Confirm: false,
+                AlgoId: "0",
+                AlgoType: "0",
+              });
+          
+              // Axios request configuration
+              const config = {
+                method: "post",
+                maxBodyLength: Infinity,
+                url: "https://fund.markethubonline.com/middleware/api/v2/PlaceOrder",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: client.authtoken,
+                },
+                data,
+              };
+          
+              // Send order request
+              const response = await axios.request(config);
+          
+              const responseData = response.data;
+              if (response.data.user_order_number != undefined) {
     
                     const order = new Order_Modal({
                         clientid: client._id,
                         signalid:signal._id,
-                        orderid:responseData[0].NOrdNo,
-                        borkerid:2,
+                        orderid:response.data.user_order_number,
+                        ordertype: calltypes,
+                        borkerid:4,
+                        quantity
                     });
     
+
     
                    await order.save();
                     return res.json({
@@ -474,22 +416,6 @@ class Markethub {
                     });
                 }
         
-                })
-                .catch(async (error) => {
-                    const message = (JSON.stringify(error.response.data)).replace(/["',]/g, '');
-
-                    let url;
-                    if(message=="") {
-                        url =  `https://ant.aliceblueonline.com/?appcode=${client.apikey}`; 
-                    }
-
-                    return res.status(500).json({ 
-                        status: false, 
-                        url: url, 
-                        message: message 
-                    });
-        
-                });
             }
             else{
 
@@ -573,25 +499,22 @@ const userId = client.apikey;
 
 
 
-
-    var data = JSON.stringify(
-        {
-          "nestOrderNumber": orderid
-        }
-      );
-
-        let config = {
-            method: 'post',
-            maxBodyLength: Infinity,
-            url: 'https://ant.aliceblueonline.com/rest/AliceBlueAPIService/api/placeOrder/orderHistory',
-            headers: {
-                'Authorization': 'Bearer ' + userId + ' ' + authToken,
-                'Content-Type': 'application/json',
-            },
-            data: data
-        };
-       
-           const response = await axios(config); 
+let data = JSON.stringify({
+    "orderId": orderid
+  });
+  
+  let config = {
+    method: 'post',
+    maxBodyLength: Infinity,
+    url: 'https://fund.markethubonline.com/middleware/api/v2/OrderHistory',
+    headers: { 
+      'Content-Type': 'application/json', 
+      'Authorization': authToken
+    },
+    data : data
+  };
+  
+     const response = await axios(config); 
 
             order.data = response.data; 
             order.status = 1; 
@@ -611,31 +534,29 @@ const userId = client.apikey;
     }
 
 
-
 }
 
 
 async function CheckPosition(userId, authToken, segment, instrument_token, producttype, calltype, trading_symbol) {
     
 
-    var data_possition = {
-        "ret": "NET"
-    }
-    var config = {
-        method: 'post',
-        url: 'https://ant.aliceblueonline.com/rest/AliceBlueAPIService/api/positionAndHoldings/positionBook',
-        headers: {
-            'Authorization': 'Bearer ' + userId + ' ' + authToken,
-            'Content-Type': 'application/json'
-        },
-        data: JSON.stringify(data_possition)
+    let data = '';
+
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'https://fund.markethubonline.com/middleware/api/v2/GetNetPositions',
+      headers: { 
+        'Authorization': authToken
+      },
+      data : data
     };
     axios(config)
         .then(async (response) => {
  
             if (Array.isArray(response.data)) {
 
-                const Exist_entry_order = response.data.find(item1 => item1.Token === instrument_token && item1.Pcode == producttype);
+                const Exist_entry_order = response.data.find(item1 => item1.scrip_token === instrument_token && item1.product_type == producttype);
 
                 if(Exist_entry_order != undefined){
                     if (segment.toUpperCase() == 'C') {
@@ -707,25 +628,34 @@ async function CheckPosition(userId, authToken, segment, instrument_token, produ
 }
 
 async function CheckHolding(userId, authToken, segment, instrument_token, producttype, calltype) {
-    const config = {
-        method: 'get',
-        url: 'https://ant.aliceblueonline.com/rest/AliceBlueAPIService/api/positionAndHoldings/holdings',
-        headers: {
-            'Authorization': `Bearer ${userId} ${authToken}`, // Ensure this format is correct for the API you're using
-            'Content-Type': 'application/json'
-        }
-    };
+   
+   
+   
+    let data = JSON.stringify({
+        "producttype": "MTF"
+      });
+      
+      let config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'https://fund.markethubonline.com/middleware/api/v2/GetHoldings',
+        headers: { 
+          'Content-Type': 'application/json', 
+          'Authorization': authToken
+        },
+        data : data
+      };
 
     try {
         const response = await axios(config);
 
-        if (response.data.stat == "Ok") {
+        if (response.message == "Ok") {
 
-            const existEntryOrder = response.data.HoldingVal.find(item1 => item1.Token1 === instrument_token && item1.Pcode === producttype);
+            const existEntryOrder = response.data.find(item1 => item1.symboltoken === instrument_token && item1.product === producttype);
 let possition_qty = 0;
             if (existEntryOrder != undefined) {
                 if (segment.toUpperCase() == 'C') {
-                     possition_qty = parseInt(existEntryOrder.SellableQty);
+                     possition_qty = parseInt(existEntryOrder.authorisedquantity);
                 } 
             }
             return {

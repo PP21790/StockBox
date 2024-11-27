@@ -168,24 +168,8 @@ class Angle {
                 "stoploss":"0",
                 "quantity":quantity
                 });
-console.log(data);
               
-                // var config = {
-                //     method: 'get',
-                //     url: 'https://apiconnect.angelone.in/rest/secure/angelbroking/portfolio/v1/getAllHolding',
-                // //    url: 'https://apiconnect.angelbroking.com/rest/secure/angelbroking/order/v1/getPosition',
-                //     headers: {
-                //         'Authorization': `Bearer ${authToken}`,
-                //         'Content-Type': 'application/json',
-                //         'Accept': 'application/json',
-                //         'X-UserType': 'USER',
-                //         'X-SourceID': 'WEB',
-                //         'X-ClientLocalIP': 'CLIENT_LOCAL_IP',
-                //         'X-ClientPublicIP': 'CLIENT_PUBLIC_IP',
-                //         'X-MACAddress': 'MAC_ADDRESS',
-                //         'X-PrivateKey': client.apikey
-                //     },
-                // };
+               
 
 
 
