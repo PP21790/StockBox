@@ -766,13 +766,12 @@ async PlanExipreListWithFilter(req, res) {
 }
 
 
-
-
 async Notification(req, res) {
   try {
    
     const result = await Adminnotification_Modal.find({})
     .sort({ createdAt: -1 })
+    .limit(20)
     .lean();
 
       return res.json({
@@ -784,6 +783,39 @@ async Notification(req, res) {
     } catch (error) {
       return res.json({ status: false, message: "Server error", data: [] });
     }
+}
+
+async NotificationList(req, res) {
+  try {
+    // Extract page and limit from query parameters with default values
+    const page = parseInt(req.query.page) || 1; // Default to page 1
+    const limit = 5; // Default to 10 items per page
+    const skip = (page - 1) * limit; // Calculate the number of documents to skip
+
+    const result = await Adminnotification_Modal.find({})
+      .sort({ createdAt: -1 })
+      .skip(skip) // Skip the required number of documents
+      .limit(limit) // Limit the number of documents
+      .lean();
+
+    // Get total count for pagination metadata
+    const totalCount = await Adminnotification_Modal.countDocuments({});
+    const totalPages = Math.ceil(totalCount / limit);
+
+    return res.json({
+      status: true,
+      message: "get",
+      data: result,
+      pagination: {
+        currentPage: page,
+        totalPages: totalPages,
+        totalItems: totalCount,
+      },
+    });
+
+  } catch (error) {
+    return res.json({ status: false, message: "Server error", data: [] });
+  }
 }
 
 
