@@ -691,7 +691,7 @@ const Client = () => {
                                             className="bx bxs-trash"
                                             aria-hidden="true"
                                         />
-                                        Deleted Client
+                                        Deleted Client 
                                     </Link>
                                 </div>
 

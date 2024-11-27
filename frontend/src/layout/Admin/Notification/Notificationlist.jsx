@@ -33,8 +33,13 @@ const Notificationlist = () => {
             };
             const response = await getAllNotificationlist(token, data);
             if (response?.status) {
-                setClients(response.data);
                 setTotalRows(response.pagination.total);
+                const filterdata = response.data.filter((item) =>
+                    searchInput === "" ||
+                    item.title.toLowerCase().includes(searchInput.toLowerCase()) ||
+                    item.message.toLowerCase().includes(searchInput.toLowerCase()) 
+                );
+                setClients(searchInput ? filterdata : response.data);
             }
         } catch (error) {
             console.error('Error fetching client data:', error);
@@ -95,7 +100,7 @@ const Notificationlist = () => {
             <div className="card">
                 <div className="card-body">
                     <div className="d-lg-flex align-items-center mb-4 gap-3">
-                        {/* <div className="position-relative">
+                        <div className="position-relative">
                             <input
                                 type="text"
                                 className="form-control ps-5 radius-10"
@@ -106,7 +111,7 @@ const Notificationlist = () => {
                             <span className="position-absolute top-50 product-show translate-middle-y">
                                 <i className="bx bx-search" />
                             </span>
-                        </div> */}
+                        </div>
 
 
                         {/* <div

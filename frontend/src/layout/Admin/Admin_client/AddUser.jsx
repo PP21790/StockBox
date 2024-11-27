@@ -7,6 +7,8 @@ import { AddClient } from '../../../Services/Admin';
 
 
 const AddUser = () => {
+
+  
   const navigate = useNavigate();
 
   const user_id = localStorage.getItem("id");

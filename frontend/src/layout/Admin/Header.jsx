@@ -293,7 +293,7 @@ const Header = () => {
                   <div className="dropdown-menu dropdown-menu-end">
                     <div className="msg-header">
                       <p className="msg-header-title">Notifications</p>
-                      <p className="msg-header-badge">{clients.length} New</p>
+                      <p className="msg-header-badge">{clients.filter(notification => notification.status === 0).length} New</p>
                     </div>
                     <div className="header-notifications-list" style={{ overflowY: "scroll", maxHeight: "300px" }}>
                       {clients.length > 0 ? (
@@ -327,7 +327,7 @@ const Header = () => {
                                   className="msg-info text-truncate"
                                   title={notification.message}
                                   style={{
-                                    fontWeight: notification.status === 0 ? "bold" : "normal", // Additional emphasis for unread
+                                    fontWeight: notification.status === 0 ? "bold" : "normal", 
                                   }}
                                 >
                                   {notification.message}

@@ -16,18 +16,19 @@ import Table from '../../../components/Table1';
 
 
 const ClientDeleteHistory = () => {
-    
+
     useEffect(() => {
-        
+
         getcategoryplanlist()
     }, []);
 
 
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
-    
+
     const location = useLocation();
     const clientStatus = location?.state?.clientStatus;
+
 
 
 
@@ -48,11 +49,11 @@ const ClientDeleteHistory = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
 
+
+
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };
-
-
 
     const [basketdetail, setBasketdetail] = useState({
         plan_id: "",
@@ -61,15 +62,11 @@ const ClientDeleteHistory = () => {
         discount: ""
     });
 
-
-
     const [updatetitle, setUpdatetitle] = useState({
         plan_id: "",
         client_id: "",
         price: ""
     });
-
-
 
 
 
@@ -81,9 +78,6 @@ const ClientDeleteHistory = () => {
 
 
     }
-
-
-
 
 
     useEffect(() => {
@@ -158,7 +152,7 @@ const ClientDeleteHistory = () => {
                 createdby: statuscreatedby,
                 search: searchInput,
                 planStatus: expired === "active" ? "active" : expired === "expired" ? "expired" : clientStatus === "active" ? "active" : clientStatus === "expired" ? "expired" : "",
-                add_by:""
+                add_by: ""
 
             };
             const response = await DeleteClientHistory(data, token);
@@ -263,7 +257,7 @@ const ClientDeleteHistory = () => {
             ),
             sortable: true,
             width: '200px',
-        } ,
+        },
         {
             name: 'Created By',
             selector: row => row.addedByDetails?.FullName ?? (row.clientcome === 1 ? "WEB" : "APP"),
@@ -298,10 +292,10 @@ const ClientDeleteHistory = () => {
         //     sortable: true,
         //     width: '165px',
         // },
-        
+
         {
-            name: 'CreatedAt',
-            selector: row => fDateTime(row.createdAt),
+            name: 'Deleted Date',
+            selector: row => fDateTime(row.updatedAt),
             sortable: true,
             width: '200px',
         },
@@ -343,7 +337,7 @@ const ClientDeleteHistory = () => {
             <div>
                 <div className="page-content">
 
-                    <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+                    <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3 w-100">
                         <div className="breadcrumb-title pe-3">Client Delete History</div>
                         <div className="ps-3">
                             <nav aria-label="breadcrumb">
@@ -356,7 +350,15 @@ const ClientDeleteHistory = () => {
                                 </ol>
                             </nav>
                         </div>
+                        <div className="col-md-9 d-flex justify-content-end ">
+                            <Link to="/admin/client">
+                                <Tooltip title="Back">
+                                    <i className="lni lni-arrow-left-circle" style={{ fontSize: "2rem" }} />
+                                </Tooltip>
+                            </Link>
+                        </div>
                     </div>
+
                     <hr />
 
                     <div className="card">
