@@ -401,7 +401,6 @@ const Signal = () => {
                 }
             }
 
-            // Data preparation based on index
             const data = {
                 id: serviceid._id,
                 closestatus: index === 1 ? checkstatus : "",
@@ -436,8 +435,8 @@ const Signal = () => {
                     closeprice: "", close_description: "", targetprice1: "", targetprice2: "", targetprice3: "",
                     targethit1: "", targethit2: "", targethit3: ""
                 });
-                getAllSignal();
                 setModel(!model);
+                getAllSignal();
             } else {
                 Swal.fire({
                     title: 'Error!',
