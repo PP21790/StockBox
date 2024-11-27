@@ -5764,3 +5764,13 @@ ul li {
 	position: relative;
 	left: 199px;
 }
+.notification.bg-dark
+{
+background-color: #f1f1f1 !important;
+}
+  
+  
+.notification.dropdown-item.active, .notification.dropdown-item:active {
+    background-color: transparent !important;
+}
+  

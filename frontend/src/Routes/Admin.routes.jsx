@@ -74,6 +74,7 @@ import Updatebankdetail from '../layout/Admin/BasicSetting/BankDetaildata/Update
 import QRDetails from '../layout/Admin/BasicSetting/QRDetails/QRDetails';
 import ClientDeleteHistory from '../layout/Admin/Admin_client/ClientDeleteHistory';
 import Planexpirymonth from '../layout/Admin/PlanExpiryMonth/Planexpirymonth';
+import Notificationlist from '../layout/Admin/Notification/Notificationlist';
 
 
 
@@ -233,6 +234,7 @@ function MainApp() {
 
                     <Route path="/planexpiry" element={<Planexpiry />} />
                     <Route path="/planexpirymonth" element={<Planexpirymonth />} />
+                    <Route path="/notificationlist" element={<Notificationlist/>} />
                 
                      
 

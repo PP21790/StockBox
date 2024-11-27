@@ -101,7 +101,7 @@ const Header = () => {
         } else if (notification.type === "plan purchase") {
           navigate("/admin/paymenthistory")
           getdemoclient()
-        }else if (notification.type === "plan expire") {
+        } else if (notification.type === "plan expire") {
           navigate("/admin/planexpiry")
           getdemoclient()
         } else {
@@ -132,8 +132,7 @@ const Header = () => {
     try {
       const response = await getDashboardNotification(token);
       if (response.status) {
-        const filterdata = response.data.filter((item) => item.status == 0);
-        setClients(filterdata);
+        setClients(response.data);
       } else {
 
       }
@@ -284,7 +283,11 @@ const Header = () => {
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
                   >
-                    {clients.length ? <span className="alert-count">{clients.length}</span> : ""}
+                    {clients.filter(notification => notification.status === 0).length ? (
+                      <span className="alert-count">
+                        {clients.filter(notification => notification.status === 0).length}
+                      </span>
+                    ) : ""}
                     <i className="bx bx-bell" />
                   </a>
                   <div className="dropdown-menu dropdown-menu-end">
@@ -292,44 +295,72 @@ const Header = () => {
                       <p className="msg-header-title">Notifications</p>
                       <p className="msg-header-badge">{clients.length} New</p>
                     </div>
-                    <div className="header-notifications-list" style={{ overflowY: "scroll " }}>
-                      {clients.length > 0 ?  clients.map((notification, index) => (
-                        <a
-                          key={index}
-                          className="dropdown-item"
-                          onClick={(event) => handleNotificationClick(event, notification)}
-                        >
-                          <div className="d-flex align-items-center">
-                            <div className="flex-grow-1">
-                              <h6 className="msg-name">
-                                {notification?.title}
-                                <span className="msg-time float-end">
-                                  {notification.createdAt
-                                    ? formatDistanceToNow(new Date(notification.createdAt), {
-                                      addSuffix: true,
-                                    })
-                                    : "Empty Message"}
-                                </span>
-                              </h6>
-                              <p
-                                className="msg-info text-truncate"
-                                title={notification.message}
-                              >
-                                {notification.message}
-                              </p>
+                    <div className="header-notifications-list" style={{ overflowY: "scroll", maxHeight: "300px" }}>
+                      {clients.length > 0 ? (
+                        clients.map((notification, index) => (
+                          <a
+                            key={index}
+                            className={`dropdown-item notification ${notification.status === 1
+                                ? " text-info font-bold" 
+                                : " text-muted bg-dark"       
+                              } `}
+                            onClick={(event) => handleNotificationClick(event, notification)}
+                          >
+                            <div className="d-flex align-items-center">
+                              <div className="flex-grow-1">
+                                <h6 className={` msg-name  ${notification.status === 1
+                                ? "  font-bold" 
+                                : " text-muted" 
+                                      
+                              } `}>
+                                  
+                                  {notification?.title}
+                                  <span className="msg-time float-end">
+                                    {notification.createdAt
+                                      ? formatDistanceToNow(new Date(notification.createdAt), {
+                                        addSuffix: true,
+                                      })
+                                      : "Empty Message"}
+                                  </span>
+                                </h6>
+                                <p
+                                  className="msg-info text-truncate"
+                                  title={notification.message}
+                                  style={{
+                                    fontWeight: notification.status === 0 ? "bold" : "normal", // Additional emphasis for unread
+                                  }}
+                                >
+                                  {notification.message}
+                                </p>
+                              </div>
                             </div>
-                          </div>
-                        </a>
-                      )): <span style={{display:"flex", justifyContent:"center" , alignItems:"center",marginTop:"50px"}}><h4>Empty Message</h4></span>}
+                          </a>
+
+                        ))
+                      ) : (
+                        <span
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            height: "100%",
+                            color: "#6c757d",
+                          }}
+                        >
+                          <h4>No Notifications</h4>
+                        </span>
+                      )}
                     </div>
 
                     <div className="text-center msg-footer">
-                      {/* <Link to="/admin/help">
+                      <Link to="">
                         <button className="btn btn-primary w-100">View All Notifications</button>
-                      </Link> */}
+                      </Link>
                     </div>
                   </div>
                 </li>
+
+
               </ul>
             </div>
             <div className="user-box dropdown px-3">

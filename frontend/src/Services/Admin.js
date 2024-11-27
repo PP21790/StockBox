@@ -2878,3 +2878,26 @@ export async function getExpiryByMonth(token) {
         return err.response?.data || err.message;
     }
 }
+
+
+
+// get all notification list 
+
+
+export async function getAllNotificationlist(token ,_id) {
+  
+    try {
+        const res = await axios.get(`${Config.base_url}dashboard/notificationlist/${_id}`, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
