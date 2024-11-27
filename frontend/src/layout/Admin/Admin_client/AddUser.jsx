@@ -8,7 +8,7 @@ import { AddClient } from '../../../Services/Admin';
 
 const AddUser = () => {
 
-  
+
   const navigate = useNavigate();
 
   const user_id = localStorage.getItem("id");
@@ -98,6 +98,9 @@ const AddUser = () => {
     onSubmit,
   });
 
+
+
+
   const fields = [
     {
       name: "FullName",
@@ -147,6 +150,9 @@ const AddUser = () => {
     },
   ];
 
+
+
+  
   return (
     <div style={{ marginTop: "100px" }}>
       <DynamicForm

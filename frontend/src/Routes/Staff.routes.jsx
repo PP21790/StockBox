@@ -56,6 +56,7 @@ import Changepass from '../Auth/Changepass';
 import Planexpiry from '../layout/Staff/PlanExpiry/Planexpiry';
 import Perform from '../layout/Staff/Perform/Perfom';
 import History from '../layout/Staff/Payment_history/Paymenthistory';
+import Planexpirymonth from '../layout/Staff/PlanExpiryMonth/Planexpirymonth';
 
 
 
@@ -199,7 +200,7 @@ function Staffrouting() {
 
                     <Route path="/paymentrequest" element={<PaymentRequest />} />
                     <Route path="/changepass" element={<Changepass />} />
-
+                    <Route path="/planexpirymonth" element={<Planexpirymonth />} />
 
 
 

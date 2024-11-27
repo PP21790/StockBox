@@ -19,7 +19,7 @@ const Client = () => {
 
 
 
-    
+
     useEffect(() => {
         getbasketlist()
         getcategoryplanlist()
@@ -27,7 +27,7 @@ const Client = () => {
 
 
 
-    
+
     const location = useLocation();
     const clientStatus = location?.state?.clientStatus;
 
@@ -76,12 +76,12 @@ const Client = () => {
     }, [clientStatus, clients])
 
 
-   
+
     const handleDownload = (row) => {
         const url = `${image_baseurl}uploads/pdf/${row.pdf}`;
         const link = document.createElement('a');
         link.href = url;
-        link.target = '_blank'; 
+        link.target = '_blank';
 
         document.body.appendChild(link);
         link.click();
@@ -110,7 +110,6 @@ const Client = () => {
     const handleTabChange = (index) => {
         setCheckedIndex(index);
     };
-
 
 
     const showModal = () => {
@@ -232,7 +231,7 @@ const Client = () => {
         }
     };
 
-   
+
 
     const getplanlistassinstatus = async (_id) => {
         try {
@@ -358,7 +357,7 @@ const Client = () => {
             getAdminclient();
         }
     };
-    
+
 
 
 
@@ -691,7 +690,7 @@ const Client = () => {
                                             className="bx bxs-trash"
                                             aria-hidden="true"
                                         />
-                                        Deleted Client 
+                                        Deleted Client
                                     </Link>
                                 </div>
 
@@ -897,7 +896,7 @@ const Client = () => {
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Validity:</strong>
                                                                                                     <span>{item.validity}</span>
-                                                                                                    {console.log("item", item)}
+
                                                                                                 </div>
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Created At:</strong>

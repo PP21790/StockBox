@@ -4,7 +4,7 @@ import axios from 'axios';
 import Table from '../../../components/Table1';
 import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { FreeClientList, FreeClientListWithFilter, PlanSubscription, DeleteFreeClient, getcategoryplan, getplanlist } from '../../../Services/Admin';
+import { FreeClientList, FreeClientListWithFilter, PlanSubscription, DeleteFreeClient, getcategoryplan, getplanlist, getPlanbyUser } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
 import { image_baseurl } from '../../../Utils/config';
 import { fDate, fDateTime } from '../../../Utils/Date_formate';
@@ -15,10 +15,10 @@ import { exportToCSV } from '../../../Utils/ExportData';
 const Freeclient = () => {
 
 
-    
+
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
-     
+
 
     const location = useLocation()
     const clientStatus = location?.state?.clientStatus;
@@ -35,7 +35,7 @@ const Freeclient = () => {
     const [ForGetCSV, setForGetCSV] = useState([])
     const [searchInput, setSearchInput] = useState("");
     const [header, setheader] = useState("Free Trial Client");
-    
+
 
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
@@ -49,14 +49,14 @@ const Freeclient = () => {
         client_id: "",
         price: ""
     });
-   
+
 
     useEffect(() => {
         if (clientStatus == "active") {
             setheader("Free Trial Active Client")
         } else if (clientStatus == "expired") {
             setheader("Free  Trial Deactive Client")
-        } 
+        }
     }, [clientStatus, clients])
 
 
@@ -64,7 +64,6 @@ const Freeclient = () => {
     useEffect(() => {
         getdemoclient();
         getcategoryplanlist()
-        getplanlistbyadmin()
     }, []);
 
 
@@ -75,7 +74,7 @@ const Freeclient = () => {
 
     const getdemoclient = async () => {
         try {
-            const data = { page: currentPage, search: searchInput , freestatus : clientStatus || ""}
+            const data = { page: currentPage, search: searchInput, freestatus: clientStatus || "" }
             const response = await FreeClientListWithFilter(data, token);
             if (response.status) {
                 setTotalRows(response.pagination.total)
@@ -87,16 +86,16 @@ const Freeclient = () => {
         }
     }
 
-   
+
 
     const getexportfile = async () => {
         try {
-          
+
             const response = await FreeClientList(token);
             if (response.status) {
                 if (response.data?.length > 0) {
                     const csvArr = response.data?.map((item) => ({
-        
+
                         FullName: item.clientDetails?.FullName || '-',
                         Email: item.clientDetails?.Email || '-',
                         PhoneNo: item?.clientDetails?.PhoneNo || '-',
@@ -104,10 +103,10 @@ const Freeclient = () => {
                         Status: item?.status === "active" ? "Active" : "Expired",
                         StartDate: fDateTime(item?.startdate) || '-',
                         EndDate: fDateTime(item?.enddate) || '-',
-        
+
                     }));
                     exportToCSV(csvArr, 'All Free Clients')
-                   
+
                 }
             }
         } catch (error) {
@@ -117,9 +116,10 @@ const Freeclient = () => {
 
 
 
-    const getplanlistbyadmin = async () => {
+    const getplanlistassinstatus = async (_id) => {
         try {
-            const response = await getplanlist(token);
+
+            const response = await getPlanbyUser(_id, token);
             if (response.status) {
                 setPlanlist(response.data);
             }
@@ -127,6 +127,18 @@ const Freeclient = () => {
             console.log("error");
         }
     }
+
+
+    // const getplanlistbyadmin = async () => {
+    //     try {
+    //         const response = await getplanlist(token);
+    //         if (response.status) {
+    //             setPlanlist(response.data);
+    //         }
+    //     } catch (error) {
+    //         console.log("error");
+    //     }
+    // }
 
 
     const getcategoryplanlist = async () => {
@@ -151,7 +163,7 @@ const Freeclient = () => {
         setIsModalVisible(true);
     };
 
-    
+
     const handleCancel = () => {
         setIsModalVisible(false);
         setSelectcategory("")
@@ -424,7 +436,7 @@ const Freeclient = () => {
 
                     </Tooltip> */}
                     <Tooltip placement="top" overlay="Package Assign">
-                        <span onClick={(e) => { showModal(true); setClientid(row); }} style={{ cursor: 'pointer' }}>
+                        <span onClick={(e) => { showModal(true); setClientid(row); getplanlistassinstatus(row._id) }} style={{ cursor: 'pointer' }}>
                             <Settings2 />
                         </span>
                     </Tooltip>
@@ -444,6 +456,9 @@ const Freeclient = () => {
             width: '165px',
         }
     ];
+
+
+
 
     return (
         <div>
@@ -482,23 +497,23 @@ const Freeclient = () => {
                                     </div>
 
                                     <div
-                                    className="ms-2"
-                                    onClick={(e) => getexportfile()}
-                                >
-                                    <button
-                                        type="button"
-                                        className="btn btn-primary float-end"
-                                        data-toggle="tooltip"
-                                        data-placement="top"
-                                        title="Export To Excel"
-                                        delay={{ show: "0", hide: "100" }}
-
+                                        className="ms-2"
+                                        onClick={(e) => getexportfile()}
                                     >
-                                        <i className="bx bxs-download" aria-hidden="true"></i>
+                                        <button
+                                            type="button"
+                                            className="btn btn-primary float-end"
+                                            data-toggle="tooltip"
+                                            data-placement="top"
+                                            title="Export To Excel"
+                                            delay={{ show: "0", hide: "100" }}
 
-                                        Export-Excel
-                                    </button>
-                                  </div>
+                                        >
+                                            <i className="bx bxs-download" aria-hidden="true"></i>
+
+                                            Export-Excel
+                                        </button>
+                                    </div>
 
 
 
@@ -560,7 +575,7 @@ const Freeclient = () => {
                                             <>
                                                 <div className='row mt-3'>
                                                     {category && category
-                                                        .filter(cat => planlist.some(plan => plan.category === cat._id))
+                                                        .filter(cat => planlist.some(plan => plan.category._id === cat._id))
                                                         .map((item, index) => (
                                                             <div className='col-lg-4' key={index}>
                                                                 <input
@@ -571,8 +586,10 @@ const Freeclient = () => {
                                                                     id={`proplus-${index}`}
                                                                     onClick={() => handleCategoryChange(item._id)}
                                                                 />
-                                                                <label className="form-check-label" htmlFor={`proplus-${index}`}>
-                                                                    {item.title}
+                                                                <label className="form-check-label" htmlFor={`proplus-${index}`} style={{ fontSize: "12px" }}>
+                                                                    {item.title} (
+                                                                    {item.servicesDetails.map((service) => service.title).join(", ")}
+                                                                    )
                                                                 </label>
                                                             </div>
                                                         ))}
@@ -582,7 +599,7 @@ const Freeclient = () => {
                                                     <form className='card-body mt-3' style={{ height: "40vh", overflowY: "scroll" }} >
                                                         <div className="row">
                                                             {planlist
-                                                                .filter(item => item.category === selectcategory)
+                                                                .filter(item => item.category._id === selectcategory)
                                                                 .map((item, index) => (
                                                                     <div className="col-md-6" key={index}>
                                                                         <div className="card mb-0 my-2">
@@ -601,7 +618,8 @@ const Freeclient = () => {
                                                                                         }}
                                                                                     />
                                                                                     <label className="form-check-label mx-1" style={{ fontSize: "13px", fontWeight: "800" }} htmlFor={`input-plan-${index}`}>
-                                                                                        {item.title}
+                                                                                        {item.validity}
+
                                                                                     </label>
                                                                                 </h5>
 
@@ -616,7 +634,12 @@ const Freeclient = () => {
                                                                                                 aria-expanded={selectedPlanId === item._id}
                                                                                                 aria-controls={`collapse-${item._id}`}
                                                                                             >
-                                                                                                <strong className="text-secondary">Validity: {item.validity}</strong>
+                                                                                                <div className='d-flex justify-content-between'>
+                                                                                                    <div>
+                                                                                                        <strong className="text-secondary m-2">Detail</strong>
+                                                                                                        <strong className="text-success m-2 activestrong">{item?.subscription?.status === "active" ? "Active" : ""}</strong>
+                                                                                                    </div>
+                                                                                                </div>
                                                                                             </button>
                                                                                         </h2>
                                                                                         <div
@@ -628,11 +651,14 @@ const Freeclient = () => {
                                                                                             <div className="accordion-body">
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Price:</strong>
-                                                                                                    <span><IndianRupee /> {item.price}</span>
+                                                                                                    <span><IndianRupee /> {item.price && item.price}</span>
+
+
                                                                                                 </div>
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Validity:</strong>
                                                                                                     <span>{item.validity}</span>
+                                                                                                   
                                                                                                 </div>
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Created At:</strong>

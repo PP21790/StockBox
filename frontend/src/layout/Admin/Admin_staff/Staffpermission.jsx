@@ -300,7 +300,7 @@ const Staffpermission = () => {
         if (formik.values.userPermissions == true ) {
             formik.setFieldValue('addclient', true);
             formik.setFieldValue('viewclient', true);
-            // formik.setFieldValue('Ownclient', true);
+            formik.setFieldValue('Ownclient', false);
             formik.setFieldValue('viewdetail', true);
             formik.setFieldValue('editclient', true);
             // formik.setFieldValue('deleteclient', true);
@@ -319,6 +319,9 @@ const Staffpermission = () => {
         }
 
     }, [formik.values.userPermissions])
+
+   
+
    
 
     useEffect(() => {
@@ -333,7 +336,7 @@ const Staffpermission = () => {
     useEffect(() => {
         if (formik.values.Signalpermission == true) {
             formik.setFieldValue('signalstatus', true);
-            // formik.setFieldValue('ownsignal', true);
+            formik.setFieldValue('ownsignal', false);
             formik.setFieldValue('viewsignal', true);
             formik.setFieldValue('signaldetail', true);
             formik.setFieldValue('addsignal', true);
