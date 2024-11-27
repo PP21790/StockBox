@@ -101,6 +101,9 @@ const Header = () => {
         } else if (notification.type === "plan purchase") {
           navigate("/admin/paymenthistory")
           getdemoclient()
+        }else if (notification.type === "plan expire") {
+          navigate("/admin/planexpiry")
+          getdemoclient()
         } else {
           navigate("/admin/client")
           getdemoclient()
