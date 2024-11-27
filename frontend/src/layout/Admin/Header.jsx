@@ -353,7 +353,7 @@ const Header = () => {
                     </div>
 
                     <div className="text-center msg-footer">
-                      <Link to="">
+                      <Link to="/admin/notificationlist">
                         <button className="btn btn-primary w-100">View All Notifications</button>
                       </Link>
                     </div>

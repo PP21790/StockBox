@@ -209,6 +209,11 @@ const ClientDeleteHistory = () => {
             width: '350px',
         },
         {
+            name: 'Phone No',
+            selector: row => row.PhoneNo,
+            sortable: true,
+        },
+        {
             name: 'Plan Status',
             cell: row => {
                 const hasActive = row?.plansStatus?.some(item => item.status === 'active');
@@ -258,16 +263,7 @@ const ClientDeleteHistory = () => {
             ),
             sortable: true,
             width: '200px',
-        }
-
-        ,
-        {
-            name: 'Phone No',
-            selector: row => row.PhoneNo,
-            sortable: true,
-        },
-
-
+        } ,
         {
             name: 'Created By',
             selector: row => row.addedByDetails?.FullName ?? (row.clientcome === 1 ? "WEB" : "APP"),

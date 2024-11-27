@@ -196,7 +196,7 @@ const Dashbord = () => {
                                         />
                                     </div>
                                     <div className="d-flex align-items-center text-white">
-                                        <p className="mb-0">Month Expiry</p>
+                                        <p className="mb-0">Current Month Active License</p>
                                         <p className="mb-0 ms-auto">
                                             <span>
                                                 <i className="bx bx-up-arrow-alt text-white" />

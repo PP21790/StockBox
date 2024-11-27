@@ -4,24 +4,19 @@ import { RefreshCcw } from 'lucide-react';
 import Table from '../../../components/Table1';
 import { exportToCSV } from '../../../Utils/ExportData';
 import { getAllNotificationlist } from '../../../Services/Admin';
-import { fDateTime} from '../../../Utils/Date_formate';
+import { fDateTime } from '../../../Utils/Date_formate';
 
 
 
 const Notificationlist = () => {
-    
+
 
     const token = localStorage.getItem('token');
-    
+
     const [searchInput, setSearchInput] = useState('');
-    const [searchStock, setSearchStock] = useState('');
     const [clients, setClients] = useState([]);
-    const [serviceList, setServiceList] = useState([]);
-    const [ForGetCSV, setForGetCSV] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
-    const [startDate, setStartDate] = useState('');
-    const [endDate, setEndDate] = useState('');
 
 
 
@@ -29,17 +24,16 @@ const Notificationlist = () => {
         setCurrentPage(page);
     };
 
-    
+
 
     const getClientData = async () => {
         try {
             const data = {
-                page: currentPage 
+                page: currentPage
             };
-            const response = await getAllNotificationlist(token,data);
+            const response = await getAllNotificationlist(token, data);
             if (response?.status) {
                 setClients(response.data);
-                console.log("response.data",response.data)
                 setTotalRows(response.pagination.total);
             }
         } catch (error) {
@@ -51,7 +45,7 @@ const Notificationlist = () => {
 
     useEffect(() => {
         getClientData();
-    }, [searchInput,currentPage]);
+    }, [searchInput, currentPage]);
 
 
 
@@ -64,38 +58,28 @@ const Notificationlist = () => {
             width: '100px',
         },
         {
-            name: 'Full Name',
-            selector: (row) => row.clientFullName,
-            sortable: true, width: '200px'
+            name: 'Title',
+            selector: (row) => row.title,
+            sortable: true,
+            width: '200px',
+
         },
         {
-            name: 'Email',
-            selector: (row) => row.clientEmail,
-            sortable: true, width: '300px'
+            name: 'Message',
+            selector: (row) => row.message,
+            sortable: true,
+            width: '500px',
+
         },
         {
-            name: 'Mobile',
-            selector: (row) => row.clientMobile,
-            sortable: true, width: '200px'
-        },
-        {
-            name: 'Segment',
-            selector: (row) => row.serviceTitle,
-            sortable: true, width: '200px'
-        },
-        {
-            name: 'Start Date',
-            selector: (row) => fDateTime(row.startdate),
-            sortable: true, width: '200px'
-        },
-        {
-            name: 'End Date',
-            selector: (row) => fDateTime(row.enddate),
-            sortable: true, width: '200px'
+            name: 'Date',
+            selector: (row) => fDateTime(row.createdAt),
+            sortable: true,
+            width: '200px'
         },
     ];
 
-    
+
 
     return (
         <div className="page-content">
@@ -111,18 +95,18 @@ const Notificationlist = () => {
             <div className="card">
                 <div className="card-body">
                     <div className="d-lg-flex align-items-center mb-4 gap-3">
-                        <div className="position-relative">
+                        {/* <div className="position-relative">
                             <input
                                 type="text"
                                 className="form-control ps-5 radius-10"
-                                placeholder="Search Client"
+                                placeholder="Search notification"
                                 value={searchInput}
                                 onChange={(e) => setSearchInput(e.target.value)}
                             />
                             <span className="position-absolute top-50 product-show translate-middle-y">
                                 <i className="bx bx-search" />
                             </span>
-                        </div>
+                        </div> */}
 
 
                         {/* <div

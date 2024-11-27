@@ -2884,10 +2884,10 @@ export async function getExpiryByMonth(token) {
 // get all notification list 
 
 
-export async function getAllNotificationlist(token ,_id) {
+export async function getAllNotificationlist(token ,page) {
   
     try {
-        const res = await axios.get(`${Config.base_url}dashboard/notificationlist/${_id}`, {
+        const res = await axios.get(`${Config.base_url}dashboard/notificationlist/${page}`, {
             headers: {
                 data: {},
                 'Authorization': `${token}`,

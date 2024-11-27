@@ -39,7 +39,13 @@ const Planexpirymonth = () => {
 
     const columns = [
         {
-            name: 'Client',
+            name: 'S.No',
+            selector: (row, index) =>  index + 1,
+            sortable: false,
+            width: '200px',
+        },
+        {
+            name: 'No Of License',
             selector: row => row.noofclient,
             sortable: true,
             width: '300px',
@@ -50,12 +56,12 @@ const Planexpirymonth = () => {
             sortable: true,
             width: '300px',
         },
-        {
-            name: 'Created_At',
-            selector: row => fDateTime(row.created_at),
-            sortable: true,
-            width: '300px',
-        },
+        // {
+        //     name: 'Created_At',
+        //     selector: row => fDateTime(row.created_at),
+        //     sortable: true,
+        //     width: '300px',
+        // },
 
         // {
         //     name: 'Purchase Date',
