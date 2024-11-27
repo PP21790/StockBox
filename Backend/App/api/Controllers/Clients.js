@@ -1556,6 +1556,7 @@ async orderList(req, res) {
           borkerid:1,
           data:1,
           signalid: 1,
+          ordertype: 1,
           signalDetails: 1, // Include all fields from the signalDetails object
           createdAt: 1
         }
@@ -1625,6 +1626,7 @@ async orderListDetail(req, res) {
           quantity: 1,
           status: 1,
           borkerid:1,
+          ordertype:1,
           data:1,
           signalDetails: 1, // Include all fields from the signalDetails object
           createdAt: 1
