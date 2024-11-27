@@ -74,7 +74,7 @@ class BasicSetting {
                     smtp_password,
                     from_mail:smtp_username,
                     from_name,
-                    to_mail:smtp_username,
+                    to_mail,
                     refer_title,
                     refer_description,
                     refer_image,
