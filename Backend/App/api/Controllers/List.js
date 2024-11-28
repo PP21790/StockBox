@@ -1107,7 +1107,7 @@ async applyCoupon (req, res) {
 
 
   try {
-      const { code, purchaseValue } = req.body;
+      const { code, purchaseValue,planid } = req.body;
       // Find the coupon by code
       const coupon = await Coupon_Modal.findOne({ code, status: 'true', del: false });
       if (!coupon) {
@@ -1144,11 +1144,13 @@ async applyCoupon (req, res) {
       return res.status(400).json({ message: 'Coupon usage limit has been reached' });
     }
 
+    const plan = await Plan_Modal.findById(planid)
+    .exec();
 
-
-    // if (!coupon.service) {
-    //   return res.status(404).json({ message: 'Coupon not found or is inactive' });
-    // }
+    if (!coupon.service) {
+      if(plan)
+      return res.status(404).json({ message: 'Coupon not found or is inactive' });
+    }
 
       // Ensure the discount does not exceed the minimum coupon value
 
