@@ -10,7 +10,7 @@ if (!admin.apps.length) {
   console.log('Firebase Admin SDK initialized.');
 }
 
-async function sendFCMNotification(title, body, tokens) {
+async function sendFCMNotification(title, body, tokens, type="") {
   try {
 
    const tokenss = [...new Set(tokens)];
@@ -23,6 +23,7 @@ async function sendFCMNotification(title, body, tokens) {
       },
       data: {
         additional_data: 'value',
+        type: type, 
       },
     }));
 

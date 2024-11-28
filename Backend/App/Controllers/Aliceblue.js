@@ -407,7 +407,6 @@ class Aliceblue {
                   "trading_symbol": stock.tradesymbol,
                   "transtype": calltypes,
                   "trigPrice": "00.00",
-                  "complexty":"",
                   "deviceNumber": "",
                   "orderTag": "order1"
                 }
