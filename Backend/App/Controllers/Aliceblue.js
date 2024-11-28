@@ -262,9 +262,11 @@ class Aliceblue {
 
 
     async ExitplaceOrder(req, res) {
+
         try {
             const { id, signalid, quantity, price } = req.body;
-    
+           
+
             const client = await Clients_Modal.findById(id);
             if (!client) {
                 return res.status(404).json({
@@ -357,12 +359,14 @@ class Aliceblue {
             let totalValue = 0;  // Declare totalValue outside the blocks
             try {
                 positionData = await CheckPosition(userId, authToken, stock.segment, stock.instrument_token, producttype, signal.calltype, stock.tradesymbol);
+              
             } catch (error) {
             }
 
             if (stock.segment === "C") {
                 try {
                     holdingData = await CheckHolding(userId, authToken, stock.segment, stock.instrument_token, producttype, signal.calltype);
+                 
                 } catch (error) {
                 }
 
@@ -375,6 +379,7 @@ class Aliceblue {
             {
                   totalValue = Math.abs(positionData.qty)
             }
+
 
             let calltypes;
                 if(signal.calltype === 'BUY')
@@ -401,11 +406,11 @@ class Aliceblue {
                   "symbol_id": stock.instrument_token,
                   "trading_symbol": stock.tradesymbol,
                   "transtype": calltypes,
+                  "complexty":"REGULAR",
                   "trigPrice": "00.00",
                   "orderTag": "order1"
                 }
               ]);
-
 
 
                 let config = {
@@ -421,7 +426,7 @@ class Aliceblue {
 
                 axios(config)
                 .then(async (response) => {
-                  
+                  console.log("response",response);
                     const responseData = response.data;
     
     
