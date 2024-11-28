@@ -83,12 +83,19 @@ const Addcoupon = () => {
         if (values.mincouponvalue && !values.mincouponvalue) {
             errors.mincouponvalue = "Please Enter Min Coupon Value";
         }
+        if (values.limitation && !values.limitation) {
+            errors.limitation = "Please Enter Limit";
+        }
+        // if (values.service && !values.service) {
+        //     errors.service = "Please Enter Service";
+        // }
 
         return errors;
     };
 
 
     const onSubmit = async (values) => {
+        console.log("values",values)
         const req = {
             name: values.name,
             code: values.code,
@@ -100,11 +107,17 @@ const Addcoupon = () => {
             mincouponvalue: values.mincouponvalue,
             description: values.description,
             image: values.image,
+            limitation:values.limitation,
+            service:values.service,
             add_by: user_id,
         };
-
+       
         try {
             const response = await Addcouponbyadmin(req, token);
+        console.log("req",req)
+              
+
+
             if (response.status) {
 
                 Swal.fire({
@@ -149,6 +162,8 @@ const Addcoupon = () => {
             mincouponvalue: '',
             description: '',
             image: '',
+            limitation: '',
+            service: 0,
             add_by: ''
         },
         validate,
@@ -228,7 +243,7 @@ const Addcoupon = () => {
             star:true,
             showWhen: (values) => values.type === "percentage"
         }, {
-            name: "limit",
+            name: "limitation",
             label: "Set Limit",
             type: "number",
             label_size: 12,

@@ -96,7 +96,7 @@ const AddUser = () => {
       PhoneNo: "",
       password: "",
       ConfirmPassword: "",
-      freetrial: "",
+      freetrial: 0,
       add_by: "",
     },
     validate,
