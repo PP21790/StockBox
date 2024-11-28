@@ -13,14 +13,14 @@ const ReferAndEarn = () => {
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
     const [clients, setClients] = useState(null);
-    const [isChanged, setIsChanged] = useState(false);  
+    const [isChanged, setIsChanged] = useState(false);
 
 
 
     const getsettinglist = async () => {
         try {
             const response = await basicsettinglist(token);
-        
+
             if (response.status) {
 
                 setClients(response.data);
@@ -100,7 +100,7 @@ const ReferAndEarn = () => {
                                             timerProgressBar: true,
                                         });
                                     }
-                                    setIsChanged(false);  
+                                    setIsChanged(false);
                                 } catch (error) {
                                     Swal.fire({
                                         title: 'Error',
@@ -233,6 +233,45 @@ const ReferAndEarn = () => {
                                                 )}
                                             </div>
                                         </div>
+                                        <div className="col-sm-9">
+                                            <div className="input-group">
+                                                <Field
+                                                    type="checkbox"
+                                                    name="Multipletime"
+                                                    className="form-check-input me-2"
+                                                    onChange={(e) => {
+                                                        const isChecked = e.target.checked;
+                                                        setFieldValue('Multipletime', isChecked);
+                                                        if (isChecked) {
+                                                            setFieldValue('Singletime', false); 
+                                                        }
+                                                    }}
+                                                />
+                                                <label htmlFor="Multipletime" className="form-check-label">
+                                                    Multiple Time
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div className="col-sm-9">
+                                            <div className="input-group">
+                                                <Field
+                                                    type="checkbox"
+                                                    name="Singletime"
+                                                    className="form-check-input me-2"
+                                                    onChange={(e) => {
+                                                        const isChecked = e.target.checked;
+                                                        setFieldValue('Singletime', isChecked);
+                                                        if (isChecked) {
+                                                            setFieldValue('Multipletime', false); 
+                                                        }
+                                                    }}
+                                                />
+                                                <label htmlFor="Singletime" className="form-check-label">
+                                                    Single Time
+                                                </label>
+                                            </div>
+                                        </div>
+
 
                                         <div className="row">
                                             <label className="col-sm-3 col-form-label" />

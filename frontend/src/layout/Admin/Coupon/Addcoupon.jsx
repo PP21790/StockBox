@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import DynamicForm from '../../../components/FormicForm';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import { Addcouponbyadmin } from '../../../Services/Admin';
+import { Addcouponbyadmin , GetService} from '../../../Services/Admin';
 
 
 const Addcoupon = () => {
@@ -12,10 +12,27 @@ const Addcoupon = () => {
     const user_id = localStorage.getItem("id");
     const token = localStorage.getItem("token");
 
+    const [servicedata, setServicedata] = useState([]);
+
     const today = new Date().toISOString().slice(0, 10);
 
+ 
+    useEffect(() => {
+        getservice();
+    }, []);
 
+     
 
+    const getservice = async () => {
+        try {
+            const response = await GetService(token);
+            if (response.status) {
+                setServicedata(response.data);
+            }
+        } catch (error) {
+            console.error("Error fetching services:", error);
+        }
+    };
 
 
 
@@ -210,6 +227,27 @@ const Addcoupon = () => {
             disable: false,
             star:true,
             showWhen: (values) => values.type === "percentage"
+        }, {
+            name: "limit",
+            label: "Set Limit",
+            type: "number",
+            label_size: 12,
+            col_size: 6,
+            disable: false,
+            star:true,
+        },
+        {
+            name: "service",
+            label: "Select Service",
+            type: "select",      
+            label_size: 12,
+            col_size: 6,
+            disable: false,
+            options: servicedata?.map((item) => ({
+                label: item?.title,
+                value: item?._id,
+            })),
+            star:true
         },
         {
             name: "startdate",
@@ -230,7 +268,7 @@ const Addcoupon = () => {
             disable: false,
             star:true
         },
-
+       
 
         // {
         //     name: "image",

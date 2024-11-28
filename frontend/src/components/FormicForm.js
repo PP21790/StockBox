@@ -765,7 +765,38 @@ const DynamicForm = ({
                                                                         </div>
                                                                     </div>
                                                                 </>
-                                                            ) : field.type === "password" ? (
+                                                            ) : field.type === "togglebtn" ? (
+                                                                <>
+                                                                    <div className={`col-lg-${field.col_size} mb-4`}>
+                                                                        <div className="row">
+                                                                      
+                                                                            <label htmlFor={field.name} className={`col-lg-${field.label_size} col-form-label`}>
+                                                                                {field.label}
+                                                                                {field.star == true ? <span className="text-danger">*</span> : ""}
+                                                                            </label>
+                                                                            
+                                                                            <div className="col-lg-8">
+                                                                                <div className="form-switch">
+                                                                                    <input
+                                                                                        className="form-check-input"
+                                                                                        style={{height: "22px",
+                                                                                            width: "45px"
+                                                                                        }}
+                                                                                        type="checkbox"
+                                                                                        id={field.name}
+                                                                                        checked={formik.values[field.name] === 1}
+                                                                                        onChange={() =>
+                                                                                            formik.setFieldValue(field.name, formik.values[field.name] === 1 ? 0 : 1)
+                                                                                        }
+                                                                                        disabled={field.disable}
+                                                                                    />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                            
+                                                                </>
+                                                            )  : field.type === "password" ? (
                                                                 <>
                                                                     <div className={`col-lg-${field.col_size}`}>
                                                                         <div className=" input-block row">

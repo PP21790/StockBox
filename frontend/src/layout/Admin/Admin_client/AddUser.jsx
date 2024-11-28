@@ -44,13 +44,17 @@ const AddUser = () => {
   };
 
   const onSubmit = async (values) => {
+    console.log("values",values)
     const req = {
       FullName: values.FullName,
       Email: values.Email,
       PhoneNo: values.PhoneNo,
       password: values.password,
       add_by: user_id,
+      freetrial:values.freetrial
     };
+    
+    return
 
     try {
       const response = await AddClient(req, token);
@@ -92,6 +96,7 @@ const AddUser = () => {
       PhoneNo: "",
       password: "",
       ConfirmPassword: "",
+      freetrial: "",
       add_by: "",
     },
     validate,
@@ -145,6 +150,15 @@ const AddUser = () => {
       type: "password1",
       label_size: 12,
       col_size: 6,
+      disable: false,
+      star:true
+    },
+    {
+      name: "freetrial",
+      label: "Free trial status",
+      type: "togglebtn",
+      label_size: 6,
+      col_size: 4,
       disable: false,
       star:true
     },

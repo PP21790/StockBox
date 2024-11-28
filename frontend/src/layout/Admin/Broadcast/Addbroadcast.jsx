@@ -61,7 +61,6 @@ const Addbroadcast = () => {
 
         try {
             const response = await SendBroadCast(req, token);
-            console.log("response",response)
             if (response.status) {
                 Swal.fire({
                     title: "Send Successful!",
@@ -153,6 +152,7 @@ const Addbroadcast = () => {
             disable: false,
             star:true
         },
+        
     ];
 
     return (
