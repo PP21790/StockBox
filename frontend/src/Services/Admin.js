@@ -2260,6 +2260,7 @@ export async function UpdatereferAndEarn(data, token) {
     formData.append('refer_title', data.refer_title);
     formData.append('refer_description', data.refer_description);
     formData.append('refer_image', data.refer_image);
+    formData.append('refer_status', data.refer_status);
 
     try {
         const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {

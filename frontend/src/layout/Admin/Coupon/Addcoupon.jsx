@@ -86,9 +86,9 @@ const Addcoupon = () => {
         if (!values.limitation) {
             errors.limitation = "Please Enter Limit";
         }
-        // if (values.service && !values.service) {
-        //     errors.service = "Please Enter Service";
-        // }
+        if (!values.service) {
+            errors.service = "Please Select Service";
+        }
 
         return errors;
     };
@@ -159,7 +159,7 @@ const Addcoupon = () => {
             description: '',
             image: '',
             limitation: '',
-            service: 0,
+            service: "",
             add_by: ''
         },
         validate,
@@ -250,16 +250,20 @@ const Addcoupon = () => {
         {
             name: "service",
             label: "Select Service",
-            type: "select",      
+            type: "select",
             label_size: 12,
             col_size: 6,
             disable: false,
-            options: servicedata?.map((item) => ({
-                label: item?.title,
-                value: item?._id,
-            })),
-            star:true
+            options: [
+                { label: "All", value: "0" }, 
+                ...servicedata?.map((item) => ({
+                    label: item?.title,
+                    value: item?._id,
+                })),
+            ],
+            star: true,
         },
+        
         {
             name: "startdate",
             label: "Start Date",

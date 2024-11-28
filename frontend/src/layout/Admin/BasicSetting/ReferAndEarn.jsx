@@ -42,6 +42,9 @@ const ReferAndEarn = () => {
         return <div>Loading...</div>;
     }
 
+
+
+
     return (
         <div className="page-content">
             <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
@@ -69,6 +72,7 @@ const ReferAndEarn = () => {
                                 receiver_earn: clients[0]?.receiver_earn || '',
                                 refer_title: clients[0]?.refer_title || '',
                                 refer_description: clients[0]?.refer_description || '',
+                                refer_status: clients[0]?.refer_status || '',
                                 refer_image: null,
                             }}
                             onSubmit={async (values) => {
@@ -78,6 +82,7 @@ const ReferAndEarn = () => {
                                     refer_title: values?.refer_title,
                                     refer_description: values?.refer_description,
                                     refer_image: values?.refer_image,
+                                    refer_status: values?.refer_status,
                                 };
 
                                 try {
@@ -233,7 +238,9 @@ const ReferAndEarn = () => {
                                                 )}
                                             </div>
                                         </div>
-                                        <div className="col-sm-9">
+
+                                        <div className='d-flex'>
+                                        <div className="col-sm-7">
                                             <div className="input-group">
                                                 <Field
                                                     type="checkbox"
@@ -242,9 +249,11 @@ const ReferAndEarn = () => {
                                                     onChange={(e) => {
                                                         const isChecked = e.target.checked;
                                                         setFieldValue('Multipletime', isChecked);
+                                                        setFieldValue('refer_status', isChecked ? 1 : ''); 
                                                         if (isChecked) {
-                                                            setFieldValue('Singletime', false); 
+                                                            setFieldValue('Singletime', false);
                                                         }
+                                                        handleFieldChange();
                                                     }}
                                                 />
                                                 <label htmlFor="Multipletime" className="form-check-label">
@@ -261,9 +270,11 @@ const ReferAndEarn = () => {
                                                     onChange={(e) => {
                                                         const isChecked = e.target.checked;
                                                         setFieldValue('Singletime', isChecked);
+                                                        setFieldValue('refer_status', isChecked ? 0 : '');
                                                         if (isChecked) {
-                                                            setFieldValue('Multipletime', false); 
+                                                            setFieldValue('Multipletime', false);
                                                         }
+                                                        handleFieldChange();
                                                     }}
                                                 />
                                                 <label htmlFor="Singletime" className="form-check-label">
@@ -271,6 +282,9 @@ const ReferAndEarn = () => {
                                                 </label>
                                             </div>
                                         </div>
+                                        </div>
+                                       
+
 
 
                                         <div className="row">

@@ -8,6 +8,8 @@ const upload = require('../Utils/multerHelper');
 
 class Coupon {
 
+
+  
     async AddCoupon(req, res) {
         try {
 
@@ -164,6 +166,9 @@ class Coupon {
       return res.json({ status: false, message: "Server error", data: [] });
     }
   }
+
+
+
   async activeCoupon(req, res) {
     try {
 
@@ -222,6 +227,8 @@ class Coupon {
         });
     }
 }
+
+
 
 
   async updateCoupon(req, res) {
