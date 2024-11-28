@@ -1217,7 +1217,6 @@ export async function Addcouponbyadmin(data, token) {
     formData.append('minpurchasevalue', data.minpurchasevalue);
     formData.append('mincouponvalue', data.mincouponvalue);
     formData.append('description', data.description);
-    formData.append('showstatus', data.showstatus);
     formData.append('service', data.service);
     formData.append('limitation', data.limitation);
 

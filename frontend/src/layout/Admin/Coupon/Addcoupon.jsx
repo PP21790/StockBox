@@ -114,10 +114,9 @@ const Addcoupon = () => {
        
         try {
             const response = await Addcouponbyadmin(req, token);
-        console.log("req",req)
-              
-
-
+    
+            console.log("req",req)
+            
             if (response.status) {
 
                 Swal.fire({
