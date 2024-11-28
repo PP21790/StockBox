@@ -25,7 +25,7 @@ class Coupon {
         });
 
 
-            const { name, code, type, value, startdate, enddate,add_by,minpurchasevalue,mincouponvalue,description,limitation,showstatus,service } = req.body;
+            const { name, code, type, value, startdate, enddate,add_by,minpurchasevalue,mincouponvalue,description,limitation,service } = req.body;
     
 
             if (!name) {
@@ -76,7 +76,6 @@ class Coupon {
                 image,
                 description,
                 limitation,
-                showstatus,
                 service
             });
     
@@ -240,7 +239,7 @@ class Coupon {
         });
     });
 
-      const { id, name, code, type, value, startdate, enddate,minpurchasevalue,mincouponvalue,description,limitation,showstatus,service } = req.body;
+      const { id, name, code, type, value, startdate, enddate,minpurchasevalue,mincouponvalue,description,limitation,service } = req.body;
   
 
       if (!name) {
@@ -291,7 +290,6 @@ class Coupon {
         mincouponvalue,
         description,
         limitation,
-        showstatus,
         service
       };
 
@@ -414,6 +412,52 @@ class Coupon {
         });
     }
   }
+
+
+  
+  async  showStatusChange(req, res) {
+    try {
+        const { id, status } = req.body;
+  
+        // Validate status
+        const validStatuses = ['0', '1'];
+        if (!validStatuses.includes(status)) {
+            return res.status(400).json({
+                status: false,
+                message: "Invalid status value"
+            });
+        }
+  
+        // Find and update the plan
+        const result = await Coupon_Modal.findByIdAndUpdate(
+            id,
+            { showstatus: status },
+            { new: true } // Return the updated document
+        );
+  
+        if (!result) {
+            return res.status(404).json({
+                status: false,
+                message: "Coupon not found"
+            });
+        }
+  
+        return res.json({
+            status: true,
+            message: "Status updated successfully",
+            data: result
+        });
+  
+    } catch (error) {
+        console.log("Error updating status:", error);
+        return res.status(500).json({
+            status: false,
+            message: "Server error",
+            data: []
+        });
+    }
+  }
+  
   
 }
 module.exports = new Coupon();
