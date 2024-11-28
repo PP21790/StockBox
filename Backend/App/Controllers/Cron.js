@@ -687,7 +687,7 @@ async function PlanExpire(req, res) {
     
                     if (client && client.devicetoken) {
                         const tokens = [client.devicetoken];
-                        await sendFCMNotification(title, message,tokens);
+                        await sendFCMNotification(title, message,tokens,"plan expire");
                        
                     }
                         

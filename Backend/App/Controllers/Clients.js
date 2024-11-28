@@ -1732,7 +1732,7 @@ async getClientWithFilterExcel(req, res) {
         try {
           if (client && client.devicetoken) {
             const tokens = [client.devicetoken];
-            await sendFCMNotification(notificationTitle, notificationBody,tokens);
+            await sendFCMNotification(notificationTitle, notificationBody,tokens, "payout");
            
         }
           console.log('Notifications sent successfully');
