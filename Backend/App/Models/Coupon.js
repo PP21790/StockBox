@@ -58,12 +58,10 @@ const CouponSchema = new Schema({
     },
     showstatus: {
         type: Number,
-        required: true,
         min: 0
     },
     limitation: {
         type: Number,
-        required: true,
         min: 0
     },
     service: {
