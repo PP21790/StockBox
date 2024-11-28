@@ -188,18 +188,22 @@ const Dashbord = () => {
             <div className="page-content">
                 <div className="row newbg">
                     <div className="col-md-3">
-                        <div className="card radius-10 bg-gradient-moonlit">
+                    <div className="card radius-10 bg-gradient-moonlit">
                             <Link to="/staff/planexpirymonth">
                                 <div className="card-body">
                                     <div className="d-flex align-items-center">
                                         <h5 className="mb-0 text-white">
-                                            {monthexpiry.map((item) => {
-                                                if (fDateMonth(item.month) === currentMonthYear) {
-                                                    return item.noofclient || 0;
-                                                }
-                                                return null;
-                                            })}
+                                            {monthexpiry?.length > 0
+                                                ? monthexpiry?.some((item) => fDateMonth(item.month) === currentMonthYear)
+                                                    ? monthexpiry.reduce((acc, item) => {
+                                                        return fDateMonth(item.month) === currentMonthYear
+                                                            ? acc + (item.noofclient || 0)
+                                                            : acc;
+                                                    }, 0)
+                                                    : 0
+                                                : 0}
                                         </h5>
+
                                         <div className="ms-auto">
                                             <i className="bx bx-user-plus fs-3 text-white" />
                                         </div>
