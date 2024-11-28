@@ -6,7 +6,7 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-async function sendFCMNotification(title, body, tokens) {
+async function sendFCMNotification(title, body, tokens, type="") {
   try {
 
    const tokenss = [...new Set(tokens)];
@@ -19,6 +19,7 @@ async function sendFCMNotification(title, body, tokens) {
       },
       data: {
         additional_data: 'value',
+        type: type, 
       },
     }));
 
