@@ -5,7 +5,7 @@ import { getcouponlist } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import { Eye, Pencil, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { DeleteCoupon, UpdateClientStatus, CouponStatus } from '../../../Services/Admin';
+import { DeleteCoupon, UpdateClientStatus, CouponStatus ,CouponShowstatus } from '../../../Services/Admin';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
 import { fDate, fDateTime } from '../../../Utils/Date_formate';
@@ -151,7 +151,47 @@ const Coupon = () => {
 
 
 
+    const handleSwitchChange1 = async (event, id) => {
 
+        const user_active_status = event.target.checked === true ? "0" : "1"
+        const data = { id: id, status: user_active_status }
+
+         console.log("data",data)
+    
+        const result = await Swal.fire({
+            title: "Do you want to save the changes?",
+            showCancelButton: true,
+            confirmButtonText: "Save",
+            cancelButtonText: "Cancel",
+            allowOutsideClick: false,
+        });
+
+        if (result.isConfirmed) {
+            try {
+                const response = await CouponShowstatus(data, token)
+                if (response.status) {
+                    Swal.fire({
+                        title: "Saved!",
+                        icon: "success",
+                        timer: 1000,
+                        timerProgressBar: true,
+                    });
+                    setTimeout(() => {
+                        Swal.close();
+                    }, 1000);
+                }
+                getcoupon();
+            } catch (error) {
+                Swal.fire(
+                    "Error",
+                    "There was an error processing your request.",
+                    "error"
+                );
+            }
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            getcoupon();
+        }
+    };
 
 
     const columns = [
@@ -236,6 +276,28 @@ const Coupon = () => {
                         </div>
                     );
                 }
+            },
+            sortable: true,
+            width: '156px',
+        },
+        {
+            name: 'showstatus',
+            selector: row => {
+                    return (
+                        <div className="form-check form-switch form-check-info">
+                            <input
+                                id={`rating_${row.showstatus}`}
+                                className="form-check-input toggleswitch"
+                                type="checkbox"
+                                defaultChecked={row.showstatus == 1}
+                                onChange={(event) => handleSwitchChange1(event, row._id)}
+                            />
+                            <label
+                                htmlFor={`rating_${row.showstatus}`}
+                                className="checktoggle checkbox-bg"
+                            ></label>
+                        </div>
+                    );
             },
             sortable: true,
             width: '156px',

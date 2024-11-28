@@ -2296,6 +2296,24 @@ export async function CouponStatus(data, token) {
 }
 
 
+
+export async function CouponShowstatus(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}coupon/show-change-status`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
 // get freetrial status 
 
 

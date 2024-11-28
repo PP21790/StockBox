@@ -83,7 +83,7 @@ const Addcoupon = () => {
         if (values.mincouponvalue && !values.mincouponvalue) {
             errors.mincouponvalue = "Please Enter Min Coupon Value";
         }
-        if (values.limitation && !values.limitation) {
+        if (!values.limitation) {
             errors.limitation = "Please Enter Limit";
         }
         // if (values.service && !values.service) {
@@ -95,7 +95,6 @@ const Addcoupon = () => {
 
 
     const onSubmit = async (values) => {
-        console.log("values",values)
         const req = {
             name: values.name,
             code: values.code,
@@ -114,9 +113,7 @@ const Addcoupon = () => {
        
         try {
             const response = await Addcouponbyadmin(req, token);
-    
-            console.log("req",req)
-            
+
             if (response.status) {
 
                 Swal.fire({

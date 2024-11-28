@@ -418,7 +418,7 @@ class Coupon {
   async  showStatusChange(req, res) {
     try {
         const { id, status } = req.body;
-  
+    
         // Validate status
         const validStatuses = ['0', '1'];
         if (!validStatuses.includes(status)) {
