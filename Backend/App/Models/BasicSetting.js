@@ -101,6 +101,11 @@ const BasicSettingSchema = new Schema({
         trim: true,
         default: null
     },
+    refer_status: {
+        type: Number,
+        trim: true,
+        default: 0
+    },
     surepass_token: {
         type: String,
         trim: true,

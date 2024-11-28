@@ -121,6 +121,11 @@ const clientsModel = new Schema({
         enum: [1, 0],
         default: 0
     },
+    refer_status: {
+        type: Number, // changed to Number
+        enum: [1, 0],
+        default: 0
+    },
     refer_token: {
         type: String,
         default: null
@@ -162,8 +167,8 @@ const clientsModel = new Schema({
         type: String,
         trim: true,
         default: null
-    }
-    , hserverid: {
+    },
+     hserverid: {
         type: String,
         trim: true,
         default: null

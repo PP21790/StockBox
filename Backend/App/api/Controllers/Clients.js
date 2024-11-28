@@ -96,20 +96,33 @@ class Clients {
       }
       
 
-      const refer_tokens = crypto.randomBytes(10).toString('hex'); 
+     // const refer_tokens = crypto.randomBytes(10).toString('hex'); 
 
     
       let refer_tokenss = referCode + refer_token;
-
+if(token) {
       const result = new Clients_Modal({
       FullName: FullName,
       Email: Email,
       PhoneNo: PhoneNo,
       password: hashedPassword,
       refer_token:refer_tokenss,
-      token:refer_tokens,
+      token:token,
+      refer_status:settings.refer_status,
       del: 0
       });
+    }
+    else {
+      const result = new Clients_Modal({
+        FullName: FullName,
+        Email: Email,
+        PhoneNo: PhoneNo,
+        password: hashedPassword,
+        refer_token:refer_tokenss,
+        del: 0
+        });
+
+    }
 
 
   await result.save();
@@ -141,7 +154,6 @@ class Clients {
           })
           await results.save();
         }
-  
 
 
 

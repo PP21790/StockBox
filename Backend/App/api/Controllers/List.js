@@ -156,6 +156,9 @@ class List {
 
     async Newslist(req, res) {
       
+
+
+
         try {
 
            // const news = await News_Modal.find();
@@ -624,10 +627,8 @@ if (existingPlans.length > 0) {
       
       // Round the months based on your requirement
       if (differenceInMonths % 1 >= 0.5) {
-        console.log('aaaaaa');
         monthsToAdd = Math.ceil(differenceInMonths); // Round up to the nearest whole number
       } else {
-        console.log('nnnnnn');
         monthsToAdd = Math.floor(differenceInMonths); // Round down to the nearest whole number
       }
       
@@ -703,6 +704,30 @@ if (existingPlans.length > 0) {
   
       // Save the subscription
       const savedSubscription = await newSubscription.save();
+
+if(coupon){
+      const resultc = await Coupon_Modal.find({
+        del: false,
+        status: true,
+        startdate: { $lte: endOfToday },
+        enddate: { $gte: startOfToday },
+        code:coupon
+      });
+
+
+      if (resultc) {
+        // Check if limitation is greater than 0 before decrementing
+        if (resultc.limitation > 0) {
+            const updatedResult = await Coupon_Modal.findByIdAndUpdate(
+                resultc._id,
+                { $inc: { limitation: -1 } }, // Decrease limitation by 1
+                { new: true } // Return the updated document
+            );
+            console.log('Updated Coupon:', updatedResult);
+        }
+
+    }
+  }
   
       const client = await Clients_Modal.findOne({ _id: client_id, del: 0, ActiveStatus: 1 });
      
@@ -717,8 +742,52 @@ if (existingPlans.length > 0) {
         client.freetrial  = 1; 
         await client.save();
          }
+
+
+        
       
-      const refertokens = await Refer_Modal.find({ user_id: client._id, status: 0 });
+         const refertokens = await Refer_Modal.find({ user_id: client._id, status: 0 });
+
+         if(client.refer_status && client.token) {
+          if (refertokens.length > 0) {
+          }
+          else
+          {
+            const settings = await BasicSetting_Modal.findOne();
+
+            const senderamount = (price * settings.sender_earn) / 100;
+            const receiveramount = (price * settings.receiver_earn) / 100;
+    
+    
+
+            const results = new Refer_Modal({
+              token: client.token,
+              user_id: client._id,
+              senderearn: settings.sender_earn,
+              receiverearn: settings.receiver_earn,
+              senderamount:senderamount,
+              receiveramount:receiveramount,
+              status:1
+              })
+              await results.save();
+
+              client.wamount += receiveramount; 
+              await client.save();
+              const sender = await Clients_Modal.findOne({ refer_token: client.token, del: 0, ActiveStatus: 1 });
+              
+              if (sender) {
+                  sender.wamount += senderamount; 
+                  await sender.save();
+              } else {
+                  console.error(`Sender not found or inactive for user_id: ${refertoken.user_id}`);
+              }
+
+            }
+    
+
+          }
+          
+       
       if (refertokens.length > 0) {
           for (const refertoken of refertokens) {
               const senderamount = (price * refertoken.senderearn) / 100;
@@ -747,7 +816,7 @@ if (existingPlans.length > 0) {
       } else {
           console.log('No referral tokens found.');
       }
-
+     
 
     const  adminnotificationTitle ="Important Update";
     const  adminnotificationBody ="new plan purchased......";
@@ -973,21 +1042,24 @@ async  myPlan(req, res) {
 async Couponlist(req, res) {
   try {
 
+
+
     const { } = req.body;
 
     //const result = await Coupon_Modal.find()
 
     const startOfToday = new Date();
-    startOfToday.setHours(0, 0, 0, 0); // आज का स्टार्ट टाइम: 00:00:00
+    startOfToday.setHours(0, 0, 0, 0); 
     
     const endOfToday = new Date();
-    endOfToday.setHours(23, 59, 59, 999); // आज का एंड टाइम: 23:59:59
+    endOfToday.setHours(23, 59, 59, 999); 
     
     const result = await Coupon_Modal.find({
       del: false,
       status: true,
-      startdate: { $lte: endOfToday }, // आज के अंत तक शुरू हो चुके कूपन
-      enddate: { $gte: startOfToday } // आज के स्टार्ट से समाप्त होने वाले कूपन
+      showstatus: 1,
+      startdate: { $lte: endOfToday }, 
+      enddate: { $gte: startOfToday } 
     });
 
     const protocol = req.protocol; // Will be 'http' or 'https'
@@ -1042,6 +1114,9 @@ async applyCoupon (req, res) {
           return res.status(404).json({ message: 'Coupon not found or is inactive' });
       }
 
+
+
+
       // Check if the coupon is within the valid date range
       const currentDate = new Date();
       if (currentDate < coupon.startdate || currentDate > coupon.enddate) {
@@ -1063,6 +1138,17 @@ async applyCoupon (req, res) {
       if (discount > purchaseValue) {
         return res.status(400).json({ message: "Discount should be less than the purchase value." });
     }
+
+
+    if (coupon.limitation <= 0) {
+      return res.status(400).json({ message: 'Coupon usage limit has been reached' });
+    }
+
+
+
+    // if (!coupon.service) {
+    //   return res.status(404).json({ message: 'Coupon not found or is inactive' });
+    // }
 
       // Ensure the discount does not exceed the minimum coupon value
 

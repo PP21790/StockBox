@@ -25,7 +25,7 @@ class Coupon {
         });
 
 
-            const { name, code, type, value, startdate, enddate,add_by,minpurchasevalue,mincouponvalue,description } = req.body;
+            const { name, code, type, value, startdate, enddate,add_by,minpurchasevalue,mincouponvalue,description,limitation,showstatus,service } = req.body;
     
 
             if (!name) {
@@ -75,6 +75,9 @@ class Coupon {
                 mincouponvalue,
                 image,
                 description,
+                limitation,
+                showstatus,
+                service
             });
     
             await result.save();
@@ -144,6 +147,7 @@ class Coupon {
 
   async getCoupon(req, res) {
     try {
+
 
       const { } = req.body;
 
@@ -236,7 +240,7 @@ class Coupon {
         });
     });
 
-      const { id, name, code, type, value, startdate, enddate,minpurchasevalue,mincouponvalue,description } = req.body;
+      const { id, name, code, type, value, startdate, enddate,minpurchasevalue,mincouponvalue,description,limitation,showstatus,service } = req.body;
   
 
       if (!name) {
@@ -286,6 +290,9 @@ class Coupon {
         minpurchasevalue,
         mincouponvalue,
         description,
+        limitation,
+        showstatus,
+        service
       };
 
 

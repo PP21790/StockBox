@@ -24,7 +24,7 @@ class Clients {
     
     try {
     
-      const { FullName, Email, PhoneNo, password,add_by } = req.body;
+      const { FullName, Email, PhoneNo, password,add_by,freetrial } = req.body;
       if (!FullName) {
         return res.status(400).json({ status: false, message: "fullname is required" });
       }
@@ -105,13 +105,38 @@ class Clients {
      
       await result.save();
 
-
+     
     
       const settings = await BasicSetting_Modal.findOne();
       if (!settings || !settings.smtp_status) {
         throw new Error('SMTP settings are not configured or are disabled');
       }
 
+
+      if(freetrial)
+      {
+        const freetrialDays = parseInt(settings.freetrial, 10); // or you can use +settings.freetrial
+        const start = new Date();
+        const end = new Date(start);
+        end.setDate(start.getDate() + freetrialDays);  // Add 7 days to the start date
+        end.setHours(23, 59, 59, 999); 
+
+
+        const service = await Service_Modal.find({ del: false });
+    const savePromises = service.map(async (svc) => {
+      // Create a new plan management record
+      const newPlanManage = new Planmanage({
+          clientid: result._id,
+          serviceid: svc._id,
+          startdate: start,
+          enddate: end,
+      });
+
+      // Save the new plan management record to the database
+      return newPlanManage.save();
+
+      })
+    }
 
       const mailtemplate = await Mailtemplate_Modal.findOne({ mail_type: 'welcome_mail' }); // Use findOne if you expect a single document
       if (!mailtemplate || !mailtemplate.mail_body) {
