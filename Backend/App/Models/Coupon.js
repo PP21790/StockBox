@@ -56,6 +56,19 @@ const CouponSchema = new Schema({
     description: {
         type: String,
     },
+    showstatus: {
+        type: Number,
+        required: true,
+        min: 0
+    },
+    limitation: {
+        type: Number,
+        required: true,
+        min: 0
+    },
+    service: {
+        type: String,
+    },
     del: {
         type: Boolean,
         default: false // Indicates whether the coupon is deleted

@@ -44,7 +44,8 @@ class BasicSetting {
                     digio_template_name,
                     kyc,
                     paymentstatus,
-                    officepaymenystatus
+                    officepaymenystatus,
+                    refer_status
 
                 } = req.body;
 
@@ -89,7 +90,8 @@ class BasicSetting {
                     digio_template_name,
                     kyc,
                     paymentstatus,
-                    officepaymenystatus
+                    officepaymenystatus,
+                    refer_status
                 };
 
                 const options = {
