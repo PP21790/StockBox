@@ -13,6 +13,8 @@ const Freetrial_Modal = db.Freetrial;
 const Helpdesk_Modal = db.Helpdesk;
 const PlanSubscription_Modal = db.PlanSubscription;
 const Planmanage = db.Planmanage;
+const Service_Modal = db.Service;
+
 
 const Notification_Modal = db.Notification;
 const { sendFCMNotification } = require('./Pushnotification'); 
@@ -79,6 +81,8 @@ class Clients {
       let referCode = cleanedName.substring(0, 7).toUpperCase();
 
 
+
+
   const characters = '0123456789';
   let refer_token = '';
   const length = 5; // Length of the token
@@ -90,6 +94,8 @@ class Clients {
   let refer_tokenss = referCode + refer_token;
 
 
+  
+
       const hashedPassword = await bcrypt.hash(password, 10);   
       const result = new Clients_Modal({
       FullName: FullName,
@@ -99,6 +105,7 @@ class Clients {
       add_by: add_by,
       refer_token:refer_tokenss,
       token:refer_tokens,
+      freetrial:freetrial,
       ActiveStatus:1,
       clientcome:1
       })
@@ -120,7 +127,6 @@ class Clients {
         const end = new Date(start);
         end.setDate(start.getDate() + freetrialDays);  // Add 7 days to the start date
         end.setHours(23, 59, 59, 999); 
-
 
         const service = await Service_Modal.find({ del: false });
     const savePromises = service.map(async (svc) => {
