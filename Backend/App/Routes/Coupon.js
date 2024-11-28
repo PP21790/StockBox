@@ -4,7 +4,7 @@ const path = require('path');
 
 const { checkPermission } = require('../Middleware/permissionMiddleware');
 
-const {AddCoupon,getCoupon,updateCoupon,deleteCoupon,detailCoupon,statusChange,activeCoupon} = require('../Controllers/Coupon')
+const {AddCoupon,getCoupon,updateCoupon,deleteCoupon,detailCoupon,statusChange,activeCoupon,showStatusChange} = require('../Controllers/Coupon')
 
 
 const PERMISSIONS = {
