@@ -54,10 +54,10 @@ const AddUser = () => {
       freetrial:values.freetrial
     };
     
-    return
-
+   
     try {
       const response = await AddClient(req, token);
+
       if (response.status) {
         Swal.fire({
           title: "Client Create Successfull !",
