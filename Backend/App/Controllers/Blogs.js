@@ -82,7 +82,7 @@ class BlogController {
         
               try {
                 // Send notifications to all device tokens
-                await sendFCMNotification(notificationTitle, notificationBody, tokens);
+                await sendFCMNotification(notificationTitle, notificationBody, tokens ,"add blog");
                 console.log('Notifications sent successfully');
               } catch (error) {
                 console.error('Error sending notifications:', error);

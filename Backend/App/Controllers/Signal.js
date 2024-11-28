@@ -170,7 +170,7 @@ if (!stocks) {
 
             try {
               // Send notifications to all device tokens
-              await sendFCMNotification(notificationTitle, notificationBody, tokens);
+              await sendFCMNotification(notificationTitle, notificationBody, tokens,"open signal");
               console.log('Notifications sent successfully');
             } catch (error) {
               console.error('Error sending notifications:', error);
@@ -666,7 +666,7 @@ async getSignalWithFilter(req, res) {
 
       try {
         // Send notifications to all device tokens
-        await sendFCMNotification(notificationTitle, notificationBody, tokens);
+        await sendFCMNotification(notificationTitle, notificationBody, tokens,"close signal");
         console.log('Notifications sent successfully');
       } catch (error) {
         console.error('Error sending notifications:', error);
