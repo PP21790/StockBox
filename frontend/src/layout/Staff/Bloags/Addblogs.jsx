@@ -31,7 +31,7 @@ const Addblogs = () => {
         if (!values.image) {
             errors.image = "Please enter image";
         }
-        console.log("errors",errors)
+        
 
         return errors;
     };

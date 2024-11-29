@@ -46,7 +46,7 @@ const AddSignal = () => {
   };
 
 
-  // console.log("req",expirydate[0]?.stock?.tradesymbol)
+  
 
   const formik = useFormik({
     initialValues: {

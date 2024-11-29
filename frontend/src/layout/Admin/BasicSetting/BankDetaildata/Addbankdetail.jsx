@@ -63,7 +63,7 @@ const Addbankdetail = () => {
         try {
             const response = await AddBankDetailbyadmin(req, token);
             if (response.status) {
-                console.log("response",response)
+    
                 Swal.fire({
                     title: "Create Successful!",
                     text: response.message,

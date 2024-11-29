@@ -44,7 +44,7 @@ const AddUser = () => {
   };
 
   const onSubmit = async (values) => {
-    console.log("values",values)
+  
     const req = {
       FullName: values.FullName,
       Email: values.Email,

@@ -171,7 +171,6 @@ const Coupon = () => {
 
     const expiredbydate = () => {
         const data = datewise?.map((item) => {
-            console.log("datewise", item.enddate)
             return item.enddate
 
         })

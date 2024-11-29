@@ -196,7 +196,7 @@ const Stock = () => {
     // delete plan cartegory 
 
     const DeleteStockbyadmin = async (_id) => {
-        // console.log("_id",_id)
+
         try {
             const result = await Swal.fire({
                 title: 'Are you sure?',

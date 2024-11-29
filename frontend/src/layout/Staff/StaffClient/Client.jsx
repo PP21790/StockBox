@@ -259,17 +259,6 @@ const Client = () => {
 
 
 
-    // const getplanlistbyadmin = async () => {
-    //     try {
-
-    //         const response = await getplanlist(client._id, token);
-    //         if (response.status) {
-    //             // setPlanlist(response.data);
-    //         }
-    //     } catch (error) {
-    //         console.log("error");
-    //     }
-    // }
 
 
     const getplanlistassinstatus = async (_id) => {
@@ -934,7 +923,7 @@ const Client = () => {
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Validity:</strong>
                                                                                                     <span>{item.validity}</span>
-                                                                                                    {console.log("item", item)}
+                                                                                                   
                                                                                                 </div>
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Created At:</strong>

@@ -71,7 +71,6 @@ const Header = () => {
           }
 
 
-          // console.log("data.staffstatus", data.staffstatus)
           if (data.staffstatus === 0) {
             localStorage.clear();
           }

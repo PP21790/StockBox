@@ -14,7 +14,7 @@ const EditClient = () => {
   const location = useLocation();
   const { row } = location.state;
 
-  // console.log("row",row)
+ 
 
   const user_id = localStorage.getItem("id");
   const token = localStorage.getItem("token");

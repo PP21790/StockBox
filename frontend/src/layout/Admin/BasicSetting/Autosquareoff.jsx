@@ -130,7 +130,7 @@ const Autosquareoff = () => {
                     });
                   }
                 } catch (error) {
-                  console.log('Update error:', error);
+      
                   Swal.fire({
                     title: "Error",
                     text: "An unexpected error occurred. Please try again later.",

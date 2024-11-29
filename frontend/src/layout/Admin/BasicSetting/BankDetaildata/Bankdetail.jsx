@@ -113,7 +113,6 @@ const Bankdetail = () => {
     const handleSwitchChange = async (event, id) => {
 
         const user_active_status = event.target.checked === true ? "true" : "false"
-             console.log("user_active_status",user_active_status)
         const data = { id: id, status: user_active_status }
         const result = await Swal.fire({
             title: "Do you want to save the changes?",

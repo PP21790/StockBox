@@ -50,7 +50,6 @@ const QRDetails = () => {
         try {
             const response = await getQrdetails(token);
             if (response.status) {
-                console.log("image", response.data)
                 setClients(response.data);
             }
         } catch (error) {
