@@ -50,6 +50,10 @@ const PlanSubscriptionSchema = new Schema({
         type: String,
         default: null
     },
+    coupon: {
+        type: String,
+        default: null
+    },
     del: {
         type: Boolean,
         default: false // Indicates whether the subscription is marked as deleted

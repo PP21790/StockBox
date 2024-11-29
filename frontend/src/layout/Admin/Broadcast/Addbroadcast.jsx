@@ -37,13 +37,16 @@ const Addbroadcast = () => {
     const validate = (values) => {
         let errors = {};
         if (!values.service) {
-            errors.service = "Please enter service";
+            errors.service = "Please Enter Service";
         }
         if (!values.subject) {
-            errors.subject = "Please enter subject";
+            errors.subject = "Please Enter Subject";
         }
         if (!values.message) {
-            errors.message = "Please enter message";
+            errors.message = "Please Enter Message";
+        }
+        if (!values.type) {
+            errors.type = "Please Enter Type";
         }
         return errors;
     };
@@ -53,6 +56,7 @@ const Addbroadcast = () => {
             service: values.service,
             subject: values.subject,
             message: values.message,
+            type:  values.type 
         };
 
         try {
@@ -93,7 +97,9 @@ const Addbroadcast = () => {
         initialValues: {
             service: "",
             subject: "",
-            message: "", 
+            message: "",
+            type:"" 
+            
         },
         validate,
         onSubmit,
@@ -103,22 +109,39 @@ const Addbroadcast = () => {
         {
             name: "service",
             label: "Select Service",
-            type: "selectchecbox",
+            type: "select",       //selectchecbox  for multiple
             label_size: 6,
-            col_size: 6,
+            col_size: 4,
             disable: false,
-            options: servicedata  && servicedata.length > 0 && servicedata?.map((item) => ({
+            options: servicedata?.map((item) => ({
                 label: item?.title,
                 value: item?._id,
             })),
+            star:true
         },
         {
             name: "subject",
             label: "Subject",
             type: "text",
             label_size: 12,
-            col_size: 6,
+            col_size: 4,
             disable: false,
+            star:true
+        },
+        {
+            name: "type",
+            label: "Select Type",
+            type: "select",
+            label_size: 6,
+            col_size: 4,
+            disable: false,
+            options:[
+                { value: "all", label: "All" },
+                { value: "active", label: "Active" },
+                { value: "expired", label: "Expired" },
+                { value: "nonsubscribe", label: "Non Subscribe" },
+            ],
+            star:true
         },
         {
             name: "message",
@@ -127,7 +150,9 @@ const Addbroadcast = () => {
             label_size: 12,
             col_size: 12,
             disable: false,
+            star:true
         },
+        
     ];
 
     return (

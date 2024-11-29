@@ -5,16 +5,24 @@ import Swal from 'sweetalert2';
 import { Link, useNavigate } from 'react-router-dom';
 import { image_baseurl } from '../../../Utils/config';
 
+
+
 const ReferAndEarn = () => {
+
+
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
     const [clients, setClients] = useState(null);
-    const [isChanged, setIsChanged] = useState(false);  // Track if a change is made
+    const [isChanged, setIsChanged] = useState(false);
+
+
 
     const getsettinglist = async () => {
         try {
             const response = await basicsettinglist(token);
+
             if (response.status) {
+
                 setClients(response.data);
             }
         } catch (error) {
@@ -27,12 +35,15 @@ const ReferAndEarn = () => {
     }, []);
 
     const handleFieldChange = () => {
-        setIsChanged(true); // Mark as changed when any field is modified
+        setIsChanged(true);
     };
 
     if (!clients) {
         return <div>Loading...</div>;
     }
+
+
+
 
     return (
         <div className="page-content">
@@ -57,19 +68,21 @@ const ReferAndEarn = () => {
                         <Formik
                             enableReinitialize={true}
                             initialValues={{
-                                sender_earn: clients[0].sender_earn || '',
-                                receiver_earn: clients[0].receiver_earn || '',
-                                refer_title: clients[0].refer_title || '',
-                                refer_description: clients[0].refer_description || '',
+                                sender_earn: clients[0]?.sender_earn || '',
+                                receiver_earn: clients[0]?.receiver_earn || '',
+                                refer_title: clients[0]?.refer_title || '',
+                                refer_description: clients[0]?.refer_description || '',
+                                refer_status: clients[0]?.refer_status || '',
                                 refer_image: null,
                             }}
                             onSubmit={async (values) => {
                                 const req = {
-                                    sender_earn: values.sender_earn,
-                                    receiver_earn: values.receiver_earn,
-                                    refer_title: values.refer_title,
-                                    refer_description: values.refer_description,
-                                    refer_image: values.refer_image,
+                                    sender_earn: values?.sender_earn,
+                                    receiver_earn: values?.receiver_earn,
+                                    refer_title: values?.refer_title,
+                                    refer_description: values?.refer_description,
+                                    refer_image: values?.refer_image,
+                                    refer_status: values?.refer_status,
                                 };
 
                                 try {
@@ -92,7 +105,7 @@ const ReferAndEarn = () => {
                                             timerProgressBar: true,
                                         });
                                     }
-                                    setIsChanged(false);  // Reset change status after successful update
+                                    setIsChanged(false);
                                 } catch (error) {
                                     Swal.fire({
                                         title: 'Error',
@@ -182,14 +195,12 @@ const ReferAndEarn = () => {
                                             </label>
                                             <div className="col-sm-9">
                                                 <div className="input-group">
-                                                    <span className="input-group-text">
-                                                        <i className="fadeIn animated bx bx-message-square-dots" />
-                                                    </span>
                                                     <Field
+                                                        as="textarea"
                                                         name="refer_description"
-                                                        type="text"
                                                         className="form-control"
                                                         placeholder="Description"
+                                                        style={{ width: "100%" }}
                                                         onChange={(e) => {
                                                             handleFieldChange();
                                                             setFieldValue('refer_description', e.target.value);
@@ -198,6 +209,7 @@ const ReferAndEarn = () => {
                                                 </div>
                                             </div>
                                         </div>
+
 
                                         <div className="row mb-3 align-items-center">
                                             <label htmlFor="refer_image" className="col-sm-3 col-form-label">
@@ -215,7 +227,7 @@ const ReferAndEarn = () => {
                                                 />
                                             </div>
                                             <div className="col-sm-3">
-                                                {clients[0].refer_image && (
+                                                {clients[0]?.refer_image && (
                                                     <div className="file-preview">
                                                         <img
                                                             src={`${image_baseurl}uploads/basicsetting/${clients[0].refer_image}`}
@@ -226,6 +238,54 @@ const ReferAndEarn = () => {
                                                 )}
                                             </div>
                                         </div>
+
+                                        <div className='d-flex'>
+                                        <div className="col-sm-7">
+                                            <div className="input-group">
+                                                <Field
+                                                    type="checkbox"
+                                                    name="Multipletime"
+                                                    className="form-check-input me-2"
+                                                    onChange={(e) => {
+                                                        const isChecked = e.target.checked;
+                                                        setFieldValue('Multipletime', isChecked);
+                                                        setFieldValue('refer_status', isChecked ? 1 : ''); 
+                                                        if (isChecked) {
+                                                            setFieldValue('Singletime', false);
+                                                        }
+                                                        handleFieldChange();
+                                                    }}
+                                                />
+                                                <label htmlFor="Multipletime" className="form-check-label">
+                                                    Multiple Time
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div className="col-sm-9">
+                                            <div className="input-group">
+                                                <Field
+                                                    type="checkbox"
+                                                    name="Singletime"
+                                                    className="form-check-input me-2"
+                                                    onChange={(e) => {
+                                                        const isChecked = e.target.checked;
+                                                        setFieldValue('Singletime', isChecked);
+                                                        setFieldValue('refer_status', isChecked ? 0 : '');
+                                                        if (isChecked) {
+                                                            setFieldValue('Multipletime', false);
+                                                        }
+                                                        handleFieldChange();
+                                                    }}
+                                                />
+                                                <label htmlFor="Singletime" className="form-check-label">
+                                                    Single Time
+                                                </label>
+                                            </div>
+                                        </div>
+                                        </div>
+                                       
+
+
 
                                         <div className="row">
                                             <label className="col-sm-3 col-form-label" />

@@ -24,6 +24,7 @@ import AddSignal from '../layout/Admin/Admin_signal/AddSignal';
 import Signaldetail from '../layout/Admin/Admin_signal/Signaldetail';
 import Addbasket from '../layout/Admin/Admin_basket/Addbasket';
 import Staffpermission from '../layout/Admin/Admin_staff/Staffpermission';
+import Perfom from '../layout/Admin/Admin_perfom/Perfom';
 import Plan from '../layout/Admin/Plans/Plan';
 import Addplan from '../layout/Admin/Plans/Addplan';
 import Category from '../layout/Admin/Category/Category';
@@ -64,6 +65,16 @@ import Updatecondition from '../layout/Admin/Termscondition/Updatecondition';
 import Updateblogs from '../layout/Admin/Bloags/Updateblogs';
 import { UpdateCondition } from '../Services/Admin';
 import Editfreeclient from '../layout/Admin/Admin_client/Editfreeclient';
+import Autosquareoff from '../layout/Admin/BasicSetting/Autosquareoff';
+import Planexpiry from '../layout/Admin/PlanExpiry/Planexpiry';
+import Cash from '../layout/Admin/Admin_perfom/Cash';
+import Bankdetail from '../layout/Admin/BasicSetting/BankDetaildata/Bankdetail';
+import Addbankdetail from '../layout/Admin/BasicSetting/BankDetaildata/Addbankdetail';
+import Updatebankdetail from '../layout/Admin/BasicSetting/BankDetaildata/Updatebankdetail';
+import QRDetails from '../layout/Admin/BasicSetting/QRDetails/QRDetails';
+import ClientDeleteHistory from '../layout/Admin/Admin_client/ClientDeleteHistory';
+import Planexpirymonth from '../layout/Admin/PlanExpiryMonth/Planexpirymonth';
+import Notificationlist from '../layout/Admin/Notification/Notificationlist';
 
 
 
@@ -119,17 +130,15 @@ function MainApp() {
                     <Route path="/addclient" element={<AddUser />} />
                     <Route path="/client/updateclient/:id" element={<EditClient />} />
                     <Route path="/client/clientdetail/:id" element={<Viewclientdetail />} />
-                    <Route path="/editfreeclient/:id" element={<Editfreeclient/>} />
+                    <Route path="/editfreeclient/:id" element={<Editfreeclient />} />
+                    <Route path="/clientdeletehistory" element={<ClientDeleteHistory />} />
 
 
-
+                    <Route path="/perfom" element={<Perfom />} />
+                    <Route path="/cash" element={<Cash />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/service" element={<Service />} />
                     <Route path="/kyc" element={<Kyc />} />
-
-
-
-
                     <Route path="/staff" element={<Staff />} />
                     <Route path="/addstaff" element={<AddStaff />} />
                     <Route path="/staff/updatestaff/:id" element={<Update />} />
@@ -163,17 +172,17 @@ function MainApp() {
                     <Route path="/category" element={<Category />} />
                     <Route path="/stock" element={<Stock />} />
 
-                    
+
                     <Route path="/blogs" element={<Blogs />} />
-                    <Route path="/addblogs" element={<Addblogs/>} />
-                    <Route path="/updatebolgs" element={<Updateblogs/>} />
+                    <Route path="/addblogs" element={<Addblogs />} />
+                    <Route path="/updatebolgs" element={<Updateblogs />} />
                     <Route path="/viewblog" element={<Viewblog />} />
 
 
                     <Route path="/news" element={<News />} />
                     <Route path="/addnews" element={<Addnews />} />
-                    <Route path="/updatenews" element={<Updatenews/>} />
-                
+                    <Route path="/updatenews" element={<Updatenews />} />
+
 
 
                     <Route path="/coupon" element={<Coupon />} />
@@ -182,7 +191,7 @@ function MainApp() {
 
 
                     <Route path="/termsandcondtion" element={<Condition />} />
-                    <Route path="/updatecondition" element={<Updatecondition/>} />
+                    <Route path="/updatecondition" element={<Updatecondition />} />
 
 
 
@@ -195,11 +204,19 @@ function MainApp() {
                     <Route path="/emailsetting" element={<Emailsettings />} />
                     <Route path="/emailtemplate" element={<Emailtemplate />} />
                     <Route path="/referandearn" element={<ReferAndEarn />} />
-
+                    <Route path="/autosquareoff" element={<Autosquareoff />} />
+                   
+                    <Route path="/bankdetail" element={<Bankdetail/>} />
+                    <Route path="/addbankdetail" element={<Addbankdetail/>} />
+                    <Route path="/updatebankdetail/:id" element={<Updatebankdetail/>} />
+                       
+                    <Route path="/QRdetails" element={<QRDetails/>} />
+                     
 
 
                     <Route path="/message" element={<Message />} />
                     <Route path="/changepass" element={<Changepass />} />
+                    
 
 
 
@@ -215,8 +232,11 @@ function MainApp() {
                     <Route path="/addbroadcast" element={<Addbroadcast />} />
                     <Route path="/updatebroadcast" element={<Updatebroadcast />} />
 
-
-
+                    <Route path="/planexpiry" element={<Planexpiry />} />
+                    <Route path="/planexpirymonth" element={<Planexpirymonth />} />
+                    <Route path="/notificationlist" element={<Notificationlist/>} />
+                
+                     
 
 
 

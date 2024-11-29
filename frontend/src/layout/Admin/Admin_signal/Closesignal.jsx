@@ -1,21 +1,51 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
-import Table from '../../../components/Table';
-import { Eye, RefreshCcw, Trash2 } from 'lucide-react';
+import Table from '../../../components/Table1';
+import { Eye, RefreshCcw, Trash2 , SquarePen , IndianRupee} from 'lucide-react';
 import Swal from 'sweetalert2';
-import { GetSignallist, DeleteSignal, SignalCloseApi, GetService, GetStockDetail } from '../../../Services/Admin';
-import { fDateTimeSuffix, fDateTime } from '../../../Utils/Date_formate'
-import ExportToExcel from '../../../Utils/ExportCSV';
-
+import { GetSignallist, GetSignallistWithFilter, DeleteSignal, SignalCloseApi, GetService, GetStockDetail , UpdatesignalReport } from '../../../Services/Admin';
+import { fDateTimeSuffix, fDateTimeH } from '../../../Utils/Date_formate'
+import { exportToCSV } from '../../../Utils/ExportData';
+import Select from 'react-select';
+import { Tooltip } from 'antd';
 
 
 
 const Closesignal = () => {
 
+
+
+
     const token = localStorage.getItem('token');
     const [searchInput, setSearchInput] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalRows, setTotalRows] = useState(0);
+    const [header, setheader] = useState("Close Signal");
+    
+    const [updatetitle, setUpdatetitle] = useState({
+        report: "",
+        id: "",
+     
+
+  });
+
+
+    const location = useLocation();
+    const clientStatus = location?.state?.clientStatus;
+   
+
+
+    useEffect(() => {
+        if (clientStatus == "todayclosesignal") {
+            setheader("Todays Close Signal")
+
+        }
+    }, [clientStatus])
+
+    const today = new Date();
+    const formattedDate = today.toISOString().slice(0, 10);
 
 
 
@@ -34,41 +64,90 @@ const Closesignal = () => {
     const [stockList, setStockList] = useState([]);
     const [searchstock, setSearchstock] = useState("");
     const [ForGetCSV, setForGetCSV] = useState([])
-   
-
+    const [model1, setModel1] = useState(false);
+    const [serviceid, setServiceid] = useState({});
 
     const navigate = useNavigate();
     const [clients, setClients] = useState([]);
 
 
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
+
+
+    const options = clients.map((item) => ({
+        value: item.stock,
+        label: item.stock,
+    }));
+
+    const handleChange = (selectedOption) => {
+        setSearchstock(selectedOption ? selectedOption.value : "");
+    };
+
+
+    const getexportfile = async () => {
+        try {
+            const response = await GetSignallist(token);
+            if (response.status) {
+                if (response.data?.length > 0) {
+                    let filterdata = response.data.filter((item) => item.close_status === true);
+                    const csvArr = filterdata.map((item) => {
+                        let profitAndLoss = 0;
+                        if (item.calltype === "BUY") {
+                            profitAndLoss = ((item.closeprice - item.price) * item.lotsize).toFixed(2);
+                        } else if (item.calltype === "SELL") {
+                            profitAndLoss = ((item.price - item.closeprice) * item.lotsize).toFixed(2);
+                        }
+    
+                        return {
+                            Symbol: item.tradesymbol || "",
+                            segment: item?.segment || '',
+                            EntryType: item?.calltype || '',
+                            EntryPrice: item?.price || '',
+                            ExitPrice: item?.closeprice || "",
+                            ProfitAndLoss: profitAndLoss || "",
+                            EntryDate: fDateTimeH(item?.created_at) || '',
+                            ExitDate: fDateTimeH(item?.closedate) || ''
+                        };
+                    });
+                    exportToCSV(csvArr, 'Close Signal');
+                }
+            }
+        } catch (error) {
+            console.log("Error:", error);
+        }
+    }
+    
+
+
 
     const getAllSignal = async () => {
         try {
-            const response = await GetSignallist(filters, token);
+            const data = {
+                page: currentPage,
+                from: clientStatus === "todayclosesignal" ? formattedDate : filters.from ? filters.from : "" ,
+                to: clientStatus === "todayclosesignal" ? formattedDate : filters.to ?  filters.to : "" ,
+                service: filters.service,
+                stock: searchstock,
+                closestatus: "true",
+                search: searchInput
+            };
+            
+            const response = await GetSignallistWithFilter(data, token);
             if (response && response.status) {
-                const filterdata = response.data.filter((item) => {
-                    return item.close_status == true
-                })
-                const searchInputMatch = filterdata.filter((item) => {
-                    const searchInputMatch =
-                        searchInput === "" ||
-                        item.stock.toLowerCase().includes(searchInput.toLowerCase()) ||
-                        item.calltype.toLowerCase().includes(searchInput.toLowerCase());
 
-                    const searchstockMatch =
-                        searchstock === "" ||
-                        item.stock.toLowerCase().includes(searchstock.toLowerCase());
+                let filterdata = response.data.filter((item) => item.close_status === true);
 
-                    return searchstockMatch && searchInputMatch;
-                });
+                setClients(filterdata);
+                setTotalRows(response.pagination.totalRecords);
 
-                setClients(searchInput || searchstock ? searchInputMatch : filterdata);
             }
         } catch (error) {
             console.log("error", error);
         }
     };
-
 
 
 
@@ -95,41 +174,21 @@ const Closesignal = () => {
             console.log('Error fetching stock list:', error);
         }
     };
-     
 
-      
 
-    const forCSVdata = () => {
-        if (clients?.length > 0) {
-            const csvArr = clients.map((item) => ({
-                Symbol: item.stock || "",
-                segment: item?.segment || '',
-                Price: item?.price || '',
-                EntryType: item?.calltype || '',
-                EntryPrice: item?.price || '',
-                ExitPrice : item?.closeprice || "" ,
-                EntryDate: fDateTimeSuffix(item?.created_at) || '',
-                ExitDate: fDateTimeSuffix(item?.closedate) || '',
-
-            }));
-
-            setForGetCSV(csvArr);
-        }
-    };
 
 
     useEffect(() => {
         fetchAdminServices()
         fetchStockList()
-        forCSVdata()
-    }, [filters,clients]);
+    }, [filters]);
 
 
 
 
     useEffect(() => {
         getAllSignal();
-    }, [filters, searchInput, searchstock]);
+    }, [filters, searchInput, searchstock, currentPage]);
 
 
     const handleFilterChange = (e) => {
@@ -147,7 +206,7 @@ const Closesignal = () => {
     let columns = [
         {
             name: 'S.No',
-            selector: (row, index) => index + 1,
+            selector: (row, index) => (currentPage - 1) * 10 + index + 1,
             sortable: false,
             width: '100px',
         },
@@ -159,9 +218,9 @@ const Closesignal = () => {
         },
         {
             name: 'Symbol',
-            selector: row => row.stock,
+            selector: row => row.tradesymbol,
             sortable: true,
-            width: '132px',
+            width: '300px',
         },
         {
             name: 'Entry Type',
@@ -171,7 +230,7 @@ const Closesignal = () => {
         },
         {
             name: 'Entry Price',
-            selector: row => row.price,
+            selector: row =><div> <IndianRupee />{row.price}</div>,
             sortable: true,
             width: '200px',
         },
@@ -186,7 +245,12 @@ const Closesignal = () => {
         {
             name: 'Total P&L',
             cell: row => {
-                const totalPL = (row.closeprice - row.price).toFixed(2);
+                let totalPL = 0;
+                if (row.calltype === "BUY") {
+                    totalPL = ((row.closeprice - row.price) * row.lotsize).toFixed(2);
+                } else if (row.calltype === "SELL") {
+                    totalPL = ((row.price - row.closeprice) * row.lotsize).toFixed(2);
+                }
                 const style = {
                     color: totalPL < 0 ? 'red' : 'green',
                 };
@@ -197,17 +261,17 @@ const Closesignal = () => {
         },
         {
             name: 'Entry Date',
-            selector: row => fDateTimeSuffix(row.created_at),
+            selector: row => fDateTimeH(row.created_at),
             sortable: true,
-            width: '190px',
+            width: '200px',
         },
         {
             name: 'Exit Date',
-            selector: row => fDateTimeSuffix(row.closedate),
+            selector: row => fDateTimeH(row.closedate),
             sortable: true,
-            width: '180px',
+            width: '200px',
         },
-       
+
 
 
         {
@@ -227,7 +291,31 @@ const Closesignal = () => {
             button: true,
 
         },
+        {
+            name: 'Upload Pdf',
+            cell: row => (
+                <>
+                    <div>
+                        <Tooltip placement="top" overlay="Updaate">
+                            <SquarePen
+                                onClick={() => {
+                                    setModel1(true);
+                                    setServiceid(row);
+                                    setUpdatetitle({ report: row.report, id: row._id });
+                                }}
+                            />
+                        </Tooltip>
+                    </div>
+                    
+                </>
+            ),
+            ignoreRowClick: true,
+            allowOverflow: true,
+            button: true,
+
+        },
         
+
     ];
 
 
@@ -246,6 +334,51 @@ const Closesignal = () => {
         getAllSignal();
 
     }
+ 
+   // Update service
+   const updateReportpdf = async () => {
+    try {
+        const data = { id: serviceid._id, report: updatetitle.report };
+   
+        const response = await UpdatesignalReport(data, token);
+        if (response && response.status) {
+            Swal.fire({
+                title: 'Success!',
+                text: response.message || 'File updated successfully.',
+                icon: 'success',
+                confirmButtonText: 'OK',
+                timer: 2000,
+            });
+
+            setUpdatetitle({ report: "", id: "", });
+            setModel1(false);
+        } else {
+            Swal.fire({
+                title: 'Error!',
+                text: response.message || 'There was an error updating the file.',
+                icon: 'error',
+                confirmButtonText: 'Try Again',
+            });
+        }
+    } catch (error) {
+        Swal.fire({
+            title: 'Error!',
+            text: 'server error',
+            icon: 'error',
+            confirmButtonText: 'Try Again',
+        });
+    }
+};
+
+
+const updateServiceTitle = (updatedField) => {
+    setUpdatetitle(prev => ({
+        ...prev,
+        ...updatedField
+    }));
+};
+
+ 
 
 
 
@@ -254,7 +387,7 @@ const Closesignal = () => {
             <div>
                 <div className="page-content">
                     <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                        <div className="breadcrumb-title pe-3">Close Signal</div>
+                        <div className="breadcrumb-title pe-3">{header}</div>
                         <div className="ps-3">
                             <nav aria-label="breadcrumb">
                                 <ol className="breadcrumb mb-0 p-0">
@@ -284,19 +417,27 @@ const Closesignal = () => {
                                         <i className="bx bx-search" />
                                     </span>
                                 </div>
-                                  
+
                                 <div
                                     className="ms-2"
+                                    onClick={(e) => getexportfile()}
                                 >
-                                    <ExportToExcel
-                                        className="btn btn-primary "
-                                        apiData={ForGetCSV}
-                                        fileName={'All Users'} />
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary float-end"
+                                        data-toggle="tooltip"
+                                        data-placement="top"
+                                        title="Export To Excel"
+                                        delay={{ show: "0", hide: "100" }}
 
+                                    >
+                                        <i className="bx bxs-download" aria-hidden="true"></i>
 
+                                        Export-Excel
+                                    </button>
                                 </div>
                             </div>
-                           
+
                             <div className="row">
 
                                 <div className="col-md-3">
@@ -342,18 +483,14 @@ const Closesignal = () => {
                                 <div className="col-md-3 d-flex">
                                     <div style={{ width: "80%" }}>
                                         <label>Select Stock</label>
-                                        <select
+                                        <Select
+                                            options={options}
+                                            value={options.find((option) => option.value === searchstock) || null}
+                                            onChange={handleChange}
                                             className="form-control radius-10"
-                                            value={searchstock}
-                                            onChange={(e) => setSearchstock(e.target.value)}
-                                        >
-                                            <option value="">Select Stock</option>
-                                            {clients.map((item) => (
-                                                <option key={item._id} value={item.stock}>
-                                                    {item.stock}
-                                                </option>
-                                            ))}
-                                        </select>
+                                            isClearable
+                                            placeholder="Select Stock"
+                                        />
                                     </div>
                                     <div className='rfreshicon'>
                                         <RefreshCcw onClick={resethandle} />
@@ -369,11 +506,88 @@ const Closesignal = () => {
                         <Table
                             columns={columns}
                             data={clients}
+                            totalRows={totalRows}
+                            currentPage={currentPage}
+                            onPageChange={handlePageChange}
                         />
 
                     </div>
                 </div>
             </div>
+             
+            {model1 && (
+                          <>
+                                        <div className="modal-backdrop fade show"></div>
+                                        <div
+                                            className="modal fade show"
+                                            style={{ display: 'block' }}
+                                            tabIndex={-1}
+                                            aria-labelledby="exampleModalLabel"
+                                            aria-hidden="true"
+                                        >
+                                            <div className="modal-dialog">
+                                                <div className="modal-content">
+                                                    <div className="modal-header">
+                                                        <h5 className="modal-title" id="exampleModalLabel">
+                                                            Upload Pdf
+                                                        </h5>
+                                                        <button
+                                                            type="button"
+                                                            className="btn-close"
+                                                            onClick={() => setModel1(false)}
+                                                        />
+                                                    </div>
+                                                    <div className="modal-body">
+                                                        <form>
+                                                            <div className="row">
+                                                                <div className="col-md-10">
+                                                                    <label htmlFor="imageUpload">Upload Pdf</label>
+                                                                    <span className="text-danger">*</span>
+                                                                    <input
+                                                                        className="form-control mb-3"
+                                                                        type="file"
+                                                                        accept="pdf/*"
+                                                                        id="imageUpload"
+                                                                        onChange={(e) => {
+                                                                            const file = e.target.files[0];
+                                                                            if (file) {
+                                                                                updateServiceTitle({ report: file });
+                                                                            }
+                                                                            
+                                                                        }}
+                                                                    />
+                                                                </div>
+                                                                <div className="col-md-2">
+                            
+                        
+                                                                </div>
+                                                            </div>
+    
+                                                        </form>
+
+
+                                                    </div>
+                                                    <div className="modal-footer">
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-secondary"
+                                                            onClick={() => setModel1(false)}
+                                                        >
+                                                            Close
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-primary"
+                                                            onClick={updateReportpdf}
+                                                        >
+                                                            Update File
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
 
         </div>
     );

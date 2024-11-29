@@ -16,7 +16,7 @@ const AddSignal = () => {
   const token = localStorage.getItem('token');
 
 
-
+  const [loading, setLoading] = useState(false);
 
   const [serviceList, setServiceList] = useState([]);
   const [stockList, setStockList] = useState([]);
@@ -47,8 +47,7 @@ const AddSignal = () => {
   };
 
 
-
-  
+  // console.log("req",expirydate[0]?.stock?.tradesymbol)
 
   const formik = useFormik({
     initialValues: {
@@ -65,81 +64,83 @@ const AddSignal = () => {
       callduration: '',
       calltype: '',
       expiry: '',
-      optiontype:'',
-      strikeprice:'',
+      optiontype: '',
+      strikeprice: '',
+      tradesymbol: expirydate[0]?.stock?.tradesymbol || "",
+      lotsize: expirydate[0]?.stock?.lotsize || ""
 
     },
     validate: (values) => {
-
       const errors = {};
-
-      if (!values.segment) errors.segment = 'Please select a segment';
-      if (!values.stock) errors.stock = 'Please select a stock';
-      if (!values.price) errors.price = 'Please select a price';
-       
-       if(values.calltype === "BUY"){
-
-        if (!values.tag1) errors.tag1 = 'Please enter Traget1';
-        else if (values.price && values.tag1 && values.price >= values.tag1) {
-          errors.tag1 = "Please Enter greater Than Entry Price"
-        }
-
-        if (values.tag2 && values.tag1 >= values.tag2) {
-          errors.tag2 = "Please Enter greater Than Target1"
-        }
-
-        if (values.tag3 && values.tag2 && values.tag2 >= values.tag3) {
-          errors.tag3 = "Please Enter greater Target2"
-       }
-       
-       if(values.price && values.price <= values.stoploss ){
-        errors.stoploss = "Please Enter Less Than Entry Price"
+      if (!values.segment) errors.segment = 'Please Select a Segment';
+      if (!values.stock ) errors.stock = 'Please Select a Stock';
+      if(values.price <= 0){
+        errors.price = 'Price Should Be Grater Than Zero'
      }
-    
-       }else if(values.calltype === "SELL"){
+      if (!values.price) errors.price = 'Please Select a Price';
+      if (!values.tag1) errors.tag1 = 'Please Enter Target1';
+      if (values.calltype === "BUY") {
 
-        if (values.price && values.price <= values.stoploss) {
-          errors.stoploss = "Please Enter Less Than Entry Price"
+        if (values.price && values.tag1 && values.price > values.tag1) {
+          errors.tag1 = "Please Enter Greater Than Entry Price";
         }
 
-      } else if (values.calltype === "sell") {
-
-        if (!values.tag1) errors.tag1 = 'Please enter Traget1';
-        else if (values.price && values.tag1 && values.price <= values.tag1) {
-          errors.tag1 = "Please Enter Less Than Entry Price"
+        if (values.tag2 && values.tag1 > values.tag2) {
+          errors.tag2 = "Please Enter Greater Than Target1";
         }
 
-        if (values.tag2 && values.tag1 <= values.tag2) {
-          errors.tag2 = "Please Enter Less Than Target1"
+        if (values.tag3 && values.tag2 && values.tag2 > values.tag3) {
+          errors.tag3 = "Please Enter Greater Than Target2";
         }
 
-        if (values.tag3 && values.tag2 && values.tag2 <= values.tag3) {
-          errors.tag3 = "Please Enter Less Than Target2"
+        if (values.stoploss && values.price < values.stoploss) {
+          errors.stoploss = "Please Enter Less Than Entry Price";
         }
 
-        if (values.price && values.price >= values.stoploss) {
-          errors.stoploss = "Please Enter greater Than Entry Price"
+      } else if (values.calltype === "SELL") {
+
+        if (values.price && values.tag1 && values.price < values.tag1) {
+          errors.tag1 = "Please Enter Less Than Entry Price";
+        }
+
+        if (values.tag2 && values.tag1 < values.tag2) {
+          errors.tag2 = "Please Enter Less Than Target1";
+        }
+
+        if (values.tag3 && values.tag2 && values.tag2 < values.tag3) {
+          errors.tag3 = "Please Enter Less Than Target2";
+        }
+
+        if (values.stoploss && values.price > values.stoploss) {
+          errors.stoploss = "Please Enter Greater Than Entry Price";
         }
       }
 
-      if (!values.callduration) errors.callduration = 'Please enter Trade duration';
-      if (!values.calltype) errors.calltype = 'Please enter Call Calltype';
-      if (!values.description) errors.description = 'Please enter description';
+      if (!values.callduration) errors.callduration = 'Please Enter Trade Duration';
+      if (!values.calltype) errors.calltype = 'Please Enter Call Calltype';
+      if (!values.description) errors.description = 'Please Enter Description';
+
       if (values.segment === "O" && !values.optiontype) {
         errors.optiontype = 'Please enter option type';
-      };
-      if ((values.segment === "O" || values.segment === "F") && !values.expiry) {
-        errors.expiry = 'Please enter expirydate';
       }
-      if (values.segment === "O" && !values.expiry) {
-        errors.expiry = 'Please Select Strick Price';
+
+      if ((values.segment === "O" || values.segment === "F") && !values.expiry) {
+        errors.expiry = 'Please Enter Expiry Date';
+      }
+
+      if (values.segment === "O" && !values.strikeprice) {
+        errors.strikePrice = 'Please Select Strike Price';
       }
 
       return errors;
     },
+
     onSubmit: async (values) => {
+      setLoading(!loading)
       const req = {
         add_by: user_id,
+        tradesymbol: expirydate[0]?.stock?.tradesymbol || "",
+        lotsize: expirydate[0]?.stock?.lotsize || "",
         stock: values.stock,
         price: values.price,
         tag1: values.tag1,
@@ -155,7 +156,7 @@ const AddSignal = () => {
         optiontype: values.optiontype,
         strikeprice: values.strikeprice,
       };
-
+      
       try {
         const response = await AddSignalByAdmin(req, token);
         if (response.status) {
@@ -168,7 +169,10 @@ const AddSignal = () => {
           });
           setTimeout(() => {
             navigate('/staff/signal');
+            
           }, 2000);
+       
+
         } else {
           Swal.fire({
             title: 'Alert',
@@ -177,8 +181,12 @@ const AddSignal = () => {
             timer: 1500,
             timerProgressBar: true,
           });
+           
+          setLoading(false)
         }
       } catch (error) {
+        setLoading(false)
+
         Swal.fire({
           title: 'Error',
           text: 'An unexpected error occurred. Please try again later.',
@@ -191,6 +199,7 @@ const AddSignal = () => {
   });
 
 
+ 
 
   useEffect(() => {
     if (formik.values.segment) {
@@ -210,19 +219,33 @@ const AddSignal = () => {
         expiry: '',
         optiontype: '',
         strikeprice: '',
-
+        tradesymbol: '',
+        lotsize:''
       });
-
+    
       setSearchItem("")
     }
   }, [formik.values.segment]);
+
+  
+
+  useEffect(() => {
+    if (!searchItem || searchItem.length === 0) {
+      Object.keys(formik.values).forEach(field => {
+        if (field !== "stock" ) {
+          formik.setFieldValue("stock", "");
+        }
+      });
+    }
+  }, [formik.values.stock, searchItem]);
+  
 
 
 
   useEffect(() => {
     const fetchStockData = async () => {
-      const data = { segment: formik.values.segment, symbol: searchItem };
 
+      const data = { segment: formik.values.segment, symbol: searchItem };
       try {
         const stockResponse = await getstockbyservice(data);
         if (stockResponse.status) {
@@ -233,13 +256,13 @@ const AddSignal = () => {
 
         const expiryResponse = await getexpirydate(data);
         if (expiryResponse.status) {
-          setExpirydate(expiryResponse.data);
+             setExpirydate(expiryResponse.data);
         } else {
           console.log("Failed to fetch expiry date", expiryResponse);
         }
 
 
-        const data1 = { ...data, expiry: formik.values.expiry };
+        const data1 = { ...data, expiry: formik.values.expiry , optiontype : formik.values.optiontype };
         const strikePriceResponse = await getstockStrickprice(data1);
         if (strikePriceResponse.status) {
           setStrikePrice(strikePriceResponse.data);
@@ -252,7 +275,7 @@ const AddSignal = () => {
     };
 
     fetchStockData();
-  }, [formik.values.segment, searchItem, formik.values.expiry]);
+  }, [formik.values.segment, searchItem, formik.values.expiry, formik.values.optiontype]);
 
 
 
@@ -269,21 +292,23 @@ const AddSignal = () => {
       ],
       label_size: 12,
       col_size: 8,
+      star:true
     },
+    
+   
     {
       name: 'expiry',
       label: 'Expiry Date',
       type: 'select',
       label_size: 12,
       col_size: 6,
+      star:true,
       options: expirydate.map((item) => ({
         label: item.expiry,
         value: item.expiry,
       })),
       showWhen: (values) => values.segment !== "C",
     },
-
-
     {
       name: 'optiontype',
       label: 'Option Type',
@@ -294,6 +319,7 @@ const AddSignal = () => {
       ],
       label_size: 12,
       col_size: 6,
+      star:true,
       showWhen: (values) => values.segment === "O",
     },
     {
@@ -306,13 +332,7 @@ const AddSignal = () => {
       ],
       label_size: 12,
       col_size: 6,
-    },
-    {
-      name: 'price',
-      label: 'Entry Price',
-      type: 'number',
-      label_size: 12,
-      col_size: 6,
+      star:true
     },
     {
       name: 'strikeprice',
@@ -320,6 +340,7 @@ const AddSignal = () => {
       type: 'select',
       label_size: 12,
       col_size: 6,
+      star:true,
       options: strikePrice.map((item) => ({
         label: item.stock.strike,
         value: item.stock.strike,
@@ -332,16 +353,16 @@ const AddSignal = () => {
       type: 'select',
       options: (() => {
         if (formik.values.segment === "C") {
-          return formik.values.calltype === "sell" ? [
+          return formik.values.calltype === "SELL" ? [
             { label: 'Intraday', value: 'Intraday' }
           ] : [
-            { label: 'Long Term', value: 'Long Term' },
-            { label: 'Medium Term', value: 'Medium Term' },
-            { label: 'Short Term', value: 'Short Term' },
+            { label: 'Short Term (15-30 Days)', value: 'Short Term' },
+            { label: 'Medium Term (Above 3 Month)', value: 'Medium Term' },
+            { label: 'Long Term (Above 1 year)', value: 'Long Term' },
             { label: 'Intraday', value: 'Intraday' }
           ];
         } else if (formik.values.segment === "F") {
-          return formik.values.calltype === "sell" ? [
+          return formik.values.calltype === "SELL" ? [
             { label: 'Short Term', value: 'Short Term' },
             { label: 'Intraday', value: 'Intraday' },
             { label: 'Still Expiry Date', value: 'Still Expiry Date' }
@@ -361,13 +382,25 @@ const AddSignal = () => {
       })(),
       label_size: 12,
       col_size: 6,
+      star:true
     },
+    {
+      name: 'price',
+      label: 'Entry Price',
+      type: 'number',
+      label_size: 12,
+      col_size: 6,
+      star:true
+    },
+    
+   
     {
       name: 'tag1',
       label: 'Target-1',
       type: 'number',
       label_size: 6,
       col_size: 3,
+      star:true
     },
     {
       name: 'tag2',
@@ -404,6 +437,7 @@ const AddSignal = () => {
       type: 'text5',
       label_size: 12,
       col_size: 6,
+      star:true
     },
   ];
 
@@ -429,6 +463,8 @@ const AddSignal = () => {
     borderBottom: '1px solid #ddd',
   };
 
+
+
   return (
     <div style={{ marginTop: '100px' }}>
       <DynamicForm
@@ -439,15 +475,17 @@ const AddSignal = () => {
         formik={formik}
         sumit_btn={true}
         btn_name1_route="/staff/signal"
+        btnstatus={loading}
         additional_field1={
           <div className="mb-3">
             <div className="position-relative">
               <label className="form-label">Select Stock</label>
+              <span className="text-danger">*</span> 
               <input
                 type="text"
                 className="form-control"
-                placeholder="Search Company"
-                name="SearchCompany"
+                placeholder="Search stock"
+                name="stock"
                 onChange={(e) => setSearchItem(e.target.value)}
                 value={searchItem}
                 onClick={() => setShowDropdown(true)}
@@ -476,6 +514,14 @@ const AddSignal = () => {
                   }
                 </div>
               ) : null}
+
+              {formik.touched.stock &&
+                formik.errors.stock ? (
+                <div style={{ color: "red" }}>
+                  {formik.errors.stock}
+                </div>
+              ) : null}
+
             </div>
           </div>
         }

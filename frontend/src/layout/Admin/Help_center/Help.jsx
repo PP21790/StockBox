@@ -4,7 +4,7 @@ import { getHelpMessagelist } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import { Tooltip } from 'antd';
 import { Eye } from 'lucide-react';
-import { fDate } from '../../../Utils/Date_formate';
+import { fDate , fDateTime} from '../../../Utils/Date_formate';
 
 
 
@@ -79,53 +79,46 @@ const Help = () => {
                                                 <i className="bx bx-search" />
                                             </span>
                                         </div>
-
                                     </div>
-
                                     <div className="container py-2">
-
                                         <div className="row">
-
                                             <div className="col py-2">
-                                               
-                                                        {clients.map((item) => (
-                                                            <div className="card radius-15">
-                                                                <div className="card-body p-4 position-relative">
-                                                                    <div className='p-4 border radius-15'>
-
-                                                                    
-                                                            <div key={item.id}>
-                                                                <div className="float-end text-muted">{fDate(item.created_at)}</div>
-                                                                <h4 className="card-title">{item.clientDetails?.FullName}</h4>
-                                                                <hr />
-                                                                <p>
-                                                                    <strong>Email:</strong> {item.clientDetails?.Email}
-                                                                </p>
-                                                                <p>
-                                                                    <strong>Subject:</strong> {item?.subject}
-                                                                </p>
-                                                                <p>
-                                                                    <strong>Phone No:</strong> {item?.PhoneNo}
-                                                                </p>
-                                                                <p>
-                                                                    <strong>Description:</strong> {item?.message}
-                                                                </p>
-                                                            </div>
+                                                {clients.length > 0 ? (
+                                                    clients.map((item) => (
+                                                        <div key={item.id} className="card radius-15">
+                                                            <div className="card-body p-4 position-relative">
+                                                                <div className="p-4 border radius-15">
+                                                                    <div className="float-end text-muted">
+                                                                        {fDateTime(item.created_at)}
+                                                                    </div>
+                                                                    <h4 className="card-title">{item.clientDetails?.FullName}</h4>
+                                                                    <hr />
+                                                                    <p>
+                                                                        <strong>Email:</strong> {item.clientDetails?.Email}
+                                                                    </p>
+                                                                    <p>
+                                                                        <strong>Subject:</strong> {item?.subject}
+                                                                    </p>
+                                                                    <p>
+                                                                        <strong>Phone No:</strong> {item.clientDetails?.PhoneNo}
+                                                                    </p>
+                                                                    <p>
+                                                                        <strong>Description:</strong> {item?.message}
+                                                                    </p>
                                                                 </div>
                                                             </div>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-
-                                              
-
+                                                        </div>
+                                                    ))
+                                                ) : (
+                                                    <p>No Help Message Available</p>
+                                                )}
+                                            </div>
                                         </div>
-
-
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
 
                 </div>

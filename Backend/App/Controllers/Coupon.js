@@ -1,10 +1,15 @@
 const db = require("../Models");
 const Coupon_Modal = db.Coupon;
+const Clients_Modal = db.Clients;
+const Notification_Modal = db.Notification;
+const { sendFCMNotification } = require('./Pushnotification'); 
 const upload = require('../Utils/multerHelper'); 
 
 
 class Coupon {
 
+
+  
     async AddCoupon(req, res) {
         try {
 
@@ -22,7 +27,7 @@ class Coupon {
         });
 
 
-            const { name, code, type, value, startdate, enddate,add_by,minpurchasevalue,mincouponvalue,description } = req.body;
+            const { name, code, type, value, startdate, enddate,add_by,minpurchasevalue,mincouponvalue,description,limitation,service } = req.body;
     
 
             if (!name) {
@@ -72,10 +77,55 @@ class Coupon {
                 mincouponvalue,
                 image,
                 description,
+                limitation,
+                service
             });
     
             await result.save();
     
+
+           
+
+          const clients = await Clients_Modal.find({
+            del: 0,
+            ActiveStatus: 1,
+            devicetoken: { $exists: true, $ne: null }
+          }).select('devicetoken');
+
+          const tokens = clients.map(client => client.devicetoken);
+
+          if (tokens.length > 0) {
+
+
+            const notificationTitle = 'Important Update';
+            const notificationBody =`Discount Offer: Get up to ${value} off! Use code: ${code}.`;
+
+            
+            const resultn = new Notification_Modal({
+              segmentid:result._id,
+              type:"add coupon",
+              title: notificationTitle,
+              message: notificationBody
+          });
+  
+          await resultn.save();
+
+
+          try {
+            // Send notifications to all device tokens
+            await sendFCMNotification(notificationTitle, notificationBody, tokens, "add coupon");
+            console.log('Notifications sent successfully');
+          } catch (error) {
+            console.error('Error sending notifications:', error);
+          }
+
+
+          }
+
+
+
+
+
             console.log("Coupon successfully added:", result);
             return res.json({
                 status: true,
@@ -99,11 +149,12 @@ class Coupon {
   async getCoupon(req, res) {
     try {
 
+
       const { } = req.body;
 
       //const result = await Coupon_Modal.find()
 
-      const result = await Coupon_Modal.find({ del: false }).sort({created_at:-1});
+      const result = await Coupon_Modal.find({ del: false }).sort({enddate:-1});
 
       return res.json({
         status: true,
@@ -115,6 +166,9 @@ class Coupon {
       return res.json({ status: false, message: "Server error", data: [] });
     }
   }
+
+
+
   async activeCoupon(req, res) {
     try {
 
@@ -122,7 +176,7 @@ class Coupon {
 
       //const result = await Coupon_Modal.find()
 
-      const result = await Coupon_Modal.find({ del: false,status: true }).sort({created_at:-1});
+      const result = await Coupon_Modal.find({ del: false,status: true }).sort({enddate:-1});
 
       return res.json({
         status: true,
@@ -175,6 +229,8 @@ class Coupon {
 }
 
 
+
+
   async updateCoupon(req, res) {
     try {
 
@@ -190,7 +246,7 @@ class Coupon {
         });
     });
 
-      const { id, name, code, type, value, startdate, enddate,minpurchasevalue,mincouponvalue,description } = req.body;
+      const { id, name, code, type, value, startdate, enddate,minpurchasevalue,mincouponvalue,description,limitation,service } = req.body;
   
 
       if (!name) {
@@ -240,6 +296,8 @@ class Coupon {
         minpurchasevalue,
         mincouponvalue,
         description,
+        limitation,
+        service
       };
 
 
@@ -361,6 +419,52 @@ class Coupon {
         });
     }
   }
+
+
+  
+  async  showStatusChange(req, res) {
+    try {
+        const { id, status } = req.body;
+    
+        // Validate status
+        const validStatuses = ['0', '1'];
+        if (!validStatuses.includes(status)) {
+            return res.status(400).json({
+                status: false,
+                message: "Invalid status value"
+            });
+        }
+  
+        // Find and update the plan
+        const result = await Coupon_Modal.findByIdAndUpdate(
+            id,
+            { showstatus: status },
+            { new: true } // Return the updated document
+        );
+  
+        if (!result) {
+            return res.status(404).json({
+                status: false,
+                message: "Coupon not found"
+            });
+        }
+  
+        return res.json({
+            status: true,
+            message: "Status updated successfully",
+            data: result
+        });
+  
+    } catch (error) {
+        console.log("Error updating status:", error);
+        return res.status(500).json({
+            status: false,
+            message: "Server error",
+            data: []
+        });
+    }
+  }
+  
   
 }
 module.exports = new Coupon();

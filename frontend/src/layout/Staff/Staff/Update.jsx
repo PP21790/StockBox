@@ -25,16 +25,16 @@ const Update = () => {
     let errors = {};
 
     if (!values.FullName) {
-      errors.FullName = "Please enter Full Name";
+      errors.FullName = "Please Enter Full Name";
     }
     if (!values.Email) {
-      errors.Email = "Please enter Email";
+      errors.Email = "Please Enter Email";
     }
     if (!values.UserName) {
-      errors.UserName = "Please enter Username";
+      errors.UserName = "Please Enter Username";
     }
     if (!values.PhoneNo) {
-      errors.PhoneNo = "Please enter Phone Number";
+      errors.PhoneNo = "Please Enter Phone Number";
     }
    
     

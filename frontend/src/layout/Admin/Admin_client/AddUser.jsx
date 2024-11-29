@@ -7,6 +7,8 @@ import { AddClient } from '../../../Services/Admin';
 
 
 const AddUser = () => {
+
+
   const navigate = useNavigate();
 
   const user_id = localStorage.getItem("id");
@@ -15,38 +17,47 @@ const AddUser = () => {
   const validate = (values) => {
     let errors = {};
 
+
     if (!values.FullName) {
-      errors.FullName = "Please enter Full Name";
+      errors.FullName = "Please Enter Full Name";
+    }
+    
+    if (/\d/.test(values.FullName)) {
+      errors.FullName = "Numbers are not allowed in the Full Name";
     }
     if (!values.Email) {
-      errors.Email = "Please enter Email";
+      errors.Email = "Please Enter Email";
     }
     if (!values.PhoneNo) {
-      errors.PhoneNo = "Please enter Phone Number";
+      errors.PhoneNo = "Please Enter Phone Number";
     }
     if (!values.password) {
-      errors.password = "Please enter password";
+      errors.password = "Please Enter Password";
     }
     if (!values.ConfirmPassword) {
-      errors.ConfirmPassword = "Please confirm your password";
+      errors.ConfirmPassword = "Please Confirm Your Password";
     } else if (values.password !== values.ConfirmPassword) {
-      errors.ConfirmPassword = "Passwords must match";
+      errors.ConfirmPassword = "Passwords Must Match";
     }
 
     return errors;
   };
 
   const onSubmit = async (values) => {
+  
     const req = {
       FullName: values.FullName,
       Email: values.Email,
       PhoneNo: values.PhoneNo,
       password: values.password,
       add_by: user_id,
+      freetrial:values.freetrial
     };
-
+    
+   
     try {
       const response = await AddClient(req, token);
+
       if (response.status) {
         Swal.fire({
           title: "Client Create Successfull !",
@@ -85,11 +96,15 @@ const AddUser = () => {
       PhoneNo: "",
       password: "",
       ConfirmPassword: "",
+      freetrial: 0,
       add_by: "",
     },
     validate,
     onSubmit,
   });
+
+
+
 
   const fields = [
     {
@@ -99,6 +114,7 @@ const AddUser = () => {
       label_size: 6,
       col_size: 6,
       disable: false,
+      star:true
     },
     {
       name: "Email",
@@ -107,6 +123,8 @@ const AddUser = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
+      star:true
+
     },
     {
       name: "PhoneNo",
@@ -115,6 +133,7 @@ const AddUser = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
+      star:true
     },
     {
       name: "password",
@@ -123,6 +142,7 @@ const AddUser = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
+      star:true
     },
     {
       name: "ConfirmPassword",
@@ -131,9 +151,22 @@ const AddUser = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
+      star:true
+    },
+    {
+      name: "freetrial",
+      label: "Free trial status",
+      type: "togglebtn",
+      label_size: 6,
+      col_size: 4,
+      disable: false,
+      star:true
     },
   ];
 
+
+
+  
   return (
     <div style={{ marginTop: "100px" }}>
       <DynamicForm

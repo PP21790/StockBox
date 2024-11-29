@@ -1,23 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
-import Table from '../../../components/Table';
-import { Settings2, Eye, UserPen, Trash2, Download, ArrowDownToLine } from 'lucide-react';
+// import Table from '../../../components/Table';
+import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine, RefreshCcw } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { deleteClient, UpdateClientStatus, PlanSubscription, getplanlist, BasketSubscription, BasketAllList, getcategoryplan } from '../../../Services/Admin';
+import { deleteClient, UpdateClientStatus, PlanSubscription, getclientExportfile, getplanlist, BasketSubscription, BasketAllList, getcategoryplan, getPlanbyUser, AllclientFilter } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
-import { fDateTime, fDate } from '../../../Utils/Date_formate';
+import { fDateTime } from '../../../Utils/Date_formate';
 import { image_baseurl } from '../../../Utils/config';
 import { IndianRupee } from 'lucide-react';
+import { exportToCSV } from '../../../Utils/ExportData';
+import Table from '../../../components/Table1';
 import { getstaffperuser } from '../../../Services/Admin';
 
 
 const Client = () => {
 
+
     const userid = localStorage.getItem('id');
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
+
+    const location = useLocation();
+    const clientStatus = location?.state?.clientStatus;
+
+
 
     const [category, setCategory] = useState([]);
     const [checkedIndex, setCheckedIndex] = useState(0);
@@ -29,71 +37,37 @@ const Client = () => {
     const [selectcategory, setSelectcategory] = useState(null)
     const [searchInput, setSearchInput] = useState("");
     const [selectedPlanId, setSelectedPlanId] = useState(null)
+    const [ForGetCSV, setForGetCSV] = useState([])
+    const [searchkyc, setSearchkyc] = useState("");
+    const [statuscreatedby, setStatuscreatedby] = useState("");
+    const [header, setheader] = useState("Client");
+    const [expired, setExpired] = useState("");
 
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalRows, setTotalRows] = useState(0);
     const [permission, setPermission] = useState([]);
 
-
-    const handleDownload = (row) => {
-
-        const url = `${image_baseurl}uploads/pdf/${row.pdf}`;
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = url;
-
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-    };
-
-
-
-    const [basketdetail, setBasketdetail] = useState({
-        plan_id: "",
-        client_id: "",
-        price: "",
-        discount: ""
-    });
-
-    const [updatetitle, setUpdatetitle] = useState({
-        plan_id: "",
-        client_id: "",
-        price: ""
-    });
-
-
-
-
-
-    const handleTabChange = (index) => {
-        setCheckedIndex(index);
-    };
-
-    const showModal = () => {
-        setIsModalVisible(true);
-    };
-    const handleCancel = () => {
-        setIsModalVisible(false);
-        setSelectcategory("")
-    };
-
-
-    const handleCategoryChange = (categoryId) => {
-        setSelectcategory(categoryId);
-        setSelectedPlanId(null);
-        setUpdatetitle("")
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
     };
 
 
 
 
     useEffect(() => {
-        getAdminclient();
-        getplanlistbyadmin()
-        getbasketlist()
-        getcategoryplanlist()
-        getpermissioninfo()
-    }, [searchInput]);
+        if (clientStatus == 1) {
+            setheader("Active Client")
+        } else if (clientStatus == 0) {
+            setheader("Deactive Client")
+        } else if (clientStatus === "active") {
+            setheader("Total Plan Active Client")
+
+        } else if (clientStatus === "expired") {
+            setheader("Total Plan Expired Client")
+        }
+    }, [clientStatus, clients])
+
 
 
 
@@ -111,13 +85,144 @@ const Client = () => {
 
 
 
+    const handleDownload = (row) => {
+        const url = `${image_baseurl}uploads/pdf/${row.pdf}`;
+        const link = document.createElement('a');
+        link.href = url;
+        link.target = '_blank';
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+
+
+
+
+    const [basketdetail, setBasketdetail] = useState({
+        plan_id: "",
+        client_id: "",
+        price: "",
+        discount: ""
+    });
+
+
+
+    const [updatetitle, setUpdatetitle] = useState({
+        plan_id: "",
+        client_id: "",
+        price: ""
+    });
+
+
+
+
+
+    const handleTabChange = (index) => {
+        setCheckedIndex(index);
+    };
+
+
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
+
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+        setSelectcategory("")
+    };
+
+
+    const handleCategoryChange = (categoryId) => {
+        setSelectcategory(categoryId);
+        setSelectedPlanId(null);
+        setUpdatetitle("")
+    };
+
+
+
+    const resethandle = () => {
+        setSearchkyc("")
+        setSearchInput("")
+        setStatuscreatedby("")
+        setExpired("")
+
+
+    }
+
+    useEffect(() => {
+        getpermissioninfo()
+
+        // getplanlistbyadmin()
+        getbasketlist()
+        getcategoryplanlist()
+    }, []);
+
+
+
+
+    useEffect(() => {
+        getAdminclient();
+    }, [searchInput, searchkyc, statuscreatedby, currentPage, expired, permission]);
+
+
+
+
+
+
+
+    const getexportfile = async () => {
+        try {
+            const response = await getclientExportfile(token);
+            if (response.status) {
+                if (response.data?.length > 0) {
+                    const csvArr = response.data?.map((item) => ({
+                        FullName: item?.FullName || 'N/A',
+                        Email: item?.Email || 'N/A',
+                        kyc_verification: item?.kyc_verification === 1 ? "Verified" : "Not Verified",
+                        PlanStatus: item?.plansStatus?.some(statusItem => statusItem.status === 'active')
+                            ? 'Active'
+                            : item?.plansStatus?.some(statusItem => statusItem.status === 'expired')
+                                ? 'Expired'
+                                : 'N/A',
+                        ClientActiveSegment: item?.plansStatus
+                            ?.filter(statusItem => statusItem.status === 'active')
+                            .map(statusItem => statusItem.serviceName || 'N/A')
+                            .join(', ') || 'N/A',
+                        ClientExpiredSegment: item?.plansStatus
+                            ?.filter(statusItem => statusItem.status === 'expired')
+                            .map(statusItem => statusItem.serviceName || 'N/A')
+                            .join(', ') || 'N/A',
+                        CreatedBy: item?.addedByDetails?.FullName ||
+                            (item?.clientcome === 1 ? "WEB" : "APP") ||
+                            'N/A',
+                        PhoneNo: item?.PhoneNo || 'N/A',
+                        Created_at: fDateTime(item?.createdAt) || 'N/A',
+                    }));
+                    exportToCSV(csvArr, 'All Clients')
+                } else {
+                    console.log("No data available.");
+                }
+            } else {
+                console.error("Failed to fetch data:", response.status);
+            }
+        } catch (error) {
+            console.error("Error fetching clients:", error);
+        }
+    };
+
+
+
+
+
 
     const getcategoryplanlist = async () => {
         try {
             const response = await getcategoryplan(token);
             if (response.status) {
                 setCategory(response.data);
-
             }
         } catch (error) {
             console.log("error");
@@ -126,25 +231,29 @@ const Client = () => {
 
 
 
-
+    
 
 
     const getAdminclient = async () => {
         try {
-            const response = await GetClient(token);
-            if (response.status) {
-                const clientdata = response.data.filter((item) => item.add_by === userid);
-                const filterdata = clientdata.filter((item) =>
-                    searchInput === "" ||
-                    item.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
-                    item.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
-                    item.PhoneNo.toLowerCase().includes(searchInput.toLowerCase())
-                );
 
-                setClients(searchInput ? filterdata : clientdata);
+            const data = {
+                page: currentPage,
+                kyc_verification: searchkyc,
+                status: clientStatus == 1 ? 1 : clientStatus == 0 ? 0 : "",
+                createdby: statuscreatedby,
+                search: searchInput,
+                planStatus: expired === "active" ? "active" : expired === "expired" ? "expired" : clientStatus === "active" ? "active" : clientStatus === "expired" ? "expired" : "",
+                add_by: permission.includes("Ownclient") ? userid : ""
+            };
+
+            const response = await AllclientFilter(data, token);
+            if (response.status) {
+                setClients(response.data);
+                setTotalRows(response.pagination.total);
             }
         } catch (error) {
-            console.log("error");
+            console.error("Error fetching clients:", error);
         }
     };
 
@@ -152,11 +261,11 @@ const Client = () => {
 
 
 
-    const getplanlistbyadmin = async () => {
+    const getplanlistassinstatus = async (_id) => {
         try {
-            const response = await getplanlist(token);
-            if (response.status) {
 
+            const response = await getPlanbyUser(_id, token);
+            if (response.status) {
                 setPlanlist(response.data);
             }
         } catch (error) {
@@ -178,8 +287,6 @@ const Client = () => {
     }
 
 
-
-
     const updateClient = async (row) => {
         navigate("/staff/client/updateclient/" + row._id, { state: { row } })
     }
@@ -188,7 +295,6 @@ const Client = () => {
     const Clientdetail = async (row) => {
         navigate("/staff/clientdetail/" + row._id, { state: { row } })
     }
-
 
 
 
@@ -237,9 +343,8 @@ const Client = () => {
 
 
 
+
     // update status 
-
-
 
     const handleSwitchChange = async (event, id) => {
         const originalChecked = event.target.checked;
@@ -282,6 +387,8 @@ const Client = () => {
             getAdminclient();
         }
     };
+
+
 
 
 
@@ -367,7 +474,7 @@ const Client = () => {
     const columns = [
         {
             name: 'S.No',
-            selector: (row, index) => index + 1,
+            selector: (row, index) => (currentPage - 1) * 10 + index + 1,
             sortable: false,
             width: '100px',
         },
@@ -377,12 +484,66 @@ const Client = () => {
             sortable: true,
             width: '200px',
         },
+
         {
             name: 'Email',
             selector: row => row.Email,
             sortable: true,
             width: '350px',
         },
+        {
+            name: 'Plan Status',
+            cell: row => {
+                const hasActive = row?.plansStatus?.some(item => item.status === 'active');
+                const hasExpired = row?.plansStatus?.some(item => item.status === 'expired');
+
+                let statusText = 'N/A';
+                let color = 'red';
+
+                if (hasActive) {
+                    statusText = 'Active';
+                    color = 'green';
+                } else if (hasExpired) {
+                    statusText = 'Expired';
+                    color = 'orange';
+                }
+
+                return (
+                    <span style={{ color }}>
+                        {statusText}
+                    </span>
+                );
+            },
+            sortable: true,
+            width: '200px',
+        },
+
+        {
+            name: 'Client Segment',
+            cell: row => (
+                <>
+                    {Array.isArray(row?.plansStatus) && row.plansStatus.length > 0 ? (
+                        row.plansStatus.map((item, index) => (
+                            <span
+                                key={index}
+                                style={{
+                                    color: item.status === 'active' ? 'green' : item.status === 'expired' ? 'red' : 'inherit',
+                                    marginRight: '5px',
+                                }}
+                            >
+                                {item.serviceName || "N/A"}
+                            </span>
+                        ))
+                    ) : (
+                        <span>N/A</span>
+                    )}
+                </>
+            ),
+            sortable: true,
+            width: '200px',
+        }
+
+        ,
         {
             name: 'Phone No',
             selector: row => row.PhoneNo,
@@ -392,10 +553,11 @@ const Client = () => {
 
         {
             name: 'Created By',
-            selector: row => row.clientcome == 0 ? "App" : "Web",
+            selector: row => row.addedByDetails?.FullName ?? (row.clientcome === 1 ? "WEB" : "APP"),
             sortable: true,
             width: '165px',
         },
+
         // {
         // name: 'Date',
         // selector: row => row.Status,
@@ -403,7 +565,7 @@ const Client = () => {
         // width: '165px',
         // },
 
-       permission.includes("clientchangestatus") ? {
+        permission.includes("clientchangestatus") ? {
             name: 'Active Status',
             selector: row => (
                 <div className="form-check form-switch form-check-info">
@@ -422,11 +584,11 @@ const Client = () => {
             ),
             sortable: true,
             width: '165px',
-        } :"",
+        } : "",
         {
             name: 'Kyc',
             selector: row => (
-                row.kyc_verification === "1" ? (
+                row.kyc_verification === 1 ? (
                     <div style={{ color: "green", cursor: "pointer" }} onClick={() => handleDownload(row)}>
                         <Tooltip placement="top" overlay="Download">
                             Verified <ArrowDownToLine />
@@ -443,41 +605,46 @@ const Client = () => {
         },
         {
             name: 'CreatedAt',
-            selector: row => fDate(row.createdAt),
+            selector: row => fDateTime(row.createdAt),
             sortable: true,
             width: '200px',
         },
-        {
-            name: 'Actions',
-            selector: (row) => (
-                <>
+        permission.includes("assignPackage") ||
+            permission.includes("viewdetail") ||
+            permission.includes("editclient") ?
+            {
+                name: 'Actions',
+                selector: (row) => (
+                    <div className='d-flex'>
 
+                        {permission.includes("assignPackage") ?
+                            <Tooltip placement="top" overlay="Package Assign">
+                                <span onClick={(e) => { showModal(true); setClientid(row); getplanlistassinstatus(row._id) }} style={{ cursor: 'pointer' }}>
+                                    <Settings2 />
+                                </span>
+                            </Tooltip> : ""}
 
-                    <Tooltip placement="top" overlay="Package Assign">
-                        <span onClick={(e) => { showModal(true); setClientid(row); }} style={{ cursor: 'pointer' }}>
-                            <Settings2 />
-                        </span>
-                    </Tooltip>
+                        {permission.includes("viewdetail") ?
+                            <Tooltip title="view">
+                                <Eye
 
-                    {permission.includes("viewdetail") ? <Tooltip title="view">
-                        <Eye
+                                    onClick={() => Clientdetail(row)} />
+                            </Tooltip> : ""}
 
-                            onClick={() => Clientdetail(row)} />
-                    </Tooltip> : ""}
-
-                    {permission.includes("editclient") ? <Tooltip title="Update">
-                        <UserPen onClick={() => updateClient(row)} />
-                    </Tooltip> : ""}
-                    {/* <Tooltip title="delete">
+                        {permission.includes("editclient") ?
+                            <Tooltip title="Update">
+                                <SquarePen className='ms-3' onClick={() => updateClient(row)} />
+                            </Tooltip> : ""}
+                        {/* <Tooltip title="delete">
                         <Trash2 onClick={() => DeleteClient(row._id)} />
                     </Tooltip> */}
-                </>
-            ),
-            ignoreRowClick: true,
-            allowOverflow: true,
-            button: true,
-            width: '165px',
-        }
+                    </div>
+                ),
+                ignoreRowClick: true,
+                allowOverflow: true,
+                button: true,
+                width: '165px',
+            } : ""
     ];
 
 
@@ -490,7 +657,7 @@ const Client = () => {
                 <div className="page-content">
 
                     <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                        <div className="breadcrumb-title pe-3">Client</div>
+                        <div className="breadcrumb-title pe-3">{header}</div>
                         <div className="ps-3">
                             <nav aria-label="breadcrumb">
                                 <ol className="breadcrumb mb-0 p-0">
@@ -520,6 +687,7 @@ const Client = () => {
                                         <i className="bx bx-search" />
                                     </span>
                                 </div>
+
                                 {permission.includes("addclient") ? <div className="ms-auto">
                                     <Link
                                         to="/staff/addclient"
@@ -532,12 +700,95 @@ const Client = () => {
                                         Add Client
                                     </Link>
                                 </div> : ""}
+                                <div
+                                    className="ms-2"
+                                    onClick={(e) => getexportfile()}
+                                >
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary float-end"
+                                        data-toggle="tooltip"
+                                        data-placement="top"
+                                        title="Export To Excel"
+                                        delay={{ show: "0", hide: "100" }}
+
+                                    >
+                                        <i className="bx bxs-download" aria-hidden="true"></i>
+
+                                        Export-Excel
+                                    </button>
+
+
+
+                                </div>
+
+                            </div>
+                            <div className="row">
+                                <div className="col-md-4 ">
+                                    <div>
+                                        <label htmlFor="kycSelect">Select Kyc</label>
+                                        <select
+                                            id="kycSelect"
+                                            className="form-control radius-10"
+                                            value={searchkyc}
+                                            onChange={(e) => setSearchkyc(e.target.value)}
+                                        >
+                                            <option value="">Select Kyc</option>
+                                            <option value="1">Verified</option>
+                                            <option value="0">Not Verified</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="col-md-4">
+                                    <div >
+                                        <label htmlFor="kycSelect">Select CreatedBy</label>
+                                        <select
+                                            id="CreatedBy"
+                                            className="form-control radius-10"
+                                            value={statuscreatedby}
+                                            onChange={(e) => setStatuscreatedby(e.target.value)}
+                                        >
+                                            <option value="">Select Created By</option>
+                                            <option value="web">Web</option>
+                                            <option value="app">App</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="col-md-3">
+                                    <div>
+                                        <label htmlFor="kycSelect">Select Client</label>
+                                        <select
+                                            id="CreatedBy"
+                                            className="form-control radius-10"
+                                            value={expired}
+                                            onChange={(e) => setExpired(e.target.value)}
+                                        >
+                                            <option value="">Select Client</option>
+                                            <option value="active">Active</option>
+                                            <option value="expired">Expired Or N/A</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div className="col-md-1">
+                                    <div className="refresh-icon mt-4">
+                                        <RefreshCcw onClick={resethandle} />
+                                    </div>
+                                </div>
+
                             </div>
 
 
+                            {/* <Table
+                                columns={columns}
+                                data={clients}
+                            /> */}
                             <Table
                                 columns={columns}
                                 data={clients}
+                                totalRows={totalRows}
+                                currentPage={currentPage}
+                                onPageChange={handlePageChange}
                             />
                         </div>
                     </div>
@@ -589,7 +840,7 @@ const Client = () => {
                                             <>
                                                 <div className='row mt-3'>
                                                     {category && category
-                                                        .filter(cat => planlist.some(plan => plan.category === cat._id))
+                                                        .filter(cat => planlist.some(plan => plan.category._id === cat._id))
                                                         .map((item, index) => (
                                                             <div className='col-lg-4' key={index}>
                                                                 <input
@@ -600,8 +851,10 @@ const Client = () => {
                                                                     id={`proplus-${index}`}
                                                                     onClick={() => handleCategoryChange(item._id)}
                                                                 />
-                                                                <label className="form-check-label" htmlFor={`proplus-${index}`}>
-                                                                    {item.title}
+                                                                <label className="form-check-label" htmlFor={`proplus-${index}`} style={{ fontSize: "12px" }}>
+                                                                    {item.title} (
+                                                                    {item.servicesDetails.map((service) => service.title).join(", ")}
+                                                                    )
                                                                 </label>
                                                             </div>
                                                         ))}
@@ -611,7 +864,7 @@ const Client = () => {
                                                     <form className='card-body mt-3' style={{ height: "40vh", overflowY: "scroll" }} >
                                                         <div className="row">
                                                             {planlist
-                                                                .filter(item => item.category === selectcategory)
+                                                                .filter(item => item.category._id === selectcategory)
                                                                 .map((item, index) => (
                                                                     <div className="col-md-6" key={index}>
                                                                         <div className="card mb-0 my-2">
@@ -630,7 +883,8 @@ const Client = () => {
                                                                                         }}
                                                                                     />
                                                                                     <label className="form-check-label mx-1" style={{ fontSize: "13px", fontWeight: "800" }} htmlFor={`input-plan-${index}`}>
-                                                                                        {item.title}
+                                                                                        {item.validity}
+
                                                                                     </label>
                                                                                 </h5>
 
@@ -645,7 +899,12 @@ const Client = () => {
                                                                                                 aria-expanded={selectedPlanId === item._id}
                                                                                                 aria-controls={`collapse-${item._id}`}
                                                                                             >
-                                                                                                <strong className="text-secondary">Validity: {item.validity}</strong>
+                                                                                                <div className='d-flex justify-content-between'>
+                                                                                                    <div>
+                                                                                                        <strong className="text-secondary m-2">Detail</strong>
+                                                                                                        <strong className="text-success m-2 activestrong">{item?.subscription?.status === "active" ? "Active" : ""}</strong>
+                                                                                                    </div>
+                                                                                                </div>
                                                                                             </button>
                                                                                         </h2>
                                                                                         <div
@@ -657,19 +916,22 @@ const Client = () => {
                                                                                             <div className="accordion-body">
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Price:</strong>
-                                                                                                    <span><IndianRupee /> {item.price}</span>
+                                                                                                    <span><IndianRupee /> {item.price && item.price}</span>
+
+
                                                                                                 </div>
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Validity:</strong>
                                                                                                     <span>{item.validity}</span>
+                                                                                                   
                                                                                                 </div>
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Created At:</strong>
-                                                                                                    <span>{fDate(item.created_at)}</span>
+                                                                                                    <span>{fDateTime(item.created_at)}</span>
                                                                                                 </div>
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Updated At:</strong>
-                                                                                                    <span>{fDate(item.updated_at)}</span>
+                                                                                                    <span>{fDateTime(item.updated_at)}</span>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
@@ -712,10 +974,6 @@ const Client = () => {
                     </div>
                 </>
             )}
-
-
-
-
 
         </div >
 

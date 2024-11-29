@@ -1,6 +1,11 @@
 const db = require("../Models");
 const upload = require('../Utils/multerHelper'); 
 const News_Modal = db.News;
+const Notification_Modal = db.Notification;
+const Clients_Modal = db.Clients;
+const { sendFCMNotification } = require('./Pushnotification'); 
+
+
 class NewsController {
   
     async AddNews(req, res) {
@@ -49,8 +54,40 @@ class NewsController {
             
             
             await result.save();
+
+            const notificationTitle = 'Important Update';
+            const notificationBody = `News Alert ${title}`;
+            
+            const clients = await Clients_Modal.find({
+                del: 0,
+                ActiveStatus: 1,
+                devicetoken: { $exists: true, $ne: null }
+              }).select('devicetoken');
+        
+              const tokens = clients.map(client => client.devicetoken);
+        
+              if (tokens.length > 0) {
+          
+                const resultn = new Notification_Modal({
+                  segmentid:result._id,
+                  type:'add news',
+                  title: notificationTitle,
+                  message: notificationBody
+              });
+        
+              await resultn.save();
+              try {
+                // Send notifications to all device tokens
+                await sendFCMNotification(notificationTitle, notificationBody, tokens,"add news");
+                console.log('Notifications sent successfully');
+              } catch (error) {
+                console.error('Error sending notifications:', error);
+              }
+        
+        
+              }
+        
     
-            console.log("result", result);
             return res.json({
                 status: true,
                 message: "News added successfully",

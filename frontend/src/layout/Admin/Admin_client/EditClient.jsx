@@ -14,15 +14,10 @@ const EditClient = () => {
   const location = useLocation();
   const { row } = location.state;
 
-  // console.log("row",row)
+  
 
   const user_id = localStorage.getItem("id");
   const token = localStorage.getItem("token");
-
-
-
-
-
 
 
 
@@ -114,6 +109,8 @@ const EditClient = () => {
       label_size: 6,
       col_size: 4,
       disable: false,
+      star:true
+
     },
     // {
     //   name: "UserName",
@@ -131,6 +128,8 @@ const EditClient = () => {
       label_size: 12,
       col_size: 4,
       disable: false,
+      star:true
+
     },
     {
       name: "PhoneNo",
@@ -139,6 +138,9 @@ const EditClient = () => {
       label_size: 12,
       col_size: 4,
       disable: false,
+      star:true
+      
+
     },
     // {
     //   name: "password",

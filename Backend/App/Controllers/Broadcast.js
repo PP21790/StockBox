@@ -1,18 +1,19 @@
 const db = require("../Models");
 const Broadcast_Modal = db.Broadcast;
 const Clients_Modal = db.Clients;
+const Notification_Modal = db.Notification;
+const Planmanage = db.Planmanage;
+
 const { sendFCMNotification } = require('./Pushnotification'); // Adjust if necessary
 
 
 class BroadcastController {
     async AddBroadcast(req, res) {
 
-        console.log(req.body);
-
         try {
 
-            const { subject, message, service } = req.body;
-           
+            const { subject, message, service, type } = req.body;
+             console.log("req.body",req.body)
               if (!subject) {
                 return res.status(400).json({ status: false, message: "subject is required" });
               }
@@ -25,19 +26,20 @@ class BroadcastController {
               }
              
              
-              let services;
-              if (Array.isArray(service)) {
-                  services = service.join(',');  // Convert array to comma-separated string
-              } else if (typeof service === 'string') {
-                  services = service;  // If it's already a string, use it directly
-              } else {
-                  return res.status(400).json({ status: false, message: "Invalid service format" });
-              }
+            //   let services;
+            //   if (Array.isArray(service)) {
+            //       services = service.join(',');  // Convert array to comma-separated string
+            //   } else if (typeof service === 'string') {
+            //       services = service;  // If it's already a string, use it directly
+            //   } else {
+            //       return res.status(400).json({ status: false, message: "Invalid service format" });
+            //   }
     
             // Create a new News record
             const result = new Broadcast_Modal({
                 subject: subject,
-                service: services,
+                service: service,
+                type: type,
                 message:message,
             });
             
@@ -45,29 +47,103 @@ class BroadcastController {
             await result.save();
     
 
+
+
+
+
+            // const clients = await Clients_Modal.find({
+            //     del: 0,
+            //     ActiveStatus: 1,
+            //     devicetoken: { $exists: true, $ne: null }
+            //   }).select('devicetoken');
+
+
+            const today = new Date();
+            let clients;
+if(type=="active")
+    {
+         clients = await Clients_Modal.find({
+            del: 0,
+            ActiveStatus: 1,
+            devicetoken: { $exists: true, $ne: null },
+            _id: {
+              $in: await Planmanage.find({
+                serviceid: service,  // Replace `service` with your actual service value
+                enddate: { $gte: today }
+              }).distinct('clientid')  // Assuming 'clientid' is the field linking to Clients_Modal
+            }
+          }).select('devicetoken');
+
+    }
+   else if(type=="expired")
+        {
+            
+         clients = await Clients_Modal.find({
+            del: 0,
+            ActiveStatus: 1,
+            devicetoken: { $exists: true, $ne: null },
+            _id: {
+              $in: await Planmanage.find({
+                serviceid: service,  // Replace `service` with your actual service value
+                enddate: { $lt: today }
+              }).distinct('clientid')  // Assuming 'clientid' is the field linking to Clients_Modal
+            }
+          }).select('devicetoken');
+          
+        }
+        else if(type=="nonsubscribe"){
+            
+    clients = await Clients_Modal.find({
+    del: 0,
+    ActiveStatus: 1,
+    devicetoken: { $exists: true, $ne: null },
+    _id: {
+      $nin: await Planmanage.find({
+        serviceid: service,  // Replace `service` with your actual service value
+      }).distinct('clientid')  // Get client IDs that have active plans
+    }
+  }).select('devicetoken');
+
+       }
+       else{
+            clients = await Clients_Modal.find({
+              del: 0,
+              ActiveStatus: 1,
+              devicetoken: { $exists: true, $ne: null }
+            }).select('devicetoken');
+
+       }
+              const tokens = clients.map(client => client.devicetoken);
+  
+              if (tokens.length > 0) {
+  
+    
+                const notificationTitle = 'Important Update';
+                const notificationBody = `Broadcast Alert ${subject}`;
+
+                const resultn = new Notification_Modal({
+                  segmentid:result._id,
+                  clienttype:type,
+                  type:"add broadcast",
+                  title: notificationTitle,
+                  message: notificationBody
+              });
+      
+              await resultn.save();
+  
+  
+              try {
+                // Send notifications to all device tokens
+                await sendFCMNotification(notificationTitle, notificationBody, tokens, "add broadcast");
+                console.log('Notifications sent successfully');
+              } catch (error) {
+                console.error('Error sending notifications:', error);
+              }
+  
+  
+              }
     
   
-            const clients = await Clients_Modal.find({ del: 0, ActiveStatus: 1 });
-
-            if (!clients || clients.length === 0) {
-              
-            const notificationTitle = 'Important Update';
-            const notificationBody = 'New Broadcast Added......';
-        
-            for (const client of clients) {
-              const deviceToken = client.devicetoken; // Adjust according to your token field name
-        
-              if (deviceToken) {
-                try {
-                  await sendFCMNotification(notificationTitle, notificationBody, deviceToken);
-                } catch (error) {
-                  console.error(`Failed to send notification to client with ID ${client._id}:`, error);
-                }
-              } else {
-                console.log(`No device token found for client with ID ${client._id}`);
-              }
-            }
-          }
 
             return res.json({
                 status: true,

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getstaffperuser } from '../../../Services/Admin';
+import { getstaffperuser, WebLinkforMedia, basicsettinglist } from '../../../Services/Admin';
+import Swal from 'sweetalert2';
+
 
 const Profile = () => {
 
@@ -8,6 +10,23 @@ const Profile = () => {
     const userid = localStorage.getItem('id');
 
     const [data, setData] = useState([])
+    const [clients, setClients] = useState(null);
+
+    const [weblink, setWeblink] = useState({
+        facebook: "",
+        instagram: "",
+        twitter: "",
+        youtube: ""
+    })
+
+
+
+    useEffect(() => {
+        getpermissioninfo()
+        getsettingdetail()
+    }, [])
+
+
 
     const getpermissioninfo = async () => {
         try {
@@ -22,9 +41,60 @@ const Profile = () => {
     };
 
 
-    useEffect(() => {
-        getpermissioninfo()
-    }, [])
+    const getsettingdetail = async () => {
+        try {
+            const response = await basicsettinglist(token);
+            if (response.status) {
+                setWeblink(response.data[0]);
+            }
+        } catch (error) {
+            console.log('error', error);
+        }
+    };
+
+    
+
+    const Updateweblink = async () => {
+        try {
+            const data = {
+                facebook: weblink.facebook,
+                instagram: weblink.instagram,
+                twitter: weblink.twitter,
+                youtube: weblink.youtube
+            };
+
+            const response = await WebLinkforMedia(data, token);
+
+            if (response.status) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Web links updated successfully.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                Swal.fire({
+                    title: 'Oops!',
+                    text: 'There was an issue updating the web links.',
+                    icon: 'error',
+                    confirmButtonText: 'Try Again'
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'Something went wrong. Please try again later.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+           
+        }
+    };
+
+    // const handler=()=>{
+    //     const [key] : value
+    // }
+
 
     return (
         <div>
@@ -77,10 +147,10 @@ const Profile = () => {
                                 <div className="card">
                                     <div className="card-body">
                                         <div className="row ">
-                                            <div className="col-12 d-flex justify-content-end">
+                                            {/* <div className="col-12 d-flex justify-content-end">
                                                 <i className="fadeIn animated bx bx-edit-alt" style={{ fontSize: "1.3rem" }} data-bs-toggle="modal"
                                                     data-bs-target="#example2" />
-                                            </div>
+                                            </div> */}
 
 
                                         </div>
@@ -107,7 +177,7 @@ const Profile = () => {
                                                     </div>
 
                                                 </h6>
-                                                <input type="text" className='form-control' placeholder='https://www.youtube.com/' style={{ width: "auto" }} />
+                                                <input type="text" className='form-control' placeholder='https://www.youtube.com/' style={{ width: "auto" }} value={weblink.youtube} onChange={(e) => { setWeblink({ ...weblink, youtube: e.target.value }) }} />
 
                                             </li>
 
@@ -129,7 +199,7 @@ const Profile = () => {
                                                     </svg>
 
                                                 </h6>
-                                                <input type="text" className='form-control' placeholder='https://x.com/?lang=en' style={{ width: "auto" }} />
+                                                <input type="text" className='form-control' placeholder='https://x.com/?lang=en' style={{ width: "auto" }} value={weblink.twitter} onChange={(e) => { setWeblink({ ...weblink, twitter: e.target.value }) }} />
                                             </li>
                                             <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                 <h6 className="mb-0">
@@ -151,7 +221,7 @@ const Profile = () => {
                                                     </svg>
 
                                                 </h6>
-                                                <input type="text" className='form-control' placeholder='https://www.instagram.com/accounts/login/?hl=en' style={{ width: "auto" }} />
+                                                <input type="text" className='form-control' placeholder='https://www.instagram.com/accounts/login/?hl=en' style={{ width: "auto" }} value={weblink.instagram} onChange={(e) => { setWeblink({ ...weblink, instagram: e.target.value }) }} />
                                             </li>
                                             <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                 <h6 className="mb-0">
@@ -171,9 +241,13 @@ const Profile = () => {
                                                     </svg>
 
                                                 </h6>
-                                                <input type="text" className='form-control' placeholder='https://www.facebook.com/help' style={{ width: "auto" }} />
+                                                <input type="text" className='form-control' placeholder='https://www.facebook.com/help' style={{ width: "auto" }} value={weblink.facebook} onChange={(e) => { setWeblink({ ...weblink, facebook: e.target.value }) }} />
                                             </li>
                                         </ul>
+
+                                        <div className="col-sm-12 d-flex justify-content-end">
+                                            <div className="btn btn-primary mb-0" style={{ fontSize: "14px" }} onClick={Updateweblink}>Update</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

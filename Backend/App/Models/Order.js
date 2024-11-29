@@ -18,6 +18,11 @@ const OrderModel = Schema({
         trim: true,
         default: null
     },
+    uniqueorderid: {
+        type: String,
+        trim: true,
+        default: null
+    },
     borkerid: {
         type: String,
         trim: true,
@@ -28,8 +33,13 @@ const OrderModel = Schema({
         trim: true,
         default: 0
     },
-    status: {
+    ordertype: {
         type: String,
+        trim: true,
+        default: null
+    },
+    status: {
+        type: Number,
         enum: [0, 1], // Example statuses
         default: 0
     },

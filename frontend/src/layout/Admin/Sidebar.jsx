@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { image_baseurl } from '../../Utils/config';
+import { basicsettinglist } from '../../Services/Admin';
 
 const menuItems = [
   { title: 'Dashboard', icon: 'bx-home-alt', link: '/admin/dashboard' },
@@ -29,11 +31,13 @@ const menuItems = [
 
 
   { title: 'Payment History', icon: 'bx-credit-card', link: '/admin/paymenthistory' },
-  { title: 'Payment Request', icon: 'bx-credit-card', link: '/admin/paymentrequest' },
+  { title: 'Withdrawal Request', icon: 'bx-credit-card', link: '/admin/paymentrequest' },
   { title: 'Blogs', icon: 'bx-comment-detail', link: '/admin/blogs' },
   { title: 'News', icon: 'bx-news', link: '/admin/news' },
   { title: 'Coupon', icon: 'bx-edit-alt', link: '/admin/coupon' },
   { title: 'Banner', icon: 'bx-news', link: '/admin/banner' },
+  { title: 'Client Plan Expiry', icon: 'lni-dropbox', link: '/admin/planexpiry' },
+  { title: 'Performance', icon: 'bx-news', link: '/admin/perfom' },
   {
     title: 'Basic Settings',
     icon: 'bx-cog',
@@ -43,7 +47,10 @@ const menuItems = [
       { title: 'Api Information', icon: 'bx-radio-circle', link: '/admin/Apiinfo' },
       { title: 'Payment Gateway', icon: 'bx-radio-circle', link: '/admin/paymentgeteway' },
       { title: 'Email Template', icon: 'bx-radio-circle', link: '/admin/emailtemplate' },
-      { title: 'Refer And Earn', icon: 'bx-radio-circle', link: '/admin/referandearn' }
+      { title: 'Refer And Earn', icon: 'bx-radio-circle', link: '/admin/referandearn' },
+      { title: 'Auto SquareOff', icon: 'bx-radio-circle', link: '/admin/autosquareoff' },
+      { title: 'Bank Detail', icon: 'bx-radio-circle', link: '/admin/bankdetail' },
+      { title: 'QR Detail', icon: 'bx-radio-circle', link: '/admin/QRdetails' }
     ]
   },
   { title: 'Broadcast SMS', icon: 'bx-conversation', link: '/admin/message' },
@@ -60,6 +67,13 @@ const menuItems = [
 const Sidebar = ({ onToggleClick }) => {
   const [activeIndex, setActiveIndex] = useState(null);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [clients, setClients] = useState([]);
+  
+  const token = localStorage.getItem('token');
+  const user_id = localStorage.getItem('id');
+
+
+  
 
   const handleItemClick = (index) => () => {
     setActiveIndex(index);
@@ -71,6 +85,25 @@ const Sidebar = ({ onToggleClick }) => {
     setActiveIndex(index);
   };
 
+   
+
+  const getsettinglist = async () => {
+    try {
+        const response = await basicsettinglist(token);
+        if (response.status) {
+            setClients(response.data);
+        }
+    } catch (error) {
+        console.log('error', error);
+    }
+};
+
+useEffect(() => {
+    getsettinglist();
+}, []);
+
+
+
   return (
     <div>
       <div data-simplebar="init">
@@ -79,13 +112,15 @@ const Sidebar = ({ onToggleClick }) => {
             <div className="sidebar-header">
               <div>
                 <img
-                  src="/assets/images/logo-icon.png"
+                  src={`${image_baseurl}uploads/basicsetting/${clients[0]?.favicon}`}
+                  // src='assets/images/fav5.png'
                   className="logo-icon"
                   alt="logo icon"
                 />
+
               </div>
               <div>
-                <h4 className="logo-text">STOCK BOX</h4>
+                <h4 className="logo-text">{clients[0]?.from_name}</h4>
               </div>
               <div className="toggle-icon ms-auto" onClick={onToggleClick}>
                 <i className="bx bx-arrow-back" />

@@ -5,54 +5,44 @@ import Swal from 'sweetalert2';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { UpdateStaff } from '../../../Services/Admin';
 
-
-
 const Update = () => {
-
-
-
-
   const navigate = useNavigate();
   const location = useLocation();
   const { row } = location.state; 
 
-  const user_id = localStorage.getItem("id");
   const token = localStorage.getItem("token");
 
-  
-
   const validate = (values) => {
-    let errors = {};
-
+    const errors = {};
     if (!values.FullName) {
-      errors.FullName = "Please enter Full Name";
+      errors.FullName = "Please Enter Full Name";
     }
     if (!values.Email) {
-      errors.Email = "Please enter Email";
+      errors.Email = "Please Enter Email";
     }
     if (!values.UserName) {
-      errors.UserName = "Please enter Username";
+      errors.UserName = "Please Enter Username";
     }
     if (!values.PhoneNo) {
-      errors.PhoneNo = "Please enter Phone Number";
+      errors.PhoneNo = "Please Enter Phone Number";
     }
-   
-    
-
     return errors;
   };
 
   const onSubmit = async (values) => {
+
     const req = {
       FullName: values.FullName,
       UserName: values.UserName,
       Email: values.Email,
       PhoneNo: values.PhoneNo,
+      // password: values.password,
       id: row._id,
     };
 
     try {
-      const response = await UpdateStaff(req,token);
+      const response = await UpdateStaff(req, token);
+    
       if (response.status) {
         Swal.fire({
           title: "Update Successful!",
@@ -90,7 +80,7 @@ const Update = () => {
       UserName: row?.UserName || "",
       Email: row?.Email || "",
       PhoneNo: row?.PhoneNo || "",
-    
+      // password: "", 
     },
     validate,
     onSubmit,
@@ -104,6 +94,7 @@ const Update = () => {
       label_size: 6,
       col_size: 6,
       disable: false,
+      star:true
     },
     {
       name: "UserName",
@@ -111,7 +102,8 @@ const Update = () => {
       type: "text",
       label_size: 12,
       col_size: 6,
-      disable: false,
+      disable: true,
+      star:true
     },
     {
       name: "Email",
@@ -120,6 +112,7 @@ const Update = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
+      star:true
     },
     {
       name: "PhoneNo",
@@ -128,8 +121,17 @@ const Update = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
+      star:true
     },
-
+    // {
+    //   name: "password",
+    //   label: "Password",
+    //   type: "password", 
+    //   label_size: 12,
+    //   col_size: 3,
+    //   disable: false,
+    //   star:true
+    // },
   ];
 
   return (

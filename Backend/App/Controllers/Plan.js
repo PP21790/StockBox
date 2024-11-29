@@ -15,7 +15,6 @@ class Plan {
             const { title, description, price, validity, category, add_by } = req.body;
     
             // Debugging: Log the incoming request body to ensure the data is correct
-            console.log("Request Body:", req.body);
     
             const result = new Plan_Modal({
                 title,
@@ -69,6 +68,9 @@ class Plan {
                         path: '$service',
                         preserveNullAndEmptyArrays: true // If a plan does not have a matching service, it will still appear in the result
                     }
+                },
+                {
+                  $sort: { created_at: -1 } // Sort by created_at in descending order
                 }
             ]);
     
@@ -87,6 +89,82 @@ class Plan {
         }
     }
    
+
+
+    async getPlanByClient(req, res) {
+      try {
+
+        const { id } = req.params;
+        const clientId = new mongoose.Types.ObjectId(id); // Convert to ObjectId
+        const plans = await Plan_Modal.aggregate([
+          {
+              $match: { del: false,status:"active" } // Match plans where 'del' is false
+          },
+          {
+              $lookup: {
+                  from: 'plancategories', // The name of the collection to join with
+                  localField: 'category', // The field from the Plan_Modal
+                  foreignField: '_id', // The field from the category
+                  as: 'category' // The name of the new array field to add to the output documents
+              }
+          },
+          {
+              $unwind: {
+                  path: '$category',
+                  preserveNullAndEmptyArrays: true // If a plan does not have a matching category, it will still appear in the result
+              }
+          },
+          {
+    $lookup: {
+      from: 'plansubscriptions',
+      let: { planId: '$_id', clientId: clientId }, // Pass clientId as a variable
+      pipeline: [
+        {
+          $match: {
+            $expr: {
+              $and: [
+                { $eq: ['$plan_id', '$$planId'] }, // Match subscription to the current plan ID
+                { $gte: ['$plan_end', new Date()] }, // Check if subscription is still active
+                { $eq: ['$del', false] }, // Ensure the subscription is not deleted
+                { $eq: ['$client_id', '$$clientId'] } // Match the client ID
+              ]
+            }
+          }
+        },
+        { $sort: { created_at: -1 } }, // Sort by creation date in descending order
+        { $limit: 1 }, // Get only the latest subscription if multiple exist
+        { $project: { status: 1 } } // Only include the status field
+      ],
+      as: 'subscription'
+    }
+  },
+          {
+            $unwind: {
+              path: '$subscription',
+              preserveNullAndEmptyArrays: true // Retain plans without a matching active subscription
+            }
+          },
+          {
+            $sort: { created_at: -1 } // Sort by created_at in descending order
+          }
+      ]);
+  
+          return res.json({
+              status: true,
+              message: "Plans fetched successfully",
+              data: plans
+          });
+  
+      } catch (error) {
+          return res.json({ 
+              status: false, 
+              message: "Server error", 
+              data: [] 
+          });
+      }
+  }
+ 
+
 
     async activePlan(req, res) {
       try {
@@ -109,6 +187,9 @@ class Plan {
                       path: '$category',
                       preserveNullAndEmptyArrays: true // If a plan does not have a matching category, it will still appear in the result
                   }
+              },
+              {
+                $sort: { created_at: -1 } // Sort by created_at in descending order
               }
           ]);
   
@@ -142,6 +223,7 @@ class Plan {
                 });
             }
     
+            
             // Aggregation pipeline
             const plan = await Plan_Modal.aggregate([
                 {
@@ -471,6 +553,7 @@ async  addPlanSubscription(req, res) {
 const today = new Date(); // Aaj ki date
 const existingPlans = await Planmanage.find({
     clientid: client_id,
+    serviceid: serviceId,
     enddate: { $gt: today } // End date must be greater than today's date
 })
 .sort({ enddate: -1 }) // Sort by `enddate` in descending order
@@ -622,6 +705,45 @@ try {
         },
         {
           $lookup: {
+            from: 'plancategories', // The name of the plancategories collection
+            localField: 'planDetails.category', // Field in plans referencing plancategories
+            foreignField: '_id', // The field in the plancategories collection that is referenced
+            as: 'planCategoryDetails' // The name of the field in the result that will hold the joined data
+          }
+        },
+        {
+          $unwind: '$planCategoryDetails' // Unwind if you expect only one matching category
+        },
+        {
+          $lookup: {
+            from: 'services',
+            let: { serviceIds: { $split: ['$planCategoryDetails.service', ','] } },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      {
+                        $in: ['$_id', { $map: { input: '$$serviceIds', as: 'id', in: { $toObjectId: '$$id' } } }]
+                      },
+                      { $eq: ['$status', true] }, // Match active services
+                      { $eq: ['$del', false] } // Match non-deleted services
+                    ]
+                  }
+                }
+              },
+              {
+                $project: {
+                  _id: 1,
+                  title: 1 // Service title
+                }
+              }
+            ],
+            as: 'serviceDetails'
+          }
+        },
+        {
+          $lookup: {
             from: 'clients', // The name of the clients collection
             localField: 'client_id', // The field in PlanSubscription_Modal that references the client
             foreignField: '_id', // The field in the clients collection that is referenced
@@ -633,13 +755,24 @@ try {
         },
         {
           $project: {
+            orderid: 1,
+            created_at: 1,
+            plan_price:1,
+            total:1,
+            coupon:1,
+            discount:1,
             planDetails: 1,
-            clientName: '$clientDetails.FullName', // Assuming the client's name is stored in the 'name' field
-            // Include other fields you want in the result
+            clientName: '$clientDetails.FullName',
+            clientEmail: '$clientDetails.Email',
+            clientPhoneNo: '$clientDetails.PhoneNo',
+            planCategoryTitle: '$planCategoryDetails.title',
+            serviceNames: { $map: { input: '$serviceDetails', as: 'service', in: '$$service.title' } } // Extract service titles
+      
+           
           }
         },
         {
-          $sort: { createdAt: -1 } // Sort by created_at in descending order
+          $sort: { created_at: -1 } // Sort by created_at in descending order
         }
       ]);
   
@@ -655,8 +788,173 @@ try {
       return res.status(500).json({ status: false, message: 'Server error', data: [] });
     }
   }
-  
 
+
+
+  async paymentHistoryWithFilter(req, res) {
+    try {
+      const { fromDate, toDate, search, page = 1 } = req.body; // Extract fromDate, toDate, page, and limit from the request body
+      let limit = 10;
+      const skip = (parseInt(page) - 1) * parseInt(limit); // Calculate the number of items to skip based on page and limit
+  
+      // Build match conditions based on the date range
+      const matchConditions = { del: false };
+
+
+      
+      if (fromDate && toDate) {
+        const startOfFromDate = new Date(fromDate);
+        startOfFromDate.setHours(0, 0, 0, 0); 
+      
+        const endOfToDate = new Date(toDate);
+        endOfToDate.setHours(23, 59, 59, 999); 
+      
+        matchConditions.created_at = {
+          $gte: startOfFromDate,
+          $lte: endOfToDate,
+        };
+      }
+
+
+      const searchMatch = search && search.trim() !== "" ? {
+        $or: [
+          { "clientDetails.FullName": { $regex: search, $options: "i" } }, // Search by client name
+          { "clientDetails.Email": { $regex: search, $options: "i" } },    // Search by client email
+          { "clientDetails.PhoneNo": { $regex: search, $options: "i" } }   // Search by client mobile
+        ]
+      } : {};
+  
+      const result = await PlanSubscription_Modal.aggregate([
+        {
+          $match: matchConditions
+        },
+        {
+          $lookup: {
+            from: 'plans', // The name of the plans collection
+            localField: 'plan_id', // The field in PlanSubscription_Modal that references the plans
+            foreignField: '_id', // The field in the plans collection that is referenced
+            as: 'planDetails' // The name of the field in the result that will hold the joined data
+          }
+        },
+        {
+          $unwind: '$planDetails' // Optional: Unwind the result if you expect only one matching plan per subscription
+        },
+        {
+          $lookup: {
+            from: 'plancategories', // The name of the plancategories collection
+            localField: 'planDetails.category', // Field in plans referencing plancategories
+            foreignField: '_id', // The field in the plancategories collection that is referenced
+            as: 'planCategoryDetails' // The name of the field in the result that will hold the joined data
+          }
+        },
+        {
+          $unwind: '$planCategoryDetails' // Unwind if you expect only one matching category
+        },
+        {
+          $lookup: {
+            from: 'services',
+            let: { serviceIds: { $split: ['$planCategoryDetails.service', ','] } },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      {
+                        $in: ['$_id', { $map: { input: '$$serviceIds', as: 'id', in: { $toObjectId: '$$id' } } }]
+                      },
+                      { $eq: ['$status', true] }, // Match active services
+                      { $eq: ['$del', false] } // Match non-deleted services
+                    ]
+                  }
+                }
+              },
+              {
+                $project: {
+                  _id: 1,
+                  title: 1 // Service title
+                }
+              }
+            ],
+            as: 'serviceDetails'
+          }
+        },
+        {
+          $lookup: {
+            from: 'clients', // The name of the clients collection
+            localField: 'client_id', // The field in PlanSubscription_Modal that references the client
+            foreignField: '_id', // The field in the clients collection that is referenced
+            as: 'clientDetails' // The name of the field in the result that will hold the joined client data
+          }
+        },
+        {
+          $unwind: '$clientDetails' // Optional: Unwind the result if you expect only one matching client per subscription
+        },
+        { $match: searchMatch },
+        {
+          $project: {
+            orderid: 1,
+            created_at: 1,
+            plan_price: 1,
+            total: 1,
+            coupon: 1,
+            discount: 1,
+            validity:1,
+            planDetails: 1,
+            clientName: '$clientDetails.FullName',
+            clientEmail: '$clientDetails.Email',
+            clientPhoneNo: '$clientDetails.PhoneNo',
+            planCategoryTitle: '$planCategoryDetails.title',
+            serviceNames: { $map: { input: '$serviceDetails', as: 'service', in: '$$service.title' } } // Extract service titles
+          }
+        },
+        {
+          $sort: { created_at: -1 } // Sort by created_at in descending order
+        },
+        {
+          $skip: skip // Pagination: Skip the first 'skip' number of items
+        },
+        {
+          $limit: parseInt(limit) // Limit the result to 'limit' items
+        }
+      ]);
+  
+      // Get the total count for pagination
+      const totalRecordsPipeline = [
+        { $match: matchConditions },
+        {
+          $lookup: {
+            from: 'clients',
+            localField: 'client_id',
+            foreignField: '_id',
+            as: 'clientDetails'
+          }
+        },
+        { $unwind: '$clientDetails' },
+        { $match: searchMatch },
+        { $count: 'total' }
+      ];
+      const totalRecordsResult = await PlanSubscription_Modal.aggregate(totalRecordsPipeline);
+      const totalRecords = totalRecordsResult[0] ? totalRecordsResult[0].total : 0;
+      const totalPages = Math.ceil(totalRecords / limit);
+      // Respond with the retrieved subscriptions
+      return res.json({
+        status: true,
+        message: "Subscriptions retrieved successfully",
+        data: result,
+        pagination: {
+          total: totalRecords,
+          page: parseInt(page),
+          limit: parseInt(limit),
+          totalPages
+        }
+      });
+  
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ status: false, message: 'Server error', data: [] });
+    }
+  }
+  
 
 
 

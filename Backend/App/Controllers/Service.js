@@ -49,10 +49,8 @@ class Service {
     try {
 
      
-     
       const { } = req.body;
 
-    //  const result = await Service_Modal.find()
       const result = await Service_Modal.find({ del: false });
 
 

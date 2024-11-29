@@ -85,11 +85,12 @@ const Staffpermission = () => {
             userPermissions: false,
             addclient: false,
             viewclient: false,
+            Ownclient: false,
             viewdetail: false,
             editclient: false,
             // deleteclient: false,
             clientchangestatus: false,
-
+            assignPackage: false,
 
             planpermission: false,
             addplan: false,
@@ -99,6 +100,7 @@ const Staffpermission = () => {
             planstatus: false,
 
             signalstatus: false,
+            ownsignal: false,
             // deletesignal: false,
             editsignal: false,
             viewsignal: false,
@@ -106,18 +108,18 @@ const Staffpermission = () => {
             addsignal: false,
             Signalpermission: false,
 
-            Staffpermission: false,
-            addstaff: false,
-            editstaff: false,
-            viewstaff: false,
+            // Staffpermission: false,
+            // addstaff: false,
+            // editstaff: false,
+            // viewstaff: false,
             // deletestaff: false,
-            staffstatus: false,
+            // staffstatus: false,
             
             newspermission: false,
             addnews: false,
             editnews: false,
             viewnews: false,
-            // deletenews: false,
+            deletenews: false,
             newsstatus: false,
 
 
@@ -125,7 +127,7 @@ const Staffpermission = () => {
             addbanner: false,
             editbanner: false,
             viewbanner: false,
-            // deletebanner: false,
+            deletebanner: false,
             bannerstatus: false,
            
 
@@ -134,7 +136,7 @@ const Staffpermission = () => {
             editcoupon: false,
             viewcoupon: false,
             coupondetail: false,
-            // deletecoupon: false,
+            deletecoupon: false,
             couponstatus: false,
 
 
@@ -143,7 +145,7 @@ const Staffpermission = () => {
             editblogs: false,
             viewblogs: false,
             blogdetail:false,
-            // deleteblogs: false,
+            deleteblogs: false,
             blogsstatus: false,
 
 
@@ -152,7 +154,7 @@ const Staffpermission = () => {
             addfaq: false,
             editfaq: false,
             viewfaq: false,
-            // deletefaq: false,
+            deletefaq: false,
             faqstatus: false,
 
 
@@ -169,6 +171,13 @@ const Staffpermission = () => {
             editfreeclient: false,
             viewfreeclient: false,
             freeclientstatus: false,
+
+            otherpermission: false,
+            paymenthistory: false,
+            planexpiry: false,
+            perform: false,
+           
+
            
 
         },
@@ -179,10 +188,12 @@ const Staffpermission = () => {
         if (clients.length > 0) {
             formik.setFieldValue('addclient', clients.includes('addclient'));
             formik.setFieldValue('viewclient', clients.includes('viewclient'));
+            formik.setFieldValue('Ownclient', clients.includes('Ownclient'));
             formik.setFieldValue('viewdetail', clients.includes('viewdetail'));
             formik.setFieldValue('editclient', clients.includes('editclient'));
             // formik.setFieldValue('deleteclient', clients.includes('deleteclient'));
             formik.setFieldValue('clientchangestatus', clients.includes('clientchangestatus'));
+            formik.setFieldValue('assignPackage', clients.includes('assignPackage'));
             formik.setFieldValue('userPermissions', clients.includes('userPermissions'));
 
 
@@ -202,15 +213,16 @@ const Staffpermission = () => {
             formik.setFieldValue('signaldetail', clients.includes('signaldetail'));
             // formik.setFieldValue('deletesignal', clients.includes('deletesignal'));
             formik.setFieldValue('signalstatus', clients.includes('signalstatus'));
+            formik.setFieldValue('ownsignal', clients.includes('ownsignal'));
 
 
 
-            formik.setFieldValue('Staffpermission', clients.includes('Staffpermission'));
-            formik.setFieldValue('addstaff', clients.includes('addstaff'));
-            formik.setFieldValue('editstaff', clients.includes('editstaff'));
-            formik.setFieldValue('viewstaff', clients.includes('viewstaff'));
-            // formik.setFieldValue('deletestaff', clients.includes('deletestaff'));
-            formik.setFieldValue('staffstatus', clients.includes('staffstatus'));
+            // formik.setFieldValue('Staffpermission', clients.includes('Staffpermission'));
+            // formik.setFieldValue('addstaff', clients.includes('addstaff'));
+            // formik.setFieldValue('editstaff', clients.includes('editstaff'));
+            // formik.setFieldValue('viewstaff', clients.includes('viewstaff'));
+            // // formik.setFieldValue('deletestaff', clients.includes('deletestaff'));
+            // formik.setFieldValue('staffstatus', clients.includes('staffstatus'));
 
 
 
@@ -218,7 +230,7 @@ const Staffpermission = () => {
             formik.setFieldValue('addnews', clients.includes('addnews'));
             formik.setFieldValue('editnews', clients.includes('editnews'));
             formik.setFieldValue('viewnews', clients.includes('viewnews'));
-            // formik.setFieldValue('deletenews', clients.includes('deletenews'));
+            formik.setFieldValue('deletenews', clients.includes('deletenews'));
             formik.setFieldValue('newsstatus', clients.includes('newsstatus'));
 
 
@@ -227,7 +239,7 @@ const Staffpermission = () => {
             formik.setFieldValue('addbanner', clients.includes('addbanner'));
             formik.setFieldValue('editbanner', clients.includes('editbanner'));
             formik.setFieldValue('viewbanner', clients.includes('viewbanner'));
-            // formik.setFieldValue('deletebanner', clients.includes('deletebanner'));
+            formik.setFieldValue('deletebanner', clients.includes('deletebanner'));
             formik.setFieldValue('bannerstatus', clients.includes('bannerstatus'));
 
 
@@ -237,7 +249,7 @@ const Staffpermission = () => {
             formik.setFieldValue('editcoupon', clients.includes('editcoupon'));
             formik.setFieldValue('viewcoupon', clients.includes('viewcoupon'));
             formik.setFieldValue('coupondetail', clients.includes('coupondetail'));
-            // formik.setFieldValue('deletecoupon', clients.includes('deletecoupon'));
+            formik.setFieldValue('deletecoupon', clients.includes('deletecoupon'));
             formik.setFieldValue('couponstatus', clients.includes('couponstatus'));
 
 
@@ -246,7 +258,7 @@ const Staffpermission = () => {
             formik.setFieldValue('editblogs', clients.includes('editblogs'));
             formik.setFieldValue('viewblogs', clients.includes('viewblogs'));
             formik.setFieldValue('blogdetail', clients.includes('blogdetail'));
-            // formik.setFieldValue('deleteblogs', clients.includes('deleteblogs'));
+            formik.setFieldValue('deleteblogs', clients.includes('deleteblogs'));
             formik.setFieldValue('blogsstatus', clients.includes('blogsstatus'));
 
               
@@ -254,7 +266,7 @@ const Staffpermission = () => {
             formik.setFieldValue('addfaq', clients.includes('addfaq'));
             formik.setFieldValue('editfaq', clients.includes('editfaq'));
             formik.setFieldValue('viewfaq', clients.includes('viewfaq'));
-            // formik.setFieldValue('deletefaq', clients.includes('deletefaq'));
+            formik.setFieldValue('deletefaq', clients.includes('deletefaq'));
             formik.setFieldValue('faqstatus', clients.includes('faqstatus'));
 
 
@@ -271,6 +283,13 @@ const Staffpermission = () => {
             formik.setFieldValue('editfreeclient', clients.includes('editfreeclient'));
             formik.setFieldValue('viewfreeclient', clients.includes('viewfreeclient'));
             formik.setFieldValue('freeclientstatus', clients.includes('freeclientstatus'));
+
+
+            formik.setFieldValue('otherpermission', clients.includes('otherpermission'));
+            formik.setFieldValue('paymenthistory', clients.includes('paymenthistory'));
+            formik.setFieldValue('planexpiry', clients.includes('planexpiry'));
+            formik.setFieldValue('perform', clients.includes('perform'));
+          
            
         }
     }, [clients]);
@@ -281,28 +300,35 @@ const Staffpermission = () => {
         if (formik.values.userPermissions == true ) {
             formik.setFieldValue('addclient', true);
             formik.setFieldValue('viewclient', true);
+            formik.setFieldValue('Ownclient', false);
             formik.setFieldValue('viewdetail', true);
             formik.setFieldValue('editclient', true);
             // formik.setFieldValue('deleteclient', true);
             formik.setFieldValue('clientchangestatus', true);
+            formik.setFieldValue('assignPackage', true);
         }
         else {
             formik.setFieldValue('addclient', false);
             formik.setFieldValue('viewclient', false);
+            // formik.setFieldValue('Ownclient', true);
             formik.setFieldValue('viewdetail', false);
             formik.setFieldValue('editclient', false);
             // formik.setFieldValue('deleteclient', false);
             formik.setFieldValue('clientchangestatus', false);
+            formik.setFieldValue('assignPackage', false);
         }
 
     }, [formik.values.userPermissions])
+
+   
+
    
 
     useEffect(() => {
-        if (formik.values.addclient || formik.values.editclient || formik.values.clientchangestatus) {
+        if (formik.values.addclient || formik.values.editclient || formik.values.clientchangestatus || formik.values.assignPackage || formik.values.Ownclient ) {
             formik.setFieldValue('viewclient', true);
         }
-    }, [formik.values.addclient, formik.values.editclient, formik.values.clientchangestatus]);
+    }, [formik.values.addclient, formik.values.editclient, formik.values.clientchangestatus, formik.values.assignPackage , formik.values.Ownclient]);
     
   
 
@@ -310,6 +336,7 @@ const Staffpermission = () => {
     useEffect(() => {
         if (formik.values.Signalpermission == true) {
             formik.setFieldValue('signalstatus', true);
+            formik.setFieldValue('ownsignal', false);
             formik.setFieldValue('viewsignal', true);
             formik.setFieldValue('signaldetail', true);
             formik.setFieldValue('addsignal', true);
@@ -319,6 +346,7 @@ const Staffpermission = () => {
         }
         else {
             formik.setFieldValue('signalstatus', false);
+            // formik.setFieldValue('ownsignal', false);
             formik.setFieldValue('viewsignal', false);
             formik.setFieldValue('signaldetail', false);
             formik.setFieldValue('addsignal', false);
@@ -331,10 +359,10 @@ const Staffpermission = () => {
     
     
     useEffect(() => {
-        if (formik.values.signalstatus || formik.values.signaldetail || formik.values.addsignal ||  formik.values.editsignal ) {
+        if (formik.values.signalstatus || formik.values.ownsignal|| formik.values.signaldetail || formik.values.addsignal ||  formik.values.editsignal ) {
             formik.setFieldValue('viewsignal', true);
         }
-    }, [formik.values.signalstatus, formik.values.signaldetail, formik.values.addsignal,formik.values.editsignal]);
+    }, [formik.values.signalstatus, formik.values.signaldetail, formik.values.addsignal,formik.values.editsignal , formik.values.ownsignal]);
     
 
 
@@ -398,25 +426,25 @@ const Staffpermission = () => {
 
 
 
-    useEffect(() => {
-        if (formik.values.Staffpermission == true) {
-            formik.setFieldValue('addstaff', true);
-            formik.setFieldValue('editstaff', true);
-            formik.setFieldValue('viewstaff', true);
-            // formik.setFieldValue('deletestaff', true);
-            formik.setFieldValue('staffstatus', true);
+    // useEffect(() => {
+    //     if (formik.values.Staffpermission == true) {
+    //         formik.setFieldValue('addstaff', true);
+    //         formik.setFieldValue('editstaff', true);
+    //         formik.setFieldValue('viewstaff', true);
+    //         // formik.setFieldValue('deletestaff', true);
+    //         formik.setFieldValue('staffstatus', true);
 
-        }
-        else {
-            formik.setFieldValue('addstaff', false);
-            formik.setFieldValue('editstaff', false);
-            formik.setFieldValue('viewstaff', false);
-            // formik.setFieldValue('deletestaff', false);
-            formik.setFieldValue('staffstatus', false);
+    //     }
+    //     else {
+    //         formik.setFieldValue('addstaff', false);
+    //         formik.setFieldValue('editstaff', false);
+    //         formik.setFieldValue('viewstaff', false);
+    //         // formik.setFieldValue('deletestaff', false);
+    //         formik.setFieldValue('staffstatus', false);
 
-        }
+    //     }
 
-    }, [formik.values.Staffpermission])
+    // }, [formik.values.Staffpermission])
 
 
     useEffect(() => {
@@ -432,7 +460,7 @@ const Staffpermission = () => {
             formik.setFieldValue('addbanner', true);
             formik.setFieldValue('editbanner', true);
             formik.setFieldValue('viewbanner', true);
-            // formik.setFieldValue('deletebanner', true);
+            formik.setFieldValue('deletebanner', true);
             formik.setFieldValue('bannerstatus', true);
 
         }
@@ -440,7 +468,7 @@ const Staffpermission = () => {
             formik.setFieldValue('addbanner', false);
             formik.setFieldValue('editbanner', false);
             formik.setFieldValue('viewbanner', false);
-            // formik.setFieldValue('deletebanner', false);
+            formik.setFieldValue('deletebanner', false);
             formik.setFieldValue('bannerstatus', false);
 
         }
@@ -448,10 +476,10 @@ const Staffpermission = () => {
     }, [formik.values.bannerpermission])
    
     useEffect(() => {
-        if (formik.values.addbanner || formik.values.editbanner || formik.values.bannerstatus  ) {
+        if (formik.values.addbanner || formik.values.editbanner || formik.values.bannerstatus || formik.values.deletebanner ) {
             formik.setFieldValue('viewbanner', true);
         }
-    }, [formik.values.addbanner , formik.values.editbanner , formik.values.bannerstatus]);
+    }, [formik.values.addbanner , formik.values.editbanner , formik.values.bannerstatus ,  formik.values.deletebanner]);
 
 
 
@@ -462,7 +490,7 @@ const Staffpermission = () => {
             formik.setFieldValue('editcoupon', true);
             formik.setFieldValue('viewcoupon', true);
             formik.setFieldValue('coupondetail', true);
-            // formik.setFieldValue('deletecoupon', true);
+            formik.setFieldValue('deletecoupon', true);
             formik.setFieldValue('couponstatus', true);
 
         }
@@ -471,7 +499,7 @@ const Staffpermission = () => {
             formik.setFieldValue('editcoupon', false);
             formik.setFieldValue('viewcoupon', false);
             formik.setFieldValue('coupondetail', false);
-            // formik.setFieldValue('deletecoupon', false);
+            formik.setFieldValue('deletecoupon', false);
             formik.setFieldValue('couponstatus', false);
 
         }
@@ -480,10 +508,10 @@ const Staffpermission = () => {
   
 
     useEffect(() => {
-        if (formik.values.addcoupon || formik.values.editcoupon || formik.values.coupondetail || formik.values.coupondetail  ) {
+        if (formik.values.addcoupon || formik.values.editcoupon || formik.values.coupondetail || formik.values.coupondetail || formik.values.deletecoupon  ) {
             formik.setFieldValue('viewcoupon', true);
         }
-    }, [formik.values.addcoupon ,formik.values.editcoupon ,formik.values.coupondetail ,formik.values.coupondetail ]);
+    }, [formik.values.addcoupon ,formik.values.editcoupon ,formik.values.coupondetail ,formik.values.coupondetail, formik.values.deletecoupon ]);
 
 
 
@@ -495,7 +523,7 @@ const Staffpermission = () => {
             formik.setFieldValue('editblogs', true);
             formik.setFieldValue('viewblogs', true);
             formik.setFieldValue('blogdetail', true);
-            // formik.setFieldValue('deleteblogs', true);
+            formik.setFieldValue('deleteblogs', true);
             formik.setFieldValue('blogsstatus', true);
 
         }
@@ -504,7 +532,7 @@ const Staffpermission = () => {
             formik.setFieldValue('editblogs', false);
             formik.setFieldValue('viewblogs', false);
             formik.setFieldValue('blogdetail', false);
-            // formik.setFieldValue('deleteblogs', false);
+            formik.setFieldValue('deleteblogs', false);
             formik.setFieldValue('blogsstatus', false);
 
         }
@@ -513,10 +541,10 @@ const Staffpermission = () => {
 
    
     useEffect(() => {
-        if (formik.values.addblogs || formik.values.editblogs || formik.values.blogdetail || formik.values.blogsstatus  ) {
+        if (formik.values.addblogs || formik.values.editblogs || formik.values.blogdetail || formik.values.blogsstatus || formik.values.blogdetail ) {
             formik.setFieldValue('viewblogs', true);
         }
-    }, [formik.values.addblogs ,formik.values.editblogs ,formik.values.blogdetail ,formik.values.blogsstatus ]);
+    }, [formik.values.addblogs ,formik.values.editblogs ,formik.values.blogdetail ,formik.values.blogsstatus, formik.values.blogdetail ]);
 
 
 
@@ -525,7 +553,7 @@ const Staffpermission = () => {
             formik.setFieldValue('addfaq', true);
             formik.setFieldValue('editfaq', true);
             formik.setFieldValue('viewfaq', true);
-            // formik.setFieldValue('deletefaq', true);
+            formik.setFieldValue('deletefaq', true);
             formik.setFieldValue('faqstatus', true);
 
         }
@@ -533,7 +561,7 @@ const Staffpermission = () => {
             formik.setFieldValue('addfaq', false);
             formik.setFieldValue('editfaq', false);
             formik.setFieldValue('viewfaq', false);
-            // formik.setFieldValue('deletefaq', false);
+            formik.setFieldValue('deletefaq', false);
             formik.setFieldValue('faqstatus', false);
 
         }
@@ -541,10 +569,10 @@ const Staffpermission = () => {
     }, [formik.values.faqpermission])
   
     useEffect(() => {
-        if (formik.values.addfaq || formik.values.editfaq ||  formik.values.faqstatus  ) {
+        if (formik.values.addfaq || formik.values.editfaq ||  formik.values.faqstatus || formik.values.deletefaq  ) {
             formik.setFieldValue('viewfaq', true);
         }
-    }, [formik.values.addfaq ,formik.values.editfaq ,formik.values.faqstatus ]);
+    }, [formik.values.addfaq ,formik.values.editfaq ,formik.values.faqstatus,formik.values.deletefaq  ]);
 
 
 
@@ -554,7 +582,7 @@ const Staffpermission = () => {
             formik.setFieldValue('addnews', true);
             formik.setFieldValue('editnews', true);
             formik.setFieldValue('viewnews', true);
-            // formik.setFieldValue('deletenews', true);
+            formik.setFieldValue('deletenews', true);
             formik.setFieldValue('newsstatus', true);
 
         }
@@ -562,7 +590,7 @@ const Staffpermission = () => {
             formik.setFieldValue('addnews', false);
             formik.setFieldValue('editnews', false);
             formik.setFieldValue('viewnews', false);
-            // formik.setFieldValue('deletenews', false);
+            formik.setFieldValue('deletenews', false);
             formik.setFieldValue('newsstatus', false);
 
         }
@@ -571,10 +599,10 @@ const Staffpermission = () => {
 
   
     useEffect(() => {
-        if (formik.values.addnews || formik.values.editnews ||  formik.values.newsstatus  ) {
+        if (formik.values.addnews || formik.values.editnews ||  formik.values.newsstatus || formik.values.deletenews  ) {
             formik.setFieldValue('viewnews', true);
         }
-    }, [formik.values.addnews ,formik.values.editnews ,formik.values.newsstatus ]);
+    }, [formik.values.addnews ,formik.values.editnews ,formik.values.newsstatus, formik.values.deletenews ]);
 
 
 
@@ -606,6 +634,35 @@ const Staffpermission = () => {
     }, [formik.values.addfreeclient ,formik.values.editfreeclient ,formik.values.freeclientstatus ]);
 
     
+  
+    useEffect(() => {
+        if (formik.values.otherpermission == true) {
+            formik.setFieldValue('paymenthistory', true);
+            formik.setFieldValue('planexpiry', true);   
+            formik.setFieldValue('perform', true);
+           
+         
+
+        }
+        else {
+            formik.setFieldValue('paymenthistory', false);
+            formik.setFieldValue('planexpiry', false);
+            formik.setFieldValue('perform', false);
+           
+            
+
+        }
+
+    }, [formik.values.otherpermission]) 
+
+      
+    // useEffect(() => {
+    //     if (formik.values.paymenthistory || formik.values.planexpiry ||  formik.values.perform  ) {
+    //         formik.setFieldValue('otherpermission', true);
+    //     }
+    // }, [formik.values.paymenthistory ,formik.values.planexpiry ,formik.values.perform ]);
+
+
 
     const fields = [
         {
@@ -642,8 +699,17 @@ const Staffpermission = () => {
             label_size: 12,
             col_size: 2,
             // check_box_true: formik.values.viewclient,
-            check_box_true: formik.values.userPermissions ||formik.values.clientchangestatus || formik.values.editclient || formik.values.viewdetail || formik.values.addclient || formik.values.viewclient ? true : false,
+            check_box_true: formik.values.userPermissions || formik.values.Ownclient || formik.values.assignPackage || formik.values.clientchangestatus || formik.values.editclient || formik.values.viewdetail || formik.values.addclient || formik.values.viewclient ? true : false,
 
+        },
+        {
+            name: 'Ownclient',
+            label: 'Own Client',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.addclient,
+            check_box_true:  formik.values.Ownclient  ? true : false,
         },
         {
             name: 'addclient',
@@ -690,6 +756,15 @@ const Staffpermission = () => {
             col_size: 2,
             // check_box_true: formik.values.clientchangestatus,
             check_box_true: formik.values.userPermissions || formik.values.clientchangestatus ? true : false,
+        },
+        {
+            name: 'assignPackage',
+            label: 'Assign Package',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.clientchangestatus,
+            check_box_true: formik.values.userPermissions || formik.values.assignPackage ? true : false,
         },
         {
             name: 'planpermission',
@@ -764,7 +839,17 @@ const Staffpermission = () => {
             label_size: 12,
             col_size: 2,
             // check_box_true: formik.values.viewservice,
-            check_box_true: formik.values.Signalpermission || formik.values.signalstatus || formik.values.editsignal || formik.values.signaldetail ||formik.values.addsignal || formik.values.viewsignal ? true : false,
+            check_box_true: formik.values.Signalpermission ||  formik.values.ownsignal || formik.values.signalstatus  || formik.values.editsignal || formik.values.signaldetail ||formik.values.addsignal || formik.values.viewsignal ? true : false,
+        },
+        {
+            name: 'ownsignal',
+            label: 'Own Signal',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.addservice,
+            check_box_true:  formik.values.ownsignal ? true : false,
+
         },
         {
             name: 'addsignal',
@@ -814,61 +899,61 @@ const Staffpermission = () => {
         },
         
         
-        {
-            name: 'Staffpermission',
-            label: 'All Staff',
-            type: 'checkbox',
-            label_size: 12,
-            col_size: 2,
-            check_box_true: formik.values.Staffpermission,
-            bold: true
-        },
-        {
-            name: 'viewstaff',
-            label: 'View Staff',
-            type: 'checkbox',
-            label_size: 12,
-            col_size: 2,
-            // check_box_true: formik.values.viewservice,
-            check_box_true: formik.values.Staffpermission ||  formik.values.staffstatus || formik.values.editstaff || formik.values.addstaff || formik.values.viewstaff ? true : false,
-        },
-        {
-            name: 'addstaff',
-            label: 'Add Staff',
-            type: 'checkbox',
-            label_size: 12,
-            col_size: 2,
-            // check_box_true: formik.values.addservice,
-            check_box_true: formik.values.Staffpermission || formik.values.addstaff ? true : false,
-
-        },
-        {
-            name: 'editstaff',
-            label: 'Edit Staff',
-            type: 'checkbox',
-            label_size: 12,
-            col_size: 2,
-            // check_box_true: formik.values.editservice,
-            check_box_true: formik.values.Staffpermission || formik.values.editstaff ? true : false,
-        },
         // {
-        //     name: 'deletestaff',
-        //     label: 'Delete Staff',
+        //     name: 'Staffpermission',
+        //     label: 'All Staff',
+        //     type: 'checkbox',
+        //     label_size: 12,
+        //     col_size: 2,
+        //     check_box_true: formik.values.Staffpermission,
+        //     bold: true
+        // },
+        // {
+        //     name: 'viewstaff',
+        //     label: 'View Staff',
+        //     type: 'checkbox',
+        //     label_size: 12,
+        //     col_size: 2,
+        //     // check_box_true: formik.values.viewservice,
+        //     check_box_true: formik.values.Staffpermission ||  formik.values.staffstatus || formik.values.editstaff || formik.values.addstaff || formik.values.viewstaff ? true : false,
+        // },
+        // {
+        //     name: 'addstaff',
+        //     label: 'Add Staff',
+        //     type: 'checkbox',
+        //     label_size: 12,
+        //     col_size: 2,
+        //     // check_box_true: formik.values.addservice,
+        //     check_box_true: formik.values.Staffpermission || formik.values.addstaff ? true : false,
+
+        // },
+        // {
+        //     name: 'editstaff',
+        //     label: 'Edit Staff',
+        //     type: 'checkbox',
+        //     label_size: 12,
+        //     col_size: 2,
+        //     // check_box_true: formik.values.editservice,
+        //     check_box_true: formik.values.Staffpermission || formik.values.editstaff ? true : false,
+        // },
+        // // {
+        // //     name: 'deletestaff',
+        // //     label: 'Delete Staff',
+        // //     type: 'checkbox',
+        // //     label_size: 12,
+        // //     col_size: 2,
+        // //     // check_box_true: formik.values.deleteservice,
+        // //     check_box_true: formik.values.Staffpermission || formik.values.deletestaff ? true : false,
+        // // },
+        // {
+        //     name: 'staffstatus',
+        //     label: 'Staff Status',
         //     type: 'checkbox',
         //     label_size: 12,
         //     col_size: 2,
         //     // check_box_true: formik.values.deleteservice,
-        //     check_box_true: formik.values.Staffpermission || formik.values.deletestaff ? true : false,
+        //     check_box_true: formik.values.Staffpermission || formik.values.staffstatus ? true : false,
         // },
-        {
-            name: 'staffstatus',
-            label: 'Staff Status',
-            type: 'checkbox',
-            label_size: 12,
-            col_size: 2,
-            // check_box_true: formik.values.deleteservice,
-            check_box_true: formik.values.Staffpermission || formik.values.staffstatus ? true : false,
-        },
 
 
         {
@@ -887,7 +972,7 @@ const Staffpermission = () => {
             label_size: 12,
             col_size: 2,
             // check_box_true: formik.values.viewservice,
-            check_box_true: formik.values.newspermission || formik.values.newsstatus || formik.values.editnews || formik.values.addnews  || formik.values.viewnews ? true : false,
+            check_box_true: formik.values.newspermission || formik.values.deletenews || formik.values.newsstatus || formik.values.editnews || formik.values.addnews  || formik.values.viewnews ? true : false,
         },
         {
             name: 'addnews',
@@ -908,15 +993,15 @@ const Staffpermission = () => {
             // check_box_true: formik.values.editservice,
             check_box_true: formik.values.newspermission || formik.values.editnews ? true : false,
         },
-        // {
-        //     name: 'deletenews',
-        //     label: 'Delete news',
-        //     type: 'checkbox',
-        //     label_size: 12,
-        //     col_size: 2,
-        //     // check_box_true: formik.values.deleteservice,
-        //     check_box_true: formik.values.newspermission || formik.values.deletenews ? true : false,
-        // },
+        {
+            name: 'deletenews',
+            label: 'Delete news',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.deleteservice,
+            check_box_true: formik.values.newspermission || formik.values.deletenews ? true : false,
+        },
         {
             name: 'newsstatus',
             label: 'News Status',
@@ -944,7 +1029,7 @@ const Staffpermission = () => {
             label_size: 12,
             col_size: 2,
             // check_box_true: formik.values.viewservice,
-            check_box_true: formik.values.bannerpermission || formik.values.bannerstatus || formik.values.editbanner || formik.values.addbanner || formik.values.viewbanner ? true : false,
+            check_box_true: formik.values.bannerpermission || formik.values.deletebanner || formik.values.bannerstatus || formik.values.editbanner || formik.values.addbanner || formik.values.viewbanner ? true : false,
         },
         {
             name: 'addbanner',
@@ -965,15 +1050,15 @@ const Staffpermission = () => {
             // check_box_true: formik.values.editservice,
             check_box_true: formik.values.bannerpermission || formik.values.editbanner ? true : false,
         },
-        // {
-        //     name: 'deletebanner',
-        //     label: 'Delete banner',
-        //     type: 'checkbox',
-        //     label_size: 12,
-        //     col_size: 2,
-        //     // check_box_true: formik.values.deleteservice,
-        //     check_box_true: formik.values.bannerpermission || formik.values.deletebanner ? true : false,
-        // },
+        {
+            name: 'deletebanner',
+            label: 'Delete banner',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.deleteservice,
+            check_box_true: formik.values.bannerpermission || formik.values.deletebanner ? true : false,
+        },
         {
             name: 'bannerstatus',
             label: 'banner Status',
@@ -1001,7 +1086,7 @@ const Staffpermission = () => {
             label_size: 12,
             col_size: 2,
             // check_box_true: formik.values.viewservice,
-            check_box_true: formik.values.couponpermission || formik.values.couponstatus || formik.values.editcoupon || formik.values.coupondetail || formik.values.addcoupon || formik.values.viewcoupon ? true : false,
+            check_box_true: formik.values.couponpermission || formik.values.deletecoupon || formik.values.couponstatus || formik.values.editcoupon || formik.values.coupondetail || formik.values.addcoupon || formik.values.viewcoupon ? true : false,
         },
         {
             name: 'addcoupon',
@@ -1015,7 +1100,7 @@ const Staffpermission = () => {
         },
         {
             name: 'coupondetail',
-            label: 'View coupon',
+            label: 'coupon Detail',
             type: 'checkbox',
             label_size: 12,
             col_size: 2,
@@ -1031,15 +1116,15 @@ const Staffpermission = () => {
             // check_box_true: formik.values.editservice,
             check_box_true: formik.values.couponpermission || formik.values.editcoupon ? true : false,
         },
-        // {
-        //     name: 'deletecoupon',
-        //     label: 'Delete coupon',
-        //     type: 'checkbox',
-        //     label_size: 12,
-        //     col_size: 2,
-        //     // check_box_true: formik.values.deleteservice,
-        //     check_box_true: formik.values.couponpermission || formik.values.deletecoupon ? true : false,
-        // },
+        {
+            name: 'deletecoupon',
+            label: 'Delete coupon',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.deleteservice,
+            check_box_true: formik.values.couponpermission || formik.values.deletecoupon ? true : false,
+        },
         {
             name: 'couponstatus',
             label: 'Coupon Status',
@@ -1066,7 +1151,7 @@ const Staffpermission = () => {
             label_size: 12,
             col_size: 2,
             // check_box_true: formik.values.viewservice,
-            check_box_true: formik.values.blogspermission ||formik.values.blogsstatus || formik.values.editblogs || formik.values.blogdetail || formik.values.addblogs || formik.values.viewblogs ? true : false,
+            check_box_true: formik.values.blogspermission || formik.values.deleteblogs || formik.values.blogsstatus || formik.values.editblogs || formik.values.blogdetail || formik.values.addblogs || formik.values.viewblogs ? true : false,
         },
         {
             name: 'addblogs',
@@ -1096,15 +1181,15 @@ const Staffpermission = () => {
             // check_box_true: formik.values.editservice,
             check_box_true: formik.values.blogspermission || formik.values.editblogs ? true : false,
         },
-        // {
-        //     name: 'deleteblogs',
-        //     label: 'Delete blogs',
-        //     type: 'checkbox',
-        //     label_size: 12,
-        //     col_size: 2,
-        //     // check_box_true: formik.values.deleteservice,
-        //     check_box_true: formik.values.blogspermission || formik.values.deleteblogs ? true : false,
-        // },
+        {
+            name: 'deleteblogs',
+            label: 'Delete blogs',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.deleteservice,
+            check_box_true: formik.values.blogspermission || formik.values.deleteblogs ? true : false,
+        },
         {
             name: 'blogsstatus',
             label: 'Blogs Status',
@@ -1132,7 +1217,7 @@ const Staffpermission = () => {
             label_size: 12,
             col_size: 2,
             // check_box_true: formik.values.viewservice,
-            check_box_true: formik.values.faqpermission ||formik.values.faqstatus || formik.values.editfaq || formik.values.addfaq || formik.values.viewfaq ? true : false,
+            check_box_true: formik.values.faqpermission || formik.values.deletefaq || formik.values.faqstatus || formik.values.editfaq || formik.values.addfaq || formik.values.viewfaq ? true : false,
         },
         {
             name: 'addfaq',
@@ -1153,15 +1238,15 @@ const Staffpermission = () => {
             // check_box_true: formik.values.editservice,
             check_box_true: formik.values.faqpermission || formik.values.editfaq ? true : false,
         },
-        // {
-        //     name: 'deletefaq',
-        //     label: 'Delete faq',
-        //     type: 'checkbox',
-        //     label_size: 12,
-        //     col_size: 2,
-        //     // check_box_true: formik.values.deleteservice,
-        //     check_box_true: formik.values.faqpermission || formik.values.deletefaq ? true : false,
-        // },
+        {
+            name: 'deletefaq',
+            label: 'Delete faq',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.deleteservice,
+            check_box_true: formik.values.faqpermission || formik.values.deletefaq ? true : false,
+        },
         {
             name: 'faqstatus',
             label: 'Faq Status',
@@ -1271,8 +1356,44 @@ const Staffpermission = () => {
             col_size: 2,
             // check_box_true: formik.values.deleteservice,
             check_box_true: formik.values.freeclientpermission || formik.values.freeclientstatus ? true : false,
-        }
+        },
+        {
+            name: 'otherpermission',
+            label: 'Others',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            check_box_true: formik.values.otherpermission,
+            bold: true
 
+        },
+        {
+            name: 'paymenthistory',
+            label: 'Payment History',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.viewservice,
+            check_box_true: formik.values.otherpermission || formik.values.paymenthistory ? true : false,
+        },
+        {
+            name: 'planexpiry',
+            label: 'Plan Expiry',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.viewservice,
+            check_box_true: formik.values.otherpermission || formik.values.planexpiry ? true : false,
+        },
+        {
+            name: 'perform',
+            label: 'Performance',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.viewservice,
+            check_box_true: formik.values.otherpermission || formik.values.perform ? true : false,
+        },
 
 
        

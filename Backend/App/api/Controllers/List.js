@@ -21,6 +21,9 @@ const Freetrial_Modal = db.Freetrial;
 const Broadcast_Modal = db.Broadcast;
 const Order_Modal = db.Order;
 const License_Modal = db.License;
+const Notification_Modal = db.Notification;
+const Bank_Modal = db.Bank;
+const Adminnotification_Modal = db.Adminnotification;
 
 
 mongoose  = require('mongoose');
@@ -64,8 +67,9 @@ class List {
 
     async Blogslist(req, res) {
         try {
-
-            const blogs = await Blogs_Modal.find({ del: false,status: true });
+         
+          const blogs = await Blogs_Modal.find({ del: false, status: true })
+          .sort({ created_at: -1 });
             const protocol = req.protocol; // Will be 'http' or 'https'
             const baseUrl = `${protocol}://${req.headers.host}`;
 
@@ -92,13 +96,74 @@ class List {
         }
     }
 
+
+    async BlogslistwithPagination(req, res) {
+      try {
+          const { page = 1 } = req.query; // Default page is 1, and limit is 10
+            let limit = 10;
+          // Parse page and limit as integers
+          const pageNumber = parseInt(page, 10);
+          const pageSize = parseInt(limit, 10);
+  
+          // Ensure page and limit are valid
+          if (pageNumber < 1 || pageSize < 1) {
+              return res.status(400).json({
+                  status: false,
+                  message: "Invalid page or limit value. Both must be positive integers.",
+              });
+          }
+  
+          // Get total count of blogs
+          const totalBlogs = await Blogs_Modal.countDocuments({ del: false, status: true });
+  
+          // Fetch paginated blogs
+          const blogs = await Blogs_Modal.find({ del: false, status: true })
+              .sort({ created_at: -1 })
+              .skip((pageNumber - 1) * pageSize)
+              .limit(pageSize);
+  
+          const protocol = req.protocol; // 'http' or 'https'
+          const baseUrl = `${protocol}://${req.headers.host}`;
+  
+          const blogsWithImageUrls = blogs.map(blog => {
+              return {
+                  ...blog._doc, // Spread the original blog document
+                  image: blog.image ? `${baseUrl}/uploads/blogs/${blog.image}` : null, // Append full image URL
+              };
+          });
+  
+          return res.status(200).json({
+              status: true,
+              message: "Blogs retrieved successfully",
+              data: blogsWithImageUrls,
+              pagination: {
+                  totalBlogs,
+                  currentPage: pageNumber,
+                  totalPages: Math.ceil(totalBlogs / pageSize),
+                  pageSize,
+              },
+          });
+      } catch (error) {
+          console.log("Error retrieving blogs:", error);
+          return res.status(500).json({
+              status: false,
+              message: "Server error",
+              error: error.message,
+          });
+      }
+  }
+  
+
     async Newslist(req, res) {
       
+
+
+
         try {
 
            // const news = await News_Modal.find();
-            const news = await News_Modal.find({ del: false,status: true });
-
+            const news = await News_Modal.find({ del: false, status: true })
+            .sort({ created_at: -1 });
             const protocol = req.protocol; // Will be 'http' or 'https'
             const baseUrl = `${protocol}://${req.headers.host}`;
 
@@ -125,6 +190,63 @@ class List {
     }
 
 
+    async NewslistwithPagination(req, res) {
+      try {
+          const { page = 1} = req.query; // Default page is 1, and limit is 10
+          let limit = 10;
+          // Parse page and limit as integers
+          const pageNumber = parseInt(page, 10);
+          const pageSize = parseInt(limit, 10);
+  
+          // Ensure page and limit are valid
+          if (pageNumber < 1 || pageSize < 1) {
+              return res.status(400).json({
+                  status: false,
+                  message: "Invalid page or limit value. Both must be positive integers.",
+              });
+          }
+  
+          // Get total count of news
+          const totalNews = await News_Modal.countDocuments({ del: false, status: true });
+  
+          // Fetch paginated news
+          const news = await News_Modal.find({ del: false, status: true })
+              .sort({ created_at: -1 })
+              .skip((pageNumber - 1) * pageSize)
+              .limit(pageSize);
+  
+          const protocol = req.protocol; // 'http' or 'https'
+          const baseUrl = `${protocol}://${req.headers.host}`;
+  
+          const newsWithImageUrls = news.map(newss => {
+              return {
+                  ...newss._doc, // Spread the original news document
+                  image: newss.image ? `${baseUrl}/uploads/news/${newss.image}` : null, // Append full image URL
+              };
+          });
+  
+          return res.status(200).json({
+              status: true,
+              message: "News retrieved successfully",
+              data: newsWithImageUrls,
+              pagination: {
+                  totalNews,
+                  currentPage: pageNumber,
+                  totalPages: Math.ceil(totalNews / pageSize),
+                  pageSize,
+              },
+          });
+      } catch (error) {
+          console.log("Error retrieving news:", error);
+          return res.status(500).json({
+              status: false,
+              message: "Server error",
+              error: error.message,
+          });
+      }
+  }
+  
+
     async Plancategorysist(req, res) {
         try {
 
@@ -145,103 +267,71 @@ class List {
       
     async getPlansByPlancategoryId(req, res) {
       try {
-        const pipeline = [
-          // Match all plancategories
-          {
-            $match: {
-              del: false,
-              status: true,
+      const pipeline = [
+      // Match all plancategories
+      {
+        $match: {
+          del: false,
+          status: true,
+        },
+      },
+      // Lookup to get associated plans
+      {
+        $lookup: {
+          from: 'plans', // Collection name for plans
+          let: { categoryId: '$_id' }, // Define a variable for the category ID
+          pipeline: [
+            // Match plans with specific category and additional filters
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ['$category', '$$categoryId'] }, // Match by category
+                    { $eq: ['$status', 'active'] }, // Status must be 'active'
+                    { $eq: ['$del', false] }, // del must be false
+                  ],
+                },
+              },
             },
-          },
-          // Lookup to get associated plans
-          {
-            $lookup: {
-              from: 'plans', // Collection name for plans
-              let: { categoryId: '$_id' }, // Define a variable for the category ID
-              pipeline: [
-                // Match plans with specific category and additional filters
-                {
-                  $match: {
-                    $expr: {
-                      $and: [
-                        { $eq: ['$category', '$$categoryId'] }, // Match by category
-                        { $eq: ['$status', 'active'] }, // Status must be 'active'
-                        { $eq: ['$del', false] }, // del must be false
-                      ],
-                    },
-                  },
-                },
-                // Calculate price per month based on validity
-                {
-                  $addFields: {
-                    pricePerMonth: {
-                      $switch: {
-                        branches: [
-                          { case: { $eq: ['$validity', '1 month'] }, then: { $divide: ['$price', 1] } },
-                          { case: { $eq: ['$validity', '3 months'] }, then: { $divide: ['$price', 3] } },
-                          { case: { $eq: ['$validity', '6 months'] }, then: { $divide: ['$price', 6] } },
-                          { case: { $eq: ['$validity', '9 months'] }, then: { $divide: ['$price', 9] } },
-                          { case: { $eq: ['$validity', '1 year'] }, then: { $divide: ['$price', 12] } },
-                          { case: { $eq: ['$validity', '2 years'] }, then: { $divide: ['$price', 24] } },
-                          { case: { $eq: ['$validity', '3 years'] }, then: { $divide: ['$price', 36] } },
-                          { case: { $eq: ['$validity', '4 years'] }, then: { $divide: ['$price', 48] } },
-                          { case: { $eq: ['$validity', '5 years'] }, then: { $divide: ['$price', 60] } }, // 5 years = 60 months
-                        ],
-                        default: '$price', // Fallback to total price if validity doesn't match
-                      },
-                    },
-                  },
-                },
-                // Optionally project fields in the plans
-                {
-                  $project: {
-                    _id: 1, // Plan ID
-                    title: 1, // Plan title
-                    description: 1, // Plan description
-                    price: 1, // Plan price
-                    validity: 1, // Plan validity
-                    pricePerMonth: 1, // Price per month
-                  },
-                },
-              ],
-              as: 'plans', // Name of the array field to add
-            },
-          },
-          // Lookup to get associated services
-          {
-            $lookup: {
-              from: 'services', // Collection name for services
-              let: { serviceIds: { $split: ['$service', ','] } }, // Split service string into array
-              pipeline: [
-                {
-                  $match: {
-                    $expr: {
-                      $and: [
+            // Calculate price per month based on validity
+            {
+              $addFields: {
+                pricePerMonth: {
+                  $cond: {
+                    if: { $ne: ['$validity', null] }, // Check if validity is not null
+                    then: {
+                      $divide: [
+                        '$price', // Total price
                         {
-                          $in: ['$_id', { $map: { input: '$$serviceIds', as: 'id', in: { $toObjectId: '$$id' } } }],
+                          $switch: {
+                            branches: [
+                              { case: { $eq: ['$validity', '1 month'] }, then: 1 },
+                              { case: { $eq: ['$validity', '3 months'] }, then: 3 },
+                              { case: { $eq: ['$validity', '6 months'] }, then: 6 },
+                              { case: { $eq: ['$validity', '9 months'] }, then: 9 },
+                              { case: { $eq: ['$validity', '1 year'] }, then: 12 },
+                              { case: { $eq: ['$validity', '2 years'] }, then: 24 },
+                              { case: { $eq: ['$validity', '3 years'] }, then: 36 },
+                              { case: { $eq: ['$validity', '4 years'] }, then: 48 },
+                              { case: { $eq: ['$validity', '5 years'] }, then: 60 },
+                            ],
+                            default: 1, // Default to 1 month if validity doesn't match
+                          },
                         },
-                        { $eq: ['$status', true] }, // Status must be true
-                        { $eq: ['$del', false] }, // del must be false
                       ],
                     },
+                    else: '$price', // If no validity is specified, fallback to the full price
                   },
                 },
-                // Optionally project fields in the services
-                {
-                  $project: {
-                    _id: 1, // Service ID
-                    title: 1, // Service title
-                  },
-                },
-              ],
-              as: 'services', // Name of the array field to add
+              },
             },
-          },
-          // Project only the necessary fields
-          {
-            $project: {
-              title: 1, // Plancategory title
-              plans: {
+            // Sort by pricePerMonth or validity for ascending order
+            {
+              $sort: { pricePerMonth: 1 }, // Sorting by price per month in ascending order
+            },
+            // Optionally project fields in the plans
+            {
+              $project: {
                 _id: 1, // Plan ID
                 title: 1, // Plan title
                 description: 1, // Plan description
@@ -249,14 +339,60 @@ class List {
                 validity: 1, // Plan validity
                 pricePerMonth: 1, // Price per month
               },
-              services: {
+            },
+          ],
+          as: 'plans', // Name of the array field to add
+        },
+      },
+      // Lookup to get associated services
+      {
+        $lookup: {
+          from: 'services', // Collection name for services
+          let: { serviceIds: { $split: ['$service', ','] } }, // Split service string into array
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    {
+                      $in: ['$_id', { $map: { input: '$$serviceIds', as: 'id', in: { $toObjectId: '$$id' } } }],
+                    },
+                    { $eq: ['$status', true] }, // Status must be true
+                    { $eq: ['$del', false] }, // del must be false
+                  ],
+                },
+              },
+            },
+            // Optionally project fields in the services
+            {
+              $project: {
                 _id: 1, // Service ID
                 title: 1, // Service title
               },
             },
+          ],
+          as: 'services', // Name of the array field to add
+        },
+      },
+      // Project only the necessary fields
+      {
+        $project: {
+          title: 1, // Plancategory title
+          plans: {
+            _id: 1, // Plan ID
+            title: 1, // Plan title
+            description: 1, // Plan description
+            price: 1, // Plan price
+            validity: 1, // Plan validity
+            pricePerMonth: 1, // Price per month
           },
-        ];
-  
+          services: {
+            _id: 1, // Service ID
+            title: 1, // Service title
+          },
+        },
+      },
+    ];
         const result = await Plancategory_Modal.aggregate(pipeline);
   
         return res.json({
@@ -274,64 +410,100 @@ class List {
 
 async getallPlan(req, res) {
     try {
-        const plans = await Plan_Modal.aggregate([
-            {
-                $match: { del: false, status: "active" } // Match plans where 'del' is false and status is 'active'
-            },
-            {
-                $lookup: {
-                    from: 'plancategories', // Join with plancategories collection
-                    localField: 'category', // Field from the Plan_Modal
-                    foreignField: '_id', // Field from the plancategories
-                    as: 'category' // Name for the output array field
+      const plans = await Plan_Modal.aggregate([
+        {
+          $match: { del: false, status: "active" }
+        },
+        {
+          $lookup: {
+            from: 'plancategories',
+            let: { categoryId: { $toObjectId: '$category' } }, // Ensure category is cast to ObjectId
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ['$_id', '$$categoryId'] },
+                      { $eq: ['$del', false] },
+                      { $eq: ['$status', true] }
+                    ]
+                  }
                 }
-            },
-            {
-                $unwind: {
-                    path: '$category',
-                    preserveNullAndEmptyArrays: true // If no matching category, keep the plan in the results
+              }
+            ],
+            as: 'category'
+          }
+        },
+        {
+          $unwind: {
+            path: '$category',
+            preserveNullAndEmptyArrays: false // Exclude plans with no matching category
+          }
+        },
+        {
+          $lookup: {
+            from: 'services',
+            let: { serviceIds: { $split: ['$category.service', ','] } },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      {
+                        $in: ['$_id', { $map: { input: '$$serviceIds', as: 'id', in: { $toObjectId: '$$id' } } }],
+                      },
+                      { $eq: ['$status', true] },
+                      { $eq: ['$del', false] }
+                    ]
+                  }
                 }
-            },
-            {
-                $lookup: {
-                    from: 'services', // Collection name for services
-                    let: { serviceIds: { $split: ['$category.service', ','] } }, // Split service string into array
-                    pipeline: [
-                        {
-                            $match: {
-                                $expr: {
-                                    $and: [
-                                        {
-                                            $in: ['$_id', { $map: { input: '$$serviceIds', as: 'id', in: { $toObjectId: '$$id' } } }],
-                                        },
-                                        { $eq: ['$status', true] }, // Match only active services
-                                        { $eq: ['$del', false] }, // Match only non-deleted services
-                                    ],
-                                },
-                            },
-                        },
-                        {
-                            $project: {
-                                _id: 1, // Service ID
-                                title: 1, // Service title
-                            },
-                        },
-                    ],
-                    as: 'services' // Name of the new array field to hold the services
-                }
-            },
-            {
+              },
+              {
                 $project: {
-                    _id: 1,
-                    title: 1,
-                    validity: 1, 
-                    price:1,
-                    category: 1, // Include the category details
-                    services: 1 // Include the matched services
+                  _id: 1,
+                  title: 1
                 }
+              }
+            ],
+            as: 'services'
+          }
+        },
+        {
+          $addFields: {
+            validityValue: {
+              $switch: {
+                branches: [
+                  { case: { $eq: ['$validity', '1 month'] }, then: 1 },
+                  { case: { $eq: ['$validity', '3 months'] }, then: 3 },
+                  { case: { $eq: ['$validity', '6 months'] }, then: 6 },
+                  { case: { $eq: ['$validity', '9 months'] }, then: 9 },
+                  { case: { $eq: ['$validity', '1 year'] }, then: 12 },
+                  { case: { $eq: ['$validity', '2 years'] }, then: 24 },
+                  { case: { $eq: ['$validity', '3 years'] }, then: 36 },
+                  { case: { $eq: ['$validity', '4 years'] }, then: 48 },
+                  { case: { $eq: ['$validity', '5 years'] }, then: 60 }
+                ],
+                default: 0
+              }
             }
-        ]);
-
+          }
+        },
+        {
+          $sort: { validityValue: 1 }
+        },
+        {
+          $project: {
+            _id: 1,
+            title: 1,
+            validity: 1,
+            price: 1,
+            category: 1,
+            services: 1
+          }
+        }
+      ]);
+      
+      
         return res.json({
             status: true,
             message: "Plans fetched successfully",
@@ -350,7 +522,7 @@ async getallPlan(req, res) {
    // Controller function to add a new plan subscription
    async addPlanSubscription(req, res) {
     try {
-      const { plan_id, client_id, price, discount,orderid } = req.body;
+      const { plan_id, client_id, price, discount, orderid, coupon } = req.body;
   
       // Validate input
       if (!plan_id || !client_id) {
@@ -426,6 +598,7 @@ async getallPlan(req, res) {
         const today = new Date(); // Aaj ki date
         const existingPlans = await Planmanage.find({
             clientid: client_id,
+            serviceid: serviceId,
             enddate: { $gt: today } // End date must be greater than today's date
         })
         .sort({ enddate: -1 }) // Sort by `enddate` in descending order
@@ -454,10 +627,8 @@ if (existingPlans.length > 0) {
       
       // Round the months based on your requirement
       if (differenceInMonths % 1 >= 0.5) {
-        console.log('aaaaaa');
         monthsToAdd = Math.ceil(differenceInMonths); // Round up to the nearest whole number
       } else {
-        console.log('nnnnnn');
         monthsToAdd = Math.floor(differenceInMonths); // Round down to the nearest whole number
       }
       
@@ -466,6 +637,8 @@ if (existingPlans.length > 0) {
               monthsToAdd = 0;
     } 
 } 
+
+
 
 
        ////////////////// 17/10/2024 ////////////////////////
@@ -494,6 +667,7 @@ if (existingPlans.length > 0) {
 
         let license = await License_Modal.findOne({ month: targetMonth }).exec();
 
+        
         if (license) {
             license.noofclient += monthsToAdd;
             console.log('Month found, updating noofclient.',monthsToAdd);
@@ -521,6 +695,7 @@ if (existingPlans.length > 0) {
         total: price,
         plan_price: plan.price,
         discount: discount,
+        coupon: coupon,
         plan_start: start,
         plan_end: end,
         validity: plan.validity,
@@ -529,6 +704,30 @@ if (existingPlans.length > 0) {
   
       // Save the subscription
       const savedSubscription = await newSubscription.save();
+
+if(coupon){
+      const resultc = await Coupon_Modal.find({
+        del: false,
+        status: true,
+        startdate: { $lte: endOfToday },
+        enddate: { $gte: startOfToday },
+        code:coupon
+      });
+
+
+      if (resultc) {
+        // Check if limitation is greater than 0 before decrementing
+        if (resultc.limitation > 0) {
+            const updatedResult = await Coupon_Modal.findByIdAndUpdate(
+                resultc._id,
+                { $inc: { limitation: -1 } }, // Decrease limitation by 1
+                { new: true } // Return the updated document
+            );
+            console.log('Updated Coupon:', updatedResult);
+        }
+
+    }
+  }
   
       const client = await Clients_Modal.findOne({ _id: client_id, del: 0, ActiveStatus: 1 });
      
@@ -543,12 +742,56 @@ if (existingPlans.length > 0) {
         client.freetrial  = 1; 
         await client.save();
          }
+
+
+        
       
-      const refertokens = await Refer_Modal.find({ user_id: client._id, status: 0 });
+         const refertokens = await Refer_Modal.find({ user_id: client._id, status: 0 });
+
+         if(client.refer_status && client.token) {
+          if (refertokens.length > 0) {
+          }
+          else
+          {
+            const settings = await BasicSetting_Modal.findOne();
+
+            const senderamount = (price * settings.sender_earn) / 100;
+            const receiveramount = (price * settings.receiver_earn) / 100;
+    
+    
+
+            const results = new Refer_Modal({
+              token: client.token,
+              user_id: client._id,
+              senderearn: settings.sender_earn,
+              receiverearn: settings.receiver_earn,
+              senderamount:senderamount,
+              receiveramount:receiveramount,
+              status:1
+              })
+              await results.save();
+
+              client.wamount += receiveramount; 
+              await client.save();
+              const sender = await Clients_Modal.findOne({ refer_token: client.token, del: 0, ActiveStatus: 1 });
+              
+              if (sender) {
+                  sender.wamount += senderamount; 
+                  await sender.save();
+              } else {
+                  console.error(`Sender not found or inactive for user_id: ${refertoken.user_id}`);
+              }
+
+            }
+    
+
+          }
+          
+       
       if (refertokens.length > 0) {
           for (const refertoken of refertokens) {
-              const senderamount = (plan.price * refertoken.senderearn) / 100;
-              const receiveramount = (plan.price * refertoken.receiverearn) / 100;
+              const senderamount = (price * refertoken.senderearn) / 100;
+              const receiveramount = (price * refertoken.receiverearn) / 100;
       
               refertoken.senderamount = senderamount; 
               refertoken.receiveramount = receiveramount; 
@@ -573,6 +816,22 @@ if (existingPlans.length > 0) {
       } else {
           console.log('No referral tokens found.');
       }
+     
+
+    const  adminnotificationTitle ="Important Update";
+    const  adminnotificationBody ="new plan purchased......";
+      const resultnm = new Adminnotification_Modal({
+        clientid:client._id,
+        segmentid:savedSubscription._id,
+        type:'plan purchase',
+        title: adminnotificationTitle,
+        message: adminnotificationBody
+    });
+
+
+    await resultnm.save();
+
+
 
       // Return success response
       return res.status(201).json({
@@ -712,10 +971,16 @@ async  myPlan(req, res) {
           plan_end: { $first: '$plan_end' }, // Keep the plan_end
           planDetails: { $first: '$planDetails' }, // First instance of planDetails
           categoryDetails: { $first: '$categoryDetails' }, // First instance of categoryDetails
-          serviceNames: { $push: '$serviceDetails.title' } // Create an array of service titles
+          serviceNames: { $push: '$serviceDetails.title' }
         }
       },
-      // Optionally, you can project the fields you want to return
+
+      {
+        $sort: {
+          plan_end: -1 
+        }
+      },
+
       {
         $project: {
           _id: 1, // Plan Subscription ID
@@ -727,7 +992,10 @@ async  myPlan(req, res) {
           plan_end: 1, // Plan end date
           planDetails: 1, // Details from the plans collection
           categoryDetails: 1, // Details from the plan categories collection
-          serviceNames: 1 // All service titles
+          serviceNames: 1, // All service titles
+          categoryDetails: { 
+            title: 1 // Include only the title from the category details
+          },
         }
       }
     ]);
@@ -774,14 +1042,24 @@ async  myPlan(req, res) {
 async Couponlist(req, res) {
   try {
 
+
+
     const { } = req.body;
 
     //const result = await Coupon_Modal.find()
 
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0); 
+    
+    const endOfToday = new Date();
+    endOfToday.setHours(23, 59, 59, 999); 
+    
     const result = await Coupon_Modal.find({
       del: false,
       status: true,
-      enddate: { $gt: new Date() } // Filter out expired coupons
+      showstatus: 1,
+      startdate: { $lte: endOfToday }, 
+      enddate: { $gte: startOfToday } 
     });
 
     const protocol = req.protocol; // Will be 'http' or 'https'
@@ -829,12 +1107,15 @@ async applyCoupon (req, res) {
 
 
   try {
-      const { code, purchaseValue } = req.body;
+      const { code, purchaseValue,planid } = req.body;
       // Find the coupon by code
       const coupon = await Coupon_Modal.findOne({ code, status: 'true', del: false });
       if (!coupon) {
           return res.status(404).json({ message: 'Coupon not found or is inactive' });
       }
+
+
+
 
       // Check if the coupon is within the valid date range
       const currentDate = new Date();
@@ -853,6 +1134,27 @@ async applyCoupon (req, res) {
       } else if (coupon.type === 'percentage') {
           discount = (coupon.value / 100) * purchaseValue;
       }
+
+      if (discount > purchaseValue) {
+        return res.status(400).json({ message: "Discount should be less than the purchase value." });
+    }
+
+
+    if (coupon.limitation <= 0) {
+      return res.status(400).json({ message: 'Coupon usage limit has been reached' });
+    }
+
+    
+
+     if (!coupon.service) {
+      const plan = await Plan_Modal.findById(planid)
+      .populate('category')
+      .exec();
+      if (!coupon.service!=plan.category.service) {
+
+      return res.status(404).json({ message: 'Service Does not match' });
+     }
+    }
 
       // Ensure the discount does not exceed the minimum coupon value
 
@@ -880,7 +1182,10 @@ async showSignalsToClients(req, res) {
 
 
     try {
-      const { service_id, client_id } = req.body;
+      const { service_id, client_id, search, page = 1 } = req.body;
+      const limit = 10;
+      const skip = (parseInt(page) - 1) * parseInt(limit); // Calculate how many items to skip
+    const limitValue = parseInt(limit); // Items per page
 
       const plans = await Planmanage.find({ serviceid: service_id, clientid: client_id });
       if (plans.length === 0) {
@@ -909,9 +1214,24 @@ async showSignalsToClients(req, res) {
 
    const baseUrl = `${protocol}://${req.headers.host}`; // Construct the base URL
 
+
+
+   if (search && search.trim() !== '') {
+    query.$or = [
+        { tradesymbol: { $regex: search, $options: 'i' } },
+        { calltype: { $regex: search, $options: 'i' } },
+        { price: { $regex: search, $options: 'i' } },
+        { closeprice: { $regex: search, $options: 'i' } }
+    ];
+}
+
+
+
   // const signals = await Signal_Modal.find(query).lean(); // Use lean() to return plain JavaScript objects
    const signals = await Signal_Modal.find(query)
-   .sort({ created_at: -1 }) // Change "createdAt" to the field you want to sort by
+   .sort({ created_at: -1 })
+   .skip(skip)
+   .limit(limitValue)
    .lean();
 /*
    const signalsWithReportUrls = signals.map(signal => {
@@ -922,6 +1242,9 @@ async showSignalsToClients(req, res) {
     };
 });
 */
+
+
+const totalSignals = await Signal_Modal.countDocuments(query);
 
 const signalsWithReportUrls = await Promise.all(signals.map(async (signal) => {
   // Check if the signal was bought by the client
@@ -964,23 +1287,30 @@ else
 }
 */
 
+
+
   return {
     ...signal,
     report_full_path: signal.report ? `${baseUrl}/uploads/report/${signal.report}` : null, // Append full report URL
-    purchased: order ? true : false ,
+    purchased: order ? true : false,
+
   //  lot: lot,
   //  tradesymbol: tradesymbol,
-    order_quantity: order ? order.quantity : 0 
+  order_quantity: order ? order.quantity : 0 
   };
 }));
-
-
 
 
       return res.json({
           status: true,
           message: "Signals retrieved successfully",
-          data: signalsWithReportUrls
+          data: signalsWithReportUrls,
+          pagination: {
+            total: totalSignals,
+            page: parseInt(page), // Current page
+            limit: parseInt(limit), // Items per page
+            totalPages: Math.ceil(totalSignals / limit), // Total number of pages
+          }
       });
 
   } catch (error) {
@@ -991,10 +1321,13 @@ else
 
 
 async showSignalsToClientsCloses(req, res) {
-
-
   try {
-    const { service_id, client_id } = req.body;
+
+    const { service_id, client_id, search, page = 1 } = req.body;
+    const limit = 10;
+    const skip = (parseInt(page) - 1) * parseInt(limit); 
+    const limitValue = parseInt(limit); 
+
 
     const plans = await Planmanage.find({ serviceid: service_id, clientid: client_id });
     if (plans.length === 0) {
@@ -1023,9 +1356,23 @@ async showSignalsToClientsCloses(req, res) {
 
  const baseUrl = `${protocol}://${req.headers.host}`; // Construct the base URL
 
+
+ if (search && search.trim() !== '') {
+  query.$or = [
+      { tradesymbol: { $regex: search, $options: 'i' } },
+      { calltype: { $regex: search, $options: 'i' } },
+      { price: { $regex: search, $options: 'i' } },
+      { closeprice: { $regex: search, $options: 'i' } }
+  ];
+}
+
+
+
 // const signals = await Signal_Modal.find(query).lean(); // Use lean() to return plain JavaScript objects
  const signals = await Signal_Modal.find(query)
- .sort({ closedate: -1 }) // Change "createdAt" to the field you want to sort by
+ .sort({ closedate: -1 })
+ .skip(skip)
+ .limit(limitValue)
  .lean();
 /*
  const signalsWithReportUrls = signals.map(signal => {
@@ -1037,12 +1384,16 @@ async showSignalsToClientsCloses(req, res) {
 });
 */
 
+const totalSignals = await Signal_Modal.countDocuments(query);
+
+
 const signalsWithReportUrls = await Promise.all(signals.map(async (signal) => {
 // Check if the signal was bought by the client
 const order = await Order_Modal.findOne({
   clientid: client_id,
   signalid: signal._id
 }).lean();
+
 
 
 /*
@@ -1078,13 +1429,20 @@ tradesymbol = lots.tradesymbol;
 }
 */
 
+const orders = await Order_Modal.find({
+  clientid: client_id,
+  signalid: signal._id
+}).lean();  // .lean() to return plain JavaScript objects
+
+// Sum the quantity field from the orders
+const totalQuantity = orders.reduce((sum, order) => sum + order.quantity, 0);
 return {
   ...signal,
   report_full_path: signal.report ? `${baseUrl}/uploads/report/${signal.report}` : null, // Append full report URL
   purchased: order ? true : false ,
 //  lot: lot,
 //  tradesymbol: tradesymbol,
-  order_quantity: order ? order.quantity : 0 
+order_quantity: totalQuantity ? totalQuantity : 0 
 };
 }));
 
@@ -1094,7 +1452,13 @@ return {
     return res.json({
         status: true,
         message: "Signals retrieved successfully",
-        data: signalsWithReportUrls
+        data: signalsWithReportUrls,
+        pagination: {
+          total: totalSignals,
+          page: parseInt(page), // Current page
+          limit: parseInt(limit), // Items per page
+          totalPages: Math.ceil(totalSignals / limit), // Total number of pages
+        }
     });
 
 } catch (error) {
@@ -1144,7 +1508,13 @@ async showSignalsToClientsClose(req, res) {
     return res.json({
         status: true,
         message: "Signals retrieved successfully",
-        data: signals
+        data: signals,
+        pagination: {
+          total: totalSignals,
+          page: parseInt(page), // Current page
+          limit: parseInt(limit), // Items per page
+          totalPages: Math.ceil(totalSignals / limit), // Total number of pages
+        }
     });
 
 } catch (error) {
@@ -1158,19 +1528,47 @@ async showSignalsToClientsClose(req, res) {
 
 async CloseSignal(req, res) {
   try {
-      const { service_id } = req.body;
+      const { service_id, search, page = 1 } = req.body;
+
+      const limit = 15;
+      const skip = (parseInt(page) - 1) * parseInt(limit); 
+      const limitValue = parseInt(limit); 
+
 
       const query = {
           service: service_id,
           close_status: true,
       };
-      // Fetch signals and sort by createdAt in descending order
-      const signals = await Signal_Modal.find(query).sort({ created_at: -1 }).lean(); 
 
+      if (search && search.trim() !== '') {
+        query.$or = [
+            { tradesymbol: { $regex: search, $options: 'i' } },
+            { calltype: { $regex: search, $options: 'i' } },
+            { price: { $regex: search, $options: 'i' } },
+            { closeprice: { $regex: search, $options: 'i' } }
+        ];
+    }
+
+      // Fetch signals and sort by createdAt in descending order
+      const signals = await Signal_Modal.find(query).sort({ created_at: -1 })
+      .skip(skip)
+      .limit(limitValue)
+      .lean(); 
+
+
+      const totalSignals = await Signal_Modal.countDocuments(query);
+
+      
       return res.json({
           status: true,
           message: "Signals retrieved successfully",
           data: signals,
+          pagination: {
+            total: totalSignals,
+            page: parseInt(page),
+            limit: parseInt(limit),
+            totalPages: Math.ceil(totalSignals / limit),
+          }
       });
   } catch (error) {
       console.error("Error fetching signals:", error);
@@ -1408,14 +1806,37 @@ async pastPerformance(req, res) {
       const entryPrice = parseFloat(signal.price); // Entry price
       const exitPrice = parseFloat(signal.closeprice); // Exit price
 
+      const callType = signal.calltype; // "BUY" or "SELL"
+
       if (!isNaN(entryPrice) && !isNaN(exitPrice)) {
-        const profitOrLoss = exitPrice - entryPrice;
+       // const profitOrLoss = exitPrice - entryPrice;
+       let profitOrLoss;
+       if (callType === "BUY") {
+        profitOrLoss = exitPrice - entryPrice; // Profit when exit is greater
+      } else if (callType === "SELL") {
+        profitOrLoss = entryPrice - exitPrice; // Profit when exit is less
+      }
 
         if (profitOrLoss >= 0) {
-          totalProfit += profitOrLoss;
+       //   totalProfit += profitOrLoss;
+
+       if(id=="66dfede64a88602fbbca9b72" || id=="66dfeef84a88602fbbca9b79")
+        {
+          totalProfit += profitOrLoss*signal.lotsize;
+        }
+        else{
+      totalProfit += profitOrLoss;
+        }
           profitCount++;
         } else {
-          totalLoss += Math.abs(profitOrLoss);
+
+          if(id=="66dfede64a88602fbbca9b72" || id=="66dfeef84a88602fbbca9b79")
+            {
+              totalLoss += Math.abs(profitOrLoss)*signal.lotsize;
+            }
+            else{
+                totalLoss += Math.abs(profitOrLoss);
+            }
           lossCount++;
         }
       }
@@ -1603,11 +2024,21 @@ async myFreetrial(req, res) {
 
     const result = await Freetrial_Modal.find({ clientid: id }).exec();
 
+    const today = new Date();
+    
+    // Add `status` field based on `enddate`
+    const updatedResult = result.map(item => {
+      const status = item.enddate && new Date(item.enddate) >= today ? "active" : "expired";
+      return {
+        ...item.toObject(), // Convert the Mongoose document to a plain object
+        status, // Add the new status field
+      };
+    });
     // Respond with the retrieved subscriptions and client details
     return res.json({
       status: true,
       message: "Subscriptions and client details retrieved successfully",
-      data: result
+      data: updatedResult
     });
 
   } catch (error) {
@@ -1629,13 +2060,17 @@ async basicSetting(req, res) {
 
 
     const result = await BasicSetting_Modal.find({ _id: "66bb3c19542b26b6357bbf4f" })
-    .select('freetrial website_title logo contact_number address refer_image receiver_earn refer_title sender_earn refer_description') 
+    .select('freetrial website_title logo contact_number address refer_image receiver_earn refer_title sender_earn refer_description razorpay_key	razorpay_secret kyc paymentstatus officepaymenystatus facebook instagram twitter youtube') 
     .exec();
 
     if (result.length > 0) {
       result[0].logo = `${baseUrl}/uploads/basicsetting/${result[0].logo}`;
       result[0].refer_image = `${baseUrl}/uploads/basicsetting/${result[0].refer_image}`;
   }
+
+
+
+
 
 
     return res.json({
@@ -1728,21 +2163,52 @@ async pastPerformances(req, res) {
         const entryPrice = parseFloat(signal.price); // Entry price
         const exitPrice = parseFloat(signal.closeprice); // Exit price
 
-        if (!isNaN(entryPrice) && !isNaN(exitPrice)) {
-          const profitOrLoss = exitPrice - entryPrice;
+
+          const callType = signal.calltype; // "BUY" or "SELL"
+
+          if (!isNaN(entryPrice) && !isNaN(exitPrice)) {
+           // const profitOrLoss = exitPrice - entryPrice;
+           let profitOrLoss;
+           if (callType === "BUY") {
+            profitOrLoss = exitPrice - entryPrice; // Profit when exit is greater
+          } else if (callType === "SELL") {
+            profitOrLoss = entryPrice - exitPrice; // Profit when exit is less
+          }
+
 
           if (profitOrLoss >= 0) {
+
+            if(serviceId=="66dfede64a88602fbbca9b72" || serviceId=="66dfeef84a88602fbbca9b79")
+              {
+                totalProfit += profitOrLoss*signal.lotsize;
+              }
+              else{
             totalProfit += profitOrLoss;
+              }
             profitCount++;
           } else {
+            if(serviceId=="66dfede64a88602fbbca9b72" || serviceId=="66dfeef84a88602fbbca9b79")
+              {
+                totalLoss += Math.abs(profitOrLoss)*signal.lotsize;
+              }
+              else{
             totalLoss += Math.abs(profitOrLoss);
+              }
             lossCount++;
           }
         }
+
+
       });
 
       const accuracy = (profitCount / count) * 100;
-      const avgreturnpertrade = (totalProfit - totalLoss) / count;
+      let avgreturnpertrade = 0;
+     
+
+         avgreturnpertrade = (totalProfit - totalLoss) / count;
+    
+
+      console.log("avgreturnpertrade",avgreturnpertrade);
 
       if (monthsBetween > 0) {
         avgreturnpermonth = (totalProfit - totalLoss) / monthsBetween;
@@ -1849,6 +2315,305 @@ async myService(req, res) {
   }
 }
 
+
+
+
+// async Notification(req, res) {
+//   try {
+//     const { id } = req.params;
+//     //  const result = await Notification_Modal.find({ clientid: id }).sort({ createdAt: -1 });
+//     const today = new Date();
+
+//     // Fetch active plans for the client
+//     const activePlans = await Planmanage.find({
+//       clientid: id,
+//       enddate: { $gte: today }
+//     }).select('serviceid');
+    
+//     const activeServiceIds = activePlans.map(plan => plan.serviceid);
+    
+//     // Query to fetch notifications
+//     const result = await Notification_Modal.find({
+//       $or: [
+//         // Notifications specific to the client
+//         { clientid: id },
+//         // Global notifications (null clientid)
+//         {
+//           clientid: null,
+//           $or: [
+//             // Global notifications with type `close signal` or `open signal`
+//             {
+//               type: { $in: ['close signal', 'open signal'] },
+//               segmentid: { $in: activeServiceIds } // Match serviceid with active plans
+//             },
+//             // Global notifications with other types
+//             { type: { $nin: ['close signal', 'open signal'] } }
+//           ]
+//         },
+//         // Broadcast notifications
+//         {
+//           clienttype: {
+//             $in: [
+//               'active', // Active clients
+//               'expired', // Expired clients
+//               'no subscribe', // Clients without a subscription
+//               'all' // All clients
+//             ]
+//           },
+//           $or: [
+//             // For 'active' type, ensure the client has active plans
+//             { clienttype: 'active', segmentid: { $in: activeServiceIds } },
+//             // For 'expired' type, check for expired plans
+//             { 
+//               clienttype: 'expired', 
+//               segmentid: { 
+//                 $in: await Planmanage.find({
+//                   clientid: id,
+//                   enddate: { $lt: today } // Expired plans
+//                 }).distinct('serviceid') 
+//               }
+//             },
+//             // For 'no subscribe', ensure the client has no plans
+//             {
+//               clienttype: 'nonsubscribe',
+//               segmentid: { 
+//                 $nin: await Planmanage.find({ clientid: id }).distinct('serviceid') 
+//               }
+//             },
+//             // 'all' type applies to all clients
+//             { clienttype: 'all' }
+//           ]
+//         }
+//       ]
+//     }).sort({ createdAt: -1 });
+    
+
+//       return res.json({
+//         status: true,
+//         message: "get",
+//         data:result
+//       });
+
+//     } catch (error) {
+//       return res.json({ status: false, message: "Server error", data: [] });
+//     }
+// }
+
+
+
+async Notification(req, res) {
+  try {
+    const { id } = req.params;
+    const { page = 1} = req.query; // Default values for page and limit
+    let limit = 10;
+
+    const today = new Date();
+
+
+
+    // Fetch the client's creation date
+    const client = await Clients_Modal.findById(id).select('createdAt');
+    if (!client) {
+      return res.status(404).json({ status: false, message: "Client not found" });
+    }
+    const clientCreatedAt = client.createdAt;
+
+    const activePlans = await Planmanage.find({
+      clientid: id,
+      enddate: { $gte: today }
+    }).select('serviceid');
+
+    const activeServiceIds = activePlans.map(plan => plan.serviceid);
+
+    // Query to fetch notifications
+    const result = await Notification_Modal.find({
+      createdAt: { $gte: clientCreatedAt }, // Only notifications created after the client's creation date
+      $or: [
+        // Notifications specific to the client
+        { clientid: id },
+        // Global notifications (null clientid)
+        {
+          clientid: null,
+          $or: [
+            // Global notifications with type `close signal` or `open signal`
+            {
+              type: { $in: ['close signal', 'open signal'] },
+              segmentid: { $in: activeServiceIds } // Match serviceid with active plans
+            },
+            // Global notifications with other types
+            { type: { $nin: ['close signal', 'open signal'] } }
+          ]
+        },
+        // Broadcast notifications
+        {
+          clienttype: {
+            $in: [
+              'active', // Active clients
+              'expired', // Expired clients
+              'no subscribe', // Clients without a subscription
+              'all' // All clients
+            ]
+          },
+          $or: [
+            // For 'active' type, ensure the client has active plans
+            { clienttype: 'active', segmentid: { $in: activeServiceIds } },
+            // For 'expired' type, check for expired plans
+            { 
+              clienttype: 'expired', 
+              segmentid: { 
+                $in: await Planmanage.find({
+                  clientid: id,
+                  enddate: { $lt: today } // Expired plans
+                }).distinct('serviceid') 
+              }
+            },
+            // For 'no subscribe', ensure the client has no plans
+            {
+              clienttype: 'nonsubscribe',
+              segmentid: { 
+                $nin: await Planmanage.find({ clientid: id }).distinct('serviceid') 
+              }
+            },
+            // 'all' type applies to all clients
+            { clienttype: 'all' }
+          ]
+        }
+      ]
+    })
+    .sort({ createdAt: -1 })
+    .skip((page - 1) * limit) // Skip records for pagination
+    .limit(parseInt(limit)); // Limit the number of records returned
+
+    // Total count for pagination
+    const totalCount = await Notification_Modal.countDocuments({
+      createdAt: { $gte: clientCreatedAt }, // Only notifications created after the client's creation date
+      $or: [
+        { clientid: id },
+        {
+          clientid: null,
+          $or: [
+            {
+              type: { $in: ['close signal', 'open signal'] },
+              segmentid: { $in: activeServiceIds }
+            },
+            { type: { $nin: ['close signal', 'open signal'] } }
+          ]
+        },
+        {
+          clienttype: {
+            $in: ['active', 'expired', 'no subscribe', 'all']
+          },
+          $or: [
+            { clienttype: 'active', segmentid: { $in: activeServiceIds } },
+            { 
+              clienttype: 'expired', 
+              segmentid: { 
+                $in: await Planmanage.find({
+                  clientid: id,
+                  enddate: { $lt: today }
+                }).distinct('serviceid') 
+              }
+            },
+            {
+              clienttype: 'nonsubscribe',
+              segmentid: { 
+                $nin: await Planmanage.find({ clientid: id }).distinct('serviceid') 
+              }
+            },
+            { clienttype: 'all' }
+          ]
+        }
+      ]
+    });
+
+    return res.json({
+      status: true,
+      message: "get",
+      data: result,
+      pagination: {
+        total: totalCount,
+        page: parseInt(page),
+        limit: parseInt(limit),
+        totalPages: Math.ceil(totalCount / limit)
+      }
+    });
+
+  } catch (error) {
+    return res.json({ status: false, message: "Server error", data: [] });
+  }
+}
+
+
+
+async Bank(req, res) {
+  try {
+
+    const banks = await Bank_Modal.find({ del: false, status: true, type: 1 });
+
+    const protocol = req.protocol; // 'http' or 'https'
+    const baseUrl = `${protocol}://${req.headers.host}`; // Construct base URL dynamically
+    console.log(baseUrl);
+    const bankWithImageUrls = banks.map(bank => {
+      return {
+        ...bank._doc, // Spread the original document
+        image: bank.image ? `${baseUrl}/uploads/bank/${bank.image}` : null, // Append full image URL
+      };
+    });
+    
+
+      return res.status(200).json({
+          status: true,
+          message: "Bank retrieved successfully",
+          data: bankWithImageUrls
+      });
+  } catch (error) {
+      console.log("Error retrieving Bank:", error);
+      return res.status(500).json({
+          status: false,
+          message: "Server error",
+          error: error.message
+      });
+  }
+}
+
+
+async Qrcode(req, res) {
+  try {
+
+    const banks = await Bank_Modal.find({ del: false, status: true, type: 2 });
+
+    const protocol = req.protocol; // 'http' or 'https'
+    const baseUrl = `${protocol}://${req.headers.host}`; // Construct base URL dynamically
+    
+    const bankWithImageUrls = banks.map(bank => {
+      return {
+        ...bank._doc, // Spread the original document
+        image: bank.image ? `${baseUrl}/uploads/bank/${bank.image}` : null, // Append full image URL
+      };
+    });
+    
+
+      return res.status(200).json({
+          status: true,
+          message: "Qrcode retrieved successfully",
+          data: bankWithImageUrls
+      });
+  } catch (error) {
+      console.log("Error retrieving Bank:", error);
+      return res.status(500).json({
+          status: false,
+          message: "Server error",
+          error: error.message
+      });
+  }
+}
+
+
+async Refer(req, res) {
+  return res.status(200).json({
+    status: true,
+  });
+}
 
 
 }

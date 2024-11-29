@@ -2,10 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { PaymentRequestlist, ChangePaymentStatus } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import Swal from 'sweetalert2';
-import { fDateTime ,fDate} from '../../../Utils/Date_formate';
+import { fDateTime, fDate } from '../../../Utils/Date_formate';
 import { Link } from 'react-router-dom';
+import {  IndianRupee} from 'lucide-react';
+
+
 
 const PaymentRequest = () => {
+
+
+    
     const token = localStorage.getItem('token');
     const [clients, setClients] = useState([]);
     const [searchInput, setSearchInput] = useState("");
@@ -84,25 +90,25 @@ const PaymentRequest = () => {
 
 
     const columns = [
-        {
-            name: 'S.No',
-            selector: (row, index) => index + 1,
-            sortable: false,
-            width: '78px',
-        },
+        // {
+        //     name: 'S.No',
+        //     selector: (row, index) => index + 1,
+        //     sortable: false,
+        //     width: '78px',
+        // },
         {
             name: 'Amount',
-            selector: row => row.amount,
+            selector: row => <div> <IndianRupee />{row.amount}</div> ,
             sortable: true,
         },
         {
-            name: 'Created At',
-            selector: row => fDate(row.created_at),
+            name: 'Requested Date',
+            selector: row => fDateTime(row.created_at),
             sortable: true,
         },
         {
             name: 'Updated At',
-            selector: row => fDate(row.updated_at),
+            selector: row => fDateTime(row.updated_at),
             sortable: true,
         },
         {
@@ -152,12 +158,40 @@ const PaymentRequest = () => {
 
 
     const handleSelectChange = async (rowId, event) => {
-        const newSelectedValues = {
-            ...selectedValues,
-            [rowId]: event.target.value,
+        const selectedValue = event.target.value;
+        const statusMap = {
+            0: 'Pending',
+            1: 'Complete',
+            2: 'Reject',
         };
-        setSelectedValues(newSelectedValues);
-        await Updatestatus(rowId, newSelectedValues[rowId]);
+
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: `Do you want to change the status to "${statusMap[selectedValue]}"?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, update it!',
+            cancelButtonText: 'No, cancel!',
+        });
+
+        if (result.isConfirmed) {
+            try {
+                await Updatestatus(rowId, selectedValue);
+                setSelectedValues((prevValues) => ({
+                    ...prevValues,
+                    [rowId]: selectedValue,
+                }));
+                Swal.fire('Updated!', 'The status has been updated.', 'success');
+            } catch (error) {
+                Swal.fire('Error!', 'There was a problem updating the status.', 'error');
+            }
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            window.location.reload()
+
+
+        }
     };
 
 
@@ -196,7 +230,7 @@ const PaymentRequest = () => {
             <div className='page-content'>
 
                 <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                    <div className="breadcrumb-title pe-3">Payment Request</div>
+                    <div className="breadcrumb-title pe-3">Withdrawal Request</div>
                     <div className="ps-3">
                         <nav aria-label="breadcrumb">
                             <ol className="breadcrumb mb-0 p-0">
@@ -209,7 +243,7 @@ const PaymentRequest = () => {
                         </nav>
                     </div>
                 </div>
-                <hr/>
+                <hr />
 
                 <div className='card'>
                     <div className='card-body'>
@@ -225,7 +259,7 @@ const PaymentRequest = () => {
                             <div className="tab-pane fade show active" id="NavPills">
                                 <div className="card-body pt-0">
                                     <div className="d-lg-flex align-items-center mb-4 gap-3">
-                                        <div className="position-relative">
+                                        {/* <div className="position-relative">
                                             <input
                                                 type="text"
                                                 className="form-control ps-5 radius-10"
@@ -235,8 +269,8 @@ const PaymentRequest = () => {
                                             <span className="position-absolute top-50 product-show translate-middle-y">
                                                 <i className="bx bx-search" />
                                             </span>
-                                        </div>
-                                        
+                                        </div> */}
+
                                     </div>
 
                                     <ul className="nav nav-pills nav-pills1 mb-4 light">

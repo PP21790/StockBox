@@ -2,16 +2,42 @@ import DataTable from 'react-data-table-component';
 import React from 'react';
 
 const Table = ({ columns, data }) => {
+   
+    const hasSNoColumn = columns.some(col => col.name === 'S.No');
+
+    const customColumns = hasSNoColumn 
+        ? [...columns] 
+        : [
+            {
+                name: 'S.No',
+                selector: (row, index) => (paginationPage - 1) * 10 + index + 1,
+                sortable: true,
+                width: '100px', 
+                
+            },
+            ...columns, 
+        ];
+
+    const [paginationPage, setPaginationPage] = React.useState(1);
+    const paginationPerPage = 10; 
+
+    const handlePageChange = (page) => {
+        setPaginationPage(page);
+    };
+
     return (
         <div className="table-responsive" style={tableContainerStyle}>
             <DataTable
-                columns={columns}
+                columns={customColumns}
                 data={data}
-                pagination    
+                pagination
+                paginationPerPage={paginationPerPage}
+                paginationPage={paginationPage}
+                onChangePage={handlePageChange}
                 highlightOnHover  
                 striped  
                 customStyles={customStyles}
-                responsive={true}  // Ensure responsiveness
+                responsive={true}  
             />
         </div>
     );
@@ -22,9 +48,9 @@ const tableContainerStyle = {
     backgroundColor: '#f9f9f9',
     borderRadius: '10px',
     boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
-    display: 'inline-block',  // Allow content width
-    maxWidth: '100%',  // Prevent the table from exceeding container width
-    overflowX: 'auto',  // Add horizontal scroll if content exceeds screen size
+    display: 'block', 
+    maxWidth: '100%',
+    overflowX: 'auto',  
 };
 
 const customStyles = {
@@ -54,6 +80,7 @@ const customStyles = {
             color: '#333',
             padding: '10px 20px',
             textAlign: 'center',
+            whiteSpace: 'nowrap', 
         },
     },
     cells: {
@@ -65,6 +92,9 @@ const customStyles = {
             borderBottom: '1px solid #eee',
             textAlign: 'center',
             transition: 'background-color 0.3s',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',  
+            whiteSpace: 'nowrap',      
         },
         activeStyle: {
             backgroundColor: '#e7f7e7',

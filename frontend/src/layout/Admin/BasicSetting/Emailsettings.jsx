@@ -8,6 +8,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 const Emailsettings = () => {
+
+  
   const token = localStorage.getItem('token');
   const user_id = localStorage.getItem('id');
   const navigate = useNavigate();

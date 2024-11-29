@@ -76,7 +76,8 @@ const Updatecondition = () => {
             label_size: 6,
             col_size: 6,
             disable: false,
-            disable:true
+            disable:true,
+            star:true
         },
         {
             name: "description",
@@ -85,6 +86,7 @@ const Updatecondition = () => {
             label_size: 12,
             col_size: 12,
             disable: false,
+            star:true
         },
     ];
 

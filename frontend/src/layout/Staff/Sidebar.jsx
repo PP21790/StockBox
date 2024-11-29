@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getstaffperuser } from '../../Services/Admin';
+import { basicsettinglist } from '../../Services/Admin';
+import { image_baseurl } from '../../Utils/config';
+
 
 const Sidebar = ({ onToggleClick }) => {
 
@@ -9,12 +12,29 @@ const Sidebar = ({ onToggleClick }) => {
 
   const [permission, setPermission] = useState([]);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  
+
+  const [clients, setClients] = useState([]);
+  
+  
+  
+      useEffect(() => {
+        getpermissioninfo();
+        getsettinglist()
+      }, []);
 
 
+  const getsettinglist = async () => {
+    try {
+        const response = await basicsettinglist(token);
+        if (response.status) {
+            setClients(response.data);
+        }
+    } catch (error) {
+        console.log('error', error);
+    }
+};
 
-  useEffect(() => {
-    getpermissioninfo();
-  }, []);
 
 
 
@@ -28,6 +48,8 @@ const Sidebar = ({ onToggleClick }) => {
       console.log("error", error);
     }
   };
+
+
 
   const toggleDropdown = (dropdownName) => (e) => {
     e.preventDefault();
@@ -52,7 +74,7 @@ const Sidebar = ({ onToggleClick }) => {
         ...(permission.includes('viewcategory') ? [{ title: 'Category', link: '/staff/category' }] : []),
       ].filter(Boolean),
     },
-    permission.includes('viewstaff') && { title: 'Staff', icon: 'bx bx-user-plus', link: '/staff/staff' },
+    // permission.includes('viewstaff') && { title: 'Staff', icon: 'bx bx-user-plus', link: '/staff/staff' },
     permission.includes('viewsignal') &&
     {
       title: 'Signal',
@@ -68,6 +90,8 @@ const Sidebar = ({ onToggleClick }) => {
 
 
     permission.includes('paymenthistory') && { title: 'Payment History', icon: 'bx bx-credit-card', link: '/staff/paymenthistory' },
+    permission.includes('planexpiry') && { title: 'Plan Expiry', icon: 'bx bx-credit-card', link: '/staff/planexpiry' },
+    permission.includes('perform') && { title: 'Performance', icon: 'bx bx-credit-card', link: '/staff/perform' },
     permission.includes('viewblogs') && { title: 'Blogs', icon: 'bx bx-comment-detail', link: '/staff/blogs' },
     permission.includes('viewnews') && { title: 'News', icon: 'bx bx-news', link: '/staff/news' },
     permission.includes('viewcoupon') && { title: 'Coupon', icon: 'bx bx-edit-alt', link: '/staff/coupon' },
@@ -81,10 +105,10 @@ const Sidebar = ({ onToggleClick }) => {
       <div data-simplebar="init">
         <div className="sidebar-header">
           <div>
-            <img src="/assets/images/logo-icon.png" className="logo-icon" alt="logo icon" />
+            <img  src={`${image_baseurl}uploads/basicsetting/${clients[0]?.favicon}`} />
           </div>
           <div>
-            <h4 className="logo-text">STOCK BOX</h4>
+            <h4 className="logo-text">{clients[0]?.from_name}</h4>
           </div>
           <div className="toggle-icon ms-auto" onClick={onToggleClick}>
             <i className="bx bx-arrow-back" />

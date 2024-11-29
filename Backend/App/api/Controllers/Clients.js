@@ -13,6 +13,9 @@ const Mailtemplate_Modal = db.Mailtemplate;
 const Refer_Modal = db.Refer;
 const Payout_Modal = db.Payout;
 const Helpdesk_Modal = db.Helpdesk;
+const Order_Modal = db.Order;
+const Signal_Modal = db.Signal;
+const Adminnotification_Modal = db.Adminnotification;
 
 
 class Clients {
@@ -21,6 +24,8 @@ class Clients {
   async AddClient(req, res) {
 
     try {
+
+    
       const { FullName, Email, PhoneNo, password, token } = req.body;
 
       if (!FullName) {
@@ -50,11 +55,10 @@ class Clients {
       }
   
 
-     
-
+  
       const existingUser = await Clients_Modal.findOne({
         $and: [
-          { del: 0 },
+          { del: "0" },
           {
             $or: [{ Email }, { PhoneNo }]
           }
@@ -62,7 +66,6 @@ class Clients {
       });
 
 
-  
       if (existingUser) {
         if (existingUser.Email === Email) {
           return res.status(400).json({ status: false, message: "Email already exists" });
@@ -72,20 +75,20 @@ class Clients {
       }
 
 
-
       const settings = await BasicSetting_Modal.findOne();
       if (!settings || !settings.smtp_status) {
         throw new Error('SMTP settings are not configured or are disabled');
       }
 
 
-
+      let cleanedName = FullName.replace(/\s+/g, '');
+          let referCode = cleanedName.substring(0, 7).toUpperCase();
 
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      const characters = '0123456789';
       let refer_token = '';
-      const length = 10; // Length of the token
+      const length = 5; // Length of the token
       while (refer_token.length < length) {
           const byte = crypto.randomBytes(1);
           const index = byte[0] % characters.length;
@@ -93,24 +96,35 @@ class Clients {
       }
       
 
-      const refer_tokens = crypto.randomBytes(10).toString('hex'); 
-
-
-
+     
+      let refer_tokenss = referCode + refer_token;
+      const refer_tokens = token || crypto.randomBytes(10).toString('hex'); // Use the provided token or generate a new one
 
       const result = new Clients_Modal({
-      FullName: FullName,
-      Email: Email,
-      PhoneNo: PhoneNo,
-      password: hashedPassword,
-      refer_token:refer_token,
-      token:refer_tokens,
+          FullName,
+          Email,
+          PhoneNo,
+          password: hashedPassword,
+          refer_token: refer_tokenss,
+          token: refer_tokens,
+          refer_status: token ? settings.refer_status : 0, // Only add `refer_status` if `token` is provided
+          del: 0,
       });
+      
+      await result.save(); 
 
 
+ 
 
-      await result.save();
-
+  const titles = 'Important Update';
+      const message = `new client registration.......`;
+      const resultnm = new Adminnotification_Modal({
+        clientid:result._id,
+        type:'add client',
+        title: titles,
+        message: message
+    });
+    await resultnm.save();
 
 
       if(token) {
@@ -128,7 +142,6 @@ class Clients {
           })
           await results.save();
         }
-  
 
 
 
@@ -290,8 +303,8 @@ async loginClient(req, res) {
         PhoneNo: client.PhoneNo,
         id: client.id,
         token: token,
-        angleredirecturl: `http://${req.headers.host}/backend/angle/getaccesstoken?key=${client._id}`,
-        aliceredirecturl: `http://${req.headers.host}/backend/aliceblue/getaccesstoken?key=${client._id}` },
+        angleredirecturl: `https://${req.headers.host}/backend/angle/getaccesstoken?key=${client._id}`,
+        aliceredirecturl: `https://${req.headers.host}/backend/aliceblue/getaccesstoken?key=${client._id}` },
     });
   } catch (error) {
     return res.status(500).json({
@@ -599,7 +612,21 @@ async deleteClient(req, res) {
       });
     }
 
-    console.log("Deleted Client:", deletedClient);
+
+    const titles = 'Important Update';
+    const message = `Account deleted by Client`;
+    const resultnm = new Adminnotification_Modal({
+      clientid:client._id,
+      type:'delete client',
+      title: titles,
+      message: message
+  });
+
+
+  await resultnm.save();
+
+
+    
     return res.json({
       status: true,
       message: "Client deleted successfully",
@@ -846,7 +873,7 @@ async  clientKycAndAgreement(req, res) {
     await page.setContent(htmlContent);
 
     // Define the path to save the PDF
-    const pdfDir = path.join(__dirname, '../../../../stockboxpnp.pnpuniverse.com/uploads', 'pdf');
+    const pdfDir = path.join(__dirname, `../../../../${process.env.DOMAIN}/uploads`, 'pdf');
     const pdfPath = path.join(pdfDir, `kyc-agreement-${phone}.pdf`);
     
     // Generate PDF and save to the specified path
@@ -953,7 +980,7 @@ async uploadDocument(req, res) {
 
   // Path to the PDF document
   const filename = client.pdf;
-  const dir = path.join(__dirname, '../../../../stockboxpnp.pnpuniverse.com/uploads/pdf', filename);
+  const dir = path.join(__dirname, `../../../../${process.env.DOMAIN}/uploads/pdf`, filename);
 
   if (!fs.existsSync(dir)) {
       return res.status(400).json({
@@ -1066,7 +1093,7 @@ async downloadDocument(req, res) {
 
       // Generate a unique filename
       const fileName = `kyc-agreement-${client.PhoneNo}.pdf`;
-      const tempPath = path.join(__dirname, '../../../../stockboxpnp.pnpuniverse.com/uploads/pdf', fileName);
+      const tempPath = path.join(__dirname, `../../../../${process.env.DOMAIN}/uploads/pdf`, fileName);
 
       // Ensure the directory exists
       await fs.promises.mkdir(path.dirname(tempPath), { recursive: true });
@@ -1078,6 +1105,18 @@ async downloadDocument(req, res) {
       client.kyc_verification = 1;
       client.pdf = fileName;  // Set the PDF filename
       await client.save();
+
+      const titles = 'Important Update';
+      const message = `Kyc Verification Complete By Client`;
+      const resultnm = new Adminnotification_Modal({
+        clientid:client._id,
+        type:'kyc verification',
+        title: titles,
+        message: message
+    });
+
+
+    await resultnm.save();
 
       // Return the file name or path for further use
       res.json({
@@ -1100,9 +1139,12 @@ async requestPayout(req, res) {
     const { clientId, amount } = req.body;
 
     // Validate input
-    if (!clientId || amount <= 0) {
-      return res.status(400).json({ status: false, message: 'Invalid client ID or amount.' });
+    if (!clientId) {
+      return res.status(400).json({ status: false, message: 'Invalid client ID' });
     }
+    if (amount <= 0) {
+      return res.status(400).json({ status: false, message: 'Enter Invalid Amount' });
+    } 
 
     // Fetch the client record
     const client = await Clients_Modal.findOne({ _id: clientId, del: 0, ActiveStatus: 1 });
@@ -1119,7 +1161,7 @@ async requestPayout(req, res) {
 
     // Check if the client has enough wamount
     if (client.wamount < amount) {
-      return res.status(400).json({ status: false, message: 'Insufficient funds in wamount.' });
+      return res.status(400).json({ status: false, message: 'Insufficient funds in wallet.' });
     }
 
     // Deduct the amount from client's wamount
@@ -1131,8 +1173,24 @@ async requestPayout(req, res) {
       clientid: clientId,
       amount: amount,
     });
+    
 
     await payoutRequest.save();
+
+
+
+    const titles = 'Important Update';
+    const message = `Payout request By Client`;
+    const resultnm = new Adminnotification_Modal({
+      clientid:client._id,
+      segmentid:payoutRequest._id,
+      type:'payout',
+      title: titles,
+      message: message
+  });
+
+
+  await resultnm.save();
 
     return res.status(201).json({
       status: true,
@@ -1146,12 +1204,12 @@ async requestPayout(req, res) {
   }
 }
 
+
 async payoutList(req, res) {
   try {
 
     const { id } = req.body;  // Extract the client ID from the request parameters
-    const result = await Payout_Modal.find({ clientid: id });  // Fetch payouts for the given client ID
-
+    const result = await Payout_Modal.find({ clientid: id }).sort({ created_at: -1 }); // Sort by _id in descending order
     return res.json({
       status: true,
       message: "get",
@@ -1178,10 +1236,10 @@ async referEarn(req, res) {
 
     const result = await Refer_Modal.find({
       $or: [
-        { user_id: id },      // Check if user_id matches
-        { token: client.refer_token }  // Check if token matches
+        { user_id: id }, // Check if user_id matches
+        { token: client.refer_token } // Check if token matches
       ]
-    });
+    }).sort({ created_at: -1 });
     
     // Process result to show receiveramount or senderamount based on the condition
     const processedResult = await Promise.all(result.map(async (entry) => {
@@ -1454,7 +1512,142 @@ return res.json({
   }
 }
 
+async orderList(req, res) {
+  try {
 
+    const { clientid } = req.body;  
+
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+    
+    const todayEnd = new Date();
+    todayEnd.setHours(23, 59, 59, 999);
+
+
+    const result = await Order_Modal.aggregate([
+      {
+        $match: {
+          clientid: clientid,
+          createdAt: { $gte: todayStart, $lt: todayEnd } // Match orders created today
+        }
+      },
+      {
+        $addFields: {
+          signalObjectId: { $toObjectId: "$signalid" } // Convert signalid to ObjectId
+        }
+      },
+      {
+        $lookup: {
+          from: 'signals', // The collection to join with
+          localField: 'signalObjectId', // Use converted ObjectId field for lookup
+          foreignField: '_id', // Match with _id in signals collection
+          as: 'signalDetails' // The name of the array field in the result containing signal data
+        }
+      },
+      {
+        $unwind: '$signalDetails' // Unwind the result if expecting a single match per order
+      },
+      {
+        $project: {
+          orderid: 1,
+          uniqueorderid: 1,
+          quantity: 1,
+          status: 1,
+          borkerid:1,
+          data:1,
+          signalid: 1,
+          ordertype: 1,
+          signalDetails: 1, // Include all fields from the signalDetails object
+          createdAt: 1
+        }
+      },
+      {
+        $sort: {
+          createdAt: -1 // Sort by order creation date in descending order
+        }
+      },
+      {
+        $group: {
+          _id: "$signalid", // Group by signalid
+          latestOrder: { $first: "$$ROOT" } // Take the first (latest) order per signalid
+        }
+      },
+      {
+        $replaceRoot: {
+          newRoot: "$latestOrder" // Replace the root document with the latest order for each signalid
+        }
+      }
+    ]);
+
+    return res.json({
+      status: true,
+      message: "get",
+      data: result  // Return the fetched payouts
+    });
+  } catch (error) {
+    return res.json({ status: false, message: "Server error", data: [] });  // Error handling
+  }
+}
+
+
+
+async orderListDetail(req, res) {
+  try {
+
+    const { clientid,signalid } = req.body; 
+
+    const result = await Order_Modal.aggregate([
+      {
+        $match: {
+          clientid: clientid,
+          signalid: signalid 
+        }
+      },
+      {
+        $addFields: {
+          signalObjectId: { $toObjectId: "$signalid" } // Convert signalid to ObjectId
+        }
+      },
+      {
+        $lookup: {
+          from: 'signals', // The collection to join with
+          localField: 'signalObjectId', // Use converted ObjectId field for lookup
+          foreignField: '_id', // Match with _id in signals collection
+          as: 'signalDetails' // The name of the array field in the result containing signal data
+        }
+      },
+      {
+        $unwind: '$signalDetails' // Unwind the result if expecting a single match per order
+      },
+      {
+        $project: {
+          orderid: 1,
+          uniqueorderid: 1,
+          quantity: 1,
+          status: 1,
+          borkerid:1,
+          ordertype:1,
+          data:1,
+          signalDetails: 1, // Include all fields from the signalDetails object
+          createdAt: 1
+        }
+      },
+      {
+        $sort: {
+          createdAt: -1 // Sort by order creation date in descending order
+        }
+      }
+    ]);
+
+    return res.json({
+      status: true,
+      message: "get",
+      data: result  // Return the fetched payouts
+    });
+  } catch (error) {
+    return res.json({ status: false, message: "Server error", data: [] });  // Error handling
+  }
+}
 
 }
 module.exports = new Clients();

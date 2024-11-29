@@ -12,46 +12,64 @@ const Addcoupon = () => {
     const user_id = localStorage.getItem("id");
     const token = localStorage.getItem("token");
 
+    const today = new Date().toISOString().slice(0, 10);
+
+
+
+
+
+
     const validate = (values) => {
         let errors = {};
 
         if (!values.name) {
-            errors.name = "Please enter  Name";
+            errors.name = "Please Enter  Name";
         }
         if (!values.code) {
-            errors.code = "Please enter code";
+            errors.code = "Please Enter code";
         }
         if (values.code) {
             if (values.code.length < 6 || values.code.length > 8) {
-                errors.code = "Please enter between 6 and 8 characters.";
+                errors.code = "Please Enter Between 6 and 8 Characters.";
             } else if (!/^[a-zA-Z0-9]+$/.test(values.code)) {
-                errors.code = "Code must contain only numbers and letters.";
+                errors.code = "Code Must contain Only Numbers and Letters.";
             }
         }
 
+        if (values.minpurchasevalue && parseFloat(values.minpurchasevalue) < parseFloat(values.mincouponvalue)) {
+            errors.minpurchasevalue = "Please Enter Value Greater Than  Max Discount Value "
+        }
+        if (values.mincouponvalue && parseFloat(values.minpurchasevalue) < parseFloat(values.mincouponvalue)) {
+            errors.mincouponvalue = "Please Enter Value Less Than Min Purchase Value "
+        }
+        if (values.value && parseFloat(values.minpurchasevalue) < parseFloat(values.value)) {
+            errors.minpurchasevalue = "Please Enter Greater Than Discount value";
+        }
+        if (values.enddate && values.startdate > values.enddate) {
+            errors.enddate = "Please Enter Greater Than Startdate";
+        }
         if (!values.type) {
-            errors.type = "Please enter type";
+            errors.type = "Please Enter type";
         }
         if (!values.value) {
-            errors.value = "Please enter value";
+            errors.value = "Please Enter value";
         }
         if (!values.startdate) {
-            errors.startdate = "Please enter Startdate";
+            errors.startdate = "Please Enter Startdate";
         }
         if (!values.enddate) {
-            errors.enddate = "Please enter Enddate";
+            errors.enddate = "Please Enter Enddate";
         }
         if (!values.minpurchasevalue) {
-            errors.minpurchasevalue = "Please enter Min Purchase value";
+            errors.minpurchasevalue = "Please Enter Min Purchase Value";
         }
         if (values.mincouponvalue && !values.mincouponvalue) {
-            errors.mincouponvalue = "Please enter Min Coupon value";
+            errors.mincouponvalue = "Please Enter Min Coupon Value";
         }
-        
-
 
         return errors;
     };
+
 
     const onSubmit = async (values) => {
         const req = {
@@ -108,7 +126,7 @@ const Addcoupon = () => {
             code: '',
             type: '',
             value: '',
-            startdate: '',
+            startdate: today,
             enddate: '',
             minpurchasevalue: '',
             mincouponvalue: '',
@@ -128,6 +146,7 @@ const Addcoupon = () => {
             label_size: 6,
             col_size: 6,
             disable: false,
+            star:true
         },
         {
             name: "code",
@@ -136,6 +155,7 @@ const Addcoupon = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
+            star:true
         },
         {
             name: "type",
@@ -144,44 +164,62 @@ const Addcoupon = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
+            star:true,
             options: [
                 { value: "percentage", label: "Percentage" },
-                { value: "fixed", label: "Fixed" },  
-            ]  
+                { value: "fixed", label: "Fixed" },
+            ]
         },
+
         {
             name: "value",
-            label: "Value",
+            label: "Percent/Fixed Discount",
             type: "number",
             label_size: 12,
             col_size: 6,
             disable: false,
+            star:true,
+            showWhen: (values) => values.type === "fixed"
+        },
+        {
+            name: "value",
+            label: "Percentage/Fixed Discount",
+            type: "text4",
+            label_size: 12,
+            col_size: 6,
+            disable: false,
+            star:true,
+            showWhen: (values) => values.type === "percentage"
         },
 
-         {
+        {
             name: "minpurchasevalue",
             label: "Min Purchase Value",
-            type: "text",
+            type: "number",
             label_size: 12,
             col_size: 6,
             disable: false,
+            star:true
         },
-         {
+        {
             name: "mincouponvalue",
             label: "Max Discount Value",
-            type: "text",
+            type: "number",
             label_size: 12,
             col_size: 6,
             disable: false,
-          showWhen: (values) => values.type === "percentage"
-        } ,
+            star:true,
+            showWhen: (values) => values.type === "percentage"
+        },
         {
             name: "startdate",
             label: "Start Date",
-            type: "date",
+            type: "date1",
             label_size: 12,
             col_size: 6,
             disable: false,
+            star:true
+
         },
         {
             name: "enddate",
@@ -190,6 +228,7 @@ const Addcoupon = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
+            star:true
         },
 
 
@@ -212,10 +251,12 @@ const Addcoupon = () => {
 
     ];
 
+  
+
     return (
         <div style={{ marginTop: "100px" }}>
             <DynamicForm
-                 fields={fields.filter(field => !field.showWhen || field.showWhen(formik.values))}
+                fields={fields.filter(field => !field.showWhen || field.showWhen(formik.values))}
                 formik={formik}
                 page_title="Add Coupon Code"
                 btn_name="Add Coupon"

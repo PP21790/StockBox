@@ -23,15 +23,15 @@ const Addnews = () => {
         let errors = {};
 
         if (!values.title) {
-            errors.title = "Please enter title";
+            errors.title = "Please Enter Title";
         }
         if (!values.description) {
-            errors.description = "Please enter description";
+            errors.description = "Please Enter Description";
         }
         if (!values.image) {
-            errors.image = "Please enter image";
+            errors.image = "Please Enter Image";
         }
-        // console.log("errors",errors)
+       
 
         return errors;
     };
@@ -96,6 +96,7 @@ const Addnews = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
+            star:true
         },
         {
             name: "image",
@@ -104,6 +105,7 @@ const Addnews = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
+            star:true
         },
         {
             name: "description",
@@ -112,6 +114,7 @@ const Addnews = () => {
             label_size: 12,
             col_size: 12,
             disable: false,
+            star:true
         },
     ];
 

@@ -101,6 +101,11 @@ const BasicSettingSchema = new Schema({
         trim: true,
         default: null
     },
+    refer_status: {
+        type: Number,
+        trim: true,
+        default: 0
+    },
     surepass_token: {
         type: String,
         trim: true,
@@ -132,9 +137,99 @@ const BasicSettingSchema = new Schema({
         default: null
     },
     freetrial: {
-        type: String,
+        type: Number,
         trim: true,
         default: 0
+    },
+    staffstatus: {
+        type: Number,
+        trim: true,
+        default: 1
+    },
+    kyc: {
+        type: Number,
+        trim: true,
+        default: 1
+    },
+    company_key: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    cashexpiretime: {
+        type: Number,
+        trim: true,
+        default: 0
+    },
+    foexpiretime: {
+        type: Number,
+        trim: true,
+        default: 0
+    },
+    cashexpirehours: {
+        type: Number,
+        trim: true,
+        default: 0
+    },
+    foexpirehours: {
+        type: Number,
+        trim: true,
+        default: 0
+    },
+    aliceuserid: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    apikey: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    secretkey: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    authtoken: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    facebook: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    youtube: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    twitter: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    instagram: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    brokerloginstatus: {
+        type: Number,
+        enum: [1, 0],
+        default: 0
+    },
+    paymentstatus: {
+        type: Number,
+        enum: [1, 0],
+        default: 1
+    },
+    officepaymenystatus: {
+        type: Number,
+        enum: [1, 0],
+        default: 1
     }
 
 }, {

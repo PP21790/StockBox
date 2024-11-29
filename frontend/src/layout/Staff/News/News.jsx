@@ -6,21 +6,17 @@ import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
-import { fDate } from '../../../Utils/Date_formate';
+import { fDate , fDateTime} from '../../../Utils/Date_formate';
 import { getstaffperuser } from '../../../Services/Admin';
 
 
 
 const News = () => {
-    
-    
-        const token = localStorage.getItem('token');
-        const userid = localStorage.getItem('id');
+
     const navigate = useNavigate();
 
+
     const [permission, setPermission] = useState([]);
-
-
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
@@ -43,6 +39,9 @@ const News = () => {
         add_by: "",
     });
 
+    const token = localStorage.getItem('token');
+    const userid = localStorage.getItem('id');
+
 
 
 
@@ -64,7 +63,6 @@ const News = () => {
     };
 
 
-
     const getpermissioninfo = async () => {
         try {
             const response = await getstaffperuser(userid, token);
@@ -77,12 +75,16 @@ const News = () => {
     }
 
 
+
     useEffect(() => {
         getNews();
-        getpermissioninfo()
+       
     }, [searchInput]);
 
 
+    useEffect(() => {
+        getpermissioninfo()  
+    }, []);
 
 
 
@@ -304,7 +306,7 @@ const News = () => {
                                     <i className="bx bx-search" />
                                 </span>
                             </div>
-                            {permission.includes("addnews") ? <div className="ms-auto">
+                            {permission.includes("addnews") ?  <div className="ms-auto">
                                 <Link
                                     to="/staff/addnews"
                                     type="button"
@@ -316,7 +318,7 @@ const News = () => {
                                     Add News
                                 </Link>
 
-                            </div> : ""}
+                            </div> :"" }
                         </div>
                         <div className="container py-2">
 
@@ -329,25 +331,23 @@ const News = () => {
 
                                         <div className={`card ${client.borderClass || 'radius-15'} d-flex justify-content-center align-items-center`} >
 
-                                            <div className="card-body">
+                                            <div className="card-body" style={{width:"100%"}}>
                                                 <div className="d-flex justify-content-between align-items-start">
 
                                                     <h4 className="card-title text-muted mb-0">{client.title}</h4>
 
                                                     <div>
 
-                                                        {permission.includes("editnews") ? <Tooltip placement="top" overlay="Update">
+                                                    {permission.includes("editnews") ? <Tooltip placement="top" overlay="Update">
                                                             <SquarePen
                                                                 onClick={() => {
-
-
                                                                     navigate("/staff/updatenews", { state: { client } })
                                                                 }}
                                                             />
-                                                        </Tooltip> : ""}
+                                                        </Tooltip> : "" }
                                                         {permission.includes("deletenews") ? <Tooltip placement="top" overlay="Delete">
                                                             <Trash2 onClick={() => DeleteService(client._id)} />
-                                                        </Tooltip> : ""}
+                                                        </Tooltip> : "" }
                                                     </div>
                                                 </div>
                                                 <hr />
@@ -364,18 +364,38 @@ const News = () => {
                                                         />
                                                     </div>
 
+                                                    {/* <div className="row mb-3 align-items-center">
+                                                        <label htmlFor="description" className="col-sm-3 col-form-label">
+                                                            <b>Description</b>
+                                                        </label>
+                                                        <div className="col-sm-9">
+                                                            <div className="input-group">
+                                                                <div
+                                                                    className="form-control"
+                                                                    style={{ width: "100%" }}
+                                                                    dangerouslySetInnerHTML={{ __html: row.description || "" }}
+                                                                    readOnly
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div> */}
+
 
                                                     <div className="col-md-10 ps-4">
 
                                                         <h5>Description:</h5>
-                                                        {/* <p className="card-text">{client.description} */}
-                                                        <span
-                                                            dangerouslySetInnerHTML={{ __html: client.description }}
-                                                            style={{ display: 'block', marginTop: '0.5rem' }}
+
+                                                        <div
+                                                            className="form-control"
+                                                            style={{ width: "100%" }}
+                                                            dangerouslySetInnerHTML={{ __html: client.description || "" }}
+                                                            readOnly
                                                         />
-                                                        {/* </p> */}
-                                                        <div className="float-end text-muted small">{fDate(client.created_at)}</div>
+
+                                                        <div className="float-end text-muted small">{fDateTime(client.created_at)}</div>
                                                     </div>
+
+
                                                 </div>
                                             </div>
                                         </div>
@@ -389,6 +409,9 @@ const News = () => {
                         </div>
                     </div>
                 </div>
+
+
+
 
             </div>
         </div>

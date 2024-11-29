@@ -15,28 +15,32 @@ const AddStaff = () => {
     let errors = {};
 
     if (!values.FullName) {
-      errors.FullName = "Please enter Full Name";
+      errors.FullName = "Please Enter Full Name";
+    }
+    if (/\d/.test(values.FullName)) {
+      errors.FullName = "Numbers Are Not Allowed In the Full Name";
     }
     if (!values.Email) {
-      errors.Email = "Please enter Email";
+      errors.Email = "Please Enter Email";
     }
     if (!values.UserName) {
-      errors.UserName = "Please enter Username";
+      errors.UserName = "Please Enter Username";
     }
     if (!values.PhoneNo) {
-      errors.PhoneNo = "Please enter Phone Number";
+      errors.PhoneNo = "Please Enter Phone Number";
     }
     if (!values.password) {
-      errors.password = "Please enter password";
+      errors.password = "Please Enter Password";
     }
     if (!values.ConfirmPassword) {
-      errors.ConfirmPassword = "Please confirm your password";
+      errors.ConfirmPassword = "Please Confirm Your Password";
     } else if (values.password !== values.ConfirmPassword) {
-      errors.ConfirmPassword = "Passwords must match";
+      errors.ConfirmPassword = "Passwords Must Match";
     }
 
     return errors;
   };
+
 
   const onSubmit = async (values) => {
     const req = {
@@ -81,6 +85,8 @@ const AddStaff = () => {
     }
   };
 
+
+
   const formik = useFormik({
     initialValues: {
       FullName: "",
@@ -95,6 +101,9 @@ const AddStaff = () => {
     onSubmit,
   });
 
+
+
+
   const fields = [
     {
       name: "FullName",
@@ -103,6 +112,7 @@ const AddStaff = () => {
       label_size: 6,
       col_size: 6,
       disable: false,
+      star:true
     },
     {
       name: "UserName",
@@ -111,6 +121,7 @@ const AddStaff = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
+      star:true
     },
     {
       name: "Email",
@@ -119,6 +130,7 @@ const AddStaff = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
+      star:true
     },
     {
       name: "PhoneNo",
@@ -127,6 +139,7 @@ const AddStaff = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
+      star:true
     },
     {
       name: "password",
@@ -135,14 +148,16 @@ const AddStaff = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
+      star:true
     },
     {
       name: "ConfirmPassword",
       label: "Confirm Password",
-      type: "password",
+      type: "password1",
       label_size: 12,
       col_size: 6,
       disable: false,
+      star:true
     },
   ];
 

@@ -8,3 +8,5 @@ export const base_url = `http://localhost:5001/`;
 // for image 
 
 export const image_baseurl = `https://stockboxpnp.pnpuniverse.com/`;
+// export const image_baseurl = `${window.location.origin}/`;
+// 

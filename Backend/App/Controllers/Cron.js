@@ -4,26 +4,47 @@ const xlsx = require('xlsx');
 const csv = require('csv-parser');
 const path = require('path');
 const axios = require('axios');
+const Papa = require('papaparse');
 const fs = require('fs');
 var dateTime = require('node-datetime');
 const cron = require('node-cron');
+const WebSocket = require('ws');
+var CryptoJS = require("crypto-js");
 const Stock_Modal = db.Stock;
 const Clients_Modal = db.Clients;
+const Signal_Modal = db.Signal;
+const BasicSetting_Modal = db.BasicSetting;
+const Notification_Modal = db.Notification;
+const Planmanage = db.Planmanage;
+const JsonFile = require("../../uploads/json/config.json");
+const { sendFCMNotification } = require('./Pushnotification'); 
+const Adminnotification_Modal = db.Adminnotification;
 
 
-cron.schedule('0 1 * * *', async () => {
+let ws;
+const url = "wss://ws1.aliceblueonline.com/NorenWS/"
+
+cron.schedule('0 7 * * *', async () => {
     await DeleteTokenAliceToken();
 }, {
     scheduled: true,
     timezone: "Asia/Kolkata"
 });
 
-cron.schedule('0 2 * * *', async () => {
+cron.schedule('0 8 * * *', async () => {
     await AddBulkStockCron();
 }, {
     scheduled: true,
     timezone: "Asia/Kolkata"
 });
+
+cron.schedule('0 6 * * *', async () => {
+    await downloadKotakNeotoken();
+}, {
+    scheduled: true,
+    timezone: "Asia/Kolkata"
+});
+
 
 cron.schedule('0 4 * * *', async () => {
     await TradingStatusOff();
@@ -32,6 +53,28 @@ cron.schedule('0 4 * * *', async () => {
     timezone: "Asia/Kolkata"
 });
 
+cron.schedule(`${JsonFile.cashexpiretime} ${JsonFile.cashexpirehours} * * *`, async () => {
+    await CheckExpireSignalCash();
+}, {
+    scheduled: true,
+    timezone: "Asia/Kolkata"
+});
+
+// Schedule for future option expiry
+cron.schedule(`${JsonFile.foexpiretime} ${JsonFile.foexpirehours} * * *`, async () => {
+    await CheckExpireSignalFutureOption();
+}, {
+    scheduled: true,
+    timezone: "Asia/Kolkata"
+});
+
+
+cron.schedule('0 9 * * *', async () => {
+    await PlanExpire();
+}, {
+    scheduled: true,
+    timezone: "Asia/Kolkata"
+});
 
 
 async function AddBulkStockCron(req, res) {
@@ -49,6 +92,16 @@ async function AddBulkStockCron(req, res) {
               (element.instrumenttype === 'OPTIDX' || element.instrumenttype === 'OPTSTK') &&
               element.exch_seg === "NFO" && element.name != ""
           );
+
+
+        //   const filteredDataOO = filteredDataO.filter(element =>
+        //     (element.instrumenttype === 'OPTIDX' || element.instrumenttype === 'OPTSTK') &&
+        //     element.exch_seg === "NFO" && element.name == "RELIANCE" &&  element.expiry=='28NOV2024'
+            
+        // );
+
+// console.log(filteredDataOO);
+         
           const filteredDataF = response.data.filter(element =>
               (element.instrumenttype === 'FUTSTK' || element.instrumenttype === 'FUTIDX') &&
               element.exch_seg === "NFO" && element.name != ""
@@ -147,7 +200,7 @@ async function AddBulkStockCron(req, res) {
   }
   }
   
-const DeleteTokenAliceToken = async () => {
+const DeleteTokenAliceToken = async (req, res) => {
     const pipeline = [
         {
             $addFields: {
@@ -187,17 +240,16 @@ const DeleteTokenAliceToken = async () => {
   
     ];
     const result = await Stock_Modal.aggregate(pipeline)
-    console.log("result", result.length)
+    console.log("result", result)
     if (result.length > 0) {
         const idsToDelete = result.map(item => item._id);
         await Stock_Modal.deleteMany({ _id: { $in: result[0].idsToDelete } });
         console.log(`${result.length} expired tokens deleted.`);
-        return
+        return res.send({status:true})
     } else {
         console.log('No expired tokens found.');
-    }
+        return res.status(500).send({ status: false, message: 'Internal server error' });    }
   
-    return ""
   }
   
   function createUserDataArray(data, segment) {
@@ -237,7 +289,7 @@ const DeleteTokenAliceToken = async () => {
             tradesymbol: element.symbol,
             tradesymbol_m_w: tradesymbol_m_w,
             exch_seg: element.exch_seg
-        };
+        }; 
     });
   }
   async function insertData(dataArray) {
@@ -247,7 +299,6 @@ const DeleteTokenAliceToken = async () => {
         const filteredDataArray = dataArray.filter(userData => {
             return !existingTokens.includes(userData.instrument_token);
         });
-  
         await Stock_Modal.insertMany(filteredDataArray);
     } catch (error) {
         console.log("Error in insertData:", error)
@@ -272,10 +323,446 @@ const DeleteTokenAliceToken = async () => {
             console.log(`Updated trading status for ${updateResult.modifiedCount} active clients.`);
         } else {
             console.log('No active clients found to update.');
+            
         }
+
+
+        const existingSetting = await BasicSetting_Modal.findOne({});
+        if (!existingSetting) {
+          return res.status(404).json({
+            status: false,
+            message: "Data not found",
+          });
+        }
+
+        if (existingSetting) {
+            existingSetting.brokerloginstatus = 0;
+            await existingSetting.save();
+        
+            console.log(`Updated trading status ....`);
+        } 
+
+
     } catch (error) {
         console.error('Error updating trading status:', error);
     }
 }
+
+
+
+
+async function CheckExpireSignalCash(req, res) {
+    try {
+        const today = new Date();
+        const signals = await Signal_Modal.find({
+            del: 0,
+            close_status: false,
+            segment: "C",
+            callduration:"Intraday",
+          });
+
+
+
+          for (const signal of signals) {
+            try {
+                // Get the CPrice for each signal's stock symbol
+                const cPrice = await returnstockcloseprice(signal.stock);
+
+                // Update the signal with close_status and close_price
+                await Signal_Modal.updateOne(
+                    { _id: signal._id },
+                    { $set: { close_status: true, closeprice: cPrice, closedate: today } }
+                );
+            } catch (error) {
+                console.error(`Failed to update signal for ${signal.stock}:`, error.message);
+            }
+        }
+
+        res.json({ message: "Process completed successfully." });
+      
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: "An error occurred while processing signals." });
+
+    } 
+}
+
+
+async function CheckExpireSignalFutureOption(req, res) {
+    try {
+
+        const existingSetting = await BasicSetting_Modal.findOne({});
+
+        if (!existingSetting.brokerloginstatus) {
+          return res.status(404).json({
+            status: false,
+            message: "Broker not Login",
+          });
+        }
+
+
+
+        const today = new Date();
+        const formattedToday = `${String(today.getDate()).padStart(2, '0')}${String(today.getMonth() + 1).padStart(2, '0')}${today.getFullYear()}`;
+
+        // Fetch signals based on criteria
+        const signals = await Signal_Modal.aggregate([
+            {
+                $match: {
+                    del: 0,
+                    close_status: false,
+                    segment: { $in: ["F", "O"] },
+                 $or: [
+                    { expirydate: formattedToday },
+                    { callduration: "Intraday" }
+                ]
+                }
+            },
+            {
+                $lookup: {
+                    from: "stocks",  // Stock details collection
+                    localField: "tradesymbol",
+                    foreignField: "tradesymbol",
+                    as: "stockDetails"
+                }
+            },
+            {
+                $unwind: {
+                    path: "$stockDetails",
+                    preserveNullAndEmptyArrays: true
+                }
+            }
+        ]);
+
+        // Generate channel string for the socket connection
+        const channelStradd = signals
+            .map(signal => `NFO|${signal.stockDetails?.instrument_token || ''}`)
+            .join('#');
+
+        // Check if we have any valid signals
+        if (!channelStradd) {
+            return res.status(404).json({ message: "No valid signals found for today." });
+        }
+
+        // Socket session setup parameters
+        const userid = existingSetting.aliceuserid;
+        const userSession1 = existingSetting.authtoken;  // Replace with actual token
+        const type = { loginType: "API" };
+
+        try {
+            const response = await axios.post(
+                `https://ant.aliceblueonline.com/rest/AliceBlueAPIService/api/ws/createSocketSess`,
+                type,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${userid} ${userSession1}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+
+            if (response.data.stat === "Ok") {
+                // If session creation is successful, open socket connection
+                await openSocketConnection(channelStradd, userid, userSession1);
+
+                return res.json({
+                    message: "Socket session and connection established successfully."
+                });
+            } else {
+                return res.status(500).json({
+                    error: "Failed to create socket session.",
+                    details: response.data
+                });
+            }
+        } catch (sessionError) {
+            return res.status(500).json({ error: "Failed to create socket session." });
+        }
+
+    } catch (error) {
+        return res.status(500).json({ error: "An error occurred while processing signals." });
+    }
+}
+
+
+async function openSocketConnection(channelList, userid, userSession1) {
+
+  ws = new WebSocket(url);
+  ws.onopen = function () {
+    var encrcptToken = CryptoJS.SHA256(CryptoJS.SHA256(userSession1).toString()).toString();
+    var initCon = {
+      susertoken: encrcptToken,
+      t: "c",
+      actid: userid + "_" + "API",
+      uid: userid + "_" + "API",
+      source: "API"
+    }
+    ws.send(JSON.stringify(initCon))
   
-  module.exports = { AddBulkStockCron,DeleteTokenAliceToken };
+  };
+
+  ws.onmessage = async function (msg) {
+    const response = JSON.parse(msg.data)
+    if (response.lp != undefined) {
+      const Cprice = response.lp;
+
+
+      const today = new Date();
+      const formattedToday = `${String(today.getDate()).padStart(2, '0')}${String(today.getMonth() + 1).padStart(2, '0')}${today.getFullYear()}`;
+    
+      const stock = await Stock_Modal.findOne({ instrument_token: response.tk });
+
+      await Signal_Modal.updateOne(
+        { tradesymbol: stock.tradesymbol,expirydate: formattedToday,close_status: false },
+        { $set: { close_status: true, closeprice: Cprice, closedate: today } }
+    );
+
+
+    }
+    if (response.s === 'OK') {
+
+      let json = {
+      k: channelList,
+      t: 't'
+      };
+      
+      await ws.send(JSON.stringify(json))
+      }
+
+  };
+
+  ws.onerror = function (error) {
+    console.log(`WebSocket error: ${error}`);
+  };
+
+  ws.onclose = async function () {
+    
+  };
+
+}
+  
+async function returnstockcloseprice(symbol) {
+    try {
+        if (!symbol) {
+            throw new Error("Symbol is required.");
+        }
+
+        const csvFilePath = "https://docs.google.com/spreadsheets/d/1wwSMDmZuxrDXJsmxSIELk1O01F0x1-0LEpY03iY1tWU/export?format=csv";
+        const { data } = await axios.get(csvFilePath);
+        
+        // Return a promise that resolves with the CPrice after parsing
+        return new Promise((resolve, reject) => {
+            Papa.parse(data, {
+                header: true,
+                complete: (result) => {
+                    let sheetData = result.data;
+
+                    // Map symbol names as needed
+                    sheetData.forEach(item => {
+                        switch (item.SYMBOL) {
+                            case "NIFTY_BANK":
+                                item.SYMBOL = "BANKNIFTY";
+                                break;
+                            case "NIFTY_50":
+                                item.SYMBOL = "NIFTY";
+                                break;
+                            case "NIFTY_FIN_SERVICE":
+                                item.SYMBOL = "FINNIFTY";
+                                break;
+                        }
+                    });
+
+                    // Find the requested symbol and return its CPrice
+                    const stockData = sheetData.find(item => item.SYMBOL === symbol);
+
+                    if (stockData && stockData.CPrice && stockData.CPrice !== "#N/A") {
+                        resolve(stockData.CPrice);
+                    } else {
+                        reject(new Error("CPrice unavailable or symbol not found."));
+                    }
+                },
+                error: (error) => {
+                    reject(error);
+                }
+            });
+        });
+    } catch (error) {
+        console.error("Error in returnstockcloseprice:", error.message);
+        throw error;
+    }
+}
+
+
+async function PlanExpire(req, res) {
+    try {
+        // Get the current date at midnight (start of the day)
+        const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0); // Set to start of the day (midnight)
+    
+        // Calculate the future dates (5, 3, and 1 days later)
+        const futureDates = [
+            new Date(currentDate),
+            new Date(currentDate),
+            new Date(currentDate)
+        ];
+    
+        futureDates[0].setDate(currentDate.getDate() + 5); // 5 days later
+        futureDates[1].setDate(currentDate.getDate() + 3); // 3 days later
+        futureDates[2].setDate(currentDate.getDate() + 1); // 1 day later
+    
+        // Normalize each date to midnight (00:00:00)
+        futureDates.forEach(date => {
+            date.setHours(0, 0, 0, 0); // Resetting to midnight for each date
+        });
+    
+      
+    
+        // Find plans with `enddate` within the range of the future dates (5, 3, or 1 days)
+        const plans = await Planmanage.find({
+            enddate: { 
+                $gte: futureDates[2], // greater than or equal to 1 day from now
+                $lt: futureDates[0]  // less than 5 days from now
+            }
+        });
+    
+        // Iterate over each expiring plan
+        for (const plan of plans) {
+            const planEndDate = new Date(plan.enddate);
+            planEndDate.setHours(0, 0, 0, 0); // Normalize the plan's end date to midnight
+    
+            const timeDifference = planEndDate - currentDate;
+            const daysRemaining = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+         
+
+
+            if (plan.serviceid == "66d2c3bebf7e6dc53ed07626") {
+                serviceName = "Cash";
+              
+              } else if (plan.serviceid == "66dfeef84a88602fbbca9b79") {
+                serviceName = "Option";
+              } else {
+                serviceName = "Future";
+              }
+              
+            let message;
+            const titles = 'Plan Expiry Notification';
+    
+            if (daysRemaining === 5) {
+                message = `Your plan ${serviceName} service will expire in 5 days.`;
+            } else if (daysRemaining === 3) {
+                message = `Your plan ${serviceName} service will expire in 3 days.`;
+            } else if (daysRemaining === 1) {
+                message = `Your plan ${serviceName} service will expire tomorrow.`;
+            }
+    
+             if (message) {
+                try {
+              
+                  const client = await Clients_Modal.findById(plan.clientid); // Fetch the client
+                  
+                  const resultn = new Notification_Modal({
+                    clientid: plan.clientid,
+                    segmentid:plan._id,
+                    type:"plan expire",
+                    title: titles,
+                    message: message
+                });
+    
+                await resultn.save();
+
+
+
+
+                const resultnm = new Adminnotification_Modal({
+                    clientid:plan.clientid,
+                    segmentid:plan._id,
+                    type:'plan expire',
+                    title: titles,
+                    message: message
+                });
+            
+            
+                await resultnm.save();
+            
+
+    
+                    if (client && client.devicetoken) {
+                        const tokens = [client.devicetoken];
+                        await sendFCMNotification(title, message,tokens,"plan expire");
+                       
+                    }
+                        
+                } catch (error) {
+                }
+            }
+        }
+    
+        res.status(200).json({ message: "Notifications sent successfully for expiring plans." });
+    
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: "An error occurred while processing signals." });
+    }
+}
+
+
+
+
+async function downloadKotakNeotoken(req, res) {
+    try {
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-indexed, so add 1
+        const day = currentDate.getDate().toString().padStart(2, '0');
+
+        // Format the date
+        const formattedDate = `${year}-${month}-${day}`;
+
+        const TokenUrl = [
+            {
+                url: `https://lapi.kotaksecurities.com/wso2-scripmaster/v1/prod/${formattedDate}/transformed/nse_fo.csv`,
+                key: "KOTAK_NFO"
+            },
+            {
+                url: `https://lapi.kotaksecurities.com/wso2-scripmaster/v1/prod/${formattedDate}/transformed/nse_cm.csv`,
+                key: "KOTAK_NSE"
+            },
+        ];
+
+        // Use Promise.all to handle all download requests concurrently
+        const downloadPromises = TokenUrl.map((data) => {
+            const filePath = path.join(__dirname, '../../', 'tokenkotakneo', `${data.key}.csv`);
+            const fileUrl = data.url;
+            
+            return axios({
+                method: 'get',
+                url: fileUrl,
+                responseType: 'stream',
+            })
+                .then((response) => {
+                    return new Promise((resolve, reject) => {
+                        const writer = fs.createWriteStream(filePath);
+                        response.data.pipe(writer);
+                        writer.on('finish', resolve);
+                        writer.on('error', reject);
+                    });
+                })
+                .catch((error) => {
+                    console.log(`Error downloading file from ${fileUrl}:`, error);
+                    throw new Error(`Error downloading file from ${fileUrl}`);
+                });
+        });
+
+        // Wait for all downloads to complete
+        await Promise.all(downloadPromises);
+
+        // Send the response once all files are downloaded
+        res.status(200).json({ message: "Successfully downloaded all files." });
+
+    } catch (error) {
+        console.log('An unexpected error occurred:', error);
+        res.status(500).json({ error: error.message });
+    }
+}
+
+
+  module.exports = { AddBulkStockCron,DeleteTokenAliceToken,TradingStatusOff,CheckExpireSignalCash,CheckExpireSignalFutureOption,PlanExpire,downloadKotakNeotoken };

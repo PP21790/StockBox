@@ -1,22 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Table from '../../../components/Table';
+import Table from '../../../components/Table1';
 import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { FreeClientList, PlanSubscription, DeleteFreeClient, getcategoryplan, getplanlist } from '../../../Services/Admin';
+import { FreeClientList, FreeClientListWithFilter, PlanSubscription, DeleteFreeClient, getcategoryplan, getplanlist, getPlanbyUser } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
 import { image_baseurl } from '../../../Utils/config';
-import { fDate } from '../../../Utils/Date_formate';
+import { fDate, fDateTime } from '../../../Utils/Date_formate';
 import { IndianRupee } from 'lucide-react';
-import ExportToExcel from '../../../Utils/ExportCSV';
+import { exportToCSV } from '../../../Utils/ExportData';
 
 
 const Freeclient = () => {
 
 
+
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
+
+
+    const location = useLocation()
+    const clientStatus = location?.state?.clientStatus;
 
 
     const [clients, setClients] = useState([]);
@@ -28,7 +33,16 @@ const Freeclient = () => {
     const [category, setCategory] = useState([]);
     const [client, setClientid] = useState({});
     const [ForGetCSV, setForGetCSV] = useState([])
+    const [searchInput, setSearchInput] = useState("");
+    const [header, setheader] = useState("Free Trial Client");
 
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalRows, setTotalRows] = useState(0);
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
 
     const [updatetitle, setUpdatetitle] = useState({
         plan_id: "",
@@ -37,24 +51,63 @@ const Freeclient = () => {
     });
 
 
+    useEffect(() => {
+        if (clientStatus == "active") {
+            setheader("Free Trial Active Client")
+        } else if (clientStatus == "expired") {
+            setheader("Free  Trial Deactive Client")
+        }
+    }, [clientStatus, clients])
+
+
 
     useEffect(() => {
         getdemoclient();
         getcategoryplanlist()
-        getplanlistbyadmin()
-
     }, []);
 
+
     useEffect(() => {
-        forCSVdata()
-    }, [client]);
+        getdemoclient();
+    }, [client, currentPage, searchInput]);
 
 
     const getdemoclient = async () => {
         try {
+            const data = { page: currentPage, search: searchInput, freestatus: clientStatus || "" }
+            const response = await FreeClientListWithFilter(data, token);
+            if (response.status) {
+                setTotalRows(response.pagination.total)
+                setClients(response.data);
+
+            }
+        } catch (error) {
+            console.log("error")
+        }
+    }
+
+
+
+    const getexportfile = async () => {
+        try {
+
             const response = await FreeClientList(token);
             if (response.status) {
-                setClients(response.data && response.data);
+                if (response.data?.length > 0) {
+                    const csvArr = response.data?.map((item) => ({
+
+                        FullName: item.clientDetails?.FullName || '-',
+                        Email: item.clientDetails?.Email || '-',
+                        PhoneNo: item?.clientDetails?.PhoneNo || '-',
+                        Kyc: item?.clientDetails?.kyc_verification == 1 ? "Verified" : "Not Verified",
+                        Status: item?.status === "active" ? "Active" : "Expired",
+                        StartDate: fDateTime(item?.startdate) || '-',
+                        EndDate: fDateTime(item?.enddate) || '-',
+
+                    }));
+                    exportToCSV(csvArr, 'All Free Clients')
+
+                }
             }
         } catch (error) {
             console.log("error");
@@ -62,26 +115,12 @@ const Freeclient = () => {
     }
 
 
-    const forCSVdata = () => {
-        if (clients?.length > 0) {
-            const csvArr = clients.map((item) => ({
-                FullName: item.clientDetails?.FullName,
-                Email: item.clientDetails?.Email || '',
-                PhoneNo: item?.clientDetails?.PhoneNo || '',
-                StartDate: item?.startdate || '',
-                EndDate: item?.enddate || '',
 
-            }));
-            setForGetCSV(csvArr);
-        }
-    };
-
-
-    const getplanlistbyadmin = async () => {
+    const getplanlistassinstatus = async (_id) => {
         try {
-            const response = await getplanlist(token);
-            if (response.status) {
 
+            const response = await getPlanbyUser(_id, token);
+            if (response.status) {
                 setPlanlist(response.data);
             }
         } catch (error) {
@@ -90,12 +129,23 @@ const Freeclient = () => {
     }
 
 
+    // const getplanlistbyadmin = async () => {
+    //     try {
+    //         const response = await getplanlist(token);
+    //         if (response.status) {
+    //             setPlanlist(response.data);
+    //         }
+    //     } catch (error) {
+    //         console.log("error");
+    //     }
+    // }
+
+
     const getcategoryplanlist = async () => {
         try {
             const response = await getcategoryplan(token);
             if (response.status) {
                 setCategory(response.data);
-
             }
         } catch (error) {
             console.log("error");
@@ -103,13 +153,17 @@ const Freeclient = () => {
     };
 
 
+
     const handleTabChange = (index) => {
         setCheckedIndex(index);
     };
 
+
     const showModal = () => {
         setIsModalVisible(true);
     };
+
+
     const handleCancel = () => {
         setIsModalVisible(false);
         setSelectcategory("")
@@ -283,7 +337,7 @@ const Freeclient = () => {
     const columns = [
         {
             name: 'S.No',
-            selector: (row, index) => index + 1,
+            selector: (row, index) => (currentPage - 1) * 10 + index + 1,
             sortable: false,
             width: '78px',
         },
@@ -291,18 +345,19 @@ const Freeclient = () => {
             name: 'Full Name',
             selector: row => row.clientDetails?.FullName,
             sortable: true,
-            width: '165px',
+            width: '200px',
         },
         {
             name: 'Email',
             selector: row => row.clientDetails?.Email,
             sortable: true,
-            width: '243px',
+            width: '300px',
         },
         {
             name: 'Phone No',
             selector: row => row.clientDetails?.PhoneNo,
             sortable: true,
+            width: '200px',
         },
         {
             name: 'Kyc',
@@ -320,19 +375,29 @@ const Freeclient = () => {
                 )
             ),
             sortable: true,
-            width: '160px',
+            width: '200px',
+        },
+        {
+            name: 'Status',
+            selector: row => (
+                <span style={{ color: row.status === "active" ? "green" : "red" }}>
+                    {row.status === "active" ? "Active" : "Expired"}
+                </span>
+            ),
+            sortable: true,
+            width: '200px',
         },
         {
             name: 'Start Date',
-            selector: row => fDate(row.startdate),
+            selector: row => fDateTime(row.startdate),
             sortable: true,
-            width: '230px',
+            width: '200px',
         },
         {
             name: 'End Start',
-            selector: row => fDate(row.enddate),
+            selector: row => fDateTime(row.enddate),
             sortable: true,
-            width: '230px',
+            width: '200px',
         },
 
         // {
@@ -357,7 +422,7 @@ const Freeclient = () => {
         // },
         {
             name: 'CreatedAt',
-            selector: row => row.clientDetails?.createdAt,
+            selector: row => fDateTime(row.clientDetails?.createdAt),
             sortable: true,
             width: '220px',
         },
@@ -371,7 +436,7 @@ const Freeclient = () => {
 
                     </Tooltip> */}
                     <Tooltip placement="top" overlay="Package Assign">
-                        <span onClick={(e) => { showModal(true); setClientid(row); }} style={{ cursor: 'pointer' }}>
+                        <span onClick={(e) => { showModal(true); setClientid(row); getplanlistassinstatus(row._id) }} style={{ cursor: 'pointer' }}>
                             <Settings2 />
                         </span>
                     </Tooltip>
@@ -392,13 +457,16 @@ const Freeclient = () => {
         }
     ];
 
+
+
+
     return (
         <div>
             <div>
                 <div>
                     <div className="page-content">
                         <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3 ">
-                            <div className="breadcrumb-title pe-3">Free Trial Client</div>
+                            <div className="breadcrumb-title pe-3">{header}</div>
                             <div className="ps-3">
                                 <nav aria-label="breadcrumb">
                                     <ol className="breadcrumb mb-0 p-0">
@@ -419,7 +487,9 @@ const Freeclient = () => {
                                         <input
                                             type="text"
                                             className="form-control ps-5 radius-10"
-                                            placeholder="Search Free Trial Client"
+                                            placeholder="Search free  Client"
+                                            onChange={(e) => setSearchInput(e.target.value)}
+                                            value={searchInput}
                                         />
                                         <span className="position-absolute top-50 product-show translate-middle-y">
                                             <i className="bx bx-search" />
@@ -428,19 +498,33 @@ const Freeclient = () => {
 
                                     <div
                                         className="ms-2"
+                                        onClick={(e) => getexportfile()}
                                     >
-                                        <ExportToExcel
-                                            className="btn btn-primary "
-                                            apiData={ForGetCSV}
-                                            fileName={'All Users'} />
+                                        <button
+                                            type="button"
+                                            className="btn btn-primary float-end"
+                                            data-toggle="tooltip"
+                                            data-placement="top"
+                                            title="Export To Excel"
+                                            delay={{ show: "0", hide: "100" }}
 
+                                        >
+                                            <i className="bx bxs-download" aria-hidden="true"></i>
 
+                                            Export-Excel
+                                        </button>
                                     </div>
+
+
+
                                 </div>
 
                                 <Table
                                     columns={columns}
                                     data={clients}
+                                    totalRows={totalRows}
+                                    currentPage={currentPage}
+                                    onPageChange={handlePageChange}
                                 />
                             </div>
                         </div>
@@ -491,7 +575,7 @@ const Freeclient = () => {
                                             <>
                                                 <div className='row mt-3'>
                                                     {category && category
-                                                        .filter(cat => planlist.some(plan => plan.category === cat._id))
+                                                        .filter(cat => planlist.some(plan => plan.category._id === cat._id))
                                                         .map((item, index) => (
                                                             <div className='col-lg-4' key={index}>
                                                                 <input
@@ -502,8 +586,10 @@ const Freeclient = () => {
                                                                     id={`proplus-${index}`}
                                                                     onClick={() => handleCategoryChange(item._id)}
                                                                 />
-                                                                <label className="form-check-label" htmlFor={`proplus-${index}`}>
-                                                                    {item.title}
+                                                                <label className="form-check-label" htmlFor={`proplus-${index}`} style={{ fontSize: "12px" }}>
+                                                                    {item.title} (
+                                                                    {item.servicesDetails.map((service) => service.title).join(", ")}
+                                                                    )
                                                                 </label>
                                                             </div>
                                                         ))}
@@ -513,7 +599,7 @@ const Freeclient = () => {
                                                     <form className='card-body mt-3' style={{ height: "40vh", overflowY: "scroll" }} >
                                                         <div className="row">
                                                             {planlist
-                                                                .filter(item => item.category === selectcategory)
+                                                                .filter(item => item.category._id === selectcategory)
                                                                 .map((item, index) => (
                                                                     <div className="col-md-6" key={index}>
                                                                         <div className="card mb-0 my-2">
@@ -532,7 +618,8 @@ const Freeclient = () => {
                                                                                         }}
                                                                                     />
                                                                                     <label className="form-check-label mx-1" style={{ fontSize: "13px", fontWeight: "800" }} htmlFor={`input-plan-${index}`}>
-                                                                                        {item.title}
+                                                                                        {item.validity}
+
                                                                                     </label>
                                                                                 </h5>
 
@@ -547,7 +634,12 @@ const Freeclient = () => {
                                                                                                 aria-expanded={selectedPlanId === item._id}
                                                                                                 aria-controls={`collapse-${item._id}`}
                                                                                             >
-                                                                                                <strong className="text-secondary">Validity: {item.validity}</strong>
+                                                                                                <div className='d-flex justify-content-between'>
+                                                                                                    <div>
+                                                                                                        <strong className="text-secondary m-2">Detail</strong>
+                                                                                                        <strong className="text-success m-2 activestrong">{item?.subscription?.status === "active" ? "Active" : ""}</strong>
+                                                                                                    </div>
+                                                                                                </div>
                                                                                             </button>
                                                                                         </h2>
                                                                                         <div
@@ -559,19 +651,22 @@ const Freeclient = () => {
                                                                                             <div className="accordion-body">
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Price:</strong>
-                                                                                                    <span><IndianRupee /> {item.price}</span>
+                                                                                                    <span><IndianRupee /> {item.price && item.price}</span>
+
+
                                                                                                 </div>
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Validity:</strong>
                                                                                                     <span>{item.validity}</span>
+                                                                                                   
                                                                                                 </div>
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Created At:</strong>
-                                                                                                    <span>{fDate(item.created_at)}</span>
+                                                                                                    <span>{fDateTime(item.created_at)}</span>
                                                                                                 </div>
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Updated At:</strong>
-                                                                                                    <span>{fDate(item.updated_at)}</span>
+                                                                                                    <span>{fDateTime(item.updated_at)}</span>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>

@@ -14,7 +14,7 @@ const Editfreeclient = () => {
   const location = useLocation();
   const { row } = location.state;
 
-  // console.log("row",row)
+
 
   const user_id = localStorage.getItem("id");
   const token = localStorage.getItem("token");
@@ -103,8 +103,8 @@ const Editfreeclient = () => {
       label: "Full Name",
       type: "text",
       star: true,
-      label_size: 6,
-      col_size: 3,
+      label_size: 12,
+      col_size: 4,
       disable: false,
     },
     // {
@@ -121,7 +121,7 @@ const Editfreeclient = () => {
       type: "text",
       star: true,
       label_size: 12,
-      col_size: 3,
+      col_size: 4,
       disable: false,
     },
     {
@@ -129,7 +129,7 @@ const Editfreeclient = () => {
       label: "Phone Number",
       type: "text3",
       label_size: 12,
-      col_size: 3,
+      col_size: 4,
       disable: false,
     },
     // {

@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getnewslist, AddNewsbyadmin, UpdateNewsbyadmin, changeNewsStatus, DeleteNews, getPayementhistory } from '../../../Services/Admin';
-import Table from '../../../components/Table';
-import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
+import { getPayementhistory, getPayementhistorywithfilter } from '../../../Services/Admin';
+// import Table from '../../../components/Table';
+import Table from '../../../components/Table1';
+import { SquarePen, Trash2, PanelBottomOpen, Eye, RefreshCcw , IndianRupee} from 'lucide-react';
 import Swal from 'sweetalert2';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
-import { fDate } from '../../../Utils/Date_formate';
-import ExportToExcel from '../../../Utils/ExportCSV';
+import { fDateTime } from '../../../Utils/Date_formate';
+import { exportToCSV } from '../../../Utils/ExportData';
+
+
+
 
 const History = () => {
-
 
 
     const navigate = useNavigate();
@@ -20,6 +23,16 @@ const History = () => {
     const [searchInput, setSearchInput] = useState("");
     const [viewpage, setViewpage] = useState({});
     const [ForGetCSV, setForGetCSV] = useState([])
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalRows, setTotalRows] = useState(0);
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
 
     const [updatetitle, setUpdatetitle] = useState({
         title: "",
@@ -28,7 +41,6 @@ const History = () => {
         image: "",
 
     });
-
 
 
 
@@ -43,52 +55,80 @@ const History = () => {
     const userid = localStorage.getItem('id');
 
 
+    const resethandle = () => {
+        setSearchInput("")
+        setStartDate("")
+        setEndDate("")
 
-    const forCSVdata = () => {
-        if (clients?.length > 0) {
-            const csvArr = clients.map((item) => ({
-                Segment: item.clientName,
-                Title: item.planDetails?.title || '',
-                Total: item.planDetails?.price || '',
-                Validity: item.planDetails?.validity || '',
-                Created_at: item.planDetails?.created_at || '',
-                Updated_at: item.planDetails?.updated_at || '',
-            }));
-            setForGetCSV(csvArr);
+
+    }
+
+
+
+    const getexportfile = async () => {
+        try {
+            const response = await getPayementhistory(token);
+            if (response.status) {
+                if (response.data?.length > 0) {
+                    const csvArr = response.data?.map((item) => ({
+                        Name: item.clientName || "-",
+                        Email: item.clientEmail || "-",
+                        Phone: item.clientPhoneNo || "-",
+                        Title: item?.planCategoryTitle || '-',
+                        ClientSegment: item?.serviceNames.map(statusItem => statusItem || 'N/A')
+                        .join(', ') || 'N/A',
+                        OerderId: item.orderid ? item.orderid : "Make By Admin",
+                        PlanDiscount: item.discount || 0,
+                        CouponID: item.coupon || "N/A",
+                        PlanAmount: item.plan_price || 0,
+                        Total: item?.total || '-',
+                        Validity: item.planDetails?.validity || '-',
+                        PurchaseDate: fDateTime(item.created_at) || '-',
+                    }));
+                    exportToCSV(csvArr, 'Payment History')
+                } else {
+                    console.log("No data available.");
+                }
+            } else {
+                console.error("Failed to fetch data:", response.status);
+            }
+        } catch (error) {
+            console.error("Error fetching clients:", error);
         }
     };
 
 
 
+   
+      
 
 
-
-    // Getting services
     const gethistory = async () => {
         try {
-            const response = await getPayementhistory(token);
+            const data = { page: currentPage, fromDate: startDate, toDate: endDate, search: searchInput }
+            const response = await getPayementhistorywithfilter(data, token);
             if (response.status) {
-                const filterdata = response.data.filter((item) =>
-                    searchInput === "" ||
-                    item.title.toLowerCase().includes(searchInput.toLowerCase())
-                );
-                setClients(searchInput ? filterdata : response.data);
+                let filteredData = response.data;
+                setTotalRows(response.pagination.total)
+                setClients(filteredData);
             }
         } catch (error) {
             console.log("Error fetching services:", error);
         }
     };
 
+
+
     useEffect(() => {
         gethistory();
-        forCSVdata()
-    }, [searchInput, clients]);
+    }, [searchInput, startDate, endDate, currentPage]);
+
 
 
     const columns = [
         {
             name: 'S.No',
-            selector: (row, index) => index + 1,
+            selector: (row, index) => (currentPage - 1) * 10 + index + 1,
             sortable: false,
             width: '100px',
         },
@@ -96,18 +136,83 @@ const History = () => {
             name: 'Name',
             selector: row => row.clientName,
             sortable: true,
-            width: '250px',
+            width: '200px',
+        },
+        {
+            name: 'Email',
+            selector: row => row.clientEmail,
+            sortable: true,
+            width: '300px',
+        },
+        {
+            name: 'Phone',
+            selector: row => row.clientPhoneNo,
+            sortable: true,
+            width: '200px',
         },
 
         {
             name: 'Title',
-            selector: row => row.planDetails.title,
+            selector: row => row?.planCategoryTitle ?  row?.planCategoryTitle : "N/A",
             sortable: true,
+            width: '200px',
         },
         {
-            name: 'Total',
-            selector: row => row.planDetails.price,
+            name: 'Client Segment',
+            cell: row => (
+                <>
+                    {Array.isArray(row?.serviceNames) && row.serviceNames.length > 0 ? (
+                        row.serviceNames.map((item, index) => (
+                            <span
+                                key={index}
+                                style={{
+    
+                                    marginRight: '5px',
+                                }}
+                            >
+                                {item || "N/A"}
+                            </span>
+                        ))
+                    ) : (
+                        <span>N/A</span>
+                    )}
+                </>
+            ),
             sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'Order_ID',
+            selector: row => row.orderid ? row.orderid : "Make By Admin",
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'Plan Discount',
+            selector: row => <div> <IndianRupee />{row.discount}</div>,
+            sortable: true,
+            width: '200px',
+        },
+
+        {
+            name: 'Plan Amount',
+            selector: row => <div> <IndianRupee />{row.plan_price}</div>,
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'Coupon Id',
+            selector: row => row.coupon ? row.coupon : "N/A",
+            sortable: true,
+            width: '200px',
+        },
+        
+
+        {
+            name: 'Total',
+            selector: row =><div> <IndianRupee />{row.total}</div>,
+            sortable: true,
+            width: '200px',
         },
         // {
         //     name: 'Plan Price',
@@ -116,14 +221,15 @@ const History = () => {
         // },
         {
             name: 'Validity',
-            selector: row => row.planDetails.validity,
+            selector: row => row.validity,
             sortable: true,
+            width: '200px',
         },
         {
-            name: 'Plan Start',
-            selector: row => fDate(row.planDetails.created_at),
+            name: 'Purchase Date.',
+            selector: row => fDateTime(row?.created_at),
             sortable: true,
-            width: '160px',
+            width: '200px',
         },
         // {
         //     name: 'Plan End',
@@ -135,27 +241,27 @@ const History = () => {
         //     selector: row => fDate(row.planDetails.created_at),
         //     sortable: true,
         // },
-        {
-            name: 'Actions',
-            cell: row => (
-                <>
-                    <div>
-                        <Tooltip placement="top" overlay="View">
-                            <Eye
-                                data-bs-toggle="modal"
-                                data-bs-target="#example"
-                                onClick={() => setViewpage(row)}
-                            />
-                        </Tooltip>
-                    </div>
+        // {
+        //     name: 'Actions',
+        //     cell: row => (
+        //         <>
+        //             <div>
+        //                 <Tooltip placement="top" overlay="View">
+        //                     <Eye
+        //                         data-bs-toggle="modal"
+        //                         data-bs-target="#example"
+        //                         onClick={() => setViewpage(row)}
+        //                     />
+        //                 </Tooltip>
+        //             </div>
 
 
-                </>
-            ),
-            ignoreRowClick: true,
-            allowOverflow: true,
-            button: true,
-        }
+        //         </>
+        //     ),
+        //     ignoreRowClick: true,
+        //     allowOverflow: true,
+        //     button: true,
+        // }
     ];
 
 
@@ -198,20 +304,53 @@ const History = () => {
                                 </span>
 
                             </div>
+
+
                             <div>
 
                                 <div
-                                    className="dropdown dropdown-action"
-                                    data-bs-toggle="tooltip"
-                                    data-bs-placement="bottom"
-                                    title="Download"
+                                    className="ms-2"
+                                    onClick={(e) => getexportfile()}
                                 >
-                                                                        <ExportToExcel
-                                        className="btn btn-primary "
-                                        apiData={ForGetCSV}
-                                        fileName={'All Users'} />
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary float-end"
+                                        data-toggle="tooltip"
+                                        data-placement="top"
+                                        title="Export To Excel"
+                                        delay={{ show: "0", hide: "100" }}
+
+                                    >
+                                        <i className="bx bxs-download" aria-hidden="true"></i>
+
+                                        Export-Excel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='row mb-2'>
+                            <div className="col-md-3">
+                                <input
+                                    type="date"
+                                    className="form-control"
+                                    onChange={(e) => setStartDate(e.target.value)}
+                                    value={startDate}
+                                />
+                            </div>
 
 
+                            <div className='col-md-3'>
+                                <input
+                                    type="date"
+                                    className="form-control"
+                                    onChange={(e) => setEndDate(e.target.value)}
+                                    value={endDate}
+                                />
+                            </div>
+
+                            <div className="col-md-1">
+                                <div className="refresh-icon mt-1">
+                                    <RefreshCcw onClick={resethandle} />
                                 </div>
                             </div>
                         </div>
@@ -219,10 +358,9 @@ const History = () => {
                             <Table
                                 columns={columns}
                                 data={clients}
-                                pagination
-                                striped
-                                highlightOnHover
-                                dense
+                                totalRows={totalRows}
+                                currentPage={currentPage}
+                                onPageChange={handlePageChange}
                             />
                         </div>
                     </div>
@@ -295,13 +433,16 @@ const History = () => {
                                     <li>
                                         <div className="row justify-content-between">
                                             <div className="col-md-8">
-                                                <b>Payout Date : {fDate(viewpage?.planDetails?.created_at)}</b>
+                                                {viewpage?.planDetails?.created_at ? (
+                                                    <b>Payout Date: {fDateTime(viewpage.planDetails.created_at)}</b>
+                                                ) : (
+                                                    <b>Payout Date: Not available</b>
+                                                )}
                                             </div>
-                                            <div className="col-md-6">
-
-                                            </div>
+                                            <div className="col-md-6"></div>
                                         </div>
                                     </li>
+
                                     {/* <li>
                                         <div className="row justify-content-between">
                                             <div className="col-md-6">

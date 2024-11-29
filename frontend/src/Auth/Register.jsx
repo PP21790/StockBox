@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState , useEffect } from 'react';
+import { Link} from 'react-router-dom';
+import { basicsettinglist } from '../Services/Admin';
 
 const Register = () => {
 
+   
+
+  
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+    const [clients, setClients] = useState([]);
+    const token = localStorage.getItem('token');
+    
     
     const togglePasswordVisibility = (e) => {
         e.preventDefault();
@@ -16,6 +22,24 @@ const Register = () => {
         e.preventDefault(); 
         setShowConfirmPassword(!showConfirmPassword);
     };
+
+
+    const getsettinglist = async () => {
+        try {
+            const response = await basicsettinglist(token);
+            if (response.status) {
+                setClients(response.data);
+            }
+        } catch (error) {
+            console.log('error', error);
+        }
+    };
+    
+    useEffect(() => {
+        getsettinglist();
+    }, []);
+
+   
 
     return (
         <div>
@@ -31,7 +55,7 @@ const Register = () => {
                                                 <img src="assets/images/logo-icon.png" width={60} alt="" />
                                             </div>
                                             <div className="text-center mb-4">
-                                                <h5 className="">Stock Box</h5>
+                                                <h5 className="">Stock RA</h5>
                                             </div>
                                             <div className="form-body">
                                                 <form className="row g-3">

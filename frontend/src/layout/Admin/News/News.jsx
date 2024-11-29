@@ -6,16 +6,18 @@ import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
-import { fDate } from '../../../Utils/Date_formate';
+import { fDate , fDateTime} from '../../../Utils/Date_formate';
 
 
 
 
 const News = () => {
-
+    
     const navigate = useNavigate();
-
-    const [permission, setPermission] = useState([]);
+    
+    
+    const token = localStorage.getItem('token');
+    const userid = localStorage.getItem('id');
 
 
     const [clients, setClients] = useState([]);
@@ -40,8 +42,6 @@ const News = () => {
         add_by: "",
     });
 
-    const token = localStorage.getItem('token');
-    const userid = localStorage.getItem('id');
 
 
 
@@ -382,7 +382,7 @@ const News = () => {
                                                             readOnly
                                                         />
 
-                                                        <div className="float-end text-muted small">{fDate(client.created_at)}</div>
+                                                        <div className="float-end text-muted small">{fDateTime(client.created_at)}</div>
                                                     </div>
 
 

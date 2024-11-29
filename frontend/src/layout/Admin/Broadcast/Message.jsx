@@ -5,7 +5,9 @@ import Swal from 'sweetalert2';
 import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import { Tooltip } from 'antd';
-import { fDateTime, fDate } from '../../../Utils/Date_formate';
+import { fDateTime} from '../../../Utils/Date_formate';
+
+
 
 const Message = () => {
     const navigate = useNavigate();
@@ -21,6 +23,7 @@ const Message = () => {
     const [servicedata, setServicedata] = useState({});
     const [chatMessages, setChatMessages] = useState([]);
 
+
     const getservice = async () => {
         try {
             const response = await GetService(token);
@@ -31,6 +34,8 @@ const Message = () => {
             console.log("Error fetching services:", error);
         }
     };
+
+
 
     const sendmessagedetail = async () => {
         try {
@@ -145,11 +150,13 @@ const Message = () => {
                                                                             {service.segment === "F" && <span>FUTURE </span>}
                                                                         </span>
                                                                     ))
+                                                                   
                                                                 ) : ""}
-                                                            </span>
+                                                            </span>({item.type})
                                                         </h4>
                                                         <hr />
                                                         <p><strong>Subject:</strong> {item.subject}</p>
+                                                        {/* <p><strong>Type:</strong> {item.type}</p> */}
                                                         <p className="card-text">
                                                             <strong>Message:</strong>
                                                             <span
@@ -158,8 +165,8 @@ const Message = () => {
                                                             />
                                                            
                                                         </p>
-                                                        <p><strong>Created At:</strong> {fDate(item.created_at)}</p>
-                                                        <p><strong>Updated At:</strong> {fDate(item.updated_at)}</p>
+                                                        <p><strong>Created At:</strong> {fDateTime(item.created_at)}</p>
+                                                        <p><strong>Updated At:</strong> {fDateTime(item.updated_at)}</p>
                                                     </div>
                                                 </div>
                                             </div>

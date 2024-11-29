@@ -1,24 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getFaqlist, AddFaq, UpdateFaq, changeFAQStatus, DeleteFAQ } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { Tooltip } from 'antd';
-import { fDate } from '../../../Utils/Date_formate';
+import { fDate ,fDateTime } from '../../../Utils/Date_formate';
 import { getstaffperuser } from '../../../Services/Admin';
 
-
-
 const Faq = () => {
-
+    
     const navigate = useNavigate();
+    
+    const token = localStorage.getItem('token');
+    const userid = localStorage.getItem('id');
+
+    
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
     const [searchInput, setSearchInput] = useState("");
-    const [permission, setPermission] = useState([]);
-
+     const [viewdetail,setviewdetail] = useState([])
+     const [permission, setPermission] = useState([]);
     const [updatetitle, setUpdatetitle] = useState({
         title: "",
         id: "",
@@ -28,18 +31,13 @@ const Faq = () => {
     });
 
 
-
-
     const [title, setTitle] = useState({
         title: "",
         description: "",
         add_by: "",
     });
 
-    const token = localStorage.getItem('token');
-    const userid = localStorage.getItem('id');
-
-
+ 
     const getpermissioninfo = async () => {
         try {
             const response = await getstaffperuser(userid, token);
@@ -51,9 +49,10 @@ const Faq = () => {
         }
     }
 
+   
 
 
-    // Getting blogs
+    // Getting faq
     const getFaq = async () => {
         try {
             const response = await getFaqlist(token);
@@ -65,7 +64,7 @@ const Faq = () => {
                 setClients(searchInput ? filterdata : response.data);
             }
         } catch (error) {
-            console.log("Error fetching blogs:", error);
+            console.log("Error fetching Faq:", error);
         }
     };
 
@@ -99,7 +98,7 @@ const Faq = () => {
             } else {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'There was an error updating the blogs.',
+                    text: 'There was an error updating the Faq.',
                     icon: 'error',
                     confirmButtonText: 'Try Again',
                 });
@@ -107,7 +106,7 @@ const Faq = () => {
         } catch (error) {
             Swal.fire({
                 title: 'Error!',
-                text: 'There was an error updating the blogs.',
+                text: 'There was an error updating the Faq.',
                 icon: 'error',
                 confirmButtonText: 'Try Again',
             });
@@ -118,7 +117,7 @@ const Faq = () => {
 
 
 
-    // Add blogs
+    // Add Faq
     const addfaqbyadmin = async () => {
         try {
             const data = { title: title.title, description: title.description, add_by: userid };
@@ -126,7 +125,7 @@ const Faq = () => {
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
-                    text: 'blogs added successfully.',
+                    text: 'Faq added successfully.',
                     icon: 'success',
                     confirmButtonText: 'OK',
                     timer: 2000,
@@ -203,7 +202,7 @@ const Faq = () => {
 
 
 
-    // delete blogs
+    // delete faq
 
 
     const DeleteFaq = async (_id) => {
@@ -252,12 +251,12 @@ const Faq = () => {
 
 
     const columns = [
-        {
-            name: 'S.No',
-            selector: (row, index) => index + 1,
-            sortable: false,
-            width: '100px',
-        },
+        // {
+        //     name: 'S.No',
+        //     selector: (row, index) => index + 1,
+        //     sortable: false,
+        //     width: '100px',
+        // },
         {
             name: 'Title',
             selector: row => row.title,
@@ -265,7 +264,7 @@ const Faq = () => {
             width: '200px',
 
         },
-        permission.includes("faqstatus") && {
+        permission.includes("faqstatus")  ? {
             name: 'Active Status',
             selector: row => (
                 <div className="form-check form-switch form-check-info">
@@ -286,7 +285,7 @@ const Faq = () => {
             width: '200px',
 
 
-        },
+        } : "",
         {
             name: 'Description',
             selector: row => row.description,
@@ -296,7 +295,7 @@ const Faq = () => {
 
         {
             name: 'Created At',
-            selector: row => fDate(row.created_at),
+            selector: row => fDateTime(row.created_at),
             sortable: true,
         },
         // {
@@ -306,16 +305,18 @@ const Faq = () => {
         // },
 
         permission.includes("faqsdetail") || permission.includes("editfaq")
-            || permission.includes("deletefaq") ? {
+        || permission.includes("deletefaq") ?   {
             name: 'Actions',
             cell: row => (
                 <>
                     {permission.includes("faqsdetail") ? <div>
                         <Tooltip placement="top" overlay="View">
                             <Eye style={{ marginRight: "10px" }} data-bs-toggle="modal"
-                                data-bs-target="#example1" />
+                                data-bs-target="#example1" 
+                                 onClick={()=>setviewdetail([row])}
+                                />
                         </Tooltip>
-                    </div> : ""}
+                    </div> : "" }
                     {permission.includes("editfaq") ? <div>
                         <Tooltip placement="top" overlay="Update">
                             <SquarePen
@@ -326,18 +327,18 @@ const Faq = () => {
                                 }}
                             />
                         </Tooltip>
-                    </div> : ""}
+                    </div> : "" }
                     {permission.includes("deletefaq") ? <div>
                         <Tooltip placement="top" overlay="Delete">
                             <Trash2 onClick={() => DeleteFaq(row._id)} />
                         </Tooltip>
-                    </div> : ""}
+                    </div> :"" }
                 </>
             ),
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
-        } : ""
+        } :""
     ];
 
 
@@ -395,7 +396,7 @@ const Faq = () => {
                                     <i className="bx bx-search" />
                                 </span>
                             </div>
-                            {permission.includes("addfaq") ? <div className="ms-auto">
+                            {permission.includes("addfaq") ?  <div className="ms-auto">
                                 <button
                                     type="button"
                                     className="btn btn-primary"
@@ -431,10 +432,11 @@ const Faq = () => {
                                                     <div className="row">
                                                         <div className="col-md-12">
                                                             <label htmlFor="">Title</label>
+                                                            <span className="text-danger">*</span>
                                                             <input
                                                                 className="form-control mb-3"
                                                                 type="text"
-                                                                placeholder='Enter blogs Title'
+                                                                placeholder='Enter Faq Title'
                                                                 value={title.title}
                                                                 onChange={(e) => setTitle({ ...title, title: e.target.value })}
                                                             />
@@ -444,6 +446,7 @@ const Faq = () => {
                                                     <div className="row">
                                                         <div className="col-md-12">
                                                             <label htmlFor="">description</label>
+                                                            <span className="text-danger">*</span>
                                                             <textarea
                                                                 className="form-control mb-3"
                                                                 type="text"
@@ -503,10 +506,11 @@ const Faq = () => {
                                                             <div className="row">
                                                                 <div className="col-md-12">
                                                                     <label htmlFor="">Title</label>
+                                                                    <span className="text-danger">*</span>
                                                                     <input
                                                                         className="form-control mb-2"
                                                                         type="text"
-                                                                        placeholder='Enter blogs Title'
+                                                                        placeholder='Enter Faq Title'
                                                                         value={updatetitle.title}
                                                                         onChange={(e) => updateServiceTitle({ title: e.target.value })}
                                                                     />
@@ -517,6 +521,7 @@ const Faq = () => {
                                                             <div className="row">
                                                                 <div className="col-md-12">
                                                                     <label htmlFor="">Description</label>
+                                                                    <span className="text-danger">*</span>
                                                                     <textarea
                                                                         className="form-control mb-2"
                                                                         type="text"
@@ -551,7 +556,7 @@ const Faq = () => {
                                     </>
                                 )}
 
-                            </div> : ""}
+                            </div> : "" }
                         </div>
                         <div className="table-responsive">
                             <Table
@@ -590,10 +595,22 @@ const Faq = () => {
                             </div>
                             <div className="modal-body">
                                 <ul>
-                                    <li>
+                                    {viewdetail && viewdetail.map((item)=>(
+                                        <Fragment>
+                                              <li>
                                         <div className="row justify-content-between">
                                             <div className="col-md-6">
-                                                <b>Title</b>
+                                                <b>Title : {item.title}</b>
+                                            </div>
+                                            <div className="col-md-6">
+
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div className="row justify-content-between">
+                                            <div className="">
+                                                <b>Discription : {item.description}</b>
                                             </div>
                                             <div className="col-md-6">
 
@@ -603,7 +620,7 @@ const Faq = () => {
                                     <li>
                                         <div className="row justify-content-between">
                                             <div className="col-md-6">
-                                                <b>Discription</b>
+                                                <b>Created At : {fDateTime(item.created_at)} </b>
                                             </div>
                                             <div className="col-md-6">
 
@@ -613,24 +630,17 @@ const Faq = () => {
                                     <li>
                                         <div className="row justify-content-between">
                                             <div className="col-md-6">
-                                                <b>Created At</b>
+                                                <b>Updated At : {fDateTime(item.updated_at)}</b>
                                             </div>
                                             <div className="col-md-6">
 
                                             </div>
                                         </div>
                                     </li>
-                                    <li>
-                                        <div className="row justify-content-between">
-                                            <div className="col-md-6">
-                                                <b>Updated At</b>
-                                            </div>
-                                            <div className="col-md-6">
-
-                                            </div>
-                                        </div>
-                                    </li>
-
+                                 
+                                        </Fragment>
+                                    ))}
+                                    
                                 </ul>
                             </div>
                         </div>

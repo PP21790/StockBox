@@ -244,7 +244,7 @@ const Plan = () => {
                                                             </div>
                                                         </div>
 
-                                                        <div className="row justify-content-end mb-3">
+                                                      { permission.includes("planstatus") ? <div className="row justify-content-end mb-3">
                                                             <div className="col-md-6 d-flex justify-content-start">
                                                                 <div className="form-check form-switch form-check-info">
                                                                     <input
@@ -260,11 +260,11 @@ const Plan = () => {
                                                                     ></label>
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        </div> : "" }
 
                                                         <div className="row justify-content-between align-items-center">
                                                             <div className="col-md-6">
-                                                                <h3 className="fonth3">{client.title}</h3>
+                                                                {/* <h3 className="fonth3">{client.title}</h3> */}
                                                                 <h2 className="fonth2">{client.planType}</h2>
                                                             </div>
                                                             <div className="price-section col-md-6">
@@ -276,7 +276,7 @@ const Plan = () => {
                                                         <ul>
                                                             <li><b>Validity</b>: {client.validity}</li>
                                                             <li><b className='mb-1'>Description</b>:<textarea className='form-control' >{client.description}</textarea></li>
-                                                            <li><b>Created At</b>: {fDate(client.created_at)}</li>
+                                                            <li><b>Created At</b>: {fDateTime(client.created_at)}</li>
                                                         </ul>
                                                         <div className="button-group">
                                                             <button
@@ -355,7 +355,7 @@ const Plan = () => {
                                                                                             <b>Created At</b>
                                                                                         </div>
                                                                                         <div className="col-md-6">
-                                                                                            {fDate(client.created_at)}
+                                                                                            {fDateTime(client.created_at)}
                                                                                         </div>
                                                                                     </div>
                                                                                 </li>
@@ -365,7 +365,7 @@ const Plan = () => {
                                                                                             <b>Updated At</b>
                                                                                         </div>
                                                                                         <div className="col-md-6">
-                                                                                            {fDate(client.updated_at)}
+                                                                                            {fDateTime(client.updated_at)}
                                                                                         </div>
                                                                                     </div>
                                                                                 </li>

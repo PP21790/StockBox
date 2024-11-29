@@ -1,10 +1,14 @@
 const router = require("express").Router()
 
-const {Blogslist,Newslist,Bannerlist,Plancategorysist,getPlansByPlancategoryId,addPlanSubscription,myPlan,Couponlist,Signallist,applyCoupon,showSignalsToClients,Servicelist,Faqlist,detailContent,showSignalsToClientsClose,BasketList,pastPerformance,addBasketSubscription,getallPlan,addFreeTrail,BroadcastList,myFreetrial,basicSetting,pastPerformances,myService,CloseSignal,showSignalsToClientsCloses} = require('../Controllers/List')
+const {Blogslist,Newslist,Bannerlist,Plancategorysist,getPlansByPlancategoryId,addPlanSubscription,myPlan,Couponlist,Signallist,applyCoupon,showSignalsToClients,Servicelist,Faqlist,detailContent,showSignalsToClientsClose,BasketList,pastPerformance,addBasketSubscription,getallPlan,addFreeTrail,BroadcastList,myFreetrial,basicSetting,pastPerformances,myService,CloseSignal,showSignalsToClientsCloses,Notification,Bank,Qrcode,BlogslistwithPagination,NewslistwithPagination,Refer} = require('../Controllers/List')
 
 
 router.get('/api/list/blogs',Blogslist);
+router.get('/api/list/blogspagination',BlogslistwithPagination);
+
 router.get('/api/list/news', Newslist);
+router.get('/api/list/newspagination', NewslistwithPagination);
+
 router.get('/api/list/banner', Bannerlist); 
 router.get('/api/list/plancategory', Plancategorysist); 
 router.get('/api/list/planbycategory', getPlansByPlancategoryId); 
@@ -36,8 +40,10 @@ router.post('/api/list/broadcast', BroadcastList);
 router.get('/api/list/myfreetrial/:id', myFreetrial); 
 router.get('/api/list/basicsetting', basicSetting); 
 router.get('/api/list/myservice/:id', myService); 
-
-
+router.get('/api/list/notification/:id', Notification); 
+router.get('/api/list/bank', Bank);
+router.get('/api/list/qrcode', Qrcode);
+router.get('/api/refer', Refer);
 
 
 module.exports = router;

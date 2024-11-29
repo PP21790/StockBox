@@ -1,24 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Table from '../../../components/Table';
-import { Settings2, Eye, UserPen, Trash2, Download, ArrowDownToLine } from 'lucide-react';
+import Table from '../../../components/Table1';
+import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { FreeClientList, PlanSubscription, DeleteFreeClient, getcategoryplan, getplanlist } from '../../../Services/Admin';
+import { FreeClientList, FreeClientListWithFilter, PlanSubscription, DeleteFreeClient, getcategoryplan, getplanlist } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
 import { image_baseurl } from '../../../Utils/config';
-import { fDate } from '../../../Utils/Date_formate';
+import { fDate, fDateTime } from '../../../Utils/Date_formate';
 import { IndianRupee } from 'lucide-react';
+import { exportToCSV } from '../../../Utils/ExportData';
 import { getstaffperuser } from '../../../Services/Admin';
-
-
 
 const Freeclient = () => {
 
+
     const userid = localStorage.getItem('id');
-   
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
+     
+
+    const location = useLocation()
+    const clientStatus = location?.state?.clientStatus;
 
 
     const [clients, setClients] = useState([]);
@@ -29,23 +32,48 @@ const Freeclient = () => {
     const [checkedIndex, setCheckedIndex] = useState(0);
     const [category, setCategory] = useState([]);
     const [client, setClientid] = useState({});
+    const [ForGetCSV, setForGetCSV] = useState([])
+    const [searchInput, setSearchInput] = useState("");
+    const [header, setheader] = useState("Free Trial Client");
     const [permission, setPermission] = useState([]);
-    
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalRows, setTotalRows] = useState(0);
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
 
     const [updatetitle, setUpdatetitle] = useState({
         plan_id: "",
         client_id: "",
         price: ""
     });
+   
+
+    useEffect(() => {
+        if (clientStatus == "active") {
+            setheader("Free Trial Active Client")
+        } else if (clientStatus == "expired") {
+            setheader("Free  Trial Deactive Client")
+        } 
+    }, [clientStatus, clients])
+
+
 
     useEffect(() => {
         getdemoclient();
         getcategoryplanlist()
         getplanlistbyadmin()
         getpermissioninfo()
-
     }, []);
+
+
+    useEffect(() => {
+        getdemoclient();
+    }, [client, currentPage, searchInput]);
    
+
 
     const getpermissioninfo = async () => {
         try {
@@ -62,9 +90,40 @@ const Freeclient = () => {
 
     const getdemoclient = async () => {
         try {
+            const data = { page: currentPage, search: searchInput , freestatus : clientStatus || ""}
+            const response = await FreeClientListWithFilter(data, token);
+            if (response.status) {
+                setTotalRows(response.pagination.total)
+                setClients(response.data);
+
+            }
+        } catch (error) {
+            console.log("error")
+        }
+    }
+
+   
+
+    const getexportfile = async () => {
+        try {
+          
             const response = await FreeClientList(token);
             if (response.status) {
-                setClients(response.data && response.data);
+                if (response.data?.length > 0) {
+                    const csvArr = response.data?.map((item) => ({
+        
+                        FullName: item.clientDetails?.FullName || '-',
+                        Email: item.clientDetails?.Email || '-',
+                        PhoneNo: item?.clientDetails?.PhoneNo || '-',
+                        Kyc: item?.clientDetails?.kyc_verification == 1 ? "Verified" : "Not Verified",
+                        Status: item?.status === "active" ? "Active" : "Expired",
+                        StartDate: item?.startdate || '-',
+                        EndDate: item?.enddate || '-',
+        
+                    }));
+                    exportToCSV(csvArr, 'All Free Clients')
+                   
+                }
             }
         } catch (error) {
             console.log("error");
@@ -77,7 +136,6 @@ const Freeclient = () => {
         try {
             const response = await getplanlist(token);
             if (response.status) {
-
                 setPlanlist(response.data);
             }
         } catch (error) {
@@ -91,7 +149,6 @@ const Freeclient = () => {
             const response = await getcategoryplan(token);
             if (response.status) {
                 setCategory(response.data);
-
             }
         } catch (error) {
             console.log("error");
@@ -99,13 +156,17 @@ const Freeclient = () => {
     };
 
 
+
     const handleTabChange = (index) => {
         setCheckedIndex(index);
     };
 
+
     const showModal = () => {
         setIsModalVisible(true);
     };
+
+    
     const handleCancel = () => {
         setIsModalVisible(false);
         setSelectcategory("")
@@ -279,7 +340,7 @@ const Freeclient = () => {
     const columns = [
         {
             name: 'S.No',
-            selector: (row, index) => index + 1,
+            selector: (row, index) => (currentPage - 1) * 10 + index + 1,
             sortable: false,
             width: '78px',
         },
@@ -287,18 +348,19 @@ const Freeclient = () => {
             name: 'Full Name',
             selector: row => row.clientDetails?.FullName,
             sortable: true,
-            width: '165px',
+            width: '200px',
         },
         {
             name: 'Email',
             selector: row => row.clientDetails?.Email,
             sortable: true,
-            width: '243px',
+            width: '300px',
         },
         {
             name: 'Phone No',
             selector: row => row.clientDetails?.PhoneNo,
             sortable: true,
+            width: '200px',
         },
         {
             name: 'Kyc',
@@ -316,19 +378,29 @@ const Freeclient = () => {
                 )
             ),
             sortable: true,
-            width: '160px',
+            width: '200px',
+        },
+        {
+            name: 'Status',
+            selector: row => (
+                <span style={{ color: row.status === "active" ? "green" : "red" }}>
+                    {row.status === "active" ? "Active" : "Expired"}
+                </span>
+            ),
+            sortable: true,
+            width: '200px',
         },
         {
             name: 'Start Date',
-            selector: row => fDate(row.startdate),
+            selector: row => fDateTime(row.startdate),
             sortable: true,
-            width: '230px',
+            width: '200px',
         },
         {
             name: 'End Start',
-            selector: row => fDate(row.enddate),
+            selector: row => fDateTime(row.enddate),
             sortable: true,
-            width: '230px',
+            width: '200px',
         },
 
         // {
@@ -353,7 +425,7 @@ const Freeclient = () => {
         // },
         {
             name: 'CreatedAt',
-            selector: row => row.clientDetails?.createdAt,
+            selector: row => fDateTime(row.clientDetails?.createdAt),
             sortable: true,
             width: '220px',
         },
@@ -372,8 +444,8 @@ const Freeclient = () => {
                         </span>
                     </Tooltip>
 
-                   {permission.includes("editfreeclient") && (<Tooltip title="Update">
-                        <UserPen onClick={() => updateClient(row)} />
+                    {permission.includes("editfreeclient") && (<Tooltip title="Update">
+                        <SquarePen className='ms-2' onClick={() => updateClient(row)} />
                     </Tooltip> ) }
                     {/* <Tooltip title="delete">
                         <Trash2 onClick={() => DeleteClient(row._id)} />
@@ -393,8 +465,8 @@ const Freeclient = () => {
             <div>
                 <div>
                     <div className="page-content">
-                        <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                            <div className="breadcrumb-title pe-3">Free Trial Client</div>
+                        <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3 ">
+                            <div className="breadcrumb-title pe-3">{header}</div>
                             <div className="ps-3">
                                 <nav aria-label="breadcrumb">
                                     <ol className="breadcrumb mb-0 p-0">
@@ -410,23 +482,49 @@ const Freeclient = () => {
                         <hr />
                         <div className="card">
                             <div className="card-body">
-                                <div className="d-lg-flex align-items-center mb-4 gap-3">
+                                <div className="d-lg-flex align-items-center mb-4 gap-3 justify-content-between">
                                     <div className="position-relative">
                                         <input
                                             type="text"
                                             className="form-control ps-5 radius-10"
-                                            placeholder="Search Free Trial Client"
+                                            placeholder="Search free  Client"
+                                            onChange={(e) => setSearchInput(e.target.value)}
+                                            value={searchInput}
                                         />
                                         <span className="position-absolute top-50 product-show translate-middle-y">
                                             <i className="bx bx-search" />
                                         </span>
                                     </div>
 
+                                    <div
+                                    className="ms-2"
+                                    onClick={(e) => getexportfile()}
+                                >
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary float-end"
+                                        data-toggle="tooltip"
+                                        data-placement="top"
+                                        title="Export To Excel"
+                                        delay={{ show: "0", hide: "100" }}
+
+                                    >
+                                        <i className="bx bxs-download" aria-hidden="true"></i>
+
+                                        Export-Excel
+                                    </button>
+                                  </div>
+
+
+
                                 </div>
 
                                 <Table
                                     columns={columns}
                                     data={clients}
+                                    totalRows={totalRows}
+                                    currentPage={currentPage}
+                                    onPageChange={handlePageChange}
                                 />
                             </div>
                         </div>
@@ -553,11 +651,11 @@ const Freeclient = () => {
                                                                                                 </div>
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Created At:</strong>
-                                                                                                    <span>{fDate(item.created_at)}</span>
+                                                                                                    <span>{fDateTime(item.created_at)}</span>
                                                                                                 </div>
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Updated At:</strong>
-                                                                                                    <span>{fDate(item.updated_at)}</span>
+                                                                                                    <span>{fDateTime(item.updated_at)}</span>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>

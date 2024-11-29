@@ -11,10 +11,16 @@ const Changepass = () => {
 
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [showCurrentPassword, setShowCurrentPassword] = useState(false);
 
     const togglePasswordVisibility = (e) => {
         e.preventDefault();
         setShowPassword(!showPassword);
+    };
+
+    const toggleCurrentPasswordVisibility = (e) => {
+        e.preventDefault();
+        setShowCurrentPassword(!showCurrentPassword);
     };
 
     const toggleConfirmPasswordVisibility = (e) => {
@@ -110,16 +116,16 @@ const Changepass = () => {
                                                 </label>
                                                 <div className="input-group" id="show_hide_password">
                                                     <Field
-                                                        type={showPassword ? 'text' : 'password'}
+                                                        type={showCurrentPassword ? 'text' : 'password'}
                                                         name="currentPassword"
                                                         className="form-control border-end-0"
                                                         placeholder="Enter Current Password"
                                                     />
                                                     <button
                                                         className="input-group-text bg-transparent"
-                                                        onClick={togglePasswordVisibility}
+                                                        onClick={toggleCurrentPasswordVisibility}
                                                     >
-                                                        <i className={`bx ${showPassword ? 'bx-show' : 'bx-hide'}`} />
+                                                        <i className={`bx ${showCurrentPassword ? 'bx-show' : 'bx-hide'}`} />
                                                     </button>
                                                 </div>
                                                 <ErrorMessage name="currentPassword" component="div" className="text-danger" />

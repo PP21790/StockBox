@@ -369,6 +369,21 @@ export async function GetSignallist(data, token) {
 
 
 
+// getsignal by signal filter
+
+export async function GetSignallistWithFilter(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}signal/listwithfilter`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err.response?.data || err.message;
+    }
+}
 
 
 // get signal detailperuser
@@ -1202,6 +1217,8 @@ export async function Addcouponbyadmin(data, token) {
     formData.append('minpurchasevalue', data.minpurchasevalue);
     formData.append('mincouponvalue', data.mincouponvalue);
     formData.append('description', data.description);
+    formData.append('service', data.service);
+    formData.append('limitation', data.limitation);
 
     try {
         const res = await axios.post(`${Config.base_url}coupon/add`, formData, {
@@ -1574,6 +1591,8 @@ export async function DeleteBanner(_id, token) {
 }
 
 
+
+
 // basic setting 
 
 export async function basicsettinglist(token) {
@@ -1604,6 +1623,7 @@ export async function Updatebasicsettings(data, token) {
     formData.append('contact_number', data.contact_number);
     formData.append('favicon', data.favicon);
     formData.append('logo', data.logo);
+   
 
     try {
         const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
@@ -1621,6 +1641,29 @@ export async function Updatebasicsettings(data, token) {
 }
 
 
+// update kyc status
+
+
+
+export async function UpdateKycstatus(data, token) {
+    const formData = new FormData();
+    formData.append('kyc', data.kyc);
+
+    try {
+        const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
 
 // update email setting
 
@@ -1629,24 +1672,13 @@ export async function UpdateEmailSettings(data, token) {
     const formData = new FormData();
 
 
-    // formData.append('from_mail', data.from_mail);
-    // formData.append('receiver_earn', data.receiver_earn);
-    // formData.append('refer_description', data.refer_description);
-    // formData.append('refer_title', data.refer_title);
-    // formData.append('sender_earn', data.sender_earn);
     formData.append('smtp_host', data.smtp_host);
     formData.append('smtp_password', data.smtp_password);
     formData.append('smtp_port', data.smtp_port);
-    // formData.append('smtp_status', data.smtp_status);
     formData.append('smtp_username', data.smtp_username);
     formData.append('to_mail', data.to_mail);
     formData.append('encryption', data.encryption);
-    // formData.append('refer_image', data.refer_image);
-    // formData.append('surepass_token', data.surepass_token);
-    // formData.append('digio_client_id', data.digio_client_id);
-    // formData.append('digio_client_secret', data.digio_client_secret);
-    // formData.append('razorpay_key', data.razorpay_key);
-    // formData.append('razorpay_secret', data.razorpay_secret);
+
 
     try {
         const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
@@ -1668,7 +1700,7 @@ export async function UpdateEmailSettings(data, token) {
 
 export async function updateApiinfo(data, token) {
     const formData = new FormData();
-  
+
     formData.append('digio_client_id', data.digio_client_id);
     formData.append('digio_client_secret', data.digio_client_secret);
     formData.append('digio_template_name', data.digio_template_name);
@@ -1696,6 +1728,8 @@ export async function updatePayementgateway(data, token) {
 
     formData.append('razorpay_key', data.razorpay_key);
     formData.append('razorpay_secret', data.razorpay_secret);
+    formData.append('paymentstatus', data.paymentstatus);
+    formData.append('officepaymenystatus', data.officepaymenystatus);
 
     try {
         const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
@@ -1711,6 +1745,30 @@ export async function updatePayementgateway(data, token) {
         return err.response?.data || err.message;
     }
 }
+
+
+// status payment update  
+
+export async function UpdatePaymentstatus(data, token) {
+    const formData = new FormData();
+    formData.append('paymentstatus', data.paymentstatus);
+    formData.append('officepaymenystatus', data.officepaymenystatus);
+
+    try {
+        const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
 
 
 // get email template page
@@ -1768,6 +1826,9 @@ export async function getstockbyservice(data, token) {
         return err.response?.data || err.message;
     }
 }
+
+
+
 
 // get stock expiry date
 
@@ -1882,6 +1943,25 @@ export async function getPayementhistory(token) {
     }
 }
 
+
+// get plan payment history
+
+export async function getPayementhistorywithfilter(data,token) {
+    try {
+        const res = await axios.post(`${Config.base_url}plan/paymenthistorywithfilter`,data, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}
+
+
+
+
 // get freelist client 
 
 export async function FreeClientList(token) {
@@ -1896,6 +1976,26 @@ export async function FreeClientList(token) {
         return err;
     }
 }
+
+
+
+// get free client with fillter
+
+
+export async function FreeClientListWithFilter(data,token) {
+    try {
+        const res = await axios.post(`${Config.base_url}client/freetriallistwithfilter`,data, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}
+
+
 
 
 // delete free client 
@@ -2077,6 +2177,23 @@ export async function getHelpMessagelist(token) {
 }
 
 
+
+// dashboard notification 
+
+export async function getDashboardNotification(token) {
+    try {
+        const res = await axios.get(`${Config.base_url}dashboard/notification`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}
+
+
 // // add freetrial client 
 
 // export async function addfreeClient(data, token) {
@@ -2095,14 +2212,14 @@ export async function getHelpMessagelist(token) {
 //     }
 // }
 
+// read status of notification
 
-export async function addfreeClient(data, token) {
-    const formData = new FormData();
-    formData.append('freetrial', data.freetrial);
+
+export async function ReadNotificationStatus(data, token) {
     try {
-        const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
+        const res = await axios.post(`${Config.base_url}dashboard/statuschangenotifiction`, data, {
             headers: {
-                'Content-Type': 'multipart/form-data',
+                data: {},
                 'Authorization': `${token}`,
             },
         });
@@ -2115,6 +2232,25 @@ export async function addfreeClient(data, token) {
 }
 
 
+
+export async function addfreeClient(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}basicsetting/updatefreetrail`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
 // update refer and earn 
 
 export async function UpdatereferAndEarn(data, token) {
@@ -2124,7 +2260,8 @@ export async function UpdatereferAndEarn(data, token) {
     formData.append('refer_title', data.refer_title);
     formData.append('refer_description', data.refer_description);
     formData.append('refer_image', data.refer_image);
-    
+    formData.append('refer_status', data.refer_status);
+
     try {
         const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
             headers: {
@@ -2160,6 +2297,24 @@ export async function CouponStatus(data, token) {
 }
 
 
+
+export async function CouponShowstatus(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}coupon/show-change-status`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
 // get freetrial status 
 
 
@@ -2174,5 +2329,596 @@ export async function getfreetrialstatus(token) {
         return res?.data;
     } catch (err) {
         return err;
+    }
+}
+
+
+// get trading status
+
+export async function gettradestatus(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}aliceblue/brokerlink`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// update login status
+
+
+export async function UpdateLogin_status(data, token) {
+    const formData = new FormData();
+
+    formData.append('brokerloginstatus', data.brokerloginstatus);
+    try {
+        const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// update square off 
+
+export async function Updatesquareoffdata(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}basicsetting/updatecrontime`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+// get client expiry plan data 
+
+
+
+export async function getclientPlanexpiry(token) {
+    try {
+        const res = await axios.get(`${Config.base_url}dashboard/planexiprelist`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}
+
+
+export async function getclientPlanexpirywithfilter(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}dashboard/planexiprelistwithfilter`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// get performaer data 
+
+export async function getPerformerstatus(token ,_id) {
+  
+    try {
+        const res = await axios.get(`${Config.base_url}dashboard/past-performance/${_id}`, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+// get performace data by segment 
+
+export async function getperformacebysegment(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}dashboard/closesignal`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+export async function getperformacebysegmentwithfilter(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}dashboard/closesignalwithfilter`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+/// web link for socila media 
+
+
+
+
+export async function WebLinkforMedia(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}basicsetting/updatesociallink`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+export async function ResetPassword(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}user/reset-password`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// get view client subscribtion
+
+
+export async function getclientsubscription(_id,token) {
+  
+    try {
+        const res = await axios.get(`${Config.base_url}client/myservice/${_id}`, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+export async function getPlanbyUser(_id,token) {
+  
+    try {
+        const res = await axios.get(`${Config.base_url}plan/listbyclient/${_id}`, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+// get client export file 
+
+export async function getclientExportfile(data,token) {
+  
+    try {
+        const res = await axios.get(`${Config.base_url}client/listwithfilterexcel`,data ,{
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// client filter
+
+export async function AllclientFilter(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}client/listwithfilter`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+// delete client history 
+
+export async function DeleteClientHistory(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}client/deletelistwithfilter`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+// add bank detail api 
+
+export async function AddBankDetailbyadmin(data, token) {
+    const formData = new FormData();
+
+    formData.append('name', data.name);
+    formData.append('branch', data.branch);
+    formData.append('accountno', data.accountno);
+    formData.append('ifsc', data.ifsc);
+    formData.append('image', data.image);
+
+    try {
+        const res = await axios.post(`${Config.base_url}bank/add`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+// update bank detail
+
+
+
+export async function UpdateBankDetailbyadmin(data, token) {
+    const formData = new FormData();
+
+    formData.append('name', data.name);
+    formData.append('branch', data.branch);
+    formData.append('accountno', data.accountno);
+    formData.append('ifsc', data.ifsc);
+    formData.append('id', data.id);
+    formData.append('image', data.image);
+
+
+    try {
+        const res = await axios.post(`${Config.base_url}bank/update`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+// bank detail
+
+export async function BankDetailListbyadmin(token) {
+    try {
+        const res = await axios.get(`${Config.base_url}bank/list`,{
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+
+// update bank account status
+
+export async function BankStatusdetail(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}bank/change-status`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+// delete bank detail
+
+export async function DeleteBankDetail(_id, token) {
+    try {
+        const res = await axios.get(`${Config.base_url}bank/delete/${_id}`, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+// QR detail
+
+
+export async function AddQRdetaildata(data, token) {
+    const formData = new FormData();
+    formData.append('image', data.image);
+ 
+    try {
+        const res = await axios.post(`${Config.base_url}qrcode/add`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// get qr detail
+
+
+export async function getQrdetails(token) {
+
+    try {
+        const res = await axios.get(`${Config.base_url}qrcode/list`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
+
+
+// update qr code 
+
+// update  banner
+
+export async function UpdateQrcodelist(data, token) {
+    const formData = new FormData();
+    formData.append('image', data.image);
+    formData.append('id', data.id);
+    try {
+        const res = await axios.post(`${Config.base_url}qrcode/update`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+// delete Qr status
+
+export async function DeleteQRCode(_id, token) {
+    try {
+        const res = await axios.get(`${Config.base_url}qrcode/delete/${_id}`, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// changet status of qr code 
+
+export async function changeQRstatuscode(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}qrcode/change-status`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+/// update pdf in open and close file  in signal 
+
+export async function UpdatesignalReport(data, token) {
+    const formData = new FormData();
+    formData.append('report', data.report);
+    formData.append('id', data.id);
+    try {
+        const res = await axios.post(`${Config.base_url}signal/updatereport`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// get plan expiry month detail
+
+export async function getExpiryByMonth(token) {
+  
+    try {
+        const res = await axios.get(`${Config.base_url}dashboard/totalclientmonth`, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// get all notification list 
+
+
+export async function getAllNotificationlist(token ,page) {
+  
+    try {
+        const res = await axios.get(`${Config.base_url}dashboard/notificationlist/${page}`, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+
+    } catch (err) {
+
+        return err.response?.data || err.message;
     }
 }

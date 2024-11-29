@@ -12,7 +12,6 @@ const nodemailer = require('nodemailer');
 
 class Users {
 
-
   async AddUser(req, res) {
     try {
       const { FullName, UserName, Email, PhoneNo, password, add_by } = req.body;
@@ -47,6 +46,24 @@ class Users {
       if (!add_by) {
         return res.status(400).json({ status: false, message: "Added by field is required" });
       }
+
+
+      const existingUser = await Users_Modal.findOne({
+        del: "0",
+        $or: [{ Email }, { PhoneNo }, { UserName }]
+      });
+      
+      if (existingUser) {
+        if (existingUser.UserName === UserName) {
+          return res.status(400).json({ status: false, message: "Username already exists" });
+        } else if (existingUser.Email === Email) {
+          return res.status(400).json({ status: false, message: "Email already exists" });
+        } else if (existingUser.PhoneNo === PhoneNo) {
+          return res.status(400).json({ status: false, message: "Phone number already exists" });
+        }
+      }
+
+
 
       const hashedPassword = await bcrypt.hash(password, 10);
       //  console.log("result", hashedPassword);
@@ -83,7 +100,7 @@ class Users {
 
       //const result = await Users_Modal.find()
 
-      const result = await Users_Modal.find({ del: 0, Role: 2 }).sort({ created_at: -1 });
+      const result = await Users_Modal.find({ del: 0, Role: 2 }).sort({ createdAt: -1 });
 
       return res.json({
         status: true,
@@ -106,7 +123,7 @@ class Users {
 
       //const result = await Users_Modal.find()
 
-      const result = await Users_Modal.find({ del: 0, Role: 2, ActiveStatus: 1 });
+      const result = await Users_Modal.find({ del: 0, Role: 2, ActiveStatus: 1 }).sort({ createdAt: -1 });
 
       return res.json({
         status: true,
@@ -163,8 +180,8 @@ class Users {
   async updateUser(req, res) {
     try {
       const { id, FullName, Email, PhoneNo } = req.body;
-
-
+           
+    
       if (!FullName) {
         return res.status(400).json({ status: false, message: "fullName is required" });
       }
@@ -281,13 +298,16 @@ class Users {
   async loginUser(req, res) {
     try {
       const { UserName, password } = req.body;  // Extract password here
-
+      const settings = await BasicSetting_Modal.findOne();
+      if (!settings.staffstatus) {
+        return res.json({ status: false, message: "Your panel has been deactivated. Please contact the administrator for assistance." });
+      }
 
       if (!UserName) {
-        return res.status(400).json({ status: false, message: "username is required" });
+        return res.json({ status: false, message: "username is required" });
       }
       if (!password) {
-        return res.status(400).json({ status: false, message: "password is required" });
+        return res.json({ status: false, message: "password is required" });
       }
 
       const user = await Users_Modal.findOne({
@@ -297,7 +317,7 @@ class Users {
       });
 
       if (!user) {
-        return res.status(404).json({
+        return res.json({
           status: false,
           message: "User not found or account is inactive",
         });
@@ -307,9 +327,9 @@ class Users {
 
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
-        return res.status(401).json({
+        return res.json({
           status: false,
-          message: "Invalid credentials",
+          message: "Password is Incorrect",
         });
       }
 
@@ -330,7 +350,7 @@ class Users {
         },
       });
     } catch (error) {
-      return res.status(500).json({
+      return res.json({
         status: false,
         message: "Server error",
         error: error.message,
@@ -477,7 +497,7 @@ class Users {
             console.error('Error reading HTML template:', err);
             return;
         }
-        const url =`http://${req.headers.host}/reset-password/${resetToken}`;
+        const url =`http://${req.headers.host}/#/resetpassword/${resetToken}`;
         
         const logo =`http://${req.headers.host}/uploads/basicsetting/${settings.logo}`;
 

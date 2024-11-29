@@ -1,6 +1,7 @@
 const db = require("../Models");
 const upload = require('../Utils/multerHelper'); // Import the multer helper
-
+const fs = require('fs');
+const path = require('path');
 const BasicSetting_Modal = db.BasicSetting;
 const Activitylogs_Modal = db.Activitylogs;
 
@@ -9,6 +10,7 @@ class BasicSetting {
 
 
     async AddBasicSetting(req, res) {
+
         try {
             // Handle the image uploads
             upload('basicsetting').fields([{ name: 'favicon', maxCount: 1 }, { name: 'logo', maxCount: 1 }, , { name: 'refer_image', maxCount: 1 }])(req, res, async (err) => {
@@ -40,25 +42,19 @@ class BasicSetting {
                     razorpay_key,
                     razorpay_secret,
                     digio_template_name,
-                    freetrial
+                    kyc,
+                    paymentstatus,
+                    officepaymenystatus,
+                    refer_status
 
                 } = req.body;
 
-                // Get the uploaded file paths
+
 
                 const existingSetting = await BasicSetting_Modal.findOne({});
 
 
-    if(existingSetting.freetrial !== freetrial)
-    {
-                 const message ="Free Trail Update";
-        const newactivity = new Activitylogs_Modal({
-            olddays : existingSetting.freetrial,
-            newdays : freetrial,
-            message,
-          });
-          await newactivity.save();
-    }
+  
  
 
             const favicon = req.files['favicon'] ? req.files['favicon'][0].filename : (existingSetting ? existingSetting.favicon : null);
@@ -68,7 +64,7 @@ class BasicSetting {
                 const update = {
                     favicon,
                     logo,
-                    website_title,
+                    website_title:from_name,
                     email_address,
                     contact_number,
                     address,
@@ -78,7 +74,7 @@ class BasicSetting {
                     encryption,
                     smtp_username,
                     smtp_password,
-                    from_mail,
+                    from_mail:smtp_username,
                     from_name,
                     to_mail,
                     refer_title,
@@ -92,10 +88,12 @@ class BasicSetting {
                     razorpay_key,
                     razorpay_secret,
                     digio_template_name,
-                    freetrial
+                    kyc,
+                    paymentstatus,
+                    officepaymenystatus,
+                    refer_status
                 };
 
-                // Upsert the setting
                 const options = {
                     new: true,
                     upsert: true,
@@ -143,7 +141,8 @@ class BasicSetting {
 
     async getFreetrialActivity(req, res) {
         try {
-            const settings = await Activitylogs_Modal.find();  // Correct reference here
+            const settings = await Activitylogs_Modal.find().sort({ createdAt: -1 });
+
             return res.json({
                 status: true,
                 message: "Free trial activity retrieved successfully",
@@ -158,6 +157,132 @@ class BasicSetting {
             });
         }
     }
+
+    
+
+    async updateCronTime(req, res) {
+        try {
+            const { cashexpiretime, foexpiretime, cashexpirehours, foexpirehours } = req.body;
+    
+            const update = {
+                cashexpiretime,
+                foexpiretime,
+                cashexpirehours,
+                foexpirehours
+            };
+    
+            // Update the database
+            const options = { new: true, upsert: true, runValidators: true };
+            const result = await BasicSetting_Modal.findOneAndUpdate({}, update, options);
+    
+            // Define path to the JSON file
+            const filePath = path.join(__dirname, '../../uploads/json', 'config.json');
+            // Read the existing JSON data
+            let jsonData = {};
+            if (fs.existsSync(filePath)) {
+                const fileData = fs.readFileSync(filePath, 'utf8');
+                jsonData = JSON.parse(fileData);
+            }
+    
+            // Update fields in the JSON data
+            jsonData.cashexpiretime = cashexpiretime;
+            jsonData.foexpiretime = foexpiretime;
+            jsonData.cashexpirehours = cashexpirehours;
+            jsonData.foexpirehours = foexpirehours;
+    
+            // Write the updated data back to the JSON file
+            fs.writeFileSync(filePath, JSON.stringify(jsonData, null, 2), 'utf8');
+    
+            return res.status(200).json({
+                status: true,
+                message: "Basic setting updated successfully",
+                data: result
+            });
+        } catch (error) {
+            console.error("Error updating basic setting:", error);
+            return res.status(500).json({
+                status: false,
+                message: "Server error",
+                error: error.message
+            });
+        }
+    }
+
+    async updateSocialLink(req, res) {
+        try {
+            const { facebook, youtube, twitter, instagram } = req.body;
+    
+            const update = {
+                facebook,
+                youtube,
+                twitter,
+                instagram
+            };
+    
+            // Update the database
+            const options = { new: true, upsert: true, runValidators: true };
+            const result = await BasicSetting_Modal.findOneAndUpdate({}, update, options);
+        
+            return res.status(200).json({
+                status: true,
+                message: "Social Link updated successfully",
+                data: result
+            });
+        } catch (error) {
+            console.error("Error updating social link:", error);
+            return res.status(500).json({
+                status: false,
+                message: "Server error",
+                error: error.message
+            });
+        }
+    }
+
+
+    async updateFreetrail(req, res) {
+        try {
+            const { freetrial } = req.body;
+            const update = {
+                freetrial,
+            };
+    
+            // Update the database
+         
+        
+           
+    const existingSetting = await BasicSetting_Modal.findOne({});
+
+
+    if(existingSetting.freetrial !== freetrial)
+        {
+                     const message ="Free Trail Update";
+            const newactivity = new Activitylogs_Modal({
+                olddays : existingSetting.freetrial,
+                newdays : freetrial,
+                message,
+              });
+              await newactivity.save();
+        }
+
+        
+        const options = { new: true, upsert: true, runValidators: true };
+        const result = await BasicSetting_Modal.findOneAndUpdate({}, update, options);
+
+
+        return res.status(200).json({
+            status: true,
+            message: "Social Link updated successfully",
+            data: result
+        });
+    } catch (error) {
+        console.error("Error updating social link:", error);
+        return res.status(500).json({
+            status: false,
+            message: "Server error",
+            error: error.message
+        });
+    }
+}
 
 
   }

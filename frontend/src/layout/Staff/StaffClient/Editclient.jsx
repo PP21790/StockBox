@@ -14,7 +14,7 @@ const EditClient = () => {
   const location = useLocation();
   const { row } = location.state;
 
-  // console.log("row",row)
+ 
 
   const user_id = localStorage.getItem("id");
   const token = localStorage.getItem("token");
@@ -63,7 +63,7 @@ const EditClient = () => {
           timerProgressBar: true,
         });
         setTimeout(() => {
-          navigate("/admin/client");
+          navigate("/staff/client");
         }, 1500);
       } else {
         Swal.fire({
@@ -151,7 +151,7 @@ const EditClient = () => {
         btn_name1="Cancel"
         formik={formik}
         sumit_btn={true}
-        btn_name1_route={"/admin/client"}
+        btn_name1_route={"/staff/client"}
         additional_field={<></>}
       />
     </div>

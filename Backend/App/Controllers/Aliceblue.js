@@ -9,6 +9,7 @@ const Clients_Modal = db.Clients;
 const Signal_Modal = db.Signal;
 const Stock_Modal = db.Stock;
 const Order_Modal = db.Order;
+const BasicSetting_Modal = db.BasicSetting;
 
 class Aliceblue {
 
@@ -80,7 +81,6 @@ class Aliceblue {
             return res.status(500).json({ status: false, message: error.message || "Server error" });
         }
     }
-
 
     async placeOrder(req, res) {
         
@@ -156,7 +156,7 @@ class Aliceblue {
                      symbol: signal.stock, 
                      segment: signal.segment, 
                      expiry: signal.expirydate, 
-                //     option_type: optiontype, 
+                     option_type: optiontype, 
                      strike: signal.strikeprice 
                  });
              }
@@ -213,15 +213,17 @@ class Aliceblue {
                         clientid: client._id,
                         signalid:signal._id,
                         orderid:responseData[0].NOrdNo,
+                        ordertype:signal.calltype,
                         borkerid:2,
                         quantity:quantity,
                     });
     
     
+                    
                    await order.save();
                     return res.json({
                         status: true,
-                        data: response.data 
+                        data: response.data ? null : "Order Successfully", 
                     });
                 }
                 else{
@@ -260,10 +262,10 @@ class Aliceblue {
 
 
     async ExitplaceOrder(req, res) {
-        
+      
         try {
             const { id, signalid, quantity, price } = req.body;
-    
+           
             const client = await Clients_Modal.findById(id);
             if (!client) {
                 return res.status(404).json({
@@ -350,27 +352,31 @@ class Aliceblue {
              
                 
                                
-              let positionData=0;
-                  try {
-                    const positionData = await CheckPosition(userId, authToken, stock.segment,stock.instrument_token,producttype,signal.calltype,stock.tradesymbol);
-                  
+           
+            let holdingData = { qty: 0 };  
+            let positionData = { qty: 0 };  
+            let totalValue = 0;  // Declare totalValue outside the blocks
+            try {
+                positionData = await CheckPosition(userId, authToken, stock.segment, stock.instrument_token, producttype, signal.calltype, stock.tradesymbol);
+              
+            } catch (error) {
+            }
+
+            if (stock.segment === "C") {
+                try {
+                    holdingData = await CheckHolding(userId, authToken, stock.segment, stock.instrument_token, producttype, signal.calltype);
+                 
                 } catch (error) {
-                    console.error('Error in CheckPosition:', error.message);
                 }
 
-                let totalValue=0;
-          let holdingData=0;
-        if(stock.segment=="C") {
-                try {
-                    const holdingData = await CheckHolding(userId, authToken, stock.segment,stock.instrument_token,producttype,signal.calltype);
-                } catch (error) {
-                    console.error('Error in CheckHolding:', error.message);
-                }
-                totalValue = Math.abs(positionData)+holdingData;
+                const validPositionData = !isNaN(Number(positionData.qty)) ? Number(positionData.qty) : 0;  // Validate positionData.qty
+                const validHoldingQty = !isNaN(Number(holdingData.qty)) ? Number(holdingData.qty) : 0;  // Validate holdingData.qty
+                 totalValue = validPositionData + validHoldingQty;  
+
             }
             else
             {
-                totalValue = Math.abs(positionData)
+                  totalValue = Math.abs(positionData.qty)
             }
 
 
@@ -383,8 +389,8 @@ class Aliceblue {
                     calltypes = "BUY";
                 }
           
-
          if(totalValue>=quantity) {
+
 
             var data = JSON.stringify([
                 {
@@ -404,22 +410,21 @@ class Aliceblue {
                 }
               ]);
 
+            let config = {
+                method: 'post',
+                maxBodyLength: Infinity,
+                url: 'https://ant.aliceblueonline.com/rest/AliceBlueAPIService/api/placeOrder/executePlaceOrder',
+                headers: {
+                    'Authorization': 'Bearer ' + userId + ' ' + authToken,
+                    'Content-Type': 'application/json',
+                },
+                data: data
+            };
 
-
-                let config = {
-                    method: 'post',
-                    maxBodyLength: Infinity,
-                    url: 'https://ant.aliceblueonline.com/rest/AliceBlueAPIService/api/placeOrder/executePlaceOrder',
-                    headers: {
-                        'Authorization': 'Bearer ' + userId + ' ' + authToken,
-                        'Content-Type': 'application/json',
-                    },
-                    data: data
-                };
 
                 axios(config)
                 .then(async (response) => {
-                  
+                  console.log("response",response);
                     const responseData = response.data;
     
     
@@ -429,6 +434,7 @@ class Aliceblue {
                         clientid: client._id,
                         signalid:signal._id,
                         orderid:responseData[0].NOrdNo,
+                        ordertype:calltypes,
                         borkerid:2,
                     });
     
@@ -436,7 +442,7 @@ class Aliceblue {
                    await order.save();
                     return res.json({
                         status: true,
-                        data: response.data 
+                        data: response.data ? null : "Order Successfully",
                     });
                 }
                 else{
@@ -501,8 +507,6 @@ class Aliceblue {
             }
 
 
-          
-
 
 
             const client = await Clients_Modal.findById(clientid);
@@ -514,25 +518,7 @@ class Aliceblue {
             }
 
 
-            if(client.tradingstatus == 0)
-                {
-                    return res.status(404).json({
-                        status: false,
-                        message: "Client Broker Not Login, Please Login With Broker"
-                    });
-                }
-
-
-                if (order.borkerid!=2) {
-                    return res.status(404).json({
-                        status: false,
-                        message: "Order not found for this Broker"
-                    });
-                }
-
-
-            const authToken = client.authtoken;
-            const userId = client.apikey;
+      
     
 
 if(order.status==1) {
@@ -543,12 +529,35 @@ if(order.status==1) {
     });
 }
 
-    var data = JSON.stringify([
+if(client.tradingstatus == 0)
+    {
+        return res.status(404).json({
+            status: false,
+            message: "Client Broker Not Login, Please Login With Broker"
+        });
+    }
+
+
+    if (order.borkerid!=2) {
+        return res.status(404).json({
+            status: false,
+            message: "Order not found for this Broker"
+        });
+    }
+
+
+const authToken = client.authtoken;
+const userId = client.apikey;
+
+
+
+
+
+    var data = JSON.stringify(
         {
           "nestOrderNumber": orderid
         }
-      ]);
-
+      );
 
         let config = {
             method: 'post',
@@ -561,12 +570,11 @@ if(order.status==1) {
             data: data
         };
        
-            const response = await axios(config); // Use await with axios
+           const response = await axios(config); 
+
             order.data = response.data; 
             order.status = 1; 
-    
             await order.save();
-
 
             return res.json({
                 status: true,
@@ -580,19 +588,129 @@ if(order.status==1) {
             });
         }
     }
-    
 
+    async GetAccessTokenAdmin(req, res) {
+        try {
+
+            const aliceuserid = req.query.userId;
+            const alice = await BasicSetting_Modal.findOne();
+    
+            // Check if the client exists
+            if (!alice.aliceuserid) {
+                return res.status(404).json({
+                    status: false,
+                    message: "Userid not found"
+                });
+            }
+    
+            if (req.query.authCode) {
+                const authCode = req.query.authCode;
+                const appcode = req.query.appcode;
+                const encryptedData = sha256(aliceuserid + authCode + alice.secretkey);
+                
+
+                const data = { checkSum: encryptedData };
+                // Axios configuration
+                const config = {
+                    method: "post",
+                    url: "https://ant.aliceblueonline.com/rest/AliceBlueAPIService/sso/getUserDetails",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    data: data,
+                };
+    
+                try {
+                    const response = await axios(config);
+                    // Check if the response status is not OK
+                    if (response.data.stat === "Not_ok") {
+                        return res.status(500).json({ status: false, message: response.data.emsg });
+                    }
+   
+                    if (response.data.userSession) {
+                        const brokerlink = await BasicSetting_Modal.findOneAndUpdate(
+                            { aliceuserid }, // Find by alice_userid
+                            { 
+                                authtoken: response.data.userSession,  // Update authtoken
+                                brokerloginstatus: 1        // Update tradingstatus
+                            }, 
+                            { new: true }  // Return the updated document
+                        );
+                        const dynamicUrl = `http://${req.headers.host}`;
+                        return res.redirect(dynamicUrl);
+                        // return res.json({
+                        //     status: true,
+                        //     message: "Broker login successfully",
+                        // });
+                    }
+    
+                } catch (error) {
+                    return res.status(500).json({ status: false, message: "Server error" });
+                }
+    
+            } else {
+                return res.status(400).json({ status: false, message: "authCode is required" });
+            }
+        } catch (error) {
+            return res.status(500).json({ status: false, message: error.message || "Server error" });
+        }
+    }
+
+async brokerLink(req, res) {
+  try {
+    const { apikey, secretkey, aliceuserid } = req.body;
+
+
+
+    if (!apikey && !secretkey && !aliceuserid) {
+        return res.status(404).json({
+          status: false,
+          message: "appcode,userid and secret is required",
+        });
+      }
+
+  const existingSetting = await BasicSetting_Modal.findOne({});
+
+    if (!existingSetting) {
+      return res.status(404).json({
+        status: false,
+        message: "Userid not found",
+      });
+    }
+
+    // Update client details
+    existingSetting.apikey = apikey;
+    existingSetting.secretkey = secretkey;
+    existingSetting.aliceuserid = aliceuserid;
+    await existingSetting.save();
+
+
+     let url =  `https://ant.aliceblueonline.com/?appcode=${apikey}`; 
+  
+     return res.json({
+        status: true,
+        url: url
+    });
+
+  } catch (error) {
+    // Handle server errors
+    return res.status(500).json({
+      status: false,
+      message: "Server error",
+      error: error.message,
+    });
+  }
+}
 
 
 }
 
 
-async function CheckPosition(userId, authToken , segment, instrument_token, producttype, calltype, trading_symbol) {
-    
-
+async function CheckPosition(userId, authToken, segment, instrument_token, producttype, calltype, trading_symbol) {
     var data_possition = {
         "ret": "NET"
-    }
+    };
+    
     var config = {
         method: 'post',
         url: 'https://ant.aliceblueonline.com/rest/AliceBlueAPIService/api/positionAndHoldings/positionBook',
@@ -602,80 +720,48 @@ async function CheckPosition(userId, authToken , segment, instrument_token, prod
         },
         data: JSON.stringify(data_possition)
     };
-    axios(config)
-        .then(async (response) => {
- 
-            if (Array.isArray(response.data)) {
 
-                const Exist_entry_order = response.data.find(item1 => item1.Token === instrument_token && item1.Pcode == producttype);
+    try {
+        const response = await axios(config);  // Wait for the response
 
-                if(Exist_entry_order != undefined){
-                    if (segment.toUpperCase() == 'C') {
+        if (Array.isArray(response.data)) {
+            const Exist_entry_order = response.data.find(item1 => item1.Token === instrument_token && item1.Pcode == producttype);
 
-                        const possition_qty = parseInt(Exist_entry_order.Bqty) - parseInt(Exist_entry_order.Sqty);
-                     
-                        if (possition_qty == 0) {
-                            return {
-                                status: false,
-                                qty: 0,
-                            };
+            if (Exist_entry_order != undefined) {
+                if (segment.toUpperCase() === 'C') {
+                    const possition_qty = parseInt(Exist_entry_order.Bqty) - parseInt(Exist_entry_order.Sqty);
 
-                        } else {
-
-                            return {
-                                status: true,
-                                qty: possition_qty,
-                            };                          
-                        }
-
-                    } else {
-                        const possition_qty = Exist_entry_order.Netqty;                         
-                        if (possition_qty == 0) {
-                            return {
-                                status: false,
-                                qty: 0,
-                            };
-                        } else {
-
-                            return {
-                                status: true,
-                                qty: possition_qty,
-                            };
-
-                        }
-
-                    }
-                }else{
                     return {
-                        status: false,
-                        qty: 0,
+                        status: possition_qty !== 0,
+                        qty: Math.abs(possition_qty)
+                    };
+                } else {
+                    const possition_qty = Exist_entry_order.Netqty;
+
+                    return {
+                        status: possition_qty !== 0,
+                        qty: Math.abs(possition_qty)
                     };
                 }
-
-               
             } else {
-
                 return {
                     status: false,
-                    qty: 0,
+                    qty: 0
                 };
-
             }
-
-
-
-
-        })
-        .catch(async (error) => {
-            
+        } else {
             return {
                 status: false,
-                message:err,
-                qty: 0,
+                qty: 0
             };
-
-            });
-
+        }
+    } catch (error) {
+        console.error('Error in CheckPosition:', error.message);
+        return {
+            status: false,
+            qty: 0
+        };
+    }
 }
 
 async function CheckHolding(userId, authToken, segment, instrument_token, producttype, calltype) {
@@ -683,7 +769,7 @@ async function CheckHolding(userId, authToken, segment, instrument_token, produc
         method: 'get',
         url: 'https://ant.aliceblueonline.com/rest/AliceBlueAPIService/api/positionAndHoldings/holdings',
         headers: {
-            'Authorization': `Bearer ${userId} ${authToken}`, // Ensure this format is correct for the API you're using
+            'Authorization': `Bearer ${userId} ${authToken}`,
             'Content-Type': 'application/json'
         }
     };
@@ -691,33 +777,41 @@ async function CheckHolding(userId, authToken, segment, instrument_token, produc
     try {
         const response = await axios(config);
 
-        if (response.data.stat == "Ok") {
+        // Check if the response is valid
+        if (response.data.stat === "Ok") {
 
+            // Find the matching entry in the holding data
             const existEntryOrder = response.data.HoldingVal.find(item1 => item1.Token1 === instrument_token && item1.Pcode === producttype);
-let possition_qty = 0;
-            if (existEntryOrder != undefined) {
-                if (segment.toUpperCase() == 'C') {
-                     possition_qty = parseInt(existEntryOrder.SellableQty);
-                } 
+
+            let position_qty = 0;
+
+            if (existEntryOrder !== undefined) {
+                // Check for the segment and get the appropriate quantity
+                if (segment.toUpperCase() === 'C') {
+                    position_qty = parseInt(existEntryOrder.SellableQty);
+                }
             }
+
             return {
                 status: true,
-                qty: possition_qty,
+                qty: Math.abs(position_qty)  // Ensure we return the absolute quantity
             };
         } else {
             return {
-                    status: false,
-                    qty: 0,
-                };
+                status: false,
+                qty: 0  // Return 0 if the status is not "Ok"
+            };
         }
     } catch (error) {
-        console.error('Error fetching position:', error.response ? error.response.data : error.message);
+        // Log the error and return a default response
+        console.error('Error fetching holdings:', error.response ? error.response.data : error.message);
         return {
             status: false,
-            qty: 0,
+            qty: 0  // Return 0 in case of an error
         };
     }
 }
+
 
 
 module.exports = new Aliceblue();

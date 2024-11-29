@@ -30,7 +30,9 @@ module.exports = {
     Helpdesk: require("./Helpdesk"),
     Broadcast: require("./Broadcast"),
     License: require("./License"),
-
+    Notification: require("./Notification"),
+    Bank: require("./Bank"),
+    Adminnotification: require("./Adminnotification"),
 
 
 

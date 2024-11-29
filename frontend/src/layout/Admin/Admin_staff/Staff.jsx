@@ -8,7 +8,7 @@ import { deleteStaff, updateStaffstatus } from '../../../Services/Admin';
 import Swal from 'sweetalert2';
 import { Tooltip } from 'antd';
 import ExportToExcel from '../../../Utils/ExportCSV';
-import { fDate } from '../../../Utils/Date_formate';
+import { fDate,fDateTime } from '../../../Utils/Date_formate';
 
 
 const Staff = () => {
@@ -17,20 +17,38 @@ const Staff = () => {
 
     const [clients, setClients] = useState([]);
     const [ForGetCSV, setForGetCSV] = useState([])
-    
+    const [searchInput, setSearchInput] = useState("");
+    const [allsearchInput, setAllSearchInput] = useState([]);
+     
     const token = localStorage.getItem('token');
     
 
     const getAdminclient = async () => {
         try {
             const response = await GetStaff(token);
-            if (response.status) {
+            if (response.status) { 
                 setClients(response.data);
+                setAllSearchInput(response.data)
             }
         } catch (error) {
             console.log("error");
         }
     }
+
+
+    
+    useEffect(() => {
+        const filteredData = allsearchInput?.filter((item) =>
+            !searchInput ||
+            item?.FullName.toLowerCase().includes(searchInput.toLowerCase()) ||
+            item?.UserName.toLowerCase().includes(searchInput.toLowerCase()) ||
+            item?.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
+            item?.PhoneNo.toLowerCase().includes(searchInput.toLowerCase())
+        );
+        setClients(filteredData); 
+    }, [searchInput, allsearchInput]); 
+
+
 
 
     useEffect(() => {
@@ -49,7 +67,7 @@ const Staff = () => {
             UserName: item?.UserName,
             Email: item?.Email || '',
             PhoneNo: item?.PhoneNo || '',
-            CreatedAt: item.createdAt || ""
+            CreatedAt: fDateTime(item.createdAt) || ""
     
           }));
           setForGetCSV(csvArr);
@@ -159,17 +177,17 @@ const Staff = () => {
 
 
     const columns = [
-        {
-            name: 'S.No',
-            selector: (row, index) => index + 1,
-            sortable: false,
-            width: '100px',
-        },
+        // {
+        //     name: 'S.No',
+        //     selector: (row, index) => index + 1,
+        //     sortable: false,
+        //     width: '100px',
+        // },
         {
             name: 'Full Name',
             selector: row => row.FullName,
             sortable: true,
-            width: '142px',
+            width: '200px',
         },
         {
             name: 'User Name',
@@ -181,7 +199,7 @@ const Staff = () => {
             name: 'Email',
             selector: row => row.Email,
             sortable: true,
-            width: '200px',
+            width: '300px',
         },
         {
             name: 'Phone No',
@@ -211,7 +229,7 @@ const Staff = () => {
         },
         {
             name: 'Created At',
-            selector: row => fDate(row.createdAt),
+            selector: row => fDateTime(row.createdAt),
             sortable: true,
             width: '142px',
         },
@@ -288,11 +306,13 @@ const Staff = () => {
                             <div className="card-body">
                                 <div className="d-lg-flex align-items-center mb-4 gap-3">
                                     <div className="position-relative">
-                                        <input
-                                            type="text"
-                                            className="form-control ps-5 radius-10"
-                                            placeholder="Search Staff"
-                                        />
+                                    <input
+                                        type="text"
+                                        className="form-control ps-5 radius-10"
+                                        placeholder="Search Staff"
+                                        onChange={(e) => setSearchInput(e.target.value)}
+                                        value={searchInput}
+                                    />
                                         <span className="position-absolute top-50 product-show translate-middle-y">
                                             <i className="bx bx-search" />
                                         </span>
@@ -309,9 +329,7 @@ const Staff = () => {
                                             Add Staff
                                         </Link>
                                     </div>
-                                    <div
-                                        className="ms-2"
-                                    >
+                                    <div className="ms-2" >
                                         <ExportToExcel
                                             className="btn btn-primary "
                                             apiData={ForGetCSV}

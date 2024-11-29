@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login_Api } from "../Services/Apis"
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
-
+import { basicsettinglist } from '../Services/Admin';
+import { image_baseurl } from '../Utils/config';
+import $ from "jquery";
 
 const Login = () => {
 
@@ -12,6 +14,39 @@ const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [clients, setClients] = useState([]);
+    
+    const token = localStorage.getItem('token');
+    const user_id = localStorage.getItem('id');
+   
+   
+
+    const getsettinglist = async () => {
+        try {
+            const response = await basicsettinglist(token);
+            if (response.status) {
+                const faviconElement = document.querySelector("link[rel='icon']");
+                if (faviconElement) {
+                   
+                    
+                    faviconElement.href = image_baseurl + "uploads/basicsetting/" + response.data[0].favicon;
+
+                    $('.companyName').html(response.data[0].from_name)
+                } else {
+                    console.log("Favicon element not found");
+                }
+    
+                setClients(response.data);
+            }
+        } catch (error) {
+            console.log('error', error);
+        }
+    };
+    
+    
+    useEffect(() => {
+        getsettinglist();
+    }, []);
 
 
     const loginpageOpen = async (e) => {
@@ -24,9 +59,10 @@ const Login = () => {
 
         try {
             var login_data = await login_Api(req);
+           
             if (login_data.data.status) {
                 Swal.fire({
-                    title: "Login Successful!",
+                    title: login_data.data.message || "Login Successful!",
                     text: "You will be redirected to the dashboard.",
                     icon: "success",
                     showConfirmButton: false,
@@ -50,7 +86,7 @@ const Login = () => {
         } catch (error) {
             Swal.fire({
                 title: "Error!",
-                text: "Something went wrong during login. Please try again later.",
+                text: error.message || "Something went wrong during login. Please try again later.",
                 icon: "error",
                 showConfirmButton: false,
                 timer: 2000,
@@ -84,12 +120,12 @@ const Login = () => {
                             <div className="card mb-0">
                                 <div className="card-body">
                                     <div className="p-4">
-                                        <div className="mb-3 text-center">
-                                            <img src="/assets/images/logo-icon.png" width={60} alt="" />
+                                        <div className="mb-5 text-center">
+                                            <img style={{width:"241px"}} src={`${image_baseurl}uploads/basicsetting/${clients[0]?.logo}`} />
                                         </div>
-                                        <div className="text-center mb-4">
-                                            <h5 className="">StockBox</h5>
-                                        </div>
+                                        {/* <div className="text-center mb-4">
+                                            <h5 className="">Stock RA</h5>
+                                        </div> */}
                                         <div className="form-body">
                                             <form className="row g-3" onSubmit={loginpageOpen}>
                                                 <div className="col-12">

@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 import { Tooltip } from 'antd';
 import styled from 'styled-components';
-import { fDate } from '../../../Utils/Date_formate';
+import { fDateTime } from '../../../Utils/Date_formate';
 
 const Category = () => {
     const navigate = useNavigate();
@@ -264,15 +264,16 @@ const Category = () => {
             }
         });
     };
-
+  
+   
 
     const columns = [
-        {
-            name: 'S.No',
-            selector: (row, index) => index + 1,
-            sortable: false,
-            width: '78px',
-        },
+        // {
+        //     name: 'S.No',
+        //     selector: (row, index) => 10 + index + 1,
+        //     sortable: false,
+        //     width: '78px',
+        // },
         {
             name: 'Title',
             selector: row => row.title,
@@ -307,13 +308,13 @@ const Category = () => {
         },
         {
             name: 'Created At',
-            selector: row => fDate(row.created_at),
+            selector: row => fDateTime(row.created_at),
             sortable: true,
             width: '200px',
         },
         {
             name: 'Updated At',
-            selector: row => fDate(row.updated_at),
+            selector: row => fDateTime(row.updated_at),
             sortable: true,
             width: '200px',
         },
@@ -451,6 +452,7 @@ const Category = () => {
                                                     <div className="row">
                                                         <div className="col-md-12">
                                                             <label htmlFor="service">Segment</label>
+                                                            <span className="text-danger">*</span>
                                                             {servicedata.length > 0 && (
                                                                 <DropdownMultiselect
                                                                     options={servicedata.map((item) => ({
@@ -469,6 +471,7 @@ const Category = () => {
                                                         </div>
                                                         <div className="col-md-12">
                                                             <label htmlFor="categoryTitle">Category</label>
+                                                            <span className="text-danger">*</span>
                                                             <input
                                                                 id="categoryTitle"
                                                                 className="form-control mb-3"
@@ -531,6 +534,7 @@ const Category = () => {
                                                             <div className="row">
                                                                 <div className="col-md-12">
                                                                     <label htmlFor="category">Category</label>
+                                                                    <span className="text-danger">*</span>
                                                                     <input
                                                                         className="form-control mb-2"
                                                                         type="text"
@@ -570,6 +574,7 @@ const Category = () => {
                                                             <div className="row">
                                                                 <div className="col-md-12">
                                                                     <label htmlFor="service">Segment</label>
+                                                                    <span className="text-danger">*</span>
                                                                     {servicedata.length > 0 && (
                                                                         <div className="form-group">
                                                                             {servicedata.map((item) => (

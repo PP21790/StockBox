@@ -5,16 +5,22 @@ require('dotenv').config();
 const mongoConnection = require("./App/Connection/Connection");
 const express = require("express");
 const app = express();
+var axios = require('axios');
 const http = require('http');
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
+// const Papa = require('papaparse');
+const WebSocket = require('ws');
+var CryptoJS = require("crypto-js");
 const bodyparser = require('body-parser');
 const db = require("./App/Models");
 //const { AddBulkStockCron } = require('./App/Controllers/Cron.js'); 
 process.env.TZ = 'Asia/Kolkata'; // Set the global time zone to IST
 console.log('Current time in IST:', new Date());
+const nodemailer = require('nodemailer');
+const { sendFCMNotification } = require('./App/Controllers/Pushnotification'); // Adjust if necessary
 
 require('./App/Controllers/Cron.js'); 
 const Clients_Modal = db.Clients;
@@ -46,7 +52,9 @@ const Freetrial_Modal = db.Freetrial;
 const Helpdesk_Modal = db.Helpdesk;
 const Broadcast_Modal = db.Broadcast;
 const License_Modal = db.License;
-
+const Notification_Modal = db.Notification;
+const Bank_Modal = db.Bank;
+const Adminnotification_Modal = db.Adminnotification;
 
 
 const corsOpts = {
@@ -68,12 +76,44 @@ app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 const server = http.createServer(app);
 
+let ws;
+const url = "wss://ws1.aliceblueonline.com/NorenWS/"
 
+//  app.get('/getcurrentprice', async (req, res) => {
+//   try {
+//     // SMTP configuration directly in function
+//     const transporter = nodemailer.createTransport({
+//         host: "smtp.hostinger.com",
+//         port: 465,
+//         secure: 'true', // true for SSL, false for TLS/STARTTLS
+//         auth: {
+//             user: "service@equimate.in",
+//             pass: "Service@311023"
+//         }
+//     });
 
-// app.get('/cron', (req, res) => {
-//   AddBulkStockCron()
-//   res.json("done")
-// })
+//     // Prepare dynamic content
+  
+
+//     // Define email options
+//     const mailOptions = {
+//         to: 'pankajpatidar333@gmail.com',
+//         from: `service@equimate.in`,
+//         subject: "forgot",
+//         html: "finalHtml"
+//     };
+
+//     // Send the email
+//     await transporter.sendMail(mailOptions);
+//     console.log("Email sent successfully");
+
+// } catch (error) {
+//     console.error("Error sending email:", error);
+// }
+  
+
+// });
+
 
 
 

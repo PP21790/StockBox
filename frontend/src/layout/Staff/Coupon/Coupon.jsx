@@ -3,30 +3,29 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getcouponlist } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { Eye, Pencil, Trash2 } from 'lucide-react';
+import { Eye, Pencil, Trash2 , IndianRupee} from 'lucide-react';
 import Swal from 'sweetalert2';
 import { DeleteCoupon, UpdateClientStatus, CouponStatus } from '../../../Services/Admin';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
-import { fDate } from '../../../Utils/Date_formate';
+import { fDate, fDateTime } from '../../../Utils/Date_formate';
 import { getstaffperuser } from '../../../Services/Admin';
 
 
 const Coupon = () => {
 
-    const userid = localStorage.getItem('id');
-  
+
     const navigate = useNavigate();
+
+    const userid = localStorage.getItem('id');
+    const token = localStorage.getItem('token');
 
     const [clients, setClients] = useState([]);
     const [searchInput, setSearchInput] = useState("");
     const [viewpage, setViewpage] = useState({});
-
-   
-
-    const token = localStorage.getItem('token');
+    const [datewise, setDatewise] = useState("")
     const [permission, setPermission] = useState([]);
-   
+
 
 
     const getcoupon = async () => {
@@ -40,16 +39,16 @@ const Coupon = () => {
                     item.description.toLowerCase().includes(searchInput.toLowerCase())
                 );
                 setClients(searchInput ? filterdata : response.data);
+                setDatewise(response.data)
                 // setClients(response.data);
             }
         } catch (error) {
             console.log("error");
         }
     }
+   
 
-    
 
-    
     const getpermissioninfo = async () => {
         try {
             const response = await getstaffperuser(userid, token);
@@ -61,10 +60,13 @@ const Coupon = () => {
         }
     }
 
+    useEffect(() => {
+        getpermissioninfo();
+    }, []);
+
 
     useEffect(() => {
         getcoupon();
-        getpermissioninfo()
     }, [searchInput]);
 
 
@@ -128,8 +130,6 @@ const Coupon = () => {
 
         const user_active_status = event.target.checked === true ? "true" : "false"
 
-        // console.log("user_active_status", user_active_status)
-
         const data = { id: id, status: user_active_status }
         const result = await Swal.fire({
             title: "Do you want to save the changes?",
@@ -169,25 +169,39 @@ const Coupon = () => {
 
 
 
+    const expiredbydate = () => {
+        const data = datewise?.map((item) => {
+            return item.enddate
+
+        })
+    }
+
+
 
     const columns = [
-        {
-            name: 'S.No',
-            selector: (row, index) => index + 1,
-            sortable: false,
-            width: '100px',
-        },
+        // {
+        //     name: 'S.No',
+        //     selector: (row, index) => index + 1,
+        //     sortable: false,
+        //     width: '100px',
+        // },
         {
             name: 'Name',
             selector: row => row.name,
             sortable: true,
-            width: '150px',
+            width: '200px',
         },
         {
             name: 'Code',
             selector: row => row.code,
             sortable: true,
-
+            width: '150px',
+        },
+        {
+            name: 'Fixed/Percent Value',
+            selector: row => row.type === "fixed" ? row.value : `${row.value}%`,
+            sortable: true,
+            width: '300px',
         },
         // {
         //     name: 'Image',
@@ -197,15 +211,15 @@ const Coupon = () => {
         // },
         {
             name: 'Min Purchase Value',
-            selector: row => row.minpurchasevalue,
+            selector: row =>  <div> <IndianRupee />{row.minpurchasevalue}</div>,
             sortable: true,
-            width: '206px',
+            width: '210px',
         },
         {
             name: 'Max Discount Value',
             selector: row => row.mincouponvalue ? row.mincouponvalue : "-",
             sortable: true,
-            width: '206px',
+            width: '210px',
         },
 
         // {
@@ -218,73 +232,94 @@ const Coupon = () => {
             name: 'Type',
             selector: row => row.type,
             sortable: true,
-            width: '115px',
+            width: '120px',
         },
 
-        permission.includes("couponstatus") && {
+        permission.includes("couponstatus") ? {
             name: 'Active Status',
-            selector: row => (
-                <div className="form-check form-switch form-check-info">
-                    <input
-                        id={`rating_${row.status}`}
-                        className="form-check-input toggleswitch"
-                        type="checkbox"
-                        defaultChecked={row.status == true}
-                        onChange={(event) => handleSwitchChange(event, row._id)}
-                    />
-                    <label
-                        htmlFor={`rating_${row.status}`}
-                        className="checktoggle checkbox-bg"
-                    ></label>
-                </div>
-            ),
+            selector: row => {
+                const currentDate = new Date();
+                const endDate = new Date(row.enddate );
+                endDate.setHours(23, 59, 59, 999);
+                if (currentDate > endDate) {
+                    return <span className="text-danger" style={{ color: "red" }}>Expired</span>;
+                } else {
+                    return (
+                        <div className="form-check form-switch form-check-info">
+                            <input
+                                id={`rating_${row.status}`}
+                                className="form-check-input toggleswitch"
+                                type="checkbox"
+                                defaultChecked={row.status === true}
+                                onChange={(event) => handleSwitchChange(event, row._id)}
+                            />
+                            <label
+                                htmlFor={`rating_${row.status}`}
+                                className="checktoggle checkbox-bg"
+                            ></label>
+                        </div>
+                    );
+                }
+            },
             sortable: true,
             width: '156px',
-        },
-
-
+        } : "",
         {
             name: 'Startdate',
-            selector: row => fDate(row.startdate),
+            selector: row => fDateTime(row.startdate),
             sortable: true,
             width: '200px',
         },
         {
             name: 'Enddate',
-            selector: row => fDate(row.enddate),
+            selector: row => fDateTime(row.enddate),
             sortable: true,
             width: '200px',
         },
 
-        permission.includes("editcoupon") || permission.includes("viewcoupon") 
+        permission.includes("editcoupon") || permission.includes("coupondetail") 
         || permission.includes("deletecoupon") ? {
             name: 'Actions',
-            cell: row => (
-                <>
-                  {permission.includes("viewcoupon") ? <div>
-                        <Tooltip placement="top" overlay="View">
-                            <Eye style={{ marginRight: "10px" }} data-bs-toggle="modal"
-                                data-bs-target="#example2"
-                                onClick={(e) => { setViewpage(row) }}
-                            />
-                        </Tooltip>
-                    </div> : "" }
-                    {permission.includes("editcoupon") ? <div>
-                        <Tooltip placement="top" overlay="Edit">
-                            <Pencil onClick={() => updatecoupon(row)} />
-                        </Tooltip>
-                    </div> : "" }
-                    {permission.includes("deletecoupon") ?  <div>
-                        <Tooltip placement="top" overlay="Delete">
-                            <Trash2 onClick={() => DeleteCouponbyadmin(row._id)} />
-                        </Tooltip>
-                    </div> : "" }
-                </>
-            ),
+            cell: row => {
+                const currentDate = new Date();
+                const endDate = new Date(row.enddate);
+                endDate.setHours(23, 59, 59, 999);
+                return (
+                    <>
+                        {currentDate > endDate ? (
+                            <span className="text-danger" >-</span>
+                        ) : (
+                             <div className='d-flex' >
+                                 {permission.includes("coupondetail") ?<div >
+                                    <Tooltip placement="top" overlay="View">
+                                        <Eye
+                                            style={{ marginRight: "10px" }}
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#example2"
+                                            onClick={() => setViewpage(row)}
+                                        />
+                                    </Tooltip>
+                                </div> : "" }
+                                {permission.includes("editcoupon") ? <div>
+                                    <Tooltip placement="top" overlay="Edit">
+                                        <Pencil onClick={() => updatecoupon(row)} />
+                                    </Tooltip>
+                                </div> : "" }
+                                {permission.includes("deletecoupon") ? <div>
+                                    <Tooltip placement="top" overlay="Delete">
+                                        <Trash2 onClick={() => DeleteCouponbyadmin(row._id)} />
+                                    </Tooltip>
+                                </div> : "" }
+                            </div>
+                        )}
+                    </>
+                );
+            },
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
-        }: "" 
+        } : "" 
+
     ];
 
     return (
@@ -386,7 +421,7 @@ const Coupon = () => {
                                                 </div>
                                             </div>
                                         </li>
-                                       
+
                                         <li>
                                             <div className="row justify-content-between">
                                                 <div className="col-md-6">
@@ -407,7 +442,7 @@ const Coupon = () => {
                                                 </div>
                                             </div>
                                         </li>
-                                        <li>
+                                        {/* <li>
                                             <div className="row justify-content-between">
                                                 <div >
                                                     <b>Discription : {viewpage?.description}</b>
@@ -416,27 +451,32 @@ const Coupon = () => {
 
                                                 </div>
                                             </div>
-                                        </li>
+                                        </li> */}
                                         <li>
                                             <div className="row justify-content-between">
                                                 <div className="col-md-8">
-                                                    <b>Start Date : {fDate(viewpage?.startdate)}</b>
+                                                    {viewpage?.startdate ? (
+                                                        <b>Start Date: {fDateTime(viewpage.startdate)}</b>
+                                                    ) : (
+                                                        <b>Start Date: Not available</b>
+                                                    )}
                                                 </div>
-                                                <div className="col-md-6">
-
-                                                </div>
+                                                <div className="col-md-6"></div>
                                             </div>
                                         </li>
                                         <li>
                                             <div className="row justify-content-between">
                                                 <div className="col-md-6">
-                                                    <b>End Date : {fDate(viewpage?.enddate)} </b>
+                                                    {viewpage?.enddate ? (
+                                                        <b>End Date: {fDateTime(viewpage.enddate)}</b>
+                                                    ) : (
+                                                        <b>End Date: Not available</b>
+                                                    )}
                                                 </div>
-                                                <div className="col-md-6">
-
-                                                </div>
+                                                <div className="col-md-6"></div>
                                             </div>
                                         </li>
+
                                         {/* <li>
                                             <div className="row justify-content-between">
                                                 <div className="col-md-6">

@@ -45,16 +45,32 @@ const CouponSchema = new Schema({
     },
     minpurchasevalue: {
         type: Number,
-        required: true
+        required: true,
+        default: null
     },
     mincouponvalue: {
         type: Number,
+        default: 0
     },
     image: {
         type: String,
+        default: null
     },
     description: {
         type: String,
+        default: null
+    },
+    showstatus: {
+        type: Number,
+        default: 0
+    },
+    limitation: {
+        type: Number,
+        default: 0
+    },
+    service: {
+        type: String,
+        default: null
     },
     del: {
         type: Boolean,

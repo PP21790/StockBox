@@ -3,6 +3,7 @@ import { useFormik } from 'formik';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import { image_baseurl } from '../../../Utils/config';
+import { Tooltip } from 'antd';
 
 const Viewblog = () => {
     const navigate = useNavigate();
@@ -11,20 +12,32 @@ const Viewblog = () => {
 
     return (
         <div className="page-content">
-            <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                <div className="breadcrumb-title pe-3">Blog Details</div>
-                <div className="ps-3">
-                    <nav aria-label="breadcrumb">
-                        <ol className="breadcrumb mb-0 p-0">
-                            <li className="breadcrumb-item">
-                                <Link to="/admin/dashboard">
-                                    <i className="bx bx-home-alt" />
-                                </Link>
-                            </li>
-                        </ol>
-                    </nav>
+            <div className="row">
+                <div className="col-md-6">
+                    <div className="page-breadcrumb d-none d-sm-flex align-items-center">
+                        <div className="breadcrumb-title pe-3">Blog Details</div>
+                        <div className="ps-3">
+                            <nav aria-label="breadcrumb">
+                                <ol className="breadcrumb mb-0 p-0">
+                                    <li className="breadcrumb-item">
+                                        <Link to="/admin/dashboard">
+                                            <i className="bx bx-home-alt" />
+                                        </Link>
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md-6 d-flex justify-content-end">
+                    <Link to="/admin/blogs">
+                        <Tooltip title="Back">
+                            <i className="lni lni-arrow-left-circle" style={{ fontSize: "2rem" }} />
+                        </Tooltip>
+                    </Link>
                 </div>
             </div>
+
             <hr />
             <div className="row">
                 <div className="col-lg-8 mx-auto">
