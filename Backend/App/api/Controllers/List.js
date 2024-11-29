@@ -1144,12 +1144,16 @@ async applyCoupon (req, res) {
       return res.status(400).json({ message: 'Coupon usage limit has been reached' });
     }
 
-    const plan = await Plan_Modal.findById(planid)
-    .exec();
+    
 
-    if (!coupon.service) {
-      if(plan)
-      return res.status(404).json({ message: 'Coupon not found or is inactive' });
+     if (!coupon.service) {
+      const plan = await Plan_Modal.findById(planid)
+      .populate('category')
+      .exec();
+      if (!coupon.service!=plan.category.service) {
+
+      return res.status(404).json({ message: 'Service Does not match' });
+     }
     }
 
       // Ensure the discount does not exceed the minimum coupon value
@@ -2405,6 +2409,15 @@ async Notification(req, res) {
 
     const today = new Date();
 
+
+
+    // Fetch the client's creation date
+    const client = await Clients_Modal.findById(id).select('createdAt');
+    if (!client) {
+      return res.status(404).json({ status: false, message: "Client not found" });
+    }
+    const clientCreatedAt = client.createdAt;
+
     const activePlans = await Planmanage.find({
       clientid: id,
       enddate: { $gte: today }
@@ -2414,6 +2427,7 @@ async Notification(req, res) {
 
     // Query to fetch notifications
     const result = await Notification_Modal.find({
+      createdAt: { $gte: clientCreatedAt }, // Only notifications created after the client's creation date
       $or: [
         // Notifications specific to the client
         { clientid: id },
@@ -2472,6 +2486,7 @@ async Notification(req, res) {
 
     // Total count for pagination
     const totalCount = await Notification_Modal.countDocuments({
+      createdAt: { $gte: clientCreatedAt }, // Only notifications created after the client's creation date
       $or: [
         { clientid: id },
         {

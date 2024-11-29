@@ -223,7 +223,7 @@ class Aliceblue {
                    await order.save();
                     return res.json({
                         status: true,
-                        data: response.data 
+                        data: response.data ? null : "Order Successfully", 
                     });
                 }
                 else{
@@ -262,11 +262,10 @@ class Aliceblue {
 
 
     async ExitplaceOrder(req, res) {
-
+      
         try {
             const { id, signalid, quantity, price } = req.body;
            
-
             const client = await Clients_Modal.findById(id);
             if (!client) {
                 return res.status(404).json({
@@ -390,8 +389,8 @@ class Aliceblue {
                     calltypes = "BUY";
                 }
           
-
          if(totalValue>=quantity) {
+
 
             var data = JSON.stringify([
                 {
@@ -407,71 +406,20 @@ class Aliceblue {
                   "trading_symbol": stock.tradesymbol,
                   "transtype": calltypes,
                   "trigPrice": "00.00",
-                  "deviceNumber": "",
                   "orderTag": "order1"
                 }
               ]);
 
-
-                let config = {
-                    method: 'post',
-                    maxBodyLength: Infinity,
-                    url: 'https://ant.aliceblueonline.com/rest/AliceBlueAPIService/api/placeOrder/executePlaceOrder',
-                    headers: {
-                        'Authorization': 'Bearer ' + userId + ' ' + authToken,
-                        'Content-Type': 'application/json',
-                    },
-                    data: data
-                };
-
-
-                try {
-                    const response = await axios(config);
-                    console.log("Response Data:", response.data);
-                
-                    // Check if the API response indicates an error
-                    if (Array.isArray(response.data) && response.data[0]?.stat === 'Not_Ok') {
-                        console.error("API responded with an error:", response.data);
-                        return res.status(400).json({
-                            message: 'Order placement failed. Please check the provided details.',
-                            error: response.data
-                        });
-                    }
-                
-                    // Handle successful response
-                    console.log("Order placed successfully:", response.data);
-                    return res.status(200).json({
-                        message: 'Order placed successfully!',
-                        data: response.data
-                    });
-                } catch (error) {
-                    console.error("Error occurred during API call:");
-                    
-                    // Handle network errors
-                    if (error.response) {
-                        console.error("Response Error Data:", error.response.data);
-                        return res.status(error.response.status || 500).json({
-                            message: 'API responded with an error.',
-                            error: error.response.data
-                        });
-                    } else if (error.request) {
-                        console.error("No response received. Request Details:", error.request);
-                        return res.status(500).json({
-                            message: 'No response received from the API.',
-                            error: error.request
-                        });
-                    } else {
-                        console.error("Error in setting up the request:", error.message);
-                        return res.status(500).json({
-                            message: 'Unexpected error occurred while placing the order.',
-                            error: error.message
-                        });
-                    }
-                }
-                return res.status(500).json({ 
-                    status: false, 
-                    message: "Sorry, the requested quantity is not available." 
-                });
+            let config = {
+                method: 'post',
+                maxBodyLength: Infinity,
+                url: 'https://ant.aliceblueonline.com/rest/AliceBlueAPIService/api/placeOrder/executePlaceOrder',
+                headers: {
+                    'Authorization': 'Bearer ' + userId + ' ' + authToken,
+                    'Content-Type': 'application/json',
+                },
+                data: data
+            };
 
 
                 axios(config)
@@ -494,7 +442,7 @@ class Aliceblue {
                    await order.save();
                     return res.json({
                         status: true,
-                        data: response.data 
+                        data: response.data ? null : "Order Successfully",
                     });
                 }
                 else{
