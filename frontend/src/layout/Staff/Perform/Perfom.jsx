@@ -239,7 +239,6 @@ const Perform = () => {
 
 
 
-
     const renderTable1 = () => {
         const activeService = servicedata.find(service => service._id === activeTab);
         return (
