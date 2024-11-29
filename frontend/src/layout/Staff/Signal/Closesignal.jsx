@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table1';
-import { Eye, RefreshCcw, Trash2 , SquarePen} from 'lucide-react';
+import { Eye, RefreshCcw, Trash2 , SquarePen , IndianRupee} from 'lucide-react';
 import Swal from 'sweetalert2';
 import { GetSignallist, GetSignallistWithFilter, DeleteSignal, SignalCloseApi, GetService, GetStockDetail , UpdatesignalReport } from '../../../Services/Admin';
 import { fDateTimeSuffix, fDateTimeH } from '../../../Utils/Date_formate'
@@ -243,14 +243,14 @@ const Closesignal = () => {
         },
         {
             name: 'Entry Price',
-            selector: row => row.price,
+            selector: row => <div> <IndianRupee />{row.price}</div>,
             sortable: true,
             width: '200px',
         },
 
         {
             name: 'Exit Price',
-            selector: row => row.closeprice ? row.closeprice : "-",
+            selector: row => <div> <IndianRupee />{ row.closeprice ? row.closeprice : "-"}</div>,
             sortable: true,
             width: '132px',
 

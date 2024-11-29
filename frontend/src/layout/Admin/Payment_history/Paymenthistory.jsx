@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getPayementhistory, getPayementhistorywithfilter } from '../../../Services/Admin';
 // import Table from '../../../components/Table';
 import Table from '../../../components/Table1';
-import { SquarePen, Trash2, PanelBottomOpen, Eye, RefreshCcw } from 'lucide-react';
+import { SquarePen, Trash2, PanelBottomOpen, Eye, RefreshCcw , IndianRupee} from 'lucide-react';
 import Swal from 'sweetalert2';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
@@ -189,14 +189,14 @@ const History = () => {
         },
         {
             name: 'Plan Discount',
-            selector: row => row.discount,
+            selector: row => <div> <IndianRupee />{row.discount}</div>,
             sortable: true,
             width: '200px',
         },
 
         {
             name: 'Plan Amount',
-            selector: row => row.plan_price,
+            selector: row => <div> <IndianRupee />{row.plan_price}</div>,
             sortable: true,
             width: '200px',
         },
@@ -210,7 +210,7 @@ const History = () => {
 
         {
             name: 'Total',
-            selector: row => row.total,
+            selector: row =><div> <IndianRupee />{row.total}</div>,
             sortable: true,
             width: '200px',
         },

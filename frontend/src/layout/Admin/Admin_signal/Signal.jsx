@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table1';
-import { Eye, Trash2, RefreshCcw , SquarePen} from 'lucide-react';
+import { Eye, Trash2, RefreshCcw , SquarePen ,  IndianRupee } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { GetSignallist, GetSignallistWithFilter, DeleteSignal, SignalCloseApi, GetService, GetStockDetail , UpdatesignalReport} from '../../../Services/Admin';
 import { fDateTimeH } from '../../../Utils/Date_formate'
@@ -164,7 +164,7 @@ const Signal = () => {
     };
 
 
-    
+
     
     const getexportfile = async () => {
         try {
@@ -480,13 +480,13 @@ const Signal = () => {
         },
         {
             name: 'Entry Type',
-            selector: row => row.calltype,
+            selector: row =>  row.calltype,
             sortable: true,
             width: '200px',
         },
         {
             name: 'Entry Price',
-            selector: row => row.price,
+            selector: row => <div> <IndianRupee />{row.price}</div> ,
             sortable: true,
             width: '200px',
         },

@@ -4,6 +4,7 @@ import Table from '../../../components/Table';
 import Swal from 'sweetalert2';
 import { fDateTime, fDate } from '../../../Utils/Date_formate';
 import { Link } from 'react-router-dom';
+import {  IndianRupee} from 'lucide-react';
 
 
 
@@ -97,7 +98,7 @@ const PaymentRequest = () => {
         // },
         {
             name: 'Amount',
-            selector: row => row.amount,
+            selector: row => <div> <IndianRupee />{row.amount}</div> ,
             sortable: true,
         },
         {

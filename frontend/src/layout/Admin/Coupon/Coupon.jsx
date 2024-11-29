@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getcouponlist } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { Eye, Pencil, Trash2 } from 'lucide-react';
+import { Eye, Pencil, Trash2 , IndianRupee } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { DeleteCoupon, UpdateClientStatus, CouponStatus ,CouponShowstatus } from '../../../Services/Admin';
 import { image_baseurl } from '../../../Utils/config';
@@ -226,13 +226,13 @@ const Coupon = () => {
         // },
         {
             name: 'Min Purchase Value',
-            selector: row => row.minpurchasevalue,
+            selector: row =>  <div> <IndianRupee />{row.minpurchasevalue}</div>,
             sortable: true,
             width: '210px',
         },
         {
             name: 'Max Discount Value',
-            selector: row => row.mincouponvalue ? row.mincouponvalue : "-",
+            selector: row =>   <div> <IndianRupee />{row.mincouponvalue ? row.mincouponvalue : "-"}</div>,
             sortable: true,
             width: '210px',
         },

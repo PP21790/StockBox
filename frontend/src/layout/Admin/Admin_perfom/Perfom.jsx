@@ -4,7 +4,7 @@ import Table from '../../../components/Table1';
 import Swal from 'sweetalert2';
 import { fDateTime } from '../../../Utils/Date_formate';
 import { Link } from 'react-router-dom';
-import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine, RefreshCcw } from 'lucide-react';
+import { Settings2, Eye,IndianRupee } from 'lucide-react';
 import { Tooltip } from 'antd';
 import { exportToCSV } from '../../../Utils/ExportData';
 
@@ -162,14 +162,14 @@ const Perform = () => {
         },
         {
             name: 'Entry price',
-            selector: row => row.price,
+            selector: row =>  <div> <IndianRupee />{row.price}</div>,
             sortable: true,
             width: '200px',
         },
 
         {
             name: 'Exit Price',
-            selector: row => row.closeprice,
+            selector: row => <div> <IndianRupee />{row.closeprice}</div>,
             sortable: true,
             width: '200px',
         },
