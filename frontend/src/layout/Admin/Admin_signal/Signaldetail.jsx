@@ -6,7 +6,7 @@ import { image_baseurl } from '../../../Utils/config';
 import { fDateTime, fDateTimeH } from '../../../Utils/Date_formate';
 import { Tooltip } from 'antd';
 import { ArrowDownToLine, } from 'lucide-react';
-
+import {  IndianRupee } from 'lucide-react';
 
 const Signaldetail = () => {
 
@@ -130,7 +130,7 @@ const Signaldetail = () => {
                                                         </li>
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="mb-0">Entry Price</h6>
-                                                            <span className="text-secondary">{item.price || '-'}</span>
+                                                            <span className="text-secondary"><IndianRupee/>{ item.price || '-'}</span>
                                                         </li>
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="mb-0">Entry Date & Time</h6>
@@ -163,7 +163,7 @@ const Signaldetail = () => {
                                                         </li>
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="mb-0">Exit Price</h6>
-                                                            <span className="text-secondary">{item.closeprice || '-'}</span>
+                                                            <span className="text-secondary"><IndianRupee/>{item.closeprice || '-'}</span>
                                                         </li>
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="mb-0">Exit Date & Time</h6>
@@ -206,7 +206,7 @@ const Signaldetail = () => {
                                                         <div className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="ms-3">P&L</h6>
                                                             <h6 className={`text-secondary me-2 ${item.totalGain > 0 ? 'text-success' : 'text-danger'}`}>
-                                                                {item.totalGain !== null ? `${calculatePercentage(item.totalGain, item.price)}%` : '-'}
+                                                            <IndianRupee/> {item.totalGain !== null ? `${calculatePercentage(item.totalGain, item.price)}%` : '-'}
                                                             </h6>
                                                         </div>
                                                     </div>
