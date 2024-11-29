@@ -21,6 +21,11 @@ async function sendFCMNotification(title, body, tokens, type="") {
         additional_data: 'value',
         type: type, 
       },
+      android: {
+        priority: "high", // High priority for real-time delivery
+        ttl: 3600000, // Time-to-live: 1 hour in milliseconds
+      },
+      
     }));
 
     const response = await Promise.all(

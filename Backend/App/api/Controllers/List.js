@@ -2409,6 +2409,15 @@ async Notification(req, res) {
 
     const today = new Date();
 
+
+
+    // Fetch the client's creation date
+    const client = await Clients_Modal.findById(id).select('createdAt');
+    if (!client) {
+      return res.status(404).json({ status: false, message: "Client not found" });
+    }
+    const clientCreatedAt = client.createdAt;
+
     const activePlans = await Planmanage.find({
       clientid: id,
       enddate: { $gte: today }
@@ -2418,6 +2427,7 @@ async Notification(req, res) {
 
     // Query to fetch notifications
     const result = await Notification_Modal.find({
+      createdAt: { $gte: clientCreatedAt }, // Only notifications created after the client's creation date
       $or: [
         // Notifications specific to the client
         { clientid: id },
@@ -2476,6 +2486,7 @@ async Notification(req, res) {
 
     // Total count for pagination
     const totalCount = await Notification_Modal.countDocuments({
+      createdAt: { $gte: clientCreatedAt }, // Only notifications created after the client's creation date
       $or: [
         { clientid: id },
         {

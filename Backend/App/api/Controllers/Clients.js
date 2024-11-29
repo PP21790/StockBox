@@ -96,36 +96,24 @@ class Clients {
       }
       
 
-     // const refer_tokens = crypto.randomBytes(10).toString('hex'); 
-
-    
+     
       let refer_tokenss = referCode + refer_token;
-if(token) {
+      const refer_tokens = token || crypto.randomBytes(10).toString('hex'); // Use the provided token or generate a new one
+
       const result = new Clients_Modal({
-      FullName: FullName,
-      Email: Email,
-      PhoneNo: PhoneNo,
-      password: hashedPassword,
-      refer_token:refer_tokenss,
-      token:token,
-      refer_status:settings.refer_status,
-      del: 0
+          FullName,
+          Email,
+          PhoneNo,
+          password: hashedPassword,
+          refer_token: refer_tokenss,
+          token: refer_tokens,
+          refer_status: token ? settings.refer_status : 0, // Only add `refer_status` if `token` is provided
+          del: 0,
       });
-    }
-    else {
-      const result = new Clients_Modal({
-        FullName: FullName,
-        Email: Email,
-        PhoneNo: PhoneNo,
-        password: hashedPassword,
-        refer_token:refer_tokenss,
-        del: 0
-        });
-
-    }
+      
+      await result.save(); 
 
 
-  await result.save();
  
 
   const titles = 'Important Update';

@@ -8,41 +8,13 @@ class Basket {
   
     async AddBasket(req, res) {
       try {
-          const {
-              title, description, price, add_by, accuracy, mininvamount, portfolioweightage, themename, returnpercentage,holdingperiod,potentialleft, Stock
-          } = req.body;
+          const { title, description, add_by } = req.body;
   
-          // Concatenate each stock field into a delimited string
-          const stocks = Stock.map(stock => stock.stocks).join('##');
-          const pricerange = Stock.map(stock => stock.pricerange).join('##');
-          const stockweightage = Stock.map(stock => stock.stockweightage).join('##');
-          const entryprice = Stock.map(stock => stock.entryprice).join('##');
-          const entrydate = Stock.map(stock => stock.entrydate).join('##');
-          const exitprice = Stock.map(stock => stock.exitprice).join('##');
-          const exitdate = Stock.map(stock => stock.exitdate).join('##');
-          const comment = Stock.map(stock => stock.comment).join('##');
-  
-          // Create a new basket document
+        
           const result = new Basket_Modal({
                         title,
                         description,
-                        price,
                         add_by,
-                        accuracy,
-                        mininvamount,
-                        portfolioweightage,
-                        stocks,
-                        pricerange,
-                        stockweightage,
-                        entryprice,
-                        entrydate,
-                        exitprice,
-                        exitdate,
-                        comment,
-                        returnpercentage,
-                        holdingperiod,
-                        potentialleft,
-                        themename,
           });
   
 
@@ -64,73 +36,15 @@ class Basket {
       }
   }
   
-  
-
-
-
-
   async getBasket(req, res) {
     try {
 
         const baskets = await Basket_Modal.find({ del: false });
-          const processedBaskets = await Promise.all(baskets.map(async (basket) => {
-  
-      
-            // Split the data by '##'
-            const stocks = basket.stocks ? basket.stocks.split('##') : [];
-            const pricerange = basket.pricerange ? basket.pricerange.split('##') : [];
-            const stockweightage = basket.stockweightage ? basket.stockweightage.split('##') : [];
-            const entryprice = basket.entryprice ? basket.entryprice.split('##') : [];
-            const entrydate = basket.entrydate ? basket.entrydate.split('##') : [];
-            const exitprice = basket.exitprice ? basket.exitprice.split('##') : [];
-            const exitdate = basket.exitdate ? basket.exitdate.split('##') : [];
-            const comment = basket.comment ? basket.comment.split('##') : [];
-          //  const returnpercentage = basket.returnpercentage ? basket.returnpercentage.split('##') : [];
-         //   const holdingperiod = basket.holdingperiod ? basket.holdingperiod.split('##') : [];
-          //  const potentialleft = basket.potentialleft ? basket.potentialleft.split('##') : [];
-  
-            // Group data into objects
-            const groupedData = stocks.map((stock, index) => ({
-                stock: stock || null,
-                pricerange: pricerange[index] || null,
-                stockweightage: stockweightage[index] || null,
-                entryprice: entryprice[index] || null,
-                entrydate: entrydate[index] || null,
-                exitprice: exitprice[index] || null,
-                exitdate: exitdate[index] || null,
-                comment: comment[index] || null,
-             //   returnpercentage: returnpercentage[index] || null,
-            //    holdingperiod: holdingperiod[index] || null,
-             //   potentialleft: potentialleft[index] || null
-            }));
-  
-            return {
-                _id: basket._id,
-                title: basket.title,
-                description: basket.description,
-                accuracy: basket.accuracy,
-                price: basket.price,
-                returnpercentage: basket.returnpercentage,
-                holdingperiod: basket.holdingperiod,
-                potentialleft: basket.potentialleft,
-                mininvamount: basket.mininvamount,
-                portfolioweightage: basket.portfolioweightage,
-                themename: basket.themename,
-                status: basket.status,
-                add_by: basket.add_by,
-                del: basket.del,
-                created_at: basket.created_at,
-                updated_at: basket.updated_at,
-                __v: basket.__v,
-                groupedData
-            };
-          }));
-  
 
         return res.json({
             status: true,
             message: "Baskets fetched successfully",
-            data: processedBaskets
+            data: baskets
         });
 
     } catch (error) {
@@ -147,70 +61,12 @@ class Basket {
     async activeBasket(req, res) {
       try {
 
-         
-          const baskets = await Basket_Modal.find({ del: false,status:"active" });
+          const baskets = await Basket_Modal.find({ del: false,status:true });
 
-          const processedBaskets = await Promise.all(baskets.map(async (basket) => {
-  
-      
-            // Split the data by '##'
-            const stocks = basket.stocks ? basket.stocks.split('##') : [];
-            const pricerange = basket.pricerange ? basket.pricerange.split('##') : [];
-            const stockweightage = basket.stockweightage ? basket.stockweightage.split('##') : [];
-            const entryprice = basket.entryprice ? basket.entryprice.split('##') : [];
-            const entrydate = basket.entrydate ? basket.entrydate.split('##') : [];
-            const exitprice = basket.exitprice ? basket.exitprice.split('##') : [];
-            const exitdate = basket.exitdate ? basket.exitdate.split('##') : [];
-            const comment = basket.comment ? basket.comment.split('##') : [];
-          //  const returnpercentage = basket.returnpercentage ? basket.returnpercentage.split('##') : [];
-         //   const holdingperiod = basket.holdingperiod ? basket.holdingperiod.split('##') : [];
-          //  const potentialleft = basket.potentialleft ? basket.potentialleft.split('##') : [];
-  
-            // Group data into objects
-            const groupedData = stocks.map((stock, index) => ({
-                stock: stock || null,
-                pricerange: pricerange[index] || null,
-                stockweightage: stockweightage[index] || null,
-                entryprice: entryprice[index] || null,
-                entrydate: entrydate[index] || null,
-                exitprice: exitprice[index] || null,
-                exitdate: exitdate[index] || null,
-                comment: comment[index] || null,
-             //   returnpercentage: returnpercentage[index] || null,
-            //    holdingperiod: holdingperiod[index] || null,
-             //   potentialleft: potentialleft[index] || null
-            }));
-  
-            return {
-                _id: basket._id,
-                title: basket.title,
-                description: basket.description,
-                accuracy: basket.accuracy,
-                price: basket.price,
-                returnpercentage: basket.returnpercentage,
-                holdingperiod: basket.holdingperiod,
-                potentialleft: basket.potentialleft,
-                mininvamount: basket.mininvamount,
-                portfolioweightage: basket.portfolioweightage,
-                themename: basket.themename,
-                status: basket.status,
-                add_by: basket.add_by,
-                del: basket.del,
-                created_at: basket.created_at,
-                updated_at: basket.updated_at,
-                __v: basket.__v,
-                groupedData
-            };
-          }));
-  
-
-
-
-  
           return res.json({
               status: true,
               message: "Baskets fetched successfully",
-              data: processedBaskets
+              data: baskets
           });
   
       } catch (error) {
@@ -248,51 +104,12 @@ class Basket {
         }
 
         // Split the data by '##'
-        const stocks = basket.stocks ? basket.stocks.split('##') : [];
-        const pricerange = basket.pricerange ? basket.pricerange.split('##') : [];
-        const stockweightage = basket.stockweightage ? basket.stockweightage.split('##') : [];
-        const entryprice = basket.entryprice ? basket.entryprice.split('##') : [];
-        const entrydate = basket.entrydate ? basket.entrydate.split('##') : [];
-        const exitprice = basket.exitprice ? basket.exitprice.split('##') : [];
-        const exitdate = basket.exitdate ? basket.exitdate.split('##') : [];
-        const comment = basket.comment ? basket.comment.split('##') : [];
-
-        // Group data into objects
-        const groupedData = stocks.map((stock, index) => ({
-            stock: stock || null,
-            pricerange: pricerange[index] || null,
-            stockweightage: stockweightage[index] || null,
-            entryprice: entryprice[index] || null,
-            entrydate: entrydate[index] || null,
-            exitprice: exitprice[index] || null,
-            exitdate: exitdate[index] || null,
-            comment: comment[index] || null,
-        }));
-
+    
         // Return the basket details along with grouped data
         return res.json({
             status: true,
             message: "Basket details fetched successfully",
-            data: {
-                _id: basket._id,
-                title: basket.title,
-                description: basket.description,
-                accuracy: basket.accuracy,
-                price: basket.price,
-                returnpercentage: basket.returnpercentage,
-                holdingperiod: basket.holdingperiod,
-                potentialleft: basket.potentialleft,
-                mininvamount: basket.mininvamount,
-                portfolioweightage: basket.portfolioweightage,
-                themename: basket.themename,
-                status: basket.status,
-                add_by: basket.add_by,
-                del: basket.del,
-                created_at: basket.created_at,
-                updated_at: basket.updated_at,
-                __v: basket.__v,
-                groupedData
-            }
+            data:basket
         });
 
     } catch (error) {
@@ -308,21 +125,7 @@ class Basket {
 
   async updateBasket(req, res) {
     try {
-      const {
-       id, title, description, price, add_by, accuracy, mininvamount, portfolioweightage, themename, returnpercentage,holdingperiod,potentialleft, Stock
-    } = req.body;
-
-    // Concatenate each stock field into a delimited string
-    const stocks = Stock.map(stock => stock.stocks).join('##');
-    const pricerange = Stock.map(stock => stock.pricerange).join('##');
-    const stockweightage = Stock.map(stock => stock.stockweightage).join('##');
-    const entryprice = Stock.map(stock => stock.entryprice).join('##');
-    const entrydate = Stock.map(stock => stock.entrydate).join('##');
-    const exitprice = Stock.map(stock => stock.exitprice).join('##');
-    const exitdate = Stock.map(stock => stock.exitdate).join('##');
-    const comment = Stock.map(stock => stock.comment).join('##');
-
-       // const { id, title, description, price, validity,accuracy } = req.body;
+      const { id, title, description } = req.body;
   
       if (!id) {
         return res.status(400).json({
@@ -336,22 +139,6 @@ class Basket {
         {
           title,
           description,
-          price,
-          accuracy,
-          mininvamount,
-          portfolioweightage,
-          stocks,
-          pricerange,
-          stockweightage,
-          entryprice,
-          entrydate,
-          exitprice,
-          exitdate,
-          comment,
-          returnpercentage,
-          holdingperiod,
-          potentialleft,
-          themename,
         },
         { Basket: true, runValidators: true } // Options: return the updated document and run validators
       );
@@ -427,7 +214,7 @@ async  statusChange(req, res) {
       const { id, status } = req.body;
 
       // Validate status
-      const validStatuses = ['active', 'inactive'];
+      const validStatuses = [true, false];
       if (!validStatuses.includes(status)) {
           return res.status(400).json({
               status: false,
@@ -464,8 +251,6 @@ async  statusChange(req, res) {
       });
   }
 }
-
-
 
 
   

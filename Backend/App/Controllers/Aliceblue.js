@@ -223,7 +223,7 @@ class Aliceblue {
                    await order.save();
                     return res.json({
                         status: true,
-                        data: response.data 
+                        data: response.data ? null : "Order Successfully", 
                     });
                 }
                 else{
@@ -262,11 +262,10 @@ class Aliceblue {
 
 
     async ExitplaceOrder(req, res) {
-
+      
         try {
             const { id, signalid, quantity, price } = req.body;
            
-
             const client = await Clients_Modal.findById(id);
             if (!client) {
                 return res.status(404).json({
@@ -443,7 +442,7 @@ class Aliceblue {
                    await order.save();
                     return res.json({
                         status: true,
-                        data: response.data 
+                        data: response.data ? null : "Order Successfully",
                     });
                 }
                 else{
