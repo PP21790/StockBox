@@ -164,7 +164,8 @@ const Signal = () => {
     };
 
 
-
+    
+    
     const getexportfile = async () => {
         try {
             const response = await GetSignallist(token);
@@ -243,8 +244,6 @@ const Signal = () => {
 
 
 
-
-    
 
 
     useEffect(() => {
