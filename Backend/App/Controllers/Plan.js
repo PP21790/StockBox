@@ -6,6 +6,7 @@ const PlanSubscription_Modal = db.PlanSubscription;
 const Planmanage = db.Planmanage;
 const Clients_Modal = db.Clients;
 const License_Modal = db.License;
+const Adminnotification_Modal = db.Adminnotification;
 
 
 class Plan {
@@ -582,10 +583,8 @@ if (differenceInDays < 15) {
 
 // Round the months based on your requirement
 if (differenceInMonths % 1 >= 0.5) {
-console.log('aaaaaa');
 monthsToAdd = Math.ceil(differenceInMonths); // Round up to the nearest whole number
 } else {
-console.log('nnnnnn');
 monthsToAdd = Math.floor(differenceInMonths); // Round down to the nearest whole number
 }
 
@@ -660,12 +659,33 @@ try {
       const savedSubscription = await newSubscription.save();
 
 
+
+
+
       const client = await Clients_Modal.findOne({ _id: client_id, del: 0, ActiveStatus: 1 });
       if(client.freetrial==0) 
       {
       client.freetrial  = 1; 
       await client.save();
        }
+
+
+
+       const  adminnotificationTitle ="Important Update";
+       const  adminnotificationBody =`Congratulations! ${client.FullName} ${plan.category.title} Plan successfully assigned by the SuperAdmin`;
+         const resultnm = new Adminnotification_Modal({
+           clientid:client._id,
+           segmentid:savedSubscription._id,
+           type:'plan purchase',
+           title: adminnotificationTitle,
+           message: adminnotificationBody
+       });
+   
+   
+       await resultnm.save();
+   
+
+
 
       // Return success response
       return res.status(201).json({

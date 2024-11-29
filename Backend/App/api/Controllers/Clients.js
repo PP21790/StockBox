@@ -116,15 +116,6 @@ class Clients {
 
  
 
-  const titles = 'Important Update';
-      const message = `new client registration.......`;
-      const resultnm = new Adminnotification_Modal({
-        clientid:result._id,
-        type:'add client',
-        title: titles,
-        message: message
-    });
-    await resultnm.save();
 
 
       if(token) {
@@ -614,7 +605,7 @@ async deleteClient(req, res) {
 
 
     const titles = 'Important Update';
-    const message = `Account deleted by Client`;
+    const message = `${client.FullName} has successfully deleted their account.`;
     const resultnm = new Adminnotification_Modal({
       clientid:client._id,
       type:'delete client',
@@ -668,6 +659,19 @@ async otpSubmit(req, res) {
 
     client.ActiveStatus = 1;
     await client.save();
+
+
+
+    
+  const titles = 'Important Update';
+  const message = `${client.FullName} New Account Signup successfully.`;
+    const resultnm = new Adminnotification_Modal({
+    clientid:client._id,
+    type:'add client',
+    title: titles,
+    message: message
+});
+await resultnm.save();
 
     return res.json({
       status: true,
@@ -1107,7 +1111,7 @@ async downloadDocument(req, res) {
       await client.save();
 
       const titles = 'Important Update';
-      const message = `Kyc Verification Complete By Client`;
+      const message = `Congratulations! ${client.FullName} KYC Verified successfully.`;
       const resultnm = new Adminnotification_Modal({
         clientid:client._id,
         type:'kyc verification',
@@ -1180,7 +1184,7 @@ async requestPayout(req, res) {
 
 
     const titles = 'Important Update';
-    const message = `Payout request By Client`;
+    const message = `A new payment withdrawal Request was received.`;
     const resultnm = new Adminnotification_Modal({
       clientid:client._id,
       segmentid:payoutRequest._id,
@@ -1404,7 +1408,16 @@ async addHelpDesk(req, res) {
       client_id: client_id,
     })
    
-    await result.save();    
+    await result.save();   
+    
+    const titles = 'Important Update';
+    const messages = `New Help Message Received from ${client.FullName}`;
+    const resultnm = new Adminnotification_Modal({
+      clientid:client._id,
+      type:'help desk',
+      title: titles,
+      message: messages
+  });
 
     return res.json({
       status: true,
