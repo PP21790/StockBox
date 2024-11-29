@@ -108,12 +108,12 @@ const Staffpermission = () => {
             addsignal: false,
             Signalpermission: false,
 
-            Staffpermission: false,
-            addstaff: false,
-            editstaff: false,
-            viewstaff: false,
+            // Staffpermission: false,
+            // addstaff: false,
+            // editstaff: false,
+            // viewstaff: false,
             // deletestaff: false,
-            staffstatus: false,
+            // staffstatus: false,
             
             newspermission: false,
             addnews: false,
@@ -217,12 +217,12 @@ const Staffpermission = () => {
 
 
 
-            formik.setFieldValue('Staffpermission', clients.includes('Staffpermission'));
-            formik.setFieldValue('addstaff', clients.includes('addstaff'));
-            formik.setFieldValue('editstaff', clients.includes('editstaff'));
-            formik.setFieldValue('viewstaff', clients.includes('viewstaff'));
-            // formik.setFieldValue('deletestaff', clients.includes('deletestaff'));
-            formik.setFieldValue('staffstatus', clients.includes('staffstatus'));
+            // formik.setFieldValue('Staffpermission', clients.includes('Staffpermission'));
+            // formik.setFieldValue('addstaff', clients.includes('addstaff'));
+            // formik.setFieldValue('editstaff', clients.includes('editstaff'));
+            // formik.setFieldValue('viewstaff', clients.includes('viewstaff'));
+            // // formik.setFieldValue('deletestaff', clients.includes('deletestaff'));
+            // formik.setFieldValue('staffstatus', clients.includes('staffstatus'));
 
 
 
@@ -426,25 +426,25 @@ const Staffpermission = () => {
 
 
 
-    useEffect(() => {
-        if (formik.values.Staffpermission == true) {
-            formik.setFieldValue('addstaff', true);
-            formik.setFieldValue('editstaff', true);
-            formik.setFieldValue('viewstaff', true);
-            // formik.setFieldValue('deletestaff', true);
-            formik.setFieldValue('staffstatus', true);
+    // useEffect(() => {
+    //     if (formik.values.Staffpermission == true) {
+    //         formik.setFieldValue('addstaff', true);
+    //         formik.setFieldValue('editstaff', true);
+    //         formik.setFieldValue('viewstaff', true);
+    //         // formik.setFieldValue('deletestaff', true);
+    //         formik.setFieldValue('staffstatus', true);
 
-        }
-        else {
-            formik.setFieldValue('addstaff', false);
-            formik.setFieldValue('editstaff', false);
-            formik.setFieldValue('viewstaff', false);
-            // formik.setFieldValue('deletestaff', false);
-            formik.setFieldValue('staffstatus', false);
+    //     }
+    //     else {
+    //         formik.setFieldValue('addstaff', false);
+    //         formik.setFieldValue('editstaff', false);
+    //         formik.setFieldValue('viewstaff', false);
+    //         // formik.setFieldValue('deletestaff', false);
+    //         formik.setFieldValue('staffstatus', false);
 
-        }
+    //     }
 
-    }, [formik.values.Staffpermission])
+    // }, [formik.values.Staffpermission])
 
 
     useEffect(() => {
@@ -899,61 +899,61 @@ const Staffpermission = () => {
         },
         
         
-        {
-            name: 'Staffpermission',
-            label: 'All Staff',
-            type: 'checkbox',
-            label_size: 12,
-            col_size: 2,
-            check_box_true: formik.values.Staffpermission,
-            bold: true
-        },
-        {
-            name: 'viewstaff',
-            label: 'View Staff',
-            type: 'checkbox',
-            label_size: 12,
-            col_size: 2,
-            // check_box_true: formik.values.viewservice,
-            check_box_true: formik.values.Staffpermission ||  formik.values.staffstatus || formik.values.editstaff || formik.values.addstaff || formik.values.viewstaff ? true : false,
-        },
-        {
-            name: 'addstaff',
-            label: 'Add Staff',
-            type: 'checkbox',
-            label_size: 12,
-            col_size: 2,
-            // check_box_true: formik.values.addservice,
-            check_box_true: formik.values.Staffpermission || formik.values.addstaff ? true : false,
-
-        },
-        {
-            name: 'editstaff',
-            label: 'Edit Staff',
-            type: 'checkbox',
-            label_size: 12,
-            col_size: 2,
-            // check_box_true: formik.values.editservice,
-            check_box_true: formik.values.Staffpermission || formik.values.editstaff ? true : false,
-        },
         // {
-        //     name: 'deletestaff',
-        //     label: 'Delete Staff',
+        //     name: 'Staffpermission',
+        //     label: 'All Staff',
+        //     type: 'checkbox',
+        //     label_size: 12,
+        //     col_size: 2,
+        //     check_box_true: formik.values.Staffpermission,
+        //     bold: true
+        // },
+        // {
+        //     name: 'viewstaff',
+        //     label: 'View Staff',
+        //     type: 'checkbox',
+        //     label_size: 12,
+        //     col_size: 2,
+        //     // check_box_true: formik.values.viewservice,
+        //     check_box_true: formik.values.Staffpermission ||  formik.values.staffstatus || formik.values.editstaff || formik.values.addstaff || formik.values.viewstaff ? true : false,
+        // },
+        // {
+        //     name: 'addstaff',
+        //     label: 'Add Staff',
+        //     type: 'checkbox',
+        //     label_size: 12,
+        //     col_size: 2,
+        //     // check_box_true: formik.values.addservice,
+        //     check_box_true: formik.values.Staffpermission || formik.values.addstaff ? true : false,
+
+        // },
+        // {
+        //     name: 'editstaff',
+        //     label: 'Edit Staff',
+        //     type: 'checkbox',
+        //     label_size: 12,
+        //     col_size: 2,
+        //     // check_box_true: formik.values.editservice,
+        //     check_box_true: formik.values.Staffpermission || formik.values.editstaff ? true : false,
+        // },
+        // // {
+        // //     name: 'deletestaff',
+        // //     label: 'Delete Staff',
+        // //     type: 'checkbox',
+        // //     label_size: 12,
+        // //     col_size: 2,
+        // //     // check_box_true: formik.values.deleteservice,
+        // //     check_box_true: formik.values.Staffpermission || formik.values.deletestaff ? true : false,
+        // // },
+        // {
+        //     name: 'staffstatus',
+        //     label: 'Staff Status',
         //     type: 'checkbox',
         //     label_size: 12,
         //     col_size: 2,
         //     // check_box_true: formik.values.deleteservice,
-        //     check_box_true: formik.values.Staffpermission || formik.values.deletestaff ? true : false,
+        //     check_box_true: formik.values.Staffpermission || formik.values.staffstatus ? true : false,
         // },
-        {
-            name: 'staffstatus',
-            label: 'Staff Status',
-            type: 'checkbox',
-            label_size: 12,
-            col_size: 2,
-            // check_box_true: formik.values.deleteservice,
-            check_box_true: formik.values.Staffpermission || formik.values.staffstatus ? true : false,
-        },
 
 
         {
