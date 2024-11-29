@@ -819,7 +819,7 @@ if(coupon){
      
 
     const  adminnotificationTitle ="Important Update";
-    const  adminnotificationBody ="new plan purchased......";
+    const  adminnotificationBody =`Congratulations! ${client.FullName} successfully purchased the ${plan.category.title} Plan`;
       const resultnm = new Adminnotification_Modal({
         clientid:client._id,
         segmentid:savedSubscription._id,

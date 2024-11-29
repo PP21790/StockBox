@@ -645,19 +645,20 @@ async function PlanExpire(req, res) {
               
             let message;
             const titles = 'Plan Expiry Notification';
+
+            const client = await Clients_Modal.findById(plan.clientid); // Fetch the client
     
             if (daysRemaining === 5) {
-                message = `Your plan ${serviceName} service will expire in 5 days.`;
+                message = `Reminder ${client.FullName}, ${serviceName} Plan will expire in 5 days.`;
             } else if (daysRemaining === 3) {
-                message = `Your plan ${serviceName} service will expire in 3 days.`;
+                message = `Reminder ${client.FullName}, ${serviceName} Plan will expire in 3 days.`;
             } else if (daysRemaining === 1) {
-                message = `Your plan ${serviceName} service will expire tomorrow.`;
+                message = `Reminder ${client.FullName}, ${serviceName} Plan will expire tomorrow.`;
             }
     
              if (message) {
                 try {
               
-                  const client = await Clients_Modal.findById(plan.clientid); // Fetch the client
                   
                   const resultn = new Notification_Modal({
                     clientid: plan.clientid,
