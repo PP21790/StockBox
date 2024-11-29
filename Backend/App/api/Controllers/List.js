@@ -1144,12 +1144,16 @@ async applyCoupon (req, res) {
       return res.status(400).json({ message: 'Coupon usage limit has been reached' });
     }
 
-    const plan = await Plan_Modal.findById(planid)
-    .exec();
+    
 
-    if (!coupon.service) {
-      if(plan)
-      return res.status(404).json({ message: 'Coupon not found or is inactive' });
+     if (!coupon.service) {
+      const plan = await Plan_Modal.findById(planid)
+      .populate('category')
+      .exec();
+      if (!coupon.service!=plan.category.service) {
+
+      return res.status(404).json({ message: 'Service Does not match' });
+     }
     }
 
       // Ensure the discount does not exceed the minimum coupon value
