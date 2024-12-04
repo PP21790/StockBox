@@ -18,6 +18,7 @@ const menuItems = [
     ]
   },
   { title: 'Staff', icon: 'bx-user-plus', link: '/admin/staff' },
+  { title: 'Basket', icon: 'bx bx-basket', link: '/admin/basket' },
 
   {
     title: 'Signal',

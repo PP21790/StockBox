@@ -22,18 +22,20 @@ const FormField = ({ name, label, type, placeholder, col_size, label_size, disab
 
 const BasketField = ({ push, remove, Stock, showRemoveButtons, disable, fieldTypes }) => (
   <div className="content container-fluid" data-aos="fade-left">
-    <div className="card mb-3">
-      <div className="card-header d-flex justify-content-between align-items-center">
+  
+      {/* <div className="card-header d-flex justify-content-between align-items-center">
         <h5 className="card-title mb-0">
-          <i className="fa-regular fa-circle-user pe-2"></i> Stock
+          <i className="fa-regular fa-circle-user pe-2"></i> 
+          <input type="search" className="form-control" placeholder="Search Stock" />
         </h5>
-      </div>
+      </div> */}
       <div className="card-body">
         {Stock.length > 0 ? (
           Stock.map((BasketData, index) => (
-            <div className="card Stock-group mb-3" key={index}>
-              <div className="card-header d-flex justify-content-between align-items-center">
-                <h6 className="mb-0">Stock {index + 1}</h6>
+            <div className=" Stock-group mb-3" key={index}>
+              <div className="card-header d-flex align-items-center ">
+                {/* <h6 className="mb-0">Stock {index + 1}</h6> */}
+                <h6 className="mb-0">Search Stock :</h6> <input type="search" className="ms-3 form-control w-50" placeholder="Search Stock" />
               </div>
               <div className="card-body">
                 <div className="row">
@@ -77,7 +79,7 @@ const BasketField = ({ push, remove, Stock, showRemoveButtons, disable, fieldTyp
         )}
       </div>
     </div>
-  </div>
+
 );
 
 // DynamicForm component for the main form structure

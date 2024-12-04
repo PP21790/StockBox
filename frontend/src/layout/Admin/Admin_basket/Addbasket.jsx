@@ -8,21 +8,32 @@ import { useNavigate } from 'react-router-dom';
 
 const fieldConfigurations = [
 
-
-  { col_size: 4, name: 'price', label: 'Price', type: 'number', placeholder: 'Enter price' },
-  { col_size: 4, name: 'title', label: 'Title', type: 'text', placeholder: 'Enter title' },
-  { col_size: 4, name: 'accuracy', label: 'Accuracy', type: 'number', placeholder: 'Enter accuracy' },
+ 
+  { col_size: 4, name: 'title', label: 'Basket Name', type: 'text', placeholder: 'Enter Basket Name' },
+  { col_size: 4, name: 'themename', label: 'Theme Name', type: 'text', placeholder: 'Enter theme name' },
+  { col_size: 4, name: 'cagr', label: 'CAGR', type: 'number', placeholder: 'Enter CAGR' },
+  { col_size: 4, name: 'amount', label: 'Amount', type: 'number', placeholder: 'Enter Amount' },
+  { 
+    col_size: 4, 
+    name: 'accuracy', 
+    label: 'Frequency', 
+    type: 'select', 
+    placeholder: 'Select accuracy', 
+    options: [
+      { value: 'high', label: 'High' },
+      { value: 'medium', label: 'Medium' },
+      { value: 'low', label: 'Low' }
+    ]
+  },
+   { col_size: 4, name: 'next_rebalance_date', label: 'Next Rebalance Date', type: 'number', placeholder: 'Enter Next Rebalance Date' },
   { col_size: 4, name: 'mininvamount', label: 'Minimum Investment Amount', type: 'number', placeholder: 'Enter minimum investment amount' },
   { col_size: 4, name: 'portfolioweightage', label: 'Portfolio Weightage', type: 'number', placeholder: 'Enter portfolio weightage' },
-  { col_size: 4, name: 'themename', label: 'Theme Name', type: 'text', placeholder: 'Enter theme name' },
-  { col_size: 6, name: 'returnpercentage', label: 'Return Percentage', type: 'number', placeholder: 'Enter Return Percentage' },
-  { col_size: 6, name: 'holdingperiod', label: 'Holding Period', type: 'text', placeholder: 'Enter Holding Period' },
-  { col_size: 6, name: 'potentialleft', label: 'Potential Left', type: 'text', placeholder: 'Enter Potential Left' },
-  { col_size: 6, name: 'description', label: 'Description', type: 'text', placeholder: 'Enter description' },
-  {
-    col_size: 12, name: 'Stock', label: 'Stock', type: 'Stock', placeholder: 'Add Stock',
-    data: [{ stocks: '', pricerange: '', stockweightage: '', entryprice: '', exitprice: '', exitdate: '', comment: '' }]
-  },
+  { col_size: 4, name: 'validity', label: 'Validity', type: 'select', placeholder: 'Enter validity' },
+  // { col_size: 6, name: 'returnpercentage', label: 'Return Percentage', type: 'number', placeholder: 'Enter Return Percentage' },
+  // { col_size: 6, name: 'holdingperiod', label: 'Holding Period', type: 'text', placeholder: 'Enter Holding Period' },
+  // { col_size: 6, name: 'potentialleft', label: 'Potential Left', type: 'text', placeholder: 'Enter Potential Left' },
+  { col_size: 4, name: 'description', label: 'Description', type: 'text', placeholder: 'Enter description' },
+  
 ];
 
 const initialValues = {
@@ -36,7 +47,6 @@ const initialValues = {
   returnpercentage: '',
   holdingperiod: '',
   potentialleft: '',
-  Stock: [{ stocks: '', pricerange: '', stockweightage: '', entryprice: '', exitprice: '', exitdate: '', comment: '' }],
 };
 
 const validationSchema = Yup.object().shape({
@@ -50,17 +60,7 @@ const validationSchema = Yup.object().shape({
   returnpercentage: Yup.string().required('Return percentage is required'),
   holdingperiod: Yup.string().required('Holding period is required'),
   potentialleft: Yup.string().required('Potential left is required'),
-  Stock: Yup.array().of(
-    Yup.object().shape({
-      stocks: Yup.string().required('Stocks are required'),
-      pricerange: Yup.string().required('Price range is required'),
-      stockweightage: Yup.string().required('Stock weightage is required'),
-      entryprice: Yup.string().required('Entry price is required'),
-      exitprice: Yup.string().required('Exit price is required'),
-      exitdate: Yup.string().required('Exit date is required'),
-      comment: Yup.string().required('Comment is required'),
-    })
-  ),
+  
 });
 
 const AddBasket = () => {
@@ -88,6 +88,8 @@ const AddBasket = () => {
   
     try {
       const response = await Addbasketplan(req, token);
+      console.log(response);
+      
       if (response.status) {
         Swal.fire({
           title: "Create Successful!",
@@ -119,10 +121,12 @@ const AddBasket = () => {
     }
   };
 
+  
+  
   return (
 
 
-    <div>
+    <div className='page-content'>
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
