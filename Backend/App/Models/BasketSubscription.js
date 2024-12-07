@@ -28,6 +28,26 @@ const BasketSubscriptionSchema = new Schema({
         min: 0,
         default: 0
     },
+    orderid: {
+        type: String,
+        default: null
+    },
+    coupon: {
+        type: String,
+        default: null
+    },
+    startdate: {
+        type: Date,
+        required: true
+    },
+    enddate: {
+        type: Date,
+        required: true
+    },
+    validity: {
+        type: String,
+        default: null
+    },
     status: {
         type: String,
         enum: ['active', 'inactive', 'expired'], // Example statuses

@@ -438,7 +438,6 @@ async function CheckExpireSignalFutureOption(req, res) {
         const channelStradd = signals
             .map(signal => `NFO|${signal.stockDetails?.instrument_token || ''}`)
             .join('#');
-
         // Check if we have any valid signals
         if (!channelStradd) {
             return res.status(404).json({ message: "No valid signals found for today." });
@@ -483,7 +482,6 @@ async function CheckExpireSignalFutureOption(req, res) {
     }
 }
 
-
 async function openSocketConnection(channelList, userid, userSession1) {
 
   ws = new WebSocket(url);
@@ -497,11 +495,11 @@ async function openSocketConnection(channelList, userid, userSession1) {
       source: "API"
     }
     ws.send(JSON.stringify(initCon))
-  
   };
 
   ws.onmessage = async function (msg) {
     const response = JSON.parse(msg.data)
+
     if (response.lp != undefined) {
       const Cprice = response.lp;
 
@@ -645,19 +643,20 @@ async function PlanExpire(req, res) {
               
             let message;
             const titles = 'Plan Expiry Notification';
+
+            const client = await Clients_Modal.findById(plan.clientid); // Fetch the client
     
             if (daysRemaining === 5) {
-                message = `Your plan ${serviceName} service will expire in 5 days.`;
+                message = `Reminder ${client.FullName}, ${serviceName} Plan will expire in 5 days.`;
             } else if (daysRemaining === 3) {
-                message = `Your plan ${serviceName} service will expire in 3 days.`;
+                message = `Reminder ${client.FullName}, ${serviceName} Plan will expire in 3 days.`;
             } else if (daysRemaining === 1) {
-                message = `Your plan ${serviceName} service will expire tomorrow.`;
+                message = `Reminder ${client.FullName}, ${serviceName} Plan will expire tomorrow.`;
             }
     
              if (message) {
                 try {
               
-                  const client = await Clients_Modal.findById(plan.clientid); // Fetch the client
                   
                   const resultn = new Notification_Modal({
                     clientid: plan.clientid,

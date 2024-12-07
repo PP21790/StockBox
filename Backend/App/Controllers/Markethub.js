@@ -111,7 +111,8 @@ async GetAccessToken(req, res) {
 
 async placeOrder(req, res) {
   try {
-    const { id, signalid, quantity, price } = req.body;
+    const { id, signalid, quantity, price, tsprice, tsstatus, slprice, exitquantity } = req.body;
+
   
     // Validate client existence
     const client = await Clients_Modal.findById(id);
@@ -191,6 +192,8 @@ async placeOrder(req, res) {
       const response = await axios.request(config);
       if (response.data.user_order_number != undefined) {
         // Save order in the database
+
+        const finalExitQuantity = exitquantity && exitquantity > 0 ? exitquantity : quantity;
         const order = new Order_Modal({
           clientid: client._id,
           signalid: signal._id,
@@ -198,6 +201,12 @@ async placeOrder(req, res) {
           ordertype: signal.calltype,
           brokerid: 4,
           quantity,
+          ordertoken:stock.instrument_token,
+          tsprice:tsprice,
+          tsstatus:tsstatus,
+          slprice:slprice,
+          exitquantity:finalExitQuantity,
+          exchange:exchange
         });
   
         await order.save();
@@ -382,7 +391,6 @@ async placeOrder(req, res) {
           
               // Send order request
               const response = await axios.request(config);
-          console.log("response",response);
               const responseData = response.data;
               if (response.data.user_order_number != undefined) {
     
@@ -397,6 +405,20 @@ async placeOrder(req, res) {
     
     
                    await order.save();
+
+
+                   const orderupdate = await Order_Modal.findOne({ 
+                    clientid:id, 
+                    signalid, 
+                    borkerid 
+                });
+        
+                if (orderupdate) {
+                  orderupdate.tsstatus = 0;
+                  await orderupdate.save();
+                }
+               
+
                     return res.json({
                         status: true,
                         data: response.data 
@@ -520,6 +542,233 @@ let data = JSON.stringify({
             });
         }
     }
+
+
+    async orderexitmarkethub() {
+        
+      try {
+        const { clientid, signalid, quantity, stockInfo_lp, exitquantity } = item;
+       
+        const price =stockInfo_lp;
+
+        const client = await Clients_Modal.findById(clientid);
+        if (!client) {
+            return {
+                status: false,
+                message: "Client not found"
+            };
+        }
+
+
+        if(client.tradingstatus == 0)
+        {
+            return {
+                status: false,
+                message: "Client Broker Not Login, Please Login With Broker"
+            };
+        }
+        
+
+        const signal = await Signal_Modal.findById(signalid);
+        if (!signal) {
+            return {
+                status: false,
+                message: "Signal not found"
+            };
+        }
+
+
+  
+           const authToken = client.authtoken;
+           const userId = client.alice_userid;
+
+
+           let optiontype, exchange, producttype;
+
+           if (signal.segment === "C") {
+               optiontype = "EQ";
+               exchange = "NSE";
+           } else {
+               optiontype = signal.segment === "F" ? "UT" : signal.optiontype;
+               exchange = "NFO";
+           }
+           
+           // Determine product type based on segment and call duration
+           if (signal.callduration === "Intraday") {
+               producttype = "MIS";
+           } else {
+               producttype = signal.segment === "C" ? "CNC" : "NRML";
+           }
+           
+           // Query Stock_Modal based on segment type
+           let stock;
+           if (signal.segment === "C") {
+               stock = await Stock_Modal.findOne({ 
+                   symbol: signal.stock, 
+                   segment: signal.segment, 
+                 //  option_type: optiontype 
+               });
+           } else if (signal.segment === "F") {
+               stock = await Stock_Modal.findOne({ 
+                   symbol: signal.stock, 
+                   segment: signal.segment, 
+                   expiry: signal.expirydate, 
+               //    option_type: optiontype 
+               });
+           } else {
+               stock = await Stock_Modal.findOne({ 
+                   symbol: signal.stock, 
+                   segment: signal.segment, 
+                   expiry: signal.expirydate, 
+                  // option_type: optiontype, 
+                   strike: signal.strikeprice 
+               });
+           }
+
+
+           if (!stock) {
+              return {
+                  status: false,
+                  message: "Stock not found"
+              };
+          }
+
+
+        
+
+          let holdingData = { qty: 0 };  
+          let positionData = { qty: 0 };  
+          let totalValue = 0;  // Declare totalValue outside the blocks
+              try {
+                 positionData = await CheckPosition(client.apikey, authToken, stock.segment,stock.instrument_token,producttype,signal.calltype,stock.tradesymbol);
+              
+                } catch (error) {
+                console.error('Error in CheckPosition:', error.message);
+              
+            }
+
+         
+              if(stock.segment=="C") {
+                      try {
+                           holdingData = await CheckHolding(client.apikey, authToken , stock.segment,stock.instrument_token,producttype,signal.calltype);
+                         
+                      } catch (error) {
+                          console.error('Error in CheckHolding:', error.message);
+                      }
+                      totalValue = Math.abs(positionData.qty)+holdingData.qty;
+                  }
+                  else
+                  {
+                      totalValue = Math.abs(positionData.qty)
+                  }
+           
+              
+          let calltypes;
+              if(signal.calltype === 'BUY')
+              {
+                  calltypes = "SELL";
+              }
+              else {
+                  calltypes = "BUY";
+              }
+        
+
+       if(totalValue>=exitquantity) {
+
+          const data = JSON.stringify({
+              variety: "NORMAL",
+              tradingsymbol: stock.tradesymbol,
+              symboltoken: stock.instrument_token,
+              transactiontype: calltypes,
+              exchange,
+              ordertype: "MARKET",
+              producttype,
+              duration: "DAY",
+              price,
+              quantity:exitquantity,
+              triggerprice: "0",
+              disclosedquantity: "0",
+              ordersource: null,
+              naicCode: null,
+              remarks: "_",
+              Confirm: true,
+              AlgoId: "0",
+              AlgoType: "0",
+            });
+        
+            // Axios request configuration
+            const config = {
+              method: "post",
+              maxBodyLength: Infinity,
+              url: "https://fund.markethubonline.com/middleware/api/v2/PlaceOrder",
+              headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${client.authtoken}`
+
+              },
+              data,
+            };
+        
+            // Send order request
+            const response = await axios.request(config);
+            const responseData = response.data;
+            if (response.data.user_order_number != undefined) {
+  
+                  const order = new Order_Modal({
+                      clientid: client._id,
+                      signalid:signal._id,
+                      orderid:response.data.user_order_number,
+                      ordertype: calltypes,
+                      borkerid:4,
+                      quantity:exitquantity
+                  });
+  
+  
+                 await order.save();
+
+
+                 const orderupdate = await Order_Modal.findOne({ 
+                  clientid, 
+                  signalid, 
+                  borkerid 
+              });
+      
+              if (orderupdate) {
+                orderupdate.tsstatus = 0;
+                await orderupdate.save();
+              }
+
+                  return {
+                      status: true,
+                      data: response.data 
+                  };
+              }
+              else{
+                 
+                     return { 
+                      status: false, 
+                      message: response.data 
+                  };
+              }
+      
+          }
+          else{
+
+              return { 
+                  status: false, 
+                  message: "Sorry, the requested quantity is not available." 
+              };
+
+          }
+
+      } catch (error) {
+          return { 
+              status: false, 
+              message: error.response ? error.response.data : "An error occurred while placing the order" 
+          };
+      }
+  }
+    
 
 
 }
