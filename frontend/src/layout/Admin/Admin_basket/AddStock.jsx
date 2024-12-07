@@ -135,9 +135,13 @@
 
 import {React, useState, useEffect} from 'react'
 import { getStock } from '../../../Services/Admin'
+import { useNavigate, useParams } from 'react-router-dom';
+
 
 
 const AddStock = () => {
+  const { id } = useParams();
+  const user_id = localStorage.getItem("id");
 
   const [stockdata, setStockdata] = useState([]);
   

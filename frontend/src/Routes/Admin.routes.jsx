@@ -161,7 +161,7 @@ function MainApp() {
                     <Route path="/addbasket" element={<Addbasket />} />
                     <Route path="/basket/viewdetail/:id" element={<Viewbasketdetail />} />
                     <Route path="/basket/editbasket/:id" element={<Editbasket />} />
-                    <Route path="/basket/addstock" element={<AddStock />} />
+                    <Route path="/basket/addstock/:id" element={<AddStock />} />
 
 
 

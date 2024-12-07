@@ -150,7 +150,7 @@ const Dashbord = () => {
         },
 
         {
-            name: 'CreatedAt',
+            name: 'Created At',
             selector: row => fDateTime(row.createdAt),
             sortable: true,
 
@@ -274,7 +274,7 @@ const Dashbord = () => {
                                         />
                                     </div>
                                     <div className="d-flex align-items-center text-white">
-                                        <p className="mb-0">Total Active Client</p>
+                                        <p className="mb-0">Total Active Clients</p>
                                         <p className="mb-0 ms-auto">
 
                                             <span>
@@ -314,7 +314,7 @@ const Dashbord = () => {
                                         />
                                     </div>
                                     <div className="d-flex align-items-center text-white">
-                                        <p className="mb-0">Total Deactive Client</p>
+                                        <p className="mb-0">Total Deactive Clients</p>
                                         <p className="mb-0 ms-auto">
 
                                             <span>
@@ -351,7 +351,7 @@ const Dashbord = () => {
                                         />
                                     </div>
                                     <div className="d-flex align-items-center text-white">
-                                        <p className="mb-0">Todays Open Signal</p>
+                                        <p className="mb-0">Today's Open Signal</p>
                                         <p className="mb-0 ms-auto">
 
                                             <span>
@@ -391,7 +391,7 @@ const Dashbord = () => {
                                         />
                                     </div>
                                     <div className="d-flex align-items-center text-white">
-                                        <p className="mb-0">Todays Close Signal</p>
+                                        <p className="mb-0">Today's Close Signal</p>
                                         <p className="mb-0 ms-auto">
 
                                             <span>
@@ -431,7 +431,7 @@ const Dashbord = () => {
                                         />
                                     </div>
                                     <div className="d-flex align-items-center text-white">
-                                        <p className="mb-0">Total Open Signal</p>
+                                        <p className="mb-0">Total Open Signals</p>
                                         <p className="mb-0 ms-auto">
 
                                             <span>
@@ -468,7 +468,7 @@ const Dashbord = () => {
                                         />
                                     </div>
                                     <div className="d-flex align-items-center text-white">
-                                        <p className="mb-0">Total Close Signal </p>
+                                        <p className="mb-0">Total Close Signals </p>
                                         <p className="mb-0 ms-auto">
 
                                             <span>
@@ -505,7 +505,7 @@ const Dashbord = () => {
                                         />
                                     </div>
                                     <div className="d-flex align-items-center text-white">
-                                        <p className="mb-0">Total Plan Active Client </p>
+                                        <p className="mb-0">Total Plan Active Clients </p>
                                         <p className="mb-0 ms-auto">
 
                                             <span>
@@ -582,7 +582,7 @@ const Dashbord = () => {
                                         />
                                     </div>
                                     <div className="d-flex align-items-center text-white">
-                                        <p className="mb-0">Total Active Free Client</p>
+                                        <p className="mb-0">Total Active Free Clients</p>
                                         <p className="mb-0 ms-auto">
 
                                             <span>
@@ -619,7 +619,7 @@ const Dashbord = () => {
                                         />
                                     </div>
                                     <div className="d-flex align-items-center text-white">
-                                        <p className="mb-0">Total InActive Free Client</p>
+                                        <p className="mb-0">Total Inactive Free Clients</p>
                                         <p className="mb-0 ms-auto">
 
                                             <span>

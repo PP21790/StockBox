@@ -161,11 +161,11 @@ const Login = () => {
                                                             className="input-group-text bg-transparent"
 
                                                         >
-                                                            <i className={`bx ${showPassword ? 'bx-show' : 'bx-hide'}`} />
+                                                            <i className={`bx ${showPassword ? 'bx-hide' : 'bx-show'}`} />
                                                         </a>
                                                     </div>
                                                 </div>
-                                                <div className="col-md-6">
+                                                {/* <div className="col-md-6">
                                                     <div className="form-check form-switch">
                                                         <input
                                                             className="form-check-input"
@@ -179,8 +179,8 @@ const Login = () => {
                                                             Remember Me
                                                         </label>
                                                     </div>
-                                                </div>
-                                                <div className="col-md-6 text-end">
+                                                </div> */}
+                                                <div className="col-md-6 ">
                                                     {/* <p onClick={() => navigate("/forgetpass")}>
                                                         Forgot Password?
                                                     </p> */}

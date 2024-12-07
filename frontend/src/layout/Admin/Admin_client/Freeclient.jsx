@@ -370,7 +370,7 @@ const Freeclient = () => {
                     </div>
                 ) : (
                     <div style={{ color: "red" }}>
-                        Not Verfied
+                        Not Verified
                     </div>
                 )
             ),

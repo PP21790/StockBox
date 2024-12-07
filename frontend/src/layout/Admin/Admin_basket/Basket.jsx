@@ -104,7 +104,7 @@ const Basket = () => {
       name: "Actions",
       cell: (row) => (
         <div>
-             <Link to={`addstock`} className="btn btn-primary btn-sm mx-1">
+             <Link to={`addstock/${row._id}`} className="btn btn-primary btn-sm mx-1">
            Add Stock
           </Link>
           <Link to={`viewdetail/${row._id}`} className="btn btn-primary btn-sm mx-1">
