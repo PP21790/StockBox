@@ -22,63 +22,81 @@ const FormField = ({ name, label, type, placeholder, col_size, label_size, disab
 
 const BasketField = ({ push, remove, Stock, showRemoveButtons, disable, fieldTypes }) => (
   <div className="content container-fluid" data-aos="fade-left">
-  
-      {/* <div className="card-header d-flex justify-content-between align-items-center">
+
+    {/* <div className="card-header d-flex justify-content-between align-items-center">
         <h5 className="card-title mb-0">
           <i className="fa-regular fa-circle-user pe-2"></i> 
           <input type="search" className="form-control" placeholder="Search Stock" />
         </h5>
       </div> */}
-      <div className="card-body">
-        {Stock.length > 0 ? (
-          Stock.map((BasketData, index) => (
-            <div className=" Stock-group mb-3" key={index}>
-              <div className="card-header d-flex align-items-center ">
-                {/* <h6 className="mb-0">Stock {index + 1}</h6> */}
-                <h6 className="mb-0">Search Stock :</h6> <input type="search" className="ms-3 form-control w-50" placeholder="Search Stock" />
-              </div>
-              <div className="card-body">
-                <div className="row">
-                  {fieldTypes.map((field) => (
+    <div className="card-body">
+      {Stock.length > 0 ? (
+        Stock.map((BasketData, index) => (
+          <div className=" Stock-group mb-3" key={index}>
+            <div className="card-header d-flex align-items-center ">
+              {/* <h6 className="mb-0">Stock {index + 1}</h6> */}
+              <h6 className="mb-0">Search Stock :</h6> <input type="search" className="ms-3 form-control w-50" placeholder="Search Stock" />
+            </div>
+            <div className="card-body">
+              <div className="row">
+                {fieldTypes.map((field) => (
+                  field.type === 'select' ?
                     <div className="col-lg-4 form-group mb-2" key={field.name}>
                       <label htmlFor={`Stock.${index}.${field.name}`}>{field.label}</label>
-                      <Field
+                      <select
                         name={`Stock.${index}.${field.name}`}
-                        placeholder={`Enter ${field.label}`}
-                        className="form-control mb-2"
-                        type={field.type}
-                        disabled={disable}
-                      />
+                        className="form-select mb-2"
+                        disabled={disable}>
+                        <option value="">Select Type</option>
+                        {field.options.map((option) => (
+                          <option key={option.value} value={option.value}>{option.label}</option>
+                        ))}
+                      </select>
+
+
                       <ErrorMessage name={`Stock.${index}.${field.name}`} component="div" className="text-danger" />
                     </div>
-                  ))}
-                </div>
-                {showRemoveButtons && Stock.length > 1 && (
-                  <button
-                    type="button"
-                    className="btn btn-danger"
-                    onClick={() => remove(index)}
-                  >
-                    Remove Stock
-                  </button>
-                )}
+                    : (
+                      <div className="col-lg-4 form-group mb-2" key={field.name}>
+                        <label htmlFor={`Stock.${index}.${field.name}`}>{field.label}</label>
+                        <Field
+                          name={`Stock.${index}.${field.name}`}
+                          placeholder={`Enter ${field.label}`}
+                          className="form-control mb-2"
+                          type={field.type}
+                          disabled={disable}
+                        />
+                        <ErrorMessage name={`Stock.${index}.${field.name}`} component="div" className="text-danger" />
+                      </div>
+                    )
+                ))}
               </div>
+              {showRemoveButtons && Stock.length > 1 && (
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  onClick={() => remove(index)}
+                >
+                  Remove Stock
+                </button>
+              )}
             </div>
-          ))
-        ) : (
-          <p>No Stock added yet.</p>
-        )}
-        {showRemoveButtons && (
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={() => push({})} // Adjust initial state as needed
-          >
-            Add Stock
-          </button>
-        )}
-      </div>
+          </div>
+        ))
+      ) : (
+        <p>No Stock added yet.</p>
+      )}
+      {showRemoveButtons && (
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={() => push({})} // Adjust initial state as needed
+        >
+          Add Stock
+        </button>
+      )}
     </div>
+  </div>
 
 );
 
@@ -118,12 +136,12 @@ const DynamicForm = ({ fields, page_title, btn_name1, btn_name1_route, formik, s
                   return (
                     <FieldArray name="Stock" key={index}>
                       {({ push, remove }) => (
-                        <BasketField 
-                          Stock={values.Stock} 
-                          push={push} 
-                          remove={remove} 
-                          showRemoveButtons={showAddRemoveButtons} 
-                          disable={disable || fieldDisable} 
+                        <BasketField
+                          Stock={values.Stock}
+                          push={push}
+                          remove={remove}
+                          showRemoveButtons={showAddRemoveButtons}
+                          disable={disable || fieldDisable}
                           fieldTypes={stockFieldTypes} // Pass field types here
                         />
                       )}
