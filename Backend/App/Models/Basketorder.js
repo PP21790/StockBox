@@ -2,7 +2,7 @@
 
 const { Schema, model } = require('mongoose');
 
-const OrderModel = Schema({
+const BasketorderModel = Schema({
     clientid: {
         type: String,
         trim: true,
@@ -33,25 +33,16 @@ const OrderModel = Schema({
         trim: true,
         default: 0
     },
-    exitquantity: {
-        type: Number,
-        trim: true,
-        default: 0
-    },
     ordertype: {
         type: String,
         trim: true,
         default: null
     },
-    tsprice: {
+    lprice: {
         type: Number,
         default: 0
     },
-    slprice: {
-        type: Number,
-        default: 0
-    },
-    tsstatus: {
+    tprice: {
         type: Number,
         default: 0
     },
@@ -64,6 +55,10 @@ const OrderModel = Schema({
         type: String,
         trim: true,
         default: null
+    },
+    version: {
+        type: Number,
+        default: 0
     },
     status: {
         type: Number,
@@ -86,8 +81,7 @@ const OrderModel = Schema({
     },
 
 )
-const Order_Model = model('OrderModel', OrderModel);
+const Basketorder_Model = model('BasketorderModel', BasketorderModel);
 
 
-
-module.exports = Order_Model;
+module.exports = Basketorder_Model;

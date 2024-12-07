@@ -2,62 +2,40 @@
 
 const { Schema, model } = require('mongoose');
 
-const BasketSchema = new Schema({
-    title: {
+const BasketstockSchema = new Schema({
+    basket_id: {
         type: String,
         required: true,
         trim: true
     },
-    description: {
+    name: {
         type: String,
         required: true,
         trim: true
     },
-    themename: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    add_by: {
+    tradesymbol: {
         type: String,
         required: true,
         trim: true,
         default: null
     },
-    full_price: {
-        type: Number,
-        required: true,
-        default: 0
-    },
-    basket_price: {
-        type: Number,
-        required: true,
-        default: 0
-    },
-    mininvamount: {
-        type: Number,
-        required: true,
-        default: 0
-    },
-    accuracy: {
+    price: {
         type: Number,
         default: 0
     },
-    portfolioweightage: {
+    weightage: {
         type: Number,
         default: 0
     },
-    cagr: {
-        type: String,
-        trim: true,
-        default: null
+    total_value: {
+        type: Number,
+        default: 0
     },
-    frequency: {
-        type: String,
-        trim: true,
-        default: null
+    quantity: {
+        type: Number,
+        default: 0
     },
-    validity: {
+    comment: {
         type: String,
         trim: true,
         default: null
@@ -67,14 +45,9 @@ const BasketSchema = new Schema({
         trim: true,
         default: null
     },
-    next_rebalance_date: {
-        type: String,
-        trim: true,
-        default: null
-    },
-    status: {
-        type: Boolean,
-        default: true // assuming true means active and false means inactive
+    version: {
+        type: Number,
+        default: 0
     },
     del: {
         type: Boolean,
@@ -85,6 +58,6 @@ const BasketSchema = new Schema({
 });
 
 // Define the model
-const Basket = model('Basket', BasketSchema);
+const Basketstock = model('Basketstock', BasketstockSchema);
 
-module.exports = Basket;
+module.exports = Basketstock;

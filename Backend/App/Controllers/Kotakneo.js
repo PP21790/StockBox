@@ -226,7 +226,8 @@ class Kotakneo {
     async placeOrder(req, res) {
         
         try {
-            const { id, signalid, quantity, price } = req.body;
+            const { id, signalid, quantity, price, tsprice, tsstatus, slprice, exitquantity } = req.body;
+
     
             const client = await Clients_Modal.findById(id);
             if (!client) {
@@ -257,13 +258,17 @@ class Kotakneo {
     
     
              const authToken = client.authtoken;
-             let optiontype, exchange, producttype;
+             let optiontype, exchange, producttype, exchangess;
 
              if (signal.segment === "C") {
                  exchange = "nse_cm";
+                 exchangess:"NSE"
+
              } else {
                  optiontype = signal.segment === "F" ? "UT" : signal.optiontype;
                  exchange = "nse_fo";
+                 exchangess:"NFO"
+
              }
              
              // Determine product type based on segment and call duration
@@ -403,6 +408,9 @@ axios(config)
     // Log full response for debugging purposes
 
     if (response.data.stat === 'Ok') {
+        
+        const finalExitQuantity = exitquantity && exitquantity > 0 ? exitquantity : quantity;
+
         const order = new Order_Modal({
             clientid: client._id,
             signalid: signal._id,
@@ -410,6 +418,12 @@ axios(config)
             ordertype:signal.calltype,
             borkerid: 3,
             quantity: quantity,
+            ordertoken:stock.instrument_token,
+            tsprice:tsprice,
+            tsstatus:tsstatus,
+            slprice:slprice,
+            exitquantity:finalExitQuantity,
+            exchange:exchangess
         });
 
         await order.save();
@@ -664,6 +678,18 @@ axios(config)
                    });
            
                    await order.save();
+
+                   const orderupdate = await Order_Modal.findOne({ 
+                    clientid:id,
+                    signalid, 
+                    borkerid 
+                });
+        
+                if (orderupdate) {
+                  orderupdate.tsstatus = 0;
+                  await orderupdate.save();
+                }
+               
            
                    return res.json({
                        status: true,
@@ -793,6 +819,267 @@ const uniorderId = order.orderid;
             });
         }
     }
+
+    async orderexitkotakneo(item){
+      
+        try {
+            const { clientid, signalid, quantity, stockInfo_lp, exitquantity } = item;
+           
+            const price =stockInfo_lp;
+    
+            const client = await Clients_Modal.findById(clientid);
+            if (!client) {
+                return {
+                    status: false,
+                    message: "Client not found"
+                };
+            }
+
+
+            if(client.tradingstatus == 0)
+            {
+                return {
+                    status: false,
+                    message: "Client Broker Not Login, Please Login With Broker"
+                };
+            }
+            
+    
+            const signal = await Signal_Modal.findById(signalid);
+            if (!signal) {
+                return {
+                    status: false,
+                    message: "Signal not found"
+                };
+            }
+
+    
+    
+             const authToken = client.authtoken;
+             let optiontype, exchange, producttype;
+
+             if (signal.segment === "C") {
+                exchange = "nse_cm";
+            } else {
+                optiontype = signal.segment === "F" ? "UT" : signal.optiontype;
+                exchange = "nse_fo";
+            }
+            
+            // Determine product type based on segment and call duration
+            if (signal.callduration === "Intraday") {
+               producttype = "MIS";
+           } else {
+               producttype = signal.segment === "C" ? "CNC" : "NRML";
+           }
+             
+             let stock;
+             if (signal.segment === "C") {
+                 stock = await Stock_Modal.findOne({ 
+                     symbol: signal.stock, 
+                     segment: signal.segment, 
+                 });
+             } else if (signal.segment === "F") {
+                 stock = await Stock_Modal.findOne({ 
+                     symbol: signal.stock, 
+                     segment: signal.segment, 
+                     expiry: signal.expirydate, 
+                 });
+             } else {
+                 stock = await Stock_Modal.findOne({ 
+                     symbol: signal.stock, 
+                     segment: signal.segment, 
+                     expiry: signal.expirydate, 
+                     strike: signal.strikeprice 
+                 });
+             }
+
+
+             if (!stock) {
+                return {
+                    status: false,
+                    message: "Stock not found"
+                };
+            }
+
+
+            let holdingData = { qty: 0 };  
+            let positionData = { qty: 0 };  
+            let totalValue = 0;  // Declare totalValue outside the blocks
+                try {
+                  const positionData = await CheckPosition(client.apikey, stock.segment,stock.instrument_token);
+                } catch (error) {
+                  console.error('Error in CheckPosition:', error.message);
+                
+              }
+            
+                if(stock.segment=="C") {
+                        try {
+                            const holdingData = await CheckHolding(client.apikey , stock.segment,stock.instrument_token);
+                        } catch (error) {
+                            console.error('Error in CheckHolding:', error.message);
+                        }
+                        totalValue = Math.abs(positionData.qty)+holdingData.qty;
+                    }
+                    else
+                    {
+                        totalValue = Math.abs(positionData.qty)
+                    }
+
+                    let calltypes;
+                    let calltypess;
+                    if(signal.calltype === 'BUY')
+                    {
+                        calltypes = "S";
+                        calltypess = "SEll";
+                    }
+                    else {
+                        calltypes = "B";
+                        calltypess = "BUY";
+                    }
+        
+                    if(totalValue>=exitquantity) { 
+                  
+                          const pattern = stock.instrument_token;
+                          let ts = null; // Initialize `ts` with a default value
+           
+                          let filePath_token;
+           
+                          if (signal.segment.toLowerCase() === 'o') {
+                              filePath_token = '../../tokenkotakneo/KOTAK_NFO.csv';
+                          } else if (signal.segment.toLowerCase() === 'f') {
+                              filePath_token = '../../tokenkotakneo/KOTAK_NFO.csv';
+                          } else {
+                              filePath_token = '../../tokenkotakneo/KOTAK_NSE.csv';
+                          }
+                          
+                          const filePath1 = path.join(__dirname, filePath_token);
+                          
+                          fs.readFile(filePath1, 'utf8', (err, data) => {
+                              if (err) {
+                                  console.error(`Error reading file: ${err}`);
+                                  return;
+                              }
+                          
+                              const lines = data.split('\n');
+                              let matchedLines;
+                          
+                              if (signal.segment.toLowerCase() === 'o') {
+                                  matchedLines = lines.filter(line => 
+                                      new RegExp(`.*(${pattern}).*.*(nse_fo).*.*(${input_symbol}).*.*(${optiontype}).*`, 'i').test(line)
+                                  );
+                              } else if (signal.segment.toLowerCase() === 'f') {
+                                  matchedLines = lines.filter(line => 
+                                      new RegExp(`.*(${pattern}).*.*(nse_fo).*`, 'i').test(line)
+                                  );
+                              } else {
+                                  matchedLines = lines.filter(line => 
+                                      new RegExp(`.*(${pattern}).*.*(nse_cm).*`, 'i').test(line)
+                                  );
+                              }
+                          
+                              if (matchedLines.length > 0) {
+                               const parts = matchedLines[0].split(','); // Extract parts from the first (and only) matched line
+                               ts = parts[5]; // Get the value from the 6th column (index 5)
+                        
+                               var data =  JSON.stringify({
+                                "am":"NO",
+                                "dq":"0",
+                                "es":exchange,
+                                "mp":"0",
+                                "pc":producttype,
+                                "pf":"N",
+                                "pr":price,
+                                "pt":"MKT",
+                                "qt":exitquantity,
+                                "rt":"DAY",
+                                "tp":"0",
+                                "ts":ts,
+                                "tt":calltype
+                            });
+
+                               const requestData = `jData=${data}`;
+                         
+                           let url = `https://gw-napi.kotaksecurities.com/Orders/2.0/quick/order/rule/ms/place?sId=${client.hserverid}`;
+           
+                           let config = {
+                               method: 'post',
+                               maxBodyLength: Infinity,
+                               url: url,
+                               headers: {
+                                   'accept': 'application/json',
+                                   'Sid': client.kotakneo_sid,
+                                   'Auth': client.authtoken,
+                                   'neo-fin-key': 'neotradeapi',
+                                   'Content-Type': 'application/x-www-form-urlencoded',
+                                   'Authorization': 'Bearer ' + client.oneTimeToken
+                               },
+                               data: requestData
+                           };
+           
+           
+                           
+           axios(config)
+           .then(async (response) => {
+               if (response.data.stat === 'Ok') {
+                   const order = new Order_Modal({
+                       clientid: client._id,
+                       signalid: signal._id,
+                       orderid: response.data.nOrdNo,
+                       ordertype:calltypess,
+                       borkerid: 3,
+                       quantity: exitquantity,
+                   });
+           
+                   await order.save();
+
+
+                   const orderupdate = await Order_Modal.findOne({ 
+                    clientid, 
+                    signalid, 
+                    borkerid 
+                });
+        
+                if (orderupdate) {
+                  orderupdate.tsstatus = 0;
+                  await orderupdate.save();
+                }
+               
+           
+                return {
+                    status: true,
+                    data: response.data ? null : "Order Successfully",
+                };
+               } else {
+                   // Log response if the status isn't 'Ok'
+                   return {
+                       status: false,
+                       message: response.data.message || 'Unknown error in response'
+                   };
+               }
+           })
+           .catch(async (error) => {
+                          return {
+                   status: false,
+                   message: error
+               };
+           });
+                   }
+                        
+               });
+            }
+        } catch (error) {
+            return { 
+                status: false, 
+                message: error.response ? error.response.data : "An error occurred while placing the order" 
+            };
+        }
+
+
+    }
+
+
+
+    
         
 }
 

@@ -1,3 +1,14 @@
+const mongoose = require('mongoose');
+const MongoClient = require('mongodb').MongoClient;
+const uri = process.env.MONGO_URI
+// const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+const client = new MongoClient(uri);
+const db_GET_VIEW = client.db(process.env.DB_NAME);
+
+const open_position = db_GET_VIEW.collection('open_position');
+const open_position_excute = db_GET_VIEW.collection('open_position_excute');
+
+
 
 module.exports = {
     Clients: require("./Clients"),
@@ -33,6 +44,13 @@ module.exports = {
     Notification: require("./Notification"),
     Bank: require("./Bank"),
     Adminnotification: require("./Adminnotification"),
+    Liveprice: require("./Liveprice"),
+    Basketstock: require("./Basketstock"),
+    Basketorder: require("./Basketorder"),
+
+    open_position:open_position,
+    open_position_excute:open_position_excute,
+
 
 
 

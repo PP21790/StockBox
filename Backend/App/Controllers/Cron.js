@@ -438,7 +438,6 @@ async function CheckExpireSignalFutureOption(req, res) {
         const channelStradd = signals
             .map(signal => `NFO|${signal.stockDetails?.instrument_token || ''}`)
             .join('#');
-
         // Check if we have any valid signals
         if (!channelStradd) {
             return res.status(404).json({ message: "No valid signals found for today." });
@@ -483,7 +482,6 @@ async function CheckExpireSignalFutureOption(req, res) {
     }
 }
 
-
 async function openSocketConnection(channelList, userid, userSession1) {
 
   ws = new WebSocket(url);
@@ -497,11 +495,11 @@ async function openSocketConnection(channelList, userid, userSession1) {
       source: "API"
     }
     ws.send(JSON.stringify(initCon))
-  
   };
 
   ws.onmessage = async function (msg) {
     const response = JSON.parse(msg.data)
+
     if (response.lp != undefined) {
       const Cprice = response.lp;
 

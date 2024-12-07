@@ -137,6 +137,8 @@ class Clients {
 
 
     const resetToken = Math.floor(100000 + Math.random() * 900000); 
+    const otpmobile = Math.floor(100000 + Math.random() * 900000); 
+
 
 
       const mailtemplate = await Mailtemplate_Modal.findOne({ mail_type: 'client_verification_mail' }); // Use findOne if you expect a single document
@@ -175,19 +177,27 @@ class Clients {
         await sendEmail(mailOptions);
     });
 
-        // const mailOptions = {
-        //   to: result.Email,
-        //   from: `${settings.from_name} <${settings.from_mail}>`, 
-        //   subject: 'Password Reset',
-        //   text: `Your verification code is: ${resetToken}. This code is valid for 10 minutes. Please do not share this code with anyone.`,
-        // };
-    
-        // await sendEmail(mailOptions);
 
+    // const apiUrl = "http://smsjust.com/sms/user/urlsms.php";
+    // const params = {
+    //   username: "Esign",         // API Key provided by the SMS gateway
+    //   pass: "Esign@2024",             // Recipient's phone number
+    //   senderid: "OTPPNP", // Message content
+    //   message: `One Time Password is ${otpmobile} This is usable once and expire in 10 minutes. Please do not share this with anyone. Infotech`,        // Optional: Sender ID (if supported)
+    //   dest_mobileno:result.PhoneNo,
+    //   msgtype:"TXT",
+    //   response:"Y",
+    //   dlttempid:"1507166333401681654"
+    // };
 
+    // const response = await axios.get(apiUrl, { params });
+    // console.log(response.data); 
+
+       
       return res.json({
         status: true,
         otp:resetToken,
+        otpmobile:otpmobile,
         email:Email,
         message: "OTP has been sent to your email. Please check your email.",
       });

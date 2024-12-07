@@ -21,7 +21,9 @@ console.log('Current time in IST:', new Date());
 const nodemailer = require('nodemailer');
 const { sendFCMNotification } = require('./App/Controllers/Pushnotification'); // Adjust if necessary
 
-require('./App/Controllers/Cron.js'); 
+require('./App/Controllers/Cron.js');
+require('./App/Utils/Settimeout.js'); 
+ 
 const Clients_Modal = db.Clients;
 const BasicSetting_Modal = db.BasicSetting;
 const Activitylogs_Modal = db.Activitylogs;
@@ -54,6 +56,9 @@ const License_Modal = db.License;
 const Notification_Modal = db.Notification;
 const Bank_Modal = db.Bank;
 const Adminnotification_Modal = db.Adminnotification;
+const Basketstock_Modal = db.Basketstock;
+const Liveprice_Modal = db.Liveprice;
+const Basketorder_Modal = db.Basketorder;
 
 
 const corsOpts = {
@@ -121,9 +126,16 @@ require('./App/Routes/index')(app)
 require('./App/api/Routes/index')(app)
 //require('./App/api/Routes/index')(app)
 
+// const {Alice_Socket} = require("./App/Utils/AliceSocket.js");
 
+// app.get("/test",(req,res)=>{
+//   Alice_Socket();
+//   return res.send('ok');
+// });
 
 // httpsserver.listen(1001)
 server.listen(process.env.PORT, () => {
+
   console.log(`Server is running on http://0.0.0.0:${process.env.PORT}`);
 });
+
