@@ -26,7 +26,7 @@ const fieldConfigurations = [
     col_size: 4,
     name: "cagr",
     label: "CAGR",
-    type: "number",
+    type: "text",
     placeholder: "Enter CAGR",
   },
   {
@@ -65,7 +65,7 @@ const fieldConfigurations = [
     placeholder: "Enter Basket Price",
   },
   {
-    type: "date",
+    type: "text",
     label: "Next Rebalance Date",
     name: "next_rebalance_date",
     col_size: 4,
