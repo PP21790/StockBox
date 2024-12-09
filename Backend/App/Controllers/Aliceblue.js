@@ -966,7 +966,7 @@ class Aliceblue {
     async orderplace(item) {
 
         try {
-            const { id, signalid, quantity, price, version } = item;
+            const { id, quantity, price, version, basket_id,tradesymbol,instrumentToken, calltype, brokerid } = item;
 
             const client = await Clients_Modal.findById(id);
             if (!client) {
@@ -984,72 +984,53 @@ class Aliceblue {
                 };
             }
 
-
-            const signal = await Signal_Modal.findById(signalid);
-            if (!signal) {
+            if (brokerid != 2) {
                 return {
                     status: false,
-                    message: "Signal not found"
+                    message: "Invalid Broker Place Order"
                 };
             }
-
-
 
             const authToken = client.authtoken;
             const userId = client.alice_userid;
 
-
-            let optiontype, exchange, producttype;
-
-            if (signal.segment === "C") {
-                optiontype = "EQ";
+            let exchange, producttype;
                 exchange = "NSE";
-            } else {
-                optiontype = signal.segment === "F" ? "UT" : signal.optiontype;
-                exchange = "NFO";
+                producttype = "CNC";
+
+                if(calltype =="BUY") {} else {
+                let holdingData = { qty: 0 };
+                let positionData = { qty: 0 };
+                let totalValue = 0;  // Declare totalValue outside the blocks
+                try {
+                    positionData = await CheckPosition(userId, authToken, "C", instrumentToken, producttype, calltype, tradesymbol);
+    
+                } catch (error) {
+                }
+    
+              
+                    try {
+                        holdingData = await CheckHolding(userId, authToken, "C", instrumentToken, producttype, calltype);
+    
+                    } catch (error) {
+                    }
+    
+                    const validPositionData = !isNaN(Number(positionData.qty)) ? Number(positionData.qty) : 0;  // Validate positionData.qty
+                    const validHoldingQty = !isNaN(Number(holdingData.qty)) ? Number(holdingData.qty) : 0;  // Validate holdingData.qty
+                    totalValue = validPositionData + validHoldingQty;
+    
+               
+
+
+                if (totalValue < quantity) {
+
+                    return {
+                        status: false,
+                        message: "Sorry, the requested quantity is not available."
+                    };
+                }
+    
             }
-
-            // Determine product type based on segment and call duration
-            if (signal.callduration === "Intraday") {
-                producttype = "MIS";
-            } else {
-                producttype = signal.segment === "C" ? "CNC" : "NRML";
-            }
-
-            // Query Stock_Modal based on segment type
-            let stock;
-            if (signal.segment === "C") {
-                stock = await Stock_Modal.findOne({
-                    symbol: signal.stock,
-                    segment: signal.segment,
-                    //    option_type: optiontype 
-                });
-            } else if (signal.segment === "F") {
-                stock = await Stock_Modal.findOne({
-                    symbol: signal.stock,
-                    segment: signal.segment,
-                    expiry: signal.expirydate,
-                    //    option_type: optiontype 
-                });
-            } else {
-                stock = await Stock_Modal.findOne({
-                    symbol: signal.stock,
-                    segment: signal.segment,
-                    expiry: signal.expirydate,
-                    option_type: optiontype,
-                    strike: signal.strikeprice
-                });
-            }
-
-
-            if (!stock) {
-                return {
-                    status: false,
-                    message: "Stock not found"
-                };
-            }
-
-
 
             var data = JSON.stringify([
                 {
@@ -1061,13 +1042,16 @@ class Aliceblue {
                     "price": price,
                     "qty": quantity,
                     "ret": "DAY",
-                    "symbol_id": stock.instrument_token,
-                    "trading_symbol": stock.tradesymbol,
-                    "transtype": signal.calltype,
+                    "symbol_id": tradesymbol,
+                    "trading_symbol": instrumentToken,
+                    "transtype": calltype,
                     "trigPrice": "00.00",
                     "orderTag": "order1"
                 }
             ]);
+
+
+          
 
             let config = {
                 method: 'post',
@@ -1090,14 +1074,16 @@ class Aliceblue {
                     if (responseData[0].stat == 'Ok') {
                         const order = new Basketorder_Modal({
                             clientid: client._id,
-                            signalid: signal._id,
+                            tradesymbol: tradesymbol,
                             orderid: responseData[0].NOrdNo,
-                            ordertype: signal.calltype,
+                            ordertype: calltype,
                             borkerid: 2,
+                            price: price,
                             quantity: quantity,
-                            ordertoken: stock.instrument_token,
+                            ordertoken: instrumentToken,
                             exchange: exchange,
-                            version:version
+                            version:version,
+                            basket_id:basket_id
                         });
 
                         await order.save();
@@ -1117,15 +1103,8 @@ class Aliceblue {
                 })
                 .catch(async (error) => {
                     const message = (JSON.stringify(error.response.data)).replace(/["',]/g, '');
-
-                    let url;
-                    if (message == "") {
-                        url = `https://ant.aliceblueonline.com/?appcode=${client.apikey}`;
-                    }
-
                     return {
                         status: false,
-                        url: url,
                         message: message
                     };
 
@@ -1166,10 +1145,6 @@ class Aliceblue {
                 });
             }
 
-
-
-
-
             if (order.status == 1) {
 
                 return res.json({
@@ -1185,7 +1160,6 @@ class Aliceblue {
                 });
             }
 
-
             if (order.borkerid != 2) {
                 return res.status(404).json({
                     status: false,
@@ -1193,10 +1167,8 @@ class Aliceblue {
                 });
             }
 
-
             const authToken = client.authtoken;
             const userId = client.apikey;
-
 
             var data = JSON.stringify(
                 {

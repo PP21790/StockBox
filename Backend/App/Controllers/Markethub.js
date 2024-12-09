@@ -259,7 +259,7 @@ async placeOrder(req, res) {
     
     
              const authToken = client.authtoken;
-             const userId = client.alice_userid;
+             const userId = client.apikey;
 
 
              let optiontype, exchange, producttype;
@@ -494,7 +494,7 @@ if(client.tradingstatus == 0)
     }
 
 
-    if (order.borkerid!=2) {
+    if (order.borkerid!=4) {
         return res.status(404).json({
             status: false,
             message: "Order not found for this Broker"
@@ -580,7 +580,7 @@ let data = JSON.stringify({
 
   
            const authToken = client.authtoken;
-           const userId = client.alice_userid;
+           const userId = client.apikey;
 
 
            let optiontype, exchange, producttype;
@@ -768,7 +768,239 @@ let data = JSON.stringify({
           };
       }
   }
+
+
+
+
+  async markethuborderplace(item) {
+    console.log("item",item);
+    return {
+        status: false,
+        message: "Client not found"
+    };
+    try {
+        const { id, quantity, price, version, basket_id,tradesymbol,instrumentToken, calltype, brokerid } = item;
+
+        const client = await Clients_Modal.findById(id);
+        if (!client) {
+            return {
+                status: false,
+                message: "Client not found"
+            };
+        }
+
+
+        if (client.tradingstatus == 0) {
+            return {
+                status: false,
+                message: "Client Broker Not Login, Please Login With Broker"
+            };
+        }
+
+        if (brokerid != 4) {
+            return {
+                status: false,
+                message: "Invalid Broker Place Order"
+            };
+        }
+
+        const authToken = client.authtoken;
+        const userId = client.apikey;
+
+        let exchange, producttype;
+            exchange = "NSE";
+            producttype = "CNC";
+
+            if(calltype =="BUY") {} else {
+            let holdingData = { qty: 0 };
+            let positionData = { qty: 0 };
+            let totalValue = 0;  // Declare totalValue outside the blocks
+            try {
+                positionData = await CheckPosition(userId, authToken, "C", instrumentToken, producttype, calltype, tradesymbol);
+
+            } catch (error) {
+            }
+          
+                try {
+                    holdingData = await CheckHolding(userId, authToken, "C", instrumentToken, producttype, calltype);
+
+                } catch (error) {
+                }
+
+                const validPositionData = !isNaN(Number(positionData.qty)) ? Number(positionData.qty) : 0;  // Validate positionData.qty
+                const validHoldingQty = !isNaN(Number(holdingData.qty)) ? Number(holdingData.qty) : 0;  // Validate holdingData.qty
+                totalValue = validPositionData + validHoldingQty;
+
+            if (totalValue < quantity) {
+
+                return {
+                    status: false,
+                    message: "Sorry, the requested quantity is not available."
+                };
+            }
+
+        }
+
+        const data = JSON.stringify({
+            variety: "NORMAL",
+            tradingsymbol: tradesymbol,
+            symboltoken: instrumentToken,
+            transactiontype: calltype,
+            exchange,
+            ordertype: "MARKET",
+            producttype,
+            duration: "DAY",
+            price,
+            quantity,
+            triggerprice: "0",
+            disclosedquantity: "0",
+            ordersource: null,
+            naicCode: null,
+            remarks: "_",
+            Confirm: true,
+            AlgoId: "0",
+            AlgoType: "0",
+          });
+        
+          let config = {
+            method: 'post',
+            maxBodyLength: Infinity,
+            url: 'https://fund.markethubonline.com/middleware/api/v2/PlaceOrder',
+            headers: { 
+              'Content-Type': 'application/json', 
+              'Authorization': `Bearer ${client.authtoken}`
+            },
+            data: data
+          };
+        
+
+            const response = await axios.request(config);
+            if (response.data.user_order_number != undefined) {
+                    const order = new Basketorder_Modal({
+                        clientid: client._id,
+                        tradesymbol: tradesymbol,
+                        orderid: response.data.user_order_number,
+                        ordertype: calltype,
+                        borkerid: 4,
+                        price: price,
+                        quantity: quantity,
+                        ordertoken: instrumentToken,
+                        exchange: exchange,
+                        version:version,
+                        basket_id:basket_id
+                    });
+
+                    await order.save();
+                    return {
+                        status: true,
+                        data: response.data ? null : "Order Successfully",
+                    };
+                } else {
+                  return { status: false, message: "Order placement failed", data: response.data };
+                }
+            } catch (error) {
+                console.error("Error placing order:", error); // Log the error
+                return { 
+                    status: false, 
+                    message: error.response ? error.response.data : "An error occurred while placing the order" 
+                };
+            }
+
+
+        }
+
     
+  async checkOrderBasket(req, res) {
+        
+    try {
+        const { orderid, clientid } = req.body;
+
+        const order = await Basketorder_Modal.findOne({
+            clientid: clientid,  
+            orderid: orderid        
+        });
+
+        if (!order) {
+            return res.status(404).json({
+                status: false,
+                message: "Order not found for this client"
+            });
+        }
+
+        const client = await Clients_Modal.findById(clientid);
+        if (!client) {
+            return res.status(404).json({
+                status: false,
+                message: "Client not found"
+            });
+        }
+
+if(order.status==1) {
+
+return res.json({
+    status: true,
+    response: order.data
+});
+}
+
+if(client.tradingstatus == 0)
+{
+    return res.status(404).json({
+        status: false,
+        message: "Client Broker Not Login, Please Login With Broker"
+    });
+}
+
+
+if (order.borkerid!=4) {
+    return res.status(404).json({
+        status: false,
+        message: "Order not found for this Broker"
+    });
+}
+
+
+const authToken = client.authtoken;
+const userId = client.apikey;
+
+
+
+
+let data = JSON.stringify({
+"orderId": orderid
+});
+
+let config = {
+method: 'post',
+maxBodyLength: Infinity,
+url: 'https://fund.markethubonline.com/middleware/api/v2/OrderHistory',
+headers: { 
+  'Content-Type': 'application/json', 
+  'Authorization': `Bearer ${authToken}`
+
+},
+data : data
+};
+
+ const response = await axios(config); 
+
+        order.data = response.data; 
+        order.status = 1; 
+        await order.save();
+
+        return res.json({
+            status: true,
+            response: response.data
+        });
+
+    } catch (error) {
+        return res.status(500).json({ 
+            status: false,
+            message: error.response ? error.response.data : "Error occurred while fetching order details."
+        });
+    }
+}
+
 
 
 }
