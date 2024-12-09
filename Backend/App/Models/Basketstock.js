@@ -49,6 +49,11 @@ const BasketstockSchema = new Schema({
         type: Number,
         default: 0
     },
+    status: {
+        type: Number,
+        enum: [1, 0],
+        default: 0
+    },
     del: {
         type: Boolean,
         default: false // Indicates whether the Basket is marked as deleted

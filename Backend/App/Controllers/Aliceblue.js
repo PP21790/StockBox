@@ -1042,14 +1042,15 @@ class Aliceblue {
                     "price": price,
                     "qty": quantity,
                     "ret": "DAY",
-                    "symbol_id": tradesymbol,
-                    "trading_symbol": instrumentToken,
+                    "symbol_id": instrumentToken,
+                    "trading_symbol": tradesymbol,
                     "transtype": calltype,
                     "trigPrice": "00.00",
                     "orderTag": "order1"
                 }
             ]);
 
+            
 
           
 
@@ -1068,7 +1069,6 @@ class Aliceblue {
                 .then(async (response) => {
 
                     const responseData = response.data;
-
 
 
                     if (responseData[0].stat == 'Ok') {
@@ -1102,6 +1102,9 @@ class Aliceblue {
 
                 })
                 .catch(async (error) => {
+
+console.log("error",error);
+
                     const message = (JSON.stringify(error.response.data)).replace(/["',]/g, '');
                     return {
                         status: false,
