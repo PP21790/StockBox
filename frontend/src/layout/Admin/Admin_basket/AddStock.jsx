@@ -130,6 +130,8 @@ import React, { useState } from "react";
 import Select from "react-select";
 import { Formik, Field, Form } from "formik";
 import { useNavigate, Link } from "react-router-dom";
+import { Addstockbasketform } from "../../../Services/Admin";
+import Swal from "sweetalert2";
 
 const AddStock = () => {
   const [selectedServices, setSelectedServices] = useState([]);
@@ -155,8 +157,8 @@ const AddStock = () => {
         [selectedOption.value]: {
           stocks: "",
           tradesymbol: "",
-          percentage: "",
-          price: "",
+          percentage: " ",
+          price: " ",
         },
       }));
     }
@@ -173,11 +175,55 @@ const AddStock = () => {
     });
   };
 
-  const handleSubmit = (values) => {
-    // Log the form values when submitted
+  const handleSubmit = async (values) => {
     console.log("Form values:", values);
     console.log("Dynamic formData:", formData);
+  
+    const user_id = localStorage.getItem("id");
+    const token = localStorage.getItem("token");
+  
+    const req = {
+      stocks: values.stocks,
+      tradesymbol: values.tradesymbol,
+      percentage: values.percentage,
+      price: values.price,
+    };
+  
+    try {
+      const response = await Addstockbasketform(req, token);
+      console.log("API Response:", response);
+  
+      if (response.status) {
+        Swal.fire({
+          title: "Create Successful!",
+          text: response.message,
+          icon: "success",
+          timer: 1500,
+          timerProgressBar: true,
+        });
+        setTimeout(() => {
+          navigate("/admin/basket");
+        }, 1500);
+      } else {
+        Swal.fire({
+          title: "Error",
+          text: response.message,
+          icon: "error",
+          timer: 1500,
+          timerProgressBar: true,
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        title: "Error",
+        text: "An unexpected error occurred. Please try again later.",
+        icon: "error",
+        timer: 1500,
+        timerProgressBar: true,
+      });
+    }
   };
+  
 
   return (
     <div className="page-content">
