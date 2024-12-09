@@ -26,6 +26,11 @@ const Bank_Modal = db.Bank;
 const Adminnotification_Modal = db.Adminnotification;
 const Basketstock_Modal = db.Basketstock;
 const Liveprice_Modal = db.Liveprice;
+const {orderplace} = require('../../Controllers/Aliceblue');
+const {angleorderplace} = require('../../Controllers/Angle')
+const {kotakneoorderplace} = require('../../Controllers/Kotakneo')
+const {markethuborderplace} = require('../../Controllers/Markethub')
+
 
 
 mongoose = require('mongoose');
@@ -2771,6 +2776,9 @@ class List {
   
       // Get stocks for the basket
       const existingStocks = await Basketstock_Modal.find({ basket_id }).sort({ version: -1 });
+
+      const version = existingStocks.length > 0 ? existingStocks[0].version : 0; 
+      
       if (!existingStocks || existingStocks.length === 0) {
         return res.status(400).json({
           status: false,
@@ -2815,21 +2823,71 @@ class List {
           const stockOrder = {
             tradesymbol,
             quantity,
-            allocatedAmount,
             lpPrice,
+            clientid,
+            basket_id,
+            version,
+            instrumentToken
           };
-  
           // Add the stock order to the stockOrders array
           stockOrders.push(stockOrder);
+       if(brokerid==2) {
+          await orderplace({
+            id: clientid,
+            basket_id:basket_id,
+            quantity,
+            price: lpPrice,
+            tradesymbol: tradesymbol,
+            instrumentToken: instrumentToken,
+            version: stock.version,
+            brokerid: brokerid,
+            calltype: "BUY", // Increment version for the new stock order
+          });
+        }
+        else if(brokerid==1) {
+          await angleorderplace({
+            id: clientid,
+            basket_id:basket_id,
+            quantity,
+            price: lpPrice,
+            tradesymbol: tradesymbol,
+            instrumentToken: instrumentToken,
+            version: stock.version,
+            brokerid: brokerid,
+            calltype: "BUY", // Increment version for the new stock order
+          });
+        
+        }
+        else if(brokerid==3) {
+          await kotakneoorderplace({
+            id: clientid,
+            basket_id:basket_id,
+            quantity,
+            price: lpPrice,
+            tradesymbol: tradesymbol,
+            instrumentToken: instrumentToken,
+            version: stock.version,
+            brokerid: brokerid,
+            calltype: "B", // Increment version for the new stock order
+          });
+        
+        }
+        else if(brokerid==4) {
+          await markethuborderplace({
+            id: clientid,
+            basket_id:basket_id,
+            quantity,
+            price: lpPrice,
+            tradesymbol: tradesymbol,
+            instrumentToken: instrumentToken,
+            version: stock.version,
+            brokerid: brokerid,
+            calltype: "BUY", // Increment version for the new stock order
+          });
+        
+        }
 
-          // await orderplace({
-          //   id: stock._id,
-          //   signalid: basket_id, // assuming signalid could be basket_id
-          //   quantity,
-          //   price: lpPrice,
-          //   version: stock.version, // Increment version for the new stock order
-          // });
-  
+        
 
         } catch (innerError) {
           console.error(`Error processing stock ${tradesymbol}:`, innerError);
@@ -2852,6 +2910,148 @@ class List {
     }
   }
   
+  
+
+
+  async exitPlaceOrder(req, res) {
+    try {
+      const { basket_id, clientid, brokerid, version } = req.body;
+  
+      const basket = await Basket_Modal.findById(basket_id);
+      if (!basket) {
+        return res.status(400).json({
+          status: false,
+          message: "Basket not found.",
+        });
+      }
+  
+      // Get stocks for the basket
+      const existingStocks = await Basketstock_Modal.find({ basket_id:basket_id,version:version });      
+      if (!existingStocks || existingStocks.length === 0) {
+        return res.status(400).json({
+          status: false,
+          message: "No stocks found in the basket.",
+        });
+      }
+  
+      // Total investment amount
+  
+      // Initialize an array to store the calculated stock orders
+      const stockOrders = [];
+  
+      // Iterate over each stock to calculate allocated amount and quantity
+      for (const stock of existingStocks) {
+        const { tradesymbol, quantity } = stock;
+  
+        try {
+          // Fetch stock data from Stock_Modal
+          const stockData = await Stock_Modal.findOne({ tradesymbol });
+          if (!stockData) {
+            console.log(`Stock data not found for trade symbol: ${tradesymbol}`);
+            continue; // Skip this stock if no data found
+          }
+  
+          const instrumentToken = stockData.instrument_token;
+  
+          // Fetch live price from Liveprice_Modal
+          const livePrice = await Liveprice_Modal.findOne({ token: instrumentToken });
+          if (!livePrice) {
+            console.log(`Live price not found for instrument token: ${instrumentToken}`);
+            continue; // Skip this stock if live price is unavailable
+          }
+  
+          const lpPrice = livePrice.lp;
+  
+        
+          const stockOrder = {
+            tradesymbol,
+            quantity,
+            lpPrice,
+            clientid,
+            basket_id,
+            version,
+            instrumentToken
+          };
+          // Add the stock order to the stockOrders array
+          stockOrders.push(stockOrder);
+
+
+          if(brokerid==2) {
+          await orderplace({
+            id: clientid,
+            basket_id:basket_id,
+            quantity,
+            price: lpPrice,
+            tradesymbol: tradesymbol,
+            instrumentToken: instrumentToken,
+            version: version,
+            brokerid: brokerid,
+            calltype: "SELL", 
+          });
+        }
+          else if(basket_id==1) {
+            await angleorderplace({
+              id: clientid,
+              basket_id:basket_id,
+              quantity,
+              price: lpPrice,
+              tradesymbol: tradesymbol,
+              instrumentToken: instrumentToken,
+              version: version,
+              brokerid: brokerid,
+              calltype: "SELL",  
+            });
+          
+          }
+          else if(brokerid==3) {
+
+            await kotakneoorderplace({
+              id: clientid,
+              basket_id:basket_id,
+              quantity,
+              price: lpPrice,
+              tradesymbol: tradesymbol,
+              instrumentToken: instrumentToken,
+              version: version,
+              brokerid: brokerid,
+              calltype: "S", // Increment version for the new stock order
+            });
+          
+          }
+          else if(brokerid==4) {
+            await markethuborderplace({
+              id: clientid,
+              basket_id:basket_id,
+              quantity,
+              price: lpPrice,
+              tradesymbol: tradesymbol,
+              instrumentToken: instrumentToken,
+              version: version,
+              brokerid: brokerid,
+              calltype: "SELL",  
+            });
+          
+          }
+        } catch (innerError) {
+          console.error(`Error processing stock ${tradesymbol}:`, innerError);
+          continue; // Skip this stock in case of an error
+        }
+      }
+  
+      // Respond with success and order details
+      res.status(200).json({
+        status: true,
+        message: "Order placed successfully.",
+        data: stockOrders,
+      });
+    } catch (error) {
+      console.error("Error placing order:", error);
+      res.status(500).json({
+        status: false,
+        message: "An error occurred while placing the order.",
+      });
+    }
+  }
   
 
 

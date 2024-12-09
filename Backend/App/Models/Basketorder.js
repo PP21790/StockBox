@@ -8,7 +8,7 @@ const BasketorderModel = Schema({
         trim: true,
         default: null
     },
-    signalid: {
+    tradesymbol: {
         type: String,
         trim: true,
         default: null
@@ -38,13 +38,14 @@ const BasketorderModel = Schema({
         trim: true,
         default: null
     },
-    lprice: {
+    price: {
         type: Number,
         default: 0
     },
-    tprice: {
-        type: Number,
-        default: 0
+    basket_id: {
+        type: String,
+        trim: true,
+        default: null
     },
     ordertoken: {
         type: String,

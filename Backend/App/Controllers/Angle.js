@@ -596,8 +596,6 @@ const uniorderId = order.uniqueorderid;
 
 
 
-
-
     
     async orderexitangle() {
         
@@ -836,6 +834,265 @@ const uniorderId = order.uniqueorderid;
         }
     }
 
+
+
+    
+    async angleorderplace(item) {
+
+        try {
+            const { id, quantity, price, version, basket_id,tradesymbol,instrumentToken, calltype, brokerid } = item;
+
+            const client = await Clients_Modal.findById(id);
+            if (!client) {
+                return {
+                    status: false,
+                    message: "Client not found"
+                };
+            }
+
+
+            if (client.tradingstatus == 0) {
+                return {
+                    status: false,
+                    message: "Client Broker Not Login, Please Login With Broker"
+                };
+            }
+
+            if (brokerid != 1) {
+                return {
+                    status: false,
+                    message: "Invalid Broker Place Order"
+                };
+            }
+            const authToken = client.authtoken;
+
+            let exchange, producttype;
+                exchange = "NSE";
+                producttype = "DELIVERY";
+
+                if(calltype =="BUY") {} else {
+                let holdingData = { qty: 0 };
+                let positionData = { qty: 0 };
+                let totalValue = 0;  // Declare totalValue outside the blocks
+                try {
+                    positionData = await CheckPosition(userId, authToken, "C", instrumentToken, producttype, calltype, tradesymbol);
+    
+                } catch (error) {
+                }
+    
+                    try {
+                        holdingData = await CheckHolding(userId, authToken, "C", instrumentToken, producttype, calltype);
+    
+                    } catch (error) {
+                    }
+    
+                    const validPositionData = !isNaN(Number(positionData.qty)) ? Number(positionData.qty) : 0;  // Validate positionData.qty
+                    const validHoldingQty = !isNaN(Number(holdingData.qty)) ? Number(holdingData.qty) : 0;  // Validate holdingData.qty
+                    totalValue = validPositionData + validHoldingQty;
+    
+               
+
+
+                if (totalValue < quantity) {
+
+                    return {
+                        status: false,
+                        message: "Sorry, the requested quantity is not available."
+                    };
+                }
+    
+            }
+
+
+            var data = JSON.stringify({
+                "variety":"NORMAL",
+                "tradingsymbol":tradesymbol,
+                "symboltoken":instrumentToken,
+                "transactiontype":calltype,
+                "exchange":exchange,
+                "ordertype":"MARKET",
+                "producttype":producttype,
+                "duration":"DAY",
+                "price":0,
+                "squareoff":"0",
+                "stoploss":"0",
+                "quantity":quantity
+                });
+              
+               
+
+
+
+            const config = {
+                method: 'post',
+                url: 'https://apiconnect.angelone.in/rest/secure/angelbroking/order/v1/placeOrder',
+              //  url: 'https://apiconnect.angelone.in/rest/secure/angelbroking/order/v1/getOrderBook',
+              
+                headers: { 
+                    'Authorization': `Bearer ${authToken}`,
+                    'Content-Type': 'application/json', 
+                    'Accept': 'application/json', 
+                    'X-UserType': 'USER', 
+                    'X-SourceID': 'WEB', 
+                    'X-ClientLocalIP': 'CLIENT_LOCAL_IP', // Replace with actual IP
+                    'X-ClientPublicIP': 'CLIENT_PUBLIC_IP', // Replace with actual IP
+                    'X-MACAddress': 'MAC_ADDRESS', // Replace with actual MAC address
+                    'X-PrivateKey': client.apikey // Replace with actual API key
+                },
+                data: data
+            };
+
+          //  const response = await axios(config);
+
+            axios(config)
+            .then(async (response) => {
+              
+                if (response.data.message == 'SUCCESS') {
+                        const order = new Basketorder_Modal({
+                            clientid: client._id,
+                            tradesymbol: tradesymbol,
+                            orderid:response.data.data.orderid,
+                            uniqueorderid:response.data.data.uniqueorderid,
+                            ordertype: calltype,
+                            borkerid: 1,
+                            price: price,
+                            quantity: quantity,
+                            ordertoken: instrumentToken,
+                            exchange: exchange,
+                            version:version,
+                            basket_id:basket_id
+                        });
+
+                        await order.save();
+                        return {
+                            status: true,
+                            data: response.data ? null : "Order Successfully",
+                        };
+                    }
+                    else {
+
+                        return {
+                            status: false,
+                            message: response.data
+                        };
+                    }
+
+                })
+                .catch(async (error) => {
+                    const message = (JSON.stringify(error.response.data)).replace(/["',]/g, '');
+
+                  
+                    return {
+                        status: false,
+                        message: message
+                    };
+
+                });
+
+
+        } catch (error) {
+            return {
+                status: false,
+                message: error.response ? error.response.data : "An error occurred while placing the order"
+            };
+        }
+    }
+
+
+    async checkOrderBasket(req, res) {
+        
+        try {
+            const { orderid, clientid } = req.body;
+
+            const order = await Basketorder_Modal.findOne({
+                clientid: clientid,  
+                orderid: orderid        
+            });
+    
+            if (!order) {
+                return res.status(404).json({
+                    status: false,
+                    message: "Order not found for this client"
+                });
+            }
+
+
+          
+
+
+
+            const client = await Clients_Modal.findById(clientid);
+            if (!client) {
+                return res.status(404).json({
+                    status: false,
+                    message: "Client not found"
+                });
+            }
+
+if(order.status==1) {
+
+    return res.json({
+        status: true,
+        response: order.data
+    });
+}
+
+if(client.tradingstatus == 0)
+    {
+        return res.status(404).json({
+            status: false,
+            message: "Client Broker Not Login, Please Login With Broker"
+        });
+    }
+
+
+    if (order.borkerid!=1) {
+        return res.status(404).json({
+            status: false,
+            message: "Order not found for this Broker"
+        });
+    }
+
+
+const authToken = client.authtoken;
+const userId = client.apikey;
+
+
+const uniorderId = order.uniqueorderid;
+            const config = {
+                method: 'get',
+                url: `https://apiconnect.angelone.in/rest/secure/angelbroking/order/v1/details/${uniorderId}`, // Use dynamic orderid
+                headers: {
+                    'Authorization': 'Bearer ' + authToken,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-UserType': 'USER',
+                    'X-SourceID': 'WEB',
+                    'X-ClientLocalIP': 'CLIENT_LOCAL_IP',
+                    'X-ClientPublicIP': 'CLIENT_PUBLIC_IP',
+                    'X-MACAddress': 'MAC_ADDRESS',
+                    'X-PrivateKey': userId
+                },
+            };
+    
+            const response = await axios(config); // Use await with axios
+
+            order.data = response.data; 
+            order.status = 1; 
+            await order.save();
+
+            return res.json({
+                status: true,
+                response: response.data
+            });
+    
+        } catch (error) {
+            return res.status(500).json({ 
+                status: false,
+                message: error.response ? error.response.data : "Error occurred while fetching order details."
+            });
+        }
+    }
 
     
 

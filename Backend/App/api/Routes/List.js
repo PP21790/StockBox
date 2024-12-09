@@ -1,6 +1,6 @@
 const router = require("express").Router()
 
-const {Blogslist,Newslist,Bannerlist,Plancategorysist,getPlansByPlancategoryId,addPlanSubscription,myPlan,Couponlist,Signallist,applyCoupon,showSignalsToClients,Servicelist,Faqlist,detailContent,showSignalsToClientsClose,BasketList,pastPerformance,addBasketSubscription,getallPlan,addFreeTrail,BroadcastList,myFreetrial,basicSetting,pastPerformances,myService,CloseSignal,showSignalsToClientsCloses,Notification,Bank,Qrcode,BlogslistwithPagination,NewslistwithPagination,Refer,BasketLists,BasketstockList,myBasketPlan,placeOrder} = require('../Controllers/List')
+const {Blogslist,Newslist,Bannerlist,Plancategorysist,getPlansByPlancategoryId,addPlanSubscription,myPlan,Couponlist,Signallist,applyCoupon,showSignalsToClients,Servicelist,Faqlist,detailContent,showSignalsToClientsClose,BasketList,pastPerformance,addBasketSubscription,getallPlan,addFreeTrail,BroadcastList,myFreetrial,basicSetting,pastPerformances,myService,CloseSignal,showSignalsToClientsCloses,Notification,Bank,Qrcode,BlogslistwithPagination,NewslistwithPagination,Refer,BasketLists,BasketstockList,myBasketPlan,placeOrder,exitPlaceOrder} = require('../Controllers/List')
 
 
 router.get('/api/list/blogs',Blogslist);
@@ -49,7 +49,9 @@ router.get('/api/list/notification/:id', Notification);
 router.get('/api/list/bank', Bank);
 router.get('/api/list/qrcode', Qrcode);
 router.get('/api/refer', Refer);
-router.get('/api/placeorder', placeOrder);
+router.post('/api/placeorder', placeOrder);
+router.post('/api/exitplaceorder', exitPlaceOrder);
+
 
 
 module.exports = router;
