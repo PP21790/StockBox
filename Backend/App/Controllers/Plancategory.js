@@ -273,14 +273,14 @@ class Plancategory {
       if (!updatedPlancategory) {
         return res.status(404).json({
           status: false,
-          message: "Plancategory not found",
+          message: "Plan category not found",
         });
       }
   
       console.log("Updated Plancategory:", updatedPlancategory);
       return res.json({
         status: true,
-        message: "Plancategory updated successfully",
+        message: "Plan category updated successfully",
         data: updatedPlancategory,
       });
   
@@ -302,7 +302,7 @@ class Plancategory {
       if (!id) {
         return res.status(400).json({
           status: false,
-          message: "Plancategory ID is required",
+          message: "Plan category ID is required",
         });
       }
 
@@ -318,14 +318,14 @@ class Plancategory {
       if (!deletedPlancategory) {
         return res.status(404).json({
           status: false,
-          message: "Plancategory not found",
+          message: "Plan category not found",
         });
       }
 
       console.log("Deleted Plancategory:", deletedPlancategory);
       return res.json({
         status: true,
-        message: "Plancategory deleted successfully",
+        message: "Plan category deleted successfully",
         data: deletedPlancategory,
       });
     } catch (error) {

@@ -81,16 +81,16 @@ a {
 
 .logo-icon {
 
-	width: 30px
+	width: 21px
 }
 
 
 
 .logo-text {
 
-	font-size: 22px;
+	font-size: 20px;
 
-	margin-left: 10px;
+	margin-left: 8px;
 
 	margin-bottom: 0;
 
@@ -5764,4 +5764,6 @@ background-color: #f1f1f1 !important;
 .notification.dropdown-item.active, .notification.dropdown-item:active {
     background-color: transparent !important;
 }
-  
+div.rdt_TableCell svg {
+    width: 14px;
+}

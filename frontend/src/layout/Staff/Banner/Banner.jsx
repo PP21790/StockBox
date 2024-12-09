@@ -272,7 +272,7 @@ const Banner = () => {
             name: 'Image',
             cell: row => <img src={`${image_baseurl}uploads/banner/${row.image}`} alt={row.image} title={row.image} width="50" height="50" />,
             sortable: true,
-            width: '240px',
+          
 
         },
         permission.includes("bannerstatus")  ? {
@@ -293,14 +293,14 @@ const Banner = () => {
                 </div>
             ),
             sortable: true,
-            width: '240px',
+           
 
         } : "",
         {
             name: 'Created At',
             selector: row => fDateTime(row.created_at),
             sortable: true,
-            width: '240px',
+          
 
         },
         // {
@@ -316,7 +316,7 @@ const Banner = () => {
                 <>
 
                    {permission.includes("editbanner") ? <div>
-                        <Tooltip placement="top" overlay="Updaate">
+                        <Tooltip placement="top" overlay="Update">
                             <SquarePen
                                 onClick={() => {
                                     setModel(true);
