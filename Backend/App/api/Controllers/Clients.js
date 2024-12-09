@@ -16,6 +16,7 @@ const Helpdesk_Modal = db.Helpdesk;
 const Order_Modal = db.Order;
 const Signal_Modal = db.Signal;
 const Adminnotification_Modal = db.Adminnotification;
+const Basketorder_Modal = db.Basketorder;
 
 
 class Clients {
@@ -1671,6 +1672,26 @@ async orderListDetail(req, res) {
     return res.json({ status: false, message: "Server error", data: [] });  // Error handling
   }
 }
+
+
+async basketOrderList(req, res) {
+  try {
+
+    const { clientid } = req.body;  
+console.log("clientid",clientid);
+    const result = await Basketorder_Modal.find({ clientid: clientid });
+
+    return res.json({
+      status: true,
+      message: "get",
+      data: result  // Return the fetched payouts
+    });
+  } catch (error) {
+    return res.json({ status: false, message: "Server error", data: [] });  // Error handling
+  }
+}
+
+
 
 }
 module.exports = new Clients();

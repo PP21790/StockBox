@@ -1795,7 +1795,7 @@ class List {
     try {
 
       const { id } = req.params;
-      const basketstock = await Basketstock_Modal.find({ del: false, basket_id: id });
+      const basketstock = await Basketstock_Modal.find({ del: false, status: 1, basket_id: id });
 
       return res.json({
         status: true,
@@ -2764,7 +2764,7 @@ class List {
 
   async placeOrder(req, res) {
     try {
-      const { basket_id, clientid, brokerid, investmentamount } = req.body;
+      const { basket_id, clientid, brokerid, investmentamount, type } = req.body;
   
       const basket = await Basket_Modal.findById(basket_id);
       if (!basket) {
@@ -2774,10 +2774,27 @@ class List {
         });
       }
   
+
+                  
+            if (investmentamount < basket.mininvamount) {
+              return res.status(400).json({
+                status: false,
+                message: `Investment amount must be at least ${basket.mininvamount}.`,
+              });
+            }
       // Get stocks for the basket
       const existingStocks = await Basketstock_Modal.find({ basket_id }).sort({ version: -1 });
 
-      const version = existingStocks.length > 0 ? existingStocks[0].version : 0; 
+      const version = existingStocks.length > 0 ? existingStocks[0].version : 1; 
+
+if(version==1)  {
+      if (investmentamount < basket.mininvamount) {
+        return res.status(400).json({
+          status: false,
+          message: `Investment amount must be at least ${basket.mininvamount}.`,
+        });
+      }
+    }
       
       if (!existingStocks || existingStocks.length === 0) {
         return res.status(400).json({
@@ -2794,7 +2811,7 @@ class List {
   
       // Iterate over each stock to calculate allocated amount and quantity
       for (const stock of existingStocks) {
-        const { tradesymbol, weightage } = stock;
+        const { tradesymbol, weightage,name } = stock;
   
         try {
           // Fetch stock data from Stock_Modal
@@ -2821,6 +2838,7 @@ class List {
   
           // Store the order details for the stock
           const stockOrder = {
+            symbol:name,
             tradesymbol,
             quantity,
             lpPrice,
@@ -2831,6 +2849,10 @@ class List {
           };
           // Add the stock order to the stockOrders array
           stockOrders.push(stockOrder);
+
+ if(type==1) {
+
+
        if(brokerid==2) {
           await orderplace({
             id: clientid,
@@ -2887,7 +2909,7 @@ class List {
         
         }
 
-        
+      }
 
         } catch (innerError) {
           console.error(`Error processing stock ${tradesymbol}:`, innerError);
@@ -2895,10 +2917,10 @@ class List {
         }
       }
   
-      // Respond with success and order details
+      
       res.status(200).json({
         status: true,
-        message: "Order placed successfully.",
+        message: type == 1 ? "Order Placed Successfully." : "Order Confirm Successfully.",
         data: stockOrders,
       });
     } catch (error) {
