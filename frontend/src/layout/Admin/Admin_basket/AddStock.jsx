@@ -29,7 +29,6 @@
 //       ],
 //     },
 //   ];
-  
 
 // const initialValues = {
 
@@ -38,7 +37,7 @@
 // };
 
 // const validationSchema = Yup.object().shape({
- 
+
 //   Stock: Yup.array().of(
 //     Yup.object().shape({
 //       stocks: Yup.string().required('Stocks are required'),
@@ -54,7 +53,6 @@
 
 // const AddStock = () => {
 
-
 //   const navigate = useNavigate();
 //   const user_id = localStorage.getItem("id");
 //   const token = localStorage.getItem("token");
@@ -62,16 +60,14 @@
 //   const onSubmit = async (values) => {
 
 //     const req = {
-     
+
 //       Stock: values.Stock
 //     };
 
-
-  
 //     try {
 //       const response = await AddStock(req, token);
 //       console.log(response);
-      
+
 //       if (response.status) {
 //         Swal.fire({
 //           title: "Create Successful!",
@@ -105,9 +101,8 @@
 
 //   return (
 
-
 //     <div className='page-content'>
-        
+
 //     <Formik
 //       initialValues={initialValues}
 //       validationSchema={validationSchema}
@@ -122,7 +117,7 @@
 //           page_title="Add Stock"
 //           btn_name1="Cancel"
 //           btn_name1_route="/admin/basket"
-//           showAddRemoveButtons={true} 
+//           showAddRemoveButtons={true}
 //         />
 //       )}
 //     </Formik>
@@ -131,56 +126,131 @@
 // };
 
 // export default AddStock;
-
-
-import {React, useState, useEffect} from 'react'
-import { getStock } from '../../../Services/Admin'
-import { useNavigate, useParams } from 'react-router-dom';
-
-
+import React, { useState } from "react";
+import Select from "react-select";
+import { Formik, Field, Form } from "formik";
+import { useNavigate, Link } from "react-router-dom";
 
 const AddStock = () => {
-  const { id } = useParams();
-  const user_id = localStorage.getItem("id");
+  const [selectedServices, setSelectedServices] = useState([]);
+  const [formData, setFormData] = useState({});
+  const navigate = useNavigate();
 
-  const [stockdata, setStockdata] = useState([]);
-  
-  const fetchstock=  async () => {
-    try{
-      const res= await getStock();
-      console.log(res);
-      if(res.status){
-        setStockdata(res.data);
-      }
-      else{
-        
-        console.log(res.message);
-      }
-    }catch(err){
-      {
-        console.log(err);
-      }
-  }};
-  useEffect(() => {
-    fetchstock();
-  }, [])
+  const serviceOptions = [
+    { value: "service1", label: "Service 1" },
+    { value: "service2", label: "Service 2" },
+    { value: "service3", label: "Service 3" },
+  ];
+
+  const handleServiceChange = (selectedOption) => {
+    if (
+      selectedOption &&
+      !selectedServices.some(
+        (service) => service.value === selectedOption.value
+      )
+    ) {
+      setSelectedServices((prevServices) => [...prevServices, selectedOption]);
+      setFormData((prevData) => ({
+        ...prevData,
+        [selectedOption.value]: {
+          stocks: "",
+          tradesymbol: "",
+          percentage: "",
+          price: "",
+        },
+      }));
+    }
+  };
+
+  const handleRemoveService = (serviceValue) => {
+    setSelectedServices((prevServices) =>
+      prevServices.filter((service) => service.value !== serviceValue)
+    );
+    setFormData((prevData) => {
+      const newData = { ...prevData };
+      delete newData[serviceValue];
+      return newData;
+    });
+  };
+
+  const handleSubmit = (values) => {
+    // Log the form values when submitted
+    console.log("Form values:", values);
+    console.log("Dynamic formData:", formData);
+  };
 
   return (
-    <div className='page-content'>
-
-<div className="card">
-    
-    <div className="card-body">
-      <input type="search" className="form-control" placeholder="Stock Name" />
-<ul>
-  {stockdata.map((stock, index) => (
-    <li key={index}>{stock}</li>
-  ))}
-</ul>
+    <div className="page-content">
+      <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+        <div className="breadcrumb-title pe-3">Add Stock</div>
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb mb-0 p-0">
+            <li className="breadcrumb-item">
+              <Link to="/admin/dashboard">
+                <i className="bx bx-home-alt" />
+              </Link>
+            </li>
+          </ol>
+        </nav>
       </div>
+      <hr />
+      <div className="card">
+        <div className="card-body">
+          <Formik
+            initialValues={formData}
+            onSubmit={handleSubmit}
+          >
+            {({ handleChange, values, handleSubmit }) => (
+              <Form onSubmit={handleSubmit}>
+                <Select
+                  options={serviceOptions}
+                  onChange={handleServiceChange}
+                  placeholder="Select a service"
+                  isClearable
+                  className="mt-4"
+                />
+                {selectedServices.map((service) => (
+                  <div key={service.value} className="mt-4">
+                    <h5>
+                      {service.label}
+
+                      {selectedServices && selectedServices.length > 1 && (
+                        <button
+                          type="button"
+                          className="btn btn-danger btn-sm float-end"
+                          onClick={() => handleRemoveService(service.value)}
+                        >
+                          <i className="bx bx-trash m-0"></i>
+                        </button>
+                      )}
+                    </h5>
+                    <div className="row">
+                      {Object.keys(formData[service.value]).map(
+                        (fieldKey, index) => (
+                          <div key={index} className="col-md-3">
+                            <label>{fieldKey}</label>
+                            <Field
+                              type="text"
+                              name={`${service.value}.${fieldKey}`}
+                              className="form-control "
+                              placeholder={`Enter ${fieldKey}`}
+                            />
+                          </div>
+                        )
+                      )}
+                    </div>
+                  </div>
+                ))}
+                <button type="submit" className="btn btn-primary mt-4">
+                  Submit
+                </button>
+              </Form>
+            )}
+          </Formik>
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default AddStock
+export default AddStock;
