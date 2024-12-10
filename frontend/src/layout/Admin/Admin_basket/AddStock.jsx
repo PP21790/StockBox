@@ -126,13 +126,14 @@
 // };
 
 // export default AddStock;
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import { Formik, Field, Form } from "formik";
 import { useNavigate, Link } from "react-router-dom";
 import { Addstockbasketform } from "../../../Services/Admin";
 import Swal from "sweetalert2";
 import { useParams } from "react-router-dom";
+import * as Yup from "yup";
 
 const AddStock = () => {
   const { id: basket_id } = useParams(); // Extract basket_id from the URL
@@ -146,6 +147,47 @@ const AddStock = () => {
     { value: "service3", label: "Stock 3" },
   ];
 
+  // Update the validation schema dynamically
+  const getValidationSchema = (formData) => {
+    return Yup.object().shape(
+      Object.keys(formData).reduce((acc, serviceKey) => {
+        acc[serviceKey] = Yup.object({
+          name: Yup.string().required(`${serviceKey} name is required`),
+          tradesymbol: Yup.string().required(`${serviceKey} trade symbol is required`),
+          percentage: Yup.number()
+            .required(`${serviceKey} percentage is required`)
+            .min(0, `${serviceKey} percentage must be at least 0`)
+            .max(100, `${serviceKey} percentage cannot exceed 100`),
+          price: Yup.number()
+            .required(`${serviceKey} price is required`)
+            .min(0, `${serviceKey} price must be greater than 0`),
+        });
+        return acc;
+      }, {})
+    );
+  };
+
+  // Update the initial form values dynamically
+  const getInitialValues = (formData) => {
+    const initialValues = {};
+    if (formData) {
+      Object.keys(formData).forEach((key) => {
+        initialValues[key] = formData[key];
+      });
+    }
+    return initialValues;
+  };
+
+  useEffect(() => {
+    // Whenever selectedServices change, update the initial formData structure
+    const initialData = selectedServices.reduce((acc, service) => {
+      acc[service.value] = { name: "", tradesymbol: "", percentage: "", price: "" };
+      return acc;
+    }, {});
+
+    setFormData(initialData);
+  }, [selectedServices]);
+
   const handleServiceChange = (selectedOption) => {
     if (
       selectedOption &&
@@ -154,16 +196,6 @@ const AddStock = () => {
       )
     ) {
       setSelectedServices((prevServices) => [...prevServices, selectedOption]);
-      setFormData((prevData) => ({
-        ...prevData,
-        [selectedOption.value]: {
-          name: "",
-          tradesymbol: "",
-          percentage: "",
-          price: "",
-         
-        },
-      }));
     }
   };
 
@@ -171,14 +203,9 @@ const AddStock = () => {
     setSelectedServices((prevServices) =>
       prevServices.filter((service) => service.value !== serviceValue)
     );
-    setFormData((prevData) => {
-      const newData = { ...prevData };
-      delete newData[serviceValue];
-      return newData;
-    });
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (values) => {
     const token = localStorage.getItem("token");
 
     if (!basket_id) {
@@ -191,11 +218,11 @@ const AddStock = () => {
     }
 
     console.log("Basket ID from URL:", basket_id);
-    console.log("Form Data:", formData);
+    console.log("Form Data:", values);
 
     const req = {
       basket_id, // Use the basket_id from the URL
-      stocks: Object.values(formData),
+      stocks: Object.values(values),
     };
 
     try {
@@ -244,10 +271,11 @@ const AddStock = () => {
       <div className="card">
         <div className="card-body">
           <Formik
-            initialValues={formData}
+            initialValues={getInitialValues(formData)} // Make sure formData is not null or undefined
+            validationSchema={getValidationSchema(formData)} // Make sure validation schema is valid
             onSubmit={handleSubmit}
           >
-            {({ handleChange, values, handleSubmit }) => (
+            {({ handleChange, values, handleSubmit, touched, errors }) => (
               <Form onSubmit={handleSubmit}>
                 <Select
                   options={serviceOptions}
@@ -269,27 +297,25 @@ const AddStock = () => {
                       </button>
                     </h5>
                     <div className="row">
-                      {Object.keys(formData[service.value]).map(
+                      {Object.keys(formData[service.value] || {}).map(
                         (fieldKey, index) => (
                           <div key={index} className="col-md-3">
                             <label>{fieldKey}</label>
                             <Field
-                             type={fieldKey === "percentage" || fieldKey === "price" ? "number" : "text"}
-                              // type="text"
+                              type={fieldKey === "percentage" || fieldKey === "price" ? "number" : "text"}
                               name={`${service.value}.${fieldKey}`}
-                              className="form-control"
+                              className={`form-control ${
+                                touched[service.value]?.[fieldKey] && errors[service.value]?.[fieldKey]
+                                  ? "is-invalid"
+                                  : ""
+                              }`}
                               placeholder={`Enter ${fieldKey}`}
-                              onChange={(e) => {
-                                const value = e.target.value;
-                                setFormData((prevData) => ({
-                                  ...prevData,
-                                  [service.value]: {
-                                    ...prevData[service.value],
-                                    [fieldKey]: value,
-                                  },
-                                }));
-                              }}
                             />
+                            {touched[service.value]?.[fieldKey] && errors[service.value]?.[fieldKey] && (
+                              <div className="invalid-feedback">
+                                {errors[service.value]?.[fieldKey]}
+                              </div>
+                            )}
                           </div>
                         )
                       )}
@@ -309,3 +335,6 @@ const AddStock = () => {
 };
 
 export default AddStock;
+
+
+
