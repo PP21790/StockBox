@@ -1,131 +1,3 @@
-// import React from 'react';
-// import { Formik } from 'formik';
-// import * as Yup from 'yup';
-// import DynamicForm from '../../../components/DynamicForm';
-// import { Addbasketplan } from '../../../Services/Admin';
-// import Swal from 'sweetalert2';
-// import { useNavigate } from 'react-router-dom';
-
-// const fieldConfigurations = [
-//     {
-//       col_size: 12,
-//       name: 'Stock',
-//       label: 'Stock',
-//       type: 'Stock',
-//       placeholder: 'Add Stock',
-//       data: [
-//         {
-//           stocks: '',
-//           type: '', // Dropdown for Type (buy, sell, hold)
-//           typeOptions: [ // Options for the select field
-//             { label: 'Buy', value: 'buy' },
-//             { label: 'Sell', value: 'sell' },
-//             { label: 'Hold', value: 'hold' },
-//           ],
-//           suggestedPrice: { min: '', max: '' }, // Two input fields for Suggested Price
-//           stockWeightage: '', // Input for Weightage
-//           quantity: '', // Input for Quantity
-//         },
-//       ],
-//     },
-//   ];
-
-// const initialValues = {
-
-//   Stock: [
-//     { stocks: '', pricerange: '', stockweightage: '', entryprice: '', exitprice: '', exitdate: '', comment: '' }],
-// };
-
-// const validationSchema = Yup.object().shape({
-
-//   Stock: Yup.array().of(
-//     Yup.object().shape({
-//       stocks: Yup.string().required('Stocks are required'),
-//       pricerange: Yup.string().required('Price range is required'),
-//       stockweightage: Yup.string().required('Stock weightage is required'),
-//       entryprice: Yup.string().required('Entry price is required'),
-//       exitprice: Yup.string().required('Exit price is required'),
-//       exitdate: Yup.string().required('Exit date is required'),
-//       comment: Yup.string().required('Comment is required'),
-//     })
-//   ),
-// });
-
-// const AddStock = () => {
-
-//   const navigate = useNavigate();
-//   const user_id = localStorage.getItem("id");
-//   const token = localStorage.getItem("token");
-
-//   const onSubmit = async (values) => {
-
-//     const req = {
-
-//       Stock: values.Stock
-//     };
-
-//     try {
-//       const response = await AddStock(req, token);
-//       console.log(response);
-
-//       if (response.status) {
-//         Swal.fire({
-//           title: "Create Successful!",
-//           text: response.message,
-//           icon: "success",
-//           timer: 1500,
-//           timerProgressBar: true,
-//         });
-//         setTimeout(() => {
-//           navigate("/admin/basket");
-//         }, 1500);
-//       } else {
-//         Swal.fire({
-//           title: "Error",
-//           text: response.message,
-//           icon: "error",
-//           timer: 1500,
-//           timerProgressBar: true,
-//         });
-//       }
-//     } catch (error) {
-//       Swal.fire({
-//         title: "Error",
-//         text: "An unexpected error occurred. Please try again later.",
-//         icon: "error",
-//         timer: 1500,
-//         timerProgressBar: true,
-//       });
-//     }
-//   };
-
-//   return (
-
-//     <div className='page-content'>
-
-//     <Formik
-//       initialValues={initialValues}
-//       validationSchema={validationSchema}
-//       onSubmit={onSubmit}
-//     >
-//       {formikProps => (
-//         <DynamicForm
-//           fields={fieldConfigurations}
-//           formik={formikProps}
-//           btn_name="Submit"
-//           sumit_btn={true}
-//           page_title="Add Stock"
-//           btn_name1="Cancel"
-//           btn_name1_route="/admin/basket"
-//           showAddRemoveButtons={true}
-//         />
-//       )}
-//     </Formik>
-//   </div>
-//   );
-// };
-
-// export default AddStock;
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import { Formik, Field, Form } from "formik";
@@ -134,6 +6,8 @@ import { Addstockbasketform } from "../../../Services/Admin";
 import Swal from "sweetalert2";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
+import axios from "axios";
+
 
 const AddStock = () => {
   const { id: basket_id } = useParams(); // Extract basket_id from the URL
@@ -141,11 +15,10 @@ const AddStock = () => {
   const [formData, setFormData] = useState({});
   const navigate = useNavigate();
 
-  const serviceOptions = [
-    { value: "service1", label: "Stock 1" },
-    { value: "service2", label: "Stock 2" },
-    { value: "service3", label: "Stock 3" },
-  ];
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+ 
 
   // Update the validation schema dynamically
   const getValidationSchema = (formData) => {
@@ -189,17 +62,21 @@ const AddStock = () => {
   }, [selectedServices]);
 
   const handleServiceChange = (selectedOption) => {
-    if (
-      selectedOption &&
-      !selectedServices.some(
-        (service) => service.value === selectedOption.value
-      )
-    ) {
-      setSelectedServices((prevServices) => [...prevServices, selectedOption]);
-    }
+    console.log("Selected Option:", selectedOption);
+    setSelectedServices(selectedOption);
+
+    // if (
+    //   selectedOption &&
+    //   !selectedServices.some(
+    //     (service) => service.value === selectedOption.value
+    //   )
+    // ) {
+    //   setSelectedServices(selectedOption);
+    // }
   };
 
   const handleRemoveService = (serviceValue) => {
+    console.log("Removing service:", serviceValue);
     setSelectedServices((prevServices) =>
       prevServices.filter((service) => service.value !== serviceValue)
     );
@@ -253,6 +130,61 @@ const AddStock = () => {
     }
   };
 
+
+  const fetchOptions = async (inputValue) => {
+    try {
+      // Ensure inputValue is a string
+      if (typeof inputValue !== "string") {
+        inputValue = "";
+      }
+
+      // If inputValue is empty, don't make the request
+      if (!inputValue) {
+        setOptions([]); // Reset options if no input
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true); // Start loading
+
+      // Making the API request dynamically based on the input
+      const data = JSON.stringify({
+        symbol: inputValue,
+      });
+
+      const config = {
+        method: "post",
+        maxBodyLength: Infinity,
+        url: "http://192.168.0.11:5001/stock/getstockbysymbol",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: data,
+      };
+
+      const response = await axios.request(config);
+
+      // Check if the response has the correct data format
+      if (response.data && Array.isArray(response.data.data)) {
+        const fitervalue = response.data.data.map((item) => ({
+          label: String(item._id), // Ensure label is a string
+          value: String(item._id), // Ensure value is a string
+        }));
+
+        setOptions(fitervalue); // Update options state
+      } else {
+        setOptions([]); // Reset options if response is incorrect
+      }
+    } catch (error) {
+      console.error("Error fetching options:", error);
+      setOptions([]); // Reset options on error
+    } finally {
+      setLoading(false); // Stop loading
+    }
+  };
+console.log("selectedServices",selectedServices);
+
+
   return (
     <div className="page-content">
       <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
@@ -277,15 +209,36 @@ const AddStock = () => {
           >
             {({ handleChange, values, handleSubmit, touched, errors }) => (
               <Form onSubmit={handleSubmit}>
+                <div className="row">
+                <div className="col-6 ">
+          <input
+            type="text"
+            placeholder="Search..."
+            className="form-control"
+            onChange={(e) => fetchOptions(e.target.value)}
+          />
+        </div>
+        <div className="col-6 ">
                 <Select
-                  options={serviceOptions}
+                  options={options}
                   onChange={handleServiceChange}
                   placeholder="Select a stock"
                   isClearable
-                  className="mt-4"
+
+                  isMulti
+                  name="colors"
+                  className="basic-multi-select"
+                  classNamePrefix="select"
+                  isLoading={loading} // Show loading indicator while fetching
+
+
                 />
-                {selectedServices.map((service) => (
+
+</div>
+</div>
+                {selectedServices && selectedServices.map((service) => (
                   <div key={service.value} className="mt-4">
+                    {console.log(service)}
                     <h5>
                       {service.label}
                       <button
