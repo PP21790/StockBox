@@ -71,9 +71,10 @@ const EditClient = () => {
       } else {
         Swal.fire({
           title: "Error",
-          text: response.message,
+          // text: response.message,
+          text:"Email or Mobile number are already exists",
           icon: "error",
-          timer: 1500,
+          timer: 2500,
           timerProgressBar: true,
         });
       }

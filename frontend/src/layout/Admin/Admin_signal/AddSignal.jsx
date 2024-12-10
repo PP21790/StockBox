@@ -282,7 +282,7 @@ const AddSignal = () => {
   const fields = [
     {
       name: 'segment',
-      label: 'Select Segment',
+      label: 'Segment',
       type: 'select2',
       options: [
         { label: 'Cash', value: 'C' },

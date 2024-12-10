@@ -819,7 +819,7 @@ const DynamicForm = ({
                                                                                     />
 
                                                                                     <FontAwesomeIcon
-                                                                                        icon={passwordVisible ? faEyeSlash : faEye}
+                                                                                        icon={passwordVisible ?   faEye:faEyeSlash}
                                                                                         onClick={togglePasswordVisibility}
                                                                                         style={{
                                                                                             position: 'absolute',
@@ -862,7 +862,7 @@ const DynamicForm = ({
                                                                                         style={{ paddingRight: '3rem' }}
                                                                                     />
                                                                                     <FontAwesomeIcon
-                                                                                        icon={passwordVisible1 ? faEyeSlash : faEye}
+                                                                                        icon={passwordVisible1 ?   faEye : faEyeSlash}
                                                                                         onClick={togglePasswordVisibility1}
                                                                                         style={{
                                                                                             position: 'absolute',

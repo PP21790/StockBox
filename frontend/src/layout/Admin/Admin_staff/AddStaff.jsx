@@ -17,6 +17,9 @@ const AddStaff = () => {
     if (!values.FullName) {
       errors.FullName = "Please Enter Full Name";
     }
+    if(!/^[a-zA-Z\s]+$/.test(values.FullName)){
+      errors.FullName = "Special character Are Not Allowed In the Full Name"
+    }
     if (/\d/.test(values.FullName)) {
       errors.FullName = "Numbers Are Not Allowed In the Full Name";
     }
@@ -75,6 +78,8 @@ const AddStaff = () => {
         });
       }
     } catch (error) {
+      console.log("Error:",error);
+    
       Swal.fire({
         title: "Error",
         text: "An unexpected error occurred. Please try again later.",

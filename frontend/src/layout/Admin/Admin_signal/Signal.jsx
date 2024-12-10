@@ -1173,15 +1173,24 @@ const Signal = () => {
                                                                     <input
                                                                         className="form-control mb-3"
                                                                         type="file"
-                                                                        accept="pdf/*"
+                                                                        accept="application/pdf"
                                                                         id="imageUpload"
                                                                         onChange={(e) => {
                                                                             const file = e.target.files[0];
                                                                             if (file) {
+                                                                                if (file.type !== "application/pdf") {
+                                                                                    Swal.fire({
+                                                                                        title: 'Error!',
+                                                                                        text: 'Only PDF files are allowed!.',
+                                                                                        icon: 'error',
+                                                                                        confirmButtonText: 'Try Again',
+                                                                                    });
+                                                                                    return;
+                                                                                }
                                                                                 updateServiceTitle({ report: file });
                                                                             }
-                                                                            
                                                                         }}
+                                                                        
                                                                     />
                                                                 </div>
                                                                 <div className="col-md-2">
