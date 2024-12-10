@@ -132,16 +132,18 @@ import { Formik, Field, Form } from "formik";
 import { useNavigate, Link } from "react-router-dom";
 import { Addstockbasketform } from "../../../Services/Admin";
 import Swal from "sweetalert2";
+import { useParams } from "react-router-dom";
 
 const AddStock = () => {
+  const { id: basket_id } = useParams(); // Extract basket_id from the URL
   const [selectedServices, setSelectedServices] = useState([]);
   const [formData, setFormData] = useState({});
   const navigate = useNavigate();
 
   const serviceOptions = [
-    { value: "service1", label: "Service 1" },
-    { value: "service2", label: "Service 2" },
-    { value: "service3", label: "Service 3" },
+    { value: "service1", label: "Stock 1" },
+    { value: "service2", label: "Stock 2" },
+    { value: "service3", label: "Stock 3" },
   ];
 
   const handleServiceChange = (selectedOption) => {
@@ -155,10 +157,11 @@ const AddStock = () => {
       setFormData((prevData) => ({
         ...prevData,
         [selectedOption.value]: {
-          stocks: "",
+          name: "",
           tradesymbol: "",
-          percentage: " ",
-          price: " ",
+          percentage: "",
+          price: "",
+         
         },
       }));
     }
@@ -175,55 +178,53 @@ const AddStock = () => {
     });
   };
 
-  const handleSubmit = async (values) => {
-    console.log("Form values:", values);
-    console.log("Dynamic formData:", formData);
-  
-    const user_id = localStorage.getItem("id");
+  const handleSubmit = async () => {
     const token = localStorage.getItem("token");
-  
+
+    if (!basket_id) {
+      Swal.fire({
+        title: "Error",
+        text: "Basket ID is missing in the URL. Please try again.",
+        icon: "error",
+      });
+      return;
+    }
+
+    console.log("Basket ID from URL:", basket_id);
+    console.log("Form Data:", formData);
+
     const req = {
-      stocks: values.stocks,
-      tradesymbol: values.tradesymbol,
-      percentage: values.percentage,
-      price: values.price,
+      basket_id, // Use the basket_id from the URL
+      stocks: Object.values(formData),
     };
-  
+
     try {
       const response = await Addstockbasketform(req, token);
       console.log("API Response:", response);
-  
+
       if (response.status) {
         Swal.fire({
-          title: "Create Successful!",
+          title: "Success",
           text: response.message,
           icon: "success",
-          timer: 1500,
-          timerProgressBar: true,
         });
-        setTimeout(() => {
-          navigate("/admin/basket");
-        }, 1500);
+        setTimeout(() => navigate("/admin/basket"), 1500);
       } else {
         Swal.fire({
           title: "Error",
           text: response.message,
           icon: "error",
-          timer: 1500,
-          timerProgressBar: true,
         });
       }
     } catch (error) {
+      console.error("API Error:", error);
       Swal.fire({
         title: "Error",
         text: "An unexpected error occurred. Please try again later.",
         icon: "error",
-        timer: 1500,
-        timerProgressBar: true,
       });
     }
   };
-  
 
   return (
     <div className="page-content">
@@ -251,7 +252,7 @@ const AddStock = () => {
                 <Select
                   options={serviceOptions}
                   onChange={handleServiceChange}
-                  placeholder="Select a service"
+                  placeholder="Select a stock"
                   isClearable
                   className="mt-4"
                 />
@@ -259,16 +260,13 @@ const AddStock = () => {
                   <div key={service.value} className="mt-4">
                     <h5>
                       {service.label}
-
-                      {selectedServices && selectedServices.length > 1 && (
-                        <button
-                          type="button"
-                          className="btn btn-danger btn-sm float-end"
-                          onClick={() => handleRemoveService(service.value)}
-                        >
-                          <i className="bx bx-trash m-0"></i>
-                        </button>
-                      )}
+                      <button
+                        type="button"
+                        className="btn btn-danger btn-sm float-end"
+                        onClick={() => handleRemoveService(service.value)}
+                      >
+                        <i className="bx bx-trash m-0"></i>
+                      </button>
                     </h5>
                     <div className="row">
                       {Object.keys(formData[service.value]).map(
@@ -276,10 +274,21 @@ const AddStock = () => {
                           <div key={index} className="col-md-3">
                             <label>{fieldKey}</label>
                             <Field
-                              type="text"
+                             type={fieldKey === "percentage" || fieldKey === "price" ? "number" : "text"}
+                              // type="text"
                               name={`${service.value}.${fieldKey}`}
-                              className="form-control "
+                              className="form-control"
                               placeholder={`Enter ${fieldKey}`}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                setFormData((prevData) => ({
+                                  ...prevData,
+                                  [service.value]: {
+                                    ...prevData[service.value],
+                                    [fieldKey]: value,
+                                  },
+                                }));
+                              }}
                             />
                           </div>
                         )

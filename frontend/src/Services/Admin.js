@@ -545,7 +545,7 @@ export async function Addbasketplan(data, token) {
 
 export async function Addstockbasketform(data, token) {
     try {
-        const res = await axios.post(`${Config.base_url}addstockbasketform`, data, {
+        const res = await axios.post(`${Config.base_url}basket/addstockbasketform`, data, {
             headers: {
                 data: {},
                 'Authorization': `${token}`,
