@@ -2782,6 +2782,32 @@ class List {
                 message: `Investment amount must be at least ${basket.mininvamount}.`,
               });
             }
+
+            const client = await Clients_Modal.findById(clientid);
+            if (!client) {
+                return res.status(404).json({
+                    status: false,
+                    message: "Client not found"
+                });
+            }
+            const config = {
+              method: 'get', // HTTP method
+              url: `https://ant.aliceblueonline.com/rest/AliceBlueAPIService/api/limits/getRmsLimits`, // Construct the full URL
+              headers: {
+                'Authorization': 'Bearer ' + userId + ' ' + authToken,
+              }
+            };
+            
+            axios(config)
+              .then(response => {
+                console.log(response.data); // Handle the response
+              })
+              .catch(error => {
+                console.error('Error:', error); // Handle the error
+              });
+            
+
+
       // Get stocks for the basket
       const existingStocks = await Basketstock_Modal.find({ basket_id }).sort({ version: -1 });
 

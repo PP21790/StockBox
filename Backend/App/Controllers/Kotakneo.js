@@ -8,6 +8,8 @@ const Clients_Modal = db.Clients;
 const Signal_Modal = db.Signal;
 const Stock_Modal = db.Stock;
 const Order_Modal = db.Order;
+const Basketorder_Modal = db.Basketorder;
+
 const qs = require("querystring");
 const jwt = require("jsonwebtoken");
 const path = require('path');

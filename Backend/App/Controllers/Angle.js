@@ -8,6 +8,7 @@ const Clients_Modal = db.Clients;
 const Signal_Modal = db.Signal;
 const Stock_Modal = db.Stock;
 const Order_Modal = db.Order;
+const Basketorder_Modal = db.Basketorder;
 
 
 class Angle {
@@ -942,10 +943,15 @@ const uniorderId = order.uniqueorderid;
                 data: data
             };
 
+
+        
           //  const response = await axios(config);
 
             axios(config)
             .then(async (response) => {
+
+
+            console.log("response",response.data.message);
               
                 if (response.data.message == 'SUCCESS') {
                         const order = new Basketorder_Modal({
@@ -979,12 +985,11 @@ const uniorderId = order.uniqueorderid;
 
                 })
                 .catch(async (error) => {
-                    const message = (JSON.stringify(error.response.data)).replace(/["',]/g, '');
 
                   
                     return {
                         status: false,
-                        message: message
+                        message: error
                     };
 
                 });
@@ -1000,14 +1005,15 @@ const uniorderId = order.uniqueorderid;
 
 
     async checkOrderBasket(req, res) {
-        
         try {
             const { orderid, clientid } = req.body;
+          
 
             const order = await Basketorder_Modal.findOne({
                 clientid: clientid,  
                 orderid: orderid        
             });
+           
     
             if (!order) {
                 return res.status(404).json({
@@ -1015,11 +1021,6 @@ const uniorderId = order.uniqueorderid;
                     message: "Order not found for this client"
                 });
             }
-
-
-          
-
-
 
             const client = await Clients_Modal.findById(clientid);
             if (!client) {
@@ -1059,6 +1060,7 @@ const userId = client.apikey;
 
 
 const uniorderId = order.uniqueorderid;
+
             const config = {
                 method: 'get',
                 url: `https://apiconnect.angelone.in/rest/secure/angelbroking/order/v1/details/${uniorderId}`, // Use dynamic orderid

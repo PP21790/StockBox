@@ -10,6 +10,7 @@ const Signal_Modal = db.Signal;
 const Stock_Modal = db.Stock;
 const Order_Modal = db.Order;
 const BasicSetting_Modal = db.BasicSetting;
+const Basketorder_Modal = db.Basketorder;
 
 class Markethub {
 
@@ -773,11 +774,7 @@ let data = JSON.stringify({
 
 
   async markethuborderplace(item) {
-    console.log("item",item);
-    return {
-        status: false,
-        message: "Client not found"
-    };
+   
     try {
         const { id, quantity, price, version, basket_id,tradesymbol,instrumentToken, calltype, brokerid } = item;
 

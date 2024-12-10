@@ -515,6 +515,36 @@ async getStocksByExpiryByStrike(req, res) {
 }
 
 
+async getStockBySymbol(req, res) {
+  try {
+    const { symbol } = req.body;
+
+    const result = await Stock_Modal.aggregate([
+      {
+        $match: { 
+          segment: "C",
+          symbol: { $regex: symbol, $options: 'i' }  // Like query for symbol
+        }
+      },
+      {
+        $group: {
+          _id: "$symbol",  
+        }
+      }
+    ]);
+
+    return res.json({
+      status: true,
+      message: "get",
+      data:result
+    });
+
+  } catch (error) {
+    return res.json({ status: false, message: "Server error", data: [] });
+  }
+}
+
+
 
 }
 
