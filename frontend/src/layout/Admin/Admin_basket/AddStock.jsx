@@ -8,25 +8,23 @@ import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 import axios from "axios";
 
-
 const AddStock = () => {
-  const { id: basket_id } = useParams(); // Extract basket_id from the URL
+  const { id: basket_id } = useParams(); 
   const [selectedServices, setSelectedServices] = useState([]);
   const [formData, setFormData] = useState({});
   const navigate = useNavigate();
-
   const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(false);
 
- 
-
-  // Update the validation schema dynamically
   const getValidationSchema = (formData) => {
     return Yup.object().shape(
       Object.keys(formData).reduce((acc, serviceKey) => {
+     console.log("acc[serviceKey]",acc[serviceKey])
         acc[serviceKey] = Yup.object({
           name: Yup.string().required(`${serviceKey} name is required`),
-          tradesymbol: Yup.string().required(`${serviceKey} trade symbol is required`),
+          tradesymbol: Yup.string().required(
+            `${serviceKey} trade symbol is required`
+          ),
           percentage: Yup.number()
             .required(`${serviceKey} percentage is required`)
             .min(0, `${serviceKey} percentage must be at least 0`)
@@ -35,16 +33,19 @@ const AddStock = () => {
             .required(`${serviceKey} price is required`)
             .min(0, `${serviceKey} price must be greater than 0`),
         });
+
         return acc;
       }, {})
     );
   };
 
-  // Update the initial form values dynamically
+
   const getInitialValues = (formData) => {
     const initialValues = {};
     if (formData) {
       Object.keys(formData).forEach((key) => {
+        console.log("formData[key]",formData[key])
+
         initialValues[key] = formData[key];
       });
     }
@@ -54,7 +55,16 @@ const AddStock = () => {
   useEffect(() => {
     // Whenever selectedServices change, update the initial formData structure
     const initialData = selectedServices.reduce((acc, service) => {
-      acc[service.value] = { name: "", tradesymbol: "", percentage: "", price: "" };
+
+console.log("Service:", service);
+console.log("Service Value:", acc);
+
+      acc[service.value] = {
+        name: "",
+        tradesymbol:service.tradesymbol,
+        percentage: "",
+        price: "",
+      };
       return acc;
     }, {});
 
@@ -62,7 +72,6 @@ const AddStock = () => {
   }, [selectedServices]);
 
   const handleServiceChange = (selectedOption) => {
-    console.log("Selected Option:", selectedOption);
     setSelectedServices(selectedOption);
 
     // if (
@@ -76,7 +85,6 @@ const AddStock = () => {
   };
 
   const handleRemoveService = (serviceValue) => {
-    console.log("Removing service:", serviceValue);
     setSelectedServices((prevServices) =>
       prevServices.filter((service) => service.value !== serviceValue)
     );
@@ -130,7 +138,6 @@ const AddStock = () => {
     }
   };
 
-
   const fetchOptions = async (inputValue) => {
     try {
       // Ensure inputValue is a string
@@ -169,6 +176,7 @@ const AddStock = () => {
         const fitervalue = response.data.data.map((item) => ({
           label: String(item._id), // Ensure label is a string
           value: String(item._id), // Ensure value is a string
+          tradesymbol:item.data[0].tradesymbol,
         }));
 
         setOptions(fitervalue); // Update options state
@@ -182,8 +190,8 @@ const AddStock = () => {
       setLoading(false); // Stop loading
     }
   };
-console.log("selectedServices",selectedServices);
-
+  console.log("selectedServices", selectedServices);
+  console.log("formData", formData);
 
   return (
     <div className="page-content">
@@ -210,72 +218,78 @@ console.log("selectedServices",selectedServices);
             {({ handleChange, values, handleSubmit, touched, errors }) => (
               <Form onSubmit={handleSubmit}>
                 <div className="row">
-                <div className="col-6 ">
-          <input
-            type="text"
-            placeholder="Search..."
-            className="form-control"
-            onChange={(e) => fetchOptions(e.target.value)}
-          />
-        </div>
-        <div className="col-6 ">
-                <Select
-                  options={options}
-                  onChange={handleServiceChange}
-                  placeholder="Select a stock"
-                  isClearable
-
-                  isMulti
-                  name="colors"
-                  className="basic-multi-select"
-                  classNamePrefix="select"
-                  isLoading={loading} // Show loading indicator while fetching
-
-
-                />
-
-</div>
-</div>
-                {selectedServices && selectedServices.map((service) => (
-                  <div key={service.value} className="mt-4">
-                    {console.log(service)}
-                    <h5>
-                      {service.label}
-                      <button
-                      
-                        type="button"
-                        className="btn btn-danger btn-sm float-end"
-                        onClick={() => handleRemoveService(service.value)}
-                      >
-                        <i className="bx bx-trash m-0"></i>
-                      </button>
-                    </h5>
-                    <div className="row">
-                      {Object.keys(formData[service.value] || {}).map(
-                        (fieldKey, index) => (
-                          <div key={index} className="col-md-3">
-                            <label>{fieldKey}</label>
-                            <Field
-                              type={fieldKey === "percentage" || fieldKey === "price" ? "number" : "text"}
-                              name={`${service.value}.${fieldKey}`}
-                              className={`form-control ${
-                                touched[service.value]?.[fieldKey] && errors[service.value]?.[fieldKey]
-                                  ? "is-invalid"
-                                  : ""
-                              }`}
-                              placeholder={`Enter ${fieldKey}`}
-                            />
-                            {touched[service.value]?.[fieldKey] && errors[service.value]?.[fieldKey] && (
-                              <div className="invalid-feedback">
-                                {errors[service.value]?.[fieldKey]}
-                              </div>
-                            )}
-                          </div>
-                        )
-                      )}
-                    </div>
+                  <div className="col-6 ">
+                    <input
+                      type="text"
+                      placeholder="Search..."
+                      className="form-control"
+                      onChange={(e) => fetchOptions(e.target.value)}
+                    />
                   </div>
-                ))}
+                  <div className="col-6 ">
+                    <Select
+                      options={options}
+                      onChange={handleServiceChange}
+                      placeholder="Select a stock"
+                      isClearable
+                      isMulti
+                      name="colors"
+                      className="basic-multi-select"
+                      classNamePrefix="select"
+                      isLoading={loading} // Show loading indicator while fetching
+                    />
+                  </div>
+                </div>
+                {selectedServices &&
+                  selectedServices.map((service) => (
+                    <div key={service.value} className="mt-4">
+                     
+                      <h5>
+                        {service.label}
+                        <button
+                          type="button"
+                          className="btn btn-danger btn-sm float-end"
+                          onClick={() => handleRemoveService(service.value)}
+                        >
+                          <i className="bx bx-trash m-0"></i>
+                        </button>
+                      </h5>
+
+                      <div className="row">
+                        {Object.keys(formData[service.value] || {}).map(
+                          (fieldKey, index) => (
+                            <div key={index} className="col-md-3">
+                         
+                              <label>{fieldKey}</label>
+                              <Field
+                                type={
+                                  fieldKey === "percentage" ||
+                                  fieldKey === "price"
+                                    ? "number"
+                                    : "text"
+                                }
+                                name={`${service.value}.${fieldKey}`}
+                                className={`form-control ${
+                                  touched[service.value]?.[fieldKey] &&
+                                  errors[service.value]?.[fieldKey]
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                placeholder={`Enter ${fieldKey}`}
+                                value={fieldKey === "tradesymbol" ? service.tradesymbol : values[service.value]?.[fieldKey]}
+                              />
+                              {touched[service.value]?.[fieldKey] &&
+                                errors[service.value]?.[fieldKey] && (
+                                  <div className="invalid-feedback">
+                                    {errors[service.value]?.[fieldKey]}
+                                  </div>
+                                )}
+                            </div>
+                          )
+                        )}
+                      </div>
+                    </div>
+                  ))}
                 <button type="submit" className="btn btn-primary mt-4">
                   Submit
                 </button>
@@ -289,6 +303,3 @@ console.log("selectedServices",selectedServices);
 };
 
 export default AddStock;
-
-
-

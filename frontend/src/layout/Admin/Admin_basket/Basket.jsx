@@ -27,7 +27,6 @@ const Basket = () => {
     getbasketlist();
   }, []);
 
-  console.log(clients);
   
   // Delete basket
   const Deletebasket = async (_id) => {
