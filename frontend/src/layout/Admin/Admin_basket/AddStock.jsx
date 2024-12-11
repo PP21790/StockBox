@@ -242,6 +242,7 @@ console.log("selectedServices",selectedServices);
                     <h5>
                       {service.label}
                       <button
+                      
                         type="button"
                         className="btn btn-danger btn-sm float-end"
                         onClick={() => handleRemoveService(service.value)}
