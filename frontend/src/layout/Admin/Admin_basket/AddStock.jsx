@@ -1,197 +1,104 @@
+
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
-import { Formik, Field, Form } from "formik";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useParams } from "react-router-dom";
 import { Addstockbasketform } from "../../../Services/Admin";
 import Swal from "sweetalert2";
-import { useParams } from "react-router-dom";
-import * as Yup from "yup";
 import axios from "axios";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 
 const AddStock = () => {
-  const { id: basket_id } = useParams(); 
+  const { id: basket_id } = useParams();
   const [selectedServices, setSelectedServices] = useState([]);
-  const [formData, setFormData] = useState({});
-  const navigate = useNavigate();
   const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const getValidationSchema = (formData) => {
-    return Yup.object().shape(
-      Object.keys(formData).reduce((acc, serviceKey) => {
-     console.log("acc[serviceKey]",acc[serviceKey])
-        acc[serviceKey] = Yup.object({
-          name: Yup.string().required(`${serviceKey} name is required`),
-          tradesymbol: Yup.string().required(
-            `${serviceKey} trade symbol is required`
-          ),
-          percentage: Yup.number()
-            .required(`${serviceKey} percentage is required`)
-            .min(0, `${serviceKey} percentage must be at least 0`)
-            .max(100, `${serviceKey} percentage cannot exceed 100`),
-          price: Yup.number()
-            .required(`${serviceKey} price is required`)
-            .min(0, `${serviceKey} price must be greater than 0`),
-        });
-
-        return acc;
-      }, {})
-    );
-  };
-
-
-  const getInitialValues = (formData) => {
-    const initialValues = {};
-    if (formData) {
-      Object.keys(formData).forEach((key) => {
-        console.log("formData[key]",formData[key])
-
-        initialValues[key] = formData[key];
-      });
-    }
-    return initialValues;
-  };
-
-  useEffect(() => {
-    // Whenever selectedServices change, update the initial formData structure
-    const initialData = selectedServices.reduce((acc, service) => {
-
-console.log("Service:", service);
-console.log("Service Value:", acc);
-
-      acc[service.value] = {
-        name: "",
-        tradesymbol:service.tradesymbol,
-        percentage: "",
-        price: "",
-      };
-      return acc;
-    }, {});
-
-    setFormData(initialData);
-  }, [selectedServices]);
-
-  const handleServiceChange = (selectedOption) => {
-    setSelectedServices(selectedOption);
-
-    // if (
-    //   selectedOption &&
-    //   !selectedServices.some(
-    //     (service) => service.value === selectedOption.value
-    //   )
-    // ) {
-    //   setSelectedServices(selectedOption);
-    // }
-  };
-
-  const handleRemoveService = (serviceValue) => {
-    setSelectedServices((prevServices) =>
-      prevServices.filter((service) => service.value !== serviceValue)
-    );
-  };
-
-  const handleSubmit = async (values) => {
-    const token = localStorage.getItem("token");
-
-    if (!basket_id) {
-      Swal.fire({
-        title: "Error",
-        text: "Basket ID is missing in the URL. Please try again.",
-        icon: "error",
-      });
+  const fetchOptions = async (inputValue) => {
+    if (!inputValue) {
+      setOptions([]);
       return;
     }
 
-    console.log("Basket ID from URL:", basket_id);
-    console.log("Form Data:", values);
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        "http://192.168.0.11:5001/stock/getstockbysymbol",
+        { symbol: inputValue },
+        { headers: { "Content-Type": "application/json" } }
+      );
 
-    const req = {
-      basket_id, // Use the basket_id from the URL
+      if (response.data?.data) {
+        setOptions(
+          response.data.data.map((item) => ({
+            label: String(item._id),
+            value: String(item._id),
+            tradesymbol: item.data[0]?.tradesymbol,
+          }))
+        );
+      } else {
+        setOptions([]);
+      }
+    } catch (error) {
+      console.error("Error fetching options:", error);
+      setOptions([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleServiceChange = (selectedOption) => {
+    setSelectedServices(selectedOption || []);
+  };
+
+  const handleRemoveService = (serviceValue) => {
+    setSelectedServices((prev) => prev.filter((service) => service.value !== serviceValue));
+  };
+
+  const validationSchema = Yup.object().shape(
+    selectedServices.reduce((acc, service) => {
+      acc[service.value] = Yup.object({
+        name: Yup.string().required("This field is required"),
+        percentage: Yup.number()
+          .min(0, "Percentage should be between 0 and 100")
+          .max(100, "Percentage should be between 0 and 100")
+          .required("This field is required"),
+        price: Yup.number()
+          .min(0, "Price should be greater than 0")
+          .required("This field is required"),
+      });
+      return acc;
+    }, {})
+  );
+
+  const handleSubmit = async (values) => {
+console.log("values",values)
+
+    if (!basket_id) {
+      Swal.fire("Error", "Basket ID is missing. Please try again.", "error");
+      return;
+    }
+
+    const requestData = {
+      basket_id,
       stocks: Object.values(values),
     };
 
     try {
-      const response = await Addstockbasketform(req, token);
+       const response = await Addstockbasketform(requestData );
       console.log("API Response:", response);
 
-      if (response.status) {
-        Swal.fire({
-          title: "Success",
-          text: response.message,
-          icon: "success",
-        });
+      if (response?.status) {
+        Swal.fire("Success", response.message, "success");
         setTimeout(() => navigate("/admin/basket"), 1500);
       } else {
-        Swal.fire({
-          title: "Error",
-          text: response.message,
-          icon: "error",
-        });
+        Swal.fire("Error", response.message, "error");
       }
     } catch (error) {
-      console.error("API Error:", error);
-      Swal.fire({
-        title: "Error",
-        text: "An unexpected error occurred. Please try again later.",
-        icon: "error",
-      });
+      Swal.fire("Error", "An unexpected error occurred. Please try again.", "error");
     }
   };
-
-  const fetchOptions = async (inputValue) => {
-    try {
-      // Ensure inputValue is a string
-      if (typeof inputValue !== "string") {
-        inputValue = "";
-      }
-
-      // If inputValue is empty, don't make the request
-      if (!inputValue) {
-        setOptions([]); // Reset options if no input
-        setLoading(false);
-        return;
-      }
-
-      setLoading(true); // Start loading
-
-      // Making the API request dynamically based on the input
-      const data = JSON.stringify({
-        symbol: inputValue,
-      });
-
-      const config = {
-        method: "post",
-        maxBodyLength: Infinity,
-        url: "http://192.168.0.11:5001/stock/getstockbysymbol",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        data: data,
-      };
-
-      const response = await axios.request(config);
-
-      // Check if the response has the correct data format
-      if (response.data && Array.isArray(response.data.data)) {
-        const fitervalue = response.data.data.map((item) => ({
-          label: String(item._id), // Ensure label is a string
-          value: String(item._id), // Ensure value is a string
-          tradesymbol:item.data[0].tradesymbol,
-        }));
-
-        setOptions(fitervalue); // Update options state
-      } else {
-        setOptions([]); // Reset options if response is incorrect
-      }
-    } catch (error) {
-      console.error("Error fetching options:", error);
-      setOptions([]); // Reset options on error
-    } finally {
-      setLoading(false); // Stop loading
-    }
-  };
-  console.log("selectedServices", selectedServices);
-  console.log("formData", formData);
 
   return (
     <div className="page-content">
@@ -210,86 +117,75 @@ console.log("Service Value:", acc);
       <hr />
       <div className="card">
         <div className="card-body">
+          <div className="row">
+            <div className="col-6">
+              <input
+                type="text"
+                placeholder="Search..."
+                className="form-control"
+                onChange={(e) => fetchOptions(e.target.value)}
+              />
+            </div>
+            <div className="col-6">
+              <Select
+                options={options}
+                onChange={handleServiceChange}
+                placeholder="Select a stock"
+                isClearable
+                isMulti
+                isLoading={loading}
+              />
+            </div>
+          </div>
           <Formik
-            initialValues={getInitialValues(formData)} // Make sure formData is not null or undefined
-            validationSchema={getValidationSchema(formData)} // Make sure validation schema is valid
+            initialValues={selectedServices.reduce((acc, service) => {
+              acc[service.value] = {
+                tradesymbol: service.tradesymbol,
+                name: "",
+                percentage: "",
+                price: "",
+              };
+              return acc;
+            }, {})}
+            validationSchema={validationSchema}
             onSubmit={handleSubmit}
+            enableReinitialize
           >
-            {({ handleChange, values, handleSubmit, touched, errors }) => (
-              <Form onSubmit={handleSubmit}>
-                <div className="row">
-                  <div className="col-6 ">
-                    <input
-                      type="text"
-                      placeholder="Search..."
-                      className="form-control"
-                      onChange={(e) => fetchOptions(e.target.value)}
-                    />
-                  </div>
-                  <div className="col-6 ">
-                    <Select
-                      options={options}
-                      onChange={handleServiceChange}
-                      placeholder="Select a stock"
-                      isClearable
-                      isMulti
-                      name="colors"
-                      className="basic-multi-select"
-                      classNamePrefix="select"
-                      isLoading={loading} // Show loading indicator while fetching
-                    />
-                  </div>
-                </div>
-                {selectedServices &&
-                  selectedServices.map((service) => (
-                    <div key={service.value} className="mt-4">
-                     
-                      <h5>
-                        {service.label}
-                        <button
-                          type="button"
-                          className="btn btn-danger btn-sm float-end"
-                          onClick={() => handleRemoveService(service.value)}
-                        >
-                          <i className="bx bx-trash m-0"></i>
-                        </button>
-                      </h5>
-
-                      <div className="row">
-                        {Object.keys(formData[service.value] || {}).map(
-                          (fieldKey, index) => (
-                            <div key={index} className="col-md-3">
-                         
-                              <label>{fieldKey}</label>
-                              <Field
-                                type={
-                                  fieldKey === "percentage" ||
-                                  fieldKey === "price"
-                                    ? "number"
-                                    : "text"
-                                }
-                                name={`${service.value}.${fieldKey}`}
-                                className={`form-control ${
-                                  touched[service.value]?.[fieldKey] &&
-                                  errors[service.value]?.[fieldKey]
-                                    ? "is-invalid"
-                                    : ""
-                                }`}
-                                placeholder={`Enter ${fieldKey}`}
-                                value={fieldKey === "tradesymbol" ? service.tradesymbol : values[service.value]?.[fieldKey]}
-                              />
-                              {touched[service.value]?.[fieldKey] &&
-                                errors[service.value]?.[fieldKey] && (
-                                  <div className="invalid-feedback">
-                                    {errors[service.value]?.[fieldKey]}
-                                  </div>
-                                )}
-                            </div>
-                          )
-                        )}
-                      </div>
+            {({ values }) => (
+              <Form>
+                {selectedServices.map((service) => (
+                  <div key={service.value} className="mt-4">
+                    <h5>
+                      {service.label}
+                      <button
+                        type="button"
+                        className="btn btn-danger btn-sm float-end"
+                        onClick={() => handleRemoveService(service.value)}
+                      >
+                        <i className="bx bx-trash" />
+                      </button>
+                    </h5>
+                    <div className="row">
+                      {Object.keys(values[service.value] || {}).map((fieldKey) => (
+                        <div key={fieldKey} className="col-md-3">
+                          <label>{fieldKey}</label>
+                          <Field
+                            name={`${service.value}.${fieldKey}`}
+                            type={fieldKey === "percentage" || fieldKey === "price" ? "number" : "text"}
+                            className="form-control"
+                            placeholder={`Enter ${fieldKey}`}
+                            readOnly={fieldKey === "tradesymbol"}
+                          />
+                          <ErrorMessage
+                            name={`${service.value}.${fieldKey}`}
+                            component="p"
+                            className="text-danger"
+                          />
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  </div>
+                ))}
                 <button type="submit" className="btn btn-primary mt-4">
                   Submit
                 </button>
