@@ -21,7 +21,6 @@ class Kotakneo {
     async GetAccessToken(req, res) {
         try {
             const { id, apikey, apisecret, user_name, pass_word } = req.body;
-
             // Validate inputs
             if (!id || !apikey || !apisecret || !user_name || !pass_word) {
                 return res.status(400).json({
@@ -60,12 +59,12 @@ class Kotakneo {
                 "grant_type=client_credentials",
                 { headers: { Authorization: authHeaderValue } }
             );
+
             const access_token = tokenResponse.data.access_token;
 
             if (!access_token) {
                 return res.status(500).json({ status: false, message: "Failed to obtain access token" });
             }
-
             // Step 2: Login with Access Token
             const loginResponse = await axios.post(
                 "https://gw-napi.kotaksecurities.com/login/1.0/login/v2/validate",
@@ -79,7 +78,7 @@ class Kotakneo {
             );
 
 
-            console.log(loginResponse);
+       
 
             const { token: stepOneToken, sid: stepOneSID, hsServerId: stepHsServerId } = loginResponse.data.data;
             const decodeAccessToken = jwt.decode(stepOneToken);
@@ -1011,7 +1010,7 @@ class Kotakneo {
 
 
 
-                        axios(config)
+                        return axios(config)
                             .then(async (response) => {
                                 if (response.data.stat === 'Ok') {
                                     const order = new Order_Modal({
@@ -1074,7 +1073,7 @@ class Kotakneo {
     async kotakneoorderplace(item) {
        
         try {
-            const { id, quantity, price, version, basket_id, tradesymbol, instrumentToken, calltype, brokerid } = item;
+            const { id, quantity, price, version, basket_id, tradesymbol, instrumentToken, calltype, brokerid, howmanytimebuy } = item;
 
             const client = await Clients_Modal.findById(id);
             if (!client) {
@@ -1204,7 +1203,7 @@ class Kotakneo {
 
 
 
-            axios(config)
+            return axios(config)
                 .then(async (response) => {
                     // Log full response for debugging purposes
 
@@ -1220,13 +1219,33 @@ class Kotakneo {
                             ordertoken: instrumentToken,
                             exchange: exchange,
                             version: version,
-                            basket_id: basket_id
+                            basket_id: basket_id,
+                            howmanytimebuy:howmanytimebuy
                         });
 
                         await order.save();
+
+
+
+                        if(calltype =="S") {
+                            await Basketorder_Modal.updateMany(
+                                {
+                                  version: version,
+                                  clientid: client._id,
+                                  basket_id: basket_id,
+                                  brokerid: '3',
+                                  exitstatus: 0,
+                                  ordertype: 'B',
+                                  howmanytimebuy: { $nin: howmanytimebuy }  // Only update if howmanytimebuy is not in [1, 2]
+                                },
+                                {
+                                  $set: { exitstatus: 1 }
+                                }
+                              );
+                         }
                         return {
                             status: true,
-                            data: response.data ? null : "Order Successfully",
+                            data: "Order Successfully",
                         };
                     }
                     else {

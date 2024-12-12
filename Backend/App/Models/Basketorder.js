@@ -61,6 +61,14 @@ const BasketorderModel = Schema({
         type: Number,
         default: 0
     },
+    exitstatus: {
+        type: Number,
+        default: 0
+    },
+    howmanytimebuy: {
+        type: Number,
+        default: 0
+    },
     status: {
         type: Number,
         enum: [0, 1], // Example statuses

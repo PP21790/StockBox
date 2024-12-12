@@ -194,6 +194,7 @@ class Angle {
                 data: data
             };
 
+
           //  const response = await axios(config);
 
             axios(config)
@@ -756,7 +757,7 @@ const uniorderId = order.uniqueorderid;
                 data: data
             };
 
-            axios(config)
+            return axios(config)
             .then(async (response) => {
               
                 if (response.data.message == 'SUCCESS') {
@@ -841,7 +842,7 @@ const uniorderId = order.uniqueorderid;
     async angleorderplace(item) {
 
         try {
-            const { id, quantity, price, version, basket_id,tradesymbol,instrumentToken, calltype, brokerid } = item;
+            const { id, quantity, price, version, basket_id,tradesymbol,instrumentToken, calltype, brokerid, howmanytimebuy } = item;
 
             const client = await Clients_Modal.findById(id);
             if (!client) {
@@ -947,13 +948,15 @@ const uniorderId = order.uniqueorderid;
         
           //  const response = await axios(config);
 
-            axios(config)
+          return axios(config)
             .then(async (response) => {
 
 
-            console.log("response",response.data.message);
               
                 if (response.data.message == 'SUCCESS') {
+
+
+
                         const order = new Basketorder_Modal({
                             clientid: client._id,
                             tradesymbol: tradesymbol,
@@ -966,13 +969,33 @@ const uniorderId = order.uniqueorderid;
                             ordertoken: instrumentToken,
                             exchange: exchange,
                             version:version,
-                            basket_id:basket_id
+                            basket_id:basket_id,
+                            howmanytimebuy:howmanytimebuy
                         });
 
                         await order.save();
+
+
+                        if(calltype =="SELL") {
+                            await Basketorder_Modal.updateMany(
+                                {
+                                  version: version,
+                                  clientid: client._id,
+                                  basket_id: basket_id,
+                                  brokerid: '1',
+                                  exitstatus: 0,
+                                  ordertype: 'BUY',
+                                  howmanytimebuy: { $nin: howmanytimebuy }  // Only update if howmanytimebuy is not in [1, 2]
+                                },
+                                {
+                                  $set: { exitstatus: 1 }
+                                }
+                              );
+                         }
+    
                         return {
                             status: true,
-                            data: response.data ? null : "Order Successfully",
+                            message : "Order Successfully",
                         };
                     }
                     else {
@@ -1165,7 +1188,6 @@ async function CheckPosition(userId, authToken, segment, instrument_token, produ
 
         }
     }  catch (error) {
-        console.error('Error in CheckPosition:', error.message);
         return {
             status: false,
             qty: 0
@@ -1221,7 +1243,6 @@ async function CheckHolding(userId, authToken, segment, instrument_token, produc
                 };
         }
     } catch (error) {
-        console.error('Error fetching position:', error.response ? error.response.data : error.message);
         return {
             status: false,
             qty: 0,

@@ -128,10 +128,11 @@ require('./App/api/Routes/index')(app)
 
 // const {Alice_Socket} = require("./App/Utils/AliceSocket.js");
 
-// app.get("/test",(req,res)=>{
-//   Alice_Socket();
-//   return res.send('ok');
+// app.get("/test", async (req, res) => {
+ 
+ 
 // });
+
 
 // httpsserver.listen(1001)
 server.listen(process.env.PORT, () => {
