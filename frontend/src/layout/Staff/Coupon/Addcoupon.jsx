@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import DynamicForm from '../../../components/FormicForm';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import { Addcouponbyadmin } from '../../../Services/Admin';
+import { Addcouponbyadmin,GetService } from '../../../Services/Admin';
 
 
 const Addcoupon = () => {
@@ -12,11 +12,26 @@ const Addcoupon = () => {
     const user_id = localStorage.getItem("id");
     const token = localStorage.getItem("token");
 
+    const [servicedata,setServicedata] = useState([])
+
     const today = new Date().toISOString().slice(0, 10);
 
+    useEffect(()=>{
+        getservice();
+    },[])
 
 
-
+    const getservice = async()=>{
+        try {
+            const response = await GetService(token);
+            if(response.status){
+                setServicedata(response.data)
+            }
+        } catch (error) {
+            console.log("Error fetching services:",error);
+            
+        }
+    }
 
 
     const validate = (values) => {
@@ -66,6 +81,12 @@ const Addcoupon = () => {
         if (values.mincouponvalue && !values.mincouponvalue) {
             errors.mincouponvalue = "Please Enter Min Coupon Value";
         }
+        if (!values.limitation) {
+            errors.limitation = "Please Enter Limit";
+        }
+        if (!values.service) {
+            errors.service = "Please Select Service";
+        }
 
         return errors;
     };
@@ -83,6 +104,8 @@ const Addcoupon = () => {
             mincouponvalue: values.mincouponvalue,
             description: values.description,
             image: values.image,
+            limitation:values.limitation,
+            service:values.service,
             add_by: user_id,
         };
 
@@ -132,6 +155,8 @@ const Addcoupon = () => {
             mincouponvalue: '',
             description: '',
             image: '',
+            limitation:'',
+            service:'',
             add_by: ''
         },
         validate,
@@ -186,7 +211,7 @@ const Addcoupon = () => {
             label: "Percentage/Fixed Discount",
             type: "text4",
             label_size: 12,
-            col_size: 6,
+            col_size: 6, 
             disable: false,
             star:true,
             showWhen: (values) => values.type === "percentage"
@@ -210,6 +235,31 @@ const Addcoupon = () => {
             disable: false,
             star:true,
             showWhen: (values) => values.type === "percentage"
+        },
+        {
+            name:"limitation",
+            label:"Set limitation",
+            type:"number",
+            label_size:12,
+            col_size:6,
+            disable:false,
+            star:true,
+        },
+        {
+            name:"service",
+            label:"Select Service",
+            type:"select",
+            label_size:12,
+            col_size:6,
+            disable:false,
+            options:[
+                {label:"All",value:"0"},
+                ...servicedata?.map((item)=>({
+                    label:item?.title,
+                    value:item?._id,
+                }))
+            ],
+            star:true,
         },
         {
             name: "startdate",

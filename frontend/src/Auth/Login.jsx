@@ -94,6 +94,128 @@ const Login = () => {
         }
     };
 
+
+    //check password length and also accept special character
+
+    // const loginpageOpen = async (e) => {
+    //     e.preventDefault();
+
+       
+
+    //     const passwordRegex = {
+    //         uppercase:/[A-Z]/,
+    //         lowercase:/[a-z]/,
+    //         number:/\d/,
+    //         special:/\W/,
+    //         length:/.{8,}/,
+    //     }
+
+    // console.log(password.length);
+
+    //     if (!password) {
+    //         Swal.fire({
+    //             title: "Login Failed",
+    //             text: "password is required",
+    //             icon: "error",
+    //             showConfirmButton: false,
+    //             timer: 2000,
+    //         });
+    //         return
+    //     }
+    //     else if (!passwordRegex.length.test(password)) {
+    //         Swal.fire({
+    //             title: "Login Failed",
+    //             text: "Password must be at least 8 characters long.",
+    //             icon: "error",
+    //             showConfirmButton: false,
+    //             timer: 2000,
+    //         });
+    //         return
+    //     }
+    //     else if (!passwordRegex.uppercase.test(password)) {
+    //         Swal.fire({
+    //             title: "Login Failed",
+    //             text: "Password must include at least one uppercase letter.",
+    //             icon: "error",
+    //             showConfirmButton: false,
+    //             timer: 2000,
+    //         });
+    //         return
+    //     }else if (!passwordRegex.lowercase.test(password)) {
+    //         Swal.fire({
+    //             title: "Login Failed",
+    //             text: "Password must include at least one lowercase letter.",
+    //             icon: "error",
+    //             showConfirmButton: false,
+    //             timer: 2000,
+    //         });
+    //         return
+    //     }else if (!passwordRegex.number.test(password)) {
+    //         Swal.fire({
+    //             title: "Login Failed",
+    //             text: "Password must include at least one number.",
+    //             icon: "error",
+    //             showConfirmButton: false,
+    //             timer: 2000,
+    //         });
+    //         return
+    //     }else if (!passwordRegex.special.test(password)) {
+    //         Swal.fire({
+    //             title: "Login Failed",
+    //             text: "Password must include at least one special character.",
+    //             icon: "error",
+    //             showConfirmButton: false,
+    //             timer: 2000,
+    //         });
+    //         return
+    //     }
+         
+    //     let req = {
+    //         UserName: username,
+    //         password: password,
+    //     };
+         
+
+    //     try {
+    //         var login_data = await login_Api(req);
+
+    //         if (login_data.data.status) {
+    //             Swal.fire({
+    //                 title: login_data.data.message || "Login Successful!",
+    //                 text: "You will be redirected to the dashboard.",
+    //                 icon: "success",
+    //                 showConfirmButton: false,
+    //                 timer: 2000,
+    //             }).then(() => {
+    //                 localStorage.setItem("token", login_data.data.data.token);
+    //                 localStorage.setItem("id", login_data.data.data.id);
+    //                 localStorage.setItem("Role", login_data.data.data.Role);
+    //                 localStorage.setItem("FullName", login_data.data.data.FullName);
+    //                 navigate("/admin/dashboard");
+    //             });
+    //         } else {
+    //             Swal.fire({
+    //                 title: "Login Failed",
+    //                 text: login_data.data.message || "Invalid username or password.",
+    //                 icon: "error",
+    //                 showConfirmButton: false,
+    //                 timer: 2000,
+    //             });
+    //         }
+    //     } catch (error) {
+    //         Swal.fire({
+    //             title: "Error!",
+    //             text: error.message || "Something went wrong during login. Please try again later.",
+    //             icon: "error",
+    //             showConfirmButton: false,
+    //             timer: 2000,
+    //         });
+    //     }
+    // };
+
+    // End for login password check logic
+
+
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 

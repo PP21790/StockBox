@@ -79,6 +79,7 @@ const Updatecoupon = () => {
       mincouponvalue: values.mincouponvalue,
       description: values.description,
       image: values.image,
+      limitation:values.limitation,
       id: row._id,
     };
 
@@ -125,6 +126,7 @@ const Updatecoupon = () => {
       enddate: row?.enddate ? new Date(row.enddate).toISOString().split("T")[0] : "",
       minpurchasevalue: row?.minpurchasevalue || "",
       mincouponvalue: row?.mincouponvalue || "",
+      limitation:row?.limitation || "",
       id: "",
     },
     validate,
@@ -223,7 +225,15 @@ const Updatecoupon = () => {
         col_size: 6,
         disable: false,
         star:true
-    },
+    }, {
+      name: "limitation",
+      label: "Set Limit",
+      type: "number",
+      label_size: 12,
+      col_size: 6,
+      disable: false, 
+      star:true,
+  },
 
 
     // {

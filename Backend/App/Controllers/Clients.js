@@ -1534,63 +1534,76 @@ async getClientWithFilterExcel(req, res) {
       } else if (!/^\d{10}$/.test(PhoneNo)) {
         return res.status(400).json({ status: false, message: "Invalid phone number format" });
       }
-      // if (!password || password.length < 8 || 
-      //     !/[A-Z]/.test(password) || 
-      //     !/[a-z]/.test(password) || 
-      //     !/\d/.test(password) || 
-      //     !/[@$!%*?&#]/.test(password)) {
-      //   return res.status(400).json({ 
-      //     status: false, 
-      //     message: "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&#)" 
-      //   });
-      // }
-     
-
-
+      // if (!id) {
+      //       return res.status(400).json({
+      //           status: false,
+      //           message: "Id not found",
+      //       });
+      //   }
+      
 
   
-      if (!id) {
-        return res.status(400).json({
-          status: false,
-          message: "Client ID is required",
-        });
-      }
-  
-      // Find the client by ID and update their details
-      const updatedClient = await Clients_Modal.findByIdAndUpdate(
-        id,
-        {
-          FullName,
-          Email,
-          PhoneNo,
-         
-        },
-        { new: true, runValidators: true } // Options: return the updated document and run validators
-      );
-  
-      // If the client is not found
-      if (!updatedClient) {
-        return res.status(404).json({
-          status: false,
-          message: "Client not found",
-        });
-      }
-  
-      console.log("Updated Client:", updatedClient);
-      return res.json({
-        status: true,
-        message: "Client updated successfully",
-        data: updatedClient,
-      });
-  
-    } catch (error) {
-      console.log("Error updating client:", error);
-      return res.status(500).json({
-        status: false,
-        message: "Server error",
-        error: error.message,
-      });
-    }
+              // Find the client by ID
+              const client = await Clients_Modal.findById(id);
+              console.log("id:",client);
+              
+              if (!client) {
+                  return res.status(404).json({
+                      status: false,
+                      message: "Client not found",
+                  });
+              }
+      
+              // Check if the provided PhoneNo already exists for another client (not the same client)
+              if (PhoneNo && PhoneNo !== client.PhoneNo) {
+                  const existingPhoneNo = await Clients_Modal.findOne({ PhoneNo });
+                  if (existingPhoneNo) {
+                      return res.status(400).json({
+                          status: false,
+                          message: "This mobile number is already in use by another client",
+                      });
+                  }
+              }
+      
+              // Check if the provided Email already exists for another client (not the same client)
+              if (Email && Email !== client.Email) {
+                  const existingEmail = await Clients_Modal.findOne({ Email });
+                  if (existingEmail) {
+                      return res.status(400).json({
+                          status: false,
+                          message: "This email is already in use by another client",
+                      });
+                  }
+              }
+      
+              // Update the user's profile information
+              if (FullName) client.FullName = FullName;
+              if (PhoneNo) client.PhoneNo = PhoneNo;
+              if (Email) client.Email = Email;
+      
+              // Save the updated client profile
+              await client.save();
+      
+              // Return success response with updated data
+              return res.json({
+                  status: true,
+                  message: "Profile updated successfully",
+                  data: {
+                      id: client.id,
+                      FullName: client.FullName,
+                      Email: client.Email,
+                      PhoneNo: client.PhoneNo,
+                  }
+              });
+      
+          } catch (error) {
+              console.log("Error in updateProfile:", error);
+              return res.status(500).json({
+                  status: false,
+                  message: "Server error",
+                  error: error.message,
+              });
+          }
   }
   
   

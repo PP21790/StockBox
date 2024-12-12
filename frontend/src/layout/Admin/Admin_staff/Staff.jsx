@@ -138,8 +138,8 @@ const Staff = () => {
     const handleSwitchChange = async (event, id) => {
 
         const user_active_status = event.target.checked ? "1" : "0";
-
         const data = { id: id, status: user_active_status }
+
         const result = await Swal.fire({
             title: "Do you want to save the changes?",
             showCancelButton: true,
@@ -155,12 +155,13 @@ const Staff = () => {
                     Swal.fire({
                         title: "Saved!",
                         icon: "success",
-                        timer: 1000,
+                        timer: 1500,
                         timerProgressBar: true,
                     });
+                    
                     setTimeout(() => {
                         Swal.close();
-                    }, 1000);
+                    }, 1500);
                 }
                 getAdminclient();
             } catch (error) {
@@ -171,8 +172,11 @@ const Staff = () => {
                 );
             }
         } else if (result.dismiss === Swal.DismissReason.cancel) {
+            event.target.checked = !event.target.checked
+            // Swal.fire("Cancelled","No changes were made.","info")
             getAdminclient();
         }
+        
     };
 
 
@@ -215,7 +219,7 @@ const Staff = () => {
                         id={`rating_${row.ActiveStatus}`}
                         className="form-check-input toggleswitch"
                         type="checkbox"
-                        defaultChecked={row.ActiveStatus == 1}
+                        defaultChecked={row.ActiveStatus === 1}
                         onChange={(event) => handleSwitchChange(event, row._id)}
                     />
                     <label

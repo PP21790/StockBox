@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
@@ -8,6 +8,7 @@ import { ChangePassword } from '../Services/Admin';
 const Changepass = () => {
     const token = localStorage.getItem('token');
     const userid = localStorage.getItem('id');
+    const navigate = useNavigate()
 
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -56,6 +57,7 @@ const Changepass = () => {
                     timer: 2000,
                 });
                 resetForm();
+                navigate('/login')
             } else {
                 Swal.fire({
                     title: 'Error!',

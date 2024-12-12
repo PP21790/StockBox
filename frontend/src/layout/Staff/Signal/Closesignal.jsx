@@ -250,7 +250,7 @@ const Closesignal = () => {
 
         {
             name: 'Exit Price',
-            selector: row => <div> <IndianRupee />{ row.closeprice ? row.closeprice : "-"}</div>,
+            selector: row => <div><IndianRupee />{row.closeprice ? row.closeprice : "-"}</div>,
             sortable: true,
             width: '132px',
 

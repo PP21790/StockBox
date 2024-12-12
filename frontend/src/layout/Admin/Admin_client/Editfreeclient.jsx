@@ -2,17 +2,18 @@ import React from 'react';
 import { useFormik } from 'formik';
 import DynamicForm from '../../../components/FormicForm';
 import Swal from 'sweetalert2';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate ,useParams} from 'react-router-dom';
 import { UpdateClient } from '../../../Services/Admin';
 
 
 
 const Editfreeclient = () => {
 
-
+  const {id} = useParams()
   const navigate = useNavigate();
   const location = useLocation();
   const { row } = location.state;
+console.log(id);
 
 
 
@@ -49,7 +50,7 @@ const Editfreeclient = () => {
       Email: values.Email,
       PhoneNo: values.PhoneNo,
       // password: values.password,
-      id: row._id,
+      id: id,
     };
 
     try {
