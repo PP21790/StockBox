@@ -59,7 +59,7 @@ const AddStock = () => {
   const validationSchema = Yup.object().shape(
     selectedServices.reduce((acc, service) => {
       acc[service.value] = Yup.object({
-        name: Yup.string().required("This field is required"),
+        // name: Yup.string().required("This field is required"),
         percentage: Yup.number()
           .min(0, "Percentage should be between 0 and 100")
           .max(100, "Percentage should be between 0 and 100")
@@ -141,9 +141,10 @@ console.log("values",values)
             initialValues={selectedServices.reduce((acc, service) => {
               acc[service.value] = {
                 tradesymbol: service.tradesymbol,
-                name: "",
+                name:service.label,
                 percentage: "",
                 price: "",
+                type:""
               };
               return acc;
             }, {})}
@@ -166,23 +167,42 @@ console.log("values",values)
                       </button>
                     </h5>
                     <div className="row">
-                      {Object.keys(values[service.value] || {}).map((fieldKey) => (
-                        <div key={fieldKey} className="col-md-3">
-                          <label>{fieldKey}</label>
-                          <Field
-                            name={`${service.value}.${fieldKey}`}
-                            type={fieldKey === "percentage" || fieldKey === "price" ? "number" : "text"}
-                            className="form-control"
-                            placeholder={`Enter ${fieldKey}`}
-                            readOnly={fieldKey === "tradesymbol"}
-                          />
-                          <ErrorMessage
-                            name={`${service.value}.${fieldKey}`}
-                            component="p"
-                            className="text-danger"
-                          />
-                        </div>
-                      ))}
+                    {Object.keys(values[service.value] || {}).map((fieldKey) => (
+  <div key={fieldKey} className="col-md-3">
+    <label>{fieldKey}</label>
+    {fieldKey === "type" ? (
+      <Field
+        as="select"
+        name={`${service.value}.${fieldKey}`}
+        className="form-control"
+      >
+        <option value="">Select an option</option>
+        <option value="Buy">Buy</option>
+        <option value="sell">Sell</option>
+        <option value="Hold">Hold</option>
+        {/* Add more options as needed */}
+      </Field>
+    ) : (
+      <Field
+        name={`${service.value}.${fieldKey}`}
+        type={
+          fieldKey === "percentage" || fieldKey === "price"
+            ? "number"
+            : "text"
+        }
+        className="form-control"
+        placeholder={`Enter ${fieldKey}`}
+        readOnly={fieldKey === "tradesymbol" || fieldKey === "name"}
+      />
+    )}
+    <ErrorMessage
+      name={`${service.value}.${fieldKey}`}
+      component="p"
+      className="text-danger"
+    />
+  </div>
+))}
+
                     </div>
                   </div>
                 ))}
