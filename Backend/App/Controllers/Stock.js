@@ -537,6 +537,36 @@ async getStocksByExpiryByStrike(req, res) {
         });
     }
 }
+async getStockBySymbol(req, res) {
+  try {
+    const { symbol } = req.body;
+
+    // Build the match stage dynamically if a symbol is provided
+    const matchStage = symbol
+      ? { $match: { segment: "C", symbol: { $regex: symbol, $options: 'i' } } }
+      : { $match: {} }; // Match all documents if no symbol is provided
+
+    const result = await Stock_Modal.aggregate([
+      matchStage, // Match stage (optional filtering)
+      {
+        $group: {
+          _id: "$symbol", // Grouping by symbol
+          data: { $push: "$$ROOT" } // Include all fields in the group result
+        }
+      }
+    ]);
+
+    return res.json({
+      status: true,
+      message: "Data retrieved successfully",
+      data: result
+    });
+  } catch (error) {
+    console.error("Error fetching stock data:", error);
+    return res.json({ status: false, message: "Server error", data: [] });
+  }
+}
+
 
 
 

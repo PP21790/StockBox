@@ -8,6 +8,7 @@ const Clients_Modal = db.Clients;
 const Signal_Modal = db.Signal;
 const Stock_Modal = db.Stock;
 const Order_Modal = db.Order;
+const Basketorder_Modal = db.Basketorder;
 
 
 class Angle {
@@ -192,6 +193,7 @@ class Angle {
                 },
                 data: data
             };
+
 
           //  const response = await axios(config);
 
@@ -754,7 +756,7 @@ const uniorderId = order.uniqueorderid;
                 data: data
             };
 
-            axios(config)
+            return axios(config)
             .then(async (response) => {
               
                 if (response.data.message == 'SUCCESS') {
@@ -839,7 +841,7 @@ const uniorderId = order.uniqueorderid;
     async angleorderplace(item) {
 
         try {
-            const { id, quantity, price, version, basket_id,tradesymbol,instrumentToken, calltype, brokerid } = item;
+            const { id, quantity, price, version, basket_id,tradesymbol,instrumentToken, calltype, brokerid, howmanytimebuy } = item;
 
             const client = await Clients_Modal.findById(id);
             if (!client) {
@@ -941,12 +943,19 @@ const uniorderId = order.uniqueorderid;
                 data: data
             };
 
+
+        
           //  const response = await axios(config);
 
-            axios(config)
+          return axios(config)
             .then(async (response) => {
+
+
               
                 if (response.data.message == 'SUCCESS') {
+
+
+
                         const order = new Basketorder_Modal({
                             clientid: client._id,
                             tradesymbol: tradesymbol,
@@ -959,13 +968,33 @@ const uniorderId = order.uniqueorderid;
                             ordertoken: instrumentToken,
                             exchange: exchange,
                             version:version,
-                            basket_id:basket_id
+                            basket_id:basket_id,
+                            howmanytimebuy:howmanytimebuy
                         });
 
                         await order.save();
+
+
+                        if(calltype =="SELL") {
+                            await Basketorder_Modal.updateMany(
+                                {
+                                  version: version,
+                                  clientid: client._id,
+                                  basket_id: basket_id,
+                                  brokerid: '1',
+                                  exitstatus: 0,
+                                  ordertype: 'BUY',
+                                  howmanytimebuy: { $nin: howmanytimebuy }  // Only update if howmanytimebuy is not in [1, 2]
+                                },
+                                {
+                                  $set: { exitstatus: 1 }
+                                }
+                              );
+                         }
+    
                         return {
                             status: true,
-                            data: response.data ? null : "Order Successfully",
+                            message : "Order Successfully",
                         };
                     }
                     else {
@@ -978,12 +1007,11 @@ const uniorderId = order.uniqueorderid;
 
                 })
                 .catch(async (error) => {
-                    const message = (JSON.stringify(error.response.data)).replace(/["',]/g, '');
 
                   
                     return {
                         status: false,
-                        message: message
+                        message: error
                     };
 
                 });
@@ -999,14 +1027,15 @@ const uniorderId = order.uniqueorderid;
 
 
     async checkOrderBasket(req, res) {
-        
         try {
             const { orderid, clientid } = req.body;
+          
 
             const order = await Basketorder_Modal.findOne({
                 clientid: clientid,  
                 orderid: orderid        
             });
+           
     
             if (!order) {
                 return res.status(404).json({
@@ -1014,11 +1043,6 @@ const uniorderId = order.uniqueorderid;
                     message: "Order not found for this client"
                 });
             }
-
-
-          
-
-
 
             const client = await Clients_Modal.findById(clientid);
             if (!client) {
@@ -1058,6 +1082,7 @@ const userId = client.apikey;
 
 
 const uniorderId = order.uniqueorderid;
+
             const config = {
                 method: 'get',
                 url: `https://apiconnect.angelone.in/rest/secure/angelbroking/order/v1/details/${uniorderId}`, // Use dynamic orderid
@@ -1162,7 +1187,6 @@ async function CheckPosition(userId, authToken, segment, instrument_token, produ
 
         }
     }  catch (error) {
-        console.error('Error in CheckPosition:', error.message);
         return {
             status: false,
             qty: 0
@@ -1218,7 +1242,6 @@ async function CheckHolding(userId, authToken, segment, instrument_token, produc
                 };
         }
     } catch (error) {
-        console.error('Error fetching position:', error.response ? error.response.data : error.message);
         return {
             status: false,
             qty: 0,

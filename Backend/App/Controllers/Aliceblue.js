@@ -17,6 +17,8 @@ const Basketorder_Modal = db.Basketorder;
 class Aliceblue {
 
     async GetAccessToken(req, res) {
+
+
         try {
             const alice_userid = req.query.userId;
             const client = await Clients_Modal.findOne({ alice_userid });
@@ -883,7 +885,7 @@ class Aliceblue {
                 };
 
 
-                axios(config)
+                return axios(config)
                     .then(async (response) => {
                         const responseData = response.data;
 
@@ -964,11 +966,15 @@ class Aliceblue {
 
 
     async orderplace(item) {
-
+       
         try {
-            const { id, quantity, price, version, basket_id,tradesymbol,instrumentToken, calltype, brokerid } = item;
-
+            const { id, quantity, price, version, basket_id,tradesymbol,instrumentToken, calltype, brokerid, howmanytimebuy } = item;
+           
+          
+          
+          
             const client = await Clients_Modal.findById(id);
+           
             if (!client) {
                 return {
                     status: false,
@@ -976,29 +982,29 @@ class Aliceblue {
                 };
             }
 
-
+         
             if (client.tradingstatus == 0) {
                 return {
                     status: false,
                     message: "Client Broker Not Login, Please Login With Broker"
                 };
             }
-
-            if (brokerid != 2) {
+            if (brokerid != "2") {
                 return {
                     status: false,
                     message: "Invalid Broker Place Order"
                 };
             }
-
             const authToken = client.authtoken;
             const userId = client.alice_userid;
 
             let exchange, producttype;
                 exchange = "NSE";
                 producttype = "CNC";
-
                 if(calltype =="BUY") {} else {
+
+
+
                 let holdingData = { qty: 0 };
                 let positionData = { qty: 0 };
                 let totalValue = 0;  // Declare totalValue outside the blocks
@@ -1019,8 +1025,6 @@ class Aliceblue {
                     const validHoldingQty = !isNaN(Number(holdingData.qty)) ? Number(holdingData.qty) : 0;  // Validate holdingData.qty
                     totalValue = validPositionData + validHoldingQty;
     
-               
-
 
                 if (totalValue < quantity) {
 
@@ -1031,7 +1035,7 @@ class Aliceblue {
                 }
     
             }
-
+          
             var data = JSON.stringify([
                 {
                     "complexty": "regular",
@@ -1052,7 +1056,6 @@ class Aliceblue {
 
             
 
-          
 
             let config = {
                 method: 'post',
@@ -1064,14 +1067,18 @@ class Aliceblue {
                 },
                 data: data
             };
-
-            axios(config)
+          
+            return axios(config)
                 .then(async (response) => {
 
                     const responseData = response.data;
 
-
                     if (responseData[0].stat == 'Ok') {
+
+   
+
+                       
+
                         const order = new Basketorder_Modal({
                             clientid: client._id,
                             tradesymbol: tradesymbol,
@@ -1083,14 +1090,35 @@ class Aliceblue {
                             ordertoken: instrumentToken,
                             exchange: exchange,
                             version:version,
-                            basket_id:basket_id
+                            basket_id:basket_id,
+                            howmanytimebuy:howmanytimebuy
+                            
                         });
 
                         await order.save();
+                        
+                        if(calltype =="SELL") {
+                            await Basketorder_Modal.updateMany(
+                                {
+                                  version: version,
+                                  clientid: client._id,
+                                  basket_id: basket_id,
+                                  brokerid: '2',
+                                  exitstatus: 0,
+                                  ordertype: 'BUY',
+                                  howmanytimebuy: { $nin: howmanytimebuy }  // Only update if howmanytimebuy is not in [1, 2]
+                                },
+                                {
+                                  $set: { exitstatus: 1 }
+                                }
+                              );
+                         }
                         return {
                             status: true,
-                            data: response.data ? null : "Order Successfully",
+                            message:"Order Successfully"
                         };
+
+                    
                     }
                     else {
 
@@ -1103,7 +1131,6 @@ class Aliceblue {
                 })
                 .catch(async (error) => {
 
-console.log("error",error);
 
                     const message = (JSON.stringify(error.response.data)).replace(/["',]/g, '');
                     return {

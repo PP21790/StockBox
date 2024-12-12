@@ -10,6 +10,7 @@ const Signal_Modal = db.Signal;
 const Stock_Modal = db.Stock;
 const Order_Modal = db.Order;
 const BasicSetting_Modal = db.BasicSetting;
+const Basketorder_Modal = db.Basketorder;
 
 class Markethub {
 
@@ -773,13 +774,9 @@ let data = JSON.stringify({
 
 
   async markethuborderplace(item) {
-    console.log("item",item);
-    return {
-        status: false,
-        message: "Client not found"
-    };
+   
     try {
-        const { id, quantity, price, version, basket_id,tradesymbol,instrumentToken, calltype, brokerid } = item;
+        const { id, quantity, price, version, basket_id,tradesymbol,instrumentToken, calltype, brokerid, howmanytimebuy } = item;
 
         const client = await Clients_Modal.findById(id);
         if (!client) {
@@ -887,13 +884,33 @@ let data = JSON.stringify({
                         ordertoken: instrumentToken,
                         exchange: exchange,
                         version:version,
-                        basket_id:basket_id
+                        basket_id:basket_id,
+                        howmanytimebuy:howmanytimebuy
                     });
 
                     await order.save();
+
+                    if(calltype =="SELL") {
+                        await Basketorder_Modal.updateMany(
+                            {
+                              version: version,
+                              clientid: client._id,
+                              basket_id: basket_id,
+                              brokerid: '4',
+                              exitstatus: 0,
+                              ordertype: 'BUY',
+                              howmanytimebuy: { $nin: howmanytimebuy }  // Only update if howmanytimebuy is not in [1, 2]
+                            },
+                            {
+                              $set: { exitstatus: 1 }
+                            }
+                          );
+                     }
+
+
                     return {
                         status: true,
-                        data: response.data ? null : "Order Successfully",
+                        data: "Order Successfully",
                     };
                 } else {
                   return { status: false, message: "Order placement failed", data: response.data };

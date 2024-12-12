@@ -1678,7 +1678,6 @@ async basketOrderList(req, res) {
   try {
 
     const { clientid } = req.body;  
-console.log("clientid",clientid);
     const result = await Basketorder_Modal.find({ clientid: clientid });
 
     return res.json({

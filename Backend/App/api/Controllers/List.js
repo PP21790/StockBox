@@ -1,4 +1,6 @@
 const db = require("../../Models");
+var axios = require('axios');
+
 const BasicSetting_Modal = db.BasicSetting;
 const Banner_Modal = db.Banner;
 const Blogs_Modal = db.Blogs;
@@ -26,6 +28,8 @@ const Bank_Modal = db.Bank;
 const Adminnotification_Modal = db.Adminnotification;
 const Basketstock_Modal = db.Basketstock;
 const Liveprice_Modal = db.Liveprice;
+const Basketorder_Modal = db.Basketorder;
+
 const {orderplace} = require('../../Controllers/Aliceblue');
 const {angleorderplace} = require('../../Controllers/Angle')
 const {kotakneoorderplace} = require('../../Controllers/Kotakneo')
@@ -1789,21 +1793,134 @@ class List {
     }
   }
 
+  async BasketListss(req, res) {
+    try {
+      const { clientid } = req.body; // assuming clientid is passed in the request
+  
+      // Get the current date
+      const currentDate = new Date();
+  
+      const clientObjectId = new mongoose.Types.ObjectId(clientid);
 
+
+      // Fetch all baskets with their subscription status
+      const result = await Basket_Modal.aggregate([
+        {
+          $lookup: {
+            from: 'basketsubscriptions', // BasketSubscription collection
+            localField: '_id', // field in Basket collection
+            foreignField: 'basket_id', // field in BasketSubscription collection
+            as: 'subscription_info' // Name of the array where subscription info will be stored
+          }
+        },
+        {
+          $unwind: {
+            path: '$subscription_info', // Flatten the subscription_info array
+            preserveNullAndEmptyArrays: true // Preserve baskets even if there's no subscription
+          }
+        },
+        {
+          $addFields: {
+            isSubscribed: {
+              $cond: {
+                if: { $eq: ['$subscription_info.client_id', clientObjectId] }, // Check if the user has subscribed to this basket
+                then: true,
+                else: false
+              }
+            },
+            isActive: {
+              $cond: {
+                if: {
+                  $and: [
+                    { $eq: ['$subscription_info.client_id', clientObjectId] }, // Ensure the user is subscribed
+                    { $gte: [currentDate, '$subscription_info.startdate'] }, // Ensure the subscription started
+                    { $lte: [currentDate, '$subscription_info.enddate'] } // Ensure the subscription has not ended
+                  ]
+                },
+                then: true,
+                else: false
+              }
+            }
+          }
+        },
+        {
+          $project: {
+            basket_id: 1,
+            title: 1,
+            description: 1,
+            full_price: 1,
+            basket_price: 1,
+            mininvamount: 1,
+            accuracy: 1,
+            portfolioweightage: 1,
+            cagr: 1,
+            frequency: 1,
+            validity: 1,
+            next_rebalance_date: 1,
+            status: 1,
+            del: 1,
+            created_at: 1,
+            updated_at: 1,
+            type: 1,
+            themename: 1,
+            isSubscribed: 1,
+            isActive: 1,
+            startdate: '$subscription_info.startdate',
+            enddate: '$subscription_info.enddate'
+          }
+        }
+      ]);
+  
+      // Debugging: Log the result to see the subscription info
+    //  console.log(result);
+  
+      res.status(200).json({
+        status: true,
+        message: "Baskets retrieved successfully.",
+        data: result
+      });
+    } catch (error) {
+      console.error("Error retrieving baskets:", error);
+      res.status(500).json({
+        status: false,
+        message: "An error occurred while retrieving the baskets."
+      });
+    }
+  }
+  
 
   async BasketstockList(req, res) {
     try {
-
       const { id } = req.params;
-      const basketstock = await Basketstock_Modal.find({ del: false, status: 1, basket_id: id });
-
+  
+      // Step 1: Get the latest version for the given basket_id
+      const latestVersion = await Basketstock_Modal.findOne({
+        basket_id: id,
+        del: false,
+        status: 1
+      })
+        .sort({ version: -1 }) // Sort by version in descending order
+        .select("version"); // Fetch only the version field
+  
+      // Step 2: Fetch basket stock data for the latest version
+      let basketstock = [];
+      if (latestVersion) {
+        basketstock = await Basketstock_Modal.find({
+          basket_id: id,
+          del: false,
+          status: 1,
+          version: latestVersion.version // Filter by the latest version
+        });
+      }
+  
+      // Step 3: Return the response
       return res.json({
         status: true,
         message: "Basket Stock fetched successfully",
         data: basketstock
       });
-
     } catch (error) {
+      // Handle errors
       return res.json({
         status: false,
         message: "Server error",
@@ -1811,8 +1928,121 @@ class List {
       });
     }
   }
+  
+  async BasketstockLists(req, res) {
+    try {
+      const { id, clientid } = req.params; // Extract basket_id and client_id
+  
+      // Convert clientid to ObjectId
+      const clientObjectId = new mongoose.Types.ObjectId(clientid);
+  
+      // Get the current date
+      const currentDate = new Date();
+  
+      const subscription = await BasketSubscription_Modal.findOne({
+        basket_id: id,
+        client_id: clientObjectId
+      }).sort({ created_at: -1 });
+      
+        const latestEndDate = subscription.enddate;
+      
+        // const latestVersionStock = await Basketstock_Modal.find({
+        //   basket_id: id,
+        //   del: false,
+        //   status: 1,
+        //   created_at: { $lt: latestEndDate } 
+        // });
 
 
+
+        const latestVersionStock = await Basketstock_Modal.aggregate([
+          {
+            $match: {
+              basket_id: id,
+              del: false,
+              status: 1,
+              created_at: { $lt: latestEndDate } // Filter by created_at before end_date
+            }
+          },
+          {
+            $lookup: {
+              from: "basketordermodels", // Collection name for orders
+              let: {
+                stock_tradesymbol: "$tradesymbol",
+                stock_basket_id: "$basket_id",
+                stock_version: "$version"
+              },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $and: [
+                        { $eq: ["$tradesymbol", "$$stock_tradesymbol"] }, // Match tradesymbol
+                        { $eq: ["$basket_id", "$$stock_basket_id"] }, // Match basket_id
+                        { $eq: ["$version", "$$stock_version"] }, // Match version
+                        { $eq: ["$clientid", clientid] } // Match clientid
+                      ]
+                    }
+                  }
+                }
+              ],
+              as: "order_details" // Name of the output field
+            }
+          },
+          {
+            $project: {
+              _id: 1,
+              basket_id: 1,
+              name: 1,
+              tradesymbol: 1,
+              price: 1,
+              weightage: 1,
+              total_value: 1,
+              quantity: 1,
+              comment: 1,
+              version: 1,
+              del: 1,
+              created_at: 1,
+              status: 1,
+              order_details: {
+                clientid: 1,
+                tradesymbol: 1,
+                orderid: 1,
+                uniqueorderid: 1,
+                borkerid: 1,
+                quantity: 1,
+                ordertype: 1,
+                price: 1,
+                ordertoken: 1,
+                exchange: 1,
+                version: 1,
+                howmanytimebuy: 1,
+                status: 1,
+                exitstatus: 1,
+                createdAt: 1
+              }
+            }
+          }
+        ]);
+        
+        
+        
+      return res.json({
+        status: true,
+        message: "Basket Stock fetched successfully",
+        data: latestVersionStock
+      });
+    } catch (error) {
+      console.error("Error fetching basket stock:", error);
+      return res.json({
+        status: false,
+        message: "Server error",
+        data: []
+      });
+    }
+  }
+  
+  
 
   async BasketList(req, res) {
     try {
@@ -2782,10 +3012,28 @@ class List {
                 message: `Investment amount must be at least ${basket.mininvamount}.`,
               });
             }
+
+            const client = await Clients_Modal.findById(clientid);
+            if (!client) {
+                return res.status(404).json({
+                    status: false,
+                    message: "Client not found"
+                });
+            }
+
+            if (client.tradingstatus == 0) {
+              return res.status(404).json({
+                  status: false,
+                  message: "Client Broker Not Login, Please Login With Broker"
+              });
+          }
+
+        
       // Get stocks for the basket
       const existingStocks = await Basketstock_Modal.find({ basket_id }).sort({ version: -1 });
 
       const version = existingStocks.length > 0 ? existingStocks[0].version : 1; 
+     
 
 if(version==1)  {
       if (investmentamount < basket.mininvamount) {
@@ -2808,7 +3056,8 @@ if(version==1)  {
   
       // Initialize an array to store the calculated stock orders
       const stockOrders = [];
-  
+      let respo;
+      let isFundChecked = false; // Flag to ensure we check funds only once
       // Iterate over each stock to calculate allocated amount and quantity
       for (const stock of existingStocks) {
         const { tradesymbol, weightage,name } = stock;
@@ -2851,23 +3100,136 @@ if(version==1)  {
           stockOrders.push(stockOrder);
 
  if(type==1) {
-
-
+  let howmanytimebuy = 1;
        if(brokerid==2) {
-          await orderplace({
-            id: clientid,
-            basket_id:basket_id,
-            quantity,
-            price: lpPrice,
+       
+
+        if (!isFundChecked) {
+          const orders = await Basketorder_Modal.find({
             tradesymbol: tradesymbol,
-            instrumentToken: instrumentToken,
-            version: stock.version,
-            brokerid: brokerid,
-            calltype: "BUY", // Increment version for the new stock order
-          });
+            clientid: clientid,
+            basket_id: basket_id,
+            version:version,
+            borkerid: brokerid
+        })
+        .sort({ createdAt: -1 }) // Sort by `createdAt` in descending order
+        .limit(1);
+
+        
+            if (orders.length > 0) {
+                const order = orders[0]; // Use the first order if only one is relevant
+                howmanytimebuy = (order.howmanytimebuy || 0) + 1; // Increment the `howmanytimebuy` value
+              }
+        }
+        const authToken = client.authtoken;
+        const userId = client.alice_userid;
+
+          const config = {
+            method: 'get', // HTTP method
+            url: `https://ant.aliceblueonline.com/rest/AliceBlueAPIService/api/limits/getRmsLimits`, // Construct the full URL
+            headers: {
+              'Authorization': 'Bearer ' + userId + ' ' + authToken,
+            }
+          };
+          
+          const response = await axios(config);
+          const responseData = response.data;
+          
+          if (responseData[0].stat == 'Ok') {
+            // if (!isFundChecked) {
+            //   isFundChecked = true; // Set the flag to true
+            //   const net = parseFloat(responseData[0].net); // Convert responseData.net to a float
+            //  const total = parseFloat(totalAmount);
+            //   if (total >= net) {
+            //     return res.status(400).json({
+            //       status: false,
+            //       message: "Insufficient funds in your broker account.",
+            //     });
+            //   }
+            // }
+
+         
+     
+            respo = await orderplace({
+              id: clientid,
+              basket_id:basket_id,
+              quantity,
+              price: lpPrice,
+              tradesymbol: tradesymbol,
+              instrumentToken: instrumentToken,
+              version: stock.version,
+              brokerid: brokerid,
+              calltype: "BUY",
+              howmanytimebuy
+            });
+
+            console.log("respo",respo);
+
+         }
+        
+          
         }
         else if(brokerid==1) {
-          await angleorderplace({
+
+
+          if (!isFundChecked) {
+            const orders = await Basketorder_Modal.find({
+              tradesymbol: tradesymbol,
+              clientid: clientid,
+              basket_id: basket_id,
+              version:version,
+              borkerid: brokerid
+          })
+          .sort({ createdAt: -1 }) // Sort by `createdAt` in descending order
+          .limit(1);
+  
+          
+              if (orders.length > 0) {
+                  const order = orders[0]; // Use the first order if only one is relevant
+                  howmanytimebuy = (order.howmanytimebuy || 0) + 1; // Increment the `howmanytimebuy` value
+                }
+          }
+
+          const authToken = client.authtoken;
+          const userId = client.apikey;
+  
+          var config = {
+            method: 'get',
+            url: 'https://apiconnect.angelone.in/rest/secure/angelbroking/user/v1/getRMS',
+            headers: { 
+              'Authorization': `Bearer ${authToken}`,
+              'Content-Type': 'application/json', 
+              'Accept': 'application/json', 
+              'X-UserType': 'USER', 
+              'X-SourceID': 'WEB', 
+              'X-ClientLocalIP': 'CLIENT_LOCAL_IP', // Replace with actual IP
+              'X-ClientPublicIP': 'CLIENT_PUBLIC_IP', // Replace with actual IP
+              'X-MACAddress': 'MAC_ADDRESS', // Replace with actual MAC address
+              'X-PrivateKey': userId // Replace with actual API key
+          },
+          };
+          
+            
+            const response = await axios(config);
+            if (response.data.message == 'SUCCESS') {
+            const responseData = response.data.data;
+           
+            if (!isFundChecked) {
+              isFundChecked = true; // Set the flag to true
+              const net = parseFloat(responseData.net); // Convert responseData.net to a float
+              const total = parseFloat(totalAmount);
+            
+               if (total >= net) {
+                return res.status(400).json({
+                  status: false,
+                  message: "Insufficient funds in your broker account.",
+                });
+              }
+            }
+
+          
+     
+            respo =  await angleorderplace({
             id: clientid,
             basket_id:basket_id,
             quantity,
@@ -2876,12 +3238,67 @@ if(version==1)  {
             instrumentToken: instrumentToken,
             version: stock.version,
             brokerid: brokerid,
-            calltype: "BUY", // Increment version for the new stock order
+            calltype: "BUY",
+            howmanytimebuy // Increment version for the new stock order
           });
+        }
         
         }
         else if(brokerid==3) {
-          await kotakneoorderplace({
+
+          if (!isFundChecked) {
+            const orders = await Basketorder_Modal.find({
+              tradesymbol: tradesymbol,
+              clientid: clientid,
+              basket_id: basket_id,
+              version:version,
+              borkerid: brokerid
+          })
+          .sort({ createdAt: -1 }) // Sort by `createdAt` in descending order
+          .limit(1);
+  
+          
+              if (orders.length > 0) {
+                  const order = orders[0]; // Use the first order if only one is relevant
+                  howmanytimebuy = (order.howmanytimebuy || 0) + 1; // Increment the `howmanytimebuy` value
+                }
+          }
+
+          var data2 = JSON.stringify({"seg": "CASH","exch": "NSE","prod": "ALL"});
+          const requestData = `jData=${data2}`;
+
+        var config = {
+            method: "post",
+            url: `https://gw-napi.kotaksecurities.com/Orders/2.0/quick/user/limits?sId=${client.hserverid}`,
+            headers: {
+                accept: "*/*",
+                sid: client.kotakneo_sid,
+                Auth: client.authtoken,
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + client.oneTimeToken,
+            },
+            data: requestData,
+        };
+
+
+        const response = await axios.request(config);
+        if (response.data.stat === 'Ok') {
+
+        if (!isFundChecked) {
+          isFundChecked = true; // Set the flag to true
+          const net = parseFloat(response.data.Net); // Convert responseData.net to a float
+          const total = parseFloat(totalAmount);
+        
+           if (total >= net) {
+            return res.status(400).json({
+              status: false,
+              message: "Insufficient funds in your broker account.",
+            });
+          }
+        }
+
+        
+        respo = await kotakneoorderplace({
             id: clientid,
             basket_id:basket_id,
             quantity,
@@ -2890,12 +3307,66 @@ if(version==1)  {
             instrumentToken: instrumentToken,
             version: stock.version,
             brokerid: brokerid,
-            calltype: "B", // Increment version for the new stock order
+            calltype: "B",
+            howmanytimebuy // Increment version for the new stock order
           });
-        
+        }
         }
         else if(brokerid==4) {
-          await markethuborderplace({
+
+          if (!isFundChecked) {
+            const orders = await Basketorder_Modal.find({
+              tradesymbol: tradesymbol,
+              clientid: clientid,
+              basket_id: basket_id,
+              version:version,
+              borkerid: brokerid
+          })
+          .sort({ createdAt: -1 }) // Sort by `createdAt` in descending order
+          .limit(1);
+  
+          
+              if (orders.length > 0) {
+                  const order = orders[0]; // Use the first order if only one is relevant
+                  howmanytimebuy = (order.howmanytimebuy || 0) + 1; // Increment the `howmanytimebuy` value
+                }
+          }
+
+          const authToken = client.authtoken;
+          const userId = client.apikey;
+  
+          var config = {
+            method: 'post',
+            url: 'https://fund.markethubonline.com/middleware/api/v2/GetLimits',
+            headers: { 
+              'Content-Type': 'application/json', 
+              'Authorization': `Bearer ${client.authtoken}`
+            },
+          };
+          
+            
+            const response = await axios(config);
+
+            if (response.data.message == 'Ok') {
+            const responseData = response.data.data;
+          
+      
+            if (!isFundChecked) {
+              isFundChecked = true; // Set the flag to true
+              const net = parseFloat(responseData.net); // Convert responseData.net to a float
+              const total = parseFloat(totalAmount);
+            
+               if (total >= net) {
+                return res.status(400).json({
+                  status: false,
+                  message: "Insufficient funds in your broker account.",
+                });
+              }
+            }
+
+          
+
+            respo = await markethuborderplace({
             id: clientid,
             basket_id:basket_id,
             quantity,
@@ -2904,9 +3375,12 @@ if(version==1)  {
             instrumentToken: instrumentToken,
             version: stock.version,
             brokerid: brokerid,
-            calltype: "BUY", // Increment version for the new stock order
+            calltype: "BUY",
+            howmanytimebuy // Increment version for the new stock order
           });
-        
+
+            }
+
         }
 
       }
@@ -2917,12 +3391,21 @@ if(version==1)  {
         }
       }
   
-      
+if(type!=1)
+{
+  res.status(200).json({
+    status: true,
+    message: type == 1 ? "Order Placed Successfully." : "Order Confirm Successfully.",
+    data: stockOrders,
+  });
+}
+else {
       res.status(200).json({
-        status: true,
-        message: type == 1 ? "Order Placed Successfully." : "Order Confirm Successfully.",
-        data: stockOrders,
+        "response":respo
       });
+
+    }
+    
     } catch (error) {
       console.error("Error placing order:", error);
       res.status(500).json({
@@ -2937,8 +3420,10 @@ if(version==1)  {
 
   async exitPlaceOrder(req, res) {
     try {
-      const { basket_id, clientid, brokerid, version } = req.body;
+      const { basket_id, clientid, brokerid, version, ids } = req.body;
   
+
+      
       const basket = await Basket_Modal.findById(basket_id);
       if (!basket) {
         return res.status(400).json({
@@ -2960,11 +3445,36 @@ if(version==1)  {
   
       // Initialize an array to store the calculated stock orders
       const stockOrders = [];
-  
+      let respo;
       // Iterate over each stock to calculate allocated amount and quantity
       for (const stock of existingStocks) {
         const { tradesymbol, quantity } = stock;
-  
+
+       
+        
+        const orders = await Basketorder_Modal.find({ 
+          tradesymbol: tradesymbol, 
+          clientid: clientid, 
+          basket_id: basket_id, 
+          borkerid: brokerid,
+          version: version,
+          howmanytimebuy: { $in: ids }
+      });
+
+    
+
+        // Calculating buy and sell quantities
+        const buyQuantity = orders
+            .filter(order => order.ordertype === 'BUY')
+            .reduce((total, order) => total + order.quantity, 0);
+    
+        const sellQuantity = orders
+            .filter(order => order.ordertype === 'SELL')
+            .reduce((total, order) => total + order.quantity, 0);
+    
+        // Calculating the difference
+        const netQuantity = buyQuantity - sellQuantity;
+     
         try {
           // Fetch stock data from Stock_Modal
           const stockData = await Stock_Modal.findOne({ tradesymbol });
@@ -2987,7 +3497,7 @@ if(version==1)  {
         
           const stockOrder = {
             tradesymbol,
-            quantity,
+            netQuantity,
             lpPrice,
             clientid,
             basket_id,
@@ -2999,58 +3509,62 @@ if(version==1)  {
 
 
           if(brokerid==2) {
-          await orderplace({
+             respo = await orderplace({
             id: clientid,
             basket_id:basket_id,
-            quantity,
+            quantity:netQuantity,
             price: lpPrice,
             tradesymbol: tradesymbol,
             instrumentToken: instrumentToken,
             version: version,
             brokerid: brokerid,
-            calltype: "SELL", 
+            calltype: "SELL",
+            howmanytimebuy:ids 
           });
         }
           else if(basket_id==1) {
-            await angleorderplace({
+             respo = await angleorderplace({
               id: clientid,
               basket_id:basket_id,
-              quantity,
+              quantity:netQuantity,
               price: lpPrice,
               tradesymbol: tradesymbol,
               instrumentToken: instrumentToken,
               version: version,
               brokerid: brokerid,
-              calltype: "SELL",  
+              calltype: "SELL", 
+              howmanytimebuy:ids 
             });
           
           }
           else if(brokerid==3) {
 
-            await kotakneoorderplace({
+             respo = await kotakneoorderplace({
               id: clientid,
               basket_id:basket_id,
-              quantity,
+              quantity:netQuantity,
               price: lpPrice,
               tradesymbol: tradesymbol,
               instrumentToken: instrumentToken,
               version: version,
               brokerid: brokerid,
-              calltype: "S", // Increment version for the new stock order
+              calltype: "S",
+              howmanytimebuy:ids
             });
           
           }
           else if(brokerid==4) {
-            await markethuborderplace({
+             respo = await markethuborderplace({
               id: clientid,
               basket_id:basket_id,
-              quantity,
+              quantity:netQuantity,
               price: lpPrice,
               tradesymbol: tradesymbol,
               instrumentToken: instrumentToken,
               version: version,
               brokerid: brokerid,
-              calltype: "SELL",  
+              calltype: "SELL",
+              howmanytimebuy:ids  
             });
           
           }
@@ -3062,10 +3576,10 @@ if(version==1)  {
   
       // Respond with success and order details
       res.status(200).json({
-        status: true,
-        message: "Order placed successfully.",
-        data: stockOrders,
+        "response":respo
       });
+
+
     } catch (error) {
       console.error("Error placing order:", error);
       res.status(500).json({
@@ -3076,7 +3590,64 @@ if(version==1)  {
   }
   
 
-
+  async checkBasketSell(req, res) {
+    try {
+      // Destructure the request body
+      const { basket_id, clientid, brokerid, version } = req.body;
+  
+      // Validate required fields
+      if (!basket_id || !clientid || !brokerid || !version) {
+        return res.status(400).json({
+          status: false,
+          message: "Missing required parameters. Please provide basket_id, clientid, brokerid, version, and tradesymbol."
+        });
+      }
+  
+      // Perform aggregation to group orders by `howmanytimebuy`
+      const groupedOrders = await Basketorder_Modal.aggregate([
+        {
+            $match: {
+                version: version,
+                clientid: clientid,
+                basket_id: basket_id,
+                borkerid: brokerid,
+                exitstatus: 0
+            }
+        },
+        {
+            $group: {
+                _id: "$howmanytimebuy"
+            }
+        },
+        {
+            $sort: { _id: 1 } // Sort by `howmanytimebuy` in ascending order
+        }
+    ]);
+    
+      // Check if there are any grouped orders
+      if (!groupedOrders.length) {
+        return res.status(404).json({
+          status: false,
+          message: "No orders found for the specified criteria."
+        });
+      }
+  
+      // Return the grouped orders
+      res.status(200).json({
+        status: true,
+        message: "Orders retrieved successfully.",
+        data: groupedOrders
+      });
+    } catch (error) {
+      // Log the error and return a 500 response
+      console.error("Error retrieving grouped orders:", error);
+      res.status(500).json({
+        status: false,
+        message: "An error occurred while retrieving the grouped orders."
+      });
+    }
+  }
+  
   async Refer(req, res) {
     return res.status(200).json({
       status: true,
