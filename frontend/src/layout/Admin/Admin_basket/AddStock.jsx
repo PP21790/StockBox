@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import { useNavigate, Link, useParams } from "react-router-dom";
@@ -7,6 +6,7 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import * as Config from "../../../Utils/config";
 
 const AddStock = () => {
   const { id: basket_id } = useParams();
@@ -14,6 +14,7 @@ const AddStock = () => {
   const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [inputValue, setInputValue] = useState("");
 
   const fetchOptions = async (inputValue) => {
     if (!inputValue) {
@@ -23,8 +24,7 @@ const AddStock = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post(
-        "http://192.168.0.11:5001/stock/getstockbysymbol",
+      const response = await axios.post(`${Config.base_url}stock/getstockbysymbol`,  
         { symbol: inputValue },
         { headers: { "Content-Type": "application/json" } }
       );
@@ -53,7 +53,9 @@ const AddStock = () => {
   };
 
   const handleRemoveService = (serviceValue) => {
-    setSelectedServices((prev) => prev.filter((service) => service.value !== serviceValue));
+    setSelectedServices((prev) =>
+      prev.filter((service) => service.value !== serviceValue)
+    );
   };
 
   const validationSchema = Yup.object().shape(
@@ -73,7 +75,7 @@ const AddStock = () => {
   );
 
   const handleSubmit = async (values) => {
-console.log("values",values)
+    console.log("values", values);
 
     if (!basket_id) {
       Swal.fire("Error", "Basket ID is missing. Please try again.", "error");
@@ -87,6 +89,7 @@ console.log("values",values)
 
     try {
        const response = await Addstockbasketform(requestData );
+ 
       console.log("API Response:", response);
 
       if (response?.status) {
@@ -96,8 +99,17 @@ console.log("values",values)
         Swal.fire("Error", response.message, "error");
       }
     } catch (error) {
-      Swal.fire("Error", "An unexpected error occurred. Please try again.", "error");
+      Swal.fire(
+        "Error",
+        "An unexpected error occurred. Please try again.",
+        "error"
+      );
     }
+  };
+
+  const handleInputChange = (value) => {
+    setInputValue(value);
+    fetchOptions(value); // Fetch options dynamically based on input
   };
 
   return (
@@ -118,22 +130,29 @@ console.log("values",values)
       <div className="card">
         <div className="card-body">
           <div className="row">
-            <div className="col-6">
-              <input
-                type="text"
-                placeholder="Search..."
-                className="form-control"
-                onChange={(e) => fetchOptions(e.target.value)}
-              />
-            </div>
-            <div className="col-6">
-              <Select
+        
+            <div className="col-12">
+              {/* <Select
                 options={options}
                 onChange={handleServiceChange}
                 placeholder="Select a stock"
                 isClearable
                 isMulti
                 isLoading={loading}
+              /> */}
+
+              <Select
+                inputValue={inputValue}
+                onInputChange={handleInputChange}
+                options={options}
+                onChange={handleServiceChange}
+                placeholder="Search and select stocks..."
+                isClearable
+                isMulti
+                isLoading={loading}
+                noOptionsMessage={() =>
+                  loading ? "Loading..." : "No options found"
+                }
               />
             </div>
           </div>
@@ -141,10 +160,10 @@ console.log("values",values)
             initialValues={selectedServices.reduce((acc, service) => {
               acc[service.value] = {
                 tradesymbol: service.tradesymbol,
-                name:service.label,
+                name: service.label,
                 percentage: "",
                 price: "",
-                type:""
+                type: "",
               };
               return acc;
             }, {})}
@@ -167,42 +186,47 @@ console.log("values",values)
                       </button>
                     </h5>
                     <div className="row">
-                    {Object.keys(values[service.value] || {}).map((fieldKey) => (
-  <div key={fieldKey} className="col-md-3">
-    <label>{fieldKey}</label>
-    {fieldKey === "type" ? (
-      <Field
-        as="select"
-        name={`${service.value}.${fieldKey}`}
-        className="form-control"
-      >
-        <option value="">Select an option</option>
-        <option value="Buy">Buy</option>
-        <option value="sell">Sell</option>
-        <option value="Hold">Hold</option>
-        {/* Add more options as needed */}
-      </Field>
-    ) : (
-      <Field
-        name={`${service.value}.${fieldKey}`}
-        type={
-          fieldKey === "percentage" || fieldKey === "price"
-            ? "number"
-            : "text"
-        }
-        className="form-control"
-        placeholder={`Enter ${fieldKey}`}
-        readOnly={fieldKey === "tradesymbol" || fieldKey === "name"}
-      />
-    )}
-    <ErrorMessage
-      name={`${service.value}.${fieldKey}`}
-      component="p"
-      className="text-danger"
-    />
-  </div>
-))}
-
+                      {Object.keys(values[service.value] || {}).map(
+                        (fieldKey) => (
+                          <div key={fieldKey} className="col-md-3">
+                            <label>{fieldKey}</label>
+                            {fieldKey === "type" ? (
+                              <Field
+                                as="select"
+                                name={`${service.value}.${fieldKey}`}
+                                className="form-control"
+                              >
+                                <option value="">Select an option</option>
+                                <option value="Buy">Buy</option>
+                                <option value="sell">Sell</option>
+                                <option value="Hold">Hold</option>
+                                {/* Add more options as needed */}
+                              </Field>
+                            ) : (
+                              <Field
+                                name={`${service.value}.${fieldKey}`}
+                                type={
+                                  fieldKey === "percentage" ||
+                                  fieldKey === "price"
+                                    ? "number"
+                                    : "text"
+                                }
+                                className="form-control"
+                                placeholder={`Enter ${fieldKey}`}
+                                readOnly={
+                                  fieldKey === "tradesymbol" ||
+                                  fieldKey === "name"
+                                }
+                              />
+                            )}
+                            <ErrorMessage
+                              name={`${service.value}.${fieldKey}`}
+                              component="p"
+                              className="text-danger"
+                            />
+                          </div>
+                        )
+                      )}
                     </div>
                   </div>
                 ))}
