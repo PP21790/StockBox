@@ -27,7 +27,6 @@ const BasketStockPublish = () => {
     getbasketlist();
   }, []);
 
-  
   // Delete basket
   const Deletebasket = async (_id) => {
     try {
@@ -83,7 +82,7 @@ const BasketStockPublish = () => {
     },
     {
       name: "Min. Inv. Amount",
-      selector: (row) => row.mininvamount ,
+      selector: (row) => row.mininvamount,
     },
     // {
     //   name: "CAGR",
@@ -100,88 +99,88 @@ const BasketStockPublish = () => {
       sortable: true,
     },
     {
+      name: "Disable for new clients",
+      cell: (row) => (
+        <div className="form-check form-switch">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            id="flexSwitchCheckChecked"
+          />
+        </div>
+      ),
+      sortable: true,
+    },
+    {
       name: "Actions",
       cell: (row) => (
         <div>
-             <Link to={`addstock/${row._id}`} className="btn btn-primary btn-sm mx-1">
-           Add Stock
-          </Link>
-          <Link to={`viewdetail/${row._id}`} className="btn btn-primary btn-sm mx-1">
-            View
-          </Link>
-          <Link to={`editbasket/${row._id}`} className="btn btn-warning btn-sm mx-1">
-            Edit
-          </Link>
-          <button
-            className="btn btn-danger btn-sm"
-            onClick={() => Deletebasket(row._id)}
+          <Link
+            to={`addstock/${row._id}`}
+            className="btn btn-primary btn-sm mx-1"
           >
-            Delete
-          </button>
+            Rebalance
+          </Link>
+          <Link
+            to={`viewdetail/${row._id}`}
+            className="btn btn-primary btn-sm mx-1"
+          >
+            View Details
+          </Link>
+          <Link
+            to={`editbasket/${row._id}`}
+            className="btn btn-warning btn-sm mx-1"
+          >
+            History
+          </Link>
+          <Link
+            to={`editbasket/${row._id}`}
+            className="btn btn-warning btn-sm mx-1"
+          >
+            View Purchase Client
+          </Link>
         </div>
       ),
+      width:'38%'
     },
   ];
 
   return (
     <div className="page-content">
-        
-        <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                            <div className="breadcrumb-title pe-3"> Basket List</div>
-                            <div className="ps-3">
-                                <nav aria-label="breadcrumb">
-                                    <ol className="breadcrumb mb-0 p-0">
-                                        <li className="breadcrumb-item">
-                                            <Link to="/admin/dashboard">
-                                                <i className="bx bx-home-alt" />
-                                            </Link>
-                                        </li>
-                                    </ol>
-                                </nav>
-                            </div>
-                        </div>
-                        <hr />
+      <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+        <div className="breadcrumb-title pe-3">
+          {" "}
+          Basket-Stock Published List
+        </div>
+        <div className="ps-3">
+          <nav aria-label="breadcrumb">
+            <ol className="breadcrumb mb-0 p-0">
+              <li className="breadcrumb-item">
+                <Link to="/admin/dashboard">
+                  <i className="bx bx-home-alt" />
+                </Link>
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+      <hr />
       <div className="card">
-    
         <div className="card-body">
-        <div className="d-lg-flex align-items-center mb-4 gap-3">
-                                    <div className="position-relative">
-                                    <input
-                                        type="text"
-                                        className="form-control ps-5 radius-10"
-                                        placeholder="Search Basket"
-                                       
-                                    />
-                                        <span className="position-absolute top-50 product-show translate-middle-y">
-                                            <i className="bx bx-search" />
-                                        </span>
-                                    </div>
-                                    <div className="ms-auto">
-                                        <Link
-                                            to="/admin/addbasket"
-                                            className="btn btn-primary"
-                                        >
-                                            <i
-                                                className="bx bxs-plus-square"
-                                                aria-hidden="true"
-                                            />
-                                            Add Basket
-                                        </Link>
-                                    </div>
-                                    <div className="ms-2" >
-                                    <Link
-                                            to="/admin/addbasket"
-                                            className="btn btn-primary"
-                                        >
-                                            <i
-                                                className="bx bxs-plus-square"
-                                                aria-hidden="true"
-                                            />
-                                           Rebbalancing
-                                        </Link>
-
-                                    </div>
-                                </div>
+          <div className="d-lg-flex align-items-center mb-4 gap-3">
+            <div className="position-relative">
+              <input
+                type="text"
+                className="form-control ps-5 radius-10"
+                placeholder="Search Basket"
+              />
+              <span className="position-absolute top-50 product-show translate-middle-y">
+                <i className="bx bx-search" />
+              </span>
+            </div>
+        
+           
+          </div>
           <Table
             columns={columns}
             data={clients}
