@@ -76,6 +76,7 @@ import ClientDeleteHistory from '../layout/Admin/Admin_client/ClientDeleteHistor
 import Planexpirymonth from '../layout/Admin/PlanExpiryMonth/Planexpirymonth';
 import Notificationlist from '../layout/Admin/Notification/Notificationlist';
 import AddStock from '../layout/Admin/Admin_basket/AddStock';
+import BasketStockPublish from '../layout/Admin/Admin_basket/BasketStockPublish';
 
 
 
@@ -162,6 +163,7 @@ function MainApp() {
                     <Route path="/basket/viewdetail/:id" element={<Viewbasketdetail />} />
                     <Route path="/basket/editbasket/:id" element={<Editbasket />} />
                     <Route path="/basket/addstock/:id" element={<AddStock />} />
+                    <Route path="/basket/basketstockpublish" element={<BasketStockPublish />} />
 
 
 

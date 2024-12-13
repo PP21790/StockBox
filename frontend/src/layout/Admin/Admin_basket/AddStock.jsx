@@ -164,6 +164,7 @@ const AddStock = () => {
                 percentage: "",
                 price: "",
                 type: "",
+                quantity: "",
               };
               return acc;
             }, {})}
@@ -207,7 +208,7 @@ const AddStock = () => {
                                 name={`${service.value}.${fieldKey}`}
                                 type={
                                   fieldKey === "percentage" ||
-                                  fieldKey === "price"
+                                  fieldKey === "price" || fieldKey === "quantity"
                                     ? "number"
                                     : "text"
                                 }
@@ -215,7 +216,7 @@ const AddStock = () => {
                                 placeholder={`Enter ${fieldKey}`}
                                 readOnly={
                                   fieldKey === "tradesymbol" ||
-                                  fieldKey === "name"
+                                  fieldKey === "name" 
                                 }
                               />
                             )}
@@ -232,6 +233,9 @@ const AddStock = () => {
                 ))}
                 <button type="submit" className="btn btn-primary mt-4">
                   Submit
+                </button> 
+                <button type="submit" className="btn btn-primary mt-4 ms-2">
+                  Submit & Publish
                 </button>
               </Form>
             )}
