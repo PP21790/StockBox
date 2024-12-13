@@ -66,7 +66,6 @@ class Clients {
         ]
       });
 
-
       if (existingUser) {
         if (existingUser.Email === Email) {
           return res.status(400).json({ status: false, message: "Email already exists" });
@@ -96,11 +95,10 @@ class Clients {
           refer_token += characters[index];
       }
       
-
+    
      
       let refer_tokenss = referCode + refer_token;
       const refer_tokens = token || crypto.randomBytes(10).toString('hex'); // Use the provided token or generate a new one
-
       const result = new Clients_Modal({
           FullName,
           Email,
@@ -108,10 +106,10 @@ class Clients {
           password: hashedPassword,
           refer_token: refer_tokenss,
           token: refer_tokens,
-          refer_status: token ? settings.refer_status : 0, // Only add `refer_status` if `token` is provided
+         refer_status: token ? (settings.refer_status || 0) : 0,
           del: 0,
       });
-      
+    
       await result.save(); 
 
 

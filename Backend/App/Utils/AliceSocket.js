@@ -10,30 +10,11 @@ var CryptoJS = require("crypto-js");
 const { ObjectId } = require('mongoose').Types;
 let ws;
 const url = "wss://ws1.aliceblueonline.com/NorenWS/"
+const ioSocket = require("./ioSocketReturn");
+const io = ioSocket.getIO(); // Access the already initialized io instance
 
 const Alice_Socket = async () => {
-
-
-    // const orders = await Order_Modal.aggregate([
-    //     {
-    //         $match: {
-    //             tsstatus: { $in: ["1"] }, // Target or Stop-loss
-    //         }
-    //     },
-    //     {
-    //         $group: {
-    //             _id: { ordertoken: "$ordertoken", exchange: "$exchange" }, // Group by ordertoken and exchange
-    //         }
-    //     },
-    //     {
-    //         $project: {
-    //             _id: 0, // Exclude the _id field
-    //             ordertoken: "$_id.ordertoken", // Include ordertoken
-    //             exc: "$_id.exchange" // Include exchange
-    //         }
-    //     }
-    // ]);
-    
+   
 
 
     const groupedStocks = await Basketstock_Modal.aggregate([
@@ -187,7 +168,6 @@ const Alice_Socket = async () => {
 
 }
   function openSocketConnection(channelList, userid, userSession1) {
-
     ws = new WebSocket(url);
     ws.onopen = function () {
       var encrcptToken = CryptoJS.SHA256(CryptoJS.SHA256(userSession1).toString()).toString();
@@ -206,7 +186,8 @@ const Alice_Socket = async () => {
   
     ws.onmessage = async function (msg) {
       const response = JSON.parse(msg.data)
-     
+    
+      io.emit("Live_data", response);
       if (response.tk) {
         if (response.lp != undefined) {
             await Liveprice_Modal.updateOne(

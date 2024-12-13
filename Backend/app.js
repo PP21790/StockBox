@@ -19,11 +19,30 @@ const db = require("./App/Models");
 process.env.TZ = 'Asia/Kolkata'; // Set the global time zone to IST
 console.log('Current time in IST:', new Date());
 const nodemailer = require('nodemailer');
+const socketIo = require("socket.io");
+const server = http.createServer(app);
+
+const io = socketIo(server, {
+  cors: {
+    origin: "*", // Allow all origins
+    credentials: true
+  }
+});
+
+io.on("connection", (socket) => {
+  console.log(`Client connected: ${socket.id}`);
+  socket.on("disconnect", () => {
+    console.log(`Client disconnected: ${socket.id}`);
+  });
+});
+
+// console.log("io ",io)
+require("./App/Utils/ioSocketReturn")(app, io);
 const { sendFCMNotification } = require('./App/Controllers/Pushnotification'); // Adjust if necessary
 
 require('./App/Controllers/Cron.js');
-require('./App/Utils/Settimeout.js'); 
- 
+require('./App/Utils/Settimeout.js');
+
 const Clients_Modal = db.Clients;
 const BasicSetting_Modal = db.BasicSetting;
 const Activitylogs_Modal = db.Activitylogs;
@@ -60,16 +79,23 @@ const Basketstock_Modal = db.Basketstock;
 const Liveprice_Modal = db.Liveprice;
 const Basketorder_Modal = db.Basketorder;
 
+const { Alice_Socket } = require("./App/Utils/AliceSocket");
+
 
 const corsOpts = {
-  origin: '*', // Adjust this as needed for your security requirements
-  methods: ['GET', 'POST'],
+  origin: '*',
+
+  methods: [
+    'GET',
+    'POST',
+  ],
+
   allowedHeaders: [
-    "x-access-token", "Origin", "Content-Type", "Accept", "authorization",
+    "Access-Control-Allow-Headers",
+    "x-access-token, Origin, Content-Type, Accept", "authorization",
   ],
 };
-
-app.use(cors());
+app.use(cors(corsOpts));
 
 // Body-parser middleware setup
 app.use(bodyparser.urlencoded({ extended: true }));
@@ -78,65 +104,20 @@ app.use(bodyparser.json({ limit: '10mb', extended: true }));
 
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
-const server = http.createServer(app);
-
 let ws;
 const url = "wss://ws1.aliceblueonline.com/NorenWS/"
 
-//  app.get('/getcurrentprice', async (req, res) => {
-//   try {
-//     // SMTP configuration directly in function
-//     const transporter = nodemailer.createTransport({
-//         host: "smtp.hostinger.com",
-//         port: 465,
-//         secure: 'true', // true for SSL, false for TLS/STARTTLS
-//         auth: {
-//             user: "service@equimate.in",
-//             pass: "Service@311023"
-//         }
-//     });
-
-//     // Prepare dynamic content
-  
-
-//     // Define email options
-//     const mailOptions = {
-//         to: 'pankajpatidar333@gmail.com',
-//         from: `service@equimate.in`,
-//         subject: "forgot",
-//         html: "finalHtml"
-//     };
-
-//     // Send the email
-//     await transporter.sendMail(mailOptions);
-//     console.log("Email sent successfully");
-
-// } catch (error) {
-//     console.error("Error sending email:", error);
-// }
-  
-
+// app.get("/test", (req, res) => {
+//   Alice_Socket();
 // });
 
 
 
-
-// Importing routes
 require('./App/Routes/index')(app)
 require('./App/api/Routes/index')(app)
-//require('./App/api/Routes/index')(app)
 
-// const {Alice_Socket} = require("./App/Utils/AliceSocket.js");
-
-// app.get("/test", async (req, res) => {
- 
- 
-// });
-
-
-// httpsserver.listen(1001)
-server.listen(process.env.PORT, () => {
-
-  console.log(`Server is running on http://0.0.0.0:${process.env.PORT}`);
+const PORT = process.env.PORT || 3002;
+server.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}.`);
 });
 

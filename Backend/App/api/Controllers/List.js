@@ -3654,6 +3654,48 @@ else {
     });
   }
 
+  async getLivePrice(req, res) {
+    try {
+      const livePrices = await Liveprice_Modal.aggregate([
+        {
+          $lookup: {
+            from: 'stocks', // Collection to join with
+            localField: 'token', // Field in Liveprice_Modal
+            foreignField: 'instrument_token', // Field in dstocks
+            as: 'stockDetails' // Output array field containing matching documents
+          }
+        },
+        {
+          $unwind: {
+            path: '$stockDetails', // Unwind the stockDetails array
+            preserveNullAndEmptyArrays: true // Keep documents even if no match is found
+          }
+        },
+        {
+          $project: {
+            lp: 1,
+            curtime:1,
+            token: 1,
+            tradesymbol: '$stockDetails.tradesymbol', // Include tradesymbol from dstocks
+          }
+        }
+      ]);
+  
+      return res.json({
+        status: true,
+        message: "Live prices fetched successfully",
+        data: livePrices
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        status: false,
+        message: "Server error",
+        data: []
+      });
+    }
+  }
+  
 
 }
 module.exports = new List();
