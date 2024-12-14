@@ -6,7 +6,7 @@ import Table from "../../../components/Table";
 import { BasketAllList, deletebasket } from "../../../Services/Admin";
 import { fDate } from "../../../Utils/Date_formate";
 
-const Basket = () => {
+const BasketInformation = () => {
   const navigate = useNavigate();
   const [clients, setClients] = useState([]);
   const token = localStorage.getItem("token");
@@ -187,4 +187,4 @@ const Basket = () => {
   );
 };
 
-export default Basket;
+export default BasketInformation;
