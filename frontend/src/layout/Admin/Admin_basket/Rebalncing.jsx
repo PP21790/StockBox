@@ -6,7 +6,7 @@ import Table from "../../../components/Table";
 import { BasketAllList, deletebasket } from "../../../Services/Admin";
 import { fDate } from "../../../Utils/Date_formate";
 
-const Basket = () => {
+const Rebalncing = () => {
   const navigate = useNavigate();
   const [clients, setClients] = useState([]);
   const token = localStorage.getItem("token");
@@ -102,18 +102,8 @@ const Basket = () => {
       name: "Actions",
       cell: (row) => (
         <div>
-          <Link
-            to={`addstock/${row._id}`}
-            className="btn btn-primary btn-sm mx-1"
-          >
-            Add Stock
-          </Link>
-          <Link
-            to={`viewdetail/${row._id}`}
-            className="btn btn-primary btn-sm mx-1"
-          >
-            View
-          </Link>
+        
+        
           <Link
             to={`editbasket/${row._id}`}
             className="btn btn-warning btn-sm mx-1"
@@ -134,7 +124,7 @@ const Basket = () => {
   return (
     <div className="page-content">
       <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-        <div className="breadcrumb-title pe-3"> Basket List</div>
+        <div className="breadcrumb-title pe-3"> Rebalncing</div>
         <div className="ps-3">
           <nav aria-label="breadcrumb">
             <ol className="breadcrumb mb-0 p-0">
@@ -161,18 +151,8 @@ const Basket = () => {
                 <i className="bx bx-search" />
               </span>
             </div>
-            <div className="ms-auto">
-              <Link to="/admin/addbasket" className="btn btn-primary">
-                <i className="bx bxs-plus-square" aria-hidden="true" />
-                Add Basket
-              </Link>
-            </div>
-            <div className="ms-2">
-              <Link to="/admin/basket/rebalancing" className="btn btn-primary">
-                <i className="bx bxs-plus-square" aria-hidden="true" />
-                Rebbalancing
-              </Link>
-            </div>
+            
+        
           </div>
           <Table
             columns={columns}
@@ -187,4 +167,4 @@ const Basket = () => {
   );
 };
 
-export default Basket;
+export default Rebalncing;
