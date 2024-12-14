@@ -1079,7 +1079,8 @@ class List {
             plan_id: { $first: '$plan_id' }, // Keep the original plan_id
             plan_price: { $first: '$plan_price' }, // Keep the plan_price
             total: { $first: '$total' }, // Keep the total
-            discount: { $first: '$discount' }, // Keep the discount
+            discount: { $first: '$discount' },
+            coupon: { $first: '$coupon' }, // Keep the discount
             plan_start: { $first: '$plan_start' }, // Keep the plan_start
             plan_end: { $first: '$plan_end' },
             orderid: { $first: '$orderid' }, // Keep the plan_end
@@ -1101,7 +1102,8 @@ class List {
             plan_id: 1, // Original plan_id
             plan_price: 1, // Plan price
             total: 1, // Total
-            discount: 1, // Discount
+            discount: 1,
+            coupon: 1,
             plan_start: 1, // Plan start date
             plan_end: 1,
             orderid: 1, // Plan end date
@@ -1234,9 +1236,14 @@ class List {
 
       // Check if the coupon is within the valid date range
       const currentDate = new Date();
-      if (currentDate < coupon.startdate || currentDate > coupon.enddate) {
+      const currentDateOnly = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()); // Strip time
+      const startDateOnly = new Date(coupon.startdate.getFullYear(), coupon.startdate.getMonth(), coupon.startdate.getDate());
+      const endDateOnly = new Date(coupon.enddate.getFullYear(), coupon.enddate.getMonth(), coupon.enddate.getDate());
+      
+      if (currentDateOnly < startDateOnly || currentDateOnly > endDateOnly) {
         return res.status(400).json({ message: 'Coupon is not valid at this time' });
       }
+      
 
       // Check if the purchase meets the minimum purchase value requirement
       if (purchaseValue < coupon.minpurchasevalue) {
@@ -1260,12 +1267,13 @@ class List {
       }
 
 
+console.log("coupon.service",coupon.service);
+      if (coupon.service) {
 
-      if (!coupon.service) {
         const plan = await Plan_Modal.findById(planid)
           .populate('category')
           .exec();
-        if (!coupon.service != plan.category.service) {
+        if (coupon.service != plan.category.service) {
 
           return res.status(404).json({ message: 'Service Does not match' });
         }
@@ -1671,13 +1679,26 @@ class List {
         .lean();
 
 
-      const totalSignals = await Signal_Modal.countDocuments(query);
 
+
+        const protocol = req.protocol; // Will be 'http' or 'https'
+
+        const baseUrl = `${protocol}://${req.headers.host}`; // Construct the base URL
+  
+           const signalsWithReportUrls = signals.map(signal => {
+        
+            return {
+                ...signal,
+                report_full_path: signal.report ? `${baseUrl}/uploads/report/${signal.report}` : null 
+            };
+        });
+       
+      const totalSignals = await Signal_Modal.countDocuments(query);
 
       return res.json({
         status: true,
         message: "Signals retrieved successfully",
-        data: signals,
+        data: signalsWithReportUrls,
         pagination: {
           total: totalSignals,
           page: parseInt(page),
@@ -2331,7 +2352,7 @@ class List {
 
       return res.status(201).json({
         status: true,
-        message: 'Free trail Actived successfully',
+        message: 'Free trail Activated successfully',
       });
 
     } catch (error) {

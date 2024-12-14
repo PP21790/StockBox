@@ -55,7 +55,13 @@ class Clients {
         });
       }
   
-
+      if(token) {
+        const refertokensss = await Clients_Modal.findOne({ refer_token:token,del:0,ActiveStatus:1 });
+    
+        if (!refertokensss) {
+            return res.status(400).json({ status: false, message: "Referral code doesn't exists" });
+        }
+      }
   
       const existingUser = await Clients_Modal.findOne({
         $and: [
@@ -600,23 +606,25 @@ async deleteClient(req, res) {
       });
     }
 
-  const deletedClient = await Clients_Modal.findByIdAndUpdate(
-    id, 
-    { del: 1 }, // Set del to true
-    { new: true }  // Return the updated document
-  );
+    const deletedClient = await Clients_Modal.findByIdAndUpdate(
+      id,
+      { del: 1 },
+      { new: true }
+    );
+  
     if (!deletedClient) {
+      console.error("No document found with this ID.");
       return res.status(404).json({
         status: false,
         message: "Client not found",
       });
     }
-
+    console.log("Updated Client:", deletedClient);
 
     const titles = 'Important Update';
-    const message = `${client.FullName} has successfully deleted their account.`;
+    const message = `You have successfully deleted your account.`;
     const resultnm = new Adminnotification_Modal({
-      clientid:client._id,
+      clientid:id,
       type:'delete client',
       title: titles,
       message: message
