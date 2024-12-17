@@ -78,6 +78,7 @@ import Notificationlist from '../layout/Admin/Notification/Notificationlist';
 import AddStock from '../layout/Admin/Admin_basket/AddStock';
 import BasketStockPublish from '../layout/Admin/Admin_basket/BasketStockPublish';
 import Rebalncing from '../layout/Admin/Admin_basket/Rebalncing';
+import BasketPurchaseHistory from '../layout/Admin/Admin_basket/BasketPurchaseHistory';
 
 
 
@@ -166,6 +167,7 @@ function MainApp() {
                     <Route path="/basket/addstock/:id" element={<AddStock />} />
                     <Route path="/basket/basketstockpublish" element={<BasketStockPublish />} />
                     <Route path="/basket/rebalancing" element={<Rebalncing />} />
+                    <Route path="/basket/basket-purchase-history" element={<BasketPurchaseHistory/>} />
 
 
 

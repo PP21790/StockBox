@@ -71,70 +71,44 @@ const BasketPurchaseHistory = () => {
   // Columns for DataTable
   const columns = [
     {
-      name: "Basket Name",
+      name: " Name",
       selector: (row) => row.title,
       sortable: true,
     },
     {
-      name: "Theme Name",
-      selector: (row) => row.themename,
+      name: "Email",
+      selector: (row) => row.title,
       sortable: true,
     },
+    {
+    name: "Phone",
+    selector: (row) => row.title,
+    sortable: true,
+  },
+    {
+      name: "Basket Name",
+      selector: (row) => row.title,
+      sortable: true,
+    },
+    
     {
       name: "Min. Inv. Amount",
       selector: (row) => row.mininvamount,
     },
-    // {
-    //   name: "CAGR",
-    //   selector: (row) => row.cagr,
-    // },
-    {
-      name: "Description",
-      selector: (row) => row.description,
-      wrap: true,
-    },
+    
+    
     {
       name: "Validity",
       selector: (row) => row.validity,
       sortable: true,
     },
-    {
-      name: "Actions",
-      cell: (row) => (
-        <div>
-          <Link
-            to={`addstock/${row._id}`}
-            className="btn btn-primary btn-sm mx-1"
-          >
-            Add Stock
-          </Link>
-          <Link
-            to={`viewdetail/${row._id}`}
-            className="btn btn-primary btn-sm mx-1"
-          >
-            View
-          </Link>
-          <Link
-            to={`editbasket/${row._id}`}
-            className="btn btn-warning btn-sm mx-1"
-          >
-            Edit
-          </Link>
-          <button
-            className="btn btn-danger btn-sm"
-            onClick={() => Deletebasket(row._id)}
-          >
-            Delete
-          </button>
-        </div>
-      ),
-    },
+    
   ];
 
   return (
     <div className="page-content">
       <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-        <div className="breadcrumb-title pe-3"> Basket List</div>
+        <div className="breadcrumb-title pe-3"> Basket  Purchase History</div>
         <div className="ps-3">
           <nav aria-label="breadcrumb">
             <ol className="breadcrumb mb-0 p-0">
@@ -161,18 +135,7 @@ const BasketPurchaseHistory = () => {
                 <i className="bx bx-search" />
               </span>
             </div>
-            <div className="ms-auto">
-              <Link to="/admin/addbasket" className="btn btn-primary">
-                <i className="bx bxs-plus-square" aria-hidden="true" />
-                Add Basket
-              </Link>
-            </div>
-            <div className="ms-2">
-              <Link to="/admin/addbasket" className="btn btn-primary">
-                <i className="bx bxs-plus-square" aria-hidden="true" />
-                Rebbalancing
-              </Link>
-            </div>
+          
           </div>
           <Table
             columns={columns}

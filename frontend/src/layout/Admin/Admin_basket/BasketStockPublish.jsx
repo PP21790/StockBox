@@ -148,7 +148,7 @@ const BasketStockPublish = () => {
           </Tooltip>
           <Tooltip title="history">
           <Link
-            to={`editbasket/${row._id}`}
+            to={`/admin/basket/basket-purchase-history`}
             className="btn "
           >
             <History />
