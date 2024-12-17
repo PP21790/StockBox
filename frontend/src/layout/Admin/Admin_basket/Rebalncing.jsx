@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
+import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine, RefreshCcw } from 'lucide-react';
 import Swal from "sweetalert2";
+import { Tooltip } from 'antd';
 import Table from "../../../components/Table";
 import { BasketAllList, deletebasket } from "../../../Services/Admin";
 import { fDate } from "../../../Utils/Date_formate";
@@ -101,22 +103,27 @@ const Rebalncing = () => {
     {
       name: "Actions",
       cell: (row) => (
-        <div>
-        
-        
-          <Link
-            to={`editbasket/${row._id}`}
-            className="btn btn-warning btn-sm mx-1"
-          >
-            Edit
-          </Link>
-          <button
-            className="btn btn-danger btn-sm"
-            onClick={() => Deletebasket(row._id)}
-          >
-            Delete
-          </button>
-        </div>
+
+
+        <div className='d-flex'>
+
+
+                
+
+                    <Tooltip title="view">
+                        <Eye
+
+                            />
+                    </Tooltip>
+
+                    <Tooltip title="Update">
+                        <SquarePen className='ms-3'  />
+                    </Tooltip>
+                    {/* <Tooltip title="delete">
+                        <Trash2 onClick={() => DeleteClient(row._id)} />
+                    </Tooltip> */}
+                </div>
+   
       ),
     },
   ];

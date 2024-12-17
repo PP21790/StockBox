@@ -1,6 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
+import { Tooltip } from "antd";
+import {
+  Settings2,
+  Eye,
+  SquarePen,
+  Trash2,
+  Download,
+  ArrowDownToLine,
+  RefreshCcw,
+  History,
+  Cable,
+  UserRoundCheck
+} from "lucide-react";
 import Swal from "sweetalert2";
 import Table from "../../../components/Table";
 import { BasketAllList, deletebasket } from "../../../Services/Admin";
@@ -114,34 +127,49 @@ const BasketStockPublish = () => {
     {
       name: "Actions",
       cell: (row) => (
-        <div>
-          <Link
-            to={`addstock/${row._id}`}
-            className="btn btn-primary btn-sm mx-1"
+        
+          <div className="d-flex">
+            <Tooltip placement="top" overlay="Package Assign"></Tooltip>
+
+            <Tooltip title=" Rebalance">
+            <Link
+            to={`/admin/basket/rebalancing`}
+            className="btn"
           >
-            Rebalance
+            <Cable />
           </Link>
-          <Link
-            to={`viewdetail/${row._id}`}
-            className="btn btn-primary btn-sm mx-1"
-          >
-            View Details
-          </Link>
+           
+            </Tooltip>
+
+            <Tooltip title="view">
+            <Link to={`viewdetail/${row._id}`} className="btn ">
+              <Eye />
+            </Link>
+          </Tooltip>
+          <Tooltip title="history">
           <Link
             to={`editbasket/${row._id}`}
-            className="btn btn-warning btn-sm mx-1"
+            className="btn "
           >
-            History
+            <History />
+          
           </Link>
+          </Tooltip>
+          <Tooltip title=" View Purchase Client">
           <Link
             to={`editbasket/${row._id}`}
-            className="btn btn-warning btn-sm mx-1"
+            className="btn"
           >
-            View Purchase Client
+            <UserRoundCheck />
+           
           </Link>
-        </div>
+          </Tooltip>
+          </div>
+          
+         
+        
       ),
-      width:'38%'
+    width: "200px",
     },
   ];
 
@@ -178,8 +206,6 @@ const BasketStockPublish = () => {
                 <i className="bx bx-search" />
               </span>
             </div>
-        
-           
           </div>
           <Table
             columns={columns}

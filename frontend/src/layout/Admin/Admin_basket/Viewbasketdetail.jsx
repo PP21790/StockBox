@@ -125,7 +125,9 @@ const Viewbasketdetail = () => {
         </div>
       </div>
       <hr />
-      <Formik
+      <div className="card">
+        <div className="card-body">
+        <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
         enableReinitialize
@@ -147,7 +149,8 @@ const Viewbasketdetail = () => {
                   </div>
                 ) : (
                   <div key={field.name} className="col-md-12">
-                    <label>{field.label}</label>
+                    {/* <label>{field.label}</label> */}
+                    <h5 className="mt-4 mb-3">Stock Details</h5>
                     <table className="table table-bordered">
                       <thead>
                         <tr>
@@ -184,6 +187,9 @@ const Viewbasketdetail = () => {
           </div>
         )}
       </Formik>
+        </div>
+      </div>
+     
     </div>
   );
 };
