@@ -1922,7 +1922,7 @@ console.log("coupon.service",coupon.service);
       })
         .sort({ version: -1 }) // Sort by version in descending order
         .select("version"); // Fetch only the version field
-  
+      
       // Step 2: Fetch basket stock data for the latest version
       let basketstock = [];
       if (latestVersion) {
@@ -1931,7 +1931,23 @@ console.log("coupon.service",coupon.service);
           del: false,
           status: 1,
           version: latestVersion.version // Filter by the latest version
-        });
+        }).lean(); // Use .lean() for plain objects to allow adding custom fields
+      }
+      
+      // Step 3: Add instrument_token to each basket stock
+      if (basketstock.length > 0) {
+        basketstock = await Promise.all(
+          basketstock.map(async (stock) => {
+            const stockDetails = await Stock_Modal.findOne({
+              tradesymbol: stock.tradesymbol // Match tradesymbol in the stocks collection
+            }).select("instrument_token"); // Fetch only the instrument_token field
+      
+            return {
+              ...stock, // Spread existing stock fields
+              instrument_token: stockDetails ? stockDetails.instrument_token : null // Add instrument_token
+            };
+          })
+        );
       }
   
       // Step 3: Return the response
@@ -1952,113 +1968,116 @@ console.log("coupon.service",coupon.service);
   
   async BasketstockLists(req, res) {
     try {
-      const { id, clientid } = req.params; // Extract basket_id and client_id
+      const { id, clientid } = req.params; // Extract basket_id and client_id from request parameters
   
-      // Convert clientid to ObjectId
+      // Convert clientid to ObjectId for database query
       const clientObjectId = new mongoose.Types.ObjectId(clientid);
   
-      // Get the current date
-      const currentDate = new Date();
-  
+      // Fetch the latest subscription for the given basket_id and client_id
       const subscription = await BasketSubscription_Modal.findOne({
         basket_id: id,
-        client_id: clientObjectId
+        client_id: clientObjectId,
       }).sort({ created_at: -1 });
-      
-        const latestEndDate = subscription.enddate;
-      
-        // const latestVersionStock = await Basketstock_Modal.find({
-        //   basket_id: id,
-        //   del: false,
-        //   status: 1,
-        //   created_at: { $lt: latestEndDate } 
-        // });
-
-
-
-        const latestVersionStock = await Basketstock_Modal.aggregate([
-          {
-            $match: {
-              basket_id: id,
-              del: false,
-              status: 1,
-              created_at: { $lt: latestEndDate } // Filter by created_at before end_date
-            }
+  
+      // Check if subscription exists
+      if (!subscription) {
+        return res.json({
+          status: false,
+          message: "No subscription found for the given basket and client.",
+          data: [],
+        });
+      }
+  
+      // Extract the subscription's end date
+      const latestEndDate = subscription.enddate;
+  
+      // Fetch the latest version of basket stocks and perform aggregations
+      const latestVersionStock = await Basketstock_Modal.aggregate([
+        {
+          $match: {
+            basket_id: id,
+            del: false,
+            status: 1,
+            created_at: { $lt: latestEndDate }, // Filter stocks created before the subscription end date
           },
-          {
-            $lookup: {
-              from: "basketordermodels", // Collection name for orders
-              let: {
-                stock_tradesymbol: "$tradesymbol",
-                stock_basket_id: "$basket_id",
-                stock_version: "$version"
+        },
+        {
+          $lookup: {
+            from: "basketordermodels", // Collection name for orders
+            let: {
+              stock_tradesymbol: "$tradesymbol",
+              stock_basket_id: "$basket_id",
+              stock_version: "$version",
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ["$tradesymbol", "$$stock_tradesymbol"] }, // Match tradesymbol
+                      { $eq: ["$basket_id", "$$stock_basket_id"] }, // Match basket_id
+                      { $eq: ["$version", "$$stock_version"] }, // Match version
+                      { $eq: ["$clientid", clientid] }, // Match clientid
+                    ],
+                  },
+                },
               },
-              pipeline: [
-                {
-                  $match: {
-                    $expr: {
-                      $and: [
-                        { $eq: ["$tradesymbol", "$$stock_tradesymbol"] }, // Match tradesymbol
-                        { $eq: ["$basket_id", "$$stock_basket_id"] }, // Match basket_id
-                        { $eq: ["$version", "$$stock_version"] }, // Match version
-                        { $eq: ["$clientid", clientid] } // Match clientid
-                      ]
-                    }
-                  }
-                }
-              ],
-              as: "order_details" // Name of the output field
-            }
+            ],
+            as: "order_details", // Add order details to the result
           },
-          {
-            $project: {
-              _id: 1,
-              basket_id: 1,
-              name: 1,
-              tradesymbol: 1,
-              price: 1,
-              weightage: 1,
-              total_value: 1,
-              quantity: 1,
-              comment: 1,
-              version: 1,
-              del: 1,
-              created_at: 1,
-              status: 1,
-              order_details: {
-                clientid: 1,
-                tradesymbol: 1,
-                orderid: 1,
-                uniqueorderid: 1,
-                borkerid: 1,
-                quantity: 1,
-                ordertype: 1,
-                price: 1,
-                ordertoken: 1,
-                exchange: 1,
-                version: 1,
-                howmanytimebuy: 1,
-                status: 1,
-                exitstatus: 1,
-                createdAt: 1
-              }
-            }
-          }
-        ]);
-        
-        
-        
+        },
+        {
+          $lookup: {
+            from: "stocks", // Collection name for stock details
+            localField: "tradesymbol", // Field in Basketstock_Modal to match
+            foreignField: "tradesymbol", // Field in stocks collection to match
+            as: "stock_details", // Add stock details to the result
+          },
+        },
+        {
+          $addFields: {
+            // Extract instrument_token from stock details (first match only)
+            instrument_token: {
+              $arrayElemAt: ["$stock_details.instrument_token", 0],
+            },
+          },
+        },
+        {
+          $project: {
+            // Include required fields in the final result
+            _id: 1,
+            basket_id: 1,
+            name: 1,
+            tradesymbol: 1,
+            price: 1,
+            weightage: 1,
+            total_value: 1,
+            quantity: 1,
+            comment: 1,
+            version: 1,
+            del: 1,
+            created_at: 1,
+            status: 1,
+            instrument_token: 1, // Include extracted instrument_token
+            order_details: 1, // Keep order details as a nested array
+          },
+        },
+      ]);
+  
+      // Return the fetched data as a response
       return res.json({
         status: true,
         message: "Basket Stock fetched successfully",
-        data: latestVersionStock
+        data: latestVersionStock,
       });
     } catch (error) {
       console.error("Error fetching basket stock:", error);
+  
+      // Handle any server errors gracefully
       return res.json({
         status: false,
         message: "Server error",
-        data: []
+        data: [],
       });
     }
   }

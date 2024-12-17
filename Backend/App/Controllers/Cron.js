@@ -240,7 +240,6 @@ const DeleteTokenAliceToken = async (req, res) => {
   
     ];
     const result = await Stock_Modal.aggregate(pipeline)
-    console.log("result", result)
     if (result.length > 0) {
         const idsToDelete = result.map(item => item._id);
         await Stock_Modal.deleteMany({ _id: { $in: result[0].idsToDelete } });
@@ -367,7 +366,7 @@ async function CheckExpireSignalCash(req, res) {
             try {
                 // Get the CPrice for each signal's stock symbol
                 const cPrice = await returnstockcloseprice(signal.stock);
-
+           
                 // Update the signal with close_status and close_price
                 await Signal_Modal.updateOne(
                     { _id: signal._id },
@@ -570,7 +569,15 @@ async function returnstockcloseprice(symbol) {
                     });
 
                     // Find the requested symbol and return its CPrice
-                    const stockData = sheetData.find(item => item.SYMBOL === symbol);
+                   // const stockData = sheetData.find(item => item.SYMBOL === symbol);
+
+                      const stockData = sheetData.find(item => 
+                        item.SYMBOL === symbol.trim() || 
+                        item.SYMBOL === `NSE:${symbol.trim()}`
+                    );
+
+                    // console.log("Searching for Symbol:", symbol.trim());
+                    // console.log("Matched Stock Data:", stockData);
 
                     if (stockData && stockData.CPrice && stockData.CPrice !== "#N/A") {
                         resolve(stockData.CPrice);
