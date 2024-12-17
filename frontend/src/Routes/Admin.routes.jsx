@@ -79,6 +79,8 @@ import AddStock from '../layout/Admin/Admin_basket/AddStock';
 import BasketStockPublish from '../layout/Admin/Admin_basket/BasketStockPublish';
 import Rebalncing from '../layout/Admin/Admin_basket/Rebalncing';
 import BasketPurchaseHistory from '../layout/Admin/Admin_basket/BasketPurchaseHistory';
+import ViewBasketStock from '../layout/Admin/Admin_basket/ViewBasketStock';
+import ViewPurchaseClient from '../layout/Admin/Admin_basket/ViewPurchaseClient';
 
 
 
@@ -168,6 +170,8 @@ function MainApp() {
                     <Route path="/basket/basketstockpublish" element={<BasketStockPublish />} />
                     <Route path="/basket/rebalancing" element={<Rebalncing />} />
                     <Route path="/basket/basket-purchase-history" element={<BasketPurchaseHistory/>} />
+                    <Route path="/basket/view-basket-stock" element={<ViewBasketStock />} />
+                    <Route path="/basket/view-purchase-client" element={<ViewPurchaseClient />} />
 
 
 

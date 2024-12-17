@@ -142,7 +142,7 @@ const BasketStockPublish = () => {
             </Tooltip>
 
             <Tooltip title="view">
-            <Link to={`viewdetail/${row._id}`} className="btn ">
+            <Link to={`/admin/basket/view-basket-stock/`} className="btn">
               <Eye />
             </Link>
           </Tooltip>
@@ -157,7 +157,7 @@ const BasketStockPublish = () => {
           </Tooltip>
           <Tooltip title=" View Purchase Client">
           <Link
-            to={`editbasket/${row._id}`}
+            to={`/admin/basket/view-purchase-client`}
             className="btn"
           >
             <UserRoundCheck />
