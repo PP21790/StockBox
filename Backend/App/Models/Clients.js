@@ -187,4 +187,5 @@ const Clients_model = model('CLIENTS', clientsModel);
 //     console.error('Error syncing indexes:', error);
 //   });
 
+
 module.exports = Clients_model;

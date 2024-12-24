@@ -228,7 +228,6 @@ if (!stocks) {
 
 
 async getSignal(req, res) {
-
   
   try {
     const { from, to, service, stock } = req.query;
