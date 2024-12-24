@@ -11,7 +11,6 @@ const CouponSchema = new Schema({
     code: {
         type: String,
         required: true,
-        unique: true,  // Ensure each coupon code is unique
         trim: true
     },
     type: {

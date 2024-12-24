@@ -53,8 +53,16 @@ class Coupon {
             }
 
             
+            const existingCoupon = await Coupon_Modal.findOne({ 
+              code, 
+              del: false // Check if the coupon is not deleted
+            });
+            if (existingCoupon) {
+              return res.status(400).json({ status: false, message: "Coupon code already exists" });
+            }
 
-        
+
+            
             if (!add_by) {
               return res.status(400).json({ status: false, message: "add_by is required" });
             }
