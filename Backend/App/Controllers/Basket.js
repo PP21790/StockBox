@@ -282,7 +282,7 @@ class Basket {
       const bulkOps = [];
   
       for (const stock of stocks) {
-        const { name, tradesymbol, percentage, price, comment, type } = stock;
+        const { name, tradesymbol, percentage, price, comment, type, status } = stock;
   
         const currentPrice = price;
         if (!currentPrice) {
@@ -326,6 +326,7 @@ class Basket {
               comment: comment || '',
               version,
               weightage: percentage,
+              status:status,
             },
           },
         });
