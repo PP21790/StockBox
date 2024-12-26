@@ -246,7 +246,7 @@ const QRDetails = () => {
             name: 'S.No',
             selector: (row, index) => index + 1,
             sortable: false,
-            width: '150px',
+            
 
         },
 
@@ -254,7 +254,7 @@ const QRDetails = () => {
             name: 'Image',
             cell: row => <img src={`${image_baseurl}uploads/bank/${row.image}`} alt={row.image} title={row.image} width="50" height="50" />,
             sortable: true,
-            width: '240px',
+         
 
         },
         {
@@ -275,14 +275,14 @@ const QRDetails = () => {
                 </div>
             ),
             sortable: true,
-            width: '240px',
+           
 
         },
         {
             name: 'Created At',
             selector: row => fDateTime(row.created_at),
             sortable: true,
-            width: '240px',
+           
 
         },
         // {
@@ -298,7 +298,7 @@ const QRDetails = () => {
                 <>
 
                     <div>
-                        <Tooltip placement="top" overlay="Updaate">
+                        <Tooltip placement="top" overlay="Update">
                             <SquarePen
                                 onClick={() => {
                                     setModel(true);
@@ -318,7 +318,7 @@ const QRDetails = () => {
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
-            width: '200px',
+            
 
         }
     ];
@@ -348,7 +348,7 @@ const QRDetails = () => {
             <div className="page-content">
 
                 <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                    <div className="breadcrumb-title pe-3">QR Code</div>
+                    <div className="breadcrumb-title pe-3">QR Details</div>
                     <div className="ps-3">
                         <nav aria-label="breadcrumb">
                             <ol className="breadcrumb mb-0 p-0">
@@ -374,9 +374,9 @@ const QRDetails = () => {
                                     onChange={(e) => setSearchInput(e.target.value)}
                                     value={searchInput}
                                 /> */}
-                                <span className="position-absolute top-50 product-show translate-middle-y">
+                                {/* <span className="position-absolute top-50 product-show translate-middle-y">
                                     <i className="bx bx-search" />
-                                </span>
+                                </span> */}
                             </div>
                             <div className="ms-auto">
                                 <button

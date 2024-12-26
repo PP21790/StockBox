@@ -75,6 +75,12 @@ import QRDetails from '../layout/Admin/BasicSetting/QRDetails/QRDetails';
 import ClientDeleteHistory from '../layout/Admin/Admin_client/ClientDeleteHistory';
 import Planexpirymonth from '../layout/Admin/PlanExpiryMonth/Planexpirymonth';
 import Notificationlist from '../layout/Admin/Notification/Notificationlist';
+import AddStock from '../layout/Admin/Admin_basket/AddStock';
+import BasketStockPublish from '../layout/Admin/Admin_basket/BasketStockPublish';
+import Rebalncing from '../layout/Admin/Admin_basket/Rebalncing';
+import BasketPurchaseHistory from '../layout/Admin/Admin_basket/BasketPurchaseHistory';
+import ViewBasketStock from '../layout/Admin/Admin_basket/ViewBasketStock';
+import ViewPurchaseClient from '../layout/Admin/Admin_basket/ViewPurchaseClient';
 
 
 
@@ -160,6 +166,12 @@ function MainApp() {
                     <Route path="/addbasket" element={<Addbasket />} />
                     <Route path="/basket/viewdetail/:id" element={<Viewbasketdetail />} />
                     <Route path="/basket/editbasket/:id" element={<Editbasket />} />
+                    <Route path="/basket/addstock/:id" element={<AddStock />} />
+                    <Route path="/basket/basketstockpublish" element={<BasketStockPublish />} />
+                    <Route path="/basket/rebalancing" element={<Rebalncing />} />
+                    <Route path="/basket/basket-purchase-history" element={<BasketPurchaseHistory/>} />
+                    <Route path="/basket/view-basket-stock" element={<ViewBasketStock />} />
+                    <Route path="/basket/view-purchase-client" element={<ViewPurchaseClient />} />
 
 
 

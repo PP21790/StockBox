@@ -33,7 +33,34 @@ const OrderModel = Schema({
         trim: true,
         default: 0
     },
+    exitquantity: {
+        type: Number,
+        trim: true,
+        default: 0
+    },
     ordertype: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    tsprice: {
+        type: Number,
+        default: 0
+    },
+    slprice: {
+        type: Number,
+        default: 0
+    },
+    tsstatus: {
+        type: Number,
+        default: 0
+    },
+    ordertoken: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    exchange: {
         type: String,
         trim: true,
         default: null

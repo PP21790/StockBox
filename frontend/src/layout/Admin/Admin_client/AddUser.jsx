@@ -25,6 +25,10 @@ const AddUser = () => {
     if (/\d/.test(values.FullName)) {
       errors.FullName = "Numbers are not allowed in the Full Name";
     }
+    //updated code 
+    if(/\W/.test(values.FullName)){
+      errors.FullName = "Special character are not allowed"
+    }
     if (!values.Email) {
       errors.Email = "Please Enter Email";
     }

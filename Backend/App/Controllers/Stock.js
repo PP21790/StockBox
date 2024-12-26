@@ -96,10 +96,30 @@ class Stock {
         }
       ]);
 
+
+      function convertExpiryToDate(expiry_str) {
+        const monthMap = { JAN: 0, FEB: 1, MAR: 2, APR: 3, MAY: 4, JUN: 5, JUL: 6, AUG: 7, SEP: 8, OCT: 9, NOV: 10, DEC: 11 };
+        return new Date(expiry_str.slice(5), monthMap[expiry_str.slice(2, 5)], expiry_str.slice(0, 2));
+    }
+    
+    function filterFutureExpiries(data) {
+        const today = new Date();
+        return data.filter(item => convertExpiryToDate(item.expiry_str) > today);
+    }
+    
+   
+    
+    // Filter and log
+    const filteredData = filterFutureExpiries(result);
+    console.log(filteredData);
+    
+      
+
+
       return res.json({
         status: true,
         message: "get",
-        data:result
+        data:filteredData
       });
 
     } catch (error) {
@@ -232,7 +252,7 @@ async getStocksByExpiryByStrike(req, res) {
     const result = await Stock_Modal.aggregate(pipeline);
 
     // Log the result for debugging
-    console.log("Aggregation Result:", JSON.stringify(result, null, 2));
+    // console.log("Aggregation Result:", JSON.stringify(result, null, 2));
 
     return res.json({
       status: true,
@@ -517,6 +537,36 @@ async getStocksByExpiryByStrike(req, res) {
         });
     }
 }
+async getStockBySymbol(req, res) {
+  try {
+    const { symbol } = req.body;
+
+    // Build the match stage dynamically if a symbol is provided
+    const matchStage = symbol
+      ? { $match: { segment: "C", symbol: { $regex: symbol, $options: 'i' } } }
+      : { $match: {} }; // Match all documents if no symbol is provided
+
+    const result = await Stock_Modal.aggregate([
+      matchStage, // Match stage (optional filtering)
+      {
+        $group: {
+          _id: "$symbol", // Grouping by symbol
+          data: { $push: "$$ROOT" } // Include all fields in the group result
+        }
+      }
+    ]);
+
+    return res.json({
+      status: true,
+      message: "Data retrieved successfully",
+      data: result
+    });
+  } catch (error) {
+    console.error("Error fetching stock data:", error);
+    return res.json({ status: false, message: "Server error", data: [] });
+  }
+}
+
 
 
 

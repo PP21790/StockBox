@@ -819,7 +819,7 @@ const DynamicForm = ({
                                                                                     />
 
                                                                                     <FontAwesomeIcon
-                                                                                        icon={passwordVisible ? faEyeSlash : faEye}
+                                                                                        icon={passwordVisible ?   faEye:faEyeSlash}
                                                                                         onClick={togglePasswordVisibility}
                                                                                         style={{
                                                                                             position: 'absolute',
@@ -845,7 +845,7 @@ const DynamicForm = ({
                                                                         <div className={`col-lg-${field.col_size}`}>
                                                                             <div className="input-block row">
                                                                                 <label
-                                                                                    className={`col-lg-${field.label_size} col-form-label p-0`}
+                                                                                    className={`col-lg-${field.label_size} col-form-label `}
                                                                                     htmlFor={field.name}
                                                                                 >
                                                                                     {field.label}
@@ -862,7 +862,7 @@ const DynamicForm = ({
                                                                                         style={{ paddingRight: '3rem' }}
                                                                                     />
                                                                                     <FontAwesomeIcon
-                                                                                        icon={passwordVisible1 ? faEyeSlash : faEye}
+                                                                                        icon={passwordVisible1 ?   faEye : faEyeSlash}
                                                                                         onClick={togglePasswordVisibility1}
                                                                                         style={{
                                                                                             position: 'absolute',

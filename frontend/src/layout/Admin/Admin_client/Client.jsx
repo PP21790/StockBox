@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
 // import Table from '../../../components/Table';
 import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine, RefreshCcw } from 'lucide-react';
@@ -696,7 +695,7 @@ const Client = () => {
 
 
                             </div>
-                            <div className="row">
+                            <div className="row mb-4">
                                 <div className="col-md-4 ">
                                     <div>
                                         <label htmlFor="kycSelect">Select Kyc</label>
@@ -811,7 +810,7 @@ const Client = () => {
                                     <div className='card'>
                                         {checkedIndex === 0 && (
                                             <>
-                                                <div className='row mt-3'>
+                                                <div className='row my-3'>
                                                     {category && category
                                                         .filter(cat => planlist.some(plan => plan.category._id === cat._id))
                                                         .map((item, index) => (
@@ -834,7 +833,7 @@ const Client = () => {
                                                 </div>
 
                                                 {selectcategory && (
-                                                    <form className='card-body mt-3' style={{ height: "40vh", overflowY: "scroll" }} >
+                                                    <form className='card-body my-3' style={{ height: "40vh", overflowY: "scroll" }} >
                                                         <div className="row">
                                                             {planlist
                                                                 .filter(item => item.category._id === selectcategory)

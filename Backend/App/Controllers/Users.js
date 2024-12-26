@@ -265,7 +265,7 @@ class Users {
       }
 
       //   const deletedUser = await Users_Modal.findByIdAndDelete(id);
-      const deletedUser = await Users_Modal.findByIdAndUpdate(
+      const deletedUser = await Users_Modal.findByIdAndDelete(
         id,
         { del: 1 }, // Set del to true
         { new: true }  // Return the updated document
@@ -294,6 +294,7 @@ class Users {
       });
     }
   }
+
 
   async loginUser(req, res) {
     try {

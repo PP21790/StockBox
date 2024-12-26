@@ -304,13 +304,13 @@ const Coupon = () => {
 
 
         {
-            name: 'Startdate',
+            name: 'Start date',
             selector: row => fDateTime(row.startdate),
             sortable: true,
             width: '200px',
         },
         {
-            name: 'Enddate',
+            name: 'End date',
             selector: row => fDateTime(row.enddate),
             sortable: true,
             width: '200px',

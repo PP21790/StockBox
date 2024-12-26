@@ -200,12 +200,15 @@ const History = () => {
             sortable: true,
             width: '200px',
         },
+        
         {
             name: 'Coupon Id',
             selector: row => row.coupon ? row.coupon : "N/A",
             sortable: true,
             width: '200px',
         },
+        
+        
         
 
         {
@@ -263,7 +266,10 @@ const History = () => {
         //     button: true,
         // }
     ];
+    
 
+    console.log(columns.coupon);
+    
 
 
 
@@ -403,7 +409,7 @@ const History = () => {
                                     <li>
                                         <div className="row justify-content-between">
                                             <div className="col-md-6">
-                                                <b>Price : {viewpage?.planDetails?.price}</b>
+                                                <b>Price aaa : {viewpage?.planDetails?.price}</b>
                                             </div>
                                             <div className="col-md-6">
 

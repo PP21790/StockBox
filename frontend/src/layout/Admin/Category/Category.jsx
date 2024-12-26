@@ -25,9 +25,6 @@ const Category = () => {
         service: ""
     });
 
-
-
-
     const [title, setTitle] = useState({
         title: "",
         add_by: "",
@@ -78,8 +75,6 @@ const Category = () => {
     }, [searchInput]);
 
 
-
-
     // Update service
     const Updatecategory = async () => {
         try {
@@ -116,8 +111,6 @@ const Category = () => {
             });
         }
     };
-
-
 
     // Add service
     const addcategory = async () => {
@@ -160,9 +153,6 @@ const Category = () => {
         }
     };
 
-
-
-
     // Update status
     const handleSwitchChange = async (event, id) => {
         const user_active_status = event.target.checked ? "true" : "false";
@@ -202,11 +192,7 @@ const Category = () => {
         }
     };
 
-
-
-
     // delete plan cartegory 
-
     const DeleteCategory = async (_id) => {
         try {
             const result = await Swal.fire({
@@ -250,11 +236,6 @@ const Category = () => {
         }
     };
 
-
-
-
-
-
     const handleCheckboxChange = (serviceId) => {
         setSelectedServices((prevSelected) => {
             if (prevSelected.includes(serviceId)) {
@@ -264,8 +245,6 @@ const Category = () => {
             }
         });
     };
-  
-   
 
     const columns = [
         // {
@@ -351,17 +330,12 @@ const Category = () => {
         }
     ];
 
-
-
     const updateServiceTitle = (key, value) => {
         setUpdatetitle(prev => ({
             ...prev,
             [key]: value
         }));
     };
-
-
-
 
     const handleServiceChange = (serviceId, isChecked) => {
         if (isChecked) {
@@ -376,10 +350,6 @@ const Category = () => {
             });
         }
     };
-
-
-
-
 
     return (
         <div>
@@ -448,18 +418,18 @@ const Category = () => {
                                                 />
                                             </div>
                                             <div className="modal-body">
-                                                <form>
+                                              
                                                     <div className="row">
                                                         <div className="col-md-12">
                                                             <label htmlFor="service">Segment</label>
                                                             <span className="text-danger">*</span>
                                                             {servicedata.length > 0 && (
                                                                 <DropdownMultiselect
+                                                                    name="Service"
                                                                     options={servicedata.map((item) => ({
                                                                         key: item._id,
                                                                         label: item.title
                                                                     }))}
-                                                                    name="Service"
                                                                     handleOnChange={(selected) => {
                                                                         const selectedService = selected;
                                                                         setTitle({ ...title, service: selectedService });
@@ -482,7 +452,7 @@ const Category = () => {
                                                             />
                                                         </div>
                                                     </div>
-                                                </form>
+                                           
                                             </div>
                                             <div className="modal-footer">
                                                 <button

@@ -338,8 +338,8 @@ const ClientDeleteHistory = () => {
                 <div className="page-content">
 
                     <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3 w-100">
-                        <div className="breadcrumb-title pe-3">Client Delete History</div>
-                        <div className="ps-3">
+                        <div className="breadcrumb-title pe-3 col-md-3">Client Delete History</div>
+                        <div className="ps-3 col-md-1">
                             <nav aria-label="breadcrumb">
                                 <ol className="breadcrumb mb-0 p-0">
                                     <li className="breadcrumb-item">
@@ -350,7 +350,7 @@ const ClientDeleteHistory = () => {
                                 </ol>
                             </nav>
                         </div>
-                        <div className="col-md-9 d-flex justify-content-end ">
+                        <div className="col-md-8 d-flex justify-content-end ">
                             <Link to="/admin/client">
                                 <Tooltip title="Back">
                                     <i className="lni lni-arrow-left-circle" style={{ fontSize: "2rem" }} />
@@ -400,7 +400,7 @@ const ClientDeleteHistory = () => {
 
 
                             </div>
-                            <div className="row">
+                            <div className="row mb-4">
                                 <div className="col-md-4 ">
                                     <div>
                                         <label htmlFor="kycSelect">Select Kyc</label>

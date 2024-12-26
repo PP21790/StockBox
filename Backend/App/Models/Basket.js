@@ -13,9 +13,62 @@ const BasketSchema = new Schema({
         required: true,
         trim: true
     },
+    themename: {
+        type: String,
+        required: true,
+        trim: true
+    },
     add_by: {
         type: String,
         required: true,
+        trim: true,
+        default: null
+    },
+    full_price: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+    basket_price: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+    mininvamount: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+    accuracy: {
+        type: Number,
+        default: 0
+    },
+    portfolioweightage: {
+        type: Number,
+        default: 0
+    },
+    cagr: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    frequency: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    validity: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    type: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    next_rebalance_date: {
+        type: String,
         trim: true,
         default: null
     },

@@ -77,6 +77,9 @@ const AddSignal = () => {
       if(values.price <= 0){
         errors.price = 'Price Should Be Grater Than Zero'
      }
+      if(values.expiry && values.expiry === "Select Expiry Date"){
+        errors.expiry = 'Please Select Expiry Date';
+      }
       if (!values.price) errors.price = 'Please Select a Price';
       if (!values.tag1) errors.tag1 = 'Please Enter Target1';
       if (values.calltype === "BUY") {
@@ -116,7 +119,7 @@ const AddSignal = () => {
         }
       }
 
-      if (!values.callduration) errors.callduration = 'Please Enter Trade Duration';
+      if (!values.callduration) errors.callduration = 'Select Trade duration';
       if (!values.calltype) errors.calltype = 'Please Enter Call Calltype';
       if (!values.description) errors.description = 'Please Enter Description';
 
@@ -131,6 +134,7 @@ const AddSignal = () => {
       if (values.segment === "O" && !values.strikeprice) {
         errors.strikePrice = 'Please Select Strike Price';
       }
+     
 
       return errors;
     },

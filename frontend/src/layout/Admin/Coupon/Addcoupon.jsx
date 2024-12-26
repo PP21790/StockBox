@@ -63,7 +63,7 @@ const Addcoupon = () => {
             errors.minpurchasevalue = "Please Enter Greater Than Discount value";
         }
         if (values.enddate && values.startdate > values.enddate) {
-            errors.enddate = "Please Enter Greater Than Startdate";
+            errors.enddate = "Please Enter Greater Than Start date";
         }
         if (!values.type) {
             errors.type = "Please Enter Type";
@@ -72,10 +72,10 @@ const Addcoupon = () => {
             errors.value = "Please Enter Value";
         }
         if (!values.startdate) {
-            errors.startdate = "Please Enter Startdate";
+            errors.startdate = "Please Enter Start date";
         }
         if (!values.enddate) {
-            errors.enddate = "Please Enter Enddate";
+            errors.enddate = "Please Enter End date";
         }
         if (!values.minpurchasevalue) {
             errors.minpurchasevalue = "Please Enter Min Purchase Value";

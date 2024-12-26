@@ -64,6 +64,8 @@ import Planexpirymonth from '../layout/Staff/PlanExpiryMonth/Planexpirymonth';
 function Staffrouting() {
 
     const token = localStorage.getItem('token');
+    console.log("Token:",token);
+    
     const userid = localStorage.getItem('id');
 
     const [permission, setPermission] = useState([]);

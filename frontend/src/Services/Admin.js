@@ -543,7 +543,48 @@ export async function Addbasketplan(data, token) {
     }
 }
 
+export async function Addstockbasketform(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}basket/addstockbasketform`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
 
+        return res?.data;
+    } catch (err) {
+        return err.response?.data || err.message;
+    }
+}
+export async function AddStock(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}/stock/add`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        return err.response?.data || err.message;
+    }
+}
+export async function getStock( token) {
+    try {
+        const res = await axios.get(`https://stockboxpnp.pnpuniverse.com/backend/stock/list`,  {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        return err.response?.data || err.message;
+    }
+}
 // update basket 
 
 export async function Updatebasket(data, token) {

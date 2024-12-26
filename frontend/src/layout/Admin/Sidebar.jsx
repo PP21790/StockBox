@@ -18,6 +18,15 @@ const menuItems = [
     ]
   },
   { title: 'Staff', icon: 'bx-user-plus', link: '/admin/staff' },
+  { title: 'Basket', icon: 'bx bx-basket', link: '/admin/basket',
+    subMenu: [
+      { title: 'Basket Detail', icon: 'bx bx-basket', link: '/admin/basket' },
+      { title: 'Basket Stock Pulished', icon: 'bx-radio-circle', link: '/admin/basket/basketstockpublish' },
+     
+
+    ]
+
+   },
 
   {
     title: 'Signal',
