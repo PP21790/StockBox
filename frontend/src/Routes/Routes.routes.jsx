@@ -59,7 +59,7 @@ const Routing = () => {
                     navigate("/staff/dashboard");
                 }
                 break;
-            
+
             default:
                 break;
         }
@@ -78,11 +78,11 @@ const Routing = () => {
 
 
 
-            {/* Add other routes here */}
+
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/resetpassword/:id" element={<Resetpassword/>} />
-            <Route path="/forget" element={<Forgetpassword/>} />
+            <Route path="/resetpassword/:id" element={<Resetpassword />} />
+            <Route path="/forget" element={<Forgetpassword />} />
             {/* <Route path="/updatepassword/:id" element={<Update />} /> */}
         </Routes>
     );
