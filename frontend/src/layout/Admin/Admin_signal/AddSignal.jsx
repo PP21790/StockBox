@@ -115,7 +115,7 @@ const AddSignal = () => {
         }
       }
 
-      if (!values.callduration) errors.callduration = 'Please Enter Trade Duration';
+      if (!values.callduration) errors.callduration = 'Please Select Trade Duration';
       if (!values.calltype) errors.calltype = 'Please Enter Call Calltype';
       if (!values.description) errors.description = 'Please Enter Description';
 

@@ -122,7 +122,7 @@ const Condition = () => {
         <div>
             <div className="page-content">
                 <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                    <div className="breadcrumb-title pe-3">Terms and Condiiton</div>
+                    <div className="breadcrumb-title pe-3">Policy page</div>
                     <div className="ps-3">
                         <nav aria-label="breadcrumb">
                             <ol className="breadcrumb mb-0 p-0">

@@ -153,11 +153,25 @@ const Plan = () => {
     return (
         <div className="page-content">
             <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                <div className="breadcrumb-title pe-3">Plan</div>
+                <div className="breadcrumb-title pe-3">Package
+               
+
+                </div>
+                <div className="ps-3">
+                            <nav aria-label="breadcrumb">
+                                <ol className="breadcrumb mb-0 p-0">
+                                    <li className="breadcrumb-item">
+                                        <Link to="/admin/dashboard">
+                                            <i className="bx bx-home-alt" />
+                                        </Link>
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
                 <div className="ms-auto">
                     <div className="btn-group">
                         <Link to="/admin/addplan" className="btn btn-primary">
-                            Add Plan
+                            Add Package
                         </Link>
                     </div>
                 </div>

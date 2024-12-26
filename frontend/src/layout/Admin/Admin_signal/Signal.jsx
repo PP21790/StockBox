@@ -553,7 +553,7 @@ const Signal = () => {
             cell: row => (
                 <>
                     <div>
-                        <Tooltip placement="top" overlay="Updaate">
+                        <Tooltip placement="top" overlay="Update">
                             <SquarePen
                                 onClick={() => {
                                     setModel1(true);

@@ -838,7 +838,7 @@ const Client = () => {
                                     <div className='card'>
                                         {checkedIndex === 0 && (
                                             <>
-                                                <div className='row mt-3'>
+                                                <div className='row my-3'>
                                                     {category && category
                                                         .filter(cat => planlist.some(plan => plan.category._id === cat._id))
                                                         .map((item, index) => (
@@ -861,7 +861,7 @@ const Client = () => {
                                                 </div>
 
                                                 {selectcategory && (
-                                                    <form className='card-body mt-3' style={{ height: "40vh", overflowY: "scroll" }} >
+                                                    <form className='card-body my-3' style={{ height: "40vh", overflowY: "scroll" }} >
                                                         <div className="row">
                                                             {planlist
                                                                 .filter(item => item.category._id === selectcategory)

@@ -1,6 +1,6 @@
 const router = require("express").Router()
 
-const {Blogslist,Newslist,Bannerlist,Plancategorysist,getPlansByPlancategoryId,addPlanSubscription,myPlan,Couponlist,Signallist,applyCoupon,showSignalsToClients,Servicelist,Faqlist,detailContent,showSignalsToClientsClose,BasketList,pastPerformance,addBasketSubscription,getallPlan,addFreeTrail,BroadcastList,myFreetrial,basicSetting,pastPerformances,myService,CloseSignal,showSignalsToClientsCloses,Notification,Bank,Qrcode,BlogslistwithPagination,NewslistwithPagination,Refer} = require('../Controllers/List')
+const {Blogslist,Newslist,Bannerlist,Plancategorysist,getPlansByPlancategoryId,addPlanSubscription,myPlan,Couponlist,Signallist,applyCoupon,showSignalsToClients,Servicelist,Faqlist,detailContent,showSignalsToClientsClose,BasketList,pastPerformance,addBasketSubscription,getallPlan,addFreeTrail,BroadcastList,myFreetrial,basicSetting,pastPerformances,myService,CloseSignal,showSignalsToClientsCloses,Notification,Bank,Qrcode,BlogslistwithPagination,NewslistwithPagination,Refer,BasketLists,BasketstockList,myBasketPlan,placeOrder,exitPlaceOrder} = require('../Controllers/List')
 
 
 router.get('/api/list/blogs',Blogslist);
@@ -33,6 +33,11 @@ router.get('/api/list/service', Servicelist);
 router.get('/api/list/faq', Faqlist);
 router.get('/api/list/content/:id', detailContent);
 router.get('/api/list/basket/:clientId', BasketList);
+router.get('/api/list/basket', BasketLists);
+router.get('/api/list/basketstock/:id', BasketstockList);
+router.get('/api/list/mybasketplan/:id', myBasketPlan); 
+
+
 router.get('/api/list/past-performance/:id', pastPerformance);
 router.get('/api/list/past-performances', pastPerformances);
 
@@ -44,6 +49,9 @@ router.get('/api/list/notification/:id', Notification);
 router.get('/api/list/bank', Bank);
 router.get('/api/list/qrcode', Qrcode);
 router.get('/api/refer', Refer);
+router.post('/api/placeorder', placeOrder);
+router.post('/api/exitplaceorder', exitPlaceOrder);
+
 
 
 module.exports = router;

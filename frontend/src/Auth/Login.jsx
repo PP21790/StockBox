@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login_Api } from "../Services/Apis"
 import { Link } from 'react-router-dom';
@@ -15,11 +15,11 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [clients, setClients] = useState([]);
-    
+
     const token = localStorage.getItem('token');
     const user_id = localStorage.getItem('id');
-   
-   
+
+
 
     const getsettinglist = async () => {
         try {
@@ -27,23 +27,23 @@ const Login = () => {
             if (response.status) {
                 const faviconElement = document.querySelector("link[rel='icon']");
                 if (faviconElement) {
-                   
-                    
+
+
                     faviconElement.href = image_baseurl + "uploads/basicsetting/" + response.data[0].favicon;
 
                     $('.companyName').html(response.data[0].from_name)
                 } else {
                     console.log("Favicon element not found");
                 }
-    
+
                 setClients(response.data);
             }
         } catch (error) {
             console.log('error', error);
         }
     };
-    
-    
+
+
     useEffect(() => {
         getsettinglist();
     }, []);
@@ -59,7 +59,7 @@ const Login = () => {
 
         try {
             var login_data = await login_Api(req);
-           
+
             if (login_data.data.status) {
                 Swal.fire({
                     title: login_data.data.message || "Login Successful!",
@@ -100,7 +100,7 @@ const Login = () => {
     // const loginpageOpen = async (e) => {
     //     e.preventDefault();
 
-       
+
 
     //     const passwordRegex = {
     //         uppercase:/[A-Z]/,
@@ -169,12 +169,12 @@ const Login = () => {
     //         });
     //         return
     //     }
-         
+
     //     let req = {
     //         UserName: username,
     //         password: password,
     //     };
-         
+
 
     //     try {
     //         var login_data = await login_Api(req);
@@ -243,7 +243,7 @@ const Login = () => {
                                 <div className="card-body">
                                     <div className="p-4">
                                         <div className="mb-5 text-center">
-                                            <img style={{width:"241px"}} src={`${image_baseurl}uploads/basicsetting/${clients[0]?.logo}`} />
+                                            <img style={{ width: "241px" }} src={`${image_baseurl}uploads/basicsetting/${clients[0]?.logo}`} />
                                         </div>
                                         {/* <div className="text-center mb-4">
                                             <h5 className="">Stock RA</h5>
@@ -283,19 +283,9 @@ const Login = () => {
                                                             className="input-group-text bg-transparent"
 
                                                         >
-                                                            <i className={`bx ${showPassword ? 'bx-show' : 'bx-hide'}`} />
+                                                            <i className={`bx ${showPassword ? 'bx-hide' : 'bx-show'}`} />
                                                         </a>
                                                     </div>
-                                                </div>
-                                                
-                                                <div className="col-md-6 ">
-                                                    {/* <p onClick={() => navigate("/forgetpass")}>
-                                                        Forgot Password?
-                                                    </p> */}
-                                                    <p className="mb-0">
-
-                                                        <Link to="/forget">Forgot Password?</Link>
-                                                    </p>
                                                 </div>
                                                 {/* <div className="col-md-6">
                                                     <div className="form-check form-switch">
@@ -312,7 +302,15 @@ const Login = () => {
                                                         </label>
                                                     </div>
                                                 </div> */}
-                                                
+                                                <div className="col-md-6 ">
+                                                    {/* <p onClick={() => navigate("/forgetpass")}>
+                                                        Forgot Password?
+                                                    </p> */}
+                                                    <p className="mb-0">
+
+                                                        <Link to="/forget">Forgot Password?</Link>
+                                                    </p>
+                                                </div>
 
                                                 <div className="col-12">
                                                     <div className="d-grid">

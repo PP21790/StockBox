@@ -845,7 +845,7 @@ const DynamicForm = ({
                                                                         <div className={`col-lg-${field.col_size}`}>
                                                                             <div className="input-block row">
                                                                                 <label
-                                                                                    className={`col-lg-${field.label_size} col-form-label p-0`}
+                                                                                    className={`col-lg-${field.label_size} col-form-label `}
                                                                                     htmlFor={field.name}
                                                                                 >
                                                                                     {field.label}

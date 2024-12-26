@@ -75,6 +75,7 @@ import QRDetails from '../layout/Admin/BasicSetting/QRDetails/QRDetails';
 import ClientDeleteHistory from '../layout/Admin/Admin_client/ClientDeleteHistory';
 import Planexpirymonth from '../layout/Admin/PlanExpiryMonth/Planexpirymonth';
 import Notificationlist from '../layout/Admin/Notification/Notificationlist';
+import AddStock from '../layout/Admin/Admin_basket/AddStock';
 
 
 
@@ -160,6 +161,7 @@ function MainApp() {
                     <Route path="/addbasket" element={<Addbasket />} />
                     <Route path="/basket/viewdetail/:id" element={<Viewbasketdetail />} />
                     <Route path="/basket/editbasket/:id" element={<Editbasket />} />
+                    <Route path="/basket/addstock/:id" element={<AddStock />} />
 
 
 

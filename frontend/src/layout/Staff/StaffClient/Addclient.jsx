@@ -34,7 +34,7 @@ const AddUser = () => {
     if (!values.ConfirmPassword) {
       errors.ConfirmPassword = "Please Confirm Your Password";
     } else if (values.password !== values.ConfirmPassword) {
-      errors.ConfirmPassword = "Passwords Must Match";
+      errors.ConfirmPassword = "Password Must Match";
     }
 
     return errors;
