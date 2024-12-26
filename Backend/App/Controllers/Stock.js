@@ -86,7 +86,7 @@ class Stock {
         {
           $match: {
             segment: segment,
-            symbol: { $regex: symbol, $options: 'i' }
+            symbol: { $regex: symbol, $options: 'i' }  // Like query for symbol
           }
         },
         {
@@ -96,30 +96,10 @@ class Stock {
         }
       ]);
 
-
-      function convertExpiryToDate(expiry_str) {
-        const monthMap = { JAN: 0, FEB: 1, MAR: 2, APR: 3, MAY: 4, JUN: 5, JUL: 6, AUG: 7, SEP: 8, OCT: 9, NOV: 10, DEC: 11 };
-        return new Date(expiry_str.slice(5), monthMap[expiry_str.slice(2, 5)], expiry_str.slice(0, 2));
-      }
-
-      function filterFutureExpiries(data) {
-        const today = new Date();
-        return data.filter(item => convertExpiryToDate(item.expiry_str) > today);
-      }
-
-
-
-      // Filter and log
-      const filteredData = filterFutureExpiries(result);
-      console.log(filteredData);
-
-
-
-
       return res.json({
         status: true,
         message: "get",
-        data: filteredData
+        data: result
       });
 
     } catch (error) {
@@ -127,14 +107,9 @@ class Stock {
     }
   }
 
-
-
-
-
   async getStocksByExpiry(req, res) {
     try {
       const { segment, symbol } = req.body;
-      console.log("req.body", req.body)
 
       // Current date to get the month
       const currentDate = new Date();
@@ -162,7 +137,7 @@ class Stock {
       const pipeline = [
         {
           $match: {
-            symbol: symbol,
+            symbol: { $regex: symbol, $options: 'i' },
             segment: segment,
             expiry_month_year: { $in: expiryMonths }
           }
@@ -213,7 +188,7 @@ class Stock {
       if (segment === "O") {
         matchStage = {
           $match: {
-            symbol: symbol,
+            symbol: { $regex: symbol, $options: 'i' },
             segment: segment,
             expiry: expiry,
             option_type: optiontype
@@ -222,7 +197,7 @@ class Stock {
       } else {
         matchStage = {
           $match: {
-            symbol: symbol,
+            symbol: { $regex: symbol, $options: 'i' },
             segment: segment,
             expiry: expiry
           }
@@ -250,7 +225,7 @@ class Stock {
       const result = await Stock_Modal.aggregate(pipeline);
 
       // Log the result for debugging
-      // console.log("Aggregation Result:", JSON.stringify(result, null, 2));
+      console.log("Aggregation Result:", JSON.stringify(result, null, 2));
 
       return res.json({
         status: true,

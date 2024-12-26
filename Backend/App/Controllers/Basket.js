@@ -377,7 +377,7 @@ class Basket {
       const bulkOps = [];
   
       for (const stock of stocks) {
-        const { name, tradesymbol, percentage, price, comment, type } = stock;
+        const { name, tradesymbol, percentage, price, comment, type, status } = stock;
   
         const currentPrice = price;
         if (!currentPrice) {
@@ -421,6 +421,7 @@ class Basket {
                 type,
                 comment: comment || '',
                 weightage: percentage,
+                status:status,
               },
             },
             upsert: true, // If stock does not exist, create a new one
