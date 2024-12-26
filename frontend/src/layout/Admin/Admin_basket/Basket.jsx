@@ -1,16 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Eye, RefreshCcw, Trash2 , SquarePen , IndianRupee , X,Plus  } from 'lucide-react';
+import { Eye, RefreshCcw, Trash2, SquarePen, IndianRupee, X, Plus } from 'lucide-react';
 import Swal from "sweetalert2";
 import { Tooltip } from 'antd';
 import Table from "../../../components/Table";
 import { BasketAllList, deletebasket } from "../../../Services/Admin";
 import { fDate } from "../../../Utils/Date_formate";
 
+
+
 const Basket = () => {
+
+
   const navigate = useNavigate();
   const [clients, setClients] = useState([]);
   const token = localStorage.getItem("token");
+
+
+
 
   // Fetch basket list
   const getbasketlist = async () => {
@@ -24,11 +31,18 @@ const Basket = () => {
     }
   };
 
+
+
   useEffect(() => {
     getbasketlist();
   }, []);
 
+
+
+
   // Delete basket
+
+
   const Deletebasket = async (_id) => {
     try {
       const result = await Swal.fire({
@@ -69,62 +83,70 @@ const Basket = () => {
     }
   };
 
+
+
+
   // Columns for DataTable
   const columns = [
     {
       name: "Basket Name",
       selector: (row) => row.title,
       sortable: true,
+      width: '200px',
     },
     {
       name: "Theme Name",
       selector: (row) => row.themename,
       sortable: true,
+      width: '200px',
     },
     {
       name: "Min. Inv. Amount",
       selector: (row) => row.mininvamount,
+      width: '200px',
     },
- 
+
     {
       name: "Description",
       selector: (row) => row.description,
       wrap: true,
+      width: '200px',
     },
     {
       name: "Validity",
       selector: (row) => row.validity,
       sortable: true,
+      width: '200px',
     },
     {
       name: "Actions",
       cell: (row) => (
         <div>
-            <Tooltip title="  Add Stock">
-          <Link
-            to={`addstock/${row._id}`}
-            className="btn px-2"
-          >
-            <Plus />
-          
-          </Link>
+          <Tooltip title="  Add Stock">
+            <Link
+              to={`addstock/${row._id}`}
+              className="btn px-2"
+            >
+              <Plus />
+
+            </Link>
           </Tooltip>
           <Tooltip title="view">
-          <Link
-           
-            to={`viewdetail/${row._id}`}
-            className="btn px-2"
-          >
-          <Eye/>  
-          </Link>
+            <Link
+
+              to={`viewdetail/${row._id}`}
+              className="btn px-2"
+            >
+              <Eye />
+            </Link>
           </Tooltip>
           <Tooltip title="Edit">
-          <Link
-            to={`editbasket/${row._id}`}
-            className="btn px-2"
-          >
-             <SquarePen/>
-          </Link>
+            <Link
+              to={`editbasket/${row._id}`}
+              className="btn px-2"
+            >
+              <SquarePen />
+            </Link>
           </Tooltip>
           <button
             className="btn px-2"
@@ -136,6 +158,10 @@ const Basket = () => {
       ),
     },
   ];
+
+
+
+
 
   return (
     <div className="page-content">
@@ -176,7 +202,7 @@ const Basket = () => {
             <div className="ms-2">
               <Link to="/admin/basket/rebalancing" className="btn btn-primary">
                 <i className="bx bxs-plus-square" aria-hidden="true" />
-                Rebbalancing
+                RebBalancing
               </Link>
             </div>
           </div>
