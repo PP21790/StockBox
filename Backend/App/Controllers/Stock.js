@@ -191,7 +191,7 @@ async getStocksByExpiryByStrike(req, res) {
     if (segment === "O") {
       matchStage = {
         $match: {
-          symbol: symbol,
+          symbol: { $regex: symbol, $options: 'i' },  
           segment: segment,
           expiry: expiry,
           option_type: optiontype
@@ -200,7 +200,7 @@ async getStocksByExpiryByStrike(req, res) {
     } else {
       matchStage = {
         $match: {
-          symbol: symbol,
+          symbol: { $regex: symbol, $options: 'i' },  
           segment: segment,
           expiry: expiry
         }
