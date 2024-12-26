@@ -65,6 +65,8 @@ const AddSignal = () => {
       expiry: '',
       optiontype: '',
       strikeprice: '',
+      entrytype: '',
+      lot: '',
       tradesymbol: expirydate[0]?.stock?.tradesymbol || "",
       lotsize: expirydate[0]?.stock?.lotsize || ""
 
@@ -130,6 +132,15 @@ const AddSignal = () => {
       if (values.segment === "O" && !values.strikeprice) {
         errors.strikePrice = 'Please Select Strike Price';
       }
+      if (!values.entrytype) {
+        errors.entrytype = 'Please Select Entry Type';
+      }
+      if (!values.lot) {
+        errors.lot = 'Please Enter Lot';
+      }
+      if (values.lot && values.lot <= 0) {
+        errors.lot = 'Please Enter Greater Than Zero';
+      }
 
       return errors;
     },
@@ -154,6 +165,8 @@ const AddSignal = () => {
         segment: values.segment,
         optiontype: values.optiontype,
         strikeprice: values.strikeprice,
+        entrytype: values.entrytype,
+        lot: values.lot,
       };
 
       try {
@@ -219,7 +232,9 @@ const AddSignal = () => {
         optiontype: '',
         strikeprice: '',
         tradesymbol: '',
-        lotsize: ''
+        lotsize: '',
+        entrytype: '',
+        lot: ''
       });
 
       setSearchItem("")
@@ -387,6 +402,27 @@ const AddSignal = () => {
       name: 'price',
       label: 'Entry Price',
       type: 'number',
+      label_size: 12,
+      col_size: 6,
+      star: true
+    },
+    {
+      name: 'lot',
+      label: 'Lot',
+      type: 'number',
+      label_size: 12,
+      col_size: 6,
+      star: true
+    },
+    {
+      name: 'entrytype',
+      label: 'Entry Type',
+      type: 'select',
+      options: [
+        { label: 'At', value: 'At' },
+        { label: 'Above', value: 'Above' },
+        { label: 'Below', value: 'Below' },
+      ],
       label_size: 12,
       col_size: 6,
       star: true

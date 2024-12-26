@@ -3,9 +3,9 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table1';
-import { Eye, Trash2, RefreshCcw , SquarePen ,  IndianRupee } from 'lucide-react';
+import { Eye, Trash2, RefreshCcw, SquarePen, IndianRupee } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { GetSignallist, GetSignallistWithFilter, DeleteSignal, SignalCloseApi, GetService, GetStockDetail , UpdatesignalReport} from '../../../Services/Admin';
+import { GetSignallist, GetSignallistWithFilter, DeleteSignal, SignalCloseApi, GetService, GetStockDetail, UpdatesignalReport } from '../../../Services/Admin';
 import { fDateTimeH } from '../../../Utils/Date_formate'
 import { exportToCSV } from '../../../Utils/ExportData';
 import Select from 'react-select';
@@ -22,9 +22,9 @@ const Signal = () => {
     const [totalRows, setTotalRows] = useState(0);
     const [header, setheader] = useState("Open Signal");
     const [updatetitle, setUpdatetitle] = useState({
-          report: "",
-          id: "",
-       
+        report: "",
+        id: "",
+
 
     });
     const location = useLocation();
@@ -155,7 +155,7 @@ const Signal = () => {
 
 
     const options = clients.map((item) => ({
-        value: item.stock ,
+        value: item.stock,
         label: item.stock,
     }));
 
@@ -165,7 +165,7 @@ const Signal = () => {
 
 
 
-    
+
     const getexportfile = async () => {
         try {
             const response = await GetSignallist(token);
@@ -186,16 +186,16 @@ const Signal = () => {
             console.log("Error:", error);
         }
     }
-    
-    
-  
+
+
+
 
     const getAllSignal = async () => {
         try {
             const data = {
                 page: currentPage,
-                from: clientStatus === "todayclosesignal" ? formattedDate : filters.from ? filters.from : "" ,
-                to: clientStatus === "todayclosesignal" ? formattedDate : filters.to ?  filters.to : "" ,
+                from: clientStatus === "todayclosesignal" ? formattedDate : filters.from ? filters.from : "",
+                to: clientStatus === "todayclosesignal" ? formattedDate : filters.to ? filters.to : "",
                 service: filters.service,
                 stock: searchstock,
                 closestatus: "false",
@@ -249,7 +249,7 @@ const Signal = () => {
     useEffect(() => {
         fetchAdminServices()
         fetchStockList()
-    }, [filters ]);
+    }, [filters]);
 
 
     useEffect(() => {
@@ -399,11 +399,17 @@ const Signal = () => {
                     return;
                 }
             }
+            if (index === 4) {
+                if (!closedata.close_description) {
+                    showValidationError('Please Fill in The Description');
+                    return;
+                }
+            }
 
             const data = {
                 id: serviceid._id,
                 closestatus: index === 1 ? checkstatus : "",
-                closetype: index === 0 ? "1" : index === 1 ? "2" : index === 2 ? "3" : "4",
+                closetype: index === 0 ? "1" : index === 1 ? "2" : index === 2 ? "3" : index === 3 ? "4" : "5",
                 close_description: closedata.close_description,
 
                 targethit1: index === 1 && closedata.targetprice1 ? checkedTargets1.target1 : "",
@@ -480,13 +486,19 @@ const Signal = () => {
         },
         {
             name: 'Entry Type',
-            selector: row =>  row.calltype,
+            selector: row => row.calltype,
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'Lot',
+            selector: row => row.lot,
             sortable: true,
             width: '200px',
         },
         {
             name: 'Entry Price',
-            selector: row => <div> <IndianRupee />{row.price}</div> ,
+            selector: row => <div> <IndianRupee />{row.price}</div>,
             sortable: true,
             width: '200px',
         },
@@ -563,7 +575,7 @@ const Signal = () => {
                             />
                         </Tooltip>
                     </div>
-                    
+
                 </>
             ),
             ignoreRowClick: true,
@@ -571,7 +583,7 @@ const Signal = () => {
             button: true,
 
         },
-        
+
 
 
     ];
@@ -591,18 +603,18 @@ const Signal = () => {
         fetchAdminServices()
         fetchStockList()
         getAllSignal();
-       
-        
+
+
 
     }
-  
 
 
-      // Update service
-      const updateReportpdf = async () => {
+
+    // Update service
+    const updateReportpdf = async () => {
         try {
             const data = { id: serviceid._id, report: updatetitle.report };
-       
+
             const response = await UpdatesignalReport(data, token);
             if (response && response.status) {
                 Swal.fire({
@@ -815,7 +827,7 @@ const Signal = () => {
                                 <div className="modal-body">
                                     <div className='card '>
                                         <div className='d-flex justify-content-between align-items-center card-body'>
-                                            {['Fully Closed', 'Partially Closed', 'SL Hit', 'Closed Signal'].map((tab, index) => (
+                                            {['Fully Closed', 'Partially Closed', 'SL Hit', 'Closed Signal', "Await Signal"].map((tab, index) => (
                                                 <label key={index} className='labelfont'>
                                                     <input
                                                         type="radio"
@@ -1131,6 +1143,29 @@ const Signal = () => {
                                                 <button type="submit" className='btn btn-danger mt-2' onClick={() => closeSignalperUser(3)}>Submit</button>
                                             </form>
                                         )}
+                                        {checkedIndex === 4 && (
+                                            <form className='card-body'>
+
+                                                <div className="col-md-12">
+                                                    <label className='mb-1'>Remark</label>
+                                                    <textarea
+                                                        className="form-control"
+                                                        id="input11"
+                                                        placeholder="Remark ..."
+                                                        rows={2}
+                                                        value={closedata.close_description}
+                                                        onChange={(e) =>
+                                                            setClosedata({
+                                                                ...closedata,
+                                                                close_description: e.target.value,
+                                                            })
+                                                        }
+                                                    />
+                                                </div>
+
+                                                <button type="submit" className='btn btn-danger mt-2' onClick={() => closeSignalperUser(4)}>Submit</button>
+                                            </form>
+                                        )}
                                     </div>
 
                                 </div>
@@ -1141,89 +1176,89 @@ const Signal = () => {
                 </>
             )}
 
-            
-           {model1 && (
-                          <>
-                                        <div className="modal-backdrop fade show"></div>
-                                        <div
-                                            className="modal fade show"
-                                            style={{ display: 'block' }}
-                                            tabIndex={-1}
-                                            aria-labelledby="exampleModalLabel"
-                                            aria-hidden="true"
-                                        >
-                                            <div className="modal-dialog">
-                                                <div className="modal-content">
-                                                    <div className="modal-header">
-                                                        <h5 className="modal-title" id="exampleModalLabel">
-                                                            Upload Pdf
-                                                        </h5>
-                                                        <button
-                                                            type="button"
-                                                            className="btn-close"
-                                                            onClick={() => setModel1(false)}
-                                                        />
-                                                    </div>
-                                                    <div className="modal-body">
-                                                        <form>
-                                                            <div className="row">
-                                                                <div className="col-md-10">
-                                                                    <label htmlFor="imageUpload">Upload Pdf</label>
-                                                                    <span className="text-danger">*</span>
-                                                                    <input
-                                                                        className="form-control mb-3"
-                                                                        type="file"
-                                                                        accept="application/pdf"
-                                                                        id="imageUpload"
-                                                                        onChange={(e) => {
-                                                                            const file = e.target.files[0];
-                                                                            if (file) {
-                                                                                if (file.type !== "application/pdf") {
-                                                                                    Swal.fire({
-                                                                                        title: 'Error!',
-                                                                                        text: 'Only PDF files are allowed!.',
-                                                                                        icon: 'error',
-                                                                                        confirmButtonText: 'Try Again',
-                                                                                    });
-                                                                                    return;
-                                                                                }
-                                                                                updateServiceTitle({ report: file });
-                                                                            }
-                                                                        }}
-                                                                        
-                                                                    />
-                                                                </div>
-                                                                <div className="col-md-2">
-                            
-                        
-                                                                </div>
-                                                            </div>
-    
-                                                        </form>
+
+            {model1 && (
+                <>
+                    <div className="modal-backdrop fade show"></div>
+                    <div
+                        className="modal fade show"
+                        style={{ display: 'block' }}
+                        tabIndex={-1}
+                        aria-labelledby="exampleModalLabel"
+                        aria-hidden="true"
+                    >
+                        <div className="modal-dialog">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="exampleModalLabel">
+                                        Upload Pdf
+                                    </h5>
+                                    <button
+                                        type="button"
+                                        className="btn-close"
+                                        onClick={() => setModel1(false)}
+                                    />
+                                </div>
+                                <div className="modal-body">
+                                    <form>
+                                        <div className="row">
+                                            <div className="col-md-10">
+                                                <label htmlFor="imageUpload">Upload Pdf</label>
+                                                <span className="text-danger">*</span>
+                                                <input
+                                                    className="form-control mb-3"
+                                                    type="file"
+                                                    accept="application/pdf"
+                                                    id="imageUpload"
+                                                    onChange={(e) => {
+                                                        const file = e.target.files[0];
+                                                        if (file) {
+                                                            if (file.type !== "application/pdf") {
+                                                                Swal.fire({
+                                                                    title: 'Error!',
+                                                                    text: 'Only PDF files are allowed!.',
+                                                                    icon: 'error',
+                                                                    confirmButtonText: 'Try Again',
+                                                                });
+                                                                return;
+                                                            }
+                                                            updateServiceTitle({ report: file });
+                                                        }
+                                                    }}
+
+                                                />
+                                            </div>
+                                            <div className="col-md-2">
 
 
-                                                    </div>
-                                                    <div className="modal-footer">
-                                                        <button
-                                                            type="button"
-                                                            className="btn btn-secondary"
-                                                            onClick={() => setModel1(false)}
-                                                        >
-                                                            Close
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            className="btn btn-primary"
-                                                            onClick={updateReportpdf}
-                                                        >
-                                                            Update File
-                                                        </button>
-                                                    </div>
-                                                </div>
                                             </div>
                                         </div>
-                                    </>
-                                )}
+
+                                    </form>
+
+
+                                </div>
+                                <div className="modal-footer">
+                                    <button
+                                        type="button"
+                                        className="btn btn-secondary"
+                                        onClick={() => setModel1(false)}
+                                    >
+                                        Close
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary"
+                                        onClick={updateReportpdf}
+                                    >
+                                        Update File
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            )}
 
 
         </div>

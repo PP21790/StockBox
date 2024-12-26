@@ -24,7 +24,8 @@ const AddStock = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post(`${Config.base_url}stock/getstockbysymbol`,  
+      const response = await axios.post(
+        `${Config.base_url}stock/getstockbysymbol`,
         { symbol: inputValue },
         { headers: { "Content-Type": "application/json" } }
       );
@@ -61,7 +62,6 @@ const AddStock = () => {
   const validationSchema = Yup.object().shape(
     selectedServices.reduce((acc, service) => {
       acc[service.value] = Yup.object({
-        // name: Yup.string().required("This field is required"),
         percentage: Yup.number()
           .min(0, "Percentage should be between 0 and 100")
           .max(100, "Percentage should be between 0 and 100")
@@ -74,24 +74,25 @@ const AddStock = () => {
     }, {})
   );
 
-  const handleSubmit = async (values) => {
-    console.log("values", values);
-
+  const handleSubmit = async (values, status) => {
     if (!basket_id) {
       Swal.fire("Error", "Basket ID is missing. Please try again.", "error");
       return;
     }
 
+    // Transform stocks to include status in each stock object
+    const stocksWithStatus = Object.values(values).map((stock) => ({
+      ...stock,
+      status, // Add status inside each stock
+    }));
+
     const requestData = {
       basket_id,
-      stocks: Object.values(values),
+      stocks: stocksWithStatus, // Use transformed stocks here
     };
 
     try {
-       const response = await Addstockbasketform(requestData );
- 
-      console.log("API Response:", response);
-
+      const response = await Addstockbasketform(requestData);
       if (response?.status) {
         Swal.fire("Success", response.message, "success");
         setTimeout(() => navigate("/admin/basket"), 1500);
@@ -109,7 +110,7 @@ const AddStock = () => {
 
   const handleInputChange = (value) => {
     setInputValue(value);
-    fetchOptions(value); // Fetch options dynamically based on input
+    fetchOptions(value);
   };
 
   return (
@@ -130,17 +131,7 @@ const AddStock = () => {
       <div className="card">
         <div className="card-body">
           <div className="row">
-        
             <div className="col-12">
-              {/* <Select
-                options={options}
-                onChange={handleServiceChange}
-                placeholder="Select a stock"
-                isClearable
-                isMulti
-                isLoading={loading}
-              /> */}
-
               <Select
                 inputValue={inputValue}
                 onInputChange={handleInputChange}
@@ -164,12 +155,13 @@ const AddStock = () => {
                 percentage: "",
                 price: "",
                 type: "",
-                quantity: "",
               };
               return acc;
             }, {})}
             validationSchema={validationSchema}
-            onSubmit={handleSubmit}
+            onSubmit={(values, { setSubmitting }) => {
+              setSubmitting(false);
+            }}
             enableReinitialize
           >
             {({ values }) => (
@@ -198,17 +190,16 @@ const AddStock = () => {
                                 className="form-control"
                               >
                                 <option value="">Select an option</option>
-                                <option value="Buy">Buy</option>
-                                <option value="sell">Sell</option>
-                                <option value="Hold">Hold</option>
-                                {/* Add more options as needed */}
+                                <option value="Large Cap">Large Cap</option>
+                                <option value="Mid Cap">Mid Cap</option>
+                                <option value="Small Cap">Small Cap</option>
                               </Field>
                             ) : (
                               <Field
                                 name={`${service.value}.${fieldKey}`}
                                 type={
                                   fieldKey === "percentage" ||
-                                  fieldKey === "price" || fieldKey === "quantity"
+                                    fieldKey === "price"
                                     ? "number"
                                     : "text"
                                 }
@@ -216,7 +207,7 @@ const AddStock = () => {
                                 placeholder={`Enter ${fieldKey}`}
                                 readOnly={
                                   fieldKey === "tradesymbol" ||
-                                  fieldKey === "name" 
+                                  fieldKey === "name"
                                 }
                               />
                             )}
@@ -231,10 +222,18 @@ const AddStock = () => {
                     </div>
                   </div>
                 ))}
-                <button type="submit" className="btn btn-primary mt-4">
+                <button
+                  type="button"
+                  className="btn btn-primary mt-4"
+                  onClick={() => handleSubmit(values, 0)}
+                >
                   Submit
-                </button> 
-                <button type="submit" className="btn btn-primary mt-4 ms-2">
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-primary mt-4 ms-2"
+                  onClick={() => handleSubmit(values, 1)}
+                >
                   Submit & Publish
                 </button>
               </Form>
