@@ -95,6 +95,10 @@ const corsOpts = {
     "x-access-token, Origin, Content-Type, Accept", "authorization",
   ],
 };
+
+app.options("*", cors())
+
+
 app.use(cors(corsOpts));
 
 // Body-parser middleware setup

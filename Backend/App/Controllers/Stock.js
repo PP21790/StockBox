@@ -140,7 +140,7 @@ else if(segment=="C")
     const pipeline = [
       {
           $match: {
-              symbol: symbol,
+            symbol: { $regex: symbol, $options: 'i' },  
               segment: segment,
               expiry_month_year: { $in: expiryMonths }
           }
