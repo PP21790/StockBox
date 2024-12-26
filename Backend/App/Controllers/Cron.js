@@ -16,7 +16,7 @@ const Signal_Modal = db.Signal;
 const BasicSetting_Modal = db.BasicSetting;
 const Notification_Modal = db.Notification;
 const Planmanage = db.Planmanage;
-const JsonFile = require("../../uploads/json/config.json");
+//const JsonFile = require("../../uploads/json/config.json");
 const { sendFCMNotification } = require('./Pushnotification'); 
 const Adminnotification_Modal = db.Adminnotification;
 
@@ -53,19 +53,75 @@ cron.schedule('0 4 * * *', async () => {
     timezone: "Asia/Kolkata"
 });
 
-cron.schedule(`${JsonFile.cashexpiretime} ${JsonFile.cashexpirehours} * * *`, async () => {
-    await CheckExpireSignalCash();
-}, {
-    scheduled: true,
-    timezone: "Asia/Kolkata"
-});
+// cron.schedule(`${JsonFile.cashexpiretime} ${JsonFile.cashexpirehours} * * *`, async () => {
+//     await CheckExpireSignalCash();
 
-// Schedule for future option expiry
-cron.schedule(`${JsonFile.foexpiretime} ${JsonFile.foexpirehours} * * *`, async () => {
-    await CheckExpireSignalFutureOption();
-}, {
-    scheduled: true,
-    timezone: "Asia/Kolkata"
+// }, {
+//     scheduled: true,
+//     timezone: "Asia/Kolkata"
+// });
+
+// // Schedule for future option expiry
+// cron.schedule(`${JsonFile.foexpiretime} ${JsonFile.foexpirehours} * * *`, async () => {
+//     await CheckExpireSignalFutureOption();
+// }, {
+//     scheduled: true,
+//     timezone: "Asia/Kolkata"
+// });
+
+
+const jsonFilePath = path.join(__dirname, "../../uploads/json/config.json");
+
+let JsonFile = require(jsonFilePath); 
+let cashExpireCron;
+let foExpireCron;
+
+function reloadCronJobs() {
+  if (cashExpireCron) cashExpireCron.stop();
+  if (foExpireCron) foExpireCron.stop();
+
+  cashExpireCron = cron.schedule(
+    `${JsonFile.cashexpiretime} ${JsonFile.cashexpirehours} * * *`,
+    async () => {
+      console.log("Running CheckExpireSignalCash...");
+      await CheckExpireSignalCash();
+    },
+    {
+      scheduled: true,
+      timezone: "Asia/Kolkata",
+    }
+  );
+
+  console.log(
+    `Cash Expiry Cron rescheduled with time: ${JsonFile.cashexpiretime} and hour: ${JsonFile.cashexpirehours}`
+  );
+
+  foExpireCron = cron.schedule(
+    `${JsonFile.foexpiretime} ${JsonFile.foexpirehours} * * *`,
+    async () => {
+      console.log("Running CheckExpireSignalFutureOption...");
+      await CheckExpireSignalFutureOption();
+    },
+    {
+      scheduled: true,
+      timezone: "Asia/Kolkata",
+    }
+  );
+
+  console.log(
+    `Future Option Expiry Cron rescheduled with time: ${JsonFile.foexpiretime} and hour: ${JsonFile.foexpirehours}`
+  );
+}
+
+reloadCronJobs();
+
+fs.watch(jsonFilePath, (eventType) => {
+  if (eventType === "change") {
+    console.log("Config file updated. Reloading cron jobs...");
+    delete require.cache[require.resolve(jsonFilePath)]; // Clear the cache
+    JsonFile = require(jsonFilePath); // Reload the JSON file
+    reloadCronJobs(); // Reload all cron jobs
+  }
 });
 
 
@@ -191,7 +247,7 @@ async function AddBulkStockCron(req, res) {
           
   
     
-          return res.send({status:true})
+          return;
       } else {
           return
       }
@@ -240,15 +296,14 @@ const DeleteTokenAliceToken = async (req, res) => {
   
     ];
     const result = await Stock_Modal.aggregate(pipeline)
-    console.log("result", result)
     if (result.length > 0) {
         const idsToDelete = result.map(item => item._id);
         await Stock_Modal.deleteMany({ _id: { $in: result[0].idsToDelete } });
         console.log(`${result.length} expired tokens deleted.`);
-        return res.send({status:true})
+        return;
     } else {
         console.log('No expired tokens found.');
-        return res.status(500).send({ status: false, message: 'Internal server error' });    }
+        return;    }
   
   }
   
@@ -329,10 +384,7 @@ const DeleteTokenAliceToken = async (req, res) => {
 
         const existingSetting = await BasicSetting_Modal.findOne({});
         if (!existingSetting) {
-          return res.status(404).json({
-            status: false,
-            message: "Data not found",
-          });
+          return;
         }
 
         if (existingSetting) {
@@ -344,7 +396,7 @@ const DeleteTokenAliceToken = async (req, res) => {
 
 
     } catch (error) {
-        console.error('Error updating trading status:', error);
+        console.log('Error updating trading status:', error);
     }
 }
 
@@ -353,6 +405,7 @@ const DeleteTokenAliceToken = async (req, res) => {
 
 async function CheckExpireSignalCash(req, res) {
     try {
+
         const today = new Date();
         const signals = await Signal_Modal.find({
             del: 0,
@@ -362,27 +415,25 @@ async function CheckExpireSignalCash(req, res) {
           });
 
 
-
           for (const signal of signals) {
             try {
                 // Get the CPrice for each signal's stock symbol
                 const cPrice = await returnstockcloseprice(signal.stock);
-
                 // Update the signal with close_status and close_price
                 await Signal_Modal.updateOne(
                     { _id: signal._id },
                     { $set: { close_status: true, closeprice: cPrice, closedate: today } }
                 );
             } catch (error) {
-                console.error(`Failed to update signal for ${signal.stock}:`, error.message);
+                console.log(`Failed to update signal for ${signal.stock}:`, error.message);
             }
         }
 
-        res.json({ message: "Process completed successfully." });
+        return;
       
     } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json({ error: "An error occurred while processing signals." });
+        console.log('Error:', error);
+        return;
 
     } 
 }
@@ -394,10 +445,9 @@ async function CheckExpireSignalFutureOption(req, res) {
         const existingSetting = await BasicSetting_Modal.findOne({});
 
         if (!existingSetting.brokerloginstatus) {
-          return res.status(404).json({
-            status: false,
-            message: "Broker not Login",
-          });
+            console.log("Broker not Login");
+          return;
+         
         }
 
 
@@ -440,7 +490,7 @@ async function CheckExpireSignalFutureOption(req, res) {
             .join('#');
         // Check if we have any valid signals
         if (!channelStradd) {
-            return res.status(404).json({ message: "No valid signals found for today." });
+            return;
         }
 
         // Socket session setup parameters
@@ -464,21 +514,16 @@ async function CheckExpireSignalFutureOption(req, res) {
                 // If session creation is successful, open socket connection
                 await openSocketConnection(channelStradd, userid, userSession1);
 
-                return res.json({
-                    message: "Socket session and connection established successfully."
-                });
+                return;
             } else {
-                return res.status(500).json({
-                    error: "Failed to create socket session.",
-                    details: response.data
-                });
+                return;
             }
         } catch (sessionError) {
-            return res.status(500).json({ error: "Failed to create socket session." });
+            return;
         }
 
     } catch (error) {
-        return res.status(500).json({ error: "An error occurred while processing signals." });
+        return;
     }
 }
 
@@ -499,7 +544,6 @@ async function openSocketConnection(channelList, userid, userSession1) {
 
   ws.onmessage = async function (msg) {
     const response = JSON.parse(msg.data)
-
     if (response.lp != undefined) {
       const Cprice = response.lp;
 
@@ -509,11 +553,17 @@ async function openSocketConnection(channelList, userid, userSession1) {
     
       const stock = await Stock_Modal.findOne({ instrument_token: response.tk });
 
+
+      
       await Signal_Modal.updateOne(
-        { tradesymbol: stock.tradesymbol,expirydate: formattedToday,close_status: false },
+        {
+            $or: [
+                { tradesymbol: stock.tradesymbol, expirydate: formattedToday, close_status: false },
+                { tradesymbol: stock.tradesymbol, callduration: "Intraday", close_status: false }
+            ]
+        },
         { $set: { close_status: true, closeprice: Cprice, closedate: today } }
     );
-
 
     }
     if (response.s === 'OK') {
@@ -541,7 +591,7 @@ async function openSocketConnection(channelList, userid, userSession1) {
 async function returnstockcloseprice(symbol) {
     try {
         if (!symbol) {
-            throw new Error("Symbol is required.");
+         //   throw new Error("Symbol is required.");
         }
 
         const csvFilePath = "https://docs.google.com/spreadsheets/d/1wwSMDmZuxrDXJsmxSIELk1O01F0x1-0LEpY03iY1tWU/export?format=csv";
@@ -570,7 +620,15 @@ async function returnstockcloseprice(symbol) {
                     });
 
                     // Find the requested symbol and return its CPrice
-                    const stockData = sheetData.find(item => item.SYMBOL === symbol);
+                   // const stockData = sheetData.find(item => item.SYMBOL === symbol);
+
+                      const stockData = sheetData.find(item => 
+                        item.SYMBOL === symbol.trim() || 
+                        item.SYMBOL === `NSE:${symbol.trim()}`
+                    );
+
+                    // console.log("Searching for Symbol:", symbol.trim());
+                    // console.log("Matched Stock Data:", stockData);
 
                     if (stockData && stockData.CPrice && stockData.CPrice !== "#N/A") {
                         resolve(stockData.CPrice);
@@ -584,8 +642,9 @@ async function returnstockcloseprice(symbol) {
             });
         });
     } catch (error) {
-        console.error("Error in returnstockcloseprice:", error.message);
-        throw error;
+        console.log("Error in returnstockcloseprice:", error.message);
+       // throw error;
+       return;
     }
 }
 
@@ -695,11 +754,11 @@ async function PlanExpire(req, res) {
             }
         }
     
-        res.status(200).json({ message: "Notifications sent successfully for expiring plans." });
+      return;
     
     } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json({ error: "An error occurred while processing signals." });
+        console.log('Error:', error);
+        return;
     }
 }
 
@@ -747,7 +806,7 @@ async function downloadKotakNeotoken(req, res) {
                 })
                 .catch((error) => {
                     console.log(`Error downloading file from ${fileUrl}:`, error);
-                    throw new Error(`Error downloading file from ${fileUrl}`);
+                  //  throw new Error(`Error downloading file from ${fileUrl}`);
                 });
         });
 
@@ -755,11 +814,11 @@ async function downloadKotakNeotoken(req, res) {
         await Promise.all(downloadPromises);
 
         // Send the response once all files are downloaded
-        res.status(200).json({ message: "Successfully downloaded all files." });
+        return;
 
     } catch (error) {
         console.log('An unexpected error occurred:', error);
-        res.status(500).json({ error: error.message });
+        return;
     }
 }
 

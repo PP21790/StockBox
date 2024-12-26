@@ -55,8 +55,16 @@ class Coupon {
             }
 
             
+            const existingCoupon = await Coupon_Modal.findOne({ 
+              code, 
+              del: false // Check if the coupon is not deleted
+            });
+            if (existingCoupon) {
+              return res.status(400).json({ status: false, message: "Coupon code already exists" });
+            }
 
-        
+
+            
             if (!add_by) {
               return res.status(400).json({ status: false, message: "add_by is required" });
             }
@@ -86,41 +94,41 @@ class Coupon {
 
            
 
-          const clients = await Clients_Modal.find({
-            del: 0,
-            ActiveStatus: 1,
-            devicetoken: { $exists: true, $ne: null }
-          }).select('devicetoken');
+          // const clients = await Clients_Modal.find({
+          //   del: 0,
+          //   ActiveStatus: 1,
+          //   devicetoken: { $exists: true, $ne: null }
+          // }).select('devicetoken');
 
-          const tokens = clients.map(client => client.devicetoken);
+          // const tokens = clients.map(client => client.devicetoken);
 
-          if (tokens.length > 0) {
+          // if (tokens.length > 0) {
 
 
-            const notificationTitle = 'Important Update';
-            const notificationBody =`Discount Offer: Get up to ${value} off! Use code: ${code}.`;
+          //   const notificationTitle = 'Important Update';
+          //   const notificationBody =`Discount Offer: Get up to ${value} off! Use code: ${code}.`;
 
             
-            const resultn = new Notification_Modal({
-              segmentid:result._id,
-              type:"add coupon",
-              title: notificationTitle,
-              message: notificationBody
-          });
+          //   const resultn = new Notification_Modal({
+          //     segmentid:result._id,
+          //     type:"add coupon",
+          //     title: notificationTitle,
+          //     message: notificationBody
+          // });
   
-          await resultn.save();
+          // await resultn.save();
 
 
-          try {
-            // Send notifications to all device tokens
-            await sendFCMNotification(notificationTitle, notificationBody, tokens, "add coupon");
-            console.log('Notifications sent successfully');
-          } catch (error) {
-            console.error('Error sending notifications:', error);
-          }
+          // try {
+          //   // Send notifications to all device tokens
+          //   await sendFCMNotification(notificationTitle, notificationBody, tokens, "add coupon");
+          //   console.log('Notifications sent successfully');
+          // } catch (error) {
+          //   console.log('Error sending notifications:', error);
+          // }
 
 
-          }
+          // }
 
 
 
@@ -448,6 +456,51 @@ class Coupon {
                 message: "Coupon not found"
             });
         }
+
+
+
+if(status=='1')
+{
+
+
+          const clients = await Clients_Modal.find({
+            del: 0,
+            ActiveStatus: 1,
+            devicetoken: { $exists: true, $ne: null }
+          }).select('devicetoken');
+
+          const tokens = clients.map(client => client.devicetoken);
+
+          if (tokens.length > 0) {
+
+
+            const notificationTitle = 'Important Update';
+            const notificationBody =`Discount Offer: Get up to ${result.value} off! Use code: ${result.code}.`;
+
+            
+            const resultn = new Notification_Modal({
+              segmentid:result._id,
+              type:"add coupon",
+              title: notificationTitle,
+              message: notificationBody
+          });
+  
+          await resultn.save();
+
+
+          try {
+            // Send notifications to all device tokens
+            await sendFCMNotification(notificationTitle, notificationBody, tokens, "add coupon");
+            console.log('Notifications sent successfully');
+          } catch (error) {
+            console.log('Error sending notifications:', error);
+          }
+
+
+          }
+}
+
+
   
         return res.json({
             status: true,

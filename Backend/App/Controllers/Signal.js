@@ -29,7 +29,7 @@ class Signal {
         });
 
 
-            const { price,calltype,stock,tag1,tag2,tag3,stoploss,description,callduration,callperiod,add_by,expirydate,segment,optiontype,strikeprice,tradesymbol,lotsize } = req.body;
+            const { price,calltype,stock,tag1,tag2,tag3,stoploss,description,callduration,callperiod,add_by,expirydate,segment,optiontype,strikeprice,tradesymbol,lotsize,entrytype,lot } = req.body;
         
         //    const report = req.files['report'] ? req.files['report'][0].filename : null;
 
@@ -123,6 +123,8 @@ if (!stocks) {
               optiontype: optiontype,
               tradesymbol:stocks.tradesymbol,
               lotsize: stocks.lotsize,
+              entrytype:entrytype,
+              lot:lot,
           });
     
 
@@ -226,6 +228,7 @@ if (!stocks) {
 
 
 async getSignal(req, res) {
+  
   try {
     const { from, to, service, stock } = req.query;
     // Set today's date and midnight time for filtering
@@ -603,6 +606,16 @@ async getSignalWithFilter(req, res) {
          notificationBody =`${serviceName} ${stock} CLOSED Exit Position AT ${exitprice}`;
 
       }
+      else if (closetype === "5") {
+        // Close at exit price
+        close_status = true;
+        closeprice = 0;
+        closedate = new Date();
+
+         notificationTitle = 'Important Update';
+         notificationBody =`Avoid This Signal`;
+
+      }
       
       if (!id) {
         return res.status(400).json({
@@ -611,7 +624,6 @@ async getSignalWithFilter(req, res) {
         });
       }
   
-
       const updatedSignal = await Signal_Modal.findByIdAndUpdate(
         id,
         {
@@ -669,7 +681,7 @@ async getSignalWithFilter(req, res) {
         await sendFCMNotification(notificationTitle, notificationBody, tokens,"close signal");
         console.log('Notifications sent successfully');
       } catch (error) {
-        console.error('Error sending notifications:', error);
+     //   console.error('Error sending notifications:', error);
       }
 
 
@@ -682,7 +694,6 @@ async getSignalWithFilter(req, res) {
         });
       }
   
-      console.log("Close Signal:", updatedSignal);
       return res.json({
         status: true,
         message: "Signal Closed successfully",

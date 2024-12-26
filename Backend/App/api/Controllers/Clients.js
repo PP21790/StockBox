@@ -55,7 +55,13 @@ class Clients {
         });
       }
   
-
+      if(token) {
+        const refertokensss = await Clients_Modal.findOne({ refer_token:token,del:0,ActiveStatus:1 });
+    
+        if (!refertokensss) {
+            return res.status(400).json({ status: false, message: "Referral code doesn't exists" });
+        }
+      }
   
       const existingUser = await Clients_Modal.findOne({
         $and: [
@@ -65,7 +71,6 @@ class Clients {
           }
         ]
       });
-
 
       if (existingUser) {
         if (existingUser.Email === Email) {
@@ -96,11 +101,10 @@ class Clients {
           refer_token += characters[index];
       }
       
-
+    
      
       let refer_tokenss = referCode + refer_token;
       const refer_tokens = token || crypto.randomBytes(10).toString('hex'); // Use the provided token or generate a new one
-
       const result = new Clients_Modal({
           FullName,
           Email,
@@ -108,10 +112,10 @@ class Clients {
           password: hashedPassword,
           refer_token: refer_tokenss,
           token: refer_tokens,
-          refer_status: token ? settings.refer_status : 0, // Only add `refer_status` if `token` is provided
+         refer_status: token ? (settings.refer_status || 0) : 0,
           del: 0,
       });
-      
+    
       await result.save(); 
 
 
@@ -602,23 +606,25 @@ async deleteClient(req, res) {
       });
     }
 
-  const deletedClient = await Clients_Modal.findByIdAndUpdate(
-    id, 
-    { del: 1 }, // Set del to true
-    { new: true }  // Return the updated document
-  );
+    const deletedClient = await Clients_Modal.findByIdAndUpdate(
+      id,
+      { del: 1 },
+      { new: true }
+    );
+  
     if (!deletedClient) {
+      console.error("No document found with this ID.");
       return res.status(404).json({
         status: false,
         message: "Client not found",
       });
     }
-
+    console.log("Updated Client:", deletedClient);
 
     const titles = 'Important Update';
-    const message = `${client.FullName} has successfully deleted their account.`;
+    const message = `You have successfully deleted your account.`;
     const resultnm = new Adminnotification_Modal({
-      clientid:client._id,
+      clientid:id,
       type:'delete client',
       title: titles,
       message: message

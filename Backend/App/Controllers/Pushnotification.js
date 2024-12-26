@@ -1,5 +1,5 @@
 const admin = require('firebase-admin');
-const serviceAccount = require('../../template/stockbox-15e55-firebase-adminsdk-1zz93-c91de27a7e.json');
+const serviceAccount = require('../../template/stockbox-15e55-firebase-adminsdk-1zz93-a6b89bf4c1.json');
 
 // Initialize Firebase Admin SDK
 if (!admin.apps.length) {
@@ -9,6 +9,7 @@ if (!admin.apps.length) {
   });
   console.log('Firebase Admin SDK initialized.');
 }
+
 
 async function sendFCMNotification(title, body, tokens, type="") {
   try {

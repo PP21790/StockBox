@@ -7,6 +7,7 @@ const Basket_Modal = db.Basket;
 const Basketstock_Modal = db.Basketstock;
 const Stock_Modal = db.Stock;
 const Liveprice_Modal = db.Liveprice;
+const BasketSubscription_Modal = db.BasketSubscription;
 
 class Basket {
 
@@ -469,6 +470,9 @@ class Basket {
 }
 
 
+
+
+
     async activeBasket(req, res) {
       try {
 
@@ -673,6 +677,222 @@ async  statusChange(req, res) {
       });
   }
 }
+
+
+  
+async getBasketstockList(req, res) {
+  try {
+    const { id } = req.params;
+      const basketstocks = await Basketstock_Modal.find({ del: false,basket_id:id });
+
+      return res.json({
+          status: true,
+          message: "Basketstocks fetched successfully",
+          data: basketstocks
+      });
+
+  } catch (error) {
+      console.log("An error occurred:", error);
+      return res.json({ 
+          status: false, 
+          message: "Server error", 
+          data: [] 
+      });
+  }
+}
+
+
+
+async addBasketSubscription(req, res) {
+  try {
+    const { basket_id, client_id, price } = req.body;
+
+    // Validate input
+    if (!basket_id || !client_id) {
+      return res.status(400).json({ status: false, message: 'Missing required fields' });
+    }
+    const basket = await Basket_Modal.findOne({
+      _id: basket_id,
+      del: false
+    });
+
+
+
+    // Map plan validity to months
+    const validityMapping = {
+      '1 month': 1,
+      '3 months': 3,
+      '6 months': 6,
+      '9 months': 9,
+      '1 year': 12,
+      '2 years': 24,
+      '3 years': 36,
+      '4 years': 48,
+      '5 years': 60,
+    };
+
+    const monthsToAdd = validityMapping[basket.validity];
+    if (monthsToAdd === undefined) {
+      return res.status(400).json({ status: false, message: 'Invalid plan validity period' });
+    }
+
+    const start = new Date();
+    const end = new Date(start);
+    end.setHours(23, 59, 59, 999);  // Set end date to the end of the day
+    end.setMonth(start.getMonth() + monthsToAdd);  // Add the plan validity duration
+
+
+
+    // Create a new subscription
+    const newSubscription = new BasketSubscription_Modal({
+      basket_id,
+      client_id,
+      total: price,
+      plan_price: basket.basket_price,
+      startdate: start,
+      enddate: end,
+      validity: basket.validity,
+    });
+
+
+
+    // Save to the database
+    const savedSubscription = await newSubscription.save();
+
+    // Respond with the created subscription
+    return res.status(201).json({
+      status: true,
+      message: 'Subscription added successfully',
+      data: savedSubscription
+    });
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ status: false, message: 'Server error', data: [] });
+  }
+}
+
+
+async BasketSubscriptionList(req, res) {
+  try {
+    const { fromDate, toDate, search, page = 1 } = req.body; // Extract filters and pagination details
+    const limit = 10;
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    // Match conditions for date range
+    const matchConditions = { del: false };
+
+    if (fromDate && toDate) {
+      const startOfFromDate = new Date(fromDate);
+      startOfFromDate.setHours(0, 0, 0, 0);
+
+      const endOfToDate = new Date(toDate);
+      endOfToDate.setHours(23, 59, 59, 999);
+
+      matchConditions.created_at = {
+        $gte: startOfFromDate,
+        $lte: endOfToDate,
+      };
+    }
+
+    // Match conditions for search
+    const searchMatch = search && search.trim() !== "" ? {
+      $or: [
+        { "clientDetails.FullName": { $regex: search, $options: "i" } }, // Search by client name
+        { "clientDetails.Email": { $regex: search, $options: "i" } },    // Search by client email
+        { "clientDetails.PhoneNo": { $regex: search, $options: "i" } },  // Search by client mobile
+        { "basketDetails.title": { $regex: search, $options: "i" } }      // Search by basket name
+      ]
+    } : {};
+
+    // Main aggregation pipeline
+    const result = await BasketSubscription_Modal.aggregate([
+      { $match: matchConditions },
+      {
+        $lookup: {
+          from: 'baskets', // The name of the baskets collection
+          localField: 'basket_id', // Field in BasketSubscription_Modal referencing baskets
+          foreignField: '_id', // Field in baskets collection
+          as: 'basketDetails' // Joined data field
+        }
+      },
+      {
+        $unwind: '$basketDetails' // Unwind the result if there is only one basket per subscription
+      },
+      {
+        $lookup: {
+          from: 'clients', // The name of the clients collection
+          localField: 'client_id', // Field in BasketSubscription_Modal referencing clients
+          foreignField: '_id', // Field in clients collection
+          as: 'clientDetails' // Joined data field
+        }
+      },
+      {
+        $unwind: '$clientDetails' // Unwind the result if there is only one client per subscription
+      },
+      { $match: searchMatch }, // Apply search filter
+      {
+        $project: {
+          orderid: 1,
+          created_at: 1,
+          startdate: 1,
+          enddate: 1,
+          plan_price:1,
+          total:1,
+          discount: 1,
+          coupon: 1,
+          validity: 1,
+          status: 1,
+          basketDetails: 1,
+          clientName: '$clientDetails.FullName',
+          clientEmail: '$clientDetails.Email',
+          clientPhoneNo: '$clientDetails.PhoneNo',
+          totalAmount: 1, // Add other fields specific to subscriptions
+        }
+      },
+      { $sort: { created_at: -1 } }, // Sort by creation date (newest first)
+      { $skip: skip }, // Pagination: Skip 'skip' items
+      { $limit: parseInt(limit) } // Limit to 'limit' items
+    ]);
+
+    // Total records for pagination
+    const totalRecordsPipeline = [
+      { $match: matchConditions },
+      {
+        $lookup: {
+          from: 'clients',
+          localField: 'client_id',
+          foreignField: '_id',
+          as: 'clientDetails'
+        }
+      },
+      { $unwind: '$clientDetails' },
+      { $match: searchMatch },
+      { $count: 'total' }
+    ];
+    const totalRecordsResult = await BasketSubscription_Modal.aggregate(totalRecordsPipeline);
+    const totalRecords = totalRecordsResult[0] ? totalRecordsResult[0].total : 0;
+    const totalPages = Math.ceil(totalRecords / limit);
+
+    // Respond with results and pagination
+    return res.json({
+      status: true,
+      message: "Basket Subscriptions retrieved successfully",
+      data: result,
+      pagination: {
+        total: totalRecords,
+        page: parseInt(page),
+        limit: parseInt(limit),
+        totalPages
+      }
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ status: false, message: 'Server error', data: [] });
+  }
+}
+
 
 
   

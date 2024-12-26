@@ -150,6 +150,14 @@ const signalModel = Schema({
         trim: true,
         default: null
     },
+    entrytype: {
+        type: String,
+        default: "0"
+    },
+    lot: {
+        type: String,
+        default: "0"
+    },
     del: {
         type: Number,
         enum: [1, 0],

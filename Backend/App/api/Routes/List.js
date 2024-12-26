@@ -1,6 +1,6 @@
 const router = require("express").Router()
 
-const {Blogslist,Newslist,Bannerlist,Plancategorysist,getPlansByPlancategoryId,addPlanSubscription,myPlan,Couponlist,Signallist,applyCoupon,showSignalsToClients,Servicelist,Faqlist,detailContent,showSignalsToClientsClose,BasketList,pastPerformance,addBasketSubscription,getallPlan,addFreeTrail,BroadcastList,myFreetrial,basicSetting,pastPerformances,myService,CloseSignal,showSignalsToClientsCloses,Notification,Bank,Qrcode,BlogslistwithPagination,NewslistwithPagination,Refer,BasketLists,BasketstockList,myBasketPlan,placeOrder,exitPlaceOrder,checkBasketSell,BasketListss,BasketstockLists} = require('../Controllers/List')
+const {Blogslist,Newslist,Bannerlist,Plancategorysist,getPlansByPlancategoryId,addPlanSubscription,myPlan,Couponlist,Signallist,applyCoupon,showSignalsToClients,Servicelist,Faqlist,detailContent,showSignalsToClientsClose,BasketList,pastPerformance,addBasketSubscription,getallPlan,addFreeTrail,BroadcastList,myFreetrial,basicSetting,pastPerformances,myService,CloseSignal,showSignalsToClientsCloses,Notification,Bank,Qrcode,BlogslistwithPagination,NewslistwithPagination,Refer,BasketLists,BasketstockList,myBasketPlan,placeOrder,exitPlaceOrder,checkBasketSell,BasketListss,BasketstockLists,getLivePrice,MyPorfolio,BasketstockListBalance,getBasketVersionOrder} = require('../Controllers/List')
 
 
 router.get('/api/list/blogs',Blogslist);
@@ -36,7 +36,12 @@ router.get('/api/list/basket/:clientId', BasketList);
 router.get('/api/list/basket', BasketLists);
 router.post('/api/list/baskets', BasketListss);
 router.get('/api/list/basketstock/:id', BasketstockList);
+router.get('/api/list/myportfolio/:id/:clientid', MyPorfolio);
+
 router.get('/api/list/basketstocks/:id/:clientid', BasketstockLists);
+router.get('/api/list/basketstockbalance/:id/:clientid', BasketstockListBalance);
+
+router.post('/api/list/getbasketversionorder', getBasketVersionOrder);
 
 router.get('/api/list/mybasketplan/:id', myBasketPlan); 
 
@@ -55,7 +60,7 @@ router.get('/api/refer', Refer);
 router.post('/api/placeorder', placeOrder);
 router.post('/api/exitplaceorder', exitPlaceOrder);
 router.post('/api/checkbasketsell', checkBasketSell);
-
+router.get('/api/getliveprice', getLivePrice);
 
 
 module.exports = router;

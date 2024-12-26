@@ -1079,7 +1079,8 @@ class List {
             plan_id: { $first: '$plan_id' }, // Keep the original plan_id
             plan_price: { $first: '$plan_price' }, // Keep the plan_price
             total: { $first: '$total' }, // Keep the total
-            discount: { $first: '$discount' }, // Keep the discount
+            discount: { $first: '$discount' },
+            coupon: { $first: '$coupon' }, // Keep the discount
             plan_start: { $first: '$plan_start' }, // Keep the plan_start
             plan_end: { $first: '$plan_end' },
             orderid: { $first: '$orderid' }, // Keep the plan_end
@@ -1101,7 +1102,8 @@ class List {
             plan_id: 1, // Original plan_id
             plan_price: 1, // Plan price
             total: 1, // Total
-            discount: 1, // Discount
+            discount: 1,
+            coupon: 1,
             plan_start: 1, // Plan start date
             plan_end: 1,
             orderid: 1, // Plan end date
@@ -1181,9 +1183,20 @@ class List {
       const baseUrl = `${protocol}://${req.headers.host}`;
 
       const resultWithImageUrls = result.map(results => {
+
+        let serviceName = '';
+        if (results.service == "66d2c3bebf7e6dc53ed07626") {
+          serviceName = "Cash";
+        } else if (results.service == "66dfeef84a88602fbbca9b79") {
+          serviceName = "Option";
+        } else {
+          serviceName = "Future";
+        }
+
         return {
           ...results._doc, // Spread the original bannerss document
-          image: results.image ? `${baseUrl}/uploads/coupon/${results.image}` : null // Append full image URL
+          image: results.image ? `${baseUrl}/uploads/coupon/${results.image}` : null, 
+          serviceName: serviceName
         };
       });
 
@@ -1234,9 +1247,14 @@ class List {
 
       // Check if the coupon is within the valid date range
       const currentDate = new Date();
-      if (currentDate < coupon.startdate || currentDate > coupon.enddate) {
+      const currentDateOnly = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()); // Strip time
+      const startDateOnly = new Date(coupon.startdate.getFullYear(), coupon.startdate.getMonth(), coupon.startdate.getDate());
+      const endDateOnly = new Date(coupon.enddate.getFullYear(), coupon.enddate.getMonth(), coupon.enddate.getDate());
+      
+      if (currentDateOnly < startDateOnly || currentDateOnly > endDateOnly) {
         return res.status(400).json({ message: 'Coupon is not valid at this time' });
       }
+      
 
       // Check if the purchase meets the minimum purchase value requirement
       if (purchaseValue < coupon.minpurchasevalue) {
@@ -1258,14 +1276,11 @@ class List {
       if (coupon.limitation <= 0) {
         return res.status(400).json({ message: 'Coupon usage limit has been reached' });
       }
-
-
-
-      if (!coupon.service) {
+      if (coupon.service && coupon.service != 0) {
         const plan = await Plan_Modal.findById(planid)
           .populate('category')
           .exec();
-        if (!coupon.service != plan.category.service) {
+        if (coupon.service != plan.category.service) {
 
           return res.status(404).json({ message: 'Service Does not match' });
         }
@@ -1294,8 +1309,6 @@ class List {
   }
 
   async showSignalsToClients(req, res) {
-
-
     try {
       const { service_id, client_id, search, page = 1 } = req.body;
       const limit = 10;
@@ -1653,6 +1666,7 @@ class List {
       const query = {
         service: service_id,
         close_status: true,
+        closeprice: { $ne: 0 } 
       };
 
       if (search && search.trim() !== '') {
@@ -1671,13 +1685,26 @@ class List {
         .lean();
 
 
-      const totalSignals = await Signal_Modal.countDocuments(query);
 
+
+        const protocol = req.protocol; // Will be 'http' or 'https'
+
+        const baseUrl = `${protocol}://${req.headers.host}`; // Construct the base URL
+  
+           const signalsWithReportUrls = signals.map(signal => {
+        
+            return {
+                ...signal,
+                report_full_path: signal.report ? `${baseUrl}/uploads/report/${signal.report}` : null 
+            };
+        });
+       
+      const totalSignals = await Signal_Modal.countDocuments(query);
 
       return res.json({
         status: true,
         message: "Signals retrieved successfully",
-        data: signals,
+        data: signalsWithReportUrls,
         pagination: {
           total: totalSignals,
           page: parseInt(page),
@@ -1805,71 +1832,99 @@ class List {
 
       // Fetch all baskets with their subscription status
       const result = await Basket_Modal.aggregate([
+        // Stage 1: Lookup Subscriptions
         {
-          $lookup: {
-            from: 'basketsubscriptions', // BasketSubscription collection
-            localField: '_id', // field in Basket collection
-            foreignField: 'basket_id', // field in BasketSubscription collection
-            as: 'subscription_info' // Name of the array where subscription info will be stored
-          }
-        },
-        {
-          $unwind: {
-            path: '$subscription_info', // Flatten the subscription_info array
-            preserveNullAndEmptyArrays: true // Preserve baskets even if there's no subscription
-          }
-        },
-        {
-          $addFields: {
-            isSubscribed: {
-              $cond: {
-                if: { $eq: ['$subscription_info.client_id', clientObjectId] }, // Check if the user has subscribed to this basket
-                then: true,
-                else: false
-              }
-            },
-            isActive: {
-              $cond: {
-                if: {
-                  $and: [
-                    { $eq: ['$subscription_info.client_id', clientObjectId] }, // Ensure the user is subscribed
-                    { $gte: [currentDate, '$subscription_info.startdate'] }, // Ensure the subscription started
-                    { $lte: [currentDate, '$subscription_info.enddate'] } // Ensure the subscription has not ended
-                  ]
-                },
-                then: true,
-                else: false
-              }
+            $lookup: {
+                from: 'basketsubscriptions',
+                localField: '_id',
+                foreignField: 'basket_id',
+                as: 'subscription_info'
             }
-          }
+        },
+    
+        // Stage 2: Unwind and Filter Subscriptions
+        {
+            $addFields: {
+                filteredSubscriptions: {
+                    $filter: {
+                        input: '$subscription_info',
+                        as: 'sub',
+                        cond: { $eq: ['$$sub.client_id', clientObjectId] }
+                    }
+                }
+            }
+        },
+    
+        // Stage 3: Sort and Get Latest Subscription
+        {
+            $addFields: {
+                latestSubscription: {
+                    $arrayElemAt: [
+                        {
+                            $sortArray: {
+                                input: '$filteredSubscriptions',
+                                sortBy: { enddate: -1 }
+                            }
+                        },
+                        0
+                    ]
+                }
+            }
+        },
+    
+        // Stage 4: Determine Subscription Status
+        {
+            $addFields: {
+                isSubscribed: {
+                    $cond: {
+                        if: { $gt: [{ $size: '$filteredSubscriptions' }, 0] },
+                        then: true,
+                        else: false
+                    }
+                },
+                isActive: {
+                    $cond: {
+                        if: { $and: [
+                            { $gt: [{ $size: '$filteredSubscriptions' }, 0] },
+                            { $gte: [currentDate, '$latestSubscription.startdate'] },
+                            { $lte: [currentDate, '$latestSubscription.enddate'] }
+                        ]},
+                        then: true,
+                        else: false
+                    }
+                },
+                startdate: '$latestSubscription.startdate',
+                enddate: '$latestSubscription.enddate'
+            }
         },
         {
-          $project: {
-            basket_id: 1,
-            title: 1,
-            description: 1,
-            full_price: 1,
-            basket_price: 1,
-            mininvamount: 1,
-            accuracy: 1,
-            portfolioweightage: 1,
-            cagr: 1,
-            frequency: 1,
-            validity: 1,
-            next_rebalance_date: 1,
-            status: 1,
-            del: 1,
-            created_at: 1,
-            updated_at: 1,
-            type: 1,
-            themename: 1,
-            isSubscribed: 1,
-            isActive: 1,
-            startdate: '$subscription_info.startdate',
-            enddate: '$subscription_info.enddate'
-          }
+            $project: {
+                basket_id: 1,
+                title: 1,
+                description: 1,
+                full_price: 1,
+                basket_price: 1,
+                mininvamount: 1,
+                accuracy: 1,
+                portfolioweightage: 1,
+                cagr: 1,
+                frequency: 1,
+                validity: 1,
+                next_rebalance_date: 1,
+                status: 1,
+                del: 1,
+                created_at: 1,
+                updated_at: 1,
+                type: 1,
+                themename: 1,
+                isSubscribed: 1,
+                isActive: 1,
+                startdate: 1,
+                enddate: 1
+            }
         }
-      ]);
+    ]);
+    
   
       // Debugging: Log the result to see the subscription info
     //  console.log(result);
@@ -1901,7 +1956,7 @@ class List {
       })
         .sort({ version: -1 }) // Sort by version in descending order
         .select("version"); // Fetch only the version field
-  
+      
       // Step 2: Fetch basket stock data for the latest version
       let basketstock = [];
       if (latestVersion) {
@@ -1910,7 +1965,23 @@ class List {
           del: false,
           status: 1,
           version: latestVersion.version // Filter by the latest version
-        });
+        }).lean(); // Use .lean() for plain objects to allow adding custom fields
+      }
+      
+      // Step 3: Add instrument_token to each basket stock
+      if (basketstock.length > 0) {
+        basketstock = await Promise.all(
+          basketstock.map(async (stock) => {
+            const stockDetails = await Stock_Modal.findOne({
+              tradesymbol: stock.tradesymbol // Match tradesymbol in the stocks collection
+            }).select("instrument_token"); // Fetch only the instrument_token field
+      
+            return {
+              ...stock, // Spread existing stock fields
+              instrument_token: stockDetails ? stockDetails.instrument_token : null // Add instrument_token
+            };
+          })
+        );
       }
   
       // Step 3: Return the response
@@ -1928,120 +1999,424 @@ class List {
       });
     }
   }
-  
-  async BasketstockLists(req, res) {
+
+  async MyPorfolio(req, res) {
     try {
-      const { id, clientid } = req.params; // Extract basket_id and client_id
+      const { id, clientid } = req.params; // Extract basket_id and client_id from request parameters
   
-      // Convert clientid to ObjectId
-      const clientObjectId = new mongoose.Types.ObjectId(clientid);
-  
-      // Get the current date
-      const currentDate = new Date();
-  
-      const subscription = await BasketSubscription_Modal.findOne({
-        basket_id: id,
-        client_id: clientObjectId
-      }).sort({ created_at: -1 });
-      
-        const latestEndDate = subscription.enddate;
-      
-        // const latestVersionStock = await Basketstock_Modal.find({
-        //   basket_id: id,
-        //   del: false,
-        //   status: 1,
-        //   created_at: { $lt: latestEndDate } 
-        // });
-
-
-
-        const latestVersionStock = await Basketstock_Modal.aggregate([
-          {
-            $match: {
-              basket_id: id,
-              del: false,
-              status: 1,
-              created_at: { $lt: latestEndDate } // Filter by created_at before end_date
+     
+      const result = await Basketorder_Modal.aggregate([
+        {
+          $match: {
+            basket_id: id, // Filter by basket_id
+            clientid: clientid,
+            ordertype: "BUY" // Filter by client_id
+          }
+        },
+           {
+            $group: {
+              _id: null, // Single group since we are already filtering by basket_id and client_id
+              maxVersion: { $max: "$version" } // Determine the highest version
             }
           },
           {
             $lookup: {
-              from: "basketordermodels", // Collection name for orders
-              let: {
-                stock_tradesymbol: "$tradesymbol",
-                stock_basket_id: "$basket_id",
-                stock_version: "$version"
-              },
-              pipeline: [
-                {
-                  $match: {
-                    $expr: {
-                      $and: [
-                        { $eq: ["$tradesymbol", "$$stock_tradesymbol"] }, // Match tradesymbol
-                        { $eq: ["$basket_id", "$$stock_basket_id"] }, // Match basket_id
-                        { $eq: ["$version", "$$stock_version"] }, // Match version
-                        { $eq: ["$clientid", clientid] } // Match clientid
-                      ]
-                    }
-                  }
-                }
-              ],
-              as: "order_details" // Name of the output field
+              from: "basketordermodels", // Collection name
+              localField: "maxVersion", // The max version determined earlier
+              foreignField: "version", // Match version field in the collection
+              as: "latestOrders"
+            }
+          },
+          { $unwind: "$latestOrders" },
+          {
+            $match: {
+              "latestOrders.basket_id": id,
+              "latestOrders.clientid": clientid
             }
           },
           {
+            $group: {
+              _id: "$latestOrders.tradesymbol", // Group by tradesymbol
+              totalQuantity: { $sum: "$latestOrders.quantity" }, // Sum the quantity
+              basket_id: { $first: "$latestOrders.basket_id" }, // Get the basket_id
+              clientid: { $first: "$latestOrders.clientid" }, // Get the client_id
+              ordertype: { $first: "$latestOrders.ordertype" }, // Get the ordertype (example)
+              price: { $first: "$latestOrders.price" }, // Get the price (example)
+              ordertoken: { $first: "$latestOrders.ordertoken" }, // Get the ordertype (example)
+              borkerid: { $first: "$latestOrders.borkerid" }, // Get the ordertype (example)
+              exchange: { $first: "$latestOrders.exchange" }, 
+              version: { $first: "$latestOrders.version" }, // Get the ordertype (example)
+              createdAt: { $first: "$latestOrders.createdAt" }, // Get createdAt timestamp
+              updatedAt: { $first: "$latestOrders.updatedAt" } // Get updatedAt timestamp
+            }
+          },
+          // Project the final fields for response
+          {
             $project: {
-              _id: 1,
+              _id: 0, // We don’t need the _id from the group stage
+              tradesymbol: "$_id", // Rename _id to tradesymbol
+              totalQuantity: 1,
               basket_id: 1,
-              name: 1,
-              tradesymbol: 1,
+              clientid: 1,
+              borkerid: 1,
+              ordertype: 1,
               price: 1,
-              weightage: 1,
-              total_value: 1,
-              quantity: 1,
-              comment: 1,
+              ordertoken: 1,
+              exchange: 1,
               version: 1,
-              del: 1,
-              created_at: 1,
-              status: 1,
-              order_details: {
-                clientid: 1,
-                tradesymbol: 1,
-                orderid: 1,
-                uniqueorderid: 1,
-                borkerid: 1,
-                quantity: 1,
-                ordertype: 1,
-                price: 1,
-                ordertoken: 1,
-                exchange: 1,
-                version: 1,
-                howmanytimebuy: 1,
-                status: 1,
-                exitstatus: 1,
-                createdAt: 1
-              }
+              createdAt: 1,
+              updatedAt: 1
+
             }
           }
         ]);
-        
-        
-        
+  
       return res.json({
         status: true,
         message: "Basket Stock fetched successfully",
-        data: latestVersionStock
+        data: result, // Return the aggregated result
       });
     } catch (error) {
       console.error("Error fetching basket stock:", error);
+  
+      // Handle any server errors gracefully
       return res.json({
         status: false,
         message: "Server error",
-        data: []
+        data: [],
       });
     }
   }
   
+
+  
+  async BasketstockLists(req, res) {
+    try {
+      const { id, clientid } = req.params; // Extract basket_id and client_id from request parameters
+  
+      // Convert clientid to ObjectId for database query
+      const clientObjectId = new mongoose.Types.ObjectId(clientid);
+  
+      // Fetch the latest subscription for the given basket_id and client_id
+      const subscription = await BasketSubscription_Modal.findOne({
+        basket_id: id,
+        client_id: clientObjectId,
+      }).sort({ created_at: -1 });
+  
+      // Check if subscription exists
+      if (!subscription) {
+        return res.json({
+          status: false,
+          message: "No subscription found for the given basket and client.",
+          data: [],
+        });
+      }
+  
+      // Extract the subscription's end date
+      const latestEndDate = subscription.enddate;
+  
+      // Fetch the latest version of basket stocks and perform aggregations
+      const latestVersionStock = await Basketstock_Modal.aggregate([
+        {
+          $match: {
+            basket_id: id,
+            del: false,
+            status: 1,
+            created_at: { $lt: latestEndDate }, // Filter stocks created before the subscription end date
+          },
+        },
+        {
+          $lookup: {
+            from: "basketordermodels", // Collection name for orders
+            let: {
+              stock_tradesymbol: "$tradesymbol",
+              stock_basket_id: "$basket_id",
+              stock_version: "$version",
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ["$tradesymbol", "$$stock_tradesymbol"] }, // Match tradesymbol
+                      { $eq: ["$basket_id", "$$stock_basket_id"] }, // Match basket_id
+                      { $eq: ["$version", "$$stock_version"] }, // Match version
+                      { $eq: ["$clientid", clientid] }, // Match clientid
+                    ],
+                  },
+                },
+              },
+            ],
+            as: "order_details", // Add order details to the result
+          },
+        },
+        {
+          $lookup: {
+            from: "stocks", // Collection name for stock details
+            localField: "tradesymbol", // Field in Basketstock_Modal to match
+            foreignField: "tradesymbol", // Field in stocks collection to match
+            as: "stock_details", // Add stock details to the result
+          },
+        },
+        {
+          $addFields: {
+            // Extract instrument_token from stock details (first match only)
+            instrument_token: {
+              $arrayElemAt: ["$stock_details.instrument_token", 0],
+            },
+          },
+        },
+        {
+          $project: {
+            // Include required fields in the final result
+            _id: 1,
+            basket_id: 1,
+            name: 1,
+            tradesymbol: 1,
+            price: 1,
+            weightage: 1,
+            total_value: 1,
+            quantity: 1,
+            comment: 1,
+            version: 1,
+            del: 1,
+            created_at: 1,
+            status: 1,
+            instrument_token: 1, // Include extracted instrument_token
+            order_details: 1, // Keep order details as a nested array
+          },
+        },
+      ]);
+  
+      // Return the fetched data as a response
+      return res.json({
+        status: true,
+        message: "Basket Stock fetched successfully",
+        data: latestVersionStock,
+      });
+    } catch (error) {
+      console.error("Error fetching basket stock:", error);
+  
+      // Handle any server errors gracefully
+      return res.json({
+        status: false,
+        message: "Server error",
+        data: [],
+      });
+    }
+  }
+  
+  
+  async BasketstockListBalance(req, res) {
+    try {
+      const { id, clientid } = req.params; // Extract basket_id and client_id from request parameters
+  
+      // Convert clientid to ObjectId for database query if necessary
+      const clientObjectId = new mongoose.Types.ObjectId(clientid);
+  
+      // Fetch the latest subscription for the given basket_id and client_id
+      const subscription = await BasketSubscription_Modal.findOne({
+        basket_id: id,
+        client_id: clientObjectId,
+      }).sort({ created_at: -1 });
+  
+      // Check if subscription exists
+      if (!subscription) {
+        return res.json({
+          status: false,
+          message: "No subscription found for the given basket and client.",
+          data: [],
+        });
+      }
+  
+      // Extract the subscription's end date
+      const latestEndDate = subscription.enddate;
+
+
+      const versions = await Basketstock_Modal.aggregate([
+        {
+          $match: {
+            basket_id: id,
+            del: false,
+            status: 1,
+            created_at: { $lt: latestEndDate }, // Filter stocks created before the subscription end date
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            versions: { $addToSet: "$version" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            sortedVersions: {
+              $sortArray: { input: "$versions", sortBy: -1 },
+            },
+          },
+        },
+      ]);
+
+
+      const lastTwoVersions = versions[0]?.sortedVersions?.slice(0, 2) || [];
+
+
+      const latestVersionStock = await Basketstock_Modal.aggregate([
+        {
+          $match: {
+            basket_id: id,
+            del: false,
+            status: 1,
+            created_at: { $lt: latestEndDate },
+            version: { $in: lastTwoVersions }, 
+            
+          },
+        },
+        {
+          $lookup: {
+            from: "basketordermodels", // Collection name for orders
+            let: {
+              stock_tradesymbol: "$tradesymbol",
+              stock_basket_id: "$basket_id",
+              stock_version: "$version",
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ["$tradesymbol", "$$stock_tradesymbol"] }, // Match tradesymbol
+                      { $eq: ["$basket_id", "$$stock_basket_id"] }, // Match basket_id
+                      { $eq: ["$version", "$$stock_version"] }, // Match version
+                      { $eq: ["$clientid", clientid] }, // Match clientid
+                    ],
+                  },
+                },
+              },
+            ],
+            as: "order_details", // Add order details to the result
+          },
+        },
+        {
+          $lookup: {
+            from: "stocks", // Collection name for stock details
+            localField: "tradesymbol", // Field in Basketstock_Modal to match
+            foreignField: "tradesymbol", // Field in stocks collection to match
+            as: "stock_details", // Add stock details to the result
+          },
+        },
+        {
+          $addFields: {
+            // Extract instrument_token from stock details (first match only)
+            instrument_token: {
+              $arrayElemAt: ["$stock_details.instrument_token", 0],
+            },
+          },
+        },
+        {
+          $project: {
+            // Include required fields in the final result
+            _id: 1,
+            basket_id: 1,
+            name: 1,
+            tradesymbol: 1,
+            price: 1,
+            weightage: 1,
+            total_value: 1,
+            quantity: 1,
+            comment: 1,
+            version: 1,
+            del: 1,
+            created_at: 1,
+            status: 1,
+            instrument_token: 1, // Include extracted instrument_token
+            order_details: 1, // Keep order details as a nested array
+          },
+        },
+      ]);
+  
+      return res.json({
+        status: true,
+        message: "Basket Stock fetched successfully",
+        data: latestVersionStock,
+      });
+      
+      
+      
+    } catch (error) {
+      console.error("Error fetching basket stock:", error);
+  
+      // Handle any server errors gracefully
+      return res.json({
+        status: false,
+        message: "Server error",
+        data: [],
+      });
+    }
+  }
+  
+  async getBasketVersionOrder(req, res) {
+    try {
+      // Extract basket_id, clientid, and version from request body
+      const { basket_id, clientid, version } = req.body; // Fix typo: use req.body instead of req.bady
+  console.log("req.body",req.body);
+      // Perform aggregation to fetch orders from BasketOrderModel
+      const orders = await Basketorder_Modal.aggregate([
+        {
+          $match: {
+            basket_id: basket_id,  // Match by basket_id
+            clientid: clientid,    // Match by clientid
+            version: version,      // Match by version
+          },
+        },
+        {
+          $lookup: {
+            from: "stocks", // Join with stocks collection to get stock details
+            localField: "tradesymbol", // Field in BasketOrderModel to match
+            foreignField: "tradesymbol", // Field in stocks collection to match
+            as: "stock_details", // Add stock details to the result
+          },
+        },
+        {
+          $addFields: {
+            instrument_token: {
+              $arrayElemAt: ["$stock_details.instrument_token", 0], // Extract instrument_token (first match only)
+            },
+          },
+        },
+        {
+          $project: {
+            _id: 1,
+            basket_id: 1,
+            tradesymbol: 1,
+            orderid: 1,
+            quantity: 1,
+            ordertype: 1,
+            price: 1,
+            createdAt: 1,
+            updatedAt: 1,
+            status: 1,
+            instrument_token: 1, // Include extracted instrument_token
+          },
+        },
+      ]);
+  
+      // Return the orders as a response
+      return res.status(200).json({
+        status: true,
+        message: "Orders fetched successfully",
+        data: orders,
+      });
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+      return res.status(500).json({
+        status: false,
+        message: "Error fetching orders",
+        error: error.message,
+      });
+    }
+  }
   
 
   async BasketList(req, res) {
@@ -2139,6 +2514,7 @@ class List {
       const signals = await Signal_Modal.find({
         del: 0,
         close_status: true,
+        closeprice: { $ne: 0 },
         service: new mongoose.Types.ObjectId(id) // Ensure service is an ObjectId
       });
 
@@ -2331,7 +2707,7 @@ class List {
 
       return res.status(201).json({
         status: true,
-        message: 'Free trail Actived successfully',
+        message: 'Free trial Activated successfully',
       });
 
     } catch (error) {
@@ -2485,6 +2861,7 @@ class List {
       const signals = await Signal_Modal.find({
         del: 0,
         close_status: true,
+        closeprice: { $ne: 0 },
         service: { $in: serviceIds } // Match any of the services
       });
 
@@ -2521,8 +2898,8 @@ class List {
         let avgreturnpermonth = 0;
 
         const [firstSignal, lastSignal] = await Promise.all([
-          Signal_Modal.findOne({ del: 0, close_status: true, service: serviceId }).sort({ created_at: 1 }),
-          Signal_Modal.findOne({ del: 0, close_status: true, service: serviceId }).sort({ created_at: -1 })
+          Signal_Modal.findOne({ del: 0, close_status: true, closeprice: { $ne: 0 }, service: serviceId }).sort({ created_at: 1 }),
+          Signal_Modal.findOne({ del: 0, close_status: true,  closeprice: { $ne: 0 }, service: serviceId }).sort({ created_at: -1 })
         ]);
 
         if (!firstSignal || !lastSignal) {
@@ -3654,6 +4031,48 @@ else {
     });
   }
 
+  async getLivePrice(req, res) {
+    try {
+      const livePrices = await Liveprice_Modal.aggregate([
+        {
+          $lookup: {
+            from: 'stocks', // Collection to join with
+            localField: 'token', // Field in Liveprice_Modal
+            foreignField: 'instrument_token', // Field in dstocks
+            as: 'stockDetails' // Output array field containing matching documents
+          }
+        },
+        {
+          $unwind: {
+            path: '$stockDetails', // Unwind the stockDetails array
+            preserveNullAndEmptyArrays: true // Keep documents even if no match is found
+          }
+        },
+        {
+          $project: {
+            lp: 1,
+            curtime:1,
+            token: 1,
+            tradesymbol: '$stockDetails.tradesymbol', // Include tradesymbol from dstocks
+          }
+        }
+      ]);
+  
+      return res.json({
+        status: true,
+        message: "Live prices fetched successfully",
+        data: livePrices
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        status: false,
+        message: "Server error",
+        data: []
+      });
+    }
+  }
+  
 
 }
 module.exports = new List();
