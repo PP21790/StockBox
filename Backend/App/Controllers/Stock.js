@@ -13,52 +13,52 @@ const Stock_Modal = db.Stock;
 class Stock {
 
 
- 
 
-    async AddStock(req, res) {
-        try {
-            const { symbol } = req.body;
-    
-          
-            if (!symbol) {
-              return res.status(400).json({ status: false, message: "symbol is required" });
-            }
-        
-          
-           // console.log("Request Body:", req.body);
-    
-            const result = new Stock_Modal({
-                symbol,
-          
-            });
-    
-            await result.save();
-    
-            //console.log("Stock successfully added:", result);
-            return res.json({
-                status: true,
-                message: "Stock added successfully",
-                data: result,
-            });
-    
-        } catch (error) {
-            // Enhanced error logging
-            console.log("Error adding Stock:", error);
-    
-            return res.status(500).json({
-                status: false,
-                message: "Server error",
-                error: error.message,
-            });
-        }
+
+  async AddStock(req, res) {
+    try {
+      const { symbol } = req.body;
+
+
+      if (!symbol) {
+        return res.status(400).json({ status: false, message: "symbol is required" });
+      }
+
+
+      // console.log("Request Body:", req.body);
+
+      const result = new Stock_Modal({
+        symbol,
+
+      });
+
+      await result.save();
+
+      //console.log("Stock successfully added:", result);
+      return res.json({
+        status: true,
+        message: "Stock added successfully",
+        data: result,
+      });
+
+    } catch (error) {
+      // Enhanced error logging
+      console.log("Error adding Stock:", error);
+
+      return res.status(500).json({
+        status: false,
+        message: "Server error",
+        error: error.message,
+      });
     }
-    
+  }
+
 
   async getStock(req, res) {
     try {
 
-     
-     
+
+
       const { } = req.body;
 
       const result = await Stock_Modal.find({ del: false });
@@ -67,7 +67,7 @@ class Stock {
       return res.json({
         status: true,
         message: "get",
-        data:result
+        data: result
       });
 
     } catch (error) {
@@ -78,20 +78,20 @@ class Stock {
   async getStockByService(req, res) {
     try {
 
-     
-   
-      const { segment,symbol } = req.body;
+
+
+      const { segment, symbol } = req.body;
 
       const result = await Stock_Modal.aggregate([
         {
-          $match: { 
+          $match: {
             segment: segment,
-            symbol: { $regex: symbol, $options: 'i' }  
+            symbol: { $regex: symbol, $options: 'i' }
           }
         },
         {
           $group: {
-            _id: "$symbol",  
+            _id: "$symbol",
           }
         }
       ]);
@@ -100,26 +100,26 @@ class Stock {
       function convertExpiryToDate(expiry_str) {
         const monthMap = { JAN: 0, FEB: 1, MAR: 2, APR: 3, MAY: 4, JUN: 5, JUL: 6, AUG: 7, SEP: 8, OCT: 9, NOV: 10, DEC: 11 };
         return new Date(expiry_str.slice(5), monthMap[expiry_str.slice(2, 5)], expiry_str.slice(0, 2));
-    }
-    
-    function filterFutureExpiries(data) {
+      }
+
+      function filterFutureExpiries(data) {
         const today = new Date();
         return data.filter(item => convertExpiryToDate(item.expiry_str) > today);
-    }
-    
-   
-    
-    // Filter and log
-    const filteredData = filterFutureExpiries(result);
-    console.log(filteredData);
-    
-      
+      }
+
+
+
+      // Filter and log
+      const filteredData = filterFutureExpiries(result);
+      console.log(filteredData);
+
+
 
 
       return res.json({
         status: true,
         message: "get",
-        data:filteredData
+        data: filteredData
       });
 
     } catch (error) {
@@ -130,10 +130,11 @@ class Stock {
 
 
 
-  
+
   async getStocksByExpiry(req, res) {
     try {
-      const { segment,symbol } = req.body;
+      const { segment, symbol } = req.body;
+      console.log("req.body", req.body)
 
       // Current date to get the month
       const currentDate = new Date();
@@ -143,146 +144,143 @@ class Stock {
       // Create the expiry months dynamically for the next two months
       const expiryMonths = [];
       for (let i = 0; i < 3; i++) { // Current month + next 2 months
-          const month = (parseInt(currentMonth) + i) % 12 || 12; // Adjust month to wrap around after December
-          const year = month < currentMonth ? (parseInt(currentYear) + 1) : currentYear; // Increment year if wrapped
-          expiryMonths.push(`${String(month).padStart(2, '0')}${year}`);
+        const month = (parseInt(currentMonth) + i) % 12 || 12; // Adjust month to wrap around after December
+        const year = month < currentMonth ? (parseInt(currentYear) + 1) : currentYear; // Increment year if wrapped
+        expiryMonths.push(`${String(month).padStart(2, '0')}${year}`);
       }
-let option_type;
-if(segment=="F")
-{
-  option_type= "UT";
-}
-else if(segment=="C")
-  {
-    option_type= "EQ";
-  }
-  else
-{
-   option_type= "PE";
-}
+      let option_type;
+      if (segment == "F") {
+        option_type = "UT";
+      }
+      else if (segment == "C") {
+        option_type = "EQ";
+      }
+      else {
+        option_type = "PE";
+      }
 
-    const pipeline = [
-      {
+      const pipeline = [
+        {
           $match: {
-              symbol: symbol,
-              segment: segment,
-              expiry_month_year: { $in: expiryMonths }
+            symbol: symbol,
+            segment: segment,
+            expiry_month_year: { $in: expiryMonths }
           }
-      },
-      {
+        },
+        {
           $group: {
-              _id: "$expiry",
-              stock: { $first: "$$ROOT" } 
+            _id: "$expiry",
+            stock: { $first: "$$ROOT" }
           }
-      },
-      {
+        },
+        {
           $project: {
-              expiry: "$_id", 
-              stock: 1,
-              _id: 0 
+            expiry: "$_id",
+            stock: 1,
+            _id: 0
           }
-      },
-      {
-          $sort: { expiry: 1 } 
-      }
-  ];
+        },
+        {
+          $sort: { expiry: 1 }
+        }
+      ];
 
-  const result = await Stock_Modal.aggregate(pipeline);
+      const result = await Stock_Modal.aggregate(pipeline);
 
-  
-  // Log the result of aggregation for debugging
-  // console.log("Aggregation Result:", JSON.stringify(result, null, 2));
- console.log("result",result)
-   
-  return res.json({
-      status: true,
-      message: "Stocks retrieved successfully",
-      data: result
-  });
-    
-  } catch (error) {
+
+      // Log the result of aggregation for debugging
+      // console.log("Aggregation Result:", JSON.stringify(result, null, 2));
+      console.log("result", result)
+
+      return res.json({
+        status: true,
+        message: "Stocks retrieved successfully",
+        data: result
+      });
+
+    } catch (error) {
       console.error("Error executing query:", error);
       return res.json({ status: false, message: "Server error", data: [] });
-  }
-}
-    
-async getStocksByExpiryByStrike(req, res) {
-  try {
-    const { segment, symbol, expiry, optiontype } = req.body;
-
-    // Define matchStage based on the segment
-    let matchStage;
-    if (segment === "O") {
-      matchStage = {
-        $match: {
-          symbol: symbol,
-          segment: segment,
-          expiry: expiry,
-          option_type: optiontype
-        }
-      };
-    } else {
-      matchStage = {
-        $match: {
-          symbol: symbol,
-          segment: segment,
-          expiry: expiry
-        }
-      };
     }
+  }
 
-    // Build the aggregation pipeline
-    const pipeline = [
-      matchStage, // Add matchStage directly here
-      {
-        $project: {
-          expiry: 1,
-          strike: 1, // Include strike for sorting if needed
-          stock: "$$ROOT",
-          _id: 0
-        }
-      },
-      ...(segment === "O" 
+  async getStocksByExpiryByStrike(req, res) {
+    try {
+      const { segment, symbol, expiry, optiontype } = req.body;
+
+      // Define matchStage based on the segment
+      let matchStage;
+      if (segment === "O") {
+        matchStage = {
+          $match: {
+            symbol: symbol,
+            segment: segment,
+            expiry: expiry,
+            option_type: optiontype
+          }
+        };
+      } else {
+        matchStage = {
+          $match: {
+            symbol: symbol,
+            segment: segment,
+            expiry: expiry
+          }
+        };
+      }
+
+      // Build the aggregation pipeline
+      const pipeline = [
+        matchStage, // Add matchStage directly here
+        {
+          $project: {
+            expiry: 1,
+            strike: 1, // Include strike for sorting if needed
+            stock: "$$ROOT",
+            _id: 0
+          }
+        },
+        ...(segment === "O"
           ? [{ $sort: { strike: 1 } }] // Sort by strike in ascending order if segment is "O"
           : [{ $sort: { expiry: 1 } }] // Otherwise, sort by expiry in ascending order
-      )
-    ];
+        )
+      ];
 
-    // Execute the aggregation
-    const result = await Stock_Modal.aggregate(pipeline);
+      // Execute the aggregation
+      const result = await Stock_Modal.aggregate(pipeline);
 
-    // Log the result for debugging
-    // console.log("Aggregation Result:", JSON.stringify(result, null, 2));
+      // Log the result for debugging
+      // console.log("Aggregation Result:", JSON.stringify(result, null, 2));
 
-    return res.json({
-      status: true,
-      message: "Stocks retrieved successfully",
-      data: result
-    });
-  } catch (error) {
-    console.error("Error executing query:", error);
-    return res.json({ status: false, message: "Server error", data: [] });
+      return res.json({
+        status: true,
+        message: "Stocks retrieved successfully",
+        data: result
+      });
+    } catch (error) {
+      console.error("Error executing query:", error);
+      return res.json({ status: false, message: "Server error", data: [] });
+    }
   }
-}
 
-  
+
 
 
 
   async activeStock(req, res) {
     try {
 
-     
-     
+
+
       const { } = req.body;
 
-      const result = await Stock_Modal.find({ del: false,status: true });
+      const result = await Stock_Modal.find({ del: false, status: true });
 
 
       return res.json({
         status: true,
         message: "get",
-        data:result
+        data: result
       });
 
     } catch (error) {
@@ -292,60 +290,60 @@ async getStocksByExpiryByStrike(req, res) {
 
   async detailStock(req, res) {
     try {
-        // Extract ID from request parameters
-        const { id } = req.params;
+      // Extract ID from request parameters
+      const { id } = req.params;
 
-        // Check if ID is provided
-        if (!id) {
-            return res.status(400).json({
-                status: false,
-                message: "Stock ID is required"
-            });
-        }
-
-        const Stock = await Stock_Modal.findById(id);
-
-        if (!Stock) {
-            return res.status(404).json({
-                status: false,
-                message: "Stock not found"
-            });
-        }
-
-        return res.json({
-            status: true,
-            message: "Stock details fetched successfully",
-            data: Stock
+      // Check if ID is provided
+      if (!id) {
+        return res.status(400).json({
+          status: false,
+          message: "Stock ID is required"
         });
+      }
+
+      const Stock = await Stock_Modal.findById(id);
+
+      if (!Stock) {
+        return res.status(404).json({
+          status: false,
+          message: "Stock not found"
+        });
+      }
+
+      return res.json({
+        status: true,
+        message: "Stock details fetched successfully",
+        data: Stock
+      });
 
     } catch (error) {
-        console.log("Error fetching Stock details:", error);
-        return res.status(500).json({
-            status: false,
-            message: "Server error",
-            data: []
-        });
+      console.log("Error fetching Stock details:", error);
+      return res.status(500).json({
+        status: false,
+        message: "Server error",
+        data: []
+      });
     }
-}
+  }
 
 
   async updateStock(req, res) {
     try {
       const { id, symbol } = req.body;
 
-   
+
       if (!symbol) {
         return res.status(400).json({ status: false, message: "symbol is required" });
       }
-  
-  
+
+
       if (!id) {
         return res.status(400).json({
           status: false,
           message: "Stock ID is required",
         });
       }
-  
+
       const updatedStock = await Stock_Modal.findByIdAndUpdate(
         id,
         {
@@ -353,21 +351,21 @@ async getStocksByExpiryByStrike(req, res) {
         },
         { stock: true, runValidators: true } // Options: return the updated document and run validators
       );
-  
+
       if (!updatedStock) {
         return res.status(404).json({
           status: false,
           message: "Stock not found",
         });
       }
-  
+
       console.log("Updated Stock:", updatedStock);
       return res.json({
         status: true,
         message: "Stock updated successfully",
         data: updatedStock,
       });
-  
+
     } catch (error) {
       console.log("Error updating Stock:", error);
       return res.status(500).json({
@@ -377,8 +375,8 @@ async getStocksByExpiryByStrike(req, res) {
       });
     }
   }
-  
-  
+
+
   async deleteStock(req, res) {
     try {
       const { id } = req.params; // Extract ID from URL params
@@ -392,7 +390,7 @@ async getStocksByExpiryByStrike(req, res) {
 
 
       const deletedStock = await Stock_Modal.findByIdAndUpdate(
-        id, 
+        id,
         { del: true }, // Set del to true
         { new: true }  // Return the updated document
       );
@@ -421,158 +419,158 @@ async getStocksByExpiryByStrike(req, res) {
     }
   }
 
-  async  statusChange(req, res) {
+  async statusChange(req, res) {
     try {
-        const { id, status } = req.body;
-  
-        // Validate status
-        const validStatuses = ['true', 'false'];
-        if (!validStatuses.includes(status)) {
-            return res.status(400).json({
-                status: false,
-                message: "Invalid status value"
-            });
-        }
-  
-        // Find and update the plan
-        const result = await Stock_Modal.findByIdAndUpdate(
-            id,
-            { status: status },
-            { new: true } // Return the updated document
-        );
-  
-        if (!result) {
-            return res.status(404).json({
-                status: false,
-                message: "Stock not found"
-            });
-        }
-  
-        return res.json({
-            status: true,
-            message: "Status updated successfully",
-            data: result
+      const { id, status } = req.body;
+
+      // Validate status
+      const validStatuses = ['true', 'false'];
+      if (!validStatuses.includes(status)) {
+        return res.status(400).json({
+          status: false,
+          message: "Invalid status value"
         });
-  
+      }
+
+      // Find and update the plan
+      const result = await Stock_Modal.findByIdAndUpdate(
+        id,
+        { status: status },
+        { new: true } // Return the updated document
+      );
+
+      if (!result) {
+        return res.status(404).json({
+          status: false,
+          message: "Stock not found"
+        });
+      }
+
+      return res.json({
+        status: true,
+        message: "Status updated successfully",
+        data: result
+      });
+
     } catch (error) {
-        console.log("Error updating status:", error);
-        return res.status(500).json({
-            status: false,
-            message: "Server error",
-            data: []
-        });
+      console.log("Error updating status:", error);
+      return res.status(500).json({
+        status: false,
+        message: "Server error",
+        data: []
+      });
     }
   }
   async AddBulkStock(req, res) {
     try {
-       
-        const file = req.file;
 
-        if (!file) {
-            return res.status(400).json({
-                status: false,
-                message: "File is required",
-            });
-        }
+      const file = req.file;
 
-        const ext = path.extname(file.originalname);
-        let stocks = [];
+      if (!file) {
+        return res.status(400).json({
+          status: false,
+          message: "File is required",
+        });
+      }
 
-        if (ext === '.csv') {
-            // Handle CSV file
-        
-            stocks = await new Promise((resolve, reject) => {
-              const stocks = [];
-              require('stream').Readable.from(file.buffer)
-                  .pipe(require('csv-parser')())
-                  .on('data', (row) => {
-                      stocks.push(row);
-                  })
-                  .on('end', () => {
-                      resolve(stocks);
-                  })
-                  .on('error', reject);
-          });
+      const ext = path.extname(file.originalname);
+      let stocks = [];
 
-        
-        }else {
-            return res.status(400).json({
-                status: false,
-                message: "Unsupported file format. Only CSV  files are allowed.",
-            });
-        }
+      if (ext === '.csv') {
+        // Handle CSV file
 
-        const results = [];
-        for (let stock of stocks) {
-            const { symbol } = stock;
-
-            // Check if the stock symbol already exists
-            const existingStock = await Stock_Modal.findOne({ symbol });
-
-            if (existingStock) {
-                // Update the existing stock
-               
-                await existingStock.save();
-                results.push({ symbol, action: 'updated' });
-            } else {
-                // Add new stock
-                const newStock = new Stock_Modal({ symbol });
-                await newStock.save();
-                results.push({ symbol, action: 'added' });
-            }
-        }
-
-        return res.json({
-            status: true,
-            message: "Stocks processed successfully",
-            data: results,
+        stocks = await new Promise((resolve, reject) => {
+          const stocks = [];
+          require('stream').Readable.from(file.buffer)
+            .pipe(require('csv-parser')())
+            .on('data', (row) => {
+              stocks.push(row);
+            })
+            .on('end', () => {
+              resolve(stocks);
+            })
+            .on('error', reject);
         });
 
-    } catch (error) {
-        console.log("Error processing stocks:", error);
-        return res.status(500).json({
-            status: false,
-            message: "Server error",
-            error: error.message,
+
+      } else {
+        return res.status(400).json({
+          status: false,
+          message: "Unsupported file format. Only CSV  files are allowed.",
         });
-    }
-}
-async getStockBySymbol(req, res) {
-  try {
-    const { symbol } = req.body;
+      }
 
-    // Build the match stage dynamically if a symbol is provided
-    const matchStage = symbol
-      ? { $match: { segment: "C", symbol: { $regex: symbol, $options: 'i' } } }
-      : { $match: {} }; // Match all documents if no symbol is provided
+      const results = [];
+      for (let stock of stocks) {
+        const { symbol } = stock;
 
-    const result = await Stock_Modal.aggregate([
-      matchStage, // Match stage (optional filtering)
-      {
-        $group: {
-          _id: "$symbol", // Grouping by symbol
-          data: { $push: "$$ROOT" } // Include all fields in the group result
+        // Check if the stock symbol already exists
+        const existingStock = await Stock_Modal.findOne({ symbol });
+
+        if (existingStock) {
+          // Update the existing stock
+
+          await existingStock.save();
+          results.push({ symbol, action: 'updated' });
+        } else {
+          // Add new stock
+          const newStock = new Stock_Modal({ symbol });
+          await newStock.save();
+          results.push({ symbol, action: 'added' });
         }
       }
-    ]);
 
-    return res.json({
-      status: true,
-      message: "Data retrieved successfully",
-      data: result
-    });
-  } catch (error) {
-    console.error("Error fetching stock data:", error);
-    return res.json({ status: false, message: "Server error", data: [] });
+      return res.json({
+        status: true,
+        message: "Stocks processed successfully",
+        data: results,
+      });
+
+    } catch (error) {
+      console.log("Error processing stocks:", error);
+      return res.status(500).json({
+        status: false,
+        message: "Server error",
+        error: error.message,
+      });
+    }
   }
-}
+  async getStockBySymbol(req, res) {
+    try {
+      const { symbol } = req.body;
+
+      // Build the match stage dynamically if a symbol is provided
+      const matchStage = symbol
+        ? { $match: { segment: "C", symbol: { $regex: symbol, $options: 'i' } } }
+        : { $match: {} }; // Match all documents if no symbol is provided
+
+      const result = await Stock_Modal.aggregate([
+        matchStage, // Match stage (optional filtering)
+        {
+          $group: {
+            _id: "$symbol", // Grouping by symbol
+            data: { $push: "$$ROOT" } // Include all fields in the group result
+          }
+        }
+      ]);
+
+      return res.json({
+        status: true,
+        message: "Data retrieved successfully",
+        data: result
+      });
+    } catch (error) {
+      console.error("Error fetching stock data:", error);
+      return res.json({ status: false, message: "Server error", data: [] });
+    }
+  }
 
 
 
 
 }
 
-  
-  
+
+
 
 module.exports = new Stock();

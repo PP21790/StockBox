@@ -1,5 +1,8 @@
 const router = require("express").Router()
-const {getcount,getLicense,pastPerformance,pastPerformances,CloseSignal,PlanExipreList,CloseSignalWithFilter,PlanExipreListWithFilter,CompanyStatus,Notification,statusChangeNotifiction,totalClient,NotificationList} = require('../Controllers/Dashboard')
+const cors = require('cors');
+
+
+const { getcount, getLicense, pastPerformance, pastPerformances, CloseSignal, PlanExipreList, CloseSignalWithFilter, PlanExipreListWithFilter, CompanyStatus, Notification, statusChangeNotifiction, totalClient, NotificationList } = require('../Controllers/Dashboard')
 
 router.get('/dashboard/getcount', getcount);
 router.post('/dashboard/getlicense', getLicense);
@@ -16,7 +19,7 @@ router.get('/dashboard/notification', Notification);
 router.get('/dashboard/notificationlist/:page', NotificationList);
 
 router.post('/dashboard/statuschangenotifiction', statusChangeNotifiction);
-router.get('/dashboard/totalclientmonth', totalClient);
+router.get('/dashboard/totalclientmonth', cors(), totalClient);
 
 
 module.exports = router;

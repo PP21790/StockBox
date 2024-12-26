@@ -571,9 +571,9 @@ export async function AddStock(data, token) {
         return err.response?.data || err.message;
     }
 }
-export async function getStock( token) {
+export async function getStock(token) {
     try {
-        const res = await axios.get(`https://stockboxpnp.pnpuniverse.com/backend/stock/list`,  {
+        const res = await axios.get(`https://stockboxpnp.pnpuniverse.com/backend/stock/list`, {
             headers: {
                 data: {},
                 'Authorization': `${token}`,
@@ -1664,7 +1664,7 @@ export async function Updatebasicsettings(data, token) {
     formData.append('contact_number', data.contact_number);
     formData.append('favicon', data.favicon);
     formData.append('logo', data.logo);
-   
+
 
     try {
         const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
@@ -1987,9 +1987,9 @@ export async function getPayementhistory(token) {
 
 // get plan payment history
 
-export async function getPayementhistorywithfilter(data,token) {
+export async function getPayementhistorywithfilter(data, token) {
     try {
-        const res = await axios.post(`${Config.base_url}plan/paymenthistorywithfilter`,data, {
+        const res = await axios.post(`${Config.base_url}plan/paymenthistorywithfilter`, data, {
             headers: {
                 'Authorization': `${token}`
             },
@@ -2023,9 +2023,9 @@ export async function FreeClientList(token) {
 // get free client with fillter
 
 
-export async function FreeClientListWithFilter(data,token) {
+export async function FreeClientListWithFilter(data, token) {
     try {
-        const res = await axios.post(`${Config.base_url}client/freetriallistwithfilter`,data, {
+        const res = await axios.post(`${Config.base_url}client/freetriallistwithfilter`, data, {
             headers: {
                 'Authorization': `${token}`
             },
@@ -2475,8 +2475,8 @@ export async function getclientPlanexpirywithfilter(data, token) {
 
 // get performaer data 
 
-export async function getPerformerstatus(token ,_id) {
-  
+export async function getPerformerstatus(token, _id) {
+
     try {
         const res = await axios.get(`${Config.base_url}dashboard/past-performance/${_id}`, {
             headers: {
@@ -2574,8 +2574,8 @@ export async function ResetPassword(data, token) {
 // get view client subscribtion
 
 
-export async function getclientsubscription(_id,token) {
-  
+export async function getclientsubscription(_id, token) {
+
     try {
         const res = await axios.get(`${Config.base_url}client/myservice/${_id}`, {
             headers: {
@@ -2593,8 +2593,8 @@ export async function getclientsubscription(_id,token) {
 }
 
 
-export async function getPlanbyUser(_id,token) {
-  
+export async function getPlanbyUser(_id, token) {
+
     try {
         const res = await axios.get(`${Config.base_url}plan/listbyclient/${_id}`, {
             headers: {
@@ -2614,10 +2614,10 @@ export async function getPlanbyUser(_id,token) {
 
 // get client export file 
 
-export async function getclientExportfile(data,token) {
-  
+export async function getclientExportfile(data, token) {
+
     try {
-        const res = await axios.get(`${Config.base_url}client/listwithfilterexcel`,data ,{
+        const res = await axios.get(`${Config.base_url}client/listwithfilterexcel`, data, {
             headers: {
                 data: {},
                 'Authorization': `${token}`,
@@ -2734,7 +2734,7 @@ export async function UpdateBankDetailbyadmin(data, token) {
 
 export async function BankDetailListbyadmin(token) {
     try {
-        const res = await axios.get(`${Config.base_url}bank/list`,{
+        const res = await axios.get(`${Config.base_url}bank/list`, {
             headers: {
                 data: {},
                 'Authorization': `${token}`,
@@ -2796,7 +2796,7 @@ export async function DeleteBankDetail(_id, token) {
 export async function AddQRdetaildata(data, token) {
     const formData = new FormData();
     formData.append('image', data.image);
- 
+
     try {
         const res = await axios.post(`${Config.base_url}qrcode/add`, formData, {
             headers: {
@@ -2924,12 +2924,13 @@ export async function UpdatesignalReport(data, token) {
 // get plan expiry month detail
 
 export async function getExpiryByMonth(token) {
-  
+
     try {
         const res = await axios.get(`${Config.base_url}dashboard/totalclientmonth`, {
             headers: {
                 data: {},
-                'Authorization': `${token}`,
+                // 'Authorization': `${token}`,
+                "Content-Type": "application/json"
             },
         });
 
@@ -2946,8 +2947,8 @@ export async function getExpiryByMonth(token) {
 // get all notification list 
 
 
-export async function getAllNotificationlist(token ,page) {
-  
+export async function getAllNotificationlist(token, page) {
+
     try {
         const res = await axios.get(`${Config.base_url}dashboard/notificationlist/${page}`, {
             headers: {
