@@ -18,6 +18,11 @@ const Basket = () => {
 
 
 
+  useEffect(() => {
+    getbasketlist();
+  }, []);
+
+
 
   // Fetch basket list
   const getbasketlist = async () => {
@@ -33,15 +38,11 @@ const Basket = () => {
 
 
 
-  useEffect(() => {
-    getbasketlist();
-  }, []);
-
 
 
   const handleSwitchChange = async (event, id) => {
     const originalChecked = event.target.checked;
-    const user_active_status = originalChecked ? "1" : "0";
+    const user_active_status = originalChecked ? "true" : "false";
     const data = { id: id, status: user_active_status };
 
     const result = await Swal.fire({

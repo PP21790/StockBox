@@ -54,17 +54,17 @@ class BasicSetting {
                 const existingSetting = await BasicSetting_Modal.findOne({});
 
 
-  
- 
 
-            const favicon = req.files['favicon'] ? req.files['favicon'][0].filename : (existingSetting ? existingSetting.favicon : null);
-            const logo = req.files['logo'] ? req.files['logo'][0].filename : (existingSetting ? existingSetting.logo : null);
-            const refer_image = req.files['refer_image'] ? req.files['refer_image'][0].filename : (existingSetting ? existingSetting.refer_image : null);
+
+
+                const favicon = req.files['favicon'] ? req.files['favicon'][0].filename : (existingSetting ? existingSetting.favicon : null);
+                const logo = req.files['logo'] ? req.files['logo'][0].filename : (existingSetting ? existingSetting.logo : null);
+                const refer_image = req.files['refer_image'] ? req.files['refer_image'][0].filename : (existingSetting ? existingSetting.refer_image : null);
                 // Define the update payload
                 const update = {
                     favicon,
                     logo,
-                    website_title:from_name,
+                    website_title: from_name,
                     email_address,
                     contact_number,
                     address,
@@ -74,7 +74,7 @@ class BasicSetting {
                     encryption,
                     smtp_username,
                     smtp_password,
-                    from_mail:smtp_username,
+                    from_mail: smtp_username,
                     from_name,
                     to_mail,
                     refer_title,
@@ -123,7 +123,7 @@ class BasicSetting {
     // Example method to get all settings
     async getSettings(req, res) {
         try {
-            const settings = await BasicSetting_Modal.find();  // Correct reference here
+            const settings = await BasicSetting_Modal.find();
             return res.json({
                 status: true,
                 message: "Settings retrieved successfully",
@@ -158,23 +158,23 @@ class BasicSetting {
         }
     }
 
-    
+
 
     async updateCronTime(req, res) {
         try {
             const { cashexpiretime, foexpiretime, cashexpirehours, foexpirehours } = req.body;
-    
+
             const update = {
                 cashexpiretime,
                 foexpiretime,
                 cashexpirehours,
                 foexpirehours
             };
-    
+
             // Update the database
             const options = { new: true, upsert: true, runValidators: true };
             const result = await BasicSetting_Modal.findOneAndUpdate({}, update, options);
-    
+
             // Define path to the JSON file
             const filePath = path.join(__dirname, '../../uploads/json', 'config.json');
             // Read the existing JSON data
@@ -183,16 +183,16 @@ class BasicSetting {
                 const fileData = fs.readFileSync(filePath, 'utf8');
                 jsonData = JSON.parse(fileData);
             }
-    
+
             // Update fields in the JSON data
             jsonData.cashexpiretime = cashexpiretime;
             jsonData.foexpiretime = foexpiretime;
             jsonData.cashexpirehours = cashexpirehours;
             jsonData.foexpirehours = foexpirehours;
-    
+
             // Write the updated data back to the JSON file
             fs.writeFileSync(filePath, JSON.stringify(jsonData, null, 2), 'utf8');
-    
+
             return res.status(200).json({
                 status: true,
                 message: "Basic setting updated successfully",
@@ -211,18 +211,18 @@ class BasicSetting {
     async updateSocialLink(req, res) {
         try {
             const { facebook, youtube, twitter, instagram } = req.body;
-    
+
             const update = {
                 facebook,
                 youtube,
                 twitter,
                 instagram
             };
-    
+
             // Update the database
             const options = { new: true, upsert: true, runValidators: true };
             const result = await BasicSetting_Modal.findOneAndUpdate({}, update, options);
-        
+
             return res.status(200).json({
                 status: true,
                 message: "Social Link updated successfully",
@@ -245,45 +245,44 @@ class BasicSetting {
             const update = {
                 freetrial,
             };
-    
+
             // Update the database
-         
-        
-           
-    const existingSetting = await BasicSetting_Modal.findOne({});
 
 
-    if(existingSetting.freetrial !== freetrial)
-        {
-                     const message ="Free Trail Update";
-            const newactivity = new Activitylogs_Modal({
-                olddays : existingSetting.freetrial,
-                newdays : freetrial,
-                message,
-              });
-              await newactivity.save();
+
+            const existingSetting = await BasicSetting_Modal.findOne({});
+
+
+            if (existingSetting.freetrial !== freetrial) {
+                const message = "Free Trail Update";
+                const newactivity = new Activitylogs_Modal({
+                    olddays: existingSetting.freetrial,
+                    newdays: freetrial,
+                    message,
+                });
+                await newactivity.save();
+            }
+
+
+            const options = { new: true, upsert: true, runValidators: true };
+            const result = await BasicSetting_Modal.findOneAndUpdate({}, update, options);
+
+
+            return res.status(200).json({
+                status: true,
+                message: "Social Link updated successfully",
+                data: result
+            });
+        } catch (error) {
+            console.error("Error updating social link:", error);
+            return res.status(500).json({
+                status: false,
+                message: "Server error",
+                error: error.message
+            });
         }
-
-        
-        const options = { new: true, upsert: true, runValidators: true };
-        const result = await BasicSetting_Modal.findOneAndUpdate({}, update, options);
-
-
-        return res.status(200).json({
-            status: true,
-            message: "Social Link updated successfully",
-            data: result
-        });
-    } catch (error) {
-        console.error("Error updating social link:", error);
-        return res.status(500).json({
-            status: false,
-            message: "Server error",
-            error: error.message
-        });
     }
+
+
 }
-
-
-  }
-  module.exports = new BasicSetting();
+module.exports = new BasicSetting();
