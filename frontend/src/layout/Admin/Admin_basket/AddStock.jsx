@@ -82,16 +82,18 @@ const AddStock = () => {
       return;
     }
 
-    // Transform stocks to include status in each stock object
+
     const stocksWithStatus = Object.values(values).map((stock) => ({
       ...stock,
-      status, // Add status inside each stock
+      status,
     }));
 
     const requestData = {
       basket_id,
-      stocks: stocksWithStatus, // Use transformed stocks here
+      stocks: stocksWithStatus,
     };
+
+
 
     try {
       const response = await Addstockbasketform(requestData);
@@ -109,6 +111,8 @@ const AddStock = () => {
       );
     }
   };
+
+
 
   const handleInputChange = (value) => {
     setInputValue(value);
@@ -183,46 +187,45 @@ const AddStock = () => {
                       </button>
                     </h5>
                     <div className="row">
-                      {Object.keys(values[service.value] || {}).map(
-                        (fieldKey) => (
-                          <div key={fieldKey} className="col-md-3">
-                            <label>{fieldKey}</label>
-                            {fieldKey === "type" ? (
-                              <Field
-                                as="select"
-                                name={`${service.value}.${fieldKey}`}
-                                className="form-control"
-                              >
-                                <option value="">Select an option</option>
-                                <option value="Large Cap">Large Cap</option>
-                                <option value="Mid Cap">Mid Cap</option>
-                                <option value="Small Cap">Small Cap</option>
-                              </Field>
-                            ) : (
-                              <Field
-                                name={`${service.value}.${fieldKey}`}
-                                type={
-                                  fieldKey === "percentage" ||
-                                    fieldKey === "price"
-                                    ? "number"
-                                    : "text"
-                                }
-                                className="form-control"
-                                placeholder={`Enter ${fieldKey}`}
-                                readOnly={
-                                  fieldKey === "tradesymbol" ||
-                                  fieldKey === "name"
-                                }
-                              />
-                            )}
-                            <ErrorMessage
+                      {Object.keys(values[service.value] || {}).map((fieldKey) => (
+                        <div key={fieldKey} className="col-md-3">
+                          <label>
+                            {fieldKey === "percentage" ? "Weightage" : fieldKey.charAt(0).toUpperCase() + fieldKey.slice(1)}
+                          </label>
+                          {fieldKey === "type" ? (
+                            <Field
+                              as="select"
                               name={`${service.value}.${fieldKey}`}
-                              component="p"
-                              className="text-danger"
+                              className="form-control"
+                            >
+                              <option value="">Select an option</option>
+                              <option value="Large Cap">Large Cap</option>
+                              <option value="Mid Cap">Mid Cap</option>
+                              <option value="Small Cap">Small Cap</option>
+                            </Field>
+                          ) : (
+                            <Field
+                              name={`${service.value}.${fieldKey}`}
+                              type={
+                                fieldKey === "percentage" || fieldKey === "price"
+                                  ? "number"
+                                  : "text"
+                              }
+                              className="form-control"
+                              placeholder={`Enter ${fieldKey === "percentage" ? "Weightage" : fieldKey}`}
+                              readOnly={
+                                fieldKey === "tradesymbol" || fieldKey === "name"
+                              }
                             />
-                          </div>
-                        )
-                      )}
+                          )}
+                          <ErrorMessage
+                            name={`${service.value}.${fieldKey}`}
+                            component="p"
+                            className="text-danger"
+                          />
+                        </div>
+                      ))}
+
                     </div>
                   </div>
                 ))}
