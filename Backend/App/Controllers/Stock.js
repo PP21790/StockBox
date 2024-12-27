@@ -12,20 +12,13 @@ const Stock_Modal = db.Stock;
 
 class Stock {
 
-
-
-
   async AddStock(req, res) {
     try {
       const { symbol } = req.body;
 
-
       if (!symbol) {
         return res.status(400).json({ status: false, message: "symbol is required" });
       }
-
-
-      // console.log("Request Body:", req.body);
 
       const result = new Stock_Modal({
         symbol,
@@ -34,7 +27,6 @@ class Stock {
 
       await result.save();
 
-      //console.log("Stock successfully added:", result);
       return res.json({
         status: true,
         message: "Stock added successfully",
@@ -43,8 +35,6 @@ class Stock {
 
     } catch (error) {
       // Enhanced error logging
-      console.log("Error adding Stock:", error);
-
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -57,12 +47,9 @@ class Stock {
   async getStock(req, res) {
     try {
 
-
-
       const { } = req.body;
 
       const result = await Stock_Modal.find({ del: false });
-
 
       return res.json({
         status: true,
@@ -77,8 +64,6 @@ class Stock {
 
   async getStockByService(req, res) {
     try {
-
-
 
       const { segment, symbol } = req.body;
 
@@ -163,10 +148,6 @@ class Stock {
       const result = await Stock_Modal.aggregate(pipeline);
 
 
-      // Log the result of aggregation for debugging
-      // console.log("Aggregation Result:", JSON.stringify(result, null, 2));
-      console.log("result", result)
-
       return res.json({
         status: true,
         message: "Stocks retrieved successfully",
@@ -174,7 +155,6 @@ class Stock {
       });
 
     } catch (error) {
-      console.error("Error executing query:", error);
       return res.json({ status: false, message: "Server error", data: [] });
     }
   }
@@ -204,7 +184,6 @@ class Stock {
         };
       }
 
-      // Build the aggregation pipeline
       const pipeline = [
         matchStage, // Add matchStage directly here
         {
@@ -239,13 +218,8 @@ class Stock {
   }
 
 
-
-
-
   async activeStock(req, res) {
     try {
-
-
 
       const { } = req.body;
 
@@ -334,7 +308,6 @@ class Stock {
         });
       }
 
-      console.log("Updated Stock:", updatedStock);
       return res.json({
         status: true,
         message: "Stock updated successfully",
@@ -385,7 +358,6 @@ class Stock {
         data: deletedStock,
       });
     } catch (error) {
-      console.log("Error deleting Stock:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -428,7 +400,6 @@ class Stock {
       });
 
     } catch (error) {
-      console.log("Error updating status:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -502,7 +473,6 @@ class Stock {
       });
 
     } catch (error) {
-      console.log("Error processing stocks:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -535,7 +505,6 @@ class Stock {
         data: result
       });
     } catch (error) {
-      console.error("Error fetching stock data:", error);
       return res.json({ status: false, message: "Server error", data: [] });
     }
   }
