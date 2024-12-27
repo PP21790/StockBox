@@ -301,19 +301,19 @@ const Header = () => {
                           <a
                             key={index}
                             className={`dropdown-item notification ${notification.status === 1
-                                ? " text-info font-bold" 
-                                : " text-muted bg-dark"       
+                              ? " text-info font-bold"
+                              : " text-muted bg-dark"
                               } `}
                             onClick={(event) => handleNotificationClick(event, notification)}
                           >
                             <div className="d-flex align-items-center">
                               <div className="flex-grow-1">
                                 <h6 className={` msg-name  ${notification.status === 1
-                                ? "  font-bold" 
-                                : " text-muted" 
-                                      
-                              } `}>
-                                  
+                                  ? "  font-bold"
+                                  : " text-muted"
+
+                                  } `}>
+
                                   {notification?.title}
                                   <span className="msg-time float-end">
                                     {notification.createdAt
@@ -327,7 +327,7 @@ const Header = () => {
                                   className="msg-info text-truncate"
                                   title={notification.message}
                                   style={{
-                                    fontWeight: notification.status === 0 ? "bold" : "normal", 
+                                    fontWeight: notification.status === 0 ? "bold" : "normal",
                                   }}
                                 >
                                   {notification.message}

@@ -21,12 +21,12 @@ const AddUser = () => {
     if (!values.FullName) {
       errors.FullName = "Please Enter Full Name";
     }
-    
+
     if (/\d/.test(values.FullName)) {
       errors.FullName = "Numbers are not allowed in the Full Name";
     }
     //updated code 
-    if(/\W/.test(values.FullName)){
+    if (/\W/.test(values.FullName)) {
       errors.FullName = "Special character are not allowed"
     }
     if (!values.Email) {
@@ -48,17 +48,17 @@ const AddUser = () => {
   };
 
   const onSubmit = async (values) => {
-  
+
     const req = {
       FullName: values.FullName,
       Email: values.Email,
       PhoneNo: values.PhoneNo,
       password: values.password,
       add_by: user_id,
-      freetrial:values.freetrial
+      freetrial: values.freetrial
     };
-    
-   
+
+
     try {
       const response = await AddClient(req, token);
 
@@ -118,7 +118,7 @@ const AddUser = () => {
       label_size: 6,
       col_size: 6,
       disable: false,
-      star:true
+      star: true
     },
     {
       name: "Email",
@@ -127,7 +127,7 @@ const AddUser = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
-      star:true
+      star: true
 
     },
     {
@@ -137,16 +137,16 @@ const AddUser = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
-      star:true
+      star: true
     },
     {
       name: "password",
       label: "Password",
-      type: "password", 
+      type: "password",
       label_size: 12,
       col_size: 6,
       disable: false,
-      star:true
+      star: true
     },
     {
       name: "ConfirmPassword",
@@ -155,7 +155,7 @@ const AddUser = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
-      star:true
+      star: true
     },
     {
       name: "freetrial",
@@ -164,13 +164,13 @@ const AddUser = () => {
       label_size: 6,
       col_size: 4,
       disable: false,
-      star:true
+      star: true
     },
   ];
 
 
 
-  
+
   return (
     <div style={{ marginTop: "100px" }}>
       <DynamicForm
@@ -182,7 +182,7 @@ const AddUser = () => {
         sumit_btn={true}
         btn_name1_route={"/admin/client"}
         additional_field={<></>}
-        
+
       />
     </div>
   );
