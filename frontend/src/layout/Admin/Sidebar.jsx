@@ -18,15 +18,16 @@ const menuItems = [
     ]
   },
   { title: 'Staff', icon: 'bx-user-plus', link: '/admin/staff' },
-  { title: 'Basket', icon: 'bx bx-basket', link: '/admin/basket',
+  {
+    title: 'Basket', icon: 'bx bx-basket', link: '/admin/basket',
     subMenu: [
       { title: 'Basket Detail', icon: 'bx bx-basket', link: '/admin/basket' },
       { title: 'Basket Stock Pulished', icon: 'bx-radio-circle', link: '/admin/basket/basketstockpublish' },
-     
+
 
     ]
 
-   },
+  },
 
   {
     title: 'Signal',
@@ -77,12 +78,12 @@ const Sidebar = ({ onToggleClick }) => {
   const [activeIndex, setActiveIndex] = useState(null);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [clients, setClients] = useState([]);
-  
+
   const token = localStorage.getItem('token');
   const user_id = localStorage.getItem('id');
 
 
-  
+
 
   const handleItemClick = (index) => () => {
     setActiveIndex(index);
@@ -94,22 +95,22 @@ const Sidebar = ({ onToggleClick }) => {
     setActiveIndex(index);
   };
 
-   
+
 
   const getsettinglist = async () => {
     try {
-        const response = await basicsettinglist(token);
-        if (response.status) {
-            setClients(response.data);
-        }
+      const response = await basicsettinglist(token);
+      if (response.status) {
+        setClients(response.data);
+      }
     } catch (error) {
-        console.log('error', error);
+      console.log('error', error);
     }
-};
+  };
 
-useEffect(() => {
+  useEffect(() => {
     getsettinglist();
-}, []);
+  }, []);
 
 
 

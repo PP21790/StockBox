@@ -4,7 +4,7 @@ import { Eye, RefreshCcw, Trash2, SquarePen, IndianRupee, X, Plus } from 'lucide
 import Swal from "sweetalert2";
 import { Tooltip } from 'antd';
 import Table from "../../../components/Table";
-import { BasketAllList, deletebasket } from "../../../Services/Admin";
+import { BasketAllList, deletebasket, Basketstatusofdetail } from "../../../Services/Admin";
 import { fDate } from "../../../Utils/Date_formate";
 
 
@@ -36,6 +36,50 @@ const Basket = () => {
   useEffect(() => {
     getbasketlist();
   }, []);
+
+
+
+  const handleSwitchChange = async (event, id) => {
+    const originalChecked = event.target.checked;
+    const user_active_status = originalChecked ? "1" : "0";
+    const data = { id: id, status: user_active_status };
+
+    const result = await Swal.fire({
+      title: "Do you want to save the changes?",
+      showCancelButton: true,
+      confirmButtonText: "Save",
+      cancelButtonText: "Cancel",
+      allowOutsideClick: false,
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const response = await Basketstatusofdetail(data, token);
+        if (response.status) {
+          Swal.fire({
+            title: "Saved!",
+            icon: "success",
+            timer: 1000,
+            timerProgressBar: true,
+          });
+          setTimeout(() => {
+            Swal.close();
+          }, 1000);
+        }
+        getbasketlist();
+      } catch (error) {
+        Swal.fire(
+          "Error",
+          "There was an error processing your request.",
+          "error"
+        );
+      }
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+      event.target.checked = !originalChecked;
+      getbasketlist();
+    }
+  };
+
 
 
 
@@ -117,6 +161,26 @@ const Basket = () => {
       selector: (row) => row.validity,
       sortable: true,
       width: '200px',
+    },
+    {
+      name: 'Active Status',
+      selector: row => (
+        <div className="form-check form-switch form-check-info">
+          <input
+            id={`rating_${row.ActiveStatus}`}
+            className="form-check-input toggleswitch"
+            type="checkbox"
+            defaultChecked={row.ActiveStatus == 1}
+            onChange={(event) => handleSwitchChange(event, row._id)}
+          />
+          <label
+            htmlFor={`rating_${row.ActiveStatus}`}
+            className="checktoggle checkbox-bg"
+          ></label>
+        </div>
+      ),
+      sortable: true,
+      width: '165px',
     },
     {
       name: "Actions",

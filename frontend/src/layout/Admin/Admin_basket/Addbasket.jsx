@@ -25,33 +25,33 @@ const AddBasket = () => {
       errors.themename = "Please Enter Theme Name";
     }
 
-    if (!values.full_price) {
-      errors.full_price = "Please Enter Full Price";
-    }
+    // if (!values.full_price) {
+    //   errors.full_price = "Please Enter Full Price";
+    // }
 
     if (!values.basket_price) {
       errors.basket_price = "Please Enter Basket Price";
     }
 
-    if (!values.accuracy) {
-      errors.accuracy = "Please Enter Accuracy";
+    // if (!values.accuracy) {
+    //   errors.accuracy = "Please Enter Accuracy";
 
-    }
+    // }
     if (!values.mininvamount) {
       errors.mininvamount = "Please Enter Minimum Investment Amount";
     }
 
-    if (!values.portfolioweightage) {
-      errors.portfolioweightage = "Please Enter Portfolio Weightage";
-    }
+    // if (!values.portfolioweightage) {
+    //   errors.portfolioweightage = "Please Enter Portfolio Weightage";
+    // }
 
     if (!values.frequency) {
       errors.frequency = "Please Enter Frequency";
     }
 
-    if (!values.cagr) {
-      errors.cagr = "Please Enter CAGR";
-    }
+    // if (!values.cagr) {
+    //   errors.cagr = "Please Enter CAGR";
+    // }
 
     if (!values.validity) {
       errors.validity = "Please Select Validity";
@@ -74,13 +74,13 @@ const AddBasket = () => {
       title: values.title,
       add_by: user_id,
       description: values.description,
-      full_price: values.full_price,
+      // full_price: values.full_price,
       basket_price: values.basket_price,
-      accuracy: values.accuracy,
+      // accuracy: values.accuracy,
       mininvamount: values.mininvamount,
-      portfolioweightage: values.portfolioweightage,
+      // portfolioweightage: values.portfolioweightage,
       themename: values.themename,
-      cagr: values.cagr,
+      // cagr: values.cagr,
       frequency: values.frequency,
       validity: values.validity,
       next_rebalance_date: values.next_rebalance_date
@@ -100,7 +100,7 @@ const AddBasket = () => {
           timerProgressBar: true,
         });
         setTimeout(() => {
-          navigate("/admin/client");
+          navigate("/admin/basket");
         }, 1500);
       } else {
         Swal.fire({
@@ -126,14 +126,14 @@ const AddBasket = () => {
     initialValues: {
       title: "",
       description: "",
-      full_price: "",
+      // full_price: "",
       basket_price: "",
       add_by: "",
-      accuracy: "",
+      // accuracy: "",
       mininvamount: "",
-      portfolioweightage: "",
+      // portfolioweightage: "",
       themename: "",
-      cagr: "",
+      // cagr: "",
       frequency: "",
       validity: "",
       next_rebalance_date: ""
@@ -157,23 +157,23 @@ const AddBasket = () => {
     },
     {
       name: "themename",
-      label: "theme Name",
+      label: "Theme Name",
       type: "text",
       label_size: 6,
       col_size: 6,
       disable: false,
       star: true
     },
-    {
-      name: "full_price",
-      label: "Price",
-      type: "number",
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-      star: true
+    // {
+    //   name: "full_price",
+    //   label: "Price",
+    //   type: "number",
+    //   label_size: 12,
+    //   col_size: 6,
+    //   disable: false,
+    //   star: true
 
-    },
+    // },
     {
       name: "basket_price",
       label: "Basket Price",
@@ -184,34 +184,34 @@ const AddBasket = () => {
       star: true
 
     },
-    {
-      name: "accuracy",
-      label: "Accuracy",
-      type: "number",
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-      star: true
-    },
+    // {
+    //   name: "accuracy",
+    //   label: "Accuracy",
+    //   type: "number",
+    //   label_size: 12,
+    //   col_size: 6,
+    //   disable: false,
+    //   star: true
+    // },
 
     {
       name: "mininvamount",
-      label: "Mininvamount",
+      label: "MinimumAmount",
       type: "number",
       label_size: 12,
       col_size: 6,
       disable: false,
       star: true
     },
-    {
-      name: "portfolioweightage",
-      label: "Portfolioweightage",
-      type: "number",
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-      star: true
-    },
+    // {
+    //   name: "portfolioweightage",
+    //   label: "PortfolioWeightage",
+    //   type: "number",
+    //   label_size: 12,
+    //   col_size: 6,
+    //   disable: false,
+    //   star: true
+    // },
     {
       name: "frequency",
       label: "Frequency",
@@ -221,15 +221,15 @@ const AddBasket = () => {
       disable: false,
       star: true
     },
-    {
-      name: "cagr",
-      label: "cagr",
-      type: "text",
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-      star: true
-    },
+    // {
+    //   name: "cagr",
+    //   label: "Cagr",
+    //   type: "text",
+    //   label_size: 12,
+    //   col_size: 6,
+    //   disable: false,
+    //   star: true
+    // },
     {
       name: "validity",
       label: "Validity",
@@ -273,11 +273,11 @@ const AddBasket = () => {
       <DynamicForm
         fields={fields}
         formik={formik}
-        page_title="Add New Client"
-        btn_name="Add Client"
+        page_title="Add Basket"
+        btn_name="Add Basket"
         btn_name1="Cancel"
         sumit_btn={true}
-        btn_name1_route={"/admin/client"}
+        btn_name1_route={"/admin/basket"}
         additional_field={<></>}
 
       />

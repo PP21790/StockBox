@@ -2964,3 +2964,23 @@ export async function getAllNotificationlist(token, page) {
         return err.response?.data || err.message;
     }
 }
+
+
+/// update basket status
+
+
+
+export async function Basketstatusofdetail(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}basket/change-status**`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        return err.response?.data || err.message;
+    }
+}

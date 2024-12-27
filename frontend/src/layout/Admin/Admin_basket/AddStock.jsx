@@ -7,6 +7,8 @@ import axios from "axios";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import * as Config from "../../../Utils/config";
+import { Tooltip } from 'antd';
+
 
 const AddStock = () => {
   const { id: basket_id } = useParams();
@@ -128,9 +130,11 @@ const AddStock = () => {
         </nav>
       </div>
       <hr />
+
       <div className="card">
         <div className="card-body">
           <div className="row">
+
             <div className="col-12">
               <Select
                 inputValue={inputValue}
