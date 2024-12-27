@@ -453,7 +453,7 @@ class Basket {
   async getBasket(req, res) {
     try {
 
-        const baskets = await Basket_Modal.find({ del: false });
+        const baskets = await Basket_Modal.find({ del: false,status:false });
 
         return res.json({
             status: true,
