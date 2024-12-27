@@ -74,7 +74,7 @@ const BasketSchema = new Schema({
     },
     status: {
         type: Boolean,
-        default: true // assuming true means active and false means inactive
+        default: false // assuming true means active and false means inactive
     },
     del: {
         type: Boolean,
