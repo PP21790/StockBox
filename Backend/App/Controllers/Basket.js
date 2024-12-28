@@ -233,7 +233,14 @@ class Basket {
       const existingStocks = await Basketstock_Modal.find({ basket_id }).sort({ version: -1 });
 
       let totalAmount = 0;
-      
+      if(existingStocks[0].status==0)
+        {
+          return res.status(500).json({
+            status: false,
+            message: "Please Public Old Stock First Than New Create",
+          });
+        }
+        else {
       if (existingStocks && existingStocks.length > 0) {
         let totalSum = 0;
       
@@ -340,6 +347,8 @@ class Basket {
         message: "Stocks added successfully.",
         data: result,
       });
+
+    }
     } catch (error) {
       console.error("Error adding stocks:", error);
       return res.status(500).json({
@@ -350,10 +359,9 @@ class Basket {
     }
   }
 
-
   async UpdateStockInBasketForm(req, res) {
     try {
-      const { basket_id, stocks } = req.body; // Get basket_id and stocks from the request body
+      const { basket_id, stocks, version } = req.body; // Include version in request body
   
       // Validate basket existence
       const basket = await Basket_Modal.findById(basket_id);
@@ -373,6 +381,9 @@ class Basket {
           message: "Stocks data is required and should be an array.",
         });
       }
+  
+      // Delete old stocks with the same basket_id and version
+      await Basketstock_Modal.deleteMany({ basket_id, version });
   
       const bulkOps = [];
   
@@ -402,13 +413,7 @@ class Basket {
         // Deduct from remaining amount
         remainingAmount -= total_value;
   
-        // Find the latest version of the stock in the basket
-        const existingStock = await Basketstock_Modal.findOne({
-          basket_id,
-          tradesymbol,
-        }).sort({ version: -1 });
-  
-  
+        // Prepare bulk upsert operation
         bulkOps.push({
           updateOne: {
             filter: { basket_id, tradesymbol },
@@ -421,7 +426,8 @@ class Basket {
                 type,
                 comment: comment || '',
                 weightage: percentage,
-                status:status,
+                status,
+                version, // Set the version for the stock
               },
             },
             upsert: true, // If stock does not exist, create a new one
@@ -447,7 +453,6 @@ class Basket {
     }
   }
   
-
 
   
   async getBasket(req, res) {
