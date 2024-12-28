@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import DynamicForm from '../../../components/FormicForm';
 import Swal from 'sweetalert2';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { Updatebasket, Viewbasket } from '../../../Services/Admin';
+import { updateStockList, Viewbasket } from '../../../Services/Admin';
 
 
 const EditStock = () => {
@@ -20,20 +20,20 @@ const EditStock = () => {
     const token = localStorage.getItem("token");
 
 
-    // useEffect(() => {
-    //     if (data) {
-    //         formik.setValues({
-    //             title: data.title || "",
-    //             description: data.description || "",
-    //             basket_price: data.basket_price || "",
-    //             mininvamount: data.mininvamount || "",
-    //             themename: data.themename || "",
-    //             frequency: data.frequency || "",
-    //             validity: data?.validity ? data?.validity : "",
-    //             next_rebalance_date: data?.next_rebalance_date ? data?.next_rebalance_date : "",
-    //         });
-    //     }
-    // }, [data]);
+    useEffect(() => {
+        if (data) {
+            formik.setValues({
+                title: data.title || "",
+                description: data.description || "",
+                basket_price: data.basket_price || "",
+                mininvamount: data.mininvamount || "",
+                themename: data.themename || "",
+                frequency: data.frequency || "",
+                validity: data?.validity ? data?.validity : "",
+                next_rebalance_date: data?.next_rebalance_date ? data?.next_rebalance_date : "",
+            });
+        }
+    }, [data]);
 
 
     const validate = (values) => {
@@ -89,7 +89,7 @@ const EditStock = () => {
 
 
         try {
-            const response = await Updatebasket(req, token);
+            const response = await updateStockList(req, token);
 
             if (response.status) {
                 Swal.fire({

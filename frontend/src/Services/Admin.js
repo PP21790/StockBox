@@ -639,7 +639,7 @@ export async function Updatebasket(data, token) {
 
 export async function updateStockList(data, token) {
     try {
-        const res = await axios.put(`${Config.base_url}basket/updatestockbasketform`, data, {
+        const res = await axios.post(`${Config.base_url}basket/updatestockbasketform`, data, {
             headers: {
                 data: {},
                 'Authorization': `${token}`,

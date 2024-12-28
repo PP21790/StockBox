@@ -222,6 +222,8 @@ class Basket {
     try {
       const { basket_id, stocks } = req.body; // Get basket_id and stocks from the request body
 
+      console.log("req.body", req.body)
+
       // Validate basket existence
       const basket = await Basket_Modal.findById(basket_id);
       if (!basket) {

@@ -8,6 +8,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import * as Config from "../../../Utils/config";
 
+
 const AddStock = () => {
   const { id: basket_id } = useParams();
   const [selectedServices, setSelectedServices] = useState([]);
@@ -17,6 +18,7 @@ const AddStock = () => {
   const [formikValues, setFormikValues] = useState({});
   const navigate = useNavigate();
 
+  // Fetch options based on user input
   const fetchOptions = async (inputValue) => {
     if (!inputValue) {
       setOptions([]);
@@ -50,10 +52,11 @@ const AddStock = () => {
     }
   };
 
+  // Handle changes when a stock is selected
   const handleServiceChange = (selectedOption) => {
     setSelectedServices(selectedOption || []);
 
-    const updatedValues = { ...formikValues }; // Retain existing values
+    const updatedValues = { ...formikValues };
     (selectedOption || []).forEach((service) => {
       if (!updatedValues[service.value]) {
         updatedValues[service.value] = {
@@ -66,8 +69,9 @@ const AddStock = () => {
       }
     });
 
-    setFormikValues(updatedValues); // Update form values
+    setFormikValues(updatedValues);
   };
+
 
   const handleRemoveService = (serviceValue) => {
     setSelectedServices((prev) =>
@@ -77,8 +81,14 @@ const AddStock = () => {
     const updatedValues = { ...formikValues };
     delete updatedValues[serviceValue];
     setFormikValues(updatedValues);
+
+
+    setOptions((prevOptions) =>
+      prevOptions.filter((option) => option.value !== serviceValue)
+    );
   };
 
+  // Validation Schema for Formik
   const validationSchema = Yup.object().shape(
     selectedServices.reduce((acc, service) => {
       acc[service.value] = Yup.object({
@@ -94,6 +104,7 @@ const AddStock = () => {
     }, {})
   );
 
+  // Handle form submission
   const handleSubmit = async (values, status) => {
     if (!basket_id) {
       Swal.fire("Error", "Basket ID is missing. Please try again.", "error");
@@ -127,11 +138,13 @@ const AddStock = () => {
     }
   };
 
+  // Handle input change for stock symbol search
   const handleInputChange = (value) => {
     setInputValue(value);
     fetchOptions(value);
   };
 
+  // Effect hook to ensure options are filtered out properly after removal
   useEffect(() => {
     setOptions((prevOptions) =>
       prevOptions.filter((option) =>
@@ -163,7 +176,6 @@ const AddStock = () => {
               <Select
                 inputValue={inputValue}
                 onInputChange={handleInputChange}
-                value={selectedServices}
                 options={options}
                 onChange={handleServiceChange}
                 placeholder="Search and select stocks..."
@@ -187,7 +199,12 @@ const AddStock = () => {
               });
 
               if (totalWeightage > 100) {
-                return { totalWeightageError: "Total weightage exceeds 100%" };
+                Swal.fire(
+                  "Error",
+                  "Total weightage of all stocks cannot exceed 100.",
+                  "error"
+                );
+                return { totalWeightageError: "Weightage exceeds 100" };
               }
 
               return {};
@@ -197,11 +214,8 @@ const AddStock = () => {
             }}
             enableReinitialize
           >
-            {({ values, errors }) => (
+            {({ values }) => (
               <Form>
-                {errors.totalWeightageError && (
-                  <p className="text-danger">{errors.totalWeightageError}</p>
-                )}
                 {selectedServices.map((service) => (
                   <div key={service.value} className="mt-4">
                     <h5>

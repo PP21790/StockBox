@@ -229,7 +229,7 @@ const Viewbasketdetail = () => {
               <div>
                 <h4>Basket Details</h4>
                 <div className="row">
-                  {fieldConfigurations?.map((field) => (
+                  {fieldConfigurations?.map((field) =>
                     field.type !== "Stock" ? (
                       <div key={field.name} className={`col-md-${field.col_size}`}>
                         <label>{field.label}</label>
@@ -240,63 +240,65 @@ const Viewbasketdetail = () => {
                           disabled
                         />
                       </div>
-                    )
-                      : (
-                        <div key={field.name} className="col-md-12">
-                          <h5 className="mt-4 mb-3">Stock Details</h5>
+                    ) : (
+                      <div key={field.name} className="col-md-12">
+                        <h5 className="mt-4 mb-3">Stock Details</h5>
 
+                        {Object.keys(
+                          (Array.isArray(stockdata) ? stockdata : Object.values(stockdata)).reduce((acc, stock) => {
+                            if (!acc[stock.version]) {
+                              acc[stock.version] = [];
+                            }
+                            acc[stock.version].push(stock);
+                            return acc;
+                          }, {})
+                        ).map((version) => {
+                          const versionStocks = (Array.isArray(stockdata) ? stockdata : Object.values(stockdata)).filter(
+                            (stock) => stock.version === parseInt(version)
+                          );
 
-                          {Object.keys(
-                            (Array.isArray(stockdata) ? stockdata : Object.values(stockdata)).reduce((acc, stock) => {
-                              if (!acc[stock.version]) {
-                                acc[stock.version] = [];
-                              }
-                              acc[stock.version].push(stock);
-                              return acc;
-                            }, {})
-                          ).map((version) => {
-                            const versionStocks = (Array.isArray(stockdata) ? stockdata : Object.values(stockdata)).filter(stock => stock.version === parseInt(version));
-
-                            return (
-                              <div key={version}>
+                          return (
+                            <div key={version}>
+                              <div className="d-flex justify-content-between align-items-center">
                                 <h6>Version {version}</h6>
-                                <table className="table table-bordered">
-                                  <thead>
-                                    <tr>
-                                      <th>Stock Name</th>
-                                      <th>Weightage</th>
-                                      <th>Price</th>
-                                      <th>Type</th>
-                                      <th>Action</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    {versionStocks.map((stock, index) => (
-                                      <tr key={index}>
-                                        <td>{stock?.name}</td>
-                                        <td>{stock?.weightage}</td>
-                                        <td>{stock?.price}</td>
-                                        <td>{stock?.type}</td>
-                                        <td><Tooltip title="Update">
-                                          <SquarePen className='ms-3' onClick={() => updateStock(stock)} />
-                                        </Tooltip></td>
-                                      </tr>
-                                    ))}
-                                  </tbody>
-                                </table>
+                                <Tooltip title="Update All">
+                                  <SquarePen className="cursor-pointer" onClick={() => updateStock(versionStocks)} />
+                                </Tooltip>
                               </div>
-                            );
-                          })}
-                        </div>
-
-
-                      )
-                  ))}
+                              <table className="table table-bordered">
+                                <thead>
+                                  <tr>
+                                    <th>Stock Name</th>
+                                    <th>Weightage</th>
+                                    <th>Price</th>
+                                    <th>Type</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {versionStocks.map((stock, index) => (
+                                    <tr key={index}>
+                                      <td>{stock?.name}</td>
+                                      <td>{stock?.weightage}</td>
+                                      <td>{stock?.price}</td>
+                                      <td>{stock?.type}</td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )
+                  )}
                 </div>
                 <div className="mt-3">
-                  <Link to="/admin/basket" className="btn btn-secondary">Back</Link>
+                  <Link to="/admin/basket" className="btn btn-secondary">
+                    Back
+                  </Link>
                 </div>
               </div>
+
             )}
           </Formik>
         </div>
