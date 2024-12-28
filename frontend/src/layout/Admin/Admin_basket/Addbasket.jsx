@@ -164,16 +164,7 @@ const AddBasket = () => {
       disable: false,
       star: true
     },
-    // {
-    //   name: "full_price",
-    //   label: "Price",
-    //   type: "number",
-    //   label_size: 12,
-    //   col_size: 6,
-    //   disable: false,
-    //   star: true
 
-    // },
     {
       name: "basket_price",
       label: "Basket Price",
@@ -184,15 +175,6 @@ const AddBasket = () => {
       star: true
 
     },
-    // {
-    //   name: "accuracy",
-    //   label: "Accuracy",
-    //   type: "number",
-    //   label_size: 12,
-    //   col_size: 6,
-    //   disable: false,
-    //   star: true
-    // },
 
     {
       name: "mininvamount",
@@ -203,15 +185,7 @@ const AddBasket = () => {
       disable: false,
       star: true
     },
-    // {
-    //   name: "portfolioweightage",
-    //   label: "PortfolioWeightage",
-    //   type: "number",
-    //   label_size: 12,
-    //   col_size: 6,
-    //   disable: false,
-    //   star: true
-    // },
+
     {
       name: "frequency",
       label: "Frequency",
@@ -221,15 +195,7 @@ const AddBasket = () => {
       disable: false,
       star: true
     },
-    // {
-    //   name: "cagr",
-    //   label: "Cagr",
-    //   type: "text",
-    //   label_size: 12,
-    //   col_size: 6,
-    //   disable: false,
-    //   star: true
-    // },
+
     {
       name: "validity",
       label: "Validity",

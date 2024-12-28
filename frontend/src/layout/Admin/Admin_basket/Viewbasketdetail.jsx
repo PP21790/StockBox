@@ -1,25 +1,99 @@
 import React, { useState, useEffect } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { Viewbasket } from "../../../Services/Admin"; // Adjust the import based on your project structure
+import { Viewbasket, getstocklistById } from "../../../Services/Admin";
 import Swal from "sweetalert2";
 import { useNavigate, useParams, Link } from "react-router-dom";
+import { Tooltip } from 'antd';
+import { SquarePen } from 'lucide-react';
 
-// Define field configurations for dynamic rendering
+
+
+
 const fieldConfigurations = [
-  { col_size: 4, name: "price", label: "Price", type: "number", placeholder: "Enter price", disabled: true },
-  { col_size: 4, name: "title", label: "Title", type: "text", placeholder: "Enter title" },
-  { col_size: 4, name: "accuracy", label: "Accuracy", type: "number", placeholder: "Enter accuracy" },
-  { col_size: 4, name: "mininvamount", label: "Minimum Investment Amount", type: "number", placeholder: "Enter minimum investment amount" },
-  { col_size: 4, name: "portfolioweightage", label: "Portfolio Weightage", type: "number", placeholder: "Enter portfolio weightage" },
-  { col_size: 4, name: "themename", label: "Theme Name", type: "text", placeholder: "Enter theme name" },
-  { col_size: 4, name: "returnpercentage", label: "Return Percentage", type: "number", placeholder: "Enter Return Percentage" },
-  { col_size: 4, name: "holdingperiod", label: "Holding Period", type: "text", placeholder: "Enter Holding Period" },
-  { col_size: 4, name: "potentialleft", label: "Potential Left", type: "text", placeholder: "Enter Potential Left" },
-  { col_size: 4, name: "description", label: "Description", type: "text", placeholder: "Enter description" },
-  { col_size: 4, name: "cagr", label: "CAGR", type: "number", placeholder: "Enter CAGR" },
-  { col_size: 4, name: "validity", label: "Validity", type: "text", placeholder: "Enter validity" },
-  { col_size: 4, name: "next_rebalance_date", label: "Next Rebalance Date", type: "date", placeholder: "Enter next rebalance date" },
+  {
+    name: "title",
+    label: "Basket Name",
+    type: "text",
+    label_size: 6,
+    col_size: 4,
+    disable: false,
+    star: true
+  },
+  {
+    name: "themename",
+    label: "Theme Name",
+    type: "text",
+    label_size: 6,
+    col_size: 4,
+    disable: false,
+    star: true
+  },
+
+  {
+    name: "basket_price",
+    label: "Basket Price",
+    type: "number",
+    label_size: 12,
+    col_size: 4,
+    disable: false,
+    star: true
+
+  },
+
+  {
+    name: "mininvamount",
+    label: "Minimum Amount",
+    type: "number",
+    label_size: 12,
+    col_size: 4,
+    disable: false,
+    star: true
+  },
+
+  {
+    name: "frequency",
+    label: "Frequency",
+    type: "number",
+    label_size: 12,
+    col_size: 4,
+    disable: false,
+    star: true
+  },
+
+  {
+    name: "validity",
+    label: "Validity",
+    type: "select",
+    label_size: 12,
+    col_size: 4,
+    disable: false,
+    options: [
+      { value: "1 month", label: "1 Month" },
+      { value: "3 months", label: "3 Months" },
+      { value: "6 months", label: "6 Months" },
+      { value: "1 year", label: "1 Year" }
+    ],
+    star: true
+  },
+  {
+    name: "next_rebalance_date",
+    label: "Rebalance Date",
+    type: "date",
+    label_size: 12,
+    col_size: 4,
+    disable: false,
+    star: true
+  },
+  {
+    name: "description",
+    label: "Description",
+    type: "text",
+    label_size: 12,
+    col_size: 4,
+    disable: false,
+    star: true
+  },
   {
     col_size: 12,
     name: "Stock",
@@ -32,7 +106,7 @@ const fieldConfigurations = [
   },
 ];
 
-// Validation schema for the form
+
 const validationSchema = Yup.object().shape({
   title: Yup.string().required("Title is required"),
   description: Yup.string().required("Description is required"),
@@ -57,9 +131,12 @@ const validationSchema = Yup.object().shape({
 });
 
 const Viewbasketdetail = () => {
+
+
   const { id } = useParams();
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+  const [stockdata, setStockdata] = useState({})
 
   const [initialValues, setInitialValues] = useState({
     title: "",
@@ -80,7 +157,28 @@ const Viewbasketdetail = () => {
 
   useEffect(() => {
     getbasketdetail();
+    GetStocklistbyid()
   }, []);
+
+
+  const GetStocklistbyid = async () => {
+    try {
+      const response = await getstocklistById(id, token);
+      if (response.status) {
+        setStockdata(response?.data)
+      }
+    } catch (error) {
+      console.log("error");
+    }
+  };
+
+
+  const updateStock = async (stock) => {
+    navigate("/admin/editstock/" + stock._id, { state: { stock } })
+  }
+
+
+  console.log("stockdata", stockdata)
 
   const getbasketdetail = async () => {
     try {
@@ -88,20 +186,15 @@ const Viewbasketdetail = () => {
       if (response.status) {
         const basketData = response.data;
         setInitialValues({
-          title: basketData.title || "",
-          description: basketData.description || "",
-          accuracy: basketData.accuracy || "",
-          cagr: basketData.cagr || "",
-          price: basketData.price || "",
-          mininvamount: basketData.mininvamount || "",
-          portfolioweightage: basketData.portfolioweightage || "",
-          themename: basketData.themename || "",
-          returnpercentage: basketData.returnpercentage || "",
-          holdingperiod: basketData.holdingperiod || "",
-          potentialleft: basketData.potentialleft || "",
-          validity: basketData.validity || "",
-          next_rebalance_date: basketData.next_rebalance_date || "",
-          Stock: basketData.groupedData || [{ stocks: "", pricerange: "", stockweightage: "", entryprice: "", exitprice: "", exitdate: "", comment: "" }],
+          title: basketData?.title || "",
+          description: basketData?.description || "",
+          basket_price: basketData?.basket_price || "",
+          mininvamount: basketData?.mininvamount || "",
+          themename: basketData?.themename || "",
+          frequency: basketData?.frequency || "",
+          validity: basketData?.validity ? basketData?.validity : "",
+          next_rebalance_date: basketData?.next_rebalance_date ? basketData?.next_rebalance_date : "",
+
         });
       }
     } catch (error) {
@@ -127,69 +220,88 @@ const Viewbasketdetail = () => {
       <hr />
       <div className="card">
         <div className="card-body">
-        <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        enableReinitialize
-      >
-        {({ values }) => (
-          <div>
-            <h4>Basket Details</h4>
-            <div className="row">
-              {fieldConfigurations.map((field) => (
-                field.type !== "Stock" ? (
-                  <div key={field.name} className={`col-md-${field.col_size}`}>
-                    <label>{field.label}</label>
-                    <input
-                      type={field.type}
-                      className="form-control"
-                      value={values[field.name] || ""}
-                      disabled
-                    />
-                  </div>
-                ) : (
-                  <div key={field.name} className="col-md-12">
-                    {/* <label>{field.label}</label> */}
-                    <h5 className="mt-4 mb-3">Stock Details</h5>
-                    <table className="table table-bordered">
-                      <thead>
-                        <tr>
-                          <th>Stock</th>
-                          <th>Price Range</th>
-                          <th>Stock Weightage</th>
-                          <th>Entry Price</th>
-                          <th>Exit Price</th>
-                          <th>Exit Date</th>
-                          <th>Comment</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {values.Stock.map((stock, index) => (
-                          <tr key={index}>
-                            <td>{stock.stocks || "-"}</td>
-                            <td>{stock.pricerange || "-"}</td>
-                            <td>{stock.stockweightage || "-"}</td>
-                            <td>{stock.entryprice || "-"}</td>
-                            <td>{stock.exitprice || "-"}</td>
-                            <td>{stock.exitdate || "-"}</td>
-                            <td>{stock.comment || "-"}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )
-              ))}
-            </div>
-            <div className="mt-3">
-              <Link to="/admin/basket" className="btn btn-secondary">Back</Link>
-            </div>
-          </div>
-        )}
-      </Formik>
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            enableReinitialize
+          >
+            {({ values }) => (
+              <div>
+                <h4>Basket Details</h4>
+                <div className="row">
+                  {fieldConfigurations?.map((field) => (
+                    field.type !== "Stock" ? (
+                      <div key={field.name} className={`col-md-${field.col_size}`}>
+                        <label>{field.label}</label>
+                        <input
+                          type={field.type}
+                          className="form-control"
+                          value={values[field.name] || ""}
+                          disabled
+                        />
+                      </div>
+                    )
+                      : (
+                        <div key={field.name} className="col-md-12">
+                          <h5 className="mt-4 mb-3">Stock Details</h5>
+
+
+                          {Object.keys(
+                            (Array.isArray(stockdata) ? stockdata : Object.values(stockdata)).reduce((acc, stock) => {
+                              if (!acc[stock.version]) {
+                                acc[stock.version] = [];
+                              }
+                              acc[stock.version].push(stock);
+                              return acc;
+                            }, {})
+                          ).map((version) => {
+                            const versionStocks = (Array.isArray(stockdata) ? stockdata : Object.values(stockdata)).filter(stock => stock.version === parseInt(version));
+
+                            return (
+                              <div key={version}>
+                                <h6>Version {version}</h6>
+                                <table className="table table-bordered">
+                                  <thead>
+                                    <tr>
+                                      <th>Stock Name</th>
+                                      <th>Weightage</th>
+                                      <th>Price</th>
+                                      <th>Type</th>
+                                      <th>Action</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {versionStocks.map((stock, index) => (
+                                      <tr key={index}>
+                                        <td>{stock?.name}</td>
+                                        <td>{stock?.weightage}</td>
+                                        <td>{stock?.price}</td>
+                                        <td>{stock?.type}</td>
+                                        <td><Tooltip title="Update">
+                                          <SquarePen className='ms-3' onClick={() => updateStock(stock)} />
+                                        </Tooltip></td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            );
+                          })}
+                        </div>
+
+
+                      )
+                  ))}
+                </div>
+                <div className="mt-3">
+                  <Link to="/admin/basket" className="btn btn-secondary">Back</Link>
+                </div>
+              </div>
+            )}
+          </Formik>
         </div>
       </div>
-     
+
     </div>
   );
 };

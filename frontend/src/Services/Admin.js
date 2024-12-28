@@ -485,6 +485,21 @@ export async function Viewbasket(_id, token) {
 }
 
 
+// get stocklist by id
+
+export async function getstocklistById(_id, token) {
+    try {
+        const res = await axios.get(`${Config.base_url}basket/stocklist/${_id}`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
 
 // get delete basket 
 
@@ -606,6 +621,25 @@ export async function getStock(token) {
 export async function Updatebasket(data, token) {
     try {
         const res = await axios.put(`${Config.base_url}basket/update`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+//  update stock detail
+
+export async function updateStockList(data, token) {
+    try {
+        const res = await axios.put(`${Config.base_url}basket/updatestockbasketform`, data, {
             headers: {
                 data: {},
                 'Authorization': `${token}`,

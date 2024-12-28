@@ -5,38 +5,41 @@ import Swal from 'sweetalert2';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Updatebasket, Viewbasket } from '../../../Services/Admin';
 
+
 const Editbasket = () => {
-  const { id } = useParams();
+
+  const { id } = useParams()
+
   const navigate = useNavigate();
+
+  const user_id = localStorage.getItem("id");
   const token = localStorage.getItem("token");
 
-  const [data, setData] = useState("");
-  const [validityOptions, setValidityOptions] = useState([
-    { value: "1 month", label: "1 Month" },
-    { value: "3 months", label: "3 Months" },
-    { value: "6 months", label: "6 Months" },
-    { value: "1 year", label: "1 Year" },
-  ]);
+  const [data, setData] = useState("")
+
 
   useEffect(() => {
-    getbasketdetail();
-  }, []);
+    getbasketdetail()
+  }, [])
+
+
 
   const getbasketdetail = async () => {
     try {
       const response = await Viewbasket(id, token);
       if (response.status) {
         setData(response.data);
-        console.log("response", response.data);
+        console.log("response", response.data)
       }
     } catch (error) {
-      console.log("Error fetching basket details:", error);
+      console.log("error");
     }
   };
 
+
+
   useEffect(() => {
     if (data) {
-      // Update form values
       formik.setValues({
         title: data.title || "",
         description: data.description || "",
@@ -44,16 +47,12 @@ const Editbasket = () => {
         mininvamount: data.mininvamount || "",
         themename: data.themename || "",
         frequency: data.frequency || "",
-        validity: data.validity || "",
-        next_rebalance_date: data.next_rebalance_date || "",
+        validity: data?.validity ? data?.validity : "",
+        next_rebalance_date: data?.next_rebalance_date ? data?.next_rebalance_date : "",
       });
-
-      // Add backend `validity` value to options if not already present
-      if (data.validity && !validityOptions.find(opt => opt.value === data.validity)) {
-        setValidityOptions(prev => [...prev, { value: data.validity, label: data.validity }]);
-      }
     }
   }, [data]);
+
 
   const validate = (values) => {
     let errors = {};
@@ -61,9 +60,11 @@ const Editbasket = () => {
     if (!values.title) {
       errors.title = "Please Enter Title";
     }
+
     if (!values.themename) {
       errors.themename = "Please Enter Theme Name";
     }
+
     if (!values.basket_price) {
       errors.basket_price = "Please Enter Basket Price";
     }
@@ -73,12 +74,15 @@ const Editbasket = () => {
     if (!values.frequency) {
       errors.frequency = "Please Enter Frequency";
     }
-    if (!values.validity || !validityOptions.find(opt => opt.value === values.validity)) {
-      errors.validity = "Please Select Valid Validity";
+
+    if (!values.validity) {
+      errors.validity = "Please Select Validity";
     }
+
     if (!values.next_rebalance_date) {
       errors.next_rebalance_date = "Please Select Rebalance Date";
     }
+
     if (!values.description) {
       errors.description = "Please Enter Description";
     }
@@ -87,6 +91,7 @@ const Editbasket = () => {
   };
 
   const onSubmit = async (values) => {
+
     const req = {
       title: values.title,
       id: data._id,
@@ -96,14 +101,17 @@ const Editbasket = () => {
       themename: values.themename,
       frequency: values.frequency,
       validity: values.validity,
-      next_rebalance_date: values.next_rebalance_date,
+      next_rebalance_date: values.next_rebalance_date
+
     };
+
 
     try {
       const response = await Updatebasket(req, token);
+
       if (response.status) {
         Swal.fire({
-          title: "Basket Update Successful!",
+          title: "Client Create Successfull !",
           text: response.message,
           icon: "success",
           timer: 1500,
@@ -143,11 +151,14 @@ const Editbasket = () => {
       themename: "",
       frequency: "",
       validity: "",
-      next_rebalance_date: "",
+      next_rebalance_date: ""
     },
     validate,
     onSubmit,
   });
+
+
+
 
   const fields = [
     {
@@ -157,7 +168,7 @@ const Editbasket = () => {
       label_size: 6,
       col_size: 6,
       disable: false,
-      star: true,
+      star: true
     },
     {
       name: "themename",
@@ -166,8 +177,9 @@ const Editbasket = () => {
       label_size: 6,
       col_size: 6,
       disable: false,
-      star: true,
+      star: true
     },
+
     {
       name: "basket_price",
       label: "Basket Price",
@@ -175,16 +187,17 @@ const Editbasket = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
-      star: true,
+      star: true
+
     },
     {
       name: "mininvamount",
-      label: "Minimum Amount",
+      label: "MinimumAmount",
       type: "number",
       label_size: 12,
       col_size: 6,
       disable: false,
-      star: true,
+      star: true
     },
     {
       name: "frequency",
@@ -193,8 +206,9 @@ const Editbasket = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
-      star: true,
+      star: true
     },
+
     {
       name: "validity",
       label: "Validity",
@@ -202,8 +216,13 @@ const Editbasket = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
-      options: validityOptions,
-      star: true,
+      options: [
+        { value: "1 month", label: "1 Month" },
+        { value: "3 months", label: "3 Months" },
+        { value: "6 months", label: "6 Months" },
+        { value: "1 year", label: "1 Year" }
+      ],
+      star: true
     },
     {
       name: "next_rebalance_date",
@@ -212,7 +231,7 @@ const Editbasket = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
-      star: true,
+      star: true
     },
     {
       name: "description",
@@ -221,9 +240,12 @@ const Editbasket = () => {
       label_size: 12,
       col_size: 6,
       disable: false,
-      star: true,
+      star: true
     },
   ];
+
+
+
 
   return (
     <div style={{ marginTop: "100px" }}>
@@ -236,6 +258,7 @@ const Editbasket = () => {
         sumit_btn={true}
         btn_name1_route={"/admin/basket"}
         additional_field={<></>}
+
       />
     </div>
   );

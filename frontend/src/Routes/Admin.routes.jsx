@@ -81,6 +81,7 @@ import Rebalncing from '../layout/Admin/Admin_basket/Rebalncing';
 import BasketPurchaseHistory from '../layout/Admin/Admin_basket/BasketPurchaseHistory';
 import ViewBasketStock from '../layout/Admin/Admin_basket/ViewBasketStock';
 import ViewPurchaseClient from '../layout/Admin/Admin_basket/ViewPurchaseClient';
+import EditStock from '../layout/Admin/Admin_basket/EditStock';
 
 
 
@@ -169,7 +170,7 @@ function MainApp() {
                     <Route path="/basket/addstock/:id" element={<AddStock />} />
                     <Route path="/basket/basketstockpublish" element={<BasketStockPublish />} />
                     <Route path="/basket/rebalancing" element={<Rebalncing />} />
-                    <Route path="/basket/basket-purchase-history" element={<BasketPurchaseHistory/>} />
+                    <Route path="/basket/basket-purchase-history" element={<BasketPurchaseHistory />} />
                     <Route path="/basket/view-basket-stock" element={<ViewBasketStock />} />
                     <Route path="/basket/view-purchase-client" element={<ViewPurchaseClient />} />
 
@@ -217,18 +218,18 @@ function MainApp() {
                     <Route path="/emailtemplate" element={<Emailtemplate />} />
                     <Route path="/referandearn" element={<ReferAndEarn />} />
                     <Route path="/autosquareoff" element={<Autosquareoff />} />
-                   
-                    <Route path="/bankdetail" element={<Bankdetail/>} />
-                    <Route path="/addbankdetail" element={<Addbankdetail/>} />
-                    <Route path="/updatebankdetail/:id" element={<Updatebankdetail/>} />
-                       
-                    <Route path="/QRdetails" element={<QRDetails/>} />
-                     
+
+                    <Route path="/bankdetail" element={<Bankdetail />} />
+                    <Route path="/addbankdetail" element={<Addbankdetail />} />
+                    <Route path="/updatebankdetail/:id" element={<Updatebankdetail />} />
+
+                    <Route path="/QRdetails" element={<QRDetails />} />
+
 
 
                     <Route path="/message" element={<Message />} />
                     <Route path="/changepass" element={<Changepass />} />
-                    
+
 
 
 
@@ -246,9 +247,10 @@ function MainApp() {
 
                     <Route path="/planexpiry" element={<Planexpiry />} />
                     <Route path="/planexpirymonth" element={<Planexpirymonth />} />
-                    <Route path="/notificationlist" element={<Notificationlist/>} />
-                
-                     
+                    <Route path="/notificationlist" element={<Notificationlist />} />
+
+
+                    <Route path="/editstock/:id" element={<EditStock />} />
 
 
 
