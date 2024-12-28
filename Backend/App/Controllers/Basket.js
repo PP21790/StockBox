@@ -222,8 +222,6 @@ class Basket {
     try {
       const { basket_id, stocks } = req.body; // Get basket_id and stocks from the request body
 
-      console.log("req.body", req.body)
-
       // Validate basket existence
       const basket = await Basket_Modal.findById(basket_id);
       if (!basket) {
@@ -235,14 +233,17 @@ class Basket {
       const existingStocks = await Basketstock_Modal.find({ basket_id }).sort({ version: -1 });
 
       let totalAmount = 0;
-      if (existingStocks[0].status == 0) {
-        return res.status(500).json({
-          status: false,
-          message: "Please Public Old Stock First Than New Create",
-        });
-      }
-      else {
-        if (existingStocks && existingStocks.length > 0) {
+
+      if (existingStocks && existingStocks.length > 0) {
+
+        if (existingStocks[0].status == 0) {
+          return res.status(500).json({
+            status: false,
+            message: "Please Public Old Stock First Than New Create",
+          });
+        }
+        else {
+
           let totalSum = 0;
 
           for (const stock of existingStocks) {
@@ -272,84 +273,85 @@ class Basket {
           }
 
           totalAmount = totalSum;
-        } else {
-          // Set the total amount to the basket's minimum investment amount if no stocks exist
-          totalAmount = basket.mininvamount;
         }
+      } else {
+        // Set the total amount to the basket's minimum investment amount if no stocks exist
+        totalAmount = basket.mininvamount;
+      }
 
 
-        let remainingAmount = totalAmount; // Keep track of remaining amount
+      let remainingAmount = totalAmount; // Keep track of remaining amount
 
-        if (!Array.isArray(stocks) || stocks.length === 0) {
+      if (!Array.isArray(stocks) || stocks.length === 0) {
+        return res.status(400).json({
+          status: false,
+          message: "Stocks data is required and should be an array.",
+        });
+      }
+
+      const bulkOps = [];
+
+      for (const stock of stocks) {
+        const { name, tradesymbol, percentage, price, comment, type, status } = stock;
+
+        const currentPrice = price;
+        if (!currentPrice) {
           return res.status(400).json({
             status: false,
-            message: "Stocks data is required and should be an array.",
+            message: `No market price found for ${tradesymbol}`,
           });
         }
 
-        const bulkOps = [];
+        // Calculate allocation
+        const allocatedAmount = (percentage / 100) * totalAmount;
+        if (allocatedAmount > remainingAmount) {
+          return res.status(400).json({
+            status: false,
+            message: `Insufficient funds to allocate ${allocatedAmount} for ${tradesymbol}`,
+          });
+        }
 
-        for (const stock of stocks) {
-          const { name, tradesymbol, percentage, price, comment, type, status } = stock;
+        // Calculate quantity and total value
+        const quantity = Math.floor(allocatedAmount / currentPrice);
+        const total_value = quantity * currentPrice;
 
-          const currentPrice = price;
-          if (!currentPrice) {
-            return res.status(400).json({
-              status: false,
-              message: `No market price found for ${tradesymbol}`,
-            });
-          }
+        // Deduct from remaining amount
+        remainingAmount -= total_value;
 
-          // Calculate allocation
-          const allocatedAmount = (percentage / 100) * totalAmount;
-          if (allocatedAmount > remainingAmount) {
-            return res.status(400).json({
-              status: false,
-              message: `Insufficient funds to allocate ${allocatedAmount} for ${tradesymbol}`,
-            });
-          }
+        // Find the latest version of the stock in the basket
 
-          // Calculate quantity and total value
-          const quantity = Math.floor(allocatedAmount / currentPrice);
-          const total_value = quantity * currentPrice;
-
-          // Deduct from remaining amount
-          remainingAmount -= total_value;
-
-          // Find the latest version of the stock in the basket
-
-          const version = existingStocks.length > 0 ? existingStocks[0].version + 1 : 1;
+        const version = existingStocks.length > 0 ? existingStocks[0].version + 1 : 1;
 
 
-          bulkOps.push({
-            insertOne: {
-              document: {
-                basket_id,
-                name,
-                tradesymbol,
-                price: currentPrice,
-                total_value,
-                quantity,
-                type,
-                comment: comment || '',
-                version,
-                weightage: percentage,
-                status: status,
-              },
+        bulkOps.push({
+          insertOne: {
+            document: {
+              basket_id,
+              name,
+              tradesymbol,
+              price: currentPrice,
+              total_value,
+              quantity,
+              type,
+              comment: comment || '',
+              version,
+              weightage: percentage,
+              status: status,
             },
-          });
-        }
-
-        // Execute the bulk insert
-        const result = await Basketstock_Modal.bulkWrite(bulkOps);
-
-        return res.json({
-          status: true,
-          message: "Stocks added successfully.",
-          data: result,
+          },
         });
-
       }
+
+      // Execute the bulk insert
+      const result = await Basketstock_Modal.bulkWrite(bulkOps);
+
+      return res.json({
+        status: true,
+        message: "Stocks added successfully.",
+        data: result,
+      });
+
+
     } catch (error) {
       console.error("Error adding stocks:", error);
       return res.status(500).json({
@@ -453,6 +455,7 @@ class Basket {
       });
     }
   }
+
 
 
   async getBasket(req, res) {
