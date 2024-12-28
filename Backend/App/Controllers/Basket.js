@@ -233,15 +233,18 @@ class Basket {
       const existingStocks = await Basketstock_Modal.find({ basket_id }).sort({ version: -1 });
 
       let totalAmount = 0;
-      if(existingStocks[0].status==0)
-        {
-          return res.status(500).json({
-            status: false,
-            message: "Please Public Old Stock First Than New Create",
-          });
-        }
-        else {
+     
       if (existingStocks && existingStocks.length > 0) {
+
+        if(existingStocks[0].status==0)
+          {
+            return res.status(500).json({
+              status: false,
+              message: "Please Public Old Stock First Than New Create",
+            });
+          }
+          else {
+
         let totalSum = 0;
       
         for (const stock of existingStocks) {
@@ -271,11 +274,12 @@ class Basket {
         }
       
         totalAmount = totalSum;
+      }
       } else {
         // Set the total amount to the basket's minimum investment amount if no stocks exist
         totalAmount = basket.mininvamount;
       }
- 
+   
 
       let remainingAmount = totalAmount; // Keep track of remaining amount
   
@@ -348,7 +352,7 @@ class Basket {
         data: result,
       });
 
-    }
+  
     } catch (error) {
       console.error("Error adding stocks:", error);
       return res.status(500).json({
