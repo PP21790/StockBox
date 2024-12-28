@@ -452,6 +452,22 @@ export async function BasketAllList(token) {
 
 
 
+// basket ACTIVE list 
+export async function BasketAllActiveList(token) {
+    try {
+        const res = await axios.get(`${Config.base_url}basket/activebasket`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}
+
+
+
 
 // get basket detail per stock
 
@@ -2972,7 +2988,7 @@ export async function getAllNotificationlist(token, page) {
 
 export async function Basketstatusofdetail(data, token) {
     try {
-        const res = await axios.post(`${Config.base_url}basket/change-status**`, data, {
+        const res = await axios.post(`${Config.base_url}basket/change-status`, data, {
             headers: {
                 data: {},
                 'Authorization': `${token}`,
