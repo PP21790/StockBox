@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
 import { Tooltip } from "antd";
+
+
 import {
   Settings2,
   Eye,
@@ -16,7 +18,7 @@ import {
 } from "lucide-react";
 import Swal from "sweetalert2";
 import Table from "../../../components/Table";
-import { BasketAllList, deletebasket } from "../../../Services/Admin";
+import { BasketAllActiveList, deletebasket } from "../../../Services/Admin";
 import { fDate } from "../../../Utils/Date_formate";
 
 const BasketStockPublish = () => {
@@ -24,10 +26,19 @@ const BasketStockPublish = () => {
   const [clients, setClients] = useState([]);
   const token = localStorage.getItem("token");
 
+
+  useEffect(() => {
+    getbasketlist();
+  }, []);
+
+
+
+
+
   // Fetch basket list
   const getbasketlist = async () => {
     try {
-      const response = await BasketAllList(token);
+      const response = await BasketAllActiveList(token);
       if (response.status) {
         setClients(response.data);
       }
@@ -36,9 +47,8 @@ const BasketStockPublish = () => {
     }
   };
 
-  useEffect(() => {
-    getbasketlist();
-  }, []);
+
+
 
   // Delete basket
   const Deletebasket = async (_id) => {
@@ -80,6 +90,9 @@ const BasketStockPublish = () => {
       });
     }
   };
+
+
+
 
   // Columns for DataTable
   const columns = [
@@ -127,49 +140,49 @@ const BasketStockPublish = () => {
     {
       name: "Actions",
       cell: (row) => (
-        
-          <div className="d-flex">
-            <Tooltip placement="top" overlay="Package Assign"></Tooltip>
 
-            <Tooltip title=" Rebalance">
+        <div className="d-flex">
+          <Tooltip placement="top" overlay="Package Assign"></Tooltip>
+
+          <Tooltip title=" Rebalance">
             <Link
-            to={`/admin/basket/rebalancing`}
-            className="btn"
-          >
-            <Cable />
-          </Link>
-           
-            </Tooltip>
+              to={`/admin/basket/rebalancing`}
+              className="btn"
+            >
+              <Cable />
+            </Link>
 
-            <Tooltip title="view">
+          </Tooltip>
+
+          <Tooltip title="view">
             <Link to={`/admin/basket/view-basket-stock/`} className="btn">
               <Eye />
             </Link>
           </Tooltip>
           <Tooltip title="history">
-          <Link
-            to={`/admin/basket/basket-purchase-history`}
-            className="btn "
-          >
-            <History />
-          
-          </Link>
+            <Link
+              to={`/admin/basket/basket-purchase-history`}
+              className="btn "
+            >
+              <History />
+
+            </Link>
           </Tooltip>
           <Tooltip title=" View Purchase Client">
-          <Link
-            to={`/admin/basket/view-purchase-client`}
-            className="btn"
-          >
-            <UserRoundCheck />
-           
-          </Link>
+            <Link
+              to={`/admin/basket/view-purchase-client`}
+              className="btn"
+            >
+              <UserRoundCheck />
+
+            </Link>
           </Tooltip>
-          </div>
-          
-         
-        
+        </div>
+
+
+
       ),
-    width: "200px",
+      width: "200px",
     },
   ];
 

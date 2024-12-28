@@ -7,16 +7,15 @@ import axios from "axios";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import * as Config from "../../../Utils/config";
-import { Tooltip } from 'antd';
-
 
 const AddStock = () => {
   const { id: basket_id } = useParams();
   const [selectedServices, setSelectedServices] = useState([]);
   const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
   const [inputValue, setInputValue] = useState("");
+  const [formikValues, setFormikValues] = useState({});
+  const navigate = useNavigate();
 
   const fetchOptions = async (inputValue) => {
     if (!inputValue) {
@@ -53,12 +52,31 @@ const AddStock = () => {
 
   const handleServiceChange = (selectedOption) => {
     setSelectedServices(selectedOption || []);
+
+    const updatedValues = { ...formikValues }; // Retain existing values
+    (selectedOption || []).forEach((service) => {
+      if (!updatedValues[service.value]) {
+        updatedValues[service.value] = {
+          tradesymbol: service.tradesymbol,
+          name: service.label,
+          percentage: "",
+          price: "",
+          type: "",
+        };
+      }
+    });
+
+    setFormikValues(updatedValues); // Update form values
   };
 
   const handleRemoveService = (serviceValue) => {
     setSelectedServices((prev) =>
       prev.filter((service) => service.value !== serviceValue)
     );
+
+    const updatedValues = { ...formikValues };
+    delete updatedValues[serviceValue];
+    setFormikValues(updatedValues);
   };
 
   const validationSchema = Yup.object().shape(
@@ -82,7 +100,6 @@ const AddStock = () => {
       return;
     }
 
-
     const stocksWithStatus = Object.values(values).map((stock) => ({
       ...stock,
       status,
@@ -92,8 +109,6 @@ const AddStock = () => {
       basket_id,
       stocks: stocksWithStatus,
     };
-
-
 
     try {
       const response = await Addstockbasketform(requestData);
@@ -112,12 +127,18 @@ const AddStock = () => {
     }
   };
 
-
-
   const handleInputChange = (value) => {
     setInputValue(value);
     fetchOptions(value);
   };
+
+  useEffect(() => {
+    setOptions((prevOptions) =>
+      prevOptions.filter((option) =>
+        selectedServices.some((service) => service.value === option.value)
+      )
+    );
+  }, [selectedServices]);
 
   return (
     <div className="page-content">
@@ -138,11 +159,11 @@ const AddStock = () => {
       <div className="card">
         <div className="card-body">
           <div className="row">
-
             <div className="col-12">
               <Select
                 inputValue={inputValue}
                 onInputChange={handleInputChange}
+                value={selectedServices}
                 options={options}
                 onChange={handleServiceChange}
                 placeholder="Search and select stocks..."
@@ -156,24 +177,31 @@ const AddStock = () => {
             </div>
           </div>
           <Formik
-            initialValues={selectedServices.reduce((acc, service) => {
-              acc[service.value] = {
-                tradesymbol: service.tradesymbol,
-                name: service.label,
-                percentage: "",
-                price: "",
-                type: "",
-              };
-              return acc;
-            }, {})}
+            initialValues={formikValues}
             validationSchema={validationSchema}
+            validate={(values) => {
+              let totalWeightage = 0;
+
+              Object.values(values).forEach((stock) => {
+                totalWeightage += Number(stock.percentage || 0);
+              });
+
+              if (totalWeightage > 100) {
+                return { totalWeightageError: "Total weightage exceeds 100%" };
+              }
+
+              return {};
+            }}
             onSubmit={(values, { setSubmitting }) => {
               setSubmitting(false);
             }}
             enableReinitialize
           >
-            {({ values }) => (
+            {({ values, errors }) => (
               <Form>
+                {errors.totalWeightageError && (
+                  <p className="text-danger">{errors.totalWeightageError}</p>
+                )}
                 {selectedServices.map((service) => (
                   <div key={service.value} className="mt-4">
                     <h5>
@@ -187,45 +215,52 @@ const AddStock = () => {
                       </button>
                     </h5>
                     <div className="row">
-                      {Object.keys(values[service.value] || {}).map((fieldKey) => (
-                        <div key={fieldKey} className="col-md-3">
-                          <label>
-                            {fieldKey === "percentage" ? "Weightage" : fieldKey.charAt(0).toUpperCase() + fieldKey.slice(1)}
-                          </label>
-                          {fieldKey === "type" ? (
-                            <Field
-                              as="select"
-                              name={`${service.value}.${fieldKey}`}
-                              className="form-control"
-                            >
-                              <option value="">Select an option</option>
-                              <option value="Large Cap">Large Cap</option>
-                              <option value="Mid Cap">Mid Cap</option>
-                              <option value="Small Cap">Small Cap</option>
-                            </Field>
-                          ) : (
-                            <Field
-                              name={`${service.value}.${fieldKey}`}
-                              type={
-                                fieldKey === "percentage" || fieldKey === "price"
-                                  ? "number"
-                                  : "text"
-                              }
-                              className="form-control"
-                              placeholder={`Enter ${fieldKey === "percentage" ? "Weightage" : fieldKey}`}
-                              readOnly={
-                                fieldKey === "tradesymbol" || fieldKey === "name"
-                              }
-                            />
-                          )}
-                          <ErrorMessage
-                            name={`${service.value}.${fieldKey}`}
-                            component="p"
-                            className="text-danger"
-                          />
-                        </div>
-                      ))}
-
+                      {Object.keys(values[service.value] || {}).map(
+                        (fieldKey) =>
+                          fieldKey !== "tradesymbol" && (
+                            <div key={fieldKey} className="col-md-3">
+                              <label>
+                                {fieldKey === "percentage"
+                                  ? "Weightage"
+                                  : fieldKey.charAt(0).toUpperCase() +
+                                  fieldKey.slice(1)}
+                              </label>
+                              {fieldKey === "type" ? (
+                                <Field
+                                  as="select"
+                                  name={`${service.value}.${fieldKey}`}
+                                  className="form-control"
+                                >
+                                  <option value="">Select an option</option>
+                                  <option value="Large Cap">Large Cap</option>
+                                  <option value="Mid Cap">Mid Cap</option>
+                                  <option value="Small Cap">Small Cap</option>
+                                </Field>
+                              ) : (
+                                <Field
+                                  name={`${service.value}.${fieldKey}`}
+                                  type={
+                                    fieldKey === "percentage" ||
+                                      fieldKey === "price"
+                                      ? "number"
+                                      : "text"
+                                  }
+                                  className="form-control"
+                                  placeholder={`Enter ${fieldKey === "percentage"
+                                    ? "Weightage"
+                                    : fieldKey
+                                    }`}
+                                  readOnly={fieldKey === "name"}
+                                />
+                              )}
+                              <ErrorMessage
+                                name={`${service.value}.${fieldKey}`}
+                                component="p"
+                                className="text-danger"
+                              />
+                            </div>
+                          )
+                      )}
                     </div>
                   </div>
                 ))}

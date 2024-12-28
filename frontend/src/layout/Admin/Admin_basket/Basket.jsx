@@ -42,7 +42,7 @@ const Basket = () => {
 
   const handleSwitchChange = async (event, id) => {
     const originalChecked = event.target.checked;
-    const user_active_status = originalChecked ? "true" : "false";
+    const user_active_status = originalChecked
     const data = { id: id, status: user_active_status };
 
     const result = await Swal.fire({
@@ -264,12 +264,12 @@ const Basket = () => {
                 Add Basket
               </Link>
             </div>
-            <div className="ms-2">
+            {/* <div className="ms-2">
               <Link to="/admin/basket/rebalancing" className="btn btn-primary">
                 <i className="bx bxs-plus-square" aria-hidden="true" />
                 RebBalancing
               </Link>
-            </div>
+            </div> */}
           </div>
           <Table
             columns={columns}

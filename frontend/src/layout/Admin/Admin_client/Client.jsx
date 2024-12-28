@@ -312,6 +312,14 @@ const Client = () => {
         }
     };
 
+    // const handleSwitchChange = (event, id) => {
+    //     const isChecked = event.target.checked;
+    //     setTableData((prevData) =>
+    //         prevData.map((row) =>
+    //             row._id === id ? { ...row, ActiveStatus: isChecked ? 1 : 0 } : row
+    //         )
+    //     );
+    // };
 
 
     // update status 
@@ -540,14 +548,14 @@ const Client = () => {
             selector: row => (
                 <div className="form-check form-switch form-check-info">
                     <input
-                        id={`rating_${row.ActiveStatus}`}
+                        id={`rating_${row._id}`}
                         className="form-check-input toggleswitch"
                         type="checkbox"
-                        defaultChecked={row.ActiveStatus == 1}
+                        checked={row.ActiveStatus == 1}
                         onChange={(event) => handleSwitchChange(event, row._id)}
                     />
                     <label
-                        htmlFor={`rating_${row.ActiveStatus}`}
+                        htmlFor={`rating_${row._id}`}
                         className="checktoggle checkbox-bg"
                     ></label>
                 </div>
@@ -555,6 +563,7 @@ const Client = () => {
             sortable: true,
             width: '165px',
         },
+
         {
             name: 'Kyc',
             selector: row => (
