@@ -16,7 +16,7 @@ class Service {
               return res.status(400).json({ status: false, message: "add_by is required" });
             }
     
-            console.log("Request Body:", req.body);
+            // console.log("Request Body:", req.body);
     
             const result = new Service_Modal({
                 title,
@@ -25,7 +25,7 @@ class Service {
     
             await result.save();
     
-            console.log("Service successfully added:", result);
+            // console.log("Service successfully added:", result);
             return res.json({
                 status: true,
                 message: "Service added successfully",
@@ -34,7 +34,7 @@ class Service {
     
         } catch (error) {
             // Enhanced error logging
-            console.log("Error adding Service:", error);
+            // console.log("Error adding Service:", error);
     
             return res.status(500).json({
                 status: false,
@@ -119,7 +119,7 @@ class Service {
         });
 
     } catch (error) {
-        console.log("Error fetching Service details:", error);
+        // console.log("Error fetching Service details:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",
@@ -160,7 +160,7 @@ class Service {
         });
       }
   
-      console.log("Updated Service:", updatedService);
+      // console.log("Updated Service:", updatedService);
       return res.json({
         status: true,
         message: "Service updated successfully",
@@ -168,7 +168,7 @@ class Service {
       });
   
     } catch (error) {
-      console.log("Error updating Service:", error);
+      // console.log("Error updating Service:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -205,14 +205,14 @@ class Service {
         });
       }
 
-      console.log("Deleted Service:", deletedService);
+      // console.log("Deleted Service:", deletedService);
       return res.json({
         status: true,
         message: "Service deleted successfully",
         data: deletedService,
       });
     } catch (error) {
-      console.log("Error deleting Service:", error);
+      // console.log("Error deleting Service:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -255,7 +255,7 @@ class Service {
         });
   
     } catch (error) {
-        console.log("Error updating status:", error);
+        // console.log("Error updating status:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",

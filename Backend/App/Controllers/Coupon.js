@@ -17,7 +17,7 @@ class Coupon {
           await new Promise((resolve, reject) => {
             upload('coupon').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
                 if (err) {
-                    console.log('File upload error:', err);
+                    // console.log('File upload error:', err);
                     return reject(err);
                 }
 
@@ -134,7 +134,7 @@ class Coupon {
 
 
 
-            console.log("Coupon successfully added:", result);
+            // console.log("Coupon successfully added:", result);
             return res.json({
                 status: true,
                 message: "Coupon added successfully",
@@ -143,7 +143,7 @@ class Coupon {
     
         } catch (error) {
             // Enhanced error logging
-            console.log("Error adding coupon:", error);
+            // console.log("Error adding coupon:", error);
     
             return res.status(500).json({
                 status: false,
@@ -227,7 +227,7 @@ class Coupon {
         });
 
     } catch (error) {
-        console.log("Error fetching Coupon details:", error);
+        // console.log("Error fetching Coupon details:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",
@@ -246,7 +246,7 @@ class Coupon {
       await new Promise((resolve, reject) => {
         upload('coupon').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
             if (err) {
-                console.log('File upload error:', err);
+                // console.log('File upload error:', err);
                 return reject(err);
             }
 
@@ -327,7 +327,7 @@ class Coupon {
         });
       }
   
-      console.log("Updated Coupon:", updatedCoupon);
+      // console.log("Updated Coupon:", updatedCoupon);
       return res.json({
         status: true,
         message: "Coupon updated successfully",
@@ -335,7 +335,7 @@ class Coupon {
       });
   
     } catch (error) {
-      console.log("Error updating Coupon:", error);
+      // console.log("Error updating Coupon:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -370,14 +370,14 @@ class Coupon {
         });
       }
 
-      console.log("Deleted Coupon:", deletedCoupon);
+      // console.log("Deleted Coupon:", deletedCoupon);
       return res.json({
         status: true,
         message: "Coupon deleted successfully",
         data: deletedCoupon,
       });
     } catch (error) {
-      console.log("Error deleting Coupon:", error);
+      // console.log("Error deleting Coupon:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -419,7 +419,7 @@ class Coupon {
         });
   
     } catch (error) {
-        console.log("Error updating status:", error);
+        // console.log("Error updating status:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",
@@ -491,9 +491,9 @@ if(status=='1')
           try {
             // Send notifications to all device tokens
             await sendFCMNotification(notificationTitle, notificationBody, tokens, "add coupon");
-            console.log('Notifications sent successfully');
+            // console.log('Notifications sent successfully');
           } catch (error) {
-            console.log('Error sending notifications:', error);
+            // console.log('Error sending notifications:', error);
           }
 
 
@@ -509,7 +509,7 @@ if(status=='1')
         });
   
     } catch (error) {
-        console.log("Error updating status:", error);
+        // console.log("Error updating status:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",

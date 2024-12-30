@@ -8,7 +8,7 @@ class Script {
         try {
             const { price,basket,calltype,stock,tag1,tag2,tag3,stoploss,add_by } = req.body;
     
-            console.log("Request Body:", req.body);
+            // console.log("Request Body:", req.body);
     
             const result = new Script_Modal({
                 price,
@@ -24,7 +24,7 @@ class Script {
     
             await result.save();
     
-            console.log("Script successfully added:", result);
+            // console.log("Script successfully added:", result);
             return res.json({
                 status: true,
                 message: "Script added successfully",
@@ -33,7 +33,7 @@ class Script {
     
         } catch (error) {
             // Enhanced error logging
-            console.log("Error adding Script:", error);
+            // console.log("Error adding Script:", error);
     
             return res.status(500).json({
                 status: false,
@@ -96,7 +96,7 @@ class Script {
         });
 
     } catch (error) {
-        console.log("Error fetching Script details:", error);
+        // console.log("Error fetching Script details:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",
@@ -134,14 +134,14 @@ class Script {
         });
       }
 
-      console.log("Deleted Script:", deletedScript);
+      // console.log("Deleted Script:", deletedScript);
       return res.json({
         status: true,
         message: "Script deleted successfully",
         data: deletedScript,
       });
     } catch (error) {
-      console.log("Error deleting Script:", error);
+      // console.log("Error deleting Script:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",

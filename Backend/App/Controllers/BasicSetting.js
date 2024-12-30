@@ -109,7 +109,7 @@ class BasicSetting {
                 });
             });
         } catch (error) {
-            console.log("Error adding/updating basic setting:", error);
+            // console.log("Error adding/updating basic setting:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -130,7 +130,7 @@ class BasicSetting {
                 data: settings
             });
         } catch (error) {
-            console.log("Error retrieving settings:", error);
+            // console.log("Error retrieving settings:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -149,7 +149,7 @@ class BasicSetting {
                 data: settings
             });
         } catch (error) {
-            console.log("Error retrieving settings:", error);
+            // console.log("Error retrieving settings:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -199,7 +199,7 @@ class BasicSetting {
                 data: result
             });
         } catch (error) {
-            console.error("Error updating basic setting:", error);
+            // console.error("Error updating basic setting:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -229,7 +229,7 @@ class BasicSetting {
                 data: result
             });
         } catch (error) {
-            console.error("Error updating social link:", error);
+            // console.error("Error updating social link:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -281,6 +281,24 @@ class BasicSetting {
                 error: error.message
             });
         }
+
+
+        const options = { new: true, upsert: true, runValidators: true };
+        const result = await BasicSetting_Modal.findOneAndUpdate({}, update, options);
+
+
+        return res.status(200).json({
+            status: true,
+            message: "Social Link updated successfully",
+            data: result
+        });
+    } catch(error) {
+        // console.error("Error updating social link:", error);
+        return res.status(500).json({
+            status: false,
+            message: "Server error",
+            error: error.message
+        });
     }
 
 

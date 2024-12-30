@@ -339,7 +339,7 @@ class Kotakneo {
 
             fs.readFile(filePath1, 'utf8', (err, data) => {
                 if (err) {
-                    console.error(`Error reading file: ${err}`);
+                    // console.error(`Error reading file: ${err}`);
                     return;
                 }
 
@@ -434,7 +434,7 @@ class Kotakneo {
                                 });
                             } else {
                                 // Log response if the status isn't 'Ok'
-                                console.log("Error in response:", response);
+                                // console.log("Error in response:", response);
                                 return res.status(500).json({
                                     status: false,
                                     message: response.data.message || 'Unknown error in response'
@@ -454,7 +454,7 @@ class Kotakneo {
 
             });
         } catch (error) {
-            console.error("Error placing order:", error); // Log the error
+            // console.error("Error placing order:", error); // Log the error
             return res.status(500).json({
                 status: false,
                 message: error.response ? error.response.data : "An error occurred while placing the order"
@@ -553,7 +553,7 @@ class Kotakneo {
             try {
                 const positionData = await CheckPosition(client.apikey, stock.segment, stock.instrument_token);
             } catch (error) {
-                console.error('Error in CheckPosition:', error.message);
+                // console.error('Error in CheckPosition:', error.message);
 
             }
 
@@ -561,7 +561,7 @@ class Kotakneo {
                 try {
                     const holdingData = await CheckHolding(client.apikey, stock.segment, stock.instrument_token);
                 } catch (error) {
-                    console.error('Error in CheckHolding:', error.message);
+                    // console.error('Error in CheckHolding:', error.message);
                 }
                 totalValue = Math.abs(positionData.qty) + holdingData.qty;
             }
@@ -599,7 +599,7 @@ class Kotakneo {
 
                 fs.readFile(filePath1, 'utf8', (err, data) => {
                     if (err) {
-                        console.error(`Error reading file: ${err}`);
+                        // console.error(`Error reading file: ${err}`);
                         return;
                     }
 
@@ -902,7 +902,7 @@ class Kotakneo {
             try {
                 const positionData = await CheckPosition(client.apikey, stock.segment, stock.instrument_token);
             } catch (error) {
-                console.error('Error in CheckPosition:', error.message);
+                // console.error('Error in CheckPosition:', error.message);
 
             }
 
@@ -910,7 +910,7 @@ class Kotakneo {
                 try {
                     const holdingData = await CheckHolding(client.apikey, stock.segment, stock.instrument_token);
                 } catch (error) {
-                    console.error('Error in CheckHolding:', error.message);
+                    // console.error('Error in CheckHolding:', error.message);
                 }
                 totalValue = Math.abs(positionData.qty) + holdingData.qty;
             }
@@ -948,7 +948,7 @@ class Kotakneo {
 
                 fs.readFile(filePath1, 'utf8', (err, data) => {
                     if (err) {
-                        console.error(`Error reading file: ${err}`);
+                        // console.error(`Error reading file: ${err}`);
                         return;
                     }
 
@@ -1149,7 +1149,7 @@ class Kotakneo {
 
             fs.readFile(filePath1, 'utf8', (err, data) => {
                 if (err) {
-                    console.error(`Error reading file: ${err}`);
+                    // console.error(`Error reading file: ${err}`);
                     return;
                 }
             
@@ -1442,7 +1442,7 @@ async function CheckPosition(userId, segment, instrument_token) {
 
         }
     } catch (error) {
-        console.error('Error in CheckPosition:', error.message);
+        // console.error('Error in CheckPosition:', error.message);
         return {
             status: false,
             qty: 0
@@ -1502,7 +1502,7 @@ async function CheckHolding(userId, segment, instrument_token) {
             };
         }
     } catch (error) {
-        console.error('Error fetching position:', error.response ? error.response.data : error.message);
+        // console.error('Error fetching position:', error.response ? error.response.data : error.message);
         return {
             status: false,
             qty: 0,

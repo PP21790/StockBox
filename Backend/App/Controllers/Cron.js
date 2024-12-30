@@ -83,7 +83,7 @@ function reloadCronJobs() {
   cashExpireCron = cron.schedule(
     `${JsonFile.cashexpiretime} ${JsonFile.cashexpirehours} * * *`,
     async () => {
-      console.log("Running CheckExpireSignalCash...");
+    //   console.log("Running CheckExpireSignalCash...");
       await CheckExpireSignalCash();
     },
     {
@@ -92,14 +92,14 @@ function reloadCronJobs() {
     }
   );
 
-  console.log(
-    `Cash Expiry Cron rescheduled with time: ${JsonFile.cashexpiretime} and hour: ${JsonFile.cashexpirehours}`
-  );
+//   console.log(
+//     `Cash Expiry Cron rescheduled with time: ${JsonFile.cashexpiretime} and hour: ${JsonFile.cashexpirehours}`
+//   );
 
   foExpireCron = cron.schedule(
     `${JsonFile.foexpiretime} ${JsonFile.foexpirehours} * * *`,
     async () => {
-      console.log("Running CheckExpireSignalFutureOption...");
+    //   console.log("Running CheckExpireSignalFutureOption...");
       await CheckExpireSignalFutureOption();
     },
     {
@@ -108,16 +108,16 @@ function reloadCronJobs() {
     }
   );
 
-  console.log(
-    `Future Option Expiry Cron rescheduled with time: ${JsonFile.foexpiretime} and hour: ${JsonFile.foexpirehours}`
-  );
+//   console.log(
+//     `Future Option Expiry Cron rescheduled with time: ${JsonFile.foexpiretime} and hour: ${JsonFile.foexpirehours}`
+//   );
 }
 
 reloadCronJobs();
 
 fs.watch(jsonFilePath, (eventType) => {
   if (eventType === "change") {
-    console.log("Config file updated. Reloading cron jobs...");
+    // console.log("Config file updated. Reloading cron jobs...");
     delete require.cache[require.resolve(jsonFilePath)]; // Clear the cache
     JsonFile = require(jsonFilePath); // Reload the JSON file
     reloadCronJobs(); // Reload all cron jobs
@@ -196,17 +196,17 @@ async function AddBulkStockCron(req, res) {
       
           // Segment O -OPTION
           const userDataSegment_O = await createUserDataArray(filteredDataO, "O");
-          console.log("O")
+        //   console.log("O")
           await insertData(userDataSegment_O);
-          console.log("O")
+        //   console.log("O")
           // Segment F - FUTURE
           const userDataSegment_F = await createUserDataArray(filteredDataF, "F");
           await insertData(userDataSegment_F);
-          console.log("F")
+        //   console.log("F")
           // Segment C -CASH
           const userDataSegment_C = await createUserDataArray(filteredDataC, "C");
           await insertData(userDataSegment_C);
-          console.log("C")
+        //   console.log("C")
   
   
           // Segment MF MCX FUTURE
@@ -252,7 +252,7 @@ async function AddBulkStockCron(req, res) {
           return
       }
   } catch (error) {
-      console.log("Error TokenSymbolUpdate Try catch", error);
+    //   console.log("Error TokenSymbolUpdate Try catch", error);
   }
   }
   
@@ -299,10 +299,10 @@ const DeleteTokenAliceToken = async (req, res) => {
     if (result.length > 0) {
         const idsToDelete = result.map(item => item._id);
         await Stock_Modal.deleteMany({ _id: { $in: result[0].idsToDelete } });
-        console.log(`${result.length} expired tokens deleted.`);
+        // console.log(`${result.length} expired tokens deleted.`);
         return;
     } else {
-        console.log('No expired tokens found.');
+        // console.log('No expired tokens found.');
         return;    }
   
   }
@@ -356,7 +356,7 @@ const DeleteTokenAliceToken = async (req, res) => {
         });
         await Stock_Modal.insertMany(filteredDataArray);
     } catch (error) {
-        console.log("Error in insertData:", error)
+        // console.log("Error in insertData:", error)
     }
   
   }
@@ -375,9 +375,9 @@ const DeleteTokenAliceToken = async (req, res) => {
                 { $set: { tradingstatus: 0 } }
             );
 
-            console.log(`Updated trading status for ${updateResult.modifiedCount} active clients.`);
+            // console.log(`Updated trading status for ${updateResult.modifiedCount} active clients.`);
         } else {
-            console.log('No active clients found to update.');
+            // console.log('No active clients found to update.');
             
         }
 
@@ -391,12 +391,12 @@ const DeleteTokenAliceToken = async (req, res) => {
             existingSetting.brokerloginstatus = 0;
             await existingSetting.save();
         
-            console.log(`Updated trading status ....`);
+            // console.log(`Updated trading status ....`);
         } 
 
 
     } catch (error) {
-        console.log('Error updating trading status:', error);
+        // console.log('Error updating trading status:', error);
     }
 }
 
@@ -425,14 +425,14 @@ async function CheckExpireSignalCash(req, res) {
                     { $set: { close_status: true, closeprice: cPrice, closedate: today } }
                 );
             } catch (error) {
-                console.log(`Failed to update signal for ${signal.stock}:`, error.message);
+                // console.log(`Failed to update signal for ${signal.stock}:`, error.message);
             }
         }
 
         return;
       
     } catch (error) {
-        console.log('Error:', error);
+        // console.log('Error:', error);
         return;
 
     } 
@@ -445,7 +445,7 @@ async function CheckExpireSignalFutureOption(req, res) {
         const existingSetting = await BasicSetting_Modal.findOne({});
 
         if (!existingSetting.brokerloginstatus) {
-            console.log("Broker not Login");
+            // console.log("Broker not Login");
           return;
          
         }
@@ -579,7 +579,7 @@ async function openSocketConnection(channelList, userid, userSession1) {
   };
 
   ws.onerror = function (error) {
-    console.log(`WebSocket error: ${error}`);
+    // console.log(`WebSocket error: ${error}`);
   };
 
   ws.onclose = async function () {
@@ -642,7 +642,7 @@ async function returnstockcloseprice(symbol) {
             });
         });
     } catch (error) {
-        console.log("Error in returnstockcloseprice:", error.message);
+        // console.log("Error in returnstockcloseprice:", error.message);
        // throw error;
        return;
     }
@@ -757,7 +757,7 @@ async function PlanExpire(req, res) {
       return;
     
     } catch (error) {
-        console.log('Error:', error);
+        // console.log('Error:', error);
         return;
     }
 }
@@ -805,7 +805,7 @@ async function downloadKotakNeotoken(req, res) {
                     });
                 })
                 .catch((error) => {
-                    console.log(`Error downloading file from ${fileUrl}:`, error);
+                    // console.log(`Error downloading file from ${fileUrl}:`, error);
                   //  throw new Error(`Error downloading file from ${fileUrl}`);
                 });
         });
@@ -817,7 +817,7 @@ async function downloadKotakNeotoken(req, res) {
         return;
 
     } catch (error) {
-        console.log('An unexpected error occurred:', error);
+        // console.log('An unexpected error occurred:', error);
         return;
     }
 }

@@ -235,7 +235,7 @@ clientStatusCounts.forEach(result => {
 async CompanyStatus(req, res) {
   try {
     const { key, status } = req.body;
-console.log(req.body);
+// console.log(req.body);
     const basicSetting = await BasicSetting_Modal.findOne({ company_key: key });
     
 if (!basicSetting) {
@@ -391,7 +391,7 @@ async pastPerformance(req, res) {
       }
     });
   } catch (error) {
-    console.log("Error fetching signal details:", error);
+    // console.log("Error fetching signal details:", error);
 
     return res.status(500).json({
       status: false,
@@ -523,7 +523,7 @@ async pastPerformances(req, res) {
          avgreturnpertrade = (totalProfit - totalLoss) / count;
     
 
-      console.log("avgreturnpertrade",avgreturnpertrade);
+      // console.log("avgreturnpertrade",avgreturnpertrade);
 
       if (monthsBetween > 0) {
         avgreturnpermonth = (totalProfit - totalLoss) / monthsBetween;
@@ -553,7 +553,7 @@ async pastPerformances(req, res) {
     });
 
   } catch (error) {
-    console.error("Error fetching signal details:", error);
+    // console.error("Error fetching signal details:", error);
 
     return res.status(500).json({
       status: false,
@@ -580,7 +580,7 @@ async CloseSignal(req, res) {
           data: signals,
       });
   } catch (error) {
-      console.error("Error fetching signals:", error);
+      // console.error("Error fetching signals:", error);
       return res.json({ status: false, message: "Server error", data: [] });
   }
 }
@@ -626,7 +626,7 @@ async CloseSignalWithFilter(req, res) {
           }
       });
   } catch (error) {
-      console.error("Error fetching signals:", error);
+      // console.error("Error fetching signals:", error);
       return res.json({ status: false, message: "Server error", data: [] });
   }
 }
@@ -663,7 +663,7 @@ async PlanExipreList(req, res) {
       data: enrichedPlans,
     });
   } catch (error) {
-    console.error("Error fetching plans:", error);
+    // console.error("Error fetching plans:", error);
     return res.status(500).json({ status: false, message: "Server error", data: [] });
   }
 }
@@ -844,7 +844,7 @@ async  statusChangeNotifiction(req, res) {
       });
 
   } catch (error) {
-      console.log("Error updating status:", error);
+      // console.log("Error updating status:", error);
       return res.status(500).json({
           status: false,
           message: "Server error",

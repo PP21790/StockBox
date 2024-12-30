@@ -33,7 +33,7 @@ async function run() {
         }
 
       } catch (error) {
-        console.log("Error in Open Position", error);
+        // console.log("Error in Open Position", error);
       }
 
     }
@@ -46,7 +46,7 @@ async function run() {
 
 
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 }
 

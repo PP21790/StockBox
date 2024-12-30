@@ -19,7 +19,7 @@ class Faq {
               return res.status(400).json({ status: false, message: "add_by is required" });
             }
     
-            console.log("Request Body:", req.body);
+            // console.log("Request Body:", req.body);
     
             const result = new Faq_Modal({
                 title,
@@ -29,7 +29,7 @@ class Faq {
     
             await result.save();
     
-            console.log("Faq successfully added:", result);
+            // console.log("Faq successfully added:", result);
             return res.json({
                 status: true,
                 message: "Faq added successfully",
@@ -38,7 +38,7 @@ class Faq {
     
         } catch (error) {
             // Enhanced error logging
-            console.log("Error adding Faq:", error);
+            // console.log("Error adding Faq:", error);
     
             return res.status(500).json({
                 status: false,
@@ -122,7 +122,7 @@ class Faq {
         });
 
     } catch (error) {
-        console.log("Error fetching Faq details:", error);
+        // console.log("Error fetching Faq details:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",
@@ -168,7 +168,7 @@ class Faq {
         });
       }
   
-      console.log("Updated Faq:", updatedFaq);
+      // console.log("Updated Faq:", updatedFaq);
       return res.json({
         status: true,
         message: "Faq updated successfully",
@@ -176,7 +176,7 @@ class Faq {
       });
   
     } catch (error) {
-      console.log("Error updating Faq:", error);
+      // console.log("Error updating Faq:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -213,14 +213,14 @@ class Faq {
         });
       }
 
-      console.log("Deleted Faq:", deletedFaq);
+      // console.log("Deleted Faq:", deletedFaq);
       return res.json({
         status: true,
         message: "Faq deleted successfully",
         data: deletedFaq,
       });
     } catch (error) {
-      console.log("Error deleting Faq:", error);
+      // console.log("Error deleting Faq:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -263,7 +263,7 @@ class Faq {
         });
   
     } catch (error) {
-        console.log("Error updating status:", error);
+        // console.log("Error updating status:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",

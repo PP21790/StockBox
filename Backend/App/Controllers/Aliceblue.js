@@ -1291,7 +1291,7 @@ async function CheckPosition(userId, authToken, segment, instrument_token, produ
             };
         }
     } catch (error) {
-        console.error('Error in CheckPosition:', error.message);
+        // console.error('Error in CheckPosition:', error.message);
         return {
             status: false,
             qty: 0
@@ -1339,7 +1339,7 @@ async function CheckHolding(userId, authToken, segment, instrument_token, produc
         }
     } catch (error) {
         // Log the error and return a default response
-        console.error('Error fetching holdings:', error.response ? error.response.data : error.message);
+        // console.error('Error fetching holdings:', error.response ? error.response.data : error.message);
         return {
             status: false,
             qty: 0  // Return 0 in case of an error

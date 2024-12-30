@@ -135,9 +135,9 @@ if(type=="active")
               try {
                 // Send notifications to all device tokens
                 await sendFCMNotification(notificationTitle, notificationBody, tokens, "add broadcast");
-                console.log('Notifications sent successfully');
+                // console.log('Notifications sent successfully');
               } catch (error) {
-                console.error('Error sending notifications:', error);
+                // console.error('Error sending notifications:', error);
               }
   
   
@@ -151,7 +151,7 @@ if(type=="active")
             });
     
         } catch (error) {
-            console.error("Server error:", error);
+            // console.error("Server error:", error);
             return res.status(500).json({ status: false, message: "Server error", data: [] });
         }
     }
@@ -168,7 +168,7 @@ if(type=="active")
                 data: Broadcast
             });
         } catch (error) {
-            console.error("Error retrieving Broadcast:", error);
+            // console.error("Error retrieving Broadcast:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -188,7 +188,7 @@ if(type=="active")
                 data: Broadcast
             });
         } catch (error) {
-            console.error("Error retrieving Broadcast:", error);
+            // console.error("Error retrieving Broadcast:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -218,7 +218,7 @@ if(type=="active")
                 data: Broadcast
             });
         } catch (error) {
-            console.error("Error retrieving Broadcast:", error);
+            // console.error("Error retrieving Broadcast:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -270,7 +270,7 @@ if(type=="active")
                 });
             }
     
-            console.log("Updated Broadcast:", updatedBroadcast);
+            // console.log("Updated Broadcast:", updatedBroadcast);
             return res.json({
                 status: true,
                 message: "Broadcast updated successfully",
@@ -278,7 +278,7 @@ if(type=="active")
             });
     
         } catch (error) {
-            console.error("Error updating Broadcast:", error);
+            // console.error("Error updating Broadcast:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -313,7 +313,7 @@ if(type=="active")
                 message: "Broadcast deleted successfully"
             });
         } catch (error) {
-            console.error("Error deleting Broadcast:", error);
+            // console.error("Error deleting Broadcast:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -356,7 +356,7 @@ if(type=="active")
             });
       
         } catch (error) {
-            console.error("Error updating status:", error);
+            // console.error("Error updating status:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",

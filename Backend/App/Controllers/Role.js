@@ -8,7 +8,7 @@ class Role {
         try {
             const { title, permission, add_by } = req.body;
     
-            console.log("Request Body:", req.body);
+            // console.log("Request Body:", req.body);
     
             const result = new Role_Modal({
                 title,
@@ -18,7 +18,7 @@ class Role {
     
             await result.save();
     
-            console.log("Role successfully added:", result);
+            // console.log("Role successfully added:", result);
             return res.json({
                 status: true,
                 message: "Role added successfully",
@@ -27,7 +27,7 @@ class Role {
     
         } catch (error) {
             // Enhanced error logging
-            console.log("Error adding Role:", error);
+            // console.log("Error adding Role:", error);
     
             return res.status(500).json({
                 status: false,
@@ -84,7 +84,7 @@ class Role {
         });
 
     } catch (error) {
-        console.log("Error fetching Role details:", error);
+        // console.log("Error fetching Role details:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",
@@ -122,7 +122,7 @@ class Role {
         });
       }
   
-      console.log("Updated Role:", updatedRole);
+      // console.log("Updated Role:", updatedRole);
       return res.json({
         status: true,
         message: "Role updated successfully",
@@ -130,7 +130,7 @@ class Role {
       });
   
     } catch (error) {
-      console.log("Error updating Role:", error);
+      // console.log("Error updating Role:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -166,14 +166,14 @@ class Role {
         });
       }
 
-      console.log("Deleted Role:", deletedRole);
+      // console.log("Deleted Role:", deletedRole);
       return res.json({
         status: true,
         message: "Role deleted successfully",
         data: deletedRole,
       });
     } catch (error) {
-      console.log("Error deleting Role:", error);
+      // console.log("Error deleting Role:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
