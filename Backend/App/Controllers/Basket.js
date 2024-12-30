@@ -504,6 +504,30 @@ class Basket {
   }
 
 
+
+
+
+  async activeBasket(req, res) {
+    try {
+
+      const baskets = await Basket_Modal.find({ del: false, status: true });
+
+      return res.json({
+        status: true,
+        message: "Baskets fetched successfully",
+        data: baskets
+      });
+
+    } catch (error) {
+      return res.json({
+        status: false,
+        message: "Server error",
+        data: []
+      });
+    }
+  }
+
+
   async detailBasket(req, res) {
     try {
       // Extract ID from request parameters

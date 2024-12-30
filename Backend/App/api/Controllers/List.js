@@ -3079,100 +3079,18 @@ class List {
 
 
 
-  // async Notification(req, res) {
-  //   try {
-  //     const { id } = req.params;
-  //     //  const result = await Notification_Modal.find({ clientid: id }).sort({ createdAt: -1 });
-  //     const today = new Date();
 
-  //     // Fetch active plans for the client
-  //     const activePlans = await Planmanage.find({
-  //       clientid: id,
-  //       enddate: { $gte: today }
-  //     }).select('serviceid');
-
-  //     const activeServiceIds = activePlans.map(plan => plan.serviceid);
-
-  //     // Query to fetch notifications
-  //     const result = await Notification_Modal.find({
-  //       $or: [
-  //         // Notifications specific to the client
-  //         { clientid: id },
-  //         // Global notifications (null clientid)
-  //         {
-  //           clientid: null,
-  //           $or: [
-  //             // Global notifications with type `close signal` or `open signal`
-  //             {
-  //               type: { $in: ['close signal', 'open signal'] },
-  //               segmentid: { $in: activeServiceIds } // Match serviceid with active plans
-  //             },
-  //             // Global notifications with other types
-  //             { type: { $nin: ['close signal', 'open signal'] } }
-  //           ]
-  //         },
-  //         // Broadcast notifications
-  //         {
-  //           clienttype: {
-  //             $in: [
-  //               'active', // Active clients
-  //               'expired', // Expired clients
-  //               'no subscribe', // Clients without a subscription
-  //               'all' // All clients
-  //             ]
-  //           },
-  //           $or: [
-  //             // For 'active' type, ensure the client has active plans
-  //             { clienttype: 'active', segmentid: { $in: activeServiceIds } },
-  //             // For 'expired' type, check for expired plans
-  //             { 
-  //               clienttype: 'expired', 
-  //               segmentid: { 
-  //                 $in: await Planmanage.find({
-  //                   clientid: id,
-  //                   enddate: { $lt: today } // Expired plans
-  //                 }).distinct('serviceid') 
-  //               }
-  //             },
-  //             // For 'no subscribe', ensure the client has no plans
-  //             {
-  //               clienttype: 'nonsubscribe',
-  //               segmentid: { 
-  //                 $nin: await Planmanage.find({ clientid: id }).distinct('serviceid') 
-  //               }
-  //             },
-  //             // 'all' type applies to all clients
-  //             { clienttype: 'all' }
-  //           ]
-  //         }
-  //       ]
-  //     }).sort({ createdAt: -1 });
-
-
-  //       return res.json({
-  //         status: true,
-  //         message: "get",
-  //         data:result
-  //       });
-
-  //     } catch (error) {
-  //       return res.json({ status: false, message: "Server error", data: [] });
-  //     }
-  // }
-
-
-
+/*
   async Notification(req, res) {
     try {
       const { id } = req.params;
-      const { page = 1 } = req.query; // Default values for page and limit
+      const { page = 1 } = req.query; 
       let limit = 10;
 
       const today = new Date();
 
 
 
-      // Fetch the client's creation date
       const client = await Clients_Modal.findById(id).select('createdAt');
       if (!client) {
         return res.status(404).json({ status: false, message: "Client not found" });
@@ -3181,73 +3099,67 @@ class List {
 
       const activePlans = await Planmanage.find({
         clientid: id,
-        enddate: { $gte: today }
+      startdate: { $lte: today },
+      enddate: { $gte: today }
       }).select('serviceid');
 
+
+
+      
       const activeServiceIds = activePlans.map(plan => plan.serviceid);
 
-      // Query to fetch notifications
       const result = await Notification_Modal.find({
-        createdAt: { $gte: clientCreatedAt }, // Only notifications created after the client's creation date
+        createdAt: { $gte: clientCreatedAt }, 
         $or: [
-          // Notifications specific to the client
           { clientid: id },
-          // Global notifications (null clientid)
           {
             clientid: null,
             $or: [
-              // Global notifications with type `close signal` or `open signal`
               {
                 type: { $in: ['close signal', 'open signal'] },
-                segmentid: { $in: activeServiceIds } // Match serviceid with active plans
+                segmentid: { $in: activeServiceIds } 
               },
-              // Global notifications with other types
               { type: { $nin: ['close signal', 'open signal'] } }
             ]
           },
-          // Broadcast notifications
           {
             clienttype: {
               $in: [
-                'active', // Active clients
-                'expired', // Expired clients
-                'no subscribe', // Clients without a subscription
-                'all' // All clients
+                'active', 
+                'expired', 
+                'no subscribe', 
+                'all'
               ]
             },
             $or: [
-              // For 'active' type, ensure the client has active plans
               { clienttype: 'active', segmentid: { $in: activeServiceIds } },
-              // For 'expired' type, check for expired plans
               {
                 clienttype: 'expired',
                 segmentid: {
                   $in: await Planmanage.find({
                     clientid: id,
-                    enddate: { $lt: today } // Expired plans
+                    startdate: { $lte: today },
+                    enddate: { $gte: today } 
                   }).distinct('serviceid')
                 }
               },
-              // For 'no subscribe', ensure the client has no plans
               {
                 clienttype: 'nonsubscribe',
                 segmentid: {
                   $nin: await Planmanage.find({ clientid: id }).distinct('serviceid')
                 }
               },
-              // 'all' type applies to all clients
               { clienttype: 'all' }
             ]
           }
         ]
       })
         .sort({ createdAt: -1 })
-        .skip((page - 1) * limit) // Skip records for pagination
-        .limit(parseInt(limit)); // Limit the number of records returned
+        .skip((page - 1) * limit) 
+        .limit(parseInt(limit)); 
 
-      // Total count for pagination
       const totalCount = await Notification_Modal.countDocuments({
-        createdAt: { $gte: clientCreatedAt }, // Only notifications created after the client's creation date
+        createdAt: { $gte: clientCreatedAt }, 
         $or: [
           { clientid: id },
           {
@@ -3303,6 +3215,101 @@ class List {
       return res.json({ status: false, message: "Server error", data: [] });
     }
   }
+
+*/
+
+async Notification(req, res) {
+  try {
+    const { id } = req.params;
+    const { page = 1 } = req.query; // Default values for page and limit
+    const limit = 10;
+    const today = new Date();
+
+    // Fetch the client's creation date
+    const client = await Clients_Modal.findById(id).select('createdAt');
+    if (!client) {
+      return res.status(404).json({ status: false, message: "Client not found" });
+    }
+    const clientCreatedAt = client.createdAt;
+
+    // Fetch active plans
+    const activePlans = await Planmanage.find({
+      clientid: id,
+      startdate: { $lte: today },
+      enddate: { $gte: today }
+    }).distinct('serviceid');
+
+    // Fetch expired plans
+    const expiredPlans = await Planmanage.find({
+      clientid: id,
+      enddate: { $lt: today }
+    }).distinct('serviceid');
+
+    // Fetch all plans (non-subscription check)
+    const allPlans = await Planmanage.find({
+      clientid: id
+    }).distinct('serviceid');
+
+    // Determine if client has no active or expired plans
+    const noPlans = activePlans.length === 0 && expiredPlans.length === 0;
+
+    // Logging plan information for debugging
+    console.log("Active Plans:", activePlans);
+    console.log("Expired Plans:", expiredPlans);
+    console.log("All Plans (No Subscription):", allPlans);
+
+    // Construct the query dynamically
+    const queryConditions = {
+      createdAt: { $gte: clientCreatedAt }, // Notifications created after client creation date
+      $or: [
+        // Notifications specific to the client
+        { clientid: id },
+        
+        // Global notifications
+        {
+          clientid: null,
+          $or: [
+            // Global notifications with 'close signal', 'open signal', or 'add broadcast' types
+            { type: { $in: ['close signal', 'open signal', 'add broadcast'] }, segmentid: { $in: activePlans } },
+            // Global notifications with other types
+            { type: { $nin: ['close signal', 'open signal', 'add broadcast'] } }
+          ]
+        },
+        
+        // Broadcast notifications
+        {
+          clienttype: { $in: ['active', 'expired', 'nonsubscribe', 'all'] },
+          $or: [
+            // For active clients, include active plans
+            { clienttype: 'active', segmentid: { $in: activePlans } },
+            // For expired clients, include expired plans
+            { clienttype: 'expired', segmentid: { $in: expiredPlans } },
+            // For clients with no active or expired plans (no subscription)
+            ...(noPlans ? [{ clienttype: 'nonsubscribe' }] : []),
+            // For all clients
+            { clienttype: 'all' }
+          ]
+        }
+      ]
+    };
+
+    // Fetch notifications based on constructed query
+    const result = await Notification_Modal.find(queryConditions)
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)  // Pagination
+      .limit(parseInt(limit));   // Limit the number of records
+
+    // Return the response with notifications
+    return res.json({
+      status: true,
+      message: "Notifications fetched successfully",
+      data: result
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ status: false, message: "Server error", data: [] });
+  }
+}
 
 
 

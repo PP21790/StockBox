@@ -122,7 +122,7 @@ if(type=="active")
                 const notificationBody = `Broadcast Alert ${subject}`;
 
                 const resultn = new Notification_Modal({
-                  segmentid:result._id,
+                  segmentid:service,
                   clienttype:type,
                   type:"add broadcast",
                   title: notificationTitle,
