@@ -32,6 +32,8 @@ const Notificationlist = () => {
                 page: currentPage
             };
             const response = await getAllNotificationlist(token, data);
+            console.log("Get all notification:",response.data);
+            
             if (response?.status) {
                 setTotalRows(response.pagination.total);
                 const filterdata = response.data.filter((item) =>

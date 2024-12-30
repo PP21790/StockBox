@@ -25,9 +25,19 @@ const EditClient = () => {
   const validate = (values) => {
     let errors = {};
 
-    if (!values.FullName) {
-      errors.FullName = "Please Enter Full Name";
-    }
+     // Regex to check for numbers
+  const numberRegex = /[0-9]/;
+
+  // Regex to check for special characters
+  const specialCharRegex = /[^a-zA-Z\s]/;
+
+  if (!values.FullName) {
+    errors.FullName = "Please Enter Full Name";
+  } else if (numberRegex.test(values.FullName)) {
+    errors.FullName = "Full Name should not contain numbers";
+  } else if (specialCharRegex.test(values.FullName)) {
+    errors.FullName = "Full Name should not contain special characters";
+  }
     if (!values.Email) {
       errors.Email = "Please Enter Email";
     }
@@ -46,48 +56,69 @@ const EditClient = () => {
   };
 
   const onSubmit = async (values) => {
-    const req = {
-      FullName: values.FullName,
-      // UserName: values.UserName,
-      Email: values.Email,
-      PhoneNo: values.PhoneNo,
-      // password: values.password,
-      id: row._id,
-    };
+  const req = {
+    FullName: values.FullName,
+    Email: values.Email,
+    PhoneNo: values.PhoneNo,
+    id: row._id,
+  };
 
-    try {
-      const response = await UpdateClient(req, token);
-      if (response.status) {
+  try {
+    const response = await UpdateClient(req, token);
+    console.log("checking email and mobile number:",response);
+    
+
+    if (response.status) {
+      Swal.fire({
+        title: "Update Successful!",
+        text: response.message,
+        icon: "success",
+        timer: 1500,
+        timerProgressBar: true,
+      });
+      setTimeout(() => {
+        navigate("/admin/client");
+      }, 1500);
+    } else {
+      // Check for specific error messages
+      if (response.error.status === false) {
         Swal.fire({
-          title: "Update Successful!",
-          text: response.message,
-          icon: "success",
-          timer: 1500,
+          title: "Error",
+          // text: "Email already exists. Please use a different email.",
+          text:response.error.message,
+          icon: "error",
+          timer: 2500,
           timerProgressBar: true,
         });
-        setTimeout(() => {
-          navigate("/admin/client");
-        }, 1500);
+      } else if (response.error.status === false) {
+        Swal.fire({
+          title: "Error",
+          text:response.error.message,
+          icon: "error",
+          timer: 2500,
+          timerProgressBar: true,
+        });
       } else {
         Swal.fire({
           title: "Error",
-          // text: response.message,
-          text:"Email or Mobile number are already exists",
+          text: "Email or Mobile number are already exists.",
           icon: "error",
           timer: 2500,
           timerProgressBar: true,
         });
       }
-    } catch (error) {
-      Swal.fire({
-        title: "Error",
-        text: "An unexpected error occurred. Please try again later.",
-        icon: "error",
-        timer: 1500,
-        timerProgressBar: true,
-      });
     }
-  };
+  } catch (error) {
+    Swal.fire({
+      title: "Error",
+      text: "An unexpected error occurred. Please try again later.",
+      icon: "error",
+      timer: 1500,
+      timerProgressBar: true,
+    });
+  }
+};
+
 
   const formik = useFormik({
     initialValues: {

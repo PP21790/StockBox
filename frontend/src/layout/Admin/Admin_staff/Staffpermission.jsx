@@ -1165,7 +1165,7 @@ const Staffpermission = () => {
         },
         {
             name: 'blogdetail',
-            label: 'View blogs',
+            label: 'View Details',
             type: 'checkbox',
             label_size: 12,
             col_size: 2,

@@ -736,6 +736,7 @@ const Signal = () => {
                                         placeholder="From"
                                         value={filters.from}
                                         onChange={handleFilterChange}
+                                        
                                     />
                                 </div>
                                 <div className="col-md-3">
@@ -747,6 +748,7 @@ const Signal = () => {
                                         placeholder="To"
                                         value={filters.to}
                                         onChange={handleFilterChange}
+                                        min={filters.from}
                                     />
                                 </div>
                                 <div className="col-md-3">

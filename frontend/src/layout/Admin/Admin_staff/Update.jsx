@@ -13,21 +13,37 @@ const Update = () => {
   const token = localStorage.getItem("token");
 
   const validate = (values) => {
-    const errors = {};
-    if (!values.FullName) {
-      errors.FullName = "Please Enter Full Name";
-    }
-    if (!values.Email) {
-      errors.Email = "Please Enter Email";
-    }
-    if (!values.UserName) {
-      errors.UserName = "Please Enter Username";
-    }
-    if (!values.PhoneNo) {
-      errors.PhoneNo = "Please Enter Phone Number";
-    }
-    return errors;
-  };
+  const errors = {};
+
+  // Regex to check for numbers
+  const numberRegex = /[0-9]/;
+
+  // Regex to check for special characters
+  const specialCharRegex = /[^a-zA-Z\s]/;
+
+  if (!values.FullName) {
+    errors.FullName = "Please Enter Full Name";
+  } else if (numberRegex.test(values.FullName)) {
+    errors.FullName = "Full Name should not contain numbers";
+  } else if (specialCharRegex.test(values.FullName)) {
+    errors.FullName = "Full Name should not contain special characters";
+  }
+
+  if (!values.Email) {
+    errors.Email = "Please Enter Email";
+  }
+
+  if (!values.UserName) {
+    errors.UserName = "Please Enter Username";
+  }
+
+  if (!values.PhoneNo) {
+    errors.PhoneNo = "Please Enter Phone Number";
+  }
+
+  return errors;
+};
+
 
   const onSubmit = async (values) => {
 

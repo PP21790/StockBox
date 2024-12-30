@@ -39,7 +39,7 @@ class List {
             const baseUrl = `${protocol}://${req.headers.host}`;
 
             const bannerWithImageUrls = banners.map(banner => {
-                return {
+                return { 
                     ...banner._doc, // Spread the original bannerss document
                     image: banner.image ? `${baseUrl}/uploads/banner/${banner.image}` : null // Append full image URL
                 };

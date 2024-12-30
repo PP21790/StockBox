@@ -34,8 +34,13 @@ const Updateblogs = () => {
                 image: values.image,
             };
 
+            
+            
+
             try {
                 const response = await Updateblogsbyadmin(req, token);
+                
+                
                  
                 if (response.status) {
                     Swal.fire({

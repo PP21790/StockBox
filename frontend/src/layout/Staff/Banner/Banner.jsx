@@ -48,6 +48,7 @@ const Banner = () => {
     const getBanner = async () => {
         try {
             const response = await getbannerlist(token);
+            console.log("Get banner response",response)
             if (response.status) {
                 const filterdata = response.data.filter((item) =>
                     searchInput === "" ||
@@ -128,6 +129,8 @@ const Banner = () => {
 
 
             const response = await Addbanner(data, token);
+            console.log("add banner response",response);
+            
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
