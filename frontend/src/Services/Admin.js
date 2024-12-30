@@ -534,6 +534,19 @@ export async function getAllSubscriptionList(data, token) {
 
 
 
+export async function getAllSubscriptionListById(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}basket/basketsubscriptionlistwithid`, data, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}
+
 
 
 // add staff permission 

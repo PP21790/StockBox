@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { getAllSubscriptionList } from '../../../Services/Admin';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { getAllSubscriptionListById } from '../../../Services/Admin';
 // import Table from '../../../components/Table';
 import Table from '../../../components/Table1';
 import { SquarePen, Trash2, PanelBottomOpen, Eye, RefreshCcw, IndianRupee } from 'lucide-react';
@@ -16,7 +16,8 @@ import { exportToCSV } from '../../../Utils/ExportData';
 const BasketPurchaseHistory = () => {
 
 
-  const navigate = useNavigate();
+  const { id } = useParams()
+
   const [clients, setClients] = useState([]);
   const [model, setModel] = useState(false);
   const [serviceid, setServiceid] = useState({});
@@ -52,7 +53,7 @@ const BasketPurchaseHistory = () => {
   });
 
   const token = localStorage.getItem('token');
-  const userid = localStorage.getItem('id');
+
 
 
   const resethandle = () => {
@@ -68,8 +69,8 @@ const BasketPurchaseHistory = () => {
 
   const gethistory = async () => {
     try {
-      const data = { page: currentPage, fromDate: startDate, toDate: endDate, search: searchInput }
-      const response = await getAllSubscriptionList(data, token);
+      const data = { basket_id: id, page: currentPage, fromDate: startDate, toDate: endDate, search: searchInput }
+      const response = await getAllSubscriptionListById(data, token);
       if (response.status) {
         let filteredData = response.data;
         setTotalRows(response.pagination.total)
