@@ -487,7 +487,7 @@ class Basket {
     async activeBasket(req, res) {
       try {
 
-          const baskets = await Basket_Modal.find({ del: false,status:true });
+          const baskets = await Basket_Modal.find({ del: false, status:true });
 
           return res.json({
               status: true,
