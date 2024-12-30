@@ -108,7 +108,7 @@ class BasicSetting {
                 });
             });
         } catch (error) {
-            console.log("Error adding/updating basic setting:", error);
+            // console.log("Error adding/updating basic setting:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -129,7 +129,7 @@ class BasicSetting {
                 data: settings
             });
         } catch (error) {
-            console.log("Error retrieving settings:", error);
+            // console.log("Error retrieving settings:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -148,7 +148,7 @@ class BasicSetting {
                 data: settings
             });
         } catch (error) {
-            console.log("Error retrieving settings:", error);
+            // console.log("Error retrieving settings:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -198,7 +198,7 @@ class BasicSetting {
                 data: result
             });
         } catch (error) {
-            console.error("Error updating basic setting:", error);
+            // console.error("Error updating basic setting:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -228,7 +228,7 @@ class BasicSetting {
                 data: result
             });
         } catch (error) {
-            console.error("Error updating social link:", error);
+            // console.error("Error updating social link:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -274,7 +274,7 @@ class BasicSetting {
             data: result
         });
     } catch (error) {
-        console.error("Error updating social link:", error);
+        // console.error("Error updating social link:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",

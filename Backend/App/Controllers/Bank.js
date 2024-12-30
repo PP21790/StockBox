@@ -14,7 +14,7 @@ class BankController {
             await new Promise((resolve, reject) => {
                 upload('bank').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
                     if (err) {
-                        console.log('File upload error:', err);
+                        // console.log('File upload error:', err);
                         return reject(err);
                     }
 
@@ -68,7 +68,7 @@ class BankController {
             });
     
         } catch (error) {
-            console.log("Server error:", error);
+            // console.log("Server error:", error);
             return res.status(500).json({ status: false, message: "Server error", data: [] });
         }
     }
@@ -83,7 +83,7 @@ class BankController {
             await new Promise((resolve, reject) => {
                 upload('bank').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
                     if (err) {
-                        console.log('File upload error:', err);
+                        // console.log('File upload error:', err);
                         return reject(err);
                     }
 
@@ -117,7 +117,7 @@ class BankController {
             });
     
         } catch (error) {
-            console.log("Server error:", error);
+            // console.log("Server error:", error);
             return res.status(500).json({ status: false, message: "Server error", data: [] });
         }
     }
@@ -134,7 +134,7 @@ class BankController {
                 data: Bank
             });
         } catch (error) {
-            console.log("Error retrieving Bank:", error);
+            // console.log("Error retrieving Bank:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -156,7 +156,7 @@ class BankController {
                 data: Bank
             });
         } catch (error) {
-            console.log("Error retrieving Qrcode:", error);
+            // console.log("Error retrieving Qrcode:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -176,7 +176,7 @@ class BankController {
                 data: Bank
             });
         } catch (error) {
-            console.log("Error retrieving Bank:", error);
+            // console.log("Error retrieving Bank:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -197,7 +197,7 @@ class BankController {
                 data: Bank
             });
         } catch (error) {
-            console.log("Error retrieving Bank:", error);
+            // console.log("Error retrieving Bank:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -226,7 +226,7 @@ class BankController {
                 data: Bank
             });
         } catch (error) {
-            console.log("Error retrieving Bank:", error);
+            // console.log("Error retrieving Bank:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -245,7 +245,7 @@ class BankController {
             await new Promise((resolve, reject) => {
                 upload('bank').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
                     if (err) {
-                        console.log('File upload error:', err);
+                        // console.log('File upload error:', err);
                         return reject(err);
                     }
 
@@ -311,7 +311,7 @@ class BankController {
             });
     
         } catch (error) {
-            console.log("Error updating Bank:", error);
+            // console.log("Error updating Bank:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -331,7 +331,7 @@ class BankController {
             await new Promise((resolve, reject) => {
                 upload('bank').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
                     if (err) {
-                        console.log('File upload error:', err);
+                        // console.log('File upload error:', err);
                         return reject(err);
                     }
 
@@ -377,7 +377,7 @@ class BankController {
             });
     
         } catch (error) {
-            console.log("Error updating Qrcode:", error);
+            // console.log("Error updating Qrcode:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -411,7 +411,7 @@ class BankController {
                 message: "Bank deleted successfully"
             });
         } catch (error) {
-            console.log("Error deleting Bank:", error);
+            // console.log("Error deleting Bank:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -443,7 +443,7 @@ class BankController {
                 message: "Qrcode deleted successfully"
             });
         } catch (error) {
-            console.log("Error deleting Qrcode:", error);
+            // console.log("Error deleting Qrcode:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -489,7 +489,7 @@ class BankController {
             });
       
         } catch (error) {
-            console.log("Error updating status:", error);
+            // console.log("Error updating status:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -534,7 +534,7 @@ class BankController {
             });
       
         } catch (error) {
-            console.log("Error updating status:", error);
+            // console.log("Error updating status:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",

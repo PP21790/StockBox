@@ -254,7 +254,7 @@ class Angle {
             });
        
         } catch (error) {
-            console.error("Error placing order:", error); // Log the error
+            // console.error("Error placing order:", error); // Log the error
             return res.status(500).json({ 
                 status: false, 
                 message: error.response ? error.response.data : "An error occurred while placing the order" 
@@ -355,7 +355,7 @@ class Angle {
                 try {
                    positionData = await CheckPosition(client.apikey, authToken, stock.segment,stock.instrument_token,producttype,signal.calltype,stock.tradesymbol);
                 } catch (error) {
-                  console.error('Error in CheckPosition:', error.message);
+                //   console.error('Error in CheckPosition:', error.message);
                 
               }
 
@@ -365,7 +365,7 @@ class Angle {
                              holdingData = await CheckHolding(client.apikey, authToken , stock.segment,stock.instrument_token,producttype,signal.calltype);
                       
                         } catch (error) {
-                            console.error('Error in CheckHolding:', error.message);
+                            // console.error('Error in CheckHolding:', error.message);
                         }
                         totalValue = Math.abs(positionData.qty)+holdingData.qty;
                     }
@@ -491,7 +491,7 @@ class Angle {
         }
 
         } catch (error) {
-            console.error("Error placing order:", error); // Log the error
+            // console.error("Error placing order:", error); // Log the error
             return res.status(500).json({ 
                 status: false, 
                 message: error.response ? error.response.data : "An error occurred while placing the order" 
@@ -692,7 +692,7 @@ const uniorderId = order.uniqueorderid;
                 try {
                    positionData = await CheckPosition(client.apikey, authToken, stock.segment,stock.instrument_token,producttype,signal.calltype,stock.tradesymbol);
                 } catch (error) {
-                  console.error('Error in CheckPosition:', error.message);
+                //   console.error('Error in CheckPosition:', error.message);
                 
               }
 
@@ -702,7 +702,7 @@ const uniorderId = order.uniqueorderid;
                              holdingData = await CheckHolding(client.apikey, authToken , stock.segment,stock.instrument_token,producttype,signal.calltype);
                       
                         } catch (error) {
-                            console.error('Error in CheckHolding:', error.message);
+                            // console.error('Error in CheckHolding:', error.message);
                         }
                         totalValue = Math.abs(positionData.qty)+holdingData.qty;
                     }
@@ -828,7 +828,7 @@ const uniorderId = order.uniqueorderid;
         }
 
         } catch (error) {
-            console.error("Error placing order:", error); // Log the error
+            // console.error("Error placing order:", error); // Log the error
             return { 
                 status: false, 
                 message: error.response ? error.response.data : "An error occurred while placing the order" 

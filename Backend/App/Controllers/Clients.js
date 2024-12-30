@@ -1504,7 +1504,7 @@ async getClientWithFilterExcel(req, res) {
         });
 
     } catch (error) {
-        console.log("Error fetching client details:", error);
+        // console.log("Error fetching client details:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",
@@ -1576,7 +1576,7 @@ async getClientWithFilterExcel(req, res) {
         });
       }
   
-      console.log("Updated Client:", updatedClient);
+      // console.log("Updated Client:", updatedClient);
       return res.json({
         status: true,
         message: "Client updated successfully",
@@ -1584,7 +1584,7 @@ async getClientWithFilterExcel(req, res) {
       });
   
     } catch (error) {
-      console.log("Error updating client:", error);
+      // console.log("Error updating client:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -1618,14 +1618,14 @@ async getClientWithFilterExcel(req, res) {
         });
       }
 
-      console.log("Deleted Client:", deletedClient);
+      // console.log("Deleted Client:", deletedClient);
       return res.json({
         status: true,
         message: "Client deleted successfully",
         data: deletedClient,
       });
     } catch (error) {
-      console.log("Error deleting client:", error);
+      // console.log("Error deleting client:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -1667,7 +1667,7 @@ async getClientWithFilterExcel(req, res) {
         });
   
     } catch (error) {
-        console.log("Error updating status:", error);
+        // console.log("Error updating status:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",
@@ -1735,9 +1735,9 @@ async getClientWithFilterExcel(req, res) {
             await sendFCMNotification(notificationTitle, notificationBody,tokens, "payout");
            
         }
-          console.log('Notifications sent successfully');
+          // console.log('Notifications sent successfully');
         } catch (error) {
-          console.error('Error sending notifications:', error);
+          // console.error('Error sending notifications:', error);
         }
   
       return res.status(200).json({
@@ -1747,7 +1747,7 @@ async getClientWithFilterExcel(req, res) {
       });
   
     } catch (error) {
-      console.error('Error processing payout request:', error);
+      // console.error('Error processing payout request:', error);
       return res.status(500).json({ status: false, message: 'Server error while processing payout request.' });
     }
   }
@@ -1839,7 +1839,7 @@ async getClientWithFilterExcel(req, res) {
         });
 
     } catch (error) {
-        console.error("Error fetching free trials:", error); // Log the error for debugging
+        // console.error("Error fetching free trials:", error); // Log the error for debugging
         return res.json({ status: false, message: "Server error", data: [] });
     }
 }
@@ -1960,7 +1960,7 @@ async freetrialListWithFilter(req, res) {
     });
 
   } catch (error) {
-      console.error("Error fetching free trials:", error); // Log the error for debugging
+      // console.error("Error fetching free trials:", error); // Log the error for debugging
       return res.json({ status: false, message: "Server error", data: [] });
   }
 }
@@ -2001,7 +2001,7 @@ async deleteFreetrial(req, res) {
       data: deletedFreetrial,
     });
   } catch (error) {
-    console.error("Error deleting freetrial:", error);
+    // console.error("Error deleting freetrial:", error);
     return res.status(500).json({
       status: false,
       message: "Server error",
@@ -2050,7 +2050,7 @@ async helpdeskList(req, res) {
       });
 
   } catch (error) {
-      console.error("Error fetching helpdesk:", error); // Log the error for debugging
+      // console.error("Error fetching helpdesk:", error); // Log the error for debugging
       return res.json({ status: false, message: "Server error", data: [] });
   }
 }
@@ -2080,14 +2080,14 @@ const deletedHelpdesk = await Helpdesk_Modal.findByIdAndUpdate(
     });
   }
 
-  console.log("Deleted Helpdesk:", deletedHelpdesk);
+  // console.log("Deleted Helpdesk:", deletedHelpdesk);
   return res.json({
     status: true,
     message: "Helpdesk deleted successfully",
     data: deletedHelpdesk,
   });
 } catch (error) {
-  console.error("Error deleting Helpdesk:", error);
+  // console.error("Error deleting Helpdesk:", error);
   return res.status(500).json({
     status: false,
     message: "Server error",
@@ -2138,7 +2138,7 @@ async  myPlan(req, res) {
     });
 
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     return res.status(500).json({ status: false, message: 'Server error', data: [] });
   }
 }
@@ -2197,7 +2197,7 @@ async myService(req, res) {
     });
 
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     return res.status(500).json({ status: false, message: 'Server error', data: [] });
   }
 }

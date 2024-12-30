@@ -14,7 +14,7 @@ class BlogController {
             await new Promise((resolve, reject) => {
                 upload('blogs').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
                     if (err) {
-                        console.log('File upload error:', err);
+                        // console.log('File upload error:', err);
                         return reject(err);
                     }
 
@@ -83,9 +83,9 @@ class BlogController {
               try {
                 // Send notifications to all device tokens
                 await sendFCMNotification(notificationTitle, notificationBody, tokens ,"add blog");
-                console.log('Notifications sent successfully');
+                // console.log('Notifications sent successfully');
               } catch (error) {
-                console.error('Error sending notifications:', error);
+                // console.error('Error sending notifications:', error);
               }
         
         
@@ -100,7 +100,7 @@ class BlogController {
             });
     
         } catch (error) {
-            console.log("Server error:", error);
+            // console.log("Server error:", error);
             return res.status(500).json({ status: false, message: "Server error", data: [] });
         }
     }
@@ -117,7 +117,7 @@ class BlogController {
                 data: blogs
             });
         } catch (error) {
-            console.log("Error retrieving blogs:", error);
+            // console.log("Error retrieving blogs:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -137,7 +137,7 @@ class BlogController {
                 data: blogs
             });
         } catch (error) {
-            console.log("Error retrieving blogs:", error);
+            // console.log("Error retrieving blogs:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -167,7 +167,7 @@ class BlogController {
                 data: blog
             });
         } catch (error) {
-            console.log("Error retrieving blog:", error);
+            // console.log("Error retrieving blog:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -186,7 +186,7 @@ class BlogController {
             await new Promise((resolve, reject) => {
                 upload('blogs').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
                     if (err) {
-                        console.log('File upload error:', err);
+                        // console.log('File upload error:', err);
                         return reject(err);
                     }
 
@@ -245,7 +245,7 @@ class BlogController {
             });
     
         } catch (error) {
-            console.log("Error updating Blog:", error);
+            // console.log("Error updating Blog:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -279,7 +279,7 @@ class BlogController {
                 message: "Blog deleted successfully"
             });
         } catch (error) {
-            console.log("Error deleting blog:", error);
+            // console.log("Error deleting blog:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -321,7 +321,7 @@ class BlogController {
             });
       
         } catch (error) {
-            console.log("Error updating status:", error);
+            // console.log("Error updating status:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",

@@ -3,7 +3,7 @@ const multer = require('multer');
 const storage = multer.memoryStorage(); // Store files in memory
 const upload = multer({ storage });
 const { checkPermission } = require('../Middleware/permissionMiddleware'); // Path to your middleware
-const {AddBasket,getBasket,updateBasket,deleteBasket,detailBasket,statusChange,activeBasket,AddStockInBasket,AddStockInBasketForm,UpdateStockInBasketForm,getBasketstockList,addBasketSubscription,BasketSubscriptionList} = require('../Controllers/Basket')
+const {AddBasket,getBasket,updateBasket,deleteBasket,detailBasket,statusChange,activeBasket,AddStockInBasket,AddStockInBasketForm,UpdateStockInBasketForm,getBasketstockList,addBasketSubscription,BasketSubscriptionList,BasketSubscriptionListWithId} = require('../Controllers/Basket')
 
 
 const PERMISSIONS = {
@@ -29,7 +29,7 @@ router.post('/basket/updatestockbasketform',  UpdateStockInBasketForm);
 router.get('/basket/stocklist/:id', getBasketstockList);
 router.post('/basket/addbasketsubscription', addBasketSubscription); 
 router.post('/basket/basketsubscriptionlist', BasketSubscriptionList); 
-
+router.post('/basket/basketsubscriptionlistwithid', BasketSubscriptionListWithId); 
 
 
 

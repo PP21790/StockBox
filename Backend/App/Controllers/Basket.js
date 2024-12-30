@@ -44,7 +44,7 @@ class Basket {
               data: result,
           });
       } catch (error) {
-          console.log("Error adding Basket:", error);
+          // console.log("Error adding Basket:", error);
   
           return res.status(500).json({
               status: false,
@@ -209,7 +209,7 @@ class Basket {
         data: result,
       });
     } catch (error) {
-      console.error("Error adding stocks:", error);
+      // console.error("Error adding stocks:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -354,7 +354,7 @@ class Basket {
 
   
     } catch (error) {
-      console.error("Error adding stocks:", error);
+      // console.error("Error adding stocks:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -448,7 +448,7 @@ class Basket {
         data: result,
       });
     } catch (error) {
-      console.error("Error updating stocks:", error);
+      // console.error("Error updating stocks:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -471,7 +471,7 @@ class Basket {
         });
 
     } catch (error) {
-        console.log("An error occurred:", error);
+        // console.log("An error occurred:", error);
         return res.json({ 
             status: false, 
             message: "Server error", 
@@ -539,7 +539,7 @@ class Basket {
         });
 
     } catch (error) {
-        console.log("Error fetching Basket details:", error);
+        // console.log("Error fetching Basket details:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",
@@ -587,7 +587,7 @@ class Basket {
         });
       }
   
-      console.log("Updated Basket:", updatedBasket);
+      // console.log("Updated Basket:", updatedBasket);
       return res.json({
         status: true,
         message: "Basket updated successfully",
@@ -595,7 +595,7 @@ class Basket {
       });
   
     } catch (error) {
-      console.log("Error updating Basket:", error);
+      // console.log("Error updating Basket:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -630,14 +630,14 @@ class Basket {
         });
       }
 
-      console.log("Deleted Basket:", deletedBasket);
+      // console.log("Deleted Basket:", deletedBasket);
       return res.json({
         status: true,
         message: "Basket deleted successfully",
         data: deletedBasket,
       });
     } catch (error) {
-      console.log("Error deleting Basket:", error);
+      // console.log("Error deleting Basket:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -680,7 +680,7 @@ async  statusChange(req, res) {
       });
 
   } catch (error) {
-      console.log("Error updating status:", error);
+      // console.log("Error updating status:", error);
       return res.status(500).json({
           status: false,
           message: "Server error",
@@ -703,7 +703,7 @@ async getBasketstockList(req, res) {
       });
 
   } catch (error) {
-      console.log("An error occurred:", error);
+      // console.log("An error occurred:", error);
       return res.json({ 
           status: false, 
           message: "Server error", 
@@ -778,7 +778,7 @@ async addBasketSubscription(req, res) {
     });
 
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return res.status(500).json({ status: false, message: 'Server error', data: [] });
   }
 }
@@ -899,7 +899,128 @@ async BasketSubscriptionList(req, res) {
     });
 
   } catch (error) {
-    console.error(error);
+    // console.error(error);
+    return res.status(500).json({ status: false, message: 'Server error', data: [] });
+  }
+}
+
+
+async BasketSubscriptionListWithId(req, res) {
+  try {
+    const { fromDate, toDate, search, basket_id, page = 1 } = req.body; // Extract filters, including basket_id
+    const limit = 10;
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    // Match conditions for date range
+    const matchConditions = { del: false };
+
+    if (basket_id) {
+      matchConditions.basket_id = basket_id; // Filter by basket_id
+    }
+
+    if (fromDate && toDate) {
+      const startOfFromDate = new Date(fromDate);
+      startOfFromDate.setHours(0, 0, 0, 0);
+
+      const endOfToDate = new Date(toDate);
+      endOfToDate.setHours(23, 59, 59, 999);
+
+      matchConditions.created_at = {
+        $gte: startOfFromDate,
+        $lte: endOfToDate,
+      };
+    }
+
+    // Match conditions for search
+    const searchMatch = search && search.trim() !== "" ? {
+      $or: [
+        { "clientDetails.FullName": { $regex: search, $options: "i" } },
+        { "clientDetails.Email": { $regex: search, $options: "i" } },
+        { "clientDetails.PhoneNo": { $regex: search, $options: "i" } },
+        { "basketDetails.title": { $regex: search, $options: "i" } }
+      ]
+    } : {};
+
+    // Main aggregation pipeline
+    const result = await BasketSubscription_Modal.aggregate([
+      { $match: matchConditions },
+      {
+        $lookup: {
+          from: 'baskets',
+          localField: 'basket_id',
+          foreignField: '_id',
+          as: 'basketDetails'
+        }
+      },
+      { $unwind: '$basketDetails' },
+      {
+        $lookup: {
+          from: 'clients',
+          localField: 'client_id',
+          foreignField: '_id',
+          as: 'clientDetails'
+        }
+      },
+      { $unwind: '$clientDetails' },
+      { $match: searchMatch },
+      {
+        $project: {
+          orderid: 1,
+          created_at: 1,
+          startdate: 1,
+          enddate: 1,
+          plan_price: 1,
+          total: 1,
+          discount: 1,
+          coupon: 1,
+          validity: 1,
+          status: 1,
+          basketDetails: 1,
+          clientName: '$clientDetails.FullName',
+          clientEmail: '$clientDetails.Email',
+          clientPhoneNo: '$clientDetails.PhoneNo',
+          totalAmount: 1,
+        }
+      },
+      { $sort: { created_at: -1 } },
+      { $skip: skip },
+      { $limit: parseInt(limit) }
+    ]);
+
+    // Total records for pagination
+    const totalRecordsPipeline = [
+      { $match: matchConditions },
+      {
+        $lookup: {
+          from: 'clients',
+          localField: 'client_id',
+          foreignField: '_id',
+          as: 'clientDetails'
+        }
+      },
+      { $unwind: '$clientDetails' },
+      { $match: searchMatch },
+      { $count: 'total' }
+    ];
+    const totalRecordsResult = await BasketSubscription_Modal.aggregate(totalRecordsPipeline);
+    const totalRecords = totalRecordsResult[0] ? totalRecordsResult[0].total : 0;
+    const totalPages = Math.ceil(totalRecords / limit);
+
+    // Respond with results and pagination
+    return res.json({
+      status: true,
+      message: "Basket Subscriptions retrieved successfully",
+      data: result,
+      pagination: {
+        total: totalRecords,
+        page: parseInt(page),
+        limit: parseInt(limit),
+        totalPages
+      }
+    });
+
+  } catch (error) {
+    // console.error(error);
     return res.status(500).json({ status: false, message: 'Server error', data: [] });
   }
 }
