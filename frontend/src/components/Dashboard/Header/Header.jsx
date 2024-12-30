@@ -225,7 +225,7 @@ const Header = () => {
                       <a href="javascript:;">
                         <div className="text-center msg-footer">
                           <button className="btn btn-primary w-100">
-                            View All Notifications
+                            View All Notifications ss
                           </button>
                         </div>
                       </a>
