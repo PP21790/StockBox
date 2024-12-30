@@ -133,10 +133,10 @@ const EditStock = () => {
             0
         );
 
-        if (totalWeightage > 100) {
+        if (totalWeightage !== 100) {
             Swal.fire(
                 "Error",
-                "Total weightage of all stocks cannot exceed 100.",
+                "Total weightage of all stocks must be exactly 100.",
                 "error"
             );
             return;

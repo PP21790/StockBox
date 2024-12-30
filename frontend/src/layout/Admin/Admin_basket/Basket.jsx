@@ -16,11 +16,9 @@ const Basket = () => {
   const [clients, setClients] = useState([]);
   const token = localStorage.getItem("token");
 
+  const [searchInput, setSearchInput] = useState("");
 
 
-  useEffect(() => {
-    getbasketlist();
-  }, []);
 
 
 
@@ -29,7 +27,14 @@ const Basket = () => {
     try {
       const response = await BasketAllList(token);
       if (response.status) {
-        setClients(response.data);
+        const filterdata = response.data.filter((item) =>
+          searchInput === "" ||
+          item.title.toLowerCase().includes(searchInput.toLowerCase()) ||
+          item.themename.toLowerCase().includes(searchInput.toLowerCase()) ||
+          item.validity.toLowerCase().includes(searchInput.toLowerCase())
+        );
+        setClients(searchInput ? filterdata : response.data);
+
       }
     } catch (error) {
       console.log("error");
@@ -37,6 +42,9 @@ const Basket = () => {
   };
 
 
+  useEffect(() => {
+    getbasketlist();
+  }, [searchInput]);
 
 
 
@@ -253,6 +261,8 @@ const Basket = () => {
                 type="text"
                 className="form-control ps-5 radius-10"
                 placeholder="Search Basket"
+                onChange={(e) => setSearchInput(e.target.value)}
+                value={searchInput}
               />
               <span className="position-absolute top-50 product-show translate-middle-y">
                 <i className="bx bx-search" />

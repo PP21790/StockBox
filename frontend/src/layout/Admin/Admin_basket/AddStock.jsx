@@ -21,6 +21,8 @@ const AddStock = () => {
   const [formikValues, setFormikValues] = useState({});
   const navigate = useNavigate();
 
+
+
   // Fetch options based on user input
   const fetchOptions = async (inputValue) => {
     if (!inputValue) {
@@ -54,6 +56,9 @@ const AddStock = () => {
       setLoading(false);
     }
   };
+
+
+
 
   // Handle changes when a stock is selected
   const handleServiceChange = (selectedOption) => {
@@ -109,6 +114,21 @@ const AddStock = () => {
 
   // Handle form submission
   const handleSubmit = async (values, status) => {
+
+    let totalWeightage = 0;
+    Object.values(values).forEach((stock) => {
+      totalWeightage += Number(stock.percentage || 0);
+    });
+
+    if (totalWeightage !== 100) {
+      Swal.fire(
+        "Error",
+        "Total weightage of all stocks must be exactly 100.",
+        "error"
+      );
+      return;
+    }
+
     if (!basket_id) {
       Swal.fire("Error", "Basket ID is missing. Please try again.", "error");
       return;
@@ -201,16 +221,16 @@ const AddStock = () => {
                 totalWeightage += Number(stock.percentage || 0);
               });
 
-              if (totalWeightage > 100) {
-                Swal.fire(
-                  "Error",
-                  "Total weightage of all stocks cannot exceed 100.",
-                  "error"
-                );
-                return { totalWeightageError: "Weightage exceeds 100" };
-              }
+              // if (totalWeightage > 100 || totalWeightage < 100) {
+              //   Swal.fire(
+              //     "Error",
+              //     "Total weightage of all stocks cannot exceed 100.",
+              //     "error"
+              //   );
+              //   return { totalWeightageError: "Weightage exceeds 100" };
+              // }
 
-              return {};
+              // return {};
             }}
             onSubmit={(values, { setSubmitting }) => {
               setSubmitting(false);
