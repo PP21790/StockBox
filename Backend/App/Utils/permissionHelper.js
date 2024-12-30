@@ -6,7 +6,7 @@ const hasPermission = async (userId, permissionName) => {
     const user = await Users_Modal.findOne({ token: userId });    
     if (!user) {
       if (!user) {
-        console.log('Token not valid');
+        // console.log('Token not valid');
         return false;
       }
     }
@@ -19,7 +19,7 @@ const hasPermission = async (userId, permissionName) => {
       return false;
     }
   } catch (error) {
-    console.log("Error checking permission:", error);
+    // console.log("Error checking permission:", error);
     throw new Error('Server error');
   }
 };

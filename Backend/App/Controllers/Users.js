@@ -85,7 +85,7 @@ class Users {
       });
 
     } catch (error) {
-      console.log("Error adding user:", error); // Log the full error
+      // console.log("Error adding user:", error); // Log the full error
       return res.status(500).json({ status: false, message: "Server error", error: error.message });
     }
   }
@@ -167,7 +167,7 @@ class Users {
       });
 
     } catch (error) {
-      console.log("Error fetching user details:", error);
+      // console.log("Error fetching user details:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -235,7 +235,7 @@ class Users {
         });
       }
 
-      console.log("Updated User:", updatedUser);
+      // console.log("Updated User:", updatedUser);
       return res.json({
         status: true,
         message: "User updated successfully",
@@ -243,7 +243,7 @@ class Users {
       });
 
     } catch (error) {
-      console.log("Error updating User:", error);
+      // console.log("Error updating User:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -279,14 +279,14 @@ class Users {
         });
       }
 
-      console.log("Deleted User:", deletedUser);
+      // console.log("Deleted User:", deletedUser);
       return res.json({
         status: true,
         message: "User deleted successfully",
         data: deletedUser,
       });
     } catch (error) {
-      console.log("Error deleting User:", error);
+      // console.log("Error deleting User:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -393,7 +393,7 @@ class Users {
       });
 
     } catch (error) {
-      console.log("Error updating status:", error);
+      // console.log("Error updating status:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -438,7 +438,7 @@ class Users {
       });
 
     } catch (error) {
-      console.log("Error updating User permissions:", error);
+      // console.log("Error updating User permissions:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -494,7 +494,7 @@ class Users {
       
       fs.readFile(templatePath, 'utf8', async (err, htmlTemplate) => {
         if (err) {
-            console.error('Error reading HTML template:', err);
+            // console.error('Error reading HTML template:', err);
             return;
         }
         const url =`http://${req.headers.host}/#/resetpassword/${resetToken}`;
@@ -530,7 +530,7 @@ class Users {
       });
 
     } catch (error) {
-      console.log("Error in forgotPassword:", error);
+      // console.log("Error in forgotPassword:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -579,7 +579,7 @@ class Users {
       });
 
     } catch (error) {
-      console.log("Error in resetPassword:", error);
+      // console.log("Error in resetPassword:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -627,7 +627,7 @@ class Users {
 
 
     } catch (error) {
-      console.log("Error in changePassword:", error);
+      // console.log("Error in changePassword:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -693,7 +693,7 @@ class Users {
       });
 
     } catch (error) {
-      console.log("Error in updateProfile:", error);
+      // console.log("Error in updateProfile:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -746,7 +746,7 @@ class Users {
       });
 
     } catch (error) {
-      console.log("Error in updateProfile:", error);
+      // console.log("Error in updateProfile:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -788,7 +788,7 @@ class Users {
       return res.send({ success: true, message: 'Email sent successfully', info });
       
     } catch (error) {
-      console.error('Error sending email:', error);
+      // console.error('Error sending email:', error);
       return res.status(500).send({ success: false, message: 'Error sending email', error: error.message });
     }
   }  

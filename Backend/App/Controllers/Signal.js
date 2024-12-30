@@ -20,7 +20,7 @@ class Signal {
           await new Promise((resolve, reject) => {
             upload('report').fields([{ name: 'report', maxCount: 1 }])(req, res, (err) => {
                 if (err) {
-                    console.error('File upload error:', err);
+                    // console.error('File upload error:', err);
                     return reject(err);
                 }
 
@@ -173,9 +173,9 @@ if (!stocks) {
             try {
               // Send notifications to all device tokens
               await sendFCMNotification(notificationTitle, notificationBody, tokens,"open signal");
-              console.log('Notifications sent successfully');
+              // console.log('Notifications sent successfully');
             } catch (error) {
-              console.error('Error sending notifications:', error);
+              // console.error('Error sending notifications:', error);
             }
 
 
@@ -192,7 +192,7 @@ if (!stocks) {
 
         } catch (error) {
             // Enhanced error logging
-            console.error("Error adding Signal:", error);
+            // console.error("Error adding Signal:", error);
     
             return res.status(500).json({
                 status: false,
@@ -313,7 +313,7 @@ async getSignalWithFilter(req, res) {
     
     // Query को बनाएं
     let query = { del: 0 };
-    console.log(typeof closestatus, closestatus);
+    // console.log(typeof closestatus, closestatus);
     
     if (closestatus === "true") {
       if (fromDate && toDate) {
@@ -439,7 +439,7 @@ async getSignalWithFilter(req, res) {
     });
 
 } catch (error) {
-    console.error("Error fetching Signal details:", error);
+    // console.error("Error fetching Signal details:", error);
     return res.status(500).json({
         status: false,
         message: "Server error",
@@ -477,14 +477,14 @@ async getSignalWithFilter(req, res) {
         });
       }
 
-      console.log("Deleted Signal:", deletedSignal);
+      // console.log("Deleted Signal:", deletedSignal);
       return res.json({
         status: true,
         message: "Signal deleted successfully",
         data: deletedSignal,
       });
     } catch (error) {
-      console.error("Error deleting Signal:", error);
+      // console.error("Error deleting Signal:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -679,7 +679,7 @@ async getSignalWithFilter(req, res) {
       try {
         // Send notifications to all device tokens
         await sendFCMNotification(notificationTitle, notificationBody, tokens,"close signal");
-        console.log('Notifications sent successfully');
+        // console.log('Notifications sent successfully');
       } catch (error) {
      //   console.error('Error sending notifications:', error);
       }
@@ -701,7 +701,7 @@ async getSignalWithFilter(req, res) {
       });
   
     } catch (error) {
-      console.error("Error updating Signal:", error);
+      // console.error("Error updating Signal:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -738,7 +738,7 @@ async getSignalWithFilter(req, res) {
         });
       }
   
-      console.log("Close Signal:", updatedSignal);
+      // console.log("Close Signal:", updatedSignal);
       return res.json({
         status: true,
         message: "Signal Target Hit successfully",
@@ -746,7 +746,7 @@ async getSignalWithFilter(req, res) {
       });
   
     } catch (error) {
-      console.error("Error updating Signal:", error);
+      // console.error("Error updating Signal:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -762,7 +762,7 @@ async updateReport(req, res) {
         await new Promise((resolve, reject) => {
             upload('report').fields([{ name: 'report', maxCount: 1 }])(req, res, (err) => {
                 if (err) {
-                    console.log('File upload error:', err);
+                    // console.log('File upload error:', err);
                     return reject(err);
                 }
                 resolve();
@@ -802,7 +802,7 @@ async updateReport(req, res) {
             });
         }
 
-        console.log("Updated Report:", updatedreport);
+        // console.log("Updated Report:", updatedreport);
         return res.json({
             status: true,
             message: "Report updated successfully",
@@ -810,7 +810,7 @@ async updateReport(req, res) {
         });
 
     } catch (error) {
-        console.log("Error updating Report:", error);
+        // console.log("Error updating Report:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",

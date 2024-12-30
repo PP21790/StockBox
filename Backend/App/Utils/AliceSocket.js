@@ -124,7 +124,7 @@ const Alice_Socket = async () => {
   
   if (!alice.aliceuserid) {
     
-    console.log('alice',alice);
+    // console.log('alice',alice);
     return
 }
   const userid = alice.aliceuserid;
@@ -158,11 +158,11 @@ const Alice_Socket = async () => {
 
 
     } catch (error) {
-      console.log("Error createSocketSess", error);
+      // console.log("Error createSocketSess", error);
     }
 
   } else {
-    console.log("Alice Socket Not Connected")
+    // console.log("Alice Socket Not Connected")
   }
 
 
@@ -212,7 +212,7 @@ const Alice_Socket = async () => {
     };
   
     ws.onerror = function (error) {
-      console.log(`WebSocket error: ${error}`);
+      // console.log(`WebSocket error: ${error}`);
     };
   
     ws.onclose = async function () {
@@ -230,9 +230,9 @@ function sendChannelList(channelList) {
         t: 't'
       };
       ws.send(JSON.stringify(json));  // Send channel list to server
-      console.log("Channel list sent:", channelList);
+      // console.log("Channel list sent:", channelList);
     } else {
-      console.log("WebSocket is not open. Cannot send channel list.");
+      // console.log("WebSocket is not open. Cannot send channel list.");
     }
   }
 

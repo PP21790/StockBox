@@ -67,7 +67,7 @@ async GetAccessToken(req, res) {
 
     // Make API request
     const response = await axios.request(config);
-    console.log("response",response);
+    // console.log("response",response);
     if (response.data.data.jwtToken) {
       const AccessToken = response.data.data.jwtToken;
 
@@ -93,7 +93,7 @@ async GetAccessToken(req, res) {
       });
     }
   } catch (error) {
-    console.error("Error:", error.message);
+    // console.error("Error:", error.message);
 
     // Handle Axios errors or other errors
     if (error.response) {
@@ -217,7 +217,7 @@ async placeOrder(req, res) {
         return res.status(400).json({ status: false, message: "Order placement failed", data: response.data });
       }
     } catch (error) {
-      console.error("Error placing order:", error); // Log the error
+    //   console.error("Error placing order:", error); // Log the error
       return res.status(500).json({ 
           status: false, 
           message: error.response ? error.response.data : "An error occurred while placing the order" 
@@ -323,7 +323,7 @@ async placeOrder(req, res) {
                    positionData = await CheckPosition(client.apikey, authToken, stock.segment,stock.instrument_token,producttype,signal.calltype,stock.tradesymbol);
                 
                   } catch (error) {
-                  console.error('Error in CheckPosition:', error.message);
+                //   console.error('Error in CheckPosition:', error.message);
                 
               }
 
@@ -333,7 +333,7 @@ async placeOrder(req, res) {
                              holdingData = await CheckHolding(client.apikey, authToken , stock.segment,stock.instrument_token,producttype,signal.calltype);
                            
                         } catch (error) {
-                            console.error('Error in CheckHolding:', error.message);
+                            // console.error('Error in CheckHolding:', error.message);
                         }
                         totalValue = Math.abs(positionData.qty)+holdingData.qty;
                     }
@@ -352,7 +352,7 @@ async placeOrder(req, res) {
                     calltypes = "BUY";
                 }
           
-                console.log('bbbb');
+                // console.log('bbbb');
 
          if(totalValue>=quantity) {
 
@@ -644,7 +644,7 @@ let data = JSON.stringify({
                  positionData = await CheckPosition(client.apikey, authToken, stock.segment,stock.instrument_token,producttype,signal.calltype,stock.tradesymbol);
               
                 } catch (error) {
-                console.error('Error in CheckPosition:', error.message);
+                // console.error('Error in CheckPosition:', error.message);
               
             }
 
@@ -654,7 +654,7 @@ let data = JSON.stringify({
                            holdingData = await CheckHolding(client.apikey, authToken , stock.segment,stock.instrument_token,producttype,signal.calltype);
                          
                       } catch (error) {
-                          console.error('Error in CheckHolding:', error.message);
+                        //   console.error('Error in CheckHolding:', error.message);
                       }
                       totalValue = Math.abs(positionData.qty)+holdingData.qty;
                   }
@@ -916,7 +916,7 @@ let data = JSON.stringify({
                   return { status: false, message: "Order placement failed", data: response.data };
                 }
             } catch (error) {
-                console.error("Error placing order:", error); // Log the error
+                // console.error("Error placing order:", error); // Log the error
                 return { 
                     status: false, 
                     message: error.response ? error.response.data : "An error occurred while placing the order" 
@@ -1138,7 +1138,7 @@ async function CheckHolding(userId, authToken, segment, instrument_token, produc
                 };
         }
     } catch (error) {
-        console.error('Error fetching position:', error.response ? error.response.data : error.message);
+        // console.error('Error fetching position:', error.response ? error.response.data : error.message);
         return {
             status: false,
             qty: 0,

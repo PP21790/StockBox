@@ -13,7 +13,7 @@ const checkPermission = (permissionName) => {
         res.status(403).send('Forbidden'); // Permission denied
       }
     } catch (error) {
-      console.log("Error checking permission:", error);
+      // console.log("Error checking permission:", error);
       return res.status(500).send('Server error');
     }
   };

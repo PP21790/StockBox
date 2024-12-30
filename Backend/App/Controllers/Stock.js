@@ -207,7 +207,7 @@ async getStocksByExpiryByStrike(req, res) {
     const result = await Stock_Modal.aggregate(pipeline);
 
     // Log the result for debugging
-    console.log("Aggregation Result:", JSON.stringify(result, null, 2));
+    // console.log("Aggregation Result:", JSON.stringify(result, null, 2));
 
     return res.json({
       status: true,
@@ -215,7 +215,7 @@ async getStocksByExpiryByStrike(req, res) {
       data: result
     });
   } catch (error) {
-    console.error("Error executing query:", error);
+    // console.error("Error executing query:", error);
     return res.json({ status: false, message: "Server error", data: [] });
   }
 }
@@ -269,7 +269,7 @@ async getStocksByExpiryByStrike(req, res) {
         });
 
     } catch (error) {
-        console.log("Error fetching Stock details:", error);
+        // console.log("Error fetching Stock details:", error);
         return res.status(500).json({
             status: false,
             message: "Server error",
@@ -318,7 +318,7 @@ async getStocksByExpiryByStrike(req, res) {
       });
   
     } catch (error) {
-      console.log("Error updating Stock:", error);
+      // console.log("Error updating Stock:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -354,7 +354,7 @@ async getStocksByExpiryByStrike(req, res) {
         });
       }
 
-      console.log("Deleted Stock:", deletedStock);
+      // console.log("Deleted Stock:", deletedStock);
       return res.json({
         status: true,
         message: "Stock deleted successfully",

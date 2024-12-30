@@ -7,7 +7,7 @@ let ioInstance;
 
 module.exports = function (app, io) {
     if (!ioInstance) {
-        console.log("Initializing io instance...");
+        // console.log("Initializing io instance...");
         ioInstance = io; // Save the io instance
     }
     return ioInstance;

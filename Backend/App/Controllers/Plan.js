@@ -28,7 +28,7 @@ class Plan {
     
             await result.save();
     
-            console.log("Plan successfully added:", result);
+            // console.log("Plan successfully added:", result);
             return res.json({
                 status: true,
                 message: "Plan added successfully",
@@ -37,7 +37,7 @@ class Plan {
     
         } catch (error) {
             // Enhanced error logging
-            console.log("Error adding Plan:", error);
+            // console.log("Error adding Plan:", error);
     
             return res.status(500).json({
                 status: false,
@@ -261,7 +261,7 @@ class Plan {
             });
     
         } catch (error) {
-            console.log("Error fetching Plan details:", error);
+            // console.log("Error fetching Plan details:", error);
             return res.status(500).json({
                 status: false,
                 message: "Server error",
@@ -301,7 +301,7 @@ class Plan {
         });
       }
   
-      console.log("Updated Plan:", updatedPlan);
+      // console.log("Updated Plan:", updatedPlan);
       return res.json({
         status: true,
         message: "Plan updated successfully",
@@ -309,7 +309,7 @@ class Plan {
       });
   
     } catch (error) {
-      console.log("Error updating Plan:", error);
+      // console.log("Error updating Plan:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -344,14 +344,14 @@ class Plan {
         });
       }
 
-      console.log("Deleted Plan:", deletedPlan);
+      // console.log("Deleted Plan:", deletedPlan);
       return res.json({
         status: true,
         message: "Plan deleted successfully",
         data: deletedPlan,
       });
     } catch (error) {
-      console.log("Error deleting Plan:", error);
+      // console.log("Error deleting Plan:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -394,7 +394,7 @@ async  statusChange(req, res) {
       });
 
   } catch (error) {
-      console.log("Error updating status:", error);
+      // console.log("Error updating status:", error);
       return res.status(500).json({
           status: false,
           message: "Server error",
@@ -541,9 +541,9 @@ async  addPlanSubscription(req, res) {
                 } }  // Update fields
             );
               //  const savedPlan = await existingPlan.save();  
-                console.log("Plan updated successfully:", savedPlan);
+                // console.log("Plan updated successfully:", savedPlan);
             } catch (error) {
-                console.error("Error saving updated plan:", error);
+                // console.error("Error saving updated plan:", error);
             }
         } else {
 
@@ -606,9 +606,9 @@ monthsToAdd = Math.floor(differenceInMonths); // Round down to the nearest whole
         
             try {
                 await newPlanManage.save();  // Save the new plan
-                console.log(`Added new record for service ID: ${serviceId}`);
+                // console.log(`Added new record for service ID: ${serviceId}`);
             } catch (error) {
-                console.error("Error saving new plan:", error);
+                // console.error("Error saving new plan:", error);
             }
         }
         
@@ -624,20 +624,20 @@ let license = await License_Modal.findOne({ month: targetMonth }).exec();
 
 if (license) {
     license.noofclient += monthsToAdd;
-    console.log('Month found, updating noofclient.',monthsToAdd);
+    // console.log('Month found, updating noofclient.',monthsToAdd);
 } else {
     license = new License_Modal({
         month: targetMonth,
         noofclient: monthsToAdd
     });
-    console.log('Month not found, inserting new record.');
+    // console.log('Month not found, inserting new record.');
 }
 
 try {
     await license.save();
-    console.log('License updated successfully.');
+    // console.log('License updated successfully.');
 } catch (error) {
-    console.error('Error updating license:', error);
+    // console.error('Error updating license:', error);
 }
 
 
@@ -695,7 +695,7 @@ try {
       });
   
     } catch (error) {
-      console.error(error);
+      // console.error(error);
       return res.status(500).json({ status: false, message: 'Server error', data: [] });
     }
   }
@@ -804,7 +804,7 @@ try {
       });
   
     } catch (error) {
-      console.error(error);
+      // console.error(error);
       return res.status(500).json({ status: false, message: 'Server error', data: [] });
     }
   }
@@ -970,7 +970,7 @@ try {
       });
   
     } catch (error) {
-      console.error(error);
+      // console.error(error);
       return res.status(500).json({ status: false, message: 'Server error', data: [] });
     }
   }
