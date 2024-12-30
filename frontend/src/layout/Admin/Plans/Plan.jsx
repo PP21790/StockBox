@@ -154,20 +154,20 @@ const Plan = () => {
         <div className="page-content">
             <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
                 <div className="breadcrumb-title pe-3">Package
-               
+
 
                 </div>
                 <div className="ps-3">
-                            <nav aria-label="breadcrumb">
-                                <ol className="breadcrumb mb-0 p-0">
-                                    <li className="breadcrumb-item">
-                                        <Link to="/admin/dashboard">
-                                            <i className="bx bx-home-alt" />
-                                        </Link>
-                                    </li>
-                                </ol>
-                            </nav>
-                        </div>
+                    <nav aria-label="breadcrumb">
+                        <ol className="breadcrumb mb-0 p-0">
+                            <li className="breadcrumb-item">
+                                <Link to="/admin/dashboard">
+                                    <i className="bx bx-home-alt" />
+                                </Link>
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
                 <div className="ms-auto">
                     <div className="btn-group">
                         <Link to="/admin/addplan" className="btn btn-primary">
@@ -293,7 +293,7 @@ const Plan = () => {
                                                                     <div className="modal-content">
                                                                         <div className="modal-header">
                                                                             <h5 className="modal-title" id={`modalLabel-${client._id}`}>
-                                                                                {client.title}
+                                                                                Plan Detail
                                                                             </h5>
                                                                             <button
                                                                                 type="button"

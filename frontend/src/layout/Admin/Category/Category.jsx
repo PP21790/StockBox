@@ -418,41 +418,42 @@ const Category = () => {
                                                 />
                                             </div>
                                             <div className="modal-body">
-                                              
-                                                    <div className="row">
-                                                        <div className="col-md-12">
-                                                            <label htmlFor="service">Segment</label>
-                                                            <span className="text-danger">*</span>
-                                                            {servicedata.length > 0 && (
-                                                                <DropdownMultiselect
-                                                                    name="Service"
-                                                                    options={servicedata.map((item) => ({
-                                                                        key: item._id,
-                                                                        label: item.title
-                                                                    }))}
-                                                                    handleOnChange={(selected) => {
-                                                                        const selectedService = selected;
-                                                                        setTitle({ ...title, service: selectedService });
 
-                                                                    }}
-                                                                />
-                                                            )}
+                                                <div className="row">
+                                                    <div className="col-md-12">
+                                                        <label htmlFor="service">Segment</label>
+                                                        <span className="text-danger">*</span>
+                                                        {servicedata.length > 0 && (
+                                                            <DropdownMultiselect
+                                                                name="Service"
+                                                                options={servicedata.map((item) => ({
+                                                                    key: item._id,
+                                                                    label: item.title
+                                                                }))}
+                                                                placeholder="Select Segment"
+                                                                handleOnChange={(selected) => {
+                                                                    const selectedService = selected;
+                                                                    setTitle({ ...title, service: selectedService });
 
-                                                        </div>
-                                                        <div className="col-md-12">
-                                                            <label htmlFor="categoryTitle">Category</label>
-                                                            <span className="text-danger">*</span>
-                                                            <input
-                                                                id="categoryTitle"
-                                                                className="form-control mb-3"
-                                                                type="text"
-                                                                placeholder="Enter Category Title"
-                                                                value={title.title}
-                                                                onChange={(e) => setTitle({ ...title, title: e.target.value })}
+                                                                }}
                                                             />
-                                                        </div>
+                                                        )}
+
                                                     </div>
-                                           
+                                                    <div className="col-md-12">
+                                                        <label htmlFor="categoryTitle">Category</label>
+                                                        <span className="text-danger">*</span>
+                                                        <input
+                                                            id="categoryTitle"
+                                                            className="form-control mb-3"
+                                                            type="text"
+                                                            placeholder="Enter Category Title"
+                                                            value={title.title}
+                                                            onChange={(e) => setTitle({ ...title, title: e.target.value })}
+                                                        />
+                                                    </div>
+                                                </div>
+
                                             </div>
                                             <div className="modal-footer">
                                                 <button

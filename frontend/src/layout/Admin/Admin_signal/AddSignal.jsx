@@ -118,7 +118,7 @@ const AddSignal = () => {
       }
 
       if (!values.callduration) errors.callduration = 'Please Select Trade Duration';
-      if (!values.calltype) errors.calltype = 'Please Enter Call Calltype';
+      if (!values.calltype) errors.calltype = 'Please select call type';
       if (!values.description) errors.description = 'Please Enter Description';
 
       if (values.segment === "O" && !values.optiontype) {
@@ -134,6 +134,9 @@ const AddSignal = () => {
       }
       if (!values.entrytype) {
         errors.entrytype = 'Please Select Entry Type';
+      }
+      if (!values.expiry) {
+        errors.expiry = 'Please Select Expiry Date';
       }
       if (!values.lot) {
         errors.lot = 'Please Enter Lot';
@@ -304,8 +307,8 @@ const AddSignal = () => {
         { label: 'Future', value: 'F' },
         { label: 'Option', value: 'O' },
       ],
-      label_size: 12,
-      col_size: 8,
+      label_size: 13,
+      col_size: 6,
       star: true
     },
 

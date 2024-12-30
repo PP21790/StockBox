@@ -819,7 +819,7 @@ const DynamicForm = ({
                                                                                     />
 
                                                                                     <FontAwesomeIcon
-                                                                                        icon={passwordVisible ?   faEye:faEyeSlash}
+                                                                                        icon={passwordVisible ? faEye : faEyeSlash}
                                                                                         onClick={togglePasswordVisibility}
                                                                                         style={{
                                                                                             position: 'absolute',
@@ -862,7 +862,7 @@ const DynamicForm = ({
                                                                                         style={{ paddingRight: '3rem' }}
                                                                                     />
                                                                                     <FontAwesomeIcon
-                                                                                        icon={passwordVisible1 ?   faEye : faEyeSlash}
+                                                                                        icon={passwordVisible1 ? faEye : faEyeSlash}
                                                                                         onClick={togglePasswordVisibility1}
                                                                                         style={{
                                                                                             position: 'absolute',
@@ -1235,7 +1235,7 @@ const DynamicForm = ({
                                                                                                 ],
                                                                                             }}
                                                                                             formats={[
-                                                                                                'header', 'font', 'size','bold','italic','underline','list',
+                                                                                                'header', 'font', 'size', 'bold', 'italic', 'underline', 'list',
                                                                                                 'bullet', 'link', 'image', 'clean',
                                                                                             ]}
                                                                                             style={{
