@@ -517,6 +517,22 @@ export async function deletebasket(_id, token) {
 }
 
 
+// get all subscription 
+
+export async function getAllSubscriptionList(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}basket/basketsubscriptionlist`, data, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}
+
+
 
 
 

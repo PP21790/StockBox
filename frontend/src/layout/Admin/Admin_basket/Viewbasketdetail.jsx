@@ -178,7 +178,7 @@ const Viewbasketdetail = () => {
   }
 
 
-  console.log("stockdata", stockdata)
+
 
   const getbasketdetail = async () => {
     try {
@@ -261,9 +261,11 @@ const Viewbasketdetail = () => {
                             <div key={version}>
                               <div className="d-flex justify-content-between align-items-center">
                                 <h6>Version {version}</h6>
-                                <Tooltip title="Update All">
-                                  <SquarePen className="cursor-pointer" onClick={() => updateStock(versionStocks)} />
-                                </Tooltip>
+                                {console.log("versionStocks", versionStocks)}
+                                {versionStocks[0].status == 0 ?
+                                  <Tooltip title="Update All">
+                                    <SquarePen className="cursor-pointer" onClick={() => updateStock(versionStocks)} />
+                                  </Tooltip> : ""}
                               </div>
                               <table className="table table-bordered">
                                 <thead>

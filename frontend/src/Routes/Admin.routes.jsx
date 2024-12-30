@@ -80,8 +80,8 @@ import BasketStockPublish from '../layout/Admin/Admin_basket/BasketStockPublish'
 import Rebalncing from '../layout/Admin/Admin_basket/Rebalncing';
 import BasketPurchaseHistory from '../layout/Admin/Admin_basket/BasketPurchaseHistory';
 import ViewBasketStock from '../layout/Admin/Admin_basket/ViewBasketStock';
-import ViewPurchaseClient from '../layout/Admin/Admin_basket/ViewPurchaseClient';
 import EditStock from '../layout/Admin/Admin_basket/EditStock';
+import AllBasketHistory from '../layout/Admin/Admin_basket/AllBasketHistory';
 
 
 
@@ -165,14 +165,15 @@ function MainApp() {
 
                     <Route path="/basket" element={<Basket />} />
                     <Route path="/addbasket" element={<Addbasket />} />
-                    <Route path="/basket/viewdetail/:id" element={<Viewbasketdetail />} />
+                    <Route path="/viewdetail/:id" element={<Viewbasketdetail />} />
                     <Route path="/basket/editbasket/:id" element={<Editbasket />} />
-                    <Route path="/basket/addstock/:id" element={<AddStock />} />
+                    <Route path="/addstock/:id" element={<AddStock />} />
                     <Route path="/basket/basketstockpublish" element={<BasketStockPublish />} />
                     <Route path="/basket/rebalancing" element={<Rebalncing />} />
-                    <Route path="/basket/basket-purchase-history" element={<BasketPurchaseHistory />} />
+                    <Route path="/basket-purchase-history/:id" element={<BasketPurchaseHistory />} />
                     <Route path="/basket/view-basket-stock" element={<ViewBasketStock />} />
-                    <Route path="/basket/view-purchase-client" element={<ViewPurchaseClient />} />
+                    <Route path="/purchasebaskethistory" element={<AllBasketHistory />} />
+
 
 
 

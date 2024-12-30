@@ -168,14 +168,14 @@ const Basket = () => {
       selector: row => (
         <div className="form-check form-switch form-check-info">
           <input
-            id={`rating_${row.ActiveStatus}`}
+            id={`rating_${row.status}`}
             className="form-check-input toggleswitch"
             type="checkbox"
-            defaultChecked={row.ActiveStatus == 1}
+            defaultChecked={row.status == true}
             onChange={(event) => handleSwitchChange(event, row._id)}
           />
           <label
-            htmlFor={`rating_${row.ActiveStatus}`}
+            htmlFor={`rating_${row.status}`}
             className="checktoggle checkbox-bg"
           ></label>
         </div>
@@ -189,7 +189,7 @@ const Basket = () => {
         <div>
           <Tooltip title="  Add Stock">
             <Link
-              to={`addstock/${row._id}`}
+              to={`/admin/addstock/${row._id}`}
               className="btn px-2"
             >
               <Plus />
@@ -199,7 +199,7 @@ const Basket = () => {
           <Tooltip title="view">
             <Link
 
-              to={`viewdetail/${row._id}`}
+              to={`/admin/viewdetail/${row._id}`}
               className="btn px-2"
             >
               <Eye />

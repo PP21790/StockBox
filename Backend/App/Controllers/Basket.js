@@ -366,6 +366,9 @@ class Basket {
     try {
       const { basket_id, stocks, version } = req.body; // Include version in request body
 
+      console.log("req.body", req.body)
+
+
       // Validate basket existence
       const basket = await Basket_Modal.findById(basket_id);
       if (!basket) {
