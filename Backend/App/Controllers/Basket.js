@@ -915,7 +915,7 @@ async BasketSubscriptionListWithId(req, res) {
     const matchConditions = { del: false };
 
     if (basket_id) {
-      matchConditions.basket_id = basket_id; // Filter by basket_id
+      matchConditions.basket_id = new mongoose.Types.ObjectId(basket_id);; // Filter by basket_id
     }
 
     if (fromDate && toDate) {
