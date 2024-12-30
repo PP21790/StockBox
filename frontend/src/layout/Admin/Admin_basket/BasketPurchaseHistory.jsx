@@ -166,10 +166,6 @@ const BasketPurchaseHistory = () => {
 
 
 
-
-
-
-
   return (
     <div>
       <div className="page-content">
@@ -197,7 +193,7 @@ const BasketPurchaseHistory = () => {
                 <input
                   type="text"
                   className="form-control ps-5 radius-10"
-                  placeholder="Search Payment History"
+                  placeholder="Search History"
                   onChange={(e) => setSearchInput(e.target.value)}
                   value={searchInput}
                 />

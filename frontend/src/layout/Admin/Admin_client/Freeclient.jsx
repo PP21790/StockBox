@@ -4,7 +4,7 @@ import axios from 'axios';
 import Table from '../../../components/Table1';
 import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { FreeClientList, FreeClientListWithFilter, PlanSubscription, DeleteFreeClient, getcategoryplan, getplanlist, getPlanbyUser } from '../../../Services/Admin';
+import { FreeClientList, FreeClientListWithFilter, PlanSubscription, BasketSubscription, DeleteFreeClient, getcategoryplan, getplanlist, getPlanbyUser, BasketAllActiveList } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
 import { image_baseurl } from '../../../Utils/config';
 import { fDate, fDateTime } from '../../../Utils/Date_formate';
@@ -36,7 +36,7 @@ const Freeclient = () => {
     const [searchInput, setSearchInput] = useState("");
     const [header, setheader] = useState("Free Trial Client");
 
-
+    const [getBasket, setGetBasket] = useState({});
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
 
@@ -49,6 +49,15 @@ const Freeclient = () => {
         client_id: "",
         price: ""
     });
+
+
+    const [basketdetail, setBasketdetail] = useState({
+        basket_id: "",
+        client_id: "",
+        price: "",
+
+    });
+
 
 
     useEffect(() => {
@@ -64,6 +73,7 @@ const Freeclient = () => {
     useEffect(() => {
         getdemoclient();
         getcategoryplanlist()
+        getActiveBasketdetail()
     }, []);
 
 
@@ -86,6 +96,19 @@ const Freeclient = () => {
         }
     }
 
+
+
+    const getActiveBasketdetail = async () => {
+        try {
+            const response = await BasketAllActiveList(token);
+            if (response.status) {
+                setGetBasket(response.data);
+
+            }
+        } catch (error) {
+            console.log("error");
+        }
+    };
 
 
     const getexportfile = async () => {
@@ -129,16 +152,7 @@ const Freeclient = () => {
     }
 
 
-    // const getplanlistbyadmin = async () => {
-    //     try {
-    //         const response = await getplanlist(token);
-    //         if (response.status) {
-    //             setPlanlist(response.data);
-    //         }
-    //     } catch (error) {
-    //         console.log("error");
-    //     }
-    // }
+
 
 
     const getcategoryplanlist = async () => {
@@ -330,7 +344,41 @@ const Freeclient = () => {
     };
 
 
+    // assign basket 
+    const UpdateBasketservice = async () => {
 
+        try {
+            const data = { basket_id: basketdetail.basket_id, client_id: client._id, price: basketdetail.price, };
+            const response = await BasketSubscription(data, token);
+            if (response && response.status) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Basket service updated successfully.',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    timer: 2000,
+                });
+
+                setBasketdetail({ basket_id: "", client_id: "", price: "" });
+                getdemoclient();
+                handleCancel()
+            } else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: response.message || 'There was an error updating the Basket.',
+                    icon: 'error',
+                    confirmButtonText: 'Try Again',
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'There was an error updating the Basket.',
+                icon: 'error',
+                confirmButtonText: 'Try Again',
+            });
+        }
+    };
 
 
 
@@ -555,7 +603,7 @@ const Freeclient = () => {
                                 <div className="modal-body">
                                     <div className='card'>
                                         <div className='d-flex justify-content-center align-items-center card-body'>
-                                            {['Plan'].map((tab, index) => (
+                                            {['Plan', 'Basket'].map((tab, index) => (
                                                 <label key={index} className='labelfont'>
                                                     <input
                                                         className='ms-3'
@@ -658,7 +706,7 @@ const Freeclient = () => {
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Validity:</strong>
                                                                                                     <span>{item.validity}</span>
-                                                                                                   
+
                                                                                                 </div>
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Created At:</strong>
@@ -681,6 +729,86 @@ const Freeclient = () => {
                                                 )}
                                             </>
                                         )}
+                                        {checkedIndex === 1 && (
+                                            <>
+                                                <form className='card-body my-3' style={{ height: "40vh", overflowY: "scroll" }}>
+                                                    <div className="row">
+                                                        {getBasket.map((item, index) => (
+                                                            <div className="col-md-6" key={index}>
+                                                                <div className="card mb-0 my-2">
+                                                                    <div className="card-body p-1">
+                                                                        <h5 className="card-title">
+                                                                            <input
+                                                                                style={{ height: "13px", width: "13px", marginTop: "0.52rem", border: "1px solid black" }}
+                                                                                className="form-check-input"
+                                                                                type="radio"
+                                                                                name="planSelection"
+                                                                                id={`input-plan-${index}`}
+                                                                                checked={selectedPlanId === item._id}
+                                                                                onClick={() => {
+                                                                                    setSelectedPlanId(item._id);
+                                                                                    setBasketdetail({ basket_id: item._id, price: item.basket_price });
+                                                                                }}
+                                                                            />
+                                                                            <label className="form-check-label mx-1" style={{ fontSize: "13px", fontWeight: "800" }} htmlFor={`input-plan-${index}`}>
+                                                                                {item.validity}
+                                                                            </label>
+                                                                        </h5>
+
+                                                                        <div className="accordion" id={`accordion-basket`}>
+                                                                            <div className="accordion-item">
+                                                                                <h2 className="accordion-header" id={`heading-${item._id}`}>
+                                                                                    <button
+                                                                                        className={`accordion-button ${selectedPlanId === item._id ? '' : 'collapsed'} custom-accordion-button`}
+                                                                                        type="button"
+                                                                                        data-bs-toggle="collapse"
+                                                                                        data-bs-target={`#collapse-${item._id}`}
+                                                                                        aria-expanded={selectedPlanId === item._id}
+                                                                                        aria-controls={`collapse-${item._id}`}
+                                                                                    >
+                                                                                        <div className='d-flex justify-content-between'>
+                                                                                            <div>
+                                                                                                <strong className="text-secondary m-2">Detail</strong>
+                                                                                                <strong className="text-success m-2 activestrong">{item?.subscription?.status === "active" ? "Active" : ""}</strong>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </button>
+                                                                                </h2>
+                                                                                <div
+                                                                                    id={`collapse-${item._id}`}
+                                                                                    className={`accordion-collapse collapse ${selectedPlanId === item._id ? 'show' : ''}`}
+                                                                                    aria-labelledby={`heading-${item._id}`}
+                                                                                    data-bs-parent={`#accordion-basket`}
+                                                                                >
+                                                                                    <div className="accordion-body">
+                                                                                        <div className="d-flex justify-content-between">
+                                                                                            <strong>Price:</strong>
+                                                                                            <span><IndianRupee /> {item.basket_price && item.basket_price}</span>
+                                                                                        </div>
+                                                                                        <div className="d-flex justify-content-between">
+                                                                                            <strong>Validity:</strong>
+                                                                                            <span>{item.validity}</span>
+                                                                                        </div>
+                                                                                        <div className="d-flex justify-content-between">
+                                                                                            <strong>Created At:</strong>
+                                                                                            <span>{fDateTime(item?.created_at)}</span>
+                                                                                        </div>
+                                                                                        <div className="d-flex justify-content-between">
+                                                                                            <strong>Updated At:</strong>
+                                                                                            <span>{fDateTime(item?.updated_at)}</span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </form>
+                                            </>
+                                        )}
 
                                     </div>
                                 </div>
@@ -699,6 +827,15 @@ const Freeclient = () => {
                                             type="button"
                                             className="btn btn-primary"
                                             onClick={() => Updateplansubscription()}
+                                        >
+                                            Save Plan
+                                        </button>
+                                    )}
+                                    {checkedIndex === 1 && (
+                                        <button
+                                            type="button"
+                                            className="btn btn-primary"
+                                            onClick={() => UpdateBasketservice()}
                                         >
                                             Save Plan
                                         </button>

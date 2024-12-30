@@ -4,7 +4,7 @@ import { GetClient } from '../../../Services/Admin';
 // import Table from '../../../components/Table';
 import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine, RefreshCcw } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { deleteClient, UpdateClientStatus, PlanSubscription, getplanlist, BasketSubscription, BasketAllList, getcategoryplan, getPlanbyUser, AllclientFilter, getclientExportfile } from '../../../Services/Admin';
+import { deleteClient, UpdateClientStatus, PlanSubscription, getplanlist, BasketSubscription, BasketAllList, getcategoryplan, getPlanbyUser, AllclientFilter, getclientExportfile, BasketAllActiveList } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
 import { fDateTime } from '../../../Utils/Date_formate';
 import { image_baseurl } from '../../../Utils/config';
@@ -22,6 +22,7 @@ const Client = () => {
     useEffect(() => {
         getbasketlist()
         getcategoryplanlist()
+        getActiveBasketdetail()
     }, []);
 
 
@@ -53,6 +54,7 @@ const Client = () => {
     const [expired, setExpired] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
+    const [getBasket, setGetBasket] = useState({});
 
 
 
@@ -90,10 +92,10 @@ const Client = () => {
 
 
     const [basketdetail, setBasketdetail] = useState({
-        plan_id: "",
+        basket_id: "",
         client_id: "",
         price: "",
-        discount: ""
+
     });
 
 
@@ -205,7 +207,17 @@ const Client = () => {
         }
     };
 
+    const getActiveBasketdetail = async () => {
+        try {
+            const response = await BasketAllActiveList(token);
+            if (response.status) {
+                setGetBasket(response.data);
 
+            }
+        } catch (error) {
+            console.log("error");
+        }
+    };
 
 
     const getAdminclient = async () => {
@@ -413,9 +425,8 @@ const Client = () => {
     const UpdateBasketservice = async () => {
 
         try {
-            const data = { basket_id: basketdetail.basket_id, client_id: client._id, price: basketdetail.price, discount: basketdetail.discount };
+            const data = { basket_id: basketdetail.basket_id, client_id: client._id, price: basketdetail.price, };
             const response = await BasketSubscription(data, token);
-
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
@@ -425,13 +436,13 @@ const Client = () => {
                     timer: 2000,
                 });
 
-                setBasketdetail({ basket_id: "", client_id: "", price: "", discount: "" });
+                setBasketdetail({ basket_id: "", client_id: "", price: "" });
                 getAdminclient();
                 handleCancel()
             } else {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'There was an error updating the Basket.',
+                    text: response.message || 'There was an error updating the Basket.',
                     icon: 'error',
                     confirmButtonText: 'Try Again',
                 });
@@ -535,13 +546,6 @@ const Client = () => {
             sortable: true,
             width: '165px',
         },
-
-        // {
-        // name: 'Date',
-        // selector: row => row.Status,
-        // sortable: true,
-        // width: '165px',
-        // },
 
         {
             name: 'Active Status',
@@ -801,7 +805,7 @@ const Client = () => {
                                 <div className="modal-body">
                                     <div className='card'>
                                         <div className='d-flex justify-content-center align-items-center card-body'>
-                                            {['Plan'].map((tab, index) => (
+                                            {['Plan', 'Basket'].map((tab, index) => (
                                                 <label key={index} className='labelfont'>
                                                     <input
                                                         className='ms-3'
@@ -927,6 +931,86 @@ const Client = () => {
                                                 )}
                                             </>
                                         )}
+                                        {checkedIndex === 1 && (
+                                            <>
+                                                <form className='card-body my-3' style={{ height: "40vh", overflowY: "scroll" }}>
+                                                    <div className="row">
+                                                        {getBasket.map((item, index) => (
+                                                            <div className="col-md-6" key={index}>
+                                                                <div className="card mb-0 my-2">
+                                                                    <div className="card-body p-1">
+                                                                        <h5 className="card-title">
+                                                                            <input
+                                                                                style={{ height: "13px", width: "13px", marginTop: "0.52rem", border: "1px solid black" }}
+                                                                                className="form-check-input"
+                                                                                type="radio"
+                                                                                name="planSelection"
+                                                                                id={`input-plan-${index}`}
+                                                                                checked={selectedPlanId === item._id}
+                                                                                onClick={() => {
+                                                                                    setSelectedPlanId(item._id);
+                                                                                    setBasketdetail({ basket_id: item._id, price: item.basket_price });
+                                                                                }}
+                                                                            />
+                                                                            <label className="form-check-label mx-1" style={{ fontSize: "13px", fontWeight: "800" }} htmlFor={`input-plan-${index}`}>
+                                                                                {item.validity}
+                                                                            </label>
+                                                                        </h5>
+
+                                                                        <div className="accordion" id={`accordion-basket`}>
+                                                                            <div className="accordion-item">
+                                                                                <h2 className="accordion-header" id={`heading-${item._id}`}>
+                                                                                    <button
+                                                                                        className={`accordion-button ${selectedPlanId === item._id ? '' : 'collapsed'} custom-accordion-button`}
+                                                                                        type="button"
+                                                                                        data-bs-toggle="collapse"
+                                                                                        data-bs-target={`#collapse-${item._id}`}
+                                                                                        aria-expanded={selectedPlanId === item._id}
+                                                                                        aria-controls={`collapse-${item._id}`}
+                                                                                    >
+                                                                                        <div className='d-flex justify-content-between'>
+                                                                                            <div>
+                                                                                                <strong className="text-secondary m-2">Detail</strong>
+                                                                                                <strong className="text-success m-2 activestrong">{item?.subscription?.status === "active" ? "Active" : ""}</strong>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </button>
+                                                                                </h2>
+                                                                                <div
+                                                                                    id={`collapse-${item._id}`}
+                                                                                    className={`accordion-collapse collapse ${selectedPlanId === item._id ? 'show' : ''}`}
+                                                                                    aria-labelledby={`heading-${item._id}`}
+                                                                                    data-bs-parent={`#accordion-basket`}
+                                                                                >
+                                                                                    <div className="accordion-body">
+                                                                                        <div className="d-flex justify-content-between">
+                                                                                            <strong>Price:</strong>
+                                                                                            <span><IndianRupee /> {item.basket_price && item.basket_price}</span>
+                                                                                        </div>
+                                                                                        <div className="d-flex justify-content-between">
+                                                                                            <strong>Validity:</strong>
+                                                                                            <span>{item.validity}</span>
+                                                                                        </div>
+                                                                                        <div className="d-flex justify-content-between">
+                                                                                            <strong>Created At:</strong>
+                                                                                            <span>{fDateTime(item?.created_at)}</span>
+                                                                                        </div>
+                                                                                        <div className="d-flex justify-content-between">
+                                                                                            <strong>Updated At:</strong>
+                                                                                            <span>{fDateTime(item?.updated_at)}</span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </form>
+                                            </>
+                                        )}
 
                                     </div>
                                 </div>
@@ -945,6 +1029,15 @@ const Client = () => {
                                             type="button"
                                             className="btn btn-primary"
                                             onClick={() => Updateplansubscription()}
+                                        >
+                                            Save Plan
+                                        </button>
+                                    )}
+                                    {checkedIndex === 1 && (
+                                        <button
+                                            type="button"
+                                            className="btn btn-primary"
+                                            onClick={() => UpdateBasketservice()}
                                         >
                                             Save Plan
                                         </button>

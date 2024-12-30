@@ -1529,7 +1529,7 @@ export async function PlanSubscription(data, token) {
 
 export async function BasketSubscription(data, token) {
     try {
-        const res = await axios.post(`${Config.base_url}api/list/addbasketsubscription`, data, {
+        const res = await axios.post(`${Config.base_url}basket/addbasketsubscription`, data, {
             headers: {
                 data: {},
                 'Authorization': `${token}`,

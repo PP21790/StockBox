@@ -4,7 +4,7 @@ import { Eye, RefreshCcw, Trash2, SquarePen, IndianRupee, X, Plus, History } fro
 import Swal from "sweetalert2";
 import { Tooltip } from 'antd';
 import Table from "../../../components/Table";
-import { BasketAllList, deletebasket, Basketstatusofdetail } from "../../../Services/Admin";
+import { BasketAllActiveList, deletebasket, Basketstatusofdetail } from "../../../Services/Admin";
 import { fDate } from "../../../Utils/Date_formate";
 
 
@@ -27,7 +27,7 @@ const BasketStockPublish = () => {
   // Fetch basket list
   const getbasketlist = async () => {
     try {
-      const response = await BasketAllList(token);
+      const response = await BasketAllActiveList(token);
       if (response.status) {
         setClients(response.data);
       }
@@ -171,7 +171,7 @@ const BasketStockPublish = () => {
             id={`rating_${row.status}`}
             className="form-check-input toggleswitch"
             type="checkbox"
-            defaultChecked={row.status == false}
+            defaultChecked={row.status == true}
             onChange={(event) => handleSwitchChange(event, row._id)}
           />
           <label
