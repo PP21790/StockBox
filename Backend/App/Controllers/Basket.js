@@ -604,16 +604,22 @@ async getBasket(req, res) {
 
       const totalBaskets = await Basket_Modal.countDocuments(matchConditions); // Count matching documents
 
+
+
       return res.json({
-          status: true,
-          message: "Baskets fetched successfully",
-          data: {
-              total: totalBaskets,
-              page: pageNumber,
-              limit: pageSize,
-              baskets
-          }
-      });
+        status: true,
+        message: "Baskets fetched successfully",
+        data: baskets,
+        pagination: {
+          totalRecords:totalBaskets,
+          totalPages:pageNumber,
+          page: parseInt(page),
+          limit: parseInt(pageSize)
+        }
+    });
+
+
+      
 
   } catch (error) {
       console.error("An error occurred:", error);
@@ -675,17 +681,20 @@ async getBasket(req, res) {
         // Count total active baskets (filtered by search, if applicable)
         const totalBaskets = await Basket_Modal.countDocuments(matchConditions);
   
+
         return res.json({
-            status: true,
-            message: "Active baskets fetched successfully",
-            data: {
-                total: totalBaskets,
-                page: pageNumber,
-                limit: pageSize,
-                baskets
-            }
-        });
+          status: true,
+          message: "Active baskets fetched successfully",
+          data: baskets,
+          pagination: {
+            totalRecords:totalBaskets,
+            totalPages:pageNumber,
+            page: parseInt(page),
+            limit: parseInt(pageSize)
+          }
+      });
   
+
     } catch (error) {
         console.error("An error occurred:", error);
         return res.json({
