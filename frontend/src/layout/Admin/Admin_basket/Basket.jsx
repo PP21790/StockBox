@@ -21,34 +21,16 @@ const Basket = () => {
 
 
 
-  // const GetStocklistbyid = async () => {
-  //   try {
-  //     const response = await getstocklistById(id, token);
-  //     if (response.status) {
-  //       setStockdata(response?.data)
-  //     }
-  //   } catch (error) {
-  //     console.log("error");
-  //   }
-  // };
-
-
-
 
 
   // Fetch basket list
   const getbasketlist = async () => {
     try {
-      const response = await BasketAllList(token);
+      const data = { page: 1, search: "" }
+      const response = await BasketAllList(data, token);
       if (response.status) {
-        const filterdata = response.data.filter((item) =>
-          searchInput === "" ||
-          item.title.toLowerCase().includes(searchInput.toLowerCase()) ||
-          item.themename.toLowerCase().includes(searchInput.toLowerCase()) ||
-          item.validity.toLowerCase().includes(searchInput.toLowerCase())
-        );
-        setClients(searchInput ? filterdata : response.data);
-
+        setClients([response.data.data.baskets]);
+        console.log("aa", [response.data.baskets])
       }
     } catch (error) {
       console.log("error");

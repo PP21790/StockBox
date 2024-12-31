@@ -436,19 +436,35 @@ export async function SignalCloseApi(data, token) {
 
 
 
-// basket list 
-export async function BasketAllList(token) {
+// // basket list 
+// export async function BasketAllList(token) {
+//     try {
+//         const res = await axios.get(`${Config.base_url}basket/list`, {
+//             headers: {
+//                 'Authorization': `${token}`
+//             },
+//         });
+//         return res?.data;
+//     } catch (err) {
+//         return err;
+//     }
+// }
+
+export async function BasketAllList(data, token) {
     try {
-        const res = await axios.get(`${Config.base_url}basket/list`, {
+        const res = await axios.post(`${Config.base_url}basket/list`, data, {
             headers: {
-                'Authorization': `${token}`
+                data: {},
+                'Authorization': `${token}`,
             },
         });
+
         return res?.data;
     } catch (err) {
-        return err;
+        return err.response?.data || err.message;
     }
 }
+
 
 
 

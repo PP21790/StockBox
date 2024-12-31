@@ -74,13 +74,9 @@ const AddBasket = () => {
       title: values.title,
       add_by: user_id,
       description: values.description,
-      // full_price: values.full_price,
       basket_price: values.basket_price,
-      // accuracy: values.accuracy,
       mininvamount: values.mininvamount,
-      // portfolioweightage: values.portfolioweightage,
       themename: values.themename,
-      // cagr: values.cagr,
       frequency: values.frequency,
       validity: values.validity,
       next_rebalance_date: values.next_rebalance_date
@@ -126,14 +122,10 @@ const AddBasket = () => {
     initialValues: {
       title: "",
       description: "",
-      // full_price: "",
       basket_price: "",
       add_by: "",
-      // accuracy: "",
       mininvamount: "",
-      // portfolioweightage: "",
       themename: "",
-      // cagr: "",
       frequency: "",
       validity: "",
       next_rebalance_date: ""
