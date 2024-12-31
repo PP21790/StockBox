@@ -457,13 +457,66 @@ class Basket {
     }
   }
   
-
   
   async getBasket(req, res) {
     try {
 
-        const baskets = await Basket_Modal.find({ del: false,status:false }).sort({ created_at: -1 });
-        return res.json({
+     //   const baskets = await Basket_Modal.find({ del: false,status:false }).sort({ created_at: -1 });
+       
+     const baskets = await Basket_Modal.aggregate([
+       {
+        $match: {
+          del: false,                     // Include only non-deleted baskets
+          status: false                    // Include only active baskets
+        }
+      },
+      {
+        $lookup: {
+          from: "basketstocks",
+          let: { basketId: { $toString: "$_id" } }, // Convert _id to string
+          pipeline: [
+            {
+              $match: {
+                $expr: { $eq: ["$basket_id", "$$basketId"] } // Compare with basketstocks.basket_id
+              }
+            }
+          ],
+          as: "stock_details"
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          description: 1,
+          themename: 1,
+          add_by: 1,
+          full_price: 1,
+          basket_price: 1,
+          mininvamount: 1,
+          accuracy: 1,
+          portfolioweightage: 1,
+          cagr: 1,
+          frequency: 1,
+          validity: 1,
+          next_rebalance_date: 1,
+          stock_details: {
+            $filter: {
+              input: "$stock_details",      // Filter the joined stock details
+              as: "stock",
+              cond: { $eq: ["$$stock.del", false] } // Exclude deleted stocks
+            }
+          },
+          created_at: 1,
+          updated_at: 1
+        }
+      },
+      {
+        $sort: { created_at: -1 }         // Sort by creation date
+      }
+    ]);
+     
+     return res.json({
             status: true,
             message: "Baskets fetched successfully",
             data: baskets

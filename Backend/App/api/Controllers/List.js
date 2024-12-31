@@ -166,13 +166,8 @@ class List {
 
 
   async Newslist(req, res) {
-
-
-
-
     try {
 
-      // const news = await News_Modal.find();
       const news = await News_Modal.find({ del: false, status: true })
         .sort({ created_at: -1 });
       const protocol = req.protocol; // Will be 'http' or 'https'
