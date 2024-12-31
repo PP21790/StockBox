@@ -482,6 +482,22 @@ export async function BasketAllActiveList(token) {
     }
 }
 
+// Active basket page 
+
+export async function BasketAllActiveListbyfilter(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}basket/activebasketlist`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        return err.response?.data || err.message;
+    }
+}
 
 
 

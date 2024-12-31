@@ -3,7 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { Eye, RefreshCcw, Trash2, SquarePen, IndianRupee, X, Plus } from 'lucide-react';
 import Swal from "sweetalert2";
 import { Tooltip } from 'antd';
-import Table from "../../../components/Table";
+// import Table from "../../../components/Table";
+import Table from '../../../components/Table1';
+
 import { BasketAllList, deletebasket, Basketstatusofdetail, getstocklistById } from "../../../Services/Admin";
 import { fDate } from "../../../Utils/Date_formate";
 
@@ -19,28 +21,36 @@ const Basket = () => {
 
   const [searchInput, setSearchInput] = useState("");
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalRows, setTotalRows] = useState(0);
 
 
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
 
   // Fetch basket list
   const getbasketlist = async () => {
     try {
-      const data = { page: 1, search: "" }
+      const data = { page: currentPage, search: searchInput || "" }
       const response = await BasketAllList(data, token);
       if (response.status) {
-        setClients([response.data.data.baskets]);
-        console.log("aa", [response.data.baskets])
+        setClients(response.data);
+        setTotalRows(response.pagination.total);
+
       }
     } catch (error) {
       console.log("error");
     }
   };
 
+  console.log("stockdata", stockdata)
 
   useEffect(() => {
-    getbasketlist();
-  }, [searchInput]);
+    getbasketlist()
+  }, [searchInput, currentPage])
 
 
 
@@ -170,22 +180,24 @@ const Basket = () => {
     {
       name: 'Active Status',
       selector: row => (
-        <div className="form-check form-switch form-check-info">
-          <input
-            id={`rating_${row._id}`}
-            className="form-check-input toggleswitch"
-            type="checkbox"
-            checked={row.status === true}
-            onChange={(event) => handleSwitchChange(event, row._id)}
-          />
-          <label
-            htmlFor={`rating_${row._id}`}
-            className="checktoggle checkbox-bg"
-          ></label>
-        </div>
+        row.stock_details.length > 0 ?
+          <div className="form-check form-switch form-check-info">
+            <input
+              id={`rating_${row._id}`}
+              className="form-check-input toggleswitch"
+              type="checkbox"
+              checked={row.status === true}
+              onChange={(event) => handleSwitchChange(event, row._id)}
+            />
+            <label
+              htmlFor={`rating_${row._id}`}
+              className="checktoggle checkbox-bg"
+            ></label>
+          </div>
+          : "No Stock Available"
       ),
       sortable: true,
-      width: '165px',
+      width: '175px',
     },
     {
       name: "Actions",
@@ -280,9 +292,9 @@ const Basket = () => {
           <Table
             columns={columns}
             data={clients}
-            pagination
-            highlightOnHover
-            striped
+            totalRows={totalRows}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
           />
         </div>
       </div>

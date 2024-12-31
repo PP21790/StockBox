@@ -3,8 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { Eye, RefreshCcw, Trash2, RotateCcw, IndianRupee, X, Plus, History } from 'lucide-react';
 import Swal from "sweetalert2";
 import { Tooltip } from 'antd';
-import Table from "../../../components/Table";
-import { BasketAllActiveList, deletebasket, Basketstatusofdetail } from "../../../Services/Admin";
+// import Table from "../../../components/Table";
+import Table from '../../../components/Table1';
+
+import { BasketAllActiveList, BasketAllActiveListbyfilter, deletebasket, Basketstatusofdetail } from "../../../Services/Admin";
 import { fDate } from "../../../Utils/Date_formate";
 
 
@@ -19,24 +21,24 @@ const BasketStockPublish = () => {
 
   const [searchInput, setSearchInput] = useState("");
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalRows, setTotalRows] = useState(0);
 
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
 
 
   // Fetch basket list
   const getbasketlist = async () => {
     try {
-      const response = await BasketAllActiveList(token);
+      const data = { page: currentPage, search: searchInput || "" }
+      const response = await BasketAllActiveListbyfilter(data, token);
       if (response.status) {
-        const filterdata = response.data.filter((item) =>
-          searchInput === "" ||
-          item?.title?.toLowerCase().includes(searchInput.toLowerCase()) ||
-          item?.themename?.toLowerCase().includes(searchInput.toLowerCase()) ||
-          item?.validity?.toLowerCase().includes(searchInput.toLowerCase())
-        );
-
-        setClients(searchInput ? filterdata : response.data);
+        setTotalRows(response.pagination.total);
+        setClients(response.data);
       }
     } catch (error) {
       console.log("error", JSON.stringify(error));
@@ -49,7 +51,7 @@ const BasketStockPublish = () => {
 
   useEffect(() => {
     getbasketlist();
-  }, [searchInput]);
+  }, [searchInput, currentPage]);
 
 
 
@@ -296,9 +298,9 @@ const BasketStockPublish = () => {
           <Table
             columns={columns}
             data={clients}
-            pagination
-            highlightOnHover
-            striped
+            totalRows={totalRows}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
           />
         </div>
       </div>
