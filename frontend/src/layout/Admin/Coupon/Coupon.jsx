@@ -3,9 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getcouponlist } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { Eye, Pencil, Trash2 , IndianRupee } from 'lucide-react';
+import { Eye, Pencil, Trash2, IndianRupee } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { DeleteCoupon, UpdateClientStatus, CouponStatus ,CouponShowstatus } from '../../../Services/Admin';
+import { DeleteCoupon, UpdateClientStatus, CouponStatus, CouponShowstatus } from '../../../Services/Admin';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
 import { fDate, fDateTime } from '../../../Utils/Date_formate';
@@ -30,7 +30,7 @@ const Coupon = () => {
         try {
             const response = await getcouponlist(token);
             // console.log("response",response);
-            
+
             if (response.status) {
                 const filterdata = response.data.filter((item) =>
                     searchInput === "" ||
@@ -156,7 +156,7 @@ const Coupon = () => {
     const handleSwitchChange1 = async (event, id) => {
 
         const user_active_status = event.target.checked === true ? "1" : "0"
-        const data = { id : id, status: user_active_status }
+        const data = { id: id, status: user_active_status }
 
 
         const result = await Swal.fire({
@@ -220,12 +220,12 @@ const Coupon = () => {
             sortable: true,
             width: '300px',
         },
-        {
-            name: 'Services',
-            selector: row => row.type === "service" ? row.service : `${row.service}%`,
-            sortable: true,
-            width: '300px',
-        },
+        // {
+        //     name: 'Services',
+        //     selector: row => row.type === "service" ? row.service : `${row.service}%`,
+        //     sortable: true,
+        //     width: '300px',
+        // },
         // {
         //     name: 'Image',
         //     cell: row => <img src={`${image_baseurl}/uploads/coupon/${row.image}`} alt="Image" width="50" height="50" />,
@@ -234,13 +234,13 @@ const Coupon = () => {
         // },
         {
             name: 'Min Purchase Value',
-            selector: row =>  <div> <IndianRupee />{row.minpurchasevalue}</div>,
+            selector: row => <div> <IndianRupee />{row.minpurchasevalue}</div>,
             sortable: true,
             width: '210px',
         },
         {
             name: 'Max Discount Value',
-            selector: row =>   <div> <IndianRupee />{row.mincouponvalue ? row.mincouponvalue : "-"}</div>,
+            selector: row => <div> <IndianRupee />{row.mincouponvalue ? row.mincouponvalue : "-"}</div>,
             sortable: true,
             width: '210px',
         },
@@ -262,7 +262,7 @@ const Coupon = () => {
             name: 'Active Status',
             selector: row => {
                 const currentDate = new Date();
-                const endDate = new Date(row.enddate );
+                const endDate = new Date(row.enddate);
                 endDate.setHours(23, 59, 59, 999);
                 if (currentDate > endDate) {
                     return <span className="text-danger" style={{ color: "red" }}>Expired</span>;
@@ -290,21 +290,21 @@ const Coupon = () => {
         {
             name: 'Show Status',
             selector: row => {
-                    return (
-                        <div className="form-check form-switch form-check-info">
-                            <input
-                                id={`rating_${row.showstatus}`}
-                                className="form-check-input toggleswitch"
-                                type="checkbox"
-                                defaultChecked={row.showstatus === 1}
-                                onChange={(event) => handleSwitchChange1(event, row._id)}
-                            />
-                            <label
-                                htmlFor={`rating_${row.showstatus}`}
-                                className="checktoggle checkbox-bg"
-                            ></label>
-                        </div>
-                    );
+                return (
+                    <div className="form-check form-switch form-check-info">
+                        <input
+                            id={`rating_${row.showstatus}`}
+                            className="form-check-input toggleswitch"
+                            type="checkbox"
+                            defaultChecked={row.showstatus === 1}
+                            onChange={(event) => handleSwitchChange1(event, row._id)}
+                        />
+                        <label
+                            htmlFor={`rating_${row.showstatus}`}
+                            className="checktoggle checkbox-bg"
+                        ></label>
+                    </div>
+                );
             },
             sortable: true,
             width: '156px',
