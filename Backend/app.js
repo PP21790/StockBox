@@ -110,10 +110,56 @@ app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 let ws;
 const url = "wss://ws1.aliceblueonline.com/NorenWS/"
+app.get("/test", async (req, res) => {
+  try {
+    const groupedSignals = await Signal_Modal.aggregate([
+      {
+        $lookup: {
+          from: "stocks", // Stocks collection ka naam
+          localField: "tradesymbol", // Signal modal ka field
+          foreignField: "tradesymbol", // Stocks modal ka field
+          as: "stock_info", // Jo data join hoke aayega
+        },
+      },
+      {
+        $unwind: {
+          path: "$stock_info", // Stock info array ko unwind karna
+          preserveNullAndEmptyArrays: true, // Agar matching na ho toh null ko preserve kare
+        },
+      },
+      {
+        $group: {
+          _id: "$tradesymbol", // Grouping key
+          instrument_token: { $first: "$stock_info.instrument_token" }, // Pehla instrument_token le lo
+        },
+      },
+      {
+        $project: {
+          _id: 0, // _id ko exclude karna
+          exc: "NSE", // Static exchange value
+          ordertoken: "$instrument_token", // Result mein instrument_token ko ordertoken ke naam se dikhana
+        },
+      },
+    ]);
 
-app.get("/test", (req, res) => {
-  Alice_Socket();
+    console.log("groupedSignals", groupedSignals);
+
+    // Response send karein
+    res.status(200).json({
+      success: true,
+      data: groupedSignals,
+    });
+  } catch (error) {
+    console.error("Error fetching groupedSignals:", error);
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+
+    //Alice_Socket();
 });
+
 
 
 

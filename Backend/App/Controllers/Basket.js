@@ -462,8 +462,7 @@ class Basket {
   async getBasket(req, res) {
     try {
 
-        const baskets = await Basket_Modal.find({ del: false,status:false });
-
+        const baskets = await Basket_Modal.find({ del: false,status:false }).sort({ created_at: -1 });
         return res.json({
             status: true,
             message: "Baskets fetched successfully",
@@ -487,7 +486,7 @@ class Basket {
     async activeBasket(req, res) {
       try {
 
-          const baskets = await Basket_Modal.find({ del: false, status:true });
+          const baskets = await Basket_Modal.find({ del: false, status:true }).sort({ created_at: -1 });
 
           return res.json({
               status: true,

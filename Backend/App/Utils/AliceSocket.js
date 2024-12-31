@@ -4,6 +4,7 @@ const BasicSetting_Modal = db.BasicSetting;
 const Order_Modal = db.Order;
 const Liveprice_Modal = db.Liveprice;
 const Basketstock_Modal = db.Basketstock;
+const Signal_Modal = db.Signal;
 
 const WebSocket = require('ws');
 var CryptoJS = require("crypto-js");
@@ -18,35 +19,31 @@ const Alice_Socket = async () => {
 
 
     const groupedStocks = await Basketstock_Modal.aggregate([
-      // Join with the Stock_Modal collection based on the tradesymbol field
       {
           $lookup: {
-              from: "stocks", // The name of the Stock_Modal collection (ensure the correct name)
-              localField: "tradesymbol", // Field in Basketstock_Modal to match with Stock_Modal
-              foreignField: "tradesymbol", // Field in Stock_Modal to match with Basketstock_Modal
-              as: "stock_info" // Alias for the matched data from the Stock_Modal collection
+              from: "stocks",
+              localField: "tradesymbol", 
+              foreignField: "tradesymbol",
+              as: "stock_info" 
           }
       },
-      // Unwind the stock_info array to flatten the result, so we can access instrument_token directly
       {
           $unwind: {
-              path: "$stock_info", // Unwind the stock_info array
-              preserveNullAndEmptyArrays: true // Preserve empty arrays in case there is no match
+              path: "$stock_info", 
+              preserveNullAndEmptyArrays: true 
           }
       },
-      // Group by tradesymbol
       {
           $group: {
-              _id: "$tradesymbol", // Group by tradesymbol
-              instrument_token: { $first: "$stock_info.instrument_token" } // Get the instrument_token from the stock_info
+              _id: "$tradesymbol", 
+              instrument_token: { $first: "$stock_info.instrument_token" } 
           }
       },
-      // Project the final result to include only tradesymbol and instrument_token, and set "exc" to "NSE"
       {
           $project: {
-              _id: 0, // Exclude the _id field
-              exc: "NSE", // Set the constant value of "NSE" for the exchange
-              ordertoken: "$instrument_token", // Map the instrument_token to ordertoken
+              _id: 0, 
+              exc: "NSE", 
+              ordertoken: "$instrument_token",
           }
       }
   ]);
@@ -55,44 +52,41 @@ const Alice_Socket = async () => {
   const orders = await Order_Modal.aggregate([
       {
           $match: {
-              tsstatus: { $in: ["1"] }, // Target or Stop-loss
+              tsstatus: { $in: ["1"] }, 
           }
       },
       {
           $group: {
-              _id: { ordertoken: "$ordertoken", exchange: "$exchange" }, // Group by ordertoken and exchange
+              _id: { ordertoken: "$ordertoken", exchange: "$exchange" }, 
           }
       },
       {
           $project: {
-              _id: 0, // Exclude the _id field
-              ordertoken: "$_id.ordertoken", // Include ordertoken
-              exc: "$_id.exchange" // Include exchange
+              _id: 0, 
+              ordertoken: "$_id.ordertoken", 
+              exc: "$_id.exchange" 
           }
       }
   ]);
   
-      // Log the result or return it
       const groupedStocksWithStringToken = groupedStocks.map(stock => ({
         ...stock,
-        ordertoken: String(stock.ordertoken) // Ensure ordertoken is a string
+        ordertoken: String(stock.ordertoken) 
       }));
       
       const ordersWithStringToken = orders.map(order => ({
         ...order,
-        ordertoken: String(order.ordertoken) // Ensure ordertoken is a string
+        ordertoken: String(order.ordertoken) 
       }));
       
-      // Merge both arrays
       const mergedStocks = [
         ...groupedStocksWithStringToken,
         ...ordersWithStringToken
       ];
       
-      // Deduplicate the merged array based on ordertoken
       const uniqueStocks = mergedStocks.filter((value, index, self) =>
         index === self.findIndex((stock) => (
-          stock.ordertoken === value.ordertoken // Compare ordertoken as a string
+          stock.ordertoken === value.ordertoken 
         ))
       );
       
@@ -124,7 +118,6 @@ const Alice_Socket = async () => {
   
   if (!alice.aliceuserid) {
     
-    // console.log('alice',alice);
     return
 }
   const userid = alice.aliceuserid;
