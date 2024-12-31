@@ -4,7 +4,7 @@ import { Eye, RefreshCcw, Trash2, SquarePen, IndianRupee, X, Plus } from 'lucide
 import Swal from "sweetalert2";
 import { Tooltip } from 'antd';
 import Table from "../../../components/Table";
-import { BasketAllList, deletebasket, Basketstatusofdetail } from "../../../Services/Admin";
+import { BasketAllList, deletebasket, Basketstatusofdetail, getstocklistById } from "../../../Services/Admin";
 import { fDate } from "../../../Utils/Date_formate";
 
 
@@ -15,8 +15,22 @@ const Basket = () => {
   const navigate = useNavigate();
   const [clients, setClients] = useState([]);
   const token = localStorage.getItem("token");
+  const [stockdata, setStockdata] = useState({})
 
   const [searchInput, setSearchInput] = useState("");
+
+
+
+  // const GetStocklistbyid = async () => {
+  //   try {
+  //     const response = await getstocklistById(id, token);
+  //     if (response.status) {
+  //       setStockdata(response?.data)
+  //     }
+  //   } catch (error) {
+  //     console.log("error");
+  //   }
+  // };
 
 
 
@@ -176,14 +190,14 @@ const Basket = () => {
       selector: row => (
         <div className="form-check form-switch form-check-info">
           <input
-            id={`rating_${row.status}`}
+            id={`rating_${row._id}`}
             className="form-check-input toggleswitch"
             type="checkbox"
-            defaultChecked={row.status == true}
+            checked={row.status === true}
             onChange={(event) => handleSwitchChange(event, row._id)}
           />
           <label
-            htmlFor={`rating_${row.status}`}
+            htmlFor={`rating_${row._id}`}
             className="checktoggle checkbox-bg"
           ></label>
         </div>

@@ -1390,6 +1390,7 @@ export async function updateCouponbyadmin(data, token) {
     formData.append('minpurchasevalue', data.minpurchasevalue);
     formData.append('mincouponvalue', data.mincouponvalue);
     formData.append('description', data.description);
+    formData.append('service', data.service);
 
     try {
         const res = await axios.put(`${Config.base_url}coupon/update`, formData, {

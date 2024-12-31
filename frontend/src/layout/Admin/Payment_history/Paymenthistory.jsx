@@ -187,16 +187,16 @@ const History = () => {
             sortable: true,
             width: '200px',
         },
-        {
-            name: 'Plan Discount',
-            selector: row => <div> <IndianRupee />{row.discount}</div>,
-            sortable: true,
-            width: '200px',
-        },
 
         {
             name: 'Plan Amount',
             selector: row => <div> <IndianRupee />{row.plan_price}</div>,
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'Plan Discount',
+            selector: row => <div> <IndianRupee />{row.discount}</div>,
             sortable: true,
             width: '200px',
         },

@@ -9,18 +9,18 @@ const Addbroadcast = () => {
 
     const navigate = useNavigate();
     const [servicedata, setServicedata] = useState([]);
-    
+
     useEffect(() => {
         getservice();
     }, []);
 
 
-  
+
     const user_id = localStorage.getItem("id");
     const token = localStorage.getItem("token");
 
 
-    
+
     const getservice = async () => {
         try {
             const response = await GetService(token);
@@ -32,11 +32,11 @@ const Addbroadcast = () => {
         }
     };
 
-    
+
 
     const validate = (values) => {
         let errors = {};
-        if (!values.service) {
+        if (values.type !== "nonsubscribe" && !values.service) {
             errors.service = "Please Enter Service";
         }
         if (!values.subject) {
@@ -56,7 +56,7 @@ const Addbroadcast = () => {
             service: values.service,
             subject: values.subject,
             message: values.message,
-            type:  values.type 
+            type: values.type
         };
 
         try {
@@ -98,8 +98,8 @@ const Addbroadcast = () => {
             service: "",
             subject: "",
             message: "",
-            type:"" 
-            
+            type: ""
+
         },
         validate,
         onSubmit,
@@ -107,9 +107,24 @@ const Addbroadcast = () => {
 
     const fields = [
         {
+            name: "type",
+            label: "Select Type",
+            type: "select",
+            label_size: 6,
+            col_size: 4,
+            disable: false,
+            options: [
+                { value: "all", label: "All" },
+                { value: "active", label: "Active" },
+                { value: "expired", label: "Expired" },
+                { value: "nonsubscribe", label: "Non Subscribe" },
+            ],
+            star: true
+        },
+        {
             name: "service",
             label: "Select Service",
-            type: "select",       //selectchecbox  for multiple
+            type: "select",
             label_size: 6,
             col_size: 4,
             disable: false,
@@ -117,7 +132,8 @@ const Addbroadcast = () => {
                 label: item?.title,
                 value: item?._id,
             })),
-            star:true
+            star: true,
+            showWhen: (values) => values.type !== "nonsubscribe"
         },
         {
             name: "subject",
@@ -126,39 +142,25 @@ const Addbroadcast = () => {
             label_size: 12,
             col_size: 4,
             disable: false,
-            star:true
+            star: true
         },
-        {
-            name: "type",
-            label: "Select Type",
-            type: "select",
-            label_size: 6,
-            col_size: 4,
-            disable: false,
-            options:[
-                { value: "all", label: "All" },
-                { value: "active", label: "Active" },
-                { value: "expired", label: "Expired" },
-                { value: "nonsubscribe", label: "Non Subscribe" },
-            ],
-            star:true
-        },
+
         {
             name: "message",
             label: "Message",
-            type: "ckeditor", 
+            type: "ckeditor",
             label_size: 12,
             col_size: 12,
             disable: false,
-            star:true
+            star: true
         },
-        
+
     ];
 
     return (
         <div style={{ marginTop: "100px" }}>
-          <DynamicForm
-                fields={fields}
+            <DynamicForm
+                fields={fields.filter(field => !field.showWhen || field.showWhen(formik.values))}
                 formik={formik}
                 page_title="Add Broadcast"
                 btn_name="Add Broadcast"

@@ -32,14 +32,14 @@ const Notificationlist = () => {
                 page: currentPage
             };
             const response = await getAllNotificationlist(token, data);
-            console.log("Get all notification:",response.data);
-            
+            console.log("Get all notification:", response.data);
+
             if (response?.status) {
                 setTotalRows(response.pagination.total);
                 const filterdata = response.data.filter((item) =>
                     searchInput === "" ||
                     item.title.toLowerCase().includes(searchInput.toLowerCase()) ||
-                    item.message.toLowerCase().includes(searchInput.toLowerCase()) 
+                    item.message.toLowerCase().includes(searchInput.toLowerCase())
                 );
                 setClients(searchInput ? filterdata : response.data);
             }
@@ -62,27 +62,28 @@ const Notificationlist = () => {
             name: 'S.No',
             selector: (row, index) => (currentPage - 1) * 10 + index + 1,
             sortable: false,
-           
+            width: '100px',
+
         },
         {
             name: 'Title',
             selector: (row) => row.title,
             sortable: true,
-           
+
 
         },
         {
             name: 'Message',
             selector: (row) => row.message,
             sortable: true,
-            width: '500px',
+            width: '700px',
 
         },
         {
             name: 'Date',
             selector: (row) => fDateTime(row.createdAt),
             sortable: true,
-          
+
         },
     ];
 

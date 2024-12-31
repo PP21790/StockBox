@@ -46,7 +46,7 @@ const Editbasket = () => {
         basket_price: data.basket_price || "",
         mininvamount: data.mininvamount || "",
         themename: data.themename || "",
-        frequency: data.frequency || "",
+        frequency: data?.frequency || "",
         validity: data?.validity ? data?.validity : "",
         next_rebalance_date: data?.next_rebalance_date ? data?.next_rebalance_date : "",
       });
@@ -202,11 +202,17 @@ const Editbasket = () => {
     {
       name: "frequency",
       label: "Frequency",
-      type: "number",
+      type: "select",
       label_size: 12,
       col_size: 6,
       disable: false,
-      star: true
+      star: true,
+      options: [
+        { value: "Monthly", label: "Monthly" },
+        { value: "Quarterly", label: "Quarterly" },
+        { value: "Half Yearly", label: "Half Yearly" },
+        { value: "Yearly", label: "Yearly" }
+      ],
     },
 
     {

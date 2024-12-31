@@ -159,13 +159,13 @@ const Condition = () => {
                                         <hr />
 
                                         <form className="row g-3">
-                                            
+
 
                                             <div className="col-md-12">
                                                 <label htmlFor={`mailContent${index}`} className="form-label">
                                                     Description
                                                 </label>
-                                    
+
                                                 <span
                                                     dangerouslySetInnerHTML={{ __html: client.description }}
                                                     style={{ display: 'block', marginTop: '0.5rem' }}
@@ -204,7 +204,7 @@ const Condition = () => {
                                 </div>
                                 <div className="modal-body">
                                     <form className="row g-3">
-                                       
+
                                         {/* <div className="col-md-12">
                                             <label htmlFor="subject" className="form-label">
                                                 Title

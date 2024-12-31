@@ -80,6 +80,7 @@ const Signal = () => {
     })
 
 
+    console.log("closedata", closedata)
 
 
     const [serviceList, setServiceList] = useState([]);
@@ -194,8 +195,8 @@ const Signal = () => {
         try {
             const data = {
                 page: currentPage,
-                from: clientStatus === "todayclosesignal" ? formattedDate : filters.from ? filters.from : "",
-                to: clientStatus === "todayclosesignal" ? formattedDate : filters.to ? filters.to : "",
+                from: clientStatus === "todayopensignal" ? formattedDate : filters.from ? filters.from : "",
+                to: clientStatus === "todayopensignal" ? formattedDate : filters.to ? filters.to : "",
                 service: filters.service,
                 stock: searchstock,
                 closestatus: "false",
@@ -736,7 +737,7 @@ const Signal = () => {
                                         placeholder="From"
                                         value={filters.from}
                                         onChange={handleFilterChange}
-                                        
+
                                     />
                                 </div>
                                 <div className="col-md-3">
@@ -818,7 +819,7 @@ const Signal = () => {
                             <div className="modal-content">
                                 <div className="modal-header">
                                     <h5 className="modal-title" id="exampleModalLabel">
-                                        Close Signal
+                                        Close Signal<span style={{ marginLeft: "10px", fontSize: "15px" }}>{closedata?.tradesymbol && closedata?.tradesymbol}</span>
                                     </h5>
                                     <button
                                         type="button"
@@ -902,7 +903,7 @@ const Signal = () => {
 
                                                 </p>
 
-                                                <div className="col-md-12">
+                                                {/* <div className="col-md-12">
                                                     <label htmlFor="input11" className="form-label">
                                                         Remark
                                                     </label>
@@ -920,7 +921,7 @@ const Signal = () => {
                                                             })
                                                         }
                                                     />
-                                                </div>
+                                                </div> */}
 
                                                 <button type="submit" className='btn btn-danger mt-2' onClick={() => closeSignalperUser(0)}>Submit</button>
                                             </form>

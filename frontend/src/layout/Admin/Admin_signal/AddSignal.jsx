@@ -307,7 +307,7 @@ const AddSignal = () => {
         { label: 'Future', value: 'F' },
         { label: 'Option', value: 'O' },
       ],
-      label_size: 13,
+      label_size: 12,
       col_size: 6,
       star: true
     },

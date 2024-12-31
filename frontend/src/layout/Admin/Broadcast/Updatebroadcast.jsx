@@ -8,7 +8,7 @@ import { SendBroadCast, GetService, UpdateCastmessage } from '../../../Services/
 const Updatebroadcast = () => {
     const location = useLocation();
     const { item } = location.state;
-  
+
 
     const [servicedata, setServicedata] = useState([]);
 
@@ -16,7 +16,7 @@ const Updatebroadcast = () => {
     const token = localStorage.getItem("token");
 
 
-    
+
     const getservice = async () => {
         try {
             const response = await GetService(token);
@@ -33,12 +33,12 @@ const Updatebroadcast = () => {
     }, []);
 
 
-
     const formik = useFormik({
         initialValues: {
-            service: item?.service ? item.service.split(',') : [], 
+            service: item?.service ? item.service.split(',') : [],
             subject: item?.subject || "",
             message: item?.message || "",
+            type: item?.type || "",
         },
 
         onSubmit: async (values) => {
@@ -46,7 +46,8 @@ const Updatebroadcast = () => {
                 message: values.message,
                 id: item._id,
                 subject: values.subject,
-                service: values.service.join(','), 
+                service: values.service.join(','),
+                type: values.type,
             };
 
             try {
@@ -85,27 +86,44 @@ const Updatebroadcast = () => {
 
     const fields = [
         {
+            name: "type",
+            label: "Select Type",
+            type: "select",
+            label_size: 6,
+            col_size: 4,
+            disable: false,
+            options: [
+                { value: "all", label: "All" },
+                { value: "active", label: "Active" },
+                { value: "expired", label: "Expired" },
+                { value: "nonsubscribe", label: "Non Subscribe" },
+            ],
+            star: true
+        },
+        {
             name: "service",
             label: "Select Service",
-            type: "selectchecbox",
+            type: "select",
             label_size: 6,
-            col_size: 6,
+            col_size: 4,
             disable: false,
-            options: servicedata && servicedata.length > 0 && servicedata.map((item) => ({
+            options: servicedata?.map((item) => ({
                 label: item?.title,
                 value: item?._id,
             })),
-            star:true
+            star: true,
+            showWhen: (values) => values.type !== "nonsubscribe"
         },
         {
             name: "subject",
             label: "Subject",
             type: "text",
             label_size: 12,
-            col_size: 6,
+            col_size: 4,
             disable: false,
-            star:true
+            star: true
         },
+
         {
             name: "message",
             label: "Message",
@@ -113,15 +131,16 @@ const Updatebroadcast = () => {
             label_size: 12,
             col_size: 12,
             disable: false,
-            star:true
+            star: true
         },
+
     ];
 
     return (
         <div style={{ marginTop: "100px" }}>
             {servicedata && servicedata.length > 0 && (
                 <DynamicForm
-                    fields={fields}
+                    fields={fields.filter(field => !field.showWhen || field.showWhen(formik.values))}
                     formik={formik}
                     page_title="Update Broadcast"
                     btn_name="Update Broadcast"

@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import DynamicForm from '../../../components/FormicForm';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import { Addcouponbyadmin , GetService} from '../../../Services/Admin';
+import { Addcouponbyadmin, GetService } from '../../../Services/Admin';
 
 
 const Addcoupon = () => {
@@ -16,12 +16,12 @@ const Addcoupon = () => {
 
     const today = new Date().toISOString().slice(0, 10);
 
- 
+
     useEffect(() => {
         getservice();
     }, []);
 
-     
+
 
     const getservice = async () => {
         try {
@@ -72,10 +72,10 @@ const Addcoupon = () => {
             errors.value = "Please Enter Value";
         }
         if (!values.startdate) {
-            errors.startdate = "Please Enter Start date";
+            errors.startdate = "Please Enter Start Date";
         }
         if (!values.enddate) {
-            errors.enddate = "Please Enter End date";
+            errors.enddate = "Please Enter End Date";
         }
         if (!values.minpurchasevalue) {
             errors.minpurchasevalue = "Please Enter Min Purchase Value";
@@ -106,11 +106,11 @@ const Addcoupon = () => {
             mincouponvalue: values.mincouponvalue,
             description: values.description,
             image: values.image,
-            limitation:values.limitation,
-            service:values.service,
+            limitation: values.limitation,
+            service: values.service,
             add_by: user_id,
         };
-       
+
         try {
             const response = await Addcouponbyadmin(req, token);
 
@@ -174,7 +174,7 @@ const Addcoupon = () => {
             label_size: 6,
             col_size: 6,
             disable: false,
-            star:true
+            star: true
         },
         {
             name: "code",
@@ -183,7 +183,7 @@ const Addcoupon = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
-            star:true
+            star: true
         },
         {
             name: "type",
@@ -192,7 +192,7 @@ const Addcoupon = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
-            star:true,
+            star: true,
             options: [
                 { value: "percentage", label: "Percentage" },
                 { value: "fixed", label: "Fixed" },
@@ -206,7 +206,7 @@ const Addcoupon = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
-            star:true,
+            star: true,
             showWhen: (values) => values.type === "fixed"
         },
         {
@@ -216,7 +216,7 @@ const Addcoupon = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
-            star:true,
+            star: true,
             showWhen: (values) => values.type === "percentage"
         },
 
@@ -227,7 +227,7 @@ const Addcoupon = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
-            star:true
+            star: true
         },
         {
             name: "mincouponvalue",
@@ -236,7 +236,7 @@ const Addcoupon = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
-            star:true,
+            star: true,
             showWhen: (values) => values.type === "percentage"
         }, {
             name: "limitation",
@@ -245,7 +245,7 @@ const Addcoupon = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
-            star:true,
+            star: true,
         },
         {
             name: "service",
@@ -255,7 +255,7 @@ const Addcoupon = () => {
             col_size: 6,
             disable: false,
             options: [
-                { label: "All", value: "0" }, 
+                { label: "All", value: "0" },
                 ...servicedata?.map((item) => ({
                     label: item?.title,
                     value: item?._id,
@@ -263,7 +263,6 @@ const Addcoupon = () => {
             ],
             star: true,
         },
-        
         {
             name: "startdate",
             label: "Start Date",
@@ -271,7 +270,7 @@ const Addcoupon = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
-            star:true
+            star: true
 
         },
         {
@@ -281,9 +280,9 @@ const Addcoupon = () => {
             label_size: 12,
             col_size: 6,
             disable: false,
-            star:true
+            star: true
         },
-       
+
 
         // {
         //     name: "image",
@@ -304,7 +303,7 @@ const Addcoupon = () => {
 
     ];
 
-  
+
 
     return (
         <div style={{ marginTop: "100px" }}>

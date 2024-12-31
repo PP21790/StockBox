@@ -363,6 +363,7 @@ const DynamicForm = ({
                                                                         <input
                                                                             type="file"
                                                                             id={field.name}
+                                                                            placeholder="No File Choosen"
                                                                             className={`form-control ${formik.touched[field.name] && formik.errors[field.name] ? "is-invalid" : ""
                                                                                 }`}
                                                                             onChange={(e) => {
@@ -583,57 +584,63 @@ const DynamicForm = ({
                                                                     </>
                                                                 ) : field.type === "select2" ? (
                                                                     <>
-                                                                        <div className="row">
-                                                                            {/* First Column for Select Input */}
-                                                                            <div className={`col-lg-6`}>
-                                                                                <div className="input-block row">
-
-                                                                                    <label
-
-                                                                                        className={`col-lg-${title === "forlogin"
-                                                                                            ? 3
-                                                                                            : title === "update_theme"
-                                                                                                ? 12
-                                                                                                : 7
-                                                                                            } col-form-label p-0 mx-3`}
-                                                                                        htmlFor={field.name}
+                                                                        {/* <div className="row"> */}
+                                                                        {/* First Column for Select Input */}
+                                                                        <div
+                                                                            className={`col-lg-${field.col_size}`}
+                                                                        >
+                                                                            <div className="input-block row mb-3">
+                                                                                <label
+                                                                                    className={`col-lg-${title === "forlogin"
+                                                                                        ? 3
+                                                                                        : title === "update_theme"
+                                                                                            ? 12
+                                                                                            : 7
+                                                                                        }  col-form-label p-0 mx-3 `}
+                                                                                    htmlFor={field.name}
+                                                                                >
+                                                                                    {field.label}
+                                                                                    {field.star == true ? <span className="text-danger">*</span> : ""}
+                                                                                </label>
+                                                                                <div
+                                                                                    className={`col-lg-${title === "addgroup" ? 12 : 12
+                                                                                        }`}
+                                                                                >
+                                                                                    <select
+                                                                                        className="default-select wide form-control"
+                                                                                        aria-describedby="basic-addon1"
+                                                                                        disabled={field.disable}
+                                                                                        id={field.name}
+                                                                                        {...formik.getFieldProps(field.name)}
                                                                                     >
-
-                                                                                        {field.label}
-                                                                                        {field.star == true ? <span className="text-danger">*</span> : ""}
-                                                                                    </label>
-                                                                                    <div className={`col-lg-${title === "addgroup" ? 12 : 12}`}>
-                                                                                        <select
-                                                                                            className="default-select wide form-control"
-                                                                                            aria-describedby="basic-addon1"
-                                                                                            disabled={field.disable}
-                                                                                            id={field.name}
-                                                                                            {...formik.getFieldProps(field.name)}
-                                                                                        >
-                                                                                            <option value="" selected>
-                                                                                                Select {field.label}
+                                                                                        <option value="" selected>
+                                                                                            Select {field.label}
+                                                                                        </option>
+                                                                                        {field.options.map((option) => (
+                                                                                            <option
+                                                                                                key={option.value}
+                                                                                                value={option.value}
+                                                                                            >
+                                                                                                {option.label}
                                                                                             </option>
-                                                                                            {field.options.map((option) => (
-                                                                                                <option key={option.value} value={option.value}>
-                                                                                                    {option.label}
-                                                                                                </option>
-                                                                                            ))}
-                                                                                        </select>
-                                                                                        {/* Formik Validation Errors */}
-                                                                                        {formik.touched[field.name] && formik.errors[field.name] ? (
-                                                                                            <div style={{ color: "red" }}>
-                                                                                                {formik.errors[field.name]}
-                                                                                            </div>
-                                                                                        ) : null}
-                                                                                    </div>
+                                                                                        ))}
+                                                                                    </select>
+
+                                                                                    {formik.touched[field.name] &&
+                                                                                        formik.errors[field.name] ? (
+                                                                                        <div style={{ color: "red" }}>
+                                                                                            {formik.errors[field.name]}
+                                                                                        </div>
+                                                                                    ) : null}
                                                                                 </div>
                                                                             </div>
-
-                                                                            {/* Second Column for Additional Field */}
-                                                                            <div className="col-lg-6">
-                                                                                {additional_field1}
-                                                                            </div>
                                                                         </div>
+
+
+                                                                        <div className="col-lg-6">
+                                                                            {additional_field1}
+                                                                        </div>
+                                                                        {/* </div> */}
                                                                     </>
 
                                                                 ) : field.type === "checkbox" ? (

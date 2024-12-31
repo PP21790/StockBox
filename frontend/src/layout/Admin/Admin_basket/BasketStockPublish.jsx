@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Eye, RefreshCcw, Trash2, SquarePen, IndianRupee, X, Plus, History } from 'lucide-react';
+import { Eye, RefreshCcw, Trash2, RotateCcw, IndianRupee, X, Plus, History } from 'lucide-react';
 import Swal from "sweetalert2";
 import { Tooltip } from 'antd';
 import Table from "../../../components/Table";
@@ -44,7 +44,7 @@ const BasketStockPublish = () => {
     }
   };
 
-  console.log("searchInput", searchInput)
+
 
 
   useEffect(() => {
@@ -200,13 +200,12 @@ const BasketStockPublish = () => {
       name: "Actions",
       cell: (row) => (
         <div>
-          <Tooltip title="Add Stock">
+          <Tooltip title="Reblance">
             <Link
               to={`/admin/addstock/${row._id}`}
               className="btn px-2"
             >
-              <Plus />
-
+              <RotateCcw />
             </Link>
           </Tooltip>
           <Tooltip title="view">

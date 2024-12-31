@@ -178,7 +178,7 @@ const AddBasket = () => {
 
     {
       name: "mininvamount",
-      label: "MinimumAmount",
+      label: "Minimum Amount",
       type: "number",
       label_size: 12,
       col_size: 6,
@@ -189,19 +189,24 @@ const AddBasket = () => {
     {
       name: "frequency",
       label: "Frequency",
-      type: "number",
+      type: "select",
       label_size: 12,
       col_size: 6,
       disable: false,
-      star: true
+      star: true,
+      options: [
+        { value: "Monthly", label: "Monthly" },
+        { value: "Quarterly", label: "Quarterly" },
+        { value: "Half Yearly", label: "Half Yearly" },
+        { value: "Yearly", label: "Yearly" }
+      ],
     },
-
     {
       name: "validity",
       label: "Validity",
       type: "select",
       label_size: 12,
-      col_size: 4,
+      col_size: 6,
       disable: false,
       options: [
         { value: "1 month", label: "1 Month" },

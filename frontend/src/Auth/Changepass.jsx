@@ -57,7 +57,7 @@ const Changepass = () => {
                     timer: 2000,
                 });
                 resetForm();
-                navigate('/login')
+                navigate('/admin/profile')
             } else {
                 Swal.fire({
                     title: 'Error!',
