@@ -46,7 +46,7 @@ const Updatebroadcast = () => {
                 message: values.message,
                 id: item._id,
                 subject: values.subject,
-                service: values.service.join(',') || null,
+                service: values.service.join(','),
                 type: values.type,
             };
 
