@@ -31,6 +31,7 @@ const Basket = () => {
   };
 
 
+
   // Fetch basket list
   const getbasketlist = async () => {
     try {
@@ -39,14 +40,13 @@ const Basket = () => {
       if (response.status) {
         setClients(response.data);
         setTotalRows(response.pagination.total);
-
       }
     } catch (error) {
       console.log("error");
     }
   };
 
-  console.log("stockdata", stockdata)
+
 
   useEffect(() => {
     getbasketlist()

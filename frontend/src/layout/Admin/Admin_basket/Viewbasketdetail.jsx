@@ -11,6 +11,7 @@ import { SquarePen } from 'lucide-react';
 
 
 const fieldConfigurations = [
+
   {
     name: "title",
     label: "Basket Name",
@@ -137,6 +138,8 @@ const Viewbasketdetail = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const [stockdata, setStockdata] = useState({})
+
+
 
   const [initialValues, setInitialValues] = useState({
     title: "",
