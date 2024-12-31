@@ -235,9 +235,9 @@ if(type=="active")
         try {
 
 
-            const { id, service, subject, message } = req.body;
+            const { id, service, subject, message,type } = req.body;
               
-           
+
 
             if (!id) {
                 return res.status(400).json({
@@ -246,14 +246,14 @@ if(type=="active")
                 });
             }
     
-            let services;
-            if (Array.isArray(service)) {
-                services = service.join(',');  // Convert array to comma-separated string
-            } else if (typeof service === 'string') {
-                services = service;  // If it's already a string, use it directly
-            } else {
-                return res.status(400).json({ status: false, message: "Invalid service format" });
-            }
+            // let services;
+            // if (Array.isArray(service)) {
+            //     services = service.join(',');  // Convert array to comma-separated string
+            // } else if (typeof service === 'string') {
+            //     services = service;  // If it's already a string, use it directly
+            // } else {
+            //     return res.status(400).json({ status: false, message: "Invalid service format" });
+            // }
   
             const updatedBroadcast = await Broadcast_Modal.findByIdAndUpdate(
                 id,
@@ -261,6 +261,7 @@ if(type=="active")
                     service:services,
                     subject,
                     message,
+                    type
                 },
                 { new: true, runValidators: true } // Options: return the updated document and run validators
             );
