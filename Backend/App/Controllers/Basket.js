@@ -532,21 +532,29 @@ class Basket {
     }
 }
 */
-
-
 async getBasket(req, res) {
   try {
-      const { page = 1, limit = 10 } = req.query; // Get page and limit from query params, default to page 1 and limit 10
-
+      const { search, page = 1, limit = 10 } = req.body; // Get search term, page, and limit from request body
       const pageNumber = parseInt(page);
       const pageSize = parseInt(limit);
 
+      const matchConditions = {
+          del: false, // Include only non-deleted baskets
+          status: false // Include only active baskets
+      };
+
+      // If there's a search term, include it in the match conditions
+      if (search) {
+          const searchRegex = new RegExp(search, "i"); // Create a case-insensitive regex for the search term
+          matchConditions.$or = [
+              { title: { $regex: searchRegex } },
+              { themename: { $regex: searchRegex } }
+          ];
+      }
+
       const baskets = await Basket_Modal.aggregate([
           {
-              $match: {
-                  del: false, // Include only non-deleted baskets
-                  status: false // Include only active baskets
-              }
+              $match: matchConditions // Apply dynamic search conditions
           },
           {
               $lookup: {
@@ -594,7 +602,7 @@ async getBasket(req, res) {
           { $limit: pageSize } // Limit the number of documents
       ]);
 
-      const totalBaskets = await Basket_Modal.countDocuments({ del: false, status: false }); // Total number of documents
+      const totalBaskets = await Basket_Modal.countDocuments(matchConditions); // Count matching documents
 
       return res.json({
           status: true,
@@ -616,7 +624,6 @@ async getBasket(req, res) {
       });
   }
 }
-
 
 
 
@@ -642,22 +649,36 @@ async getBasket(req, res) {
 
   async activeBasketList(req, res) {
     try {
-        const { page = 1, limit = 10 } = req.query; // Default page is 1 and limit is 10
+        const { search, page = 1, limit = 10 } = req.body; // Get search term, page, and limit from query params
         const pageNumber = parseInt(page);
         const pageSize = parseInt(limit);
-
-        // Query to fetch paginated active baskets
-        const baskets = await Basket_Modal.find({ del: false, status: true })
-            .sort({ created_at: -1 })
-            .skip((pageNumber - 1) * pageSize)
-            .limit(pageSize);
-
-        // Count total active baskets
-        const totalBaskets = await Basket_Modal.countDocuments({ del: false, status: true });
-
+  
+        const matchConditions = {
+            del: false, // Include only non-deleted baskets
+            status: true // Include only active baskets
+        };
+  
+        // If there's a search term, include it in the match conditions
+        if (search) {
+            const searchRegex = new RegExp(search, "i"); // Create a case-insensitive regex for the search term
+            matchConditions.$or = [
+                { title: { $regex: searchRegex } },
+                { themename: { $regex: searchRegex } }
+            ];
+        }
+  
+        // Query to fetch paginated active baskets with optional search filter
+        const baskets = await Basket_Modal.find(matchConditions)
+            .sort({ created_at: -1 })  // Sort by creation date in descending order
+            .skip((pageNumber - 1) * pageSize)  // Skip documents for pagination
+            .limit(pageSize);  // Limit the number of documents
+  
+        // Count total active baskets (filtered by search, if applicable)
+        const totalBaskets = await Basket_Modal.countDocuments(matchConditions);
+  
         return res.json({
             status: true,
-            message: "Baskets fetched successfully",
+            message: "Active baskets fetched successfully",
             data: {
                 total: totalBaskets,
                 page: pageNumber,
@@ -665,7 +686,7 @@ async getBasket(req, res) {
                 baskets
             }
         });
-
+  
     } catch (error) {
         console.error("An error occurred:", error);
         return res.json({
@@ -674,9 +695,8 @@ async getBasket(req, res) {
             data: []
         });
     }
-}
-
- 
+  }
+  
    
   async detailBasket(req, res) {
     try {

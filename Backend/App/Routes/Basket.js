@@ -17,13 +17,13 @@ const PERMISSIONS = {
   
 
 router.post('/basket/add', AddBasket);
-router.get('/basket/list', getBasket);
+router.post('/basket/list', getBasket);
 router.put('/basket/update', updateBasket);
 router.get('/basket/delete/:id', deleteBasket);
 router.get('/basket/detail/:id', detailBasket);
 router.post('/basket/change-status', statusChange);
 router.get('/basket/activebasket',   activeBasket);
-router.get('/basket/activebasketlist',   activeBasketList);
+router.post('/basket/activebasketlist',   activeBasketList);
 
 router.post('/basket/addstockbasket', upload.single('file'), AddStockInBasket);
 router.post('/basket/addstockbasketform',  AddStockInBasketForm);

@@ -258,7 +258,7 @@ if(type=="active")
             const updatedBroadcast = await Broadcast_Modal.findByIdAndUpdate(
                 id,
                 {
-                    service:services,
+                    service:service,
                     subject,
                     message,
                     type
