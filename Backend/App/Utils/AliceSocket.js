@@ -17,7 +17,6 @@ const io = ioSocket.getIO(); // Access the already initialized io instance
 const Alice_Socket = async () => {
    
 
-
     const groupedStocks = await Basketstock_Modal.aggregate([
       {
           $lookup: {

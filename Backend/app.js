@@ -114,6 +114,11 @@ app.get("/test", async (req, res) => {
   try {
     const groupedSignals = await Signal_Modal.aggregate([
       {
+        $match: {
+          close_status: false, // Filter where close_status is false in Signal_Modal
+        },
+      },
+      {
         $lookup: {
           from: "stocks", // Stocks collection ka naam
           localField: "tradesymbol", // Signal modal ka field
@@ -131,16 +136,30 @@ app.get("/test", async (req, res) => {
         $group: {
           _id: "$tradesymbol", // Grouping key
           instrument_token: { $first: "$stock_info.instrument_token" }, // Pehla instrument_token le lo
+          segment: { $first: "$stock_info.segment" }, // Add segment field from stock_info
         },
       },
       {
         $project: {
           _id: 0, // _id ko exclude karna
-          exc: "NSE", // Static exchange value
+          exc: {
+            $cond: {
+              if: { $eq: ["$segment", "C"] }, // If segment is "C"
+              then: "NSE", // Then exchange is NSE
+              else: "NFO", // Otherwise, exchange is NFO
+            },
+          },
           ordertoken: "$instrument_token", // Result mein instrument_token ko ordertoken ke naam se dikhana
         },
       },
+      {
+        $match: {
+          ordertoken: { $ne: null }, // Exclude documents where ordertoken is null
+        },
+      },
     ]);
+    
+    
 
     console.log("groupedSignals", groupedSignals);
 
