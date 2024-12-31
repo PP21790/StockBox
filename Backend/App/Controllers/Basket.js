@@ -456,18 +456,70 @@ class Basket {
     }
   }
 
-
-
+  /*
   async getBasket(req, res) {
     try {
 
-      const baskets = await Basket_Modal.find({ del: false, status: false });
-
-      return res.json({
-        status: true,
-        message: "Baskets fetched successfully",
-        data: baskets
-      });
+     //   const baskets = await Basket_Modal.find({ del: false,status:false }).sort({ created_at: -1 });
+       
+     const baskets = await Basket_Modal.aggregate([
+       {
+        $match: {
+          del: false,                     // Include only non-deleted baskets
+          status: false                    // Include only active baskets
+        }
+      },
+      {
+        $lookup: {
+          from: "basketstocks",
+          let: { basketId: { $toString: "$_id" } }, // Convert _id to string
+          pipeline: [
+            {
+              $match: {
+                $expr: { $eq: ["$basket_id", "$$basketId"] } // Compare with basketstocks.basket_id
+              }
+            }
+          ],
+          as: "stock_details"
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          description: 1,
+          themename: 1,
+          add_by: 1,
+          full_price: 1,
+          basket_price: 1,
+          mininvamount: 1,
+          accuracy: 1,
+          portfolioweightage: 1,
+          cagr: 1,
+          frequency: 1,
+          validity: 1,
+          next_rebalance_date: 1,
+          stock_details: {
+            $filter: {
+              input: "$stock_details",      // Filter the joined stock details
+              as: "stock",
+              cond: { $eq: ["$$stock.del", false] } // Exclude deleted stocks
+            }
+          },
+          created_at: 1,
+          updated_at: 1
+        }
+      },
+      {
+        $sort: { created_at: -1 }         // Sort by creation date
+      }
+    ]);
+     
+     return res.json({
+            status: true,
+            message: "Baskets fetched successfully",
+            data: baskets
+        });
 
     } catch (error) {
       // console.log("An error occurred:", error);
@@ -477,8 +529,92 @@ class Basket {
         data: []
       });
     }
-  }
+}
+*/
 
+
+  async getBasket(req, res) {
+    try {
+      const { page = 1, limit = 10 } = req.query; // Get page and limit from query params, default to page 1 and limit 10
+
+      const pageNumber = parseInt(page);
+      const pageSize = parseInt(limit);
+
+      const baskets = await Basket_Modal.aggregate([
+        {
+          $match: {
+            del: false, // Include only non-deleted baskets
+            status: false // Include only active baskets
+          }
+        },
+        {
+          $lookup: {
+            from: "basketstocks",
+            let: { basketId: { $toString: "$_id" } }, // Convert _id to string
+            pipeline: [
+              {
+                $match: {
+                  $expr: { $eq: ["$basket_id", "$$basketId"] } // Compare with basketstocks.basket_id
+                }
+              }
+            ],
+            as: "stock_details"
+          }
+        },
+        {
+          $project: {
+            _id: 1,
+            title: 1,
+            description: 1,
+            themename: 1,
+            add_by: 1,
+            full_price: 1,
+            basket_price: 1,
+            mininvamount: 1,
+            accuracy: 1,
+            portfolioweightage: 1,
+            cagr: 1,
+            frequency: 1,
+            validity: 1,
+            next_rebalance_date: 1,
+            stock_details: {
+              $filter: {
+                input: "$stock_details", // Filter the joined stock details
+                as: "stock",
+                cond: { $eq: ["$$stock.del", false] } // Exclude deleted stocks
+              }
+            },
+            created_at: 1,
+            updated_at: 1
+          }
+        },
+        { $sort: { created_at: -1 } }, // Sort by creation date
+        { $skip: (pageNumber - 1) * pageSize }, // Skip documents for pagination
+        { $limit: pageSize } // Limit the number of documents
+      ]);
+
+      const totalBaskets = await Basket_Modal.countDocuments({ del: false, status: false }); // Total number of documents
+
+      return res.json({
+        status: true,
+        message: "Baskets fetched successfully",
+        data: {
+          total: totalBaskets,
+          page: pageNumber,
+          limit: pageSize,
+          baskets
+        }
+      });
+
+    } catch (error) {
+      console.error("An error occurred:", error);
+      return res.json({
+        status: false,
+        message: "Server error",
+        data: []
+      });
+    }
+  }
 
 
 
@@ -486,7 +622,7 @@ class Basket {
   async activeBasket(req, res) {
     try {
 
-      const baskets = await Basket_Modal.find({ del: false, status: true });
+      const baskets = await Basket_Modal.find({ del: false, status: true }).sort({ created_at: -1 });
 
       return res.json({
         status: true,
@@ -503,22 +639,34 @@ class Basket {
     }
   }
 
-
-
-
-
-  async activeBasket(req, res) {
+  async activeBasketList(req, res) {
     try {
+      const { page = 1, limit = 10 } = req.query; // Default page is 1 and limit is 10
+      const pageNumber = parseInt(page);
+      const pageSize = parseInt(limit);
 
-      const baskets = await Basket_Modal.find({ del: false, status: true });
+      // Query to fetch paginated active baskets
+      const baskets = await Basket_Modal.find({ del: false, status: true })
+        .sort({ created_at: -1 })
+        .skip((pageNumber - 1) * pageSize)
+        .limit(pageSize);
+
+      // Count total active baskets
+      const totalBaskets = await Basket_Modal.countDocuments({ del: false, status: true });
 
       return res.json({
         status: true,
         message: "Baskets fetched successfully",
-        data: baskets
+        data: {
+          total: totalBaskets,
+          page: pageNumber,
+          limit: pageSize,
+          baskets
+        }
       });
 
     } catch (error) {
+      console.error("An error occurred:", error);
       return res.json({
         status: false,
         message: "Server error",
@@ -526,6 +674,7 @@ class Basket {
       });
     }
   }
+
 
 
   async detailBasket(req, res) {

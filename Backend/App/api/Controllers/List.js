@@ -166,13 +166,8 @@ class List {
 
 
   async Newslist(req, res) {
-
-
-
-
     try {
 
-      // const news = await News_Modal.find();
       const news = await News_Modal.find({ del: false, status: true })
         .sort({ created_at: -1 });
       const protocol = req.protocol; // Will be 'http' or 'https'
@@ -533,7 +528,7 @@ class List {
   // Controller function to add a new plan subscription
   async addPlanSubscription(req, res) {
     try {
-      const { plan_id, client_id, price, discount, orderid, coupon } = req.body;
+      const { plan_id, client_id, price, discount, orderid, coupon_code } = req.body;
 
       // Validate input
       if (!plan_id || !client_id) {
@@ -708,7 +703,7 @@ class List {
         total: price,
         plan_price: plan.price,
         discount: discount,
-        coupon: coupon,
+        coupon: coupon_code,
         plan_start: start,
         plan_end: end,
         validity: plan.validity,
@@ -718,13 +713,13 @@ class List {
       // Save the subscription
       const savedSubscription = await newSubscription.save();
 
-      if (coupon) {
+      if (coupon_code) {
         const resultc = await Coupon_Modal.find({
           del: false,
           status: true,
           startdate: { $lte: endOfToday },
           enddate: { $gte: startOfToday },
-          code: coupon
+          code: coupon_code
         });
 
 
@@ -2715,65 +2710,82 @@ class List {
       return res.status(500).json({ status: false, message: 'Server error', data: [] });
     }
   }
-
-
   async BroadcastList(req, res) {
     try {
-      const { id } = req.body; // Extract id from request body
+      const { id } = req.body;  // Extract client id from request body
       const currentDate = new Date();
-
-      // Step 1: Find services from Planmanage for the client
-      const plans = await Planmanage.find({
+  
+      // Fetch active plans
+      const activePlans = await Planmanage.find({
         clientid: id,
         startdate: { $lte: currentDate },
         enddate: { $gte: currentDate }
-      }, 'serviceid'); // Only fetch the 'serviceid' field
-
-      if (!plans.length) {
-        return res.status(404).json({ status: false, message: "No plans found for this client." });
-      }
-
-      // Extract service IDs from plans
-      const serviceIds = plans.map(plan => plan.serviceid); // Use serviceid
-
-      if (!serviceIds.length) {
-        return res.status(404).json({ status: false, message: "No services associated with the client's plans." });
-      }
-
-      // Create a regex pattern to match any of the service IDs
-      const regexPattern = serviceIds.join('|'); // Join IDs with '|'
-
-      // Step 2: Find broadcasts matching any of the service IDs
-      const query = {
+      }).distinct('serviceid');
+    
+      // Fetch expired plans
+      const expiredPlans = await Planmanage.find({
+        clientid: id,
+        enddate: { $lt: currentDate }
+      }).distinct('serviceid');
+    
+      // Fetch all plans (non-subscription check)
+      const allPlans = await Planmanage.find({
+        clientid: id
+      }).distinct('serviceid');
+    
+      // Determine the type based on active/expired plans
+      let query = {
         del: false,
-        status: true,
-        service: { $regex: new RegExp(regexPattern, 'i') } // Case-insensitive regex match
+        status: true
       };
-
-      // Execute the query to find matching broadcasts
+  
+      if (activePlans.length > 0) {
+        // If there are active plans
+        query.$or = [
+          { type: 'active', service: { $in: activePlans } }
+        ];
+      } else if (expiredPlans.length > 0) {
+        // If there are expired plans
+        query.$or = [
+          { type: 'expired', service: { $in: expiredPlans } }
+        ];
+      } else if (allPlans.length === 0) {
+        // If no plans exist
+        query.$or = [
+          { type: 'nonsubscribe', service: "" }
+        ];
+      }
+  
+      // If 'all' is selected, include all broadcasts
+      if (activePlans.length > 0 || expiredPlans.length > 0 || allPlans.length === 0) {
+        query.$or.push(
+          { type: 'all' }
+        );
+      }
+  
+      // Fetch the broadcasts
       const broadcasts = await Broadcast_Modal.find(query).sort({ created_at: -1 });
-
-      // Remove duplicates from the broadcasts array
+  
+      // Remove duplicates
       const uniqueBroadcasts = Array.from(new Set(broadcasts.map(b => b._id))).map(id => {
         return broadcasts.find(b => b._id === id);
       });
-
-      console.log("Unique Broadcasts found:", uniqueBroadcasts); // Log unique matching broadcasts
-
+  
       if (!uniqueBroadcasts.length) {
         return res.status(404).json({ status: false, message: "No matching broadcasts found." });
       }
-
+  
       // Return the matching broadcasts
       return res.status(200).json({ status: true, data: uniqueBroadcasts });
-
+  
     } catch (error) {
       console.error("Error fetching broadcasts:", error);
       return res.status(500).json({ status: false, message: "Internal server error" });
     }
   }
-
-
+  
+  
+  
   async myFreetrial(req, res) {
     try {
       const { id } = req.params;
@@ -3254,9 +3266,9 @@ async Notification(req, res) {
     const noPlans = activePlans.length === 0 && expiredPlans.length === 0;
 
     // Logging plan information for debugging
-    console.log("Active Plans:", activePlans);
-    console.log("Expired Plans:", expiredPlans);
-    console.log("All Plans (No Subscription):", allPlans);
+    // console.log("Active Plans:", activePlans);
+    // console.log("Expired Plans:", expiredPlans);
+    // console.log("All Plans (No Subscription):", allPlans);
 
     // Construct the query dynamically
     const queryConditions = {
@@ -3306,7 +3318,7 @@ async Notification(req, res) {
       data: result
     });
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     return res.status(500).json({ status: false, message: "Server error", data: [] });
   }
 }
@@ -4079,7 +4091,36 @@ else {
       });
     }
   }
-  
+
+
+  async Logout(req, res) {
+    try {
+      const { id } = req.params;
+
+  const client = await Clients_Modal.findOne({ _id: id, del: 0, ActiveStatus: 1 });
+
+  if (!client) {
+    return console.error('Client not found or inactive.');
+  }
+
+    client.devicetoken = "";
+    await client.save();
+
+  return res.json({
+    status: true,
+    message: "Logout successfully",
+  });
+
+} catch (error) {
+  console.error(error);
+  return res.status(500).json({
+    status: false,
+    message: "Server error",
+    data: []
+  });
+}
+}
+
 
 }
 module.exports = new List();

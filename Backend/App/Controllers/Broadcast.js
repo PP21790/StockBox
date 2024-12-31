@@ -21,9 +21,9 @@ class BroadcastController {
                 return res.status(400).json({ status: false, message: "message is required" });
               }
 
-              if (!service) {
-                return res.status(400).json({ status: false, message: "service is required" });
-              }
+            //   if (!service) {
+            //     return res.status(400).json({ status: false, message: "service is required" });
+            //   }
              
              
             //   let services;
@@ -93,17 +93,14 @@ if(type=="active")
         }
         else if(type=="nonsubscribe"){
             
-    clients = await Clients_Modal.find({
-    del: 0,
-    ActiveStatus: 1,
-    devicetoken: { $exists: true, $ne: null },
-    _id: {
-      $nin: await Planmanage.find({
-        serviceid: service,  // Replace `service` with your actual service value
-      }).distinct('clientid')  // Get client IDs that have active plans
-    }
-  }).select('devicetoken');
-
+         clients = await Clients_Modal.find({
+              del: 0,
+              ActiveStatus: 1,
+              devicetoken: { $exists: true, $ne: null }, // Only clients with valid device tokens
+              _id: {
+                $nin: await Planmanage.distinct('clientid'), // Exclude clients whose IDs are in Planmanage
+              },
+            }).select('devicetoken');
        }
        else{
             clients = await Clients_Modal.find({
@@ -113,8 +110,14 @@ if(type=="active")
             }).select('devicetoken');
 
        }
+
+
+
               const tokens = clients.map(client => client.devicetoken);
-  
+
+            
+
+
               if (tokens.length > 0) {
   
     
@@ -232,9 +235,9 @@ if(type=="active")
         try {
 
 
-            const { id, service, subject, message } = req.body;
+            const { id, service, subject, message,type } = req.body;
               
-           
+
 
             if (!id) {
                 return res.status(400).json({
@@ -243,14 +246,14 @@ if(type=="active")
                 });
             }
     
-            let services;
-            if (Array.isArray(service)) {
-                services = service.join(',');  // Convert array to comma-separated string
-            } else if (typeof service === 'string') {
-                services = service;  // If it's already a string, use it directly
-            } else {
-                return res.status(400).json({ status: false, message: "Invalid service format" });
-            }
+            // let services;
+            // if (Array.isArray(service)) {
+            //     services = service.join(',');  // Convert array to comma-separated string
+            // } else if (typeof service === 'string') {
+            //     services = service;  // If it's already a string, use it directly
+            // } else {
+            //     return res.status(400).json({ status: false, message: "Invalid service format" });
+            // }
   
             const updatedBroadcast = await Broadcast_Modal.findByIdAndUpdate(
                 id,
@@ -258,6 +261,7 @@ if(type=="active")
                     service:services,
                     subject,
                     message,
+                    type
                 },
                 { new: true, runValidators: true } // Options: return the updated document and run validators
             );
