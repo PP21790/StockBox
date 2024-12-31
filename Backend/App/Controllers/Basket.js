@@ -620,27 +620,27 @@ async getBasket(req, res) {
 
 
 
-  //   async activeBasket(req, res) {
-  //     try {
+    async activeBasket(req, res) {
+      try {
 
-  //         const baskets = await Basket_Modal.find({ del: false, status:true }).sort({ created_at: -1 });
+          const baskets = await Basket_Modal.find({ del: false, status:true }).sort({ created_at: -1 });
 
-  //         return res.json({
-  //             status: true,
-  //             message: "Baskets fetched successfully",
-  //             data: baskets
-  //         });
+          return res.json({
+              status: true,
+              message: "Baskets fetched successfully",
+              data: baskets
+          });
   
-  //     } catch (error) {
-  //         return res.json({ 
-  //             status: false, 
-  //             message: "Server error", 
-  //             data: [] 
-  //         });
-  //     }
-  // }
+      } catch (error) {
+          return res.json({ 
+              status: false, 
+              message: "Server error", 
+              data: [] 
+          });
+      }
+  }
 
-  async activeBasket(req, res) {
+  async activeBasketList(req, res) {
     try {
         const { page = 1, limit = 10 } = req.query; // Default page is 1 and limit is 10
         const pageNumber = parseInt(page);
