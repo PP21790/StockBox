@@ -29,6 +29,8 @@ const Coupon = () => {
     const getcoupon = async () => {
         try {
             const response = await getcouponlist(token);
+            // console.log("response",response);
+            
             if (response.status) {
                 const filterdata = response.data.filter((item) =>
                     searchInput === "" ||
@@ -215,6 +217,12 @@ const Coupon = () => {
         {
             name: 'Fixed/Percent Value',
             selector: row => row.type === "fixed" ? row.value : `${row.value}%`,
+            sortable: true,
+            width: '300px',
+        },
+        {
+            name: 'Services',
+            selector: row => row.type === "service" ? row.service : `${row.service}%`,
             sortable: true,
             width: '300px',
         },

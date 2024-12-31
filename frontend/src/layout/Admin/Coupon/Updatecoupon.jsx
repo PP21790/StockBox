@@ -17,8 +17,10 @@ const Updatecoupon = () => {
 
 
   const token = localStorage.getItem("token");
-
   const [servicedata, setServicedata] = useState([]);
+  const [isFixed, setIsFixed] = useState(false);
+
+  // const [servicedata, setServicedata] = useState([]);
 
 
   const getservice = async () => {
@@ -33,6 +35,17 @@ const Updatecoupon = () => {
     }
   };
 
+  // Fetch the services to populate the select dropdown
+  const getService = async () => {
+    try {
+      const response = await GetService(token);
+      if (response.status) {
+        setServicedata(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching services:", error);
+    }
+  };
 
 
 
@@ -155,6 +168,11 @@ const Updatecoupon = () => {
     validate,
     onSubmit,
   });
+
+  // Watch type field for changes
+  useEffect(() => {
+    setIsFixed(formik.values.type === "fixed");
+  }, [formik.values.type]);
 
   const fields = [
     {
@@ -298,7 +316,7 @@ const Updatecoupon = () => {
   return (
     <div style={{ marginTop: "100px" }}>
       <DynamicForm
-        fields={fields.filter(field => !field.showWhen || field.showWhen(formik.values))}
+        fields={fields.filter((field) => !field.showWhen || field.showWhen(formik.values))}
         page_title="Update Coupon Code"
         btn_name="Update Coupon"
         btn_name1="Cancel"

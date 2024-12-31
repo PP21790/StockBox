@@ -29,7 +29,7 @@ const Addblogs = () => {
             errors.description = "Please Enter Description";
         }
         if (!values.image) {
-            errors.image = "Please Enter Image";
+            errors.image = "Please Select Image";
         }
       
 

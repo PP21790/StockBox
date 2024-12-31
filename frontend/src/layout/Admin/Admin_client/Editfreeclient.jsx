@@ -25,21 +25,17 @@ console.log(id);
 
     if (!values.FullName) {
       errors.FullName = "Please Enter Full Name";
+    } else if (!/^[A-Za-z\s]+$/.test(values.FullName)) {
+      errors.FullName = "Full Name should contain only alphabetic characters";
     }
     if (!values.Email) {
       errors.Email = "Please Enter Email";
     }
-    // if (!values.UserName) {
-    //   errors.UserName = "Please enter Username";
-    // }
+    
     if (!values.PhoneNo) {
       errors.PhoneNo = "Please Enter Phone Number";
     }
-    // if (!values.password) {
-    //   errors.password = "Please Enter Password";
-    // }
-
-
+    
     return errors;
   };
 
