@@ -18,17 +18,26 @@ const AddUser = () => {
     let errors = {};
 
 
-    if (!values.FullName) {
-      errors.FullName = "Please Enter Full Name";
-    }
+    // if (!values.FullName) {
+    //   errors.FullName = "Please Enter Full Name";
+    // }
 
-    if (/\d/.test(values.FullName)) {
-      errors.FullName = "Numbers are not allowed in the Full Name";
-    }
-    //updated code 
-    if (/\W/.test(values.FullName)) {
-      errors.FullName = "Special character are not allowed"
-    }
+    // if (/\d/.test(values.FullName)) {
+    //   errors.FullName = "Numbers are not allowed in the Full Name";
+    // }
+    // //updated code 
+    // if (/\W/.test(values.FullName)) {
+    //   errors.FullName = "Special character are not allowed"
+    // }
+
+     // Full Name validation: Only alphabets and one space between two words allowed
+     const fullNameRegex = /^[a-zA-Z]+(?: [a-zA-Z]+)?$/;
+
+     if (!values.FullName) {
+       errors.FullName = "Please Enter Full Name";
+     } else if (!fullNameRegex.test(values.FullName)) {
+       errors.FullName = "Full Name should only contain alphabets and one space between first and last name";
+     }
     if (!values.Email) {
       errors.Email = "Please Enter Email";
     }

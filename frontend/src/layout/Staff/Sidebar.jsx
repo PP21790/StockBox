@@ -105,7 +105,7 @@ const Sidebar = ({ onToggleClick }) => {
       <div data-simplebar="init">
         <div className="sidebar-header">
           <div>
-            <img  src={`${image_baseurl}uploads/basicsetting/${clients[0]?.favicon}`} />
+            {/* <img  src={`${image_baseurl}uploads/basicsetting/${clients[0]?.favicon}`} /> */}
           </div>
           <div>
             <h4 className="logo-text">{clients[0]?.from_name}</h4>

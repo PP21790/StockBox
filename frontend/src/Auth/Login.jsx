@@ -283,7 +283,7 @@ const Login = () => {
                                                             className="input-group-text bg-transparent"
 
                                                         >
-                                                            <i className={`bx ${showPassword ? 'bx-hide' : 'bx-show'}`} />
+                                                            <i className={`bx ${showPassword ? 'bx-show' :'bx-hide'}`} />
                                                         </a>
                                                     </div>
                                                 </div>

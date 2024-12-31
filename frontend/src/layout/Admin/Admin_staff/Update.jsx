@@ -58,6 +58,9 @@ const Update = () => {
 
     try {
       const response = await UpdateStaff(req, token);
+
+      console.log("response",response);
+      
     
       if (response.status) {
         Swal.fire({
@@ -73,7 +76,7 @@ const Update = () => {
       } else {
         Swal.fire({
           title: "Error",
-          text: response.message,
+          text: response.error.message          ,
           icon: "error",
           timer: 1500,
           timerProgressBar: true,
