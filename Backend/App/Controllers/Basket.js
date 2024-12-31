@@ -603,16 +603,22 @@ class Basket {
 
       const totalBaskets = await Basket_Modal.countDocuments(matchConditions); // Count matching documents
 
+
+
       return res.json({
         status: true,
         message: "Baskets fetched successfully",
-        data: {
-          total: totalBaskets,
-          page: pageNumber,
-          limit: pageSize,
-          baskets
+        data: baskets,
+        pagination: {
+          totalRecords: totalBaskets,
+          totalPages: pageNumber,
+          page: parseInt(page),
+          limit: parseInt(pageSize)
         }
       });
+
+
+
 
     } catch (error) {
       console.error("An error occurred:", error);
@@ -651,7 +657,6 @@ class Basket {
       const { search, page = 1, limit = 10 } = req.body; // Get search term, page, and limit from query params
       const pageNumber = parseInt(page);
       const pageSize = parseInt(limit);
-      console.log(req.body);
       const matchConditions = {
         del: false, // Include only non-deleted baskets
         status: true // Include only active baskets
@@ -675,16 +680,19 @@ class Basket {
       // Count total active baskets (filtered by search, if applicable)
       const totalBaskets = await Basket_Modal.countDocuments(matchConditions);
 
+
       return res.json({
         status: true,
         message: "Active baskets fetched successfully",
-        data: {
-          total: totalBaskets,
-          page: pageNumber,
-          limit: pageSize,
-          baskets
+        data: baskets,
+        pagination: {
+          totalRecords: totalBaskets,
+          totalPages: pageNumber,
+          page: parseInt(page),
+          limit: parseInt(pageSize)
         }
       });
+
 
     } catch (error) {
       console.error("An error occurred:", error);
