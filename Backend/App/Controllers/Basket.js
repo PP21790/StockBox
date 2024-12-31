@@ -652,7 +652,6 @@ async getBasket(req, res) {
         const { search, page = 1, limit = 10 } = req.body; // Get search term, page, and limit from query params
         const pageNumber = parseInt(page);
         const pageSize = parseInt(limit);
-  console.log(req.body);
         const matchConditions = {
             del: false, // Include only non-deleted baskets
             status: true // Include only active baskets
