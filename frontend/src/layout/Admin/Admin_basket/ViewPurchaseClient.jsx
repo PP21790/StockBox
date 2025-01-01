@@ -5,6 +5,8 @@ import Swal from "sweetalert2";
 import Table from "../../../components/Table";
 import { BasketAllList, deletebasket } from "../../../Services/Admin";
 import { fDate } from "../../../Utils/Date_formate";
+import { Tooltip } from "antd";
+
 
 const ViewPurchaseClient = () => {
    const navigate = useNavigate();
@@ -72,7 +74,7 @@ const ViewPurchaseClient = () => {
 
   return (
     <div className="page-content">
-      <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+      {/* <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
         <div className="breadcrumb-title pe-3"> View Purchase Client</div>
         <div className="ps-3">
           <nav aria-label="breadcrumb">
@@ -84,6 +86,32 @@ const ViewPurchaseClient = () => {
               </li>
             </ol>
           </nav>
+        </div>
+      </div> */}
+
+<div className="row">
+        <div className="col-md-6">
+          <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+            <div className="breadcrumb-title pe-3">Add Stock</div>
+            <div className="ps-3">
+              <nav aria-label="breadcrumb">
+                <ol className="breadcrumb mb-0 p-0">
+                  <li className="breadcrumb-item">
+                    <Link to="/admin/dashboard">
+                      <i className="bx bx-home-alt" />
+                    </Link>
+                  </li>
+                </ol>
+              </nav>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-6 d-flex justify-content-end">
+          <Link to="/admin/basket/basketstockpublish">
+            <Tooltip title="Back">
+              <i className="lni lni-arrow-left-circle" style={{ fontSize: "2rem", color: "#000" }} />
+            </Tooltip>
+          </Link>
         </div>
       </div>
       <hr />
