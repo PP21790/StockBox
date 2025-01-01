@@ -5767,3 +5767,16 @@ background-color: #f1f1f1 !important;
 div.rdt_TableCell svg {
     width: 14px;
 }
+a.dropdown-item.notification {
+    width: 100%;
+    white-space: break-spaces;
+}
+.blog-detail img
+{
+	width: 100%;
+}
+div.rdt_TableCell svg {
+
+	width: 18px;
+	
+	}

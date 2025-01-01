@@ -61,7 +61,7 @@ const Client = () => {
         } else if (clientStatus == 0) {
             setheader("Deactive Client")
         } else if (clientStatus === "active") {
-            setheader("Total Plan Active Client")
+            setheader("Total Plan Active Client") 
 
         } else if (clientStatus === "expired") {
             setheader("Total Plan Expired Client")

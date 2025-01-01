@@ -97,6 +97,8 @@ const Category = () => {
 
     // Update service
     const Updatecategory = async () => {
+        console.log("dekho data aa rha hai kya");
+        
         try {
 
             const data = { title: updatetitle.title, id: serviceid._id, service: updatetitle.service };

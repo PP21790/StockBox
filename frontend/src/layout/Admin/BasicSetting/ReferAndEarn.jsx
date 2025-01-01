@@ -168,7 +168,9 @@ const ReferAndEarn = () => {
                                 setFieldValue
                               ); // Validate and update sender_earn
                             }}
+                            
                           />
+                          <span className="input-group-text">%</span>
                         </div>
                       </div>
                     </div>
@@ -202,6 +204,7 @@ const ReferAndEarn = () => {
                               ); // Validate and update receiver_earn
                             }}
                           />
+                          <span className="input-group-text">%</span>
                         </div>
                       </div>
                     </div>

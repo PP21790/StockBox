@@ -26,6 +26,8 @@ const Dashbord = () => {
     const getdetail = async () => {
         try {
             const response = await getDashboarddetail(token);
+            console.log("gggggggggg",response);
+            
             if (response.status) {
 
                 setData(response.data)
