@@ -17,7 +17,6 @@ const io = ioSocket.getIO(); // Access the already initialized io instance
 const Alice_Socket = async () => {
    
 
-
     const groupedStocks = await Basketstock_Modal.aggregate([
       {
           $lookup: {
@@ -52,7 +51,7 @@ const Alice_Socket = async () => {
   const orders = await Order_Modal.aggregate([
       {
           $match: {
-              tsstatus: { $in: ["1"] }, 
+              tsstatus: { $in: ["1,2"] }, 
           }
       },
       {

@@ -91,7 +91,6 @@ class Aliceblue {
 
         try {
             const { id, signalid, quantity, price, tsprice, tsstatus, slprice, exitquantity } = req.body;
-
             const client = await Clients_Modal.findById(id);
             if (!client) {
                 return res.status(404).json({
@@ -173,7 +172,6 @@ class Aliceblue {
                 });
             }
 
-
             var data = JSON.stringify([
                 {
                     "complexty": "regular",
@@ -191,7 +189,6 @@ class Aliceblue {
                     "orderTag": "order1"
                 }
             ]);
-
             let config = {
                 method: 'post',
                 maxBodyLength: Infinity,
@@ -223,91 +220,17 @@ class Aliceblue {
                             tsprice: tsprice,
                             slprice:slprice,
                             exitquantity:finalExitQuantity,
-                            tsstatus: 0,
+                            tsstatus: tsstatus,
                             exchange: exchange
                         });
 
 
 
                         await order.save();
-
-                        if(tsstatus!="0")
-                        {
-
-                        var pendingOrderData = JSON.stringify([
-                            {
-                                "complexty": "regular",
-                                "discqty": "0",
-                                "exch": exchange,
-                                "pCode": producttype,
-                                "prctyp": tsstatus === "1" ? "L" : "SL",
-                                "price": tsstatus === "1" ? tsprice : (slprice - 0.5).toFixed(2),
-                                "qty": quantity,
-                                "ret": "DAY",
-                                "symbol_id": stock.instrument_token,
-                                "trading_symbol": stock.tradesymbol,
-                                "transtype": signal.calltype === "BUY" ? "SELL" : "BUY",
-                                "trigPrice": tsstatus === "1" ? "00.00" : slprice,
-                                "orderTag": "order2"
-                            }
-                        ]);
-                    
-                        let pendingConfig = {
-                            method: 'post',
-                            maxBodyLength: Infinity,
-                            url: 'https://ant.aliceblueonline.com/rest/AliceBlueAPIService/api/placeOrder/executePlaceOrder',
-                            headers: {
-                                'Authorization': 'Bearer ' + userId + ' ' + authToken,
-                                'Content-Type': 'application/json',
-                            },
-                            data: pendingOrderData
-                        };
-                    
-                        try {
-                            const pendingResponse = await axios(pendingConfig);
-                            const pendingResponseData = pendingResponse.data;
-                    
-                            if (pendingResponseData[0].stat === 'Ok') {
-
-
-                                const orderexit = new Order_Modal({
-                                    clientid: client._id,
-                                    signalid: signal._id,
-                                    orderid: pendingResponseData[0].NOrdNo,
-                                    ordertype: signal.calltype === "BUY" ? "SELL" : "BUY",
-                                    borkerid: 2,
-                                    quantity: quantity,
-                                    tsstatus:0,
-                                });
-        
-                                await orderexit.save();
-
-                                return res.json({
-                                    status: true,
-                                    message: "Order and pending order placed successfully",
-                                });
-                            } else {
-                                return res.status(500).json({
-                                    status: false,
-                                    message: "Primary order placed, but pending order failed",
-                                    pendingOrderError: pendingResponseData
-                                });
-                            }
-                        } catch (pendingError) {
-                            return res.status(500).json({
-                                status: false,
-                                message: "Primary order placed, but pending order API call failed",
-                                error: pendingError.message
-                            });
-                        }
-                        }
-                        else
-                        {
                         return res.json({
                             status: true,
                             data: response.data ? null : "Order Successfully",
                         });
-                        }
                     }
                     else {
 
