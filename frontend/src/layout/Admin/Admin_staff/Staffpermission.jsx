@@ -872,7 +872,7 @@ const Staffpermission = () => {
         },
         {
             name: 'editsignal',
-            label: 'Edit Signal',
+            label: 'Update pdf',
             type: 'checkbox',
             label_size: 12,
             col_size: 2,

@@ -167,101 +167,44 @@ const BasketPurchaseHistory = () => {
 
 
   return (
-    <div>
-      <div className="page-content">
-
-        <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-          <div className="breadcrumb-title pe-3">Basket History</div>
-          <div className="ps-3">
-            <nav aria-label="breadcrumb">
-              <ol className="breadcrumb mb-0 p-0">
-                <li className="breadcrumb-item">
-                  <Link to="/admin/dashboard">
-                    <i className="bx bx-home-alt" />
-                  </Link>
-                </li>
-              </ol>
-            </nav>
+    <div className="page-content">
+      {/* <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+        <div className="breadcrumb-title pe-3"> Basket  Purchase History</div>
+        <div className="ps-3">
+          <nav aria-label="breadcrumb">
+            <ol className="breadcrumb mb-0 p-0">
+              <li className="breadcrumb-item">
+                <Link to="/admin/dashboard">
+                  <i className="bx bx-home-alt" />
+                </Link>
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div> */}
+      <div className="row">
+        <div className="col-md-6">
+          <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+            <div className="breadcrumb-title pe-3">Basket  Purchase History</div>
+            <div className="ps-3">
+              <nav aria-label="breadcrumb">
+                <ol className="breadcrumb mb-0 p-0">
+                  <li className="breadcrumb-item">
+                    <Link to="/admin/dashboard">
+                      <i className="bx bx-home-alt" />
+                    </Link>
+                  </li>
+                </ol>
+              </nav>
+            </div>
           </div>
         </div>
-        <hr />
-        <div className="card">
-          <div className="card-body">
-            <div className="d-lg-flex align-items-center mb-4 gap-3 justify-content-between">
-
-              <div className="position-relative">
-                <input
-                  type="text"
-                  className="form-control ps-5 radius-10"
-                  placeholder="Search History"
-                  onChange={(e) => setSearchInput(e.target.value)}
-                  value={searchInput}
-                />
-                <span className="position-absolute top-50 product-show translate-middle-y">
-                  <i className="bx bx-search" />
-                </span>
-
-              </div>
-
-
-              {/* <div>
-
-                                <div
-                                    className="ms-2"
-                                    onClick={(e) => getexportfile()}
-                                >
-                                    <button
-                                        type="button"
-                                        className="btn btn-primary float-end"
-                                        data-toggle="tooltip"
-                                        data-placement="top"
-                                        title="Export To Excel"
-                                        delay={{ show: "0", hide: "100" }}
-
-                                    >
-                                        <i className="bx bxs-download" aria-hidden="true"></i>
-
-                                        Export-Excel
-                                    </button>
-                                </div>
-                            </div> */}
-            </div>
-            <div className='row mb-2'>
-              <div className="col-md-3">
-                <input
-                  type="date"
-                  className="form-control"
-                  onChange={(e) => setStartDate(e.target.value)}
-                  value={startDate}
-                />
-              </div>
-
-
-              <div className='col-md-3'>
-                <input
-                  type="date"
-                  className="form-control"
-                  onChange={(e) => setEndDate(e.target.value)}
-                  value={endDate}
-                />
-              </div>
-
-              <div className="col-md-1">
-                <div className="refresh-icon mt-1">
-                  <RefreshCcw onClick={resethandle} />
-                </div>
-              </div>
-            </div>
-            <div className="table-responsive">
-              <Table
-                columns={columns}
-                data={clients}
-                totalRows={totalRows}
-                currentPage={currentPage}
-                onPageChange={handlePageChange}
-              />
-            </div>
-          </div>
+        <div className="col-md-6 d-flex justify-content-end">
+          <Link to="/admin/basket/basketstockpublish">
+            <Tooltip title="Back">
+              <i className="lni lni-arrow-left-circle" style={{ fontSize: "2rem", color: "#000" }} />
+            </Tooltip>
+          </Link>
         </div>
       </div>
 

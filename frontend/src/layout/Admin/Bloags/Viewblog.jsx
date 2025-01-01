@@ -95,7 +95,7 @@ const Viewblog = () => {
                                                 <b>Description</b>
                                             </label>
                                             <div className="col-sm-9">
-                                                <div className="input-group">
+                                                <div className="input-group blog-detail">
                                                     <div
                                                         className="form-control"
                                                         style={{ width: "100%" }}
@@ -117,6 +117,7 @@ const Viewblog = () => {
                                                     {row.image && (
                                                         <div className="file-preview">
                                                             <img
+                                                            
                                                                 src={`${image_baseurl}uploads/blogs/${row.image}`}
                                                                 alt="Image Preview"
                                                                 className="image-preview"

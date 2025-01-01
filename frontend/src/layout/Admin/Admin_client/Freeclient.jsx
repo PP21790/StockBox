@@ -584,7 +584,7 @@ const Freeclient = () => {
                 <>
                     <div className="modal-backdrop fade show"></div>
                     <div
-                        className="modal fade show d-block"
+                        className=" model-xl modal fade show d-block"
                         tabIndex="-1"
                         aria-labelledby="exampleModalLabel"
                         aria-hidden="true"

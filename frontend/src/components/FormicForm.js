@@ -507,7 +507,7 @@ const DynamicForm = ({
                                                                                         {...formik.getFieldProps(field.name)}
                                                                                     >
                                                                                         <option value="" selected>
-                                                                                            Select {field.label}
+                                                                                             {field.label}
                                                                                         </option>
                                                                                         {field.options.map((option) => (
                                                                                             <option
