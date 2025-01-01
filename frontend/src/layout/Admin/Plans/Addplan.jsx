@@ -54,7 +54,7 @@ const Addplan = () => {
             errors.validity = "Please Enter Validity";
         }
         if (!values.category) {
-            errors.category = "Please Enter Category";
+            errors.category = "Please Select Category";
         }
 
         return errors;
@@ -205,8 +205,8 @@ const Addplan = () => {
             <DynamicForm
                 fields={fields}
                 formik={formik}
-                page_title="Add New Plan"
-                btn_name="Add Plan"
+                page_title="Add New Package"
+                btn_name="Add Package"
                 btn_name1="Cancel"
                 sumit_btn={true}
                 btn_name1_route={"/admin/plan"}

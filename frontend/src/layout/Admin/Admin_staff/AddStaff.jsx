@@ -17,7 +17,7 @@ const AddStaff = () => {
     if (!values.FullName) {
       errors.FullName = "Please Enter Full Name";
     }else if(!/^[a-zA-Z\s]+$/.test(values.FullName)){
-      errors.FullName = "Special character Are Not Allowed In the Full Name"
+      errors.FullName = "Special Character Are Not Allowed In the Full Name"
     }else if (/\d/.test(values.FullName)) {
       errors.FullName = "Numbers Are Not Allowed In the Full Name";
     }

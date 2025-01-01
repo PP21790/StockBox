@@ -31,7 +31,7 @@ class Plan {
             // console.log("Plan successfully added:", result);
             return res.json({
                 status: true,
-                message: "Plan added successfully",
+                message: "Package added successfully",
                 data: result,
             });
     
