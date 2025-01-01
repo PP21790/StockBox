@@ -186,7 +186,7 @@ const Bankdetail = () => {
         },
         {
             name: 'IFSC Code',
-            selector: row => row.accountno,
+            selector: row => row.ifsc,
             sortable: true,
             width: '200px',
         },
