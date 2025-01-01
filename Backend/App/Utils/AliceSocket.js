@@ -51,7 +51,7 @@ const Alice_Socket = async () => {
   const orders = await Order_Modal.aggregate([
       {
           $match: {
-              tsstatus: { $in: ["1"] }, 
+              tsstatus: { $in: ["1,2"] }, 
           }
       },
       {

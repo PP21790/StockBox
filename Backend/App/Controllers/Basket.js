@@ -8,6 +8,8 @@ const Basketstock_Modal = db.Basketstock;
 const Stock_Modal = db.Stock;
 const Liveprice_Modal = db.Liveprice;
 const BasketSubscription_Modal = db.BasketSubscription;
+const Clients_Modal = db.Clients;
+
 
 class Basket {
 
@@ -923,6 +925,14 @@ async addBasketSubscription(req, res) {
     if (!basket_id || !client_id) {
       return res.status(400).json({ status: false, message: 'Missing required fields' });
     }
+
+
+    const client = await Clients_Modal.findOne({ _id: client_id, del: 0, ActiveStatus: 1 });
+    if (!client) {
+      return res.status(400).json({ status: false, message: 'Client Not Actived' });
+    }
+
+
     const basket = await Basket_Modal.findOne({
       _id: basket_id,
       del: false
