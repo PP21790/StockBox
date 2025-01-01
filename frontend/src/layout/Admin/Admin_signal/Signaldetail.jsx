@@ -145,7 +145,7 @@ const Signaldetail = () => {
                                                             <span className="text-secondary">{item.targetprice3 || item.tag3 || '-'}</span>
                                                         </li>
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                                            <h6 className="mb-0">Remark</h6>
+                                                            <h6 className="mb-0">Description</h6>
                                                             <span className="text-secondary">{item.description || '-'}</span>
                                                         </li>
                                                     </ul>

@@ -683,7 +683,7 @@ const Staffpermission = () => {
         },
         {
             name: 'userPermissions',
-            label: 'All Client',
+            label: 'All Client Permissions',
             type: 'checkbox',
             label_size: 12,
             col_size: 2,
@@ -694,7 +694,7 @@ const Staffpermission = () => {
         },
         {
             name: 'viewclient',
-            label: 'View Client',
+            label: 'View Client ',
             type: 'checkbox',
             label_size: 12,
             col_size: 2,
@@ -768,7 +768,7 @@ const Staffpermission = () => {
         },
         {
             name: 'planpermission',
-            label: 'All Plan',
+            label: 'All Plan Permissions',
             type: 'checkbox',
             label_size: 12,
             col_size: 2,
@@ -825,7 +825,7 @@ const Staffpermission = () => {
 
         {
             name: 'Signalpermission',
-            label: 'All Signal',
+            label: 'All Signal Permissions',
             type: 'checkbox',
             label_size: 12,
             col_size: 2,
@@ -958,7 +958,7 @@ const Staffpermission = () => {
 
         {
             name: 'newspermission',
-            label: 'All news',
+            label: 'All News Permissions',
             type: 'checkbox',
             label_size: 12,
             col_size: 2,
@@ -1015,7 +1015,7 @@ const Staffpermission = () => {
 
         {
             name: 'bannerpermission',
-            label: 'All Banner',
+            label: 'All Banner Permissions',
             type: 'checkbox',
             label_size: 12,
             col_size: 2,
@@ -1072,7 +1072,7 @@ const Staffpermission = () => {
 
         {
             name: 'couponpermission',
-            label: 'All Coupon',
+            label: 'All Coupon Permissions',
             type: 'checkbox',
             label_size: 12,
             col_size: 2,
@@ -1137,7 +1137,7 @@ const Staffpermission = () => {
 
         {
             name: 'blogspermission',
-            label: 'All Blogs',
+            label: 'All Blogs Permissions',
             type: 'checkbox',
             label_size: 12,
             col_size: 2,
@@ -1203,7 +1203,7 @@ const Staffpermission = () => {
 
         {
             name: 'faqpermission',
-            label: 'All Faq',
+            label: 'All Faq Permissions',
             type: 'checkbox',
             label_size: 12,
             col_size: 2,
@@ -1258,7 +1258,7 @@ const Staffpermission = () => {
         },
         {
             name: 'categorypermission',
-            label: 'All category',
+            label: 'All category Permissions',
             type: 'checkbox',
             label_size: 12,
             col_size: 2,
@@ -1313,7 +1313,7 @@ const Staffpermission = () => {
         },
         {
             name: 'freeclientpermission',
-            label: 'All Free Client',
+            label: 'All Free Client Permissions',
             type: 'checkbox',
             label_size: 12,
             col_size: 2,
@@ -1359,7 +1359,7 @@ const Staffpermission = () => {
         },
         {
             name: 'otherpermission',
-            label: 'Others',
+            label: 'Others Permissions',
             type: 'checkbox',
             label_size: 12,
             col_size: 2,

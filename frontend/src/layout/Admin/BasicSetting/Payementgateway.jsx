@@ -8,19 +8,19 @@ const Payementgateway = () => {
     const user_id = localStorage.getItem('id');
 
     const [clients, setClients] = useState(null);
-    
-    
-    
+
+
+
     const [initialValues, setInitialValues] = useState({
         razorpay_secret: "",
         razorpay_key: "",
         paymentstatus: "",
         officepaymenystatus: ""
     });
-    
+
     const [updateapi, setUpdateapi] = useState(initialValues);
 
-   
+
 
     const getApidetail = async () => {
         try {
@@ -49,8 +49,8 @@ const Payementgateway = () => {
 
 
 
-    const handleInputChange = (field, value) => {
-        setUpdateapi((prev) => ({ ...prev, [field]: value }));
+    const handleInputChange = (field, e) => {
+        setUpdateapi((prev) => ({ ...prev, [field]: e.target.value }));
     };
 
 
@@ -197,18 +197,24 @@ const Payementgateway = () => {
                         <div className="card-header">Razorpay</div>
                         <div className="card-body">
                             <form className="row">
-                                <FormField
-                                    label="Razorpay Key"
+                                <label>Razorpay Key</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
                                     id="razorpay_key"
                                     value={updateapi.razorpay_key}
                                     onChange={(value) => handleInputChange("razorpay_key", value)}
                                 />
-                                <FormField
-                                    label="Razorpay Secret Key"
+
+                                <label>Razorpay Secret Key</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
                                     id="razorpay_secret"
                                     value={updateapi.razorpay_secret}
                                     onChange={(value) => handleInputChange("razorpay_secret", value)}
                                 />
+
                             </form>
                         </div>
                         <div className="card-footer text-center">

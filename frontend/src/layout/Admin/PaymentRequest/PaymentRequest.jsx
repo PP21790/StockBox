@@ -4,14 +4,14 @@ import Table from '../../../components/Table';
 import Swal from 'sweetalert2';
 import { fDateTime, fDate } from '../../../Utils/Date_formate';
 import { Link } from 'react-router-dom';
-import {  IndianRupee} from 'lucide-react';
+import { IndianRupee } from 'lucide-react';
 
 
 
 const PaymentRequest = () => {
 
 
-    
+
     const token = localStorage.getItem('token');
     const [clients, setClients] = useState([]);
     const [searchInput, setSearchInput] = useState("");
@@ -63,8 +63,11 @@ const PaymentRequest = () => {
                     icon: 'error',
                     title: 'Error',
                     text: response.message || 'Failed to update the request. Please try again.',
-                    timer: 2000
+                    timer: 3000
                 });
+                window.location.reload();
+
+
             }
         } catch (error) {
             Swal.fire({
@@ -73,7 +76,7 @@ const PaymentRequest = () => {
                 text: error.message || 'An unexpected error occurred. Please try again.',
                 timer: 2000
             });
-            console.log("Error:", error);
+
         }
     };
 
@@ -98,7 +101,7 @@ const PaymentRequest = () => {
         // },
         {
             name: 'Amount',
-            selector: row => <div> <IndianRupee />{row.amount}</div> ,
+            selector: row => <div> <IndianRupee />{row.amount}</div>,
             sortable: true,
         },
         {
@@ -183,7 +186,7 @@ const PaymentRequest = () => {
                     ...prevValues,
                     [rowId]: selectedValue,
                 }));
-                Swal.fire('Updated!', 'The status has been updated.', 'success');
+                // Swal.fire('Updated!', 'The status has been updated.', 'success');
             } catch (error) {
                 Swal.fire('Error!', 'There was a problem updating the status.', 'error');
             }

@@ -37,7 +37,7 @@ const Addbroadcast = () => {
     const validate = (values) => {
         let errors = {};
         if (values.type !== "nonsubscribe" && !values.service) {
-            errors.service = "Please Enter Service";
+            errors.service = "Please Select Service";
         }
         if (!values.subject) {
             errors.subject = "Please Enter Subject";
@@ -46,7 +46,7 @@ const Addbroadcast = () => {
             errors.message = "Please Enter Message";
         }
         if (!values.type) {
-            errors.type = "Please Enter Type";
+            errors.type = "Please Select Type";
         }
         return errors;
     };

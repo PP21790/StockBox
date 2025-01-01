@@ -270,14 +270,14 @@ const Coupon = () => {
                     return (
                         <div className="form-check form-switch form-check-info">
                             <input
-                                id={`rating_${row.status}`}
+                                id={`rating_${row._id}`}
                                 className="form-check-input toggleswitch"
                                 type="checkbox"
                                 defaultChecked={row.status === true}
                                 onChange={(event) => handleSwitchChange(event, row._id)}
                             />
                             <label
-                                htmlFor={`rating_${row.status}`}
+                                htmlFor={`rating_${row._id}`}
                                 className="checktoggle checkbox-bg"
                             ></label>
                         </div>
@@ -290,27 +290,33 @@ const Coupon = () => {
         {
             name: 'Show Status',
             selector: row => {
-                return (
-                    <div className="form-check form-switch form-check-info">
-                        <input
-                            id={`rating_${row.showstatus}`}
-                            className="form-check-input toggleswitch"
-                            type="checkbox"
-                            defaultChecked={row.showstatus === 1}
-                            onChange={(event) => handleSwitchChange1(event, row._id)}
-                        />
-                        <label
-                            htmlFor={`rating_${row.showstatus}`}
-                            className="checktoggle checkbox-bg"
-                        ></label>
-                    </div>
-                );
+                const currentDate = new Date();
+                const endDate = new Date(row.enddate);
+                endDate.setHours(23, 59, 59, 999);
+                if (currentDate > endDate) {
+                    return <span className="text-danger" style={{ color: "red" }}>Expired</span>;
+                } else {
+                    return (
+                        <div className="form-check form-switch form-check-info">
+                            <input
+                                id={`rating_${row._id}`}
+                                className="form-check-input toggleswitch"
+                                type="checkbox"
+                                checked={row.showstatus === 1}
+                                onChange={(event) => handleSwitchChange1(event, row._id)}
+                            />
+                            <label
+                                htmlFor={`rating_${row._id}`}
+                                className="checktoggle checkbox-bg"
+                            ></label>
+                        </div>
+                    );
+                }
             },
+
             sortable: true,
             width: '156px',
         },
-
-
         {
             name: 'Start date',
             selector: row => fDateTime(row.startdate),

@@ -3,13 +3,14 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GetClient } from '../../../Services/Admin';
 import Table from '../../../components/Table1';
-import { Eye, Trash2, RefreshCcw, SquarePen, IndianRupee } from 'lucide-react';
+import { Eye, Trash2, RefreshCcw, SquarePen, IndianRupee, ArrowDownToLine } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { GetSignallist, GetSignallistWithFilter, DeleteSignal, SignalCloseApi, GetService, GetStockDetail, UpdatesignalReport } from '../../../Services/Admin';
 import { fDateTimeH } from '../../../Utils/Date_formate'
 import { exportToCSV } from '../../../Utils/ExportData';
 import Select from 'react-select';
 import { Tooltip } from 'antd';
+import { image_baseurl } from '../../../Utils/config';
 
 
 
@@ -463,6 +464,19 @@ const Signal = () => {
 
 
 
+    const handleDownload = (row) => {
+        const url = `${image_baseurl}uploads/report/${row.report}`;
+        const link = document.createElement('a');
+        link.href = url;
+        link.target = '_blank';
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+
+
 
     // colums
     let columns = [
@@ -492,7 +506,7 @@ const Signal = () => {
             width: '200px',
         },
         {
-            name: 'Lot',
+            name: 'Quantity/Lot',
             selector: row => row.lot,
             sortable: true,
             width: '200px',
@@ -562,19 +576,28 @@ const Signal = () => {
 
         },
         {
-            name: 'Upload Pdf',
+            name: 'Upload Report',
             cell: row => (
                 <>
-                    <div>
-                        <Tooltip placement="top" overlay="Update">
-                            <SquarePen
-                                onClick={() => {
-                                    setModel1(true);
-                                    setServiceid(row);
-                                    setUpdatetitle({ report: row.report, id: row._id });
-                                }}
-                            />
-                        </Tooltip>
+
+                    <div className='d-flex'>
+                        {row.report ?
+                            <div style={{ color: "green", cursor: "pointer" }} onClick={() => handleDownload(row)}>
+                                <Tooltip placement="top" overlay="Download">
+                                    <ArrowDownToLine />
+                                </Tooltip>
+                            </div> : ""}
+                        <div className='mx-4'>
+                            <Tooltip placement="top" overlay="Update">
+                                <SquarePen
+                                    onClick={() => {
+                                        setModel1(true);
+                                        setServiceid(row);
+                                        setUpdatetitle({ report: row.report, id: row._id });
+                                    }}
+                                />
+                            </Tooltip>
+                        </div>
                     </div>
 
                 </>
@@ -582,6 +605,7 @@ const Signal = () => {
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
+            width: '200px',
 
         },
 
@@ -830,7 +854,7 @@ const Signal = () => {
                                 <div className="modal-body">
                                     <div className='card '>
                                         <div className='d-flex justify-content-between align-items-center card-body'>
-                                            {['Fully Closed', 'Partially Closed', 'SL Hit', 'Closed Signal', "Await Signal"].map((tab, index) => (
+                                            {['Fully Closed', 'Partially Closed', 'SL Hit', 'Closed Signal', "Avoid Signal Signal"].map((tab, index) => (
                                                 <label key={index} className='labelfont'>
                                                     <input
                                                         type="radio"

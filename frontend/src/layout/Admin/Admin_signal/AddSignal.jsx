@@ -72,7 +72,6 @@ const AddSignal = () => {
     },
     validate: (values) => {
       const errors = {};
-      console.log("errors", errors)
       if (!values.segment) errors.segment = 'Please Select a Segment';
       if (!values.stock) errors.stock = 'Please Select a Stock';
       if (values.price <= 0) {
@@ -365,6 +364,19 @@ const AddSignal = () => {
       showWhen: (values) => values.segment === "O"
     },
     {
+      name: 'entrytype',
+      label: 'Entry Type',
+      type: 'select',
+      options: [
+        { label: 'At', value: 'At' },
+        { label: 'Above', value: 'Above' },
+        { label: 'Below', value: 'Below' },
+      ],
+      label_size: 12,
+      col_size: 6,
+      star: true
+    },
+    {
       name: 'callduration',
       label: 'Trade Duration',
       type: 'select',
@@ -411,25 +423,13 @@ const AddSignal = () => {
     },
     {
       name: 'lot',
-      label: 'Lot',
+      label: 'Quantity/Lot',
       type: 'number',
       label_size: 12,
       col_size: 6,
       star: true
     },
-    {
-      name: 'entrytype',
-      label: 'Entry Type',
-      type: 'select',
-      options: [
-        { label: 'At', value: 'At' },
-        { label: 'Above', value: 'Above' },
-        { label: 'Below', value: 'Below' },
-      ],
-      label_size: 12,
-      col_size: 6,
-      star: true
-    },
+
 
 
     {
