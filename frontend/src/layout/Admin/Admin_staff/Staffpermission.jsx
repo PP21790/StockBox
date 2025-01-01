@@ -114,7 +114,7 @@ const Staffpermission = () => {
             // viewstaff: false,
             // deletestaff: false,
             // staffstatus: false,
-            
+
             newspermission: false,
             addnews: false,
             editnews: false,
@@ -129,7 +129,7 @@ const Staffpermission = () => {
             viewbanner: false,
             deletebanner: false,
             bannerstatus: false,
-           
+
 
             couponpermission: false,
             addcoupon: false,
@@ -144,12 +144,12 @@ const Staffpermission = () => {
             addblogs: false,
             editblogs: false,
             viewblogs: false,
-            blogdetail:false,
+            blogdetail: false,
             deleteblogs: false,
             blogsstatus: false,
 
 
-            
+
             faqpermission: false,
             addfaq: false,
             editfaq: false,
@@ -165,7 +165,7 @@ const Staffpermission = () => {
             // deletecategory: false,
             categorystatus: false,
 
-            
+
             freeclientpermission: false,
             addfreeclient: false,
             editfreeclient: false,
@@ -176,9 +176,9 @@ const Staffpermission = () => {
             paymenthistory: false,
             planexpiry: false,
             perform: false,
-           
 
-           
+
+
 
         },
         onSubmit,
@@ -234,7 +234,7 @@ const Staffpermission = () => {
             formik.setFieldValue('newsstatus', clients.includes('newsstatus'));
 
 
-           
+
             formik.setFieldValue('bannerpermission', clients.includes('bannerpermission'));
             formik.setFieldValue('addbanner', clients.includes('addbanner'));
             formik.setFieldValue('editbanner', clients.includes('editbanner'));
@@ -243,7 +243,7 @@ const Staffpermission = () => {
             formik.setFieldValue('bannerstatus', clients.includes('bannerstatus'));
 
 
-             
+
             formik.setFieldValue('couponpermission', clients.includes('couponpermission'));
             formik.setFieldValue('addcoupon', clients.includes('addcoupon'));
             formik.setFieldValue('editcoupon', clients.includes('editcoupon'));
@@ -261,7 +261,7 @@ const Staffpermission = () => {
             formik.setFieldValue('deleteblogs', clients.includes('deleteblogs'));
             formik.setFieldValue('blogsstatus', clients.includes('blogsstatus'));
 
-              
+
             formik.setFieldValue('faqpermission', clients.includes('faqpermission'));
             formik.setFieldValue('addfaq', clients.includes('addfaq'));
             formik.setFieldValue('editfaq', clients.includes('editfaq'));
@@ -289,15 +289,15 @@ const Staffpermission = () => {
             formik.setFieldValue('paymenthistory', clients.includes('paymenthistory'));
             formik.setFieldValue('planexpiry', clients.includes('planexpiry'));
             formik.setFieldValue('perform', clients.includes('perform'));
-          
-           
+
+
         }
     }, [clients]);
 
 
 
     useEffect(() => {
-        if (formik.values.userPermissions == true ) {
+        if (formik.values.userPermissions == true) {
             formik.setFieldValue('addclient', true);
             formik.setFieldValue('viewclient', true);
             formik.setFieldValue('Ownclient', false);
@@ -320,19 +320,19 @@ const Staffpermission = () => {
 
     }, [formik.values.userPermissions])
 
-   
 
-   
+
+
 
     useEffect(() => {
-        if (formik.values.addclient || formik.values.editclient || formik.values.clientchangestatus || formik.values.assignPackage || formik.values.Ownclient ) {
+        if (formik.values.addclient || formik.values.editclient || formik.values.clientchangestatus || formik.values.assignPackage || formik.values.Ownclient) {
             formik.setFieldValue('viewclient', true);
         }
-    }, [formik.values.addclient, formik.values.editclient, formik.values.clientchangestatus, formik.values.assignPackage , formik.values.Ownclient]);
-    
-  
+    }, [formik.values.addclient, formik.values.editclient, formik.values.clientchangestatus, formik.values.assignPackage, formik.values.Ownclient]);
 
-   
+
+
+
     useEffect(() => {
         if (formik.values.Signalpermission == true) {
             formik.setFieldValue('signalstatus', true);
@@ -356,17 +356,17 @@ const Staffpermission = () => {
         }
 
     }, [formik.values.Signalpermission])
-    
-    
+
+
     useEffect(() => {
-        if (formik.values.signalstatus || formik.values.ownsignal|| formik.values.signaldetail || formik.values.addsignal ||  formik.values.editsignal ) {
+        if (formik.values.signalstatus || formik.values.ownsignal || formik.values.signaldetail || formik.values.addsignal || formik.values.editsignal) {
             formik.setFieldValue('viewsignal', true);
         }
-    }, [formik.values.signalstatus, formik.values.signaldetail, formik.values.addsignal,formik.values.editsignal , formik.values.ownsignal]);
-    
+    }, [formik.values.signalstatus, formik.values.signaldetail, formik.values.addsignal, formik.values.editsignal, formik.values.ownsignal]);
 
 
- 
+
+
     useEffect(() => {
         if (formik.values.categorypermission == true) {
             formik.setFieldValue('categorystatus', true);
@@ -389,10 +389,10 @@ const Staffpermission = () => {
 
 
     useEffect(() => {
-        if (formik.values.categorystatus || formik.values.addcategory || formik.values.editcategory  ) {
+        if (formik.values.categorystatus || formik.values.addcategory || formik.values.editcategory) {
             formik.setFieldValue('viewcategory', true);
         }
-    }, [formik.values.categorystatus , formik.values.addcategory , formik.values.editcategory]);
+    }, [formik.values.categorystatus, formik.values.addcategory, formik.values.editcategory]);
 
 
 
@@ -418,10 +418,10 @@ const Staffpermission = () => {
 
 
     useEffect(() => {
-        if (formik.values.addplan || formik.values.editplan || formik.values.planstatus  ) {
+        if (formik.values.addplan || formik.values.editplan || formik.values.planstatus) {
             formik.setFieldValue('viewplan', true);
         }
-    }, [formik.values.addplan , formik.values.editplan ,formik.values.planstatus]);
+    }, [formik.values.addplan, formik.values.editplan, formik.values.planstatus]);
 
 
 
@@ -448,10 +448,10 @@ const Staffpermission = () => {
 
 
     useEffect(() => {
-        if (formik.values.addstaff || formik.values.editstaff || formik.values.staffstatus  ) {
+        if (formik.values.addstaff || formik.values.editstaff || formik.values.staffstatus) {
             formik.setFieldValue('viewstaff', true);
         }
-    }, [formik.values.addstaff , formik.values.editstaff , formik.values.staffstatus]);
+    }, [formik.values.addstaff, formik.values.editstaff, formik.values.staffstatus]);
 
 
 
@@ -474,16 +474,16 @@ const Staffpermission = () => {
         }
 
     }, [formik.values.bannerpermission])
-   
+
     useEffect(() => {
-        if (formik.values.addbanner || formik.values.editbanner || formik.values.bannerstatus || formik.values.deletebanner ) {
+        if (formik.values.addbanner || formik.values.editbanner || formik.values.bannerstatus || formik.values.deletebanner) {
             formik.setFieldValue('viewbanner', true);
         }
-    }, [formik.values.addbanner , formik.values.editbanner , formik.values.bannerstatus ,  formik.values.deletebanner]);
+    }, [formik.values.addbanner, formik.values.editbanner, formik.values.bannerstatus, formik.values.deletebanner]);
 
 
 
-  
+
     useEffect(() => {
         if (formik.values.couponpermission == true) {
             formik.setFieldValue('addcoupon', true);
@@ -505,18 +505,18 @@ const Staffpermission = () => {
         }
 
     }, [formik.values.couponpermission])
-  
+
 
     useEffect(() => {
-        if (formik.values.addcoupon || formik.values.editcoupon || formik.values.coupondetail || formik.values.coupondetail || formik.values.deletecoupon  ) {
+        if (formik.values.addcoupon || formik.values.editcoupon || formik.values.coupondetail || formik.values.coupondetail || formik.values.deletecoupon) {
             formik.setFieldValue('viewcoupon', true);
         }
-    }, [formik.values.addcoupon ,formik.values.editcoupon ,formik.values.coupondetail ,formik.values.coupondetail, formik.values.deletecoupon ]);
+    }, [formik.values.addcoupon, formik.values.editcoupon, formik.values.coupondetail, formik.values.coupondetail, formik.values.deletecoupon]);
 
 
 
 
-   
+
     useEffect(() => {
         if (formik.values.blogspermission == true) {
             formik.setFieldValue('addblogs', true);
@@ -539,12 +539,12 @@ const Staffpermission = () => {
 
     }, [formik.values.blogspermission])
 
-   
+
     useEffect(() => {
-        if (formik.values.addblogs || formik.values.editblogs || formik.values.blogdetail || formik.values.blogsstatus || formik.values.blogdetail ) {
+        if (formik.values.addblogs || formik.values.editblogs || formik.values.blogdetail || formik.values.blogsstatus || formik.values.blogdetail) {
             formik.setFieldValue('viewblogs', true);
         }
-    }, [formik.values.addblogs ,formik.values.editblogs ,formik.values.blogdetail ,formik.values.blogsstatus, formik.values.blogdetail ]);
+    }, [formik.values.addblogs, formik.values.editblogs, formik.values.blogdetail, formik.values.blogsstatus, formik.values.blogdetail]);
 
 
 
@@ -567,12 +567,12 @@ const Staffpermission = () => {
         }
 
     }, [formik.values.faqpermission])
-  
+
     useEffect(() => {
-        if (formik.values.addfaq || formik.values.editfaq ||  formik.values.faqstatus || formik.values.deletefaq  ) {
+        if (formik.values.addfaq || formik.values.editfaq || formik.values.faqstatus || formik.values.deletefaq) {
             formik.setFieldValue('viewfaq', true);
         }
-    }, [formik.values.addfaq ,formik.values.editfaq ,formik.values.faqstatus,formik.values.deletefaq  ]);
+    }, [formik.values.addfaq, formik.values.editfaq, formik.values.faqstatus, formik.values.deletefaq]);
 
 
 
@@ -597,12 +597,12 @@ const Staffpermission = () => {
 
     }, [formik.values.newspermission])
 
-  
+
     useEffect(() => {
-        if (formik.values.addnews || formik.values.editnews ||  formik.values.newsstatus || formik.values.deletenews  ) {
+        if (formik.values.addnews || formik.values.editnews || formik.values.newsstatus || formik.values.deletenews) {
             formik.setFieldValue('viewnews', true);
         }
-    }, [formik.values.addnews ,formik.values.editnews ,formik.values.newsstatus, formik.values.deletenews ]);
+    }, [formik.values.addnews, formik.values.editnews, formik.values.newsstatus, formik.values.deletenews]);
 
 
 
@@ -612,7 +612,7 @@ const Staffpermission = () => {
             formik.setFieldValue('editfreeclient', true);
             formik.setFieldValue('viewfreeclient', true);
             formik.setFieldValue('freeclientstatus', true);
-         
+
 
         }
         else {
@@ -620,42 +620,42 @@ const Staffpermission = () => {
             formik.setFieldValue('editfreeclient', false);
             formik.setFieldValue('viewfreeclient', false);
             formik.setFieldValue('freeclientstatus', false);
-            
+
 
         }
 
-    }, [formik.values.freeclientpermission]) 
+    }, [formik.values.freeclientpermission])
 
 
     useEffect(() => {
-        if (formik.values.addfreeclient || formik.values.editfreeclient ||  formik.values.freeclientstatus  ) {
+        if (formik.values.addfreeclient || formik.values.editfreeclient || formik.values.freeclientstatus) {
             formik.setFieldValue('viewfreeclient', true);
         }
-    }, [formik.values.addfreeclient ,formik.values.editfreeclient ,formik.values.freeclientstatus ]);
+    }, [formik.values.addfreeclient, formik.values.editfreeclient, formik.values.freeclientstatus]);
 
-    
-  
+
+
     useEffect(() => {
         if (formik.values.otherpermission == true) {
             formik.setFieldValue('paymenthistory', true);
-            formik.setFieldValue('planexpiry', true);   
+            formik.setFieldValue('planexpiry', true);
             formik.setFieldValue('perform', true);
-           
-         
+
+
 
         }
         else {
             formik.setFieldValue('paymenthistory', false);
             formik.setFieldValue('planexpiry', false);
             formik.setFieldValue('perform', false);
-           
-            
+
+
 
         }
 
-    }, [formik.values.otherpermission]) 
+    }, [formik.values.otherpermission])
 
-      
+
     // useEffect(() => {
     //     if (formik.values.paymenthistory || formik.values.planexpiry ||  formik.values.perform  ) {
     //         formik.setFieldValue('otherpermission', true);
@@ -689,8 +689,8 @@ const Staffpermission = () => {
             col_size: 2,
             check_box_true: formik.values.userPermissions,
             bold: true
-            
-            
+
+
         },
         {
             name: 'viewclient',
@@ -709,7 +709,7 @@ const Staffpermission = () => {
             label_size: 12,
             col_size: 2,
             // check_box_true: formik.values.addclient,
-            check_box_true:  formik.values.Ownclient  ? true : false,
+            check_box_true: formik.values.Ownclient ? true : false,
         },
         {
             name: 'addclient',
@@ -718,7 +718,7 @@ const Staffpermission = () => {
             label_size: 12,
             col_size: 2,
             // check_box_true: formik.values.addclient,
-            check_box_true: formik.values.userPermissions ||  formik.values.addclient  ? true : false,
+            check_box_true: formik.values.userPermissions || formik.values.addclient ? true : false,
         },
         {
             name: 'viewdetail',
@@ -839,7 +839,7 @@ const Staffpermission = () => {
             label_size: 12,
             col_size: 2,
             // check_box_true: formik.values.viewservice,
-            check_box_true: formik.values.Signalpermission ||  formik.values.ownsignal || formik.values.signalstatus  || formik.values.editsignal || formik.values.signaldetail ||formik.values.addsignal || formik.values.viewsignal ? true : false,
+            check_box_true: formik.values.Signalpermission || formik.values.ownsignal || formik.values.signalstatus || formik.values.editsignal || formik.values.signaldetail || formik.values.addsignal || formik.values.viewsignal ? true : false,
         },
         {
             name: 'ownsignal',
@@ -848,7 +848,7 @@ const Staffpermission = () => {
             label_size: 12,
             col_size: 2,
             // check_box_true: formik.values.addservice,
-            check_box_true:  formik.values.ownsignal ? true : false,
+            check_box_true: formik.values.ownsignal ? true : false,
 
         },
         {
@@ -897,8 +897,8 @@ const Staffpermission = () => {
             // check_box_true: formik.values.deleteservice,
             check_box_true: formik.values.Signalpermission || formik.values.signalstatus ? true : false,
         },
-        
-        
+
+
         // {
         //     name: 'Staffpermission',
         //     label: 'All Staff',
@@ -972,7 +972,7 @@ const Staffpermission = () => {
             label_size: 12,
             col_size: 2,
             // check_box_true: formik.values.viewservice,
-            check_box_true: formik.values.newspermission || formik.values.deletenews || formik.values.newsstatus || formik.values.editnews || formik.values.addnews  || formik.values.viewnews ? true : false,
+            check_box_true: formik.values.newspermission || formik.values.deletenews || formik.values.newsstatus || formik.values.editnews || formik.values.addnews || formik.values.viewnews ? true : false,
         },
         {
             name: 'addnews',
@@ -1199,7 +1199,7 @@ const Staffpermission = () => {
             // check_box_true: formik.values.deleteservice,
             check_box_true: formik.values.blogspermission || formik.values.blogsstatus ? true : false,
         },
-     
+
 
         {
             name: 'faqpermission',
@@ -1328,28 +1328,28 @@ const Staffpermission = () => {
             label_size: 12,
             col_size: 2,
             // check_box_true: formik.values.editservice,
-            check_box_true: formik.values.freeclientpermission || formik.values.editfreeclient ||  formik.values.freeclientstatus || formik.values.addfreeclient || formik.values.freeclientstatus || formik.values.viewfreeclient ? true : false,
+            check_box_true: formik.values.freeclientpermission || formik.values.editfreeclient || formik.values.freeclientstatus || formik.values.addfreeclient || formik.values.freeclientstatus || formik.values.viewfreeclient ? true : false,
         },
+        // {
+        //     name: 'addfreeclient',
+        //     label: 'Add Free Client',
+        //     type: 'checkbox',
+        //     label_size: 12,
+        //     col_size: 2,
+        //     // check_box_true: formik.values.viewservice,
+        //     check_box_true: formik.values.freeclientpermission || formik.values.addfreeclient ? true : false,
+        // },
+        // {
+        //     name: 'editfreeclient',
+        //     label: 'Edit Free Client',
+        //     type: 'checkbox',
+        //     label_size: 12,
+        //     col_size: 2,
+        //     // check_box_true: formik.values.deleteservice,
+        //     check_box_true: formik.values.freeclientpermission || formik.values.editfreeclient ? true : false,
+        // },
         {
-            name: 'addfreeclient',
-            label: 'Add Free Client',
-            type: 'checkbox',
-            label_size: 12,
-            col_size: 2,
-            // check_box_true: formik.values.viewservice,
-            check_box_true: formik.values.freeclientpermission || formik.values.addfreeclient ? true : false,
-        },
-        {
-            name: 'editfreeclient',
-            label: 'Edit Free Client',
-            type: 'checkbox',
-            label_size: 12,
-            col_size: 2,
-            // check_box_true: formik.values.deleteservice,
-            check_box_true: formik.values.freeclientpermission || formik.values.editfreeclient ? true : false,
-        },
-        {
-            name: 'freeclientstatus',                           
+            name: 'freeclientstatus',
             label: 'Free Client Status',
             type: 'checkbox',
             label_size: 12,
@@ -1396,8 +1396,8 @@ const Staffpermission = () => {
         },
 
 
-       
-       
+
+
 
 
     ];
@@ -1416,7 +1416,7 @@ const Staffpermission = () => {
             />
         </div>
     );
-    
+
 };
 
 export default Staffpermission;  

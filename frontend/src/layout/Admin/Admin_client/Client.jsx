@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { GetClient } from '../../../Services/Admin';
 // import Table from '../../../components/Table';
 import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine, RefreshCcw } from 'lucide-react';
@@ -30,6 +30,14 @@ const Client = () => {
 
     const location = useLocation();
     const clientStatus = location?.state?.clientStatus;
+
+
+    // const path = useParams();
+    // console.log("path", path);
+
+    // const clientValue = path["*"];
+    // console.log("Client Value:", clientValue);
+
 
     const token = localStorage.getItem('token');
     const navigate = useNavigate();

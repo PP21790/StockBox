@@ -80,7 +80,7 @@ const Signal = () => {
     })
 
 
-    console.log("closedata", closedata)
+
 
 
     const [serviceList, setServiceList] = useState([]);
@@ -729,7 +729,7 @@ const Signal = () => {
                             <div className="row">
 
                                 <div className="col-md-3">
-                                    <label>Form Date</label>
+                                    <label>From date</label>
                                     <input
                                         type="date"
                                         name="from"

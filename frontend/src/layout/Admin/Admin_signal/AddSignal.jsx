@@ -33,7 +33,6 @@ const AddSignal = () => {
 
 
 
-
   const fetchAdminServices = async () => {
     try {
       const response = await GetService(token);
@@ -73,6 +72,7 @@ const AddSignal = () => {
     },
     validate: (values) => {
       const errors = {};
+      console.log("errors", errors)
       if (!values.segment) errors.segment = 'Please Select a Segment';
       if (!values.stock) errors.stock = 'Please Select a Stock';
       if (values.price <= 0) {
@@ -135,9 +135,7 @@ const AddSignal = () => {
       if (!values.entrytype) {
         errors.entrytype = 'Please Select Entry Type';
       }
-      if (!values.expiry) {
-        errors.expiry = 'Please Select Expiry Date';
-      }
+
       if (!values.lot) {
         errors.lot = 'Please Enter Lot';
       }
@@ -147,6 +145,8 @@ const AddSignal = () => {
 
       return errors;
     },
+
+
 
     onSubmit: async (values) => {
       setLoading(!loading)
