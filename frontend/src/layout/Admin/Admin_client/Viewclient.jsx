@@ -28,6 +28,9 @@ const Viewclientdetail = () => {
     const getCategoryTitle = async (categoryId) => {
         try {
             const response = await getcategoryplan(token);
+            console.log("Dtata D",response);
+
+            
             if (response.status) {
                 const category = response.data.find(item => item._id === categoryId);
                 return category ? category.title : '-';
@@ -44,6 +47,8 @@ const Viewclientdetail = () => {
     const getPlanDetail = async () => {
         try {
             const response = await clientplandatabyid(id, token);
+            console.log("Dtata C",response);
+            
             if (response.status) {
                 const plansWithTitles = await Promise.all(
                     response.data.map(async (plan) => {
@@ -68,6 +73,8 @@ const Viewclientdetail = () => {
     const getClientDetail = async () => {
         try {
             const response = await clientdetailbyid(id, token);
+            console.log("Dtata B",response);
+            
             if (response.status) {
                 setClient([response.data])
             }
@@ -81,6 +88,8 @@ const Viewclientdetail = () => {
     const getclientservice = async () => {
         try {
             const response = await getclientsubscription(id, token);
+            console.log("Dtata A",response);
+
             if (response.status) {
                 setService(response.data);
             }

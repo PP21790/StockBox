@@ -324,7 +324,7 @@ const Header = () => {
                                   </span>
                                 </h6>
                                 <p
-                                  className="msg-info text-truncate"
+                                  className="msg-info "
                                   title={notification.message}
                                   style={{
                                     fontWeight: notification.status === 0 ? "bold" : "normal",

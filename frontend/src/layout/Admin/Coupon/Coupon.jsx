@@ -29,8 +29,8 @@ const Coupon = () => {
     const getcoupon = async () => {
         try {
             const response = await getcouponlist(token);
-            // console.log("response",response);
-
+            console.log("response",response);
+            
             if (response.status) {
                 const filterdata = response.data.filter((item) =>
                     searchInput === "" ||

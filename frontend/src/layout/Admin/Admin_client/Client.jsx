@@ -244,6 +244,8 @@ const Client = () => {
 
             };
             const response = await AllclientFilter(data, token);
+            console.log("Dtata",response);
+
             if (response.status) {
                 setClients(response.data);
                 setTotalRows(response.pagination.total);
