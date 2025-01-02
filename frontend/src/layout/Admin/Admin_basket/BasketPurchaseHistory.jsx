@@ -19,10 +19,8 @@ const BasketPurchaseHistory = () => {
   const { id } = useParams()
 
   const [clients, setClients] = useState([]);
-  const [model, setModel] = useState(false);
-  const [serviceid, setServiceid] = useState({});
   const [searchInput, setSearchInput] = useState("");
-  const [viewpage, setViewpage] = useState({});
+
   const [ForGetCSV, setForGetCSV] = useState([])
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -35,22 +33,6 @@ const BasketPurchaseHistory = () => {
   };
 
 
-  const [updatetitle, setUpdatetitle] = useState({
-    title: "",
-    id: "",
-    description: "",
-    image: "",
-
-  });
-
-
-
-  const [title, setTitle] = useState({
-    title: "",
-    description: "",
-    image: "",
-    add_by: "",
-  });
 
   const token = localStorage.getItem('token');
 
@@ -170,18 +152,29 @@ const BasketPurchaseHistory = () => {
     <div>
       <div className="page-content">
 
-        <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-          <div className="breadcrumb-title pe-3">Basket History</div>
-          <div className="ps-3">
-            <nav aria-label="breadcrumb">
-              <ol className="breadcrumb mb-0 p-0">
-                <li className="breadcrumb-item">
-                  <Link to="/admin/dashboard">
-                    <i className="bx bx-home-alt" />
-                  </Link>
-                </li>
-              </ol>
-            </nav>
+        <div className="row">
+          <div className="col-md-6">
+            <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+              <div className="breadcrumb-title pe-3">Basket History</div>
+              <div className="ps-3">
+                <nav aria-label="breadcrumb">
+                  <ol className="breadcrumb mb-0 p-0">
+                    <li className="breadcrumb-item">
+                      <Link to="/admin/dashboard">
+                        <i className="bx bx-home-alt" />
+                      </Link>
+                    </li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-6 d-flex justify-content-end">
+            <Link to="/admin/basket/basketstockpublish">
+              <Tooltip title="Back">
+                <i className="lni lni-arrow-left-circle" style={{ fontSize: "2rem", color: "#000" }} />
+              </Tooltip>
+            </Link>
           </div>
         </div>
         <hr />
@@ -265,99 +258,7 @@ const BasketPurchaseHistory = () => {
         </div>
       </div>
 
-      <div className="button-group">
 
-        <div
-          className="modal fade"
-          id="example"
-          tabIndex={-1}
-          aria-labelledby="example"
-          aria-hidden="true"
-        >
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title" id="example">
-                </h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                />
-              </div>
-              <div className="modal-body">
-                <ul>
-                  <li>
-                    <div className="row justify-content-between">
-                      <div className="col-md-6">
-                        <b>Title :  {viewpage?.clientName}</b>
-                      </div>
-                      <div className="col-md-6">
-
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <div className="row justify-content-between">
-                      <div className="col-md-6">
-                        <b>Price aaa : {viewpage?.planDetails?.price}</b>
-                      </div>
-                      <div className="col-md-6">
-
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <div className="row justify-content-between">
-                      <div className="col-md-6">
-                        <b>Validity : {viewpage?.planDetails?.validity}</b>
-                      </div>
-                      <div className="col-md-6">
-
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <div className="row justify-content-between">
-                      <div >
-                        <b>Description : {viewpage?.planDetails?.description} </b>
-                      </div>
-                      <div className="col-md-6">
-
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <div className="row justify-content-between">
-                      <div className="col-md-8">
-                        {viewpage?.planDetails?.created_at ? (
-                          <b>Payout Date: {fDateTime(viewpage.planDetails.created_at)}</b>
-                        ) : (
-                          <b>Payout Date: Not available</b>
-                        )}
-                      </div>
-                      <div className="col-md-6"></div>
-                    </div>
-                  </li>
-
-                  {/* <li>
-                                        <div className="row justify-content-between">
-                                            <div className="col-md-6">
-                                                <b>Updated At</b>
-                                            </div>
-                                            <div className="col-md-6">
-
-                                            </div>
-                                        </div>
-                                    </li> */}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
     </div>
   );
 };

@@ -8,14 +8,19 @@ const Payementgateway = () => {
     const user_id = localStorage.getItem('id');
 
     const [clients, setClients] = useState(null);
+
+
+
     const [initialValues, setInitialValues] = useState({
         razorpay_secret: "",
         razorpay_key: "",
         paymentstatus: "",
         officepaymenystatus: ""
     });
+
     const [updateapi, setUpdateapi] = useState(initialValues);
-    const [isEditable, setIsEditable] = useState(false); // Track editable state
+
+
 
     const getApidetail = async () => {
         try {
@@ -25,23 +30,31 @@ const Payementgateway = () => {
                 setClients(clientData);
                 setInitialValues(clientData);
                 setUpdateapi(clientData);
-                setIsEditable(clientData.paymentstatus === 0); // Initialize editability
             }
         } catch (error) {
             console.error('Error fetching API details:', error);
         }
     };
 
+
     useEffect(() => {
         getApidetail();
-    }, []); // Empty dependency ensures it runs only once
+    }, []);
+
+
 
     const hasChanges = () =>
         JSON.stringify(initialValues) !== JSON.stringify(updateapi);
 
-    const handleInputChange = (field, value) => {
-        setUpdateapi((prev) => ({ ...prev, [field]: value }));
+
+
+
+    const handleInputChange = (field, e) => {
+        setUpdateapi((prev) => ({ ...prev, [field]: e.target.value }));
     };
+
+
+
 
     const handleSwitchChange = async (event, type) => {
         const user_active_status = event.target.checked ? 1 : 0;
@@ -68,11 +81,8 @@ const Payementgateway = () => {
                         timer: 1000,
                         timerProgressBar: true,
                     });
-                    setClients((prev) => ({
-                        ...prev,
-                        paymentstatus: user_active_status,
-                    }));
-                    setIsEditable(user_active_status === 0); // Only update editability here
+                    getApidetail()
+
                 }
             } catch (error) {
                 Swal.fire(
@@ -81,6 +91,7 @@ const Payementgateway = () => {
                     "error"
                 );
             }
+            getApidetail()
         }
     };
 
@@ -120,7 +131,7 @@ const Payementgateway = () => {
         }
     };
 
-    const FormField = ({ label, id, value, onChange, disabled }) => (
+    const FormField = ({ label, id, value, onChange }) => (
         <div className="col-md-12 mb-2">
             <label htmlFor={id} className="form-label">{label}</label>
             <input
@@ -129,7 +140,6 @@ const Payementgateway = () => {
                 id={id}
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
-                disabled={disabled} // Disable when not editable
             />
         </div>
     );
@@ -187,20 +197,24 @@ const Payementgateway = () => {
                         <div className="card-header">Razorpay</div>
                         <div className="card-body">
                             <form className="row">
-                                <FormField
-                                    label="Razorpay Key"
+                                <label>Razorpay Key</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
                                     id="razorpay_key"
                                     value={updateapi.razorpay_key}
                                     onChange={(value) => handleInputChange("razorpay_key", value)}
-                                    disabled={!isEditable}
                                 />
-                                <FormField
-                                    label="Razorpay Secret Key"
+
+                                <label>Razorpay Secret Key</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
                                     id="razorpay_secret"
                                     value={updateapi.razorpay_secret}
                                     onChange={(value) => handleInputChange("razorpay_secret", value)}
-                                    disabled={!isEditable}
                                 />
+
                             </form>
                         </div>
                         <div className="card-footer text-center">
@@ -208,7 +222,7 @@ const Payementgateway = () => {
                                 type="button"
                                 className="btn btn-primary"
                                 onClick={UpdateApi}
-                                disabled={!hasChanges() || !isEditable}
+                                disabled={!hasChanges()}
                             >
                                 Update
                             </button>

@@ -481,7 +481,11 @@ async  addPlanSubscription(req, res) {
       if (!client_id) {
         return res.status(400).json({ status: false, message: 'Client Not Found' });
       }
-  
+      const client = await Clients_Modal.findOne({ _id: client_id, del: 0, ActiveStatus: 1 });
+      if (!client) {
+        return res.status(400).json({ status: false, message: 'Client Not Actived' });
+      }
+
       // Fetch the plan and populate the category
       const plan = await Plan_Modal.findById(plan_id)
         .populate('category')
@@ -662,7 +666,7 @@ try {
 
 
 
-      const client = await Clients_Modal.findOne({ _id: client_id, del: 0, ActiveStatus: 1 });
+     
       if(client.freetrial==0) 
       {
       client.freetrial  = 1; 

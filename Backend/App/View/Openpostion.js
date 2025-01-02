@@ -59,7 +59,7 @@ db.createView("open_position", "ordermodels",
                 $and: [
           
                   { $eq: ['$basics_settings.brokerloginstatus', 1] },
-                  { $in: ['$tsstatus', ["1"]] }
+                  { $in: ['$tsstatus', ["1,2"]] }
                 ],
               },
             },

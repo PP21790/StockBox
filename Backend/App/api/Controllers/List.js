@@ -1087,7 +1087,7 @@ class List {
 
         {
           $sort: {
-            plan_end: -1
+            created_at: -1
           }
         },
 

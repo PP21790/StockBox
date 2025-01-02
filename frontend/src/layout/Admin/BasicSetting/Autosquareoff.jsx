@@ -115,7 +115,7 @@ const Autosquareoff = () => {
                   if (response.status) {
                     Swal.fire({
                       title: "Update Successful!",
-                      text: response.message,
+                      text: "Auto Squareoff updated successfully",
                       icon: "success",
                       timer: 1500,
                       timerProgressBar: true,
@@ -130,7 +130,7 @@ const Autosquareoff = () => {
                     });
                   }
                 } catch (error) {
-      
+
                   Swal.fire({
                     title: "Error",
                     text: "An unexpected error occurred. Please try again later.",
