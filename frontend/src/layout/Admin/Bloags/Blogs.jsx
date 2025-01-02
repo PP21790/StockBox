@@ -1,4 +1,4 @@
-    import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getblogslist, Addblogsbyadmin, Updateblogsbyadmin, changeblogsstatus, DeleteBlog } from '../../../Services/Admin';
 import Table from '../../../components/Table';
@@ -6,18 +6,14 @@ import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
-import { fDateTime} from '../../../Utils/Date_formate';
+import { fDateTime } from '../../../Utils/Date_formate';
 
 
 
 const Blogs = () => {
 
 
-
     const navigate = useNavigate();
-
-
-
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
@@ -108,7 +104,7 @@ const Blogs = () => {
     // };
 
     const updateblogs = async (row) => {
-        navigate("/admin/updatebolgs" ,{ state: { row } })
+        navigate("/admin/updatebolgs", { state: { row } })
     }
 
     const viewblog = async (row) => {
@@ -160,7 +156,7 @@ const Blogs = () => {
 
 
     const updateClient = async (row) => {
-        navigate("/admin/viewblog/" , { state: { row } })
+        navigate("/admin/viewblog/", { state: { row } })
     }
 
 
@@ -209,7 +205,7 @@ const Blogs = () => {
 
 
     // delete blogs
- 
+
     const DeleteBlogs = async (_id) => {
         try {
             const result = await Swal.fire({
@@ -223,7 +219,7 @@ const Blogs = () => {
 
             if (result.isConfirmed) {
                 const response = await DeleteBlog(_id, token);
-             
+
                 if (response.status) {
                     Swal.fire({
                         title: 'Deleted!',
@@ -320,12 +316,12 @@ const Blogs = () => {
                 <>
                     <div>
                         <Tooltip placement="top" overlay="View">
-                          
-                            <Eye style={{ marginRight: "10px" }} 
+
+                            <Eye style={{ marginRight: "10px" }}
                                 onClick={() => {
                                     updateClient(row)
-                                }}/>
-                            
+                                }} />
+
                         </Tooltip>
                     </div>
                     <div>
@@ -350,15 +346,15 @@ const Blogs = () => {
         }
     ];
 
-   
+
     function stripHtml(html) {
         const div = document.createElement("div");
         div.innerHTML = html;
         return div.textContent || div.innerText || "";
     }
 
-  
-   
+
+
     const updateServiceTitle = (updatedField) => {
         setUpdatetitle(prev => ({
             ...prev,
@@ -391,7 +387,7 @@ const Blogs = () => {
 
                 <div className="card">
                     <div className="card-body">
-                      
+
                         <div className="d-lg-flex align-items-center mb-4 gap-3">
                             <div className="position-relative">
                                 <input

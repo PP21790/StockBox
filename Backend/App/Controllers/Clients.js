@@ -1519,19 +1519,19 @@ class Clients {
 
 
       if (!FullName) {
-        return res.status(400).json({ status: false, message: "fullname is required" });
+        return res.json({ status: false, message: "Fullname is Required" });
       }
 
       if (!Email) {
-        return res.status(400).json({ status: false, message: "email is required" });
+        return res.json({ status: false, message: "Email is Required" });
       } else if (!/^\S+@\S+\.\S+$/.test(Email)) {
-        return res.status(400).json({ status: false, message: "Invalid email format" });
+        return res.json({ status: false, message: "Invalid Email Format" });
       }
 
       if (!PhoneNo) {
-        return res.status(400).json({ status: false, message: "phone number is required" });
+        return res.json({ status: false, message: "Phone number is Required" });
       } else if (!/^\d{10}$/.test(PhoneNo)) {
-        return res.status(400).json({ status: false, message: "Invalid phone number format" });
+        return res.json({ status: false, message: "Invalid Phone number Format" });
       }
       // if (!id) {
       //       return res.status(400).json({
@@ -1543,7 +1543,7 @@ class Clients {
 
 
       if (!id) {
-        return res.status(400).json({
+        return res.json({
           status: false,
           message: "Client ID is required",
         });
@@ -1563,7 +1563,7 @@ class Clients {
 
       // If the client is not found
       if (!updatedClient) {
-        return res.status(404).json({
+        return res.json({
           status: false,
           message: "Client not found",
         });
@@ -1578,7 +1578,7 @@ class Clients {
 
     } catch (error) {
       // console.log("Error updating client:", error);
-      return res.status(500).json({
+      return res.json({
         status: false,
         message: "Server error",
         error: error.message,

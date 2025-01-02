@@ -2,20 +2,17 @@ import React from 'react';
 import { useFormik } from 'formik';
 import DynamicForm from '../../../components/FormicForm';
 import Swal from 'sweetalert2';
-import { useLocation, useNavigate ,useParams} from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { UpdateClient } from '../../../Services/Admin';
 
 
 
 const Editfreeclient = () => {
 
-  const {id} = useParams()
+  const { id } = useParams()
   const navigate = useNavigate();
   const location = useLocation();
   const { row } = location.state;
-console.log(id);
-
-
 
   const user_id = localStorage.getItem("id");
   const token = localStorage.getItem("token");
@@ -31,11 +28,11 @@ console.log(id);
     if (!values.Email) {
       errors.Email = "Please Enter Email";
     }
-    
+
     if (!values.PhoneNo) {
       errors.PhoneNo = "Please Enter Phone Number";
     }
-    
+
     return errors;
   };
 
@@ -51,6 +48,7 @@ console.log(id);
 
     try {
       const response = await UpdateClient(req, token);
+
       if (response.status) {
         Swal.fire({
           title: "Update Successful!",
@@ -103,7 +101,7 @@ console.log(id);
       label_size: 12,
       col_size: 4,
       disable: false,
-      star:true
+      star: true
     },
     // {
     //   name: "UserName",
@@ -121,7 +119,7 @@ console.log(id);
       label_size: 12,
       col_size: 4,
       disable: false,
-      star:true
+      star: true
     },
     {
       name: "PhoneNo",
