@@ -25,6 +25,8 @@ const PaymentRequest = () => {
     const getpaymentrequest = async () => {
         try {
             const response = await PaymentRequestlist(token);
+            console.log("data",response);
+            
             if (response.status) {
                 const filterdata = response.data.filter((item) =>
                     searchInput === "" ||
@@ -98,6 +100,29 @@ const PaymentRequest = () => {
         //     selector: (row, index) => index + 1,
         //     sortable: false,
         //     width: '78px',
+        // },
+        // {
+        //     name: 'User name',
+        //     // selector: row => <div> <IndianRupee />{row.amount}</div>,
+        //     sortable: true,
+        //     width: '150px',
+        // },
+        // {
+        //     name: 'Mobile no',
+        //     // selector: row => <div> <IndianRupee />{row.amount}</div>,
+        //     sortable: true,
+        //     width: '150px',
+        // },
+        // {
+        //     name: 'Email Id',
+        //     // selector: row => <div> <IndianRupee />{row.amount}</div>,
+        //     sortable: true,
+        // },
+        // {
+        //     name: 'Available balance',
+        //     // selector: row => <div> <IndianRupee />{row.amount}</div>,
+        //     sortable: true,
+        //     width: '250px',
         // },
         {
             name: 'Amount',
