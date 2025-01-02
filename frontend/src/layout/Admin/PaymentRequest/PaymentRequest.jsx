@@ -25,8 +25,6 @@ const PaymentRequest = () => {
     const getpaymentrequest = async () => {
         try {
             const response = await PaymentRequestlist(token);
-            console.log("data",response);
-            
             if (response.status) {
                 const filterdata = response.data.filter((item) =>
                     searchInput === "" ||
