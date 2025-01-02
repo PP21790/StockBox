@@ -148,6 +148,12 @@ const Basket = () => {
   // Columns for DataTable
   const columns = [
     {
+      name: 'S.No',
+      selector: (row, index) => (currentPage - 1) * 10 + index + 1,
+      sortable: false,
+      width: '100px',
+    },
+    {
       name: "Basket Name",
       selector: (row) => row.title,
       sortable: true,

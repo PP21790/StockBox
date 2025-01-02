@@ -170,7 +170,7 @@ const AddBasket = () => {
 
     {
       name: "mininvamount",
-      label: "Minimum Amount",
+      label: "Minimun Investment Amount",
       type: "number",
       label_size: 12,
       col_size: 6,
