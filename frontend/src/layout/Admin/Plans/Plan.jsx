@@ -334,16 +334,7 @@ const Plan = () => {
                                                                                         </div>
                                                                                     </div>
                                                                                 </li>
-                                                                                <li>
-                                                                                    <div className="row justify-content-between">
-                                                                                        <div className="col-md-6">
-                                                                                            <b>Description</b>
-                                                                                        </div>
-                                                                                        <div className="col-md-6">
-                                                                                            {client.description}
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </li>
+                                                                               
                                                                                 <li>
                                                                                     <div className="row justify-content-between">
                                                                                         <div className="col-md-6">
@@ -361,6 +352,16 @@ const Plan = () => {
                                                                                         </div>
                                                                                         <div className="col-md-6">
                                                                                             {fDateTime(client.updated_at)}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <div className="row justify-content-between">
+                                                                                        <div className="col-md-6">
+                                                                                            <b>Description</b>
+                                                                                        </div>
+                                                                                        <div className="col-md-6">
+                                                                                            {client.description}
                                                                                         </div>
                                                                                     </div>
                                                                                 </li>

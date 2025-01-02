@@ -40,8 +40,6 @@ const PaymentRequest = () => {
 
 
 
-
-
     const Updatestatus = async (id, status) => {
         try {
             const data = {
@@ -93,35 +91,36 @@ const PaymentRequest = () => {
 
 
     const columns = [
-        // {
-        //     name: 'S.No',
-        //     selector: (row, index) => index + 1,
-        //     sortable: false,
-        //     width: '78px',
-        // },
-        // {
-        //     name: 'User name',
-        //     // selector: row => <div> <IndianRupee />{row.amount}</div>,
-        //     sortable: true,
-        //     width: '150px',
-        // },
-        // {
-        //     name: 'Mobile no',
-        //     // selector: row => <div> <IndianRupee />{row.amount}</div>,
-        //     sortable: true,
-        //     width: '150px',
-        // },
-        // {
-        //     name: 'Email Id',
-        //     // selector: row => <div> <IndianRupee />{row.amount}</div>,
-        //     sortable: true,
-        // },
-        // {
-        //     name: 'Available balance',
-        //     // selector: row => <div> <IndianRupee />{row.amount}</div>,
-        //     sortable: true,
-        //     width: '250px',
-        // },
+        {
+            name: 'S.No',
+            selector: (row, index) => index + 1,
+            sortable: false,
+            width: '78px',
+        },
+        {
+            name: 'UserName',
+            selector: row => <div> {row.username}</div> ,
+            sortable: false,
+           
+        },
+        {
+            name: 'Mobile Number',
+            selector: row => <div> {row.number}</div> ,
+            sortable: false,
+           
+        },
+        {
+            name: 'Email Id',
+            selector: row => <div>{row.email}</div> ,
+            sortable: false,
+           
+        },
+        {
+            name: 'Available Balance',
+            selector: row => <div> <IndianRupee />{row.balance}</div>,
+            sortable: false,
+           
+        },
         {
             name: 'Amount',
             selector: row => <div> <IndianRupee />{row.amount}</div>,

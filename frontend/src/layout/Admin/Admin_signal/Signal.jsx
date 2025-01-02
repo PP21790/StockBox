@@ -15,7 +15,7 @@ import { image_baseurl } from '../../../Utils/config';
 
 
 const Signal = () => {
-
+    const [viewMode, setViewMode] = useState("table"); // "table" or "card"
     const token = localStorage.getItem('token');
     const [searchInput, setSearchInput] = useState("");
 
@@ -826,6 +826,135 @@ const Signal = () => {
                         />
 
                     </div>
+
+                    <div className="card">
+      <div className="card-body">
+        {/* Tabs for Switching Views */}
+        <div className="d-flex justify-content-between mb-4">
+          <div className="btn-group">
+            <button
+              className={`btn btn-outline-primary ${viewMode === "table" ? "active" : ""}`}
+              onClick={() => setViewMode("table")}
+            >
+              Table View
+            </button>
+            <button
+              className={`btn btn-outline-primary ${viewMode === "card" ? "active" : ""}`}
+              onClick={() => setViewMode("card")}
+            >
+              Card View
+            </button>
+          </div>
+        </div>
+
+        {/* Search and Filter Section */}
+        <div className="d-lg-flex align-items-center mb-4 gap-3">
+          <div className="position-relative">
+            <input
+              type="text"
+              className="form-control ps-5 radius-10"
+              placeholder="Search Signal"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+            />
+            <span className="position-absolute top-50 product-show translate-middle-y">
+              <i className="bx bx-search" />
+            </span>
+          </div>
+          <div className="ms-auto">
+            <Link to="/admin/addsignal" className="btn btn-primary">
+              <i className="bx bxs-plus-square" aria-hidden="true" /> Add Signal
+            </Link>
+          </div>
+          <div className="ms-2" onClick={getexportfile}>
+            <button type="button" className="btn btn-primary float-end" title="Export To Excel">
+              <i className="bx bxs-download" aria-hidden="true" /> Export-Excel
+            </button>
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-md-3">
+            <label>From date</label>
+            <input
+              type="date"
+              name="from"
+              className="form-control radius-10"
+              value={filters.from}
+              onChange={handleFilterChange}
+            />
+          </div>
+          <div className="col-md-3">
+            <label>To Date</label>
+            <input
+              type="date"
+              name="to"
+              className="form-control radius-10"
+              value={filters.to}
+              onChange={handleFilterChange}
+              min={filters.from}
+            />
+          </div>
+          <div className="col-md-3">
+            <label>Select Service</label>
+            <select
+              name="service"
+              className="form-control radius-10"
+              value={filters.service}
+              onChange={handleFilterChange}
+            >
+              <option value="">Select Service</option>
+              {serviceList.map((service) => (
+                <option key={service._id} value={service._id}>
+                  {service.title}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="col-md-3 d-flex">
+            <div style={{ width: "80%" }}>
+              <label>Select Stock</label>
+              <Select
+                options={options}
+                value={options.find((option) => option.value === searchstock) || null}
+                onChange={handleChange1}
+                isClearable
+                placeholder="Select Stock"
+              />
+            </div>
+            <div className="rfreshicon">
+              <RefreshCcw onClick={resethandle} />
+            </div>
+          </div>
+        </div>
+
+        {/* Conditional Rendering of Table or Cards */}
+        {viewMode === "table" ? (
+          <Table
+            columns={columns}
+            data={clients}
+            totalRows={totalRows}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
+        ) : (
+          <div className="row">
+            {clients.map((client, index) => (
+              <div className="col-md-4" key={index}>
+                <div className="card radius-10 mb-3">
+                  <div className="card-body">
+                  <h5 className="card-title">{client.refer_token || "No Name"}</h5>
+              <p className="card-text">{client.details || "No Details Available"}</p>
+              {/* Add more fields if needed */}
+              <p className="card-text">Email: {client.email || "N/A"}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
                 </div>
             </div>
 
