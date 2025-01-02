@@ -52,7 +52,7 @@ const Profile = () => {
         }
     };
 
-    
+
 
     const Updateweblink = async () => {
         try {
@@ -87,7 +87,7 @@ const Profile = () => {
                 icon: 'error',
                 confirmButtonText: 'OK'
             });
-           
+
         }
     };
 
@@ -105,13 +105,10 @@ const Profile = () => {
                     <div className="ps-3">
                         <nav aria-label="breadcrumb">
                             <ol className="breadcrumb mb-0 p-0">
-                                {/* <li className="breadcrumb-item">
-                                    <a href="javascript:;">
+                                <li className="breadcrumb-item">
+                                    <Link to="/admin/dashboard">
                                         <i className="bx bx-home-alt" />
-                                    </a>
-                                </li> */}
-                                <li className="breadcrumb-item active" aria-current="page">
-                                    Admin Profile
+                                    </Link>
                                 </li>
                             </ol>
                         </nav>

@@ -17,8 +17,6 @@ import Table from '../../../components/Table1';
 const Client = () => {
 
 
-
-
     useEffect(() => {
         getbasketlist()
         getcategoryplanlist()
@@ -244,7 +242,7 @@ const Client = () => {
 
             };
             const response = await AllclientFilter(data, token);
-            console.log("Dtata",response);
+            console.log("Dtata", response);
 
             if (response.status) {
                 setClients(response.data);

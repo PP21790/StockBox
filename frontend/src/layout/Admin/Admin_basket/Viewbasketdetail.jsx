@@ -55,7 +55,7 @@ const fieldConfigurations = [
   {
     name: "frequency",
     label: "Frequency",
-    type: "number",
+    type: "select",
     label_size: 12,
     col_size: 4,
     disable: false,
@@ -194,7 +194,7 @@ const Viewbasketdetail = () => {
           basket_price: basketData?.basket_price || "",
           mininvamount: basketData?.mininvamount || "",
           themename: basketData?.themename || "",
-          frequency: basketData?.frequency || "",
+          frequency: basketData?.frequency ? basketData?.frequency : "",
           validity: basketData?.validity ? basketData?.validity : "",
           next_rebalance_date: basketData?.next_rebalance_date ? basketData?.next_rebalance_date : "",
 
@@ -245,7 +245,7 @@ const Viewbasketdetail = () => {
                       </div>
                     ) : (
                       <div key={field.name} className="col-md-12">
-                        <h5 className="mt-4 mb-3">Stock Details</h5>
+
 
                         {Object.keys(
                           (Array.isArray(stockdata) ? stockdata : Object.values(stockdata)).reduce((acc, stock) => {
@@ -261,36 +261,42 @@ const Viewbasketdetail = () => {
                           );
 
                           return (
-                            <div key={version}>
-                              <div className="d-flex justify-content-between align-items-center">
-                                <h6>Version {version}</h6>
+                            <>
+                              <h5 className="mt-4 mb-3">Stock Details</h5>
+                              <div key={version}>
+                                <div className="d-flex justify-content-between align-items-center">
+                                  <h6>Version {version}</h6>
 
-                                {versionStocks[0].status == 0 ?
-                                  <Tooltip title="Update All">
-                                    <SquarePen className="cursor-pointer" onClick={() => updateStock(versionStocks)} />
-                                  </Tooltip> : ""}
-                              </div>
-                              <table className="table table-bordered">
-                                <thead>
-                                  <tr>
-                                    <th>Stock Name</th>
-                                    <th>Weightage</th>
-                                    <th>Price</th>
-                                    <th>Type</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {versionStocks.map((stock, index) => (
-                                    <tr key={index}>
-                                      <td>{stock?.name}</td>
-                                      <td>{stock?.weightage}</td>
-                                      <td>{stock?.price}</td>
-                                      <td>{stock?.type}</td>
+                                  {versionStocks[0].status == 0 ?
+                                    <Tooltip title="Update All">
+                                      <SquarePen className="cursor-pointer" onClick={() => updateStock(versionStocks)} />
+                                    </Tooltip> : ""}
+                                </div>
+                                <table className="table table-bordered">
+                                  <thead>
+                                    <tr>
+                                      <th>Stock Name</th>
+                                      <th>Weightage</th>
+                                      <th>Price</th>
+                                      <th>Type</th>
+                                      <th>Quantity</th>
+
                                     </tr>
-                                  ))}
-                                </tbody>
-                              </table>
-                            </div>
+                                  </thead>
+                                  <tbody>
+                                    {versionStocks.map((stock, index) => (
+                                      <tr key={index}>
+                                        <td>{stock?.name}</td>
+                                        <td>{stock?.weightage}</td>
+                                        <td>{stock?.price}</td>
+                                        <td>{stock?.type}</td>
+                                        <td>{stock?.quantity}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </>
                           );
                         })}
                       </div>

@@ -26,8 +26,6 @@ const Dashbord = () => {
     const getdetail = async () => {
         try {
             const response = await getDashboarddetail(token);
-            console.log("gggggggggg",response);
-            
             if (response.status) {
 
                 setData(response.data)
@@ -254,7 +252,7 @@ const Dashbord = () => {
                     </div>
                     <div className="col-md-3">
                         <div className="card radius-10 bg-gradient-ohhappiness">
-                            <Link to="/admin/client" state={{ clientStatus: 1 }}> 
+                            <Link to="/admin/client" state={{ clientStatus: 1 }}>
                                 <div className="card-body">
                                     <div className="d-flex align-items-center">
                                         <h5 className="mb-0 text-white">{data.clientCountActive && data.clientCountActive}</h5>
