@@ -9,13 +9,13 @@ class Plancategory {
             const { title,service,add_by } = req.body;
 
             if (!title) {
-              return res.status(400).json({ status: false, message: "title is required" });
+              return res.json({ status: false, message: "Title is required" });
             }
             if (!service) {
-                return res.status(400).json({ status: false, message: "service is required" });
+                return res.json({ status: false, message: "Service is required" });
               }
             if (!add_by) {
-              return res.status(400).json({ status: false, message: "add_by is required" });
+              return res.json({ status: false, message: "Add_by is required" });
             }
 
             let services;
@@ -24,9 +24,16 @@ class Plancategory {
             } else if (typeof service === 'string') {
                 services = service;  // If it's already a string, use it directly
             } else {
-                return res.status(400).json({ status: false, message: "Invalid service format" });
+                return res.json({ status: false, message: "Invalid service format" });
             }
     
+            const existingCategory = await Plancategory_Modal.findOne({ title });
+
+            if (existingCategory) {
+              return res.json({ status: false, message: "Plancategory already exists" });
+            }
+
+
             const result = new Plancategory_Modal({
                 title,
                 service:services,
@@ -238,10 +245,10 @@ class Plancategory {
       const { id, title,service } = req.body;
 
       if (!title) {
-        return res.status(400).json({ status: false, message: "title is required" });
+        return res.json({ status: false, message: "Title is required" });
       }
       if (!service) {
-        return res.status(400).json({ status: false, message: "service is required" });
+        return res.json({ status: false, message: "Service is required" });
       }
   
       if (!id) {

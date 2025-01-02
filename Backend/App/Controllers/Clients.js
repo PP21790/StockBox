@@ -18,6 +18,7 @@ const Service_Modal = db.Service;
 
 const Notification_Modal = db.Notification;
 const { sendFCMNotification } = require('./Pushnotification'); 
+const { resolve } = require("path/win32");
 
 class Clients {
 
@@ -1681,21 +1682,21 @@ async getClientWithFilterExcel(req, res) {
   
       // Validate input
       if (!payoutRequestId || !['1', '2'].includes(status)) {
-        return res.status(400).json({ status: false, message: 'Invalid payout request ID or status.' });
+        return res.json({ status: false, message: 'Invalid payout request ID or status.' });
       }
   
       // Fetch the payout request record
       const payoutRequest = await Payout_Modal.findById(payoutRequestId);
       
       if (!payoutRequest) {
-        return res.status(404).json({ status: false, message: 'Payout request not found.' });
+        return resolve.json({ status: false, message: 'Payout request not found.' });
       }
   
       // Fetch the client record
       const client = await Clients_Modal.findOne({ _id: payoutRequest.clientid, del: 0, ActiveStatus: 1 });
   
       if (!client) {
-        return res.status(404).json({ status: false, message: 'Client not found or inactive.' });
+        return res.json({ status: false, message: 'Client not found or inactive.' });
       }
      let  notificationBody;
       const notificationTitle = 'Important Update';
@@ -1740,7 +1741,7 @@ async getClientWithFilterExcel(req, res) {
           // console.error('Error sending notifications:', error);
         }
   
-      return res.status(200).json({
+      return res.json({
         status: true,
         message: 'Payout request updated successfully.',
         data: payoutRequest,
@@ -1748,30 +1749,66 @@ async getClientWithFilterExcel(req, res) {
   
     } catch (error) {
       // console.error('Error processing payout request:', error);
-      return res.status(500).json({ status: false, message: 'Server error while processing payout request.' });
+      return res.json({ status: false, message: 'Server error while processing payout request.' });
     }
   }
   
-  
   async payoutList(req, res) {
+ 
     try {
+      // const { } = req.body; // Not needed unless you plan to use body data
 
-      
-      const { } = req.body;
-
-    //  const result = await Clients_Modal.find()
-    const result = await Payout_Modal.find({ del: 0 }).sort({ created_at: -1 });
-
+      const result = await Payout_Modal.aggregate([
+        {
+          $lookup: {
+            from: "clients", // The collection to join
+            let: { clientId: { $toObjectId: "$clientid" } }, // Convert clientid to ObjectId for matching
+            pipeline: [
+              {
+                $match: {
+                  $expr: { $eq: ["$_id", "$$clientId"] }, // Match _id with clientId
+                  ActiveStatus: 1, // Ensure client is active
+                  del: 0 // Ensure client is not deleted
+                }
+              },
+              {
+                $project: { FullName: 1, Email: 1, PhoneNo: 1 } // Get only required fields
+              }
+            ],
+            as: "client_details" // The resulting array of matched documents from clients
+          }
+        },
+        {
+          $unwind: { path: "$client_details", preserveNullAndEmptyArrays: false } // Exclude documents where client_details is empty or null
+        },
+        {
+          $project: {
+            _id: 1,
+            clientid: 1,
+            amount: 1,
+            status: 1,
+            del: 1,
+            created_at: 1,
+            updated_at: 1,
+            client_details: 1 // Include client details
+          }
+        }
+      ]);
+  
+      // Log the result for debugging
+  
       return res.json({
         status: true,
         message: "get",
-        data:result
+        data: result
       });
-
+  
     } catch (error) {
+      console.error("Error during aggregation:", error); // Log the error
       return res.json({ status: false, message: "Server error", data: [] });
     }
   }
+  
   async freetrialList(req, res) {
     try {
       const today = new Date(); // Get today's date
@@ -1861,6 +1898,17 @@ async freetrialListWithFilter(req, res) {
       ]
     } : {};
 
+
+    const statussMatch = {
+      "clientDetails.ActiveStatus": 1,
+      "clientDetails.del": 0  
+    };
+    
+    const finalFilter = {
+      ...searchMatch,  
+      ...statussMatch 
+    };
+
     const statusMatch = freestatus && freestatus.trim() !== "" ? {
       status: freestatus // Match only the given status (active or expired)
     } : {};
@@ -1891,7 +1939,7 @@ async freetrialListWithFilter(req, res) {
           }
       },
       {
-        $match: searchMatch // Apply the search filter dynamically
+        $match: finalFilter // Apply the search filter dynamically
       },
       {
           $lookup: {
