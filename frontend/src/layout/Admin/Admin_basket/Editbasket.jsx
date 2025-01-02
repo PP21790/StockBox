@@ -167,7 +167,7 @@ const Editbasket = () => {
       type: "text",
       label_size: 6,
       col_size: 6,
-      disable: false,
+      disable: true,
       star: true
     },
     {
@@ -176,7 +176,7 @@ const Editbasket = () => {
       type: "text",
       label_size: 6,
       col_size: 6,
-      disable: false,
+      disable: true,
       star: true
     },
 
@@ -196,7 +196,7 @@ const Editbasket = () => {
       type: "number",
       label_size: 12,
       col_size: 6,
-      disable: false,
+      disable: true,
       star: true
     },
     {
@@ -221,7 +221,7 @@ const Editbasket = () => {
       type: "select",
       label_size: 12,
       col_size: 6,
-      disable: false,
+      disable: true,
       options: [
         { value: "1 month", label: "1 Month" },
         { value: "3 months", label: "3 Months" },

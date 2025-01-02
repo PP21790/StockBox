@@ -202,7 +202,7 @@ const BasketStockPublish = () => {
       name: "Actions",
       cell: (row) => (
         <div>
-          <Tooltip title="Reblance">
+          <Tooltip title="Rebalance">
             <Link
               to={`/admin/addstock/${row._id}`}
               className="btn px-2"
@@ -235,12 +235,12 @@ const BasketStockPublish = () => {
               <History />
             </Link>
           </Tooltip>
-          <button
+          {/* <button
             className="btn px-2"
             onClick={() => Deletebasket(row._id)}
           >
             <Trash2 />
-          </button>
+          </button> */}
         </div>
       ),
     },
@@ -282,12 +282,12 @@ const BasketStockPublish = () => {
                 <i className="bx bx-search" />
               </span>
             </div>
-            <div className="ms-auto">
+            {/* <div className="ms-auto">
               <Link to="/admin/addbasket" className="btn btn-primary">
                 <i className="bx bxs-plus-square" aria-hidden="true" />
                 Add Basket
               </Link>
-            </div>
+            </div> */}
             {/* <div className="ms-2">
               <Link to="/admin/basket/rebalancing" className="btn btn-primary">
                 <i className="bx bxs-plus-square" aria-hidden="true" />
