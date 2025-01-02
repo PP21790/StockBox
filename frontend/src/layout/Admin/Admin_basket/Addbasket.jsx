@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { Addbasketplan } from '../../../Services/Admin';
 
 
-const AddBasket = () => {
+const AddBasket = () => { 
 
 
   const navigate = useNavigate();
@@ -58,7 +58,7 @@ const AddBasket = () => {
     }
 
     if (!values.next_rebalance_date) {
-      errors.next_rebalance_date = "Please Select Rebalance Date";
+      errors.next_rebalance_date = "Please Enter Rebalance Date";
     }
 
     if (!values.description) {
@@ -180,7 +180,7 @@ const AddBasket = () => {
 
     {
       name: "frequency",
-      label: "Frequency",
+      label: "Rebalance Frequency",
       type: "select",
       label_size: 12,
       col_size: 6,
@@ -211,7 +211,7 @@ const AddBasket = () => {
     {
       name: "next_rebalance_date",
       label: "Rebalance Date",
-      type: "date",
+      type: "text",
       label_size: 12,
       col_size: 6,
       disable: false,
@@ -220,12 +220,12 @@ const AddBasket = () => {
     {
       name: "description",
       label: "Description",
-      type: "text",
+      type: "ckeditor", 
       label_size: 12,
-      col_size: 6,
+      col_size: 12,
       disable: false,
-      star: true
-    },
+      star:true
+  },
   ];
 
 
