@@ -91,35 +91,35 @@ const PaymentRequest = () => {
 
 
     const columns = [
-        // {
-        //     name: 'S.No',
-        //     selector: (row, index) => index + 1,
-        //     sortable: false,
-        //     width: '78px',
-        // },
-        // {
-        //     name: 'User name',
-        //     // selector: row => <div> <IndianRupee />{row.amount}</div>,
-        //     sortable: true,
-        //     width: '150px',
-        // },
-        // {
-        //     name: 'Mobile no',
-        //     // selector: row => <div> <IndianRupee />{row.amount}</div>,
-        //     sortable: true,
-        //     width: '150px',
-        // },
-        // {
-        //     name: 'Email Id',
-        //     // selector: row => <div> <IndianRupee />{row.amount}</div>,
-        //     sortable: true,
-        // },
-        // {
-        //     name: 'Available balance',
-        //     // selector: row => <div> <IndianRupee />{row.amount}</div>,
-        //     sortable: true,
-        //     width: '250px',
-        // },
+        {
+            name: 'S.No',
+            selector: (row, index) => index + 1,
+            sortable: false,
+            width: '78px',
+        },
+        {
+            name: 'User name',
+            selector: row => <div>{row?.client_details?.FullName}</div>,
+            sortable: true,
+            width: '150px',
+        },
+        {
+            name: 'Mobile no',
+            selector: row => <div>{row?.client_details?.PhoneNo}</div>,
+            sortable: true,
+            width: '150px',
+        },
+        {
+            name: 'Email Id',
+            selector: row => <div>{row?.client_details?.Email}</div>,
+            sortable: true,
+        },
+        {
+            name: 'Available balance',
+            selector: row => <div> <IndianRupee />{row.amount}</div>,
+            sortable: true,
+            width: '250px',
+        },
         {
             name: 'Amount',
             selector: row => <div> <IndianRupee />{row.amount}</div>,
