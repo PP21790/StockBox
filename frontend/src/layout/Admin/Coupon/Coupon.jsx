@@ -220,6 +220,12 @@ const Coupon = () => {
             sortable: true,
             width: '300px',
         },
+        {
+            name: 'Used Limit/Total Limit',
+            selector: row => row.type === "limit" ? row.value : `${row.value}%`,
+            sortable: true,
+            width: '300px',
+        },
         // {
         //     name: 'Services',
         //     selector: row => row.type === "service" ? row.service : `${row.service}%`,
