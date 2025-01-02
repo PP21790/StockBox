@@ -19,10 +19,8 @@ const BasketPurchaseHistory = () => {
   const { id } = useParams()
 
   const [clients, setClients] = useState([]);
-  const [model, setModel] = useState(false);
-  const [serviceid, setServiceid] = useState({});
   const [searchInput, setSearchInput] = useState("");
-  const [viewpage, setViewpage] = useState({});
+
   const [ForGetCSV, setForGetCSV] = useState([])
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -35,22 +33,6 @@ const BasketPurchaseHistory = () => {
   };
 
 
-  const [updatetitle, setUpdatetitle] = useState({
-    title: "",
-    id: "",
-    description: "",
-    image: "",
-
-  });
-
-
-
-  const [title, setTitle] = useState({
-    title: "",
-    description: "",
-    image: "",
-    add_by: "",
-  });
 
   const token = localStorage.getItem('token');
 
@@ -167,140 +149,105 @@ const BasketPurchaseHistory = () => {
 
 
   return (
-    <div className="page-content">
-      {/* <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-        <div className="breadcrumb-title pe-3"> Basket  Purchase History</div>
-        <div className="ps-3">
-          <nav aria-label="breadcrumb">
-            <ol className="breadcrumb mb-0 p-0">
-              <li className="breadcrumb-item">
-                <Link to="/admin/dashboard">
-                  <i className="bx bx-home-alt" />
-                </Link>
-              </li>
-            </ol>
-          </nav>
-        </div>
-      </div> */}
-      <div className="row">
-        <div className="col-md-6">
-          <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-            <div className="breadcrumb-title pe-3">Basket  Purchase History</div>
-            <div className="ps-3">
-              <nav aria-label="breadcrumb">
-                <ol className="breadcrumb mb-0 p-0">
-                  <li className="breadcrumb-item">
-                    <Link to="/admin/dashboard">
-                      <i className="bx bx-home-alt" />
-                    </Link>
-                  </li>
-                </ol>
-              </nav>
-            </div>
+    <div>
+      <div className="page-content">
+
+        <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+          <div className="breadcrumb-title pe-3">Basket History</div>
+          <div className="ps-3">
+            <nav aria-label="breadcrumb">
+              <ol className="breadcrumb mb-0 p-0">
+                <li className="breadcrumb-item">
+                  <Link to="/admin/dashboard">
+                    <i className="bx bx-home-alt" />
+                  </Link>
+                </li>
+              </ol>
+            </nav>
           </div>
         </div>
-        <div className="col-md-6 d-flex justify-content-end">
-          <Link to="/admin/basket/basketstockpublish">
-            <Tooltip title="Back">
-              <i className="lni lni-arrow-left-circle" style={{ fontSize: "2rem", color: "#000" }} />
-            </Tooltip>
-          </Link>
-        </div>
-      </div>
+        <hr />
+        <div className="card">
+          <div className="card-body">
+            <div className="d-lg-flex align-items-center mb-4 gap-3 justify-content-between">
 
-      <div className="button-group">
+              <div className="position-relative">
+                <input
+                  type="text"
+                  className="form-control ps-5 radius-10"
+                  placeholder="Search History"
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  value={searchInput}
+                />
+                <span className="position-absolute top-50 product-show translate-middle-y">
+                  <i className="bx bx-search" />
+                </span>
 
-        <div
-          className="modal fade"
-          id="example"
-          tabIndex={-1}
-          aria-labelledby="example"
-          aria-hidden="true"
-        >
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title" id="example">
-                </h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
+              </div>
+
+
+              {/* <div>
+
+                                <div
+                                    className="ms-2"
+                                    onClick={(e) => getexportfile()}
+                                >
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary float-end"
+                                        data-toggle="tooltip"
+                                        data-placement="top"
+                                        title="Export To Excel"
+                                        delay={{ show: "0", hide: "100" }}
+
+                                    >
+                                        <i className="bx bxs-download" aria-hidden="true"></i>
+
+                                        Export-Excel
+                                    </button>
+                                </div>
+                            </div> */}
+            </div>
+            <div className='row mb-2'>
+              <div className="col-md-3">
+                <input
+                  type="date"
+                  className="form-control"
+                  onChange={(e) => setStartDate(e.target.value)}
+                  value={startDate}
                 />
               </div>
-              <div className="modal-body">
-                <ul>
-                  <li>
-                    <div className="row justify-content-between">
-                      <div className="col-md-6">
-                        <b>Title :  {viewpage?.clientName}</b>
-                      </div>
-                      <div className="col-md-6">
 
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <div className="row justify-content-between">
-                      <div className="col-md-6">
-                        <b>Price aaa : {viewpage?.planDetails?.price}</b>
-                      </div>
-                      <div className="col-md-6">
 
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <div className="row justify-content-between">
-                      <div className="col-md-6">
-                        <b>Validity : {viewpage?.planDetails?.validity}</b>
-                      </div>
-                      <div className="col-md-6">
-
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <div className="row justify-content-between">
-                      <div >
-                        <b>Description : {viewpage?.planDetails?.description} </b>
-                      </div>
-                      <div className="col-md-6">
-
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <div className="row justify-content-between">
-                      <div className="col-md-8">
-                        {viewpage?.planDetails?.created_at ? (
-                          <b>Payout Date: {fDateTime(viewpage.planDetails.created_at)}</b>
-                        ) : (
-                          <b>Payout Date: Not available</b>
-                        )}
-                      </div>
-                      <div className="col-md-6"></div>
-                    </div>
-                  </li>
-
-                  {/* <li>
-                                        <div className="row justify-content-between">
-                                            <div className="col-md-6">
-                                                <b>Updated At</b>
-                                            </div>
-                                            <div className="col-md-6">
-
-                                            </div>
-                                        </div>
-                                    </li> */}
-                </ul>
+              <div className='col-md-3'>
+                <input
+                  type="date"
+                  className="form-control"
+                  onChange={(e) => setEndDate(e.target.value)}
+                  value={endDate}
+                />
               </div>
+
+              <div className="col-md-1">
+                <div className="refresh-icon mt-1">
+                  <RefreshCcw onClick={resethandle} />
+                </div>
+              </div>
+            </div>
+            <div className="table-responsive">
+              <Table
+                columns={columns}
+                data={clients}
+                totalRows={totalRows}
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+              />
             </div>
           </div>
         </div>
-
       </div>
+
+
     </div>
   );
 };

@@ -298,7 +298,7 @@ const Viewbasketdetail = () => {
                   )}
                 </div>
                 <div className="mt-3">
-                  <Link to="/admin/basket/basketstockpublish" className="btn btn-secondary">
+                  <Link to="/admin/basket" className="btn btn-secondary">
                     Back
                   </Link>
                 </div>
