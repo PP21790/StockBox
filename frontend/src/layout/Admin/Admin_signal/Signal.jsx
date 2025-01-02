@@ -652,6 +652,7 @@ const Signal = () => {
 
                 setUpdatetitle({ report: "", id: "", });
                 setModel1(false);
+                getAllSignal();
             } else {
                 Swal.fire({
                     title: 'Error!',
@@ -1218,7 +1219,7 @@ const Signal = () => {
                             <div className="modal-content">
                                 <div className="modal-header">
                                     <h5 className="modal-title" id="exampleModalLabel">
-                                        Upload Pdf
+                                        Upload Report
                                     </h5>
                                     <button
                                         type="button"
@@ -1230,7 +1231,7 @@ const Signal = () => {
                                     <form>
                                         <div className="row">
                                             <div className="col-md-10">
-                                                <label htmlFor="imageUpload">Upload Pdf</label>
+                                                <label htmlFor="imageUpload">Upload Report</label>
                                                 <span className="text-danger">*</span>
                                                 <input
                                                     className="form-control mb-3"
