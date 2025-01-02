@@ -714,16 +714,15 @@ class List {
       const savedSubscription = await newSubscription.save();
 
       if (coupon_code) {
-        const resultc = await Coupon_Modal.find({
+        const resultc = await Coupon_Modal.findOne({
           del: false,
           status: true,
-          startdate: { $lte: endOfToday },
-          enddate: { $gte: startOfToday },
           code: coupon_code
         });
 
 
         if (resultc) {
+
           // Check if limitation is greater than 0 before decrementing
           if (resultc.limitation > 0) {
             const updatedResult = await Coupon_Modal.findByIdAndUpdate(
@@ -731,7 +730,6 @@ class List {
               { $inc: { limitation: -1 } }, // Decrease limitation by 1
               { new: true } // Return the updated document
             );
-            console.log('Updated Coupon:', updatedResult);
           }
 
         }
@@ -741,7 +739,7 @@ class List {
 
 
       if (!client) {
-        return console.error('Client not found or inactive.');
+        return console.log('Client not found or inactive.');
       }
 
 

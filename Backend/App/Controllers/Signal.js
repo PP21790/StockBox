@@ -758,6 +758,7 @@ async getSignalWithFilter(req, res) {
 
 async updateReport(req, res) {
     try {
+
         // Handle file upload
         await new Promise((resolve, reject) => {
             upload('report').fields([{ name: 'report', maxCount: 1 }])(req, res, (err) => {
@@ -769,7 +770,7 @@ async updateReport(req, res) {
             });
         });
 
-        const { id } = req.body;
+        const { id,description } = req.body;
 
         if (!id) {
             return res.status(400).json({
@@ -785,6 +786,7 @@ async updateReport(req, res) {
         const updateFields = {}; // Initialize as an empty object
         if (reportFile) {
             updateFields.report = reportFile;
+            updateFields.description = description;
         }
 
         // Update the report in the database

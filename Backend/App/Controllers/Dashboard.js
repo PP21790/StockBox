@@ -134,41 +134,102 @@ class Dashboard {
     const totalActiveClients = activefreetrial.length > 0 ? activefreetrial[0].clientCount : 0;
     const totalInactiveClients = inactivefreetrial.length > 0 ? inactivefreetrial[0].clientCount : 0;
     
-  
-const clientStatusCounts = await Planmanage.aggregate([
-  {
-    // Step 1: Group by clientid and determine min and max enddate for each client
-    $group: {
-      _id: "$clientid",
-      maxEnddate: { $max: "$enddate" } // Find the latest enddate for each client
-    }
-  },
-  {
-    // Step 2: Classify each client as active or inactive based on maxEnddate
-    $project: {
-      isActive: { $gte: ["$maxEnddate", today] } // true if maxEnddate is today or later
-    }
-  },
-  {
-    // Step 3: Group by isActive status to count active and inactive clients
-    $group: {
-      _id: "$isActive", // Group by active/inactive status
-      clientCount: { $sum: 1 } // Count clients in each group
-    }
-  }
-]);
-
-// Parse the result to get counts of active and inactive clients
-let activeCount = 0;
-let inactiveCount = 0;
-clientStatusCounts.forEach(result => {
-  if (result._id === true) {
-    activeCount = result.clientCount;
-  } else {
-    inactiveCount = result.clientCount;
-  }
-});
-
+    const matchConditions = { del: 0 };
+    const resultclient = await Clients_Modal.aggregate([
+      {
+        $match: matchConditions // Match the conditions for active clients (e.g., del: 0)
+      },
+      {
+        $lookup: {
+          from: 'planmanages', // Planmanage collection
+          let: { clientId: { $toObjectId: "$_id" } }, // Convert Clients_Modal _id to ObjectId
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $eq: [{ $toObjectId: "$clientid" }, "$$clientId"] // Match clientid in planmanages
+                }
+              }
+            }
+          ],
+          as: 'plans'
+        }
+      },
+      {
+        $addFields: {
+          plansStatus: {
+            $map: {
+              input: "$plans",
+              as: "plan",
+              in: {
+                planId: "$$plan._id", // Include plan ID
+                status: {
+                  $cond: {
+                    if: { $gte: ["$$plan.enddate", new Date()] }, // Active if enddate >= today
+                    then: "active", // Plan is active
+                    else: "expired" // Plan is expired
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          clientStatus: {
+            $cond: {
+              if: {
+                $gt: [
+                  {
+                    $size: {
+                      $filter: {
+                        input: {
+                          $ifNull: ["$plansStatus", []] // Default to an empty array if plansStatus is null or missing
+                        },
+                        as: "plan",
+                        cond: { $eq: ["$$plan.status", "active"] }
+                      }
+                    }
+                  },
+                  0
+                ]
+              },
+              then: "active", // At least one "active" plan
+              else: {
+                $cond: {
+                  if: {
+                    $or: [
+                      { $eq: ["$plansStatus", null] }, // Check if plansStatus is null
+                      { $eq: [{ $size: "$plansStatus" }, 0] } // Check if plansStatus is an empty array
+                    ]
+                  },
+                  then: "NA", // Default to "NA" if plansStatus is empty or missing
+                  else: "expired" // Otherwise, set to "expired"
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        $group: {
+          _id: "$clientStatus", // Group by clientStatus (active, expired, or NA)
+          count: { $sum: 1 } // Count the number of clients in each group
+        }
+      },
+      {
+        $sort: { '_id': 1 } // Sort the results by status (active, expired, etc.)
+      }
+    ]);
+    
+    // To separate active and expired count
+    const activeCount = resultclient.find(item => item._id === 'active')?.count || 0;
+    const inactiveCount = resultclient.find(item => item._id === 'expired')?.count || 0;
+    const naCount = resultclient.find(item => item._id === 'NA')?.count || 0;
+    
+   
 
 
             return res.json({
@@ -681,14 +742,18 @@ async PlanExipreListWithFilter(req, res) {
     }
     if (startdate) {
       const startOfStartDate = new Date(startdate);
-      startOfStartDate.setHours(0, 0, 0, 0); // दिन की शुरुआत (00:00:00)
-      filter.enddate = { $gte: startOfStartDate }; // Start date greater than or equal
+      startOfStartDate.setHours(0, 0, 0, 0); // Start of the day (00:00:00)
+      filter.enddate = { $gte: startOfStartDate }; // Ensure enddate is greater than or equal to startdate
     }
     
+    // If enddate is provided
     if (enddate) {
       const endOfEndDate = new Date(enddate);
-      endOfEndDate.setHours(23, 59, 59, 999); // दिन का अंत (23:59:59)
-      filter.enddate = { $lte: endOfEndDate }; // End date less than or equal
+      endOfEndDate.setHours(23, 59, 59, 999); // End of the day (23:59:59)
+      
+      // Combine the conditions to make sure the enddate is between startdate and enddate
+      filter.enddate = filter.enddate || {}; // Ensure we don't overwrite existing filter conditions
+      filter.enddate.$lte = endOfEndDate; // Ensure enddate is less than or equal to enddate
     }
     // If search term is provided, apply it to client fields (FullName, PhoneNo, Email)
     let clientFilter = {};
@@ -702,7 +767,6 @@ async PlanExipreListWithFilter(req, res) {
         ]
       };
     }
-
     // Fetch matching client IDs based on the search filter
     const matchingClients = await Clients_Modal.find(clientFilter).select('_id');
 
