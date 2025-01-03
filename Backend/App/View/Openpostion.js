@@ -1,24 +1,18 @@
 db.createView("open_position", "ordermodels",
     [
-   
-  
       {
         $addFields: {
           tsprice: {
             $cond: {
               if: {
                 $or: [
-  
                   { $eq: ['$tsprice', 0] },
                   { $eq: ['$tsprice', "0"] },
                   { $eq: ['$tsprice', '0'] },
                 ],
               },
               then: 0,
-              else: {
-                $add: [{ $toDouble: '$tsprice' }]
-  
-              },
+              else: { $add: [{ $toDouble: '$tsprice' }] },
             },
           },
           slprice: {
@@ -27,15 +21,11 @@ db.createView("open_position", "ordermodels",
                 $or: [
                   { $eq: ['$slprice', 0] },
                   { $eq: ['$slprice', "0"] },
-                  { $eq: ['$slprice', '0'] }, 
+                  { $eq: ['$slprice', '0'] },
                 ],
               },
               then: 0,
-              else: {
-                $add: [{ $toDouble: '$slprice' }]
-  
-              },
-  
+              else: { $add: [{ $toDouble: '$slprice' }] },
             },
           },
         },
@@ -46,7 +36,7 @@ db.createView("open_position", "ordermodels",
           let: {},
           pipeline: [],
           as: 'basics_settings',
-        }
+        },
       },
       {
         $unwind: '$basics_settings',
@@ -57,16 +47,14 @@ db.createView("open_position", "ordermodels",
             {
               $expr: {
                 $and: [
-          
                   { $eq: ['$basics_settings.brokerloginstatus', 1] },
-                  { $in: ['$tsstatus', ["1,2"]] }
+                  { $in: ['$tsstatus', [1, 2]] },
                 ],
               },
             },
           ],
         },
       },
-  
       {
         $lookup: {
           from: 'stockliveprices',
@@ -78,25 +66,14 @@ db.createView("open_position", "ordermodels",
       {
         $addFields: {
           stockInfo: {
-            $ifNull: [
-              { $arrayElemAt: ['$stockInfo', 0] },
-              { curtime: 0, lp: 0 }
-            ]
+            $ifNull: [{ $arrayElemAt: ['$stockInfo', 0] }, { curtime: 0, lp: 0 }],
           },
           stockInfo_lp: {
-            $ifNull: [
-              { $toDouble: { $arrayElemAt: ['$stockInfo.lp', 0] } },
-              0
-            ]
+            $ifNull: [{ $toDouble: { $arrayElemAt: ['$stockInfo.lp', 0] } }, 0],
           },
-        
           stockInfo_curtime: {
-            $ifNull: [
-              { $arrayElemAt: ['$stockInfo.curtime', 0] },
-              0
-            ]
+            $ifNull: [{ $arrayElemAt: ['$stockInfo.curtime', 0] }, 0],
           },
-  
           isLpInRangeTarget: {
             $cond: {
               if: {
@@ -104,38 +81,21 @@ db.createView("open_position", "ordermodels",
                   { $eq: ['$tsprice', 0] },
                   {
                     $eq: [
-                      {
-                        $ifNull: [
-                          { $toDouble: { $arrayElemAt: ['$stockInfo.lp', 0] } },
-                          0
-                        ]
-                      },
-                      0
+                      { $ifNull: [{ $toDouble: { $arrayElemAt: ['$stockInfo.lp', 0] } }, 0] },
+                      0,
                     ],
                   },
                 ],
-  
               },
               then: false,
               else: {
-                $or: [
-                  {
-                    $gte: [
-                      {
-                        $ifNull: [
-                          { $toDouble: { $arrayElemAt: ['$stockInfo.lp', 0] } },
-                          0
-                        ]
-                      },
-                      '$tsprice',
-                    ],
-                  },
-  
+                $gte: [
+                  { $ifNull: [{ $toDouble: { $arrayElemAt: ['$stockInfo.lp', 0] } }, 0] },
+                  '$tsprice',
                 ],
               },
             },
           },
-  
           isLpInRangeStoploss: {
             $cond: {
               if: {
@@ -143,40 +103,23 @@ db.createView("open_position", "ordermodels",
                   { $eq: ['$slprice', 0] },
                   {
                     $eq: [
-                      {
-                        $ifNull: [
-                          { $toDouble: { $arrayElemAt: ['$stockInfo.lp', 0] } },
-                          0
-                        ]
-                      },
-                      0
+                      { $ifNull: [{ $toDouble: { $arrayElemAt: ['$stockInfo.lp', 0] } }, 0] },
+                      0,
                     ],
                   },
                 ],
-  
               },
               then: false,
               else: {
-                $or: [
-                  {
-                    $lte: [
-                      {
-                        $ifNull: [
-                          { $toDouble: { $arrayElemAt: ['$stockInfo.lp', 0] } },
-                          0
-                        ]
-                      },
-                      '$slprice',
-                    ],
-                  },
-  
+                $lte: [
+                  { $ifNull: [{ $toDouble: { $arrayElemAt: ['$stockInfo.lp', 0] } }, 0] },
+                  '$slprice',
                 ],
               },
             },
           },
         },
       },
-        
       {
         $project: {
           _id: 1,
@@ -186,19 +129,18 @@ db.createView("open_position", "ordermodels",
           ordertype: 1,
           borkerid: 1,
           quantity: 1,
-          ordertoken:1,
+          ordertoken: 1,
           tsprice: 1,
-          tsstatus:1,
+          slprice: 1,
+          tsstatus: 1,
           exchange: 1,
-          exitquantity:1,
+          exitquantity: 1,
           stockInfo_curtime: 1,
           stockInfo_lp: 1,
           isLpInRangeTarget: 1,
           isLpInRangeStoploss: 1,
-         
         },
-      }
-  
+      },
   
     ]
   )

@@ -110,72 +110,154 @@ app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 let ws;
 const url = "wss://ws1.aliceblueonline.com/NorenWS/"
 app.get("/test", async (req, res) => {
-  // try {
-  //   const groupedSignals = await Signal_Modal.aggregate([
+  // const testcheck = await Order_Modal.aggregate([
+    
   //     {
-  //       $match: {
-  //         close_status: false, // Filter where close_status is false in Signal_Modal
+  //       $addFields: {
+  //         tsprice: {
+  //           $cond: {
+  //             if: {
+  //               $or: [
+  //                 { $eq: ['$tsprice', 0] },
+  //                 { $eq: ['$tsprice', "0"] },
+  //                 { $eq: ['$tsprice', '0'] },
+  //               ],
+  //             },
+  //             then: 0,
+  //             else: { $add: [{ $toDouble: '$tsprice' }] },
+  //           },
+  //         },
+  //         slprice: {
+  //           $cond: {
+  //             if: {
+  //               $or: [
+  //                 { $eq: ['$slprice', 0] },
+  //                 { $eq: ['$slprice', "0"] },
+  //                 { $eq: ['$slprice', '0'] },
+  //               ],
+  //             },
+  //             then: 0,
+  //             else: { $add: [{ $toDouble: '$slprice' }] },
+  //           },
+  //         },
   //       },
   //     },
   //     {
   //       $lookup: {
-  //         from: "stocks", // Stocks collection ka naam
-  //         localField: "tradesymbol", // Signal modal ka field
-  //         foreignField: "tradesymbol", // Stocks modal ka field
-  //         as: "stock_info", // Jo data join hoke aayega
+  //         from: 'basicsettings',
+  //         let: {},
+  //         pipeline: [],
+  //         as: 'basics_settings',
   //       },
   //     },
   //     {
-  //       $unwind: {
-  //         path: "$stock_info", // Stock info array ko unwind karna
-  //         preserveNullAndEmptyArrays: true, // Agar matching na ho toh null ko preserve kare
+  //       $unwind: '$basics_settings',
+  //     },
+  //     {
+  //       $match: {
+  //         $and: [
+  //           {
+  //             $expr: {
+  //               $and: [
+  //                 { $eq: ['$basics_settings.brokerloginstatus', 1] },
+  //                 { $in: ['$tsstatus', [1, 2]] },
+  //               ],
+  //             },
+  //           },
+  //         ],
   //       },
   //     },
   //     {
-  //       $group: {
-  //         _id: "$tradesymbol", // Grouping key
-  //         instrument_token: { $first: "$stock_info.instrument_token" }, // Pehla instrument_token le lo
-  //         segment: { $first: "$stock_info.segment" }, // Add segment field from stock_info
+  //       $lookup: {
+  //         from: 'stockliveprices',
+  //         localField: 'ordertoken',
+  //         foreignField: 'token',
+  //         as: 'stockInfo',
+  //       },
+  //     },
+  //     {
+  //       $addFields: {
+  //         stockInfo: {
+  //           $ifNull: [{ $arrayElemAt: ['$stockInfo', 0] }, { curtime: 0, lp: 0 }],
+  //         },
+  //         stockInfo_lp: {
+  //           $ifNull: [{ $toDouble: { $arrayElemAt: ['$stockInfo.lp', 0] } }, 0],
+  //         },
+  //         stockInfo_curtime: {
+  //           $ifNull: [{ $arrayElemAt: ['$stockInfo.curtime', 0] }, 0],
+  //         },
+  //         isLpInRangeTarget: {
+  //           $cond: {
+  //             if: {
+  //               $or: [
+  //                 { $eq: ['$tsprice', 0] },
+  //                 {
+  //                   $eq: [
+  //                     { $ifNull: [{ $toDouble: { $arrayElemAt: ['$stockInfo.lp', 0] } }, 0] },
+  //                     0,
+  //                   ],
+  //                 },
+  //               ],
+  //             },
+  //             then: false,
+  //             else: {
+  //               $gte: [
+  //                 { $ifNull: [{ $toDouble: { $arrayElemAt: ['$stockInfo.lp', 0] } }, 0] },
+  //                 '$tsprice',
+  //               ],
+  //             },
+  //           },
+  //         },
+  //         isLpInRangeStoploss: {
+  //           $cond: {
+  //             if: {
+  //               $or: [
+  //                 { $eq: ['$slprice', 0] },
+  //                 {
+  //                   $eq: [
+  //                     { $ifNull: [{ $toDouble: { $arrayElemAt: ['$stockInfo.lp', 0] } }, 0] },
+  //                     0,
+  //                   ],
+  //                 },
+  //               ],
+  //             },
+  //             then: false,
+  //             else: {
+  //               $lte: [
+  //                 { $ifNull: [{ $toDouble: { $arrayElemAt: ['$stockInfo.lp', 0] } }, 0] },
+  //                 '$slprice',
+  //               ],
+  //             },
+  //           },
+  //         },
   //       },
   //     },
   //     {
   //       $project: {
-  //         _id: 0, // _id ko exclude karna
-  //         exc: {
-  //           $cond: {
-  //             if: { $eq: ["$segment", "C"] }, // If segment is "C"
-  //             then: "NSE", // Then exchange is NSE
-  //             else: "NFO", // Otherwise, exchange is NFO
-  //           },
-  //         },
-  //         ordertoken: "$instrument_token", // Result mein instrument_token ko ordertoken ke naam se dikhana
+  //         _id: 1,
+  //         clientid: 1,
+  //         signalid: 1,
+  //         orderid: 1,
+  //         ordertype: 1,
+  //         borkerid: 1,
+  //         quantity: 1,
+  //         ordertoken: 1,
+  //         tsprice: 1,
+  //         slprice: 1,
+  //         tsstatus: 1,
+  //         exchange: 1,
+  //         exitquantity: 1,
+  //         stockInfo_curtime: 1,
+  //         stockInfo_lp: 1,
+  //         isLpInRangeTarget: 1,
+  //         isLpInRangeStoploss: 1,
   //       },
   //     },
-  //     {
-  //       $match: {
-  //         ordertoken: { $ne: null }, // Exclude documents where ordertoken is null
-  //       },
-  //     },
-  //   ]);
-    
-    
-
-  //   console.log("groupedSignals", groupedSignals);
-
-  //   // Response send karein
-  //   res.status(200).json({
-  //     success: true,
-  //     data: groupedSignals,
-  //   });
-  // } catch (error) {
-  //   console.error("Error fetching groupedSignals:", error);
-  //   res.status(500).json({
-  //     success: false,
-  //     message: "Something went wrong",
-  //   });
-  // }
-
-    Alice_Socket();
+  //   ]
+  // );
+  // console.log("testcheck",testcheck);
+  // res.json(testcheck);
+   Alice_Socket();
 });
 
 
