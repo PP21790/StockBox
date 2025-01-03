@@ -954,7 +954,9 @@ const Signal = () => {
                                         <div className="col-md-12" key={index}>
                                             <div className="card radius-10 mb-3">
                                                 <div className="card-body">
+                                                    <h4>Segment:</h4>
                                                     <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Veritatis amet delectus repudiandae! Veniam fugiat harum facere corporis, maxime non incidunt perspiciatis sint deleniti nobis exercitationem illum. Nam modi cumque commodi.</p>
+                                                    <h4>Date:</h4>
                                                 </div>
                                             </div>
                                         </div>
