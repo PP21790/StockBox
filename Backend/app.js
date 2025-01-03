@@ -34,6 +34,12 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log(`Client disconnected: ${socket.id}`);
   });
+
+
+  socket.on("deactivestaff", (staffId) => {
+    io.emit("forceLogout", staffId);
+    });
+
 });
 
 // console.log("io ",io)
