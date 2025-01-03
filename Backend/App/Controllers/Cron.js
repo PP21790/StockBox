@@ -141,6 +141,8 @@ async function AddBulkStockCron(req, res) {
       };
   
       const response = await axios(config);
+
+
       if (response.data.length > 0) {
   
   
@@ -196,17 +198,17 @@ async function AddBulkStockCron(req, res) {
       
           // Segment O -OPTION
           const userDataSegment_O = await createUserDataArray(filteredDataO, "O");
-        //   console.log("O")
+          console.log("O")
           await insertData(userDataSegment_O);
         //   console.log("O")
           // Segment F - FUTURE
           const userDataSegment_F = await createUserDataArray(filteredDataF, "F");
           await insertData(userDataSegment_F);
-        //   console.log("F")
+          console.log("F")
           // Segment C -CASH
           const userDataSegment_C = await createUserDataArray(filteredDataC, "C");
           await insertData(userDataSegment_C);
-        //   console.log("C")
+          console.log("C")
   
   
           // Segment MF MCX FUTURE
@@ -247,12 +249,18 @@ async function AddBulkStockCron(req, res) {
           
   
     
-          return;
+          res.json({ 
+            status: true, 
+        });
       } else {
-          return
+        res.json({ 
+            status: true, 
+        });
       }
   } catch (error) {
-    //   console.log("Error TokenSymbolUpdate Try catch", error);
+    res.json({ 
+        status: false, 
+    });
   }
   }
   
@@ -299,11 +307,17 @@ const DeleteTokenAliceToken = async (req, res) => {
     if (result.length > 0) {
         const idsToDelete = result.map(item => item._id);
         await Stock_Modal.deleteMany({ _id: { $in: result[0].idsToDelete } });
-        // console.log(`${result.length} expired tokens deleted.`);
-        return;
+        console.log(`${result.length} expired tokens deleted.`);
+        res.json({ 
+            status: true, 
+            message: `${result[0].idsToDelete.length} expired tokens deleted.` 
+        });
     } else {
-        // console.log('No expired tokens found.');
-        return;    }
+        res.json({ 
+            status: true, 
+            message: 'No expired tokens found.' 
+        });
+       }
   
   }
   

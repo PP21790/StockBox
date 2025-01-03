@@ -597,7 +597,14 @@ class Angle {
     async orderexitangle(item) {
 
         try {
-            const { clientid, signalid, quantity, stockInfo_lp, exitquantity } = item;
+            const { clientid, signalid, quantity, stockInfo_lp, exitquantity, _id } = item;
+
+
+            const orderss = await Order_Modal.findById(_id);
+            if (orderss) {
+                orderss.tsstatus = 0;
+                await orderss.save();
+            }
 
             const price = stockInfo_lp;
             const client = await Clients_Modal.findById(clientid);
@@ -769,16 +776,16 @@ class Angle {
 
 
 
-                            const orderupdate = await Order_Modal.findOne({
-                                clientid,
-                                signalid,
-                                borkerid
-                            });
+                            //    const orderupdate = await Order_Modal.findOne({ 
+                            //     clientid, 
+                            //     signalid, 
+                            //     borkerid 
+                            // });
 
-                            if (orderupdate) {
-                                orderupdate.tsstatus = 0;
-                                await orderupdate.save();
-                            }
+                            // if (orderupdate) {
+                            //   orderupdate.tsstatus = 0;
+                            //   await orderupdate.save();
+                            // }
 
 
                             return {
