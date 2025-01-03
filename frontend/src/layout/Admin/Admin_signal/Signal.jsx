@@ -15,7 +15,7 @@ import { image_baseurl } from '../../../Utils/config';
 
 
 const Signal = () => {
-    const [viewMode, setViewMode] = useState("table"); // "table" or "card"
+    const [viewMode, setViewMode] = useState("table");
     const token = localStorage.getItem('token');
     const [searchInput, setSearchInput] = useState("");
 
@@ -335,16 +335,19 @@ const Signal = () => {
         setModel(true);
         setServiceid({
             ...row,
-            "targetprice1": row.targetprice1,
-            "targetprice2": row.targetprice2,
-            "targetprice3": row.targetprice3,
+            "targetprice1": row?.targetprice1,
+            "targetprice2": row?.targetprice2,
+            "targetprice3": row?.targetprice3,
         });
         setClosedata({
             ...row,
-            "targetprice1": row.targetprice1,
-            "targetprice2": row.targetprice2,
-            "targetprice3": row.targetprice3,
-            "slprice": row.stoploss
+            "targetprice1": row?.targetprice1,
+            "targetprice2": row?.targetprice2,
+            "targetprice3": row?.targetprice3,
+            "slprice": row?.stoploss,
+            "calltype": row?.calltype,
+
+
         })
     }
 
@@ -380,41 +383,78 @@ const Signal = () => {
 
 
             if (index === 1) {
-                if (closedata.targetprice2 && !closedata.targetprice1) {
-                    showValidationError('Target 1 must be provided if Target 2 is entered.');
-                    return;
-                }
-                if (closedata.targetprice3 && (!closedata.targetprice1 || !closedata.targetprice2)) {
-                    showValidationError('Target 1 and Target 2 must be provided if Target 3 is entered.');
-                    return;
-                }
-                if (closedata.targetprice1 && closedata.targetprice2 && closedata.targetprice1 >= closedata.targetprice2) {
-                    showValidationError('Target 2 must be greater than Target 1.');
-                    return;
-                }
-                if (closedata.targetprice3 && closedata.targetprice2 >= closedata.targetprice3) {
-                    showValidationError('Target 3 must be greater than Target 2.');
-                    return;
-                }
-                if (checkedTargets1.target1 && !closedata.targetprice1) {
-                    showValidationError('Please fill in Target 1 or uncheck it.');
-                    return;
-                }
-                if (checkedTargets1.target2 && !closedata.targetprice2) {
-                    showValidationError('Please fill in Target 2 or uncheck it.');
-                    return;
-                }
-                if (checkedTargets1.target3 && !closedata.targetprice3) {
-                    showValidationError('Please fill in Target 3 or uncheck it.');
-                    return;
+                console.log("closedata?.calltype", closedata?.calltype);
+
+                if (closedata?.calltype == "BUY") {
+
+                    if (closedata.targetprice2 && !closedata.targetprice1) {
+                        showValidationError("Target 1 must be provided if Target 2 is entered.");
+                        return;
+                    }
+                    if (closedata.targetprice3 && (!closedata.targetprice1 || !closedata.targetprice2)) {
+                        showValidationError("Target 1 and Target 2 must be provided if Target 3 is entered.");
+                        return;
+                    }
+                    if (closedata.targetprice1 && closedata.targetprice2 && parseFloat(closedata.targetprice1) >= parseFloat(closedata.targetprice2)) {
+                        showValidationError("Target 2 must be greater than Target 1.");
+                        return;
+                    }
+                    if (closedata.targetprice3 && parseFloat(closedata.targetprice2) >= parseFloat(closedata.targetprice3)) {
+                        showValidationError("Target 3 must be greater than Target 2.");
+                        return;
+                    }
+                    if (checkedTargets1.target1 && !closedata.targetprice1) {
+                        showValidationError("Please fill in Target 1 or uncheck it.");
+                        return;
+                    }
+                    if (checkedTargets1.target2 && !closedata.targetprice2) {
+                        showValidationError("Please fill in Target 2 or uncheck it.");
+                        return;
+                    }
+                    if (checkedTargets1.target3 && !closedata.targetprice3) {
+                        showValidationError("Please fill in Target 3 or uncheck it.");
+                        return;
+                    }
+                } else if (closedata?.calltype == "SELL") {
+
+                    if (closedata.targetprice2 && !closedata.targetprice1) {
+                        showValidationError("Target 1 must be provided if Target 2 is entered.");
+                        return;
+                    }
+                    if (closedata.targetprice3 && (!closedata.targetprice1 || !closedata.targetprice2)) {
+                        showValidationError("Target 1 and Target 2 must be provided if Target 3 is entered.");
+                        return;
+                    }
+                    if (closedata.targetprice1 && closedata.targetprice2 && parseFloat(closedata.targetprice1) <= parseFloat(closedata.targetprice2)) {
+                        showValidationError("Target 2 must be less than Target 1.");
+                        return;
+                    }
+                    if (closedata.targetprice3 && parseFloat(closedata.targetprice2) <= parseFloat(closedata.targetprice3)) {
+                        showValidationError("Target 3 must be less than Target 2.");
+                        return;
+                    }
+                    if (checkedTargets1.target1 && !closedata.targetprice1) {
+                        showValidationError("Please fill in Target 1 or uncheck it.");
+                        return;
+                    }
+                    if (checkedTargets1.target2 && !closedata.targetprice2) {
+                        showValidationError("Please fill in Target 2 or uncheck it.");
+                        return;
+                    }
+                    if (checkedTargets1.target3 && !closedata.targetprice3) {
+                        showValidationError("Please fill in Target 3 or uncheck it.");
+                        return;
+                    }
                 }
             }
+
             if (index === 4) {
                 if (!closedata.close_description) {
-                    showValidationError('Please Fill in The Description');
+                    showValidationError("Please fill in the description.");
                     return;
                 }
             }
+
 
             const data = {
                 id: serviceid._id,
@@ -469,7 +509,6 @@ const Signal = () => {
             });
         }
     };
-
 
 
     const handleDownload = (row) => {

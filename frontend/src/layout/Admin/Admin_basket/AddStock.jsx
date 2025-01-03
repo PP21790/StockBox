@@ -9,11 +9,7 @@ import * as Yup from "yup";
 import * as Config from "../../../Utils/config";
 import { Tooltip } from 'antd';
 
-
 const AddStock = () => {
-
-
-
   const { id: basket_id } = useParams();
   const [selectedServices, setSelectedServices] = useState([]);
   const [options, setOptions] = useState([]);
@@ -21,8 +17,6 @@ const AddStock = () => {
   const [inputValue, setInputValue] = useState("");
   const [formikValues, setFormikValues] = useState({});
   const navigate = useNavigate();
-
-
 
   // Fetch options based on user input
   const fetchOptions = async (inputValue) => {
@@ -58,9 +52,6 @@ const AddStock = () => {
     }
   };
 
-
-
-
   // Handle changes when a stock is selected
   const handleServiceChange = (selectedOption) => {
     setSelectedServices(selectedOption || []);
@@ -81,7 +72,7 @@ const AddStock = () => {
     setFormikValues(updatedValues);
   };
 
-
+  // Handle removal of a selected stock
   const handleRemoveService = (serviceValue) => {
     setSelectedServices((prev) =>
       prev.filter((service) => service.value !== serviceValue)
@@ -90,7 +81,6 @@ const AddStock = () => {
     const updatedValues = { ...formikValues };
     delete updatedValues[serviceValue];
     setFormikValues(updatedValues);
-
 
     setOptions((prevOptions) =>
       prevOptions.filter((option) => option.value !== serviceValue)
@@ -115,6 +105,11 @@ const AddStock = () => {
 
   // Handle form submission
   const handleSubmit = async (values, status) => {
+    if (Object.keys(values).length === 0) {
+      Swal.fire("warning", "Please add stock ", "warning");
+
+      return;
+    }
 
     let totalWeightage = 0;
     Object.values(values).forEach((stock) => {
@@ -168,7 +163,7 @@ const AddStock = () => {
     fetchOptions(value);
   };
 
-  // Effect hook to ensure options are filtered out properly after removal
+  // Sync options with selected services
   useEffect(() => {
     setOptions((prevOptions) =>
       prevOptions.filter((option) =>
@@ -179,7 +174,6 @@ const AddStock = () => {
 
   return (
     <div className="page-content">
-
       <div className="row">
         <div className="col-md-6">
           <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
@@ -200,7 +194,10 @@ const AddStock = () => {
         <div className="col-md-6 d-flex justify-content-end">
           <Link to="/admin/basket">
             <Tooltip title="Back">
-              <i className="lni lni-arrow-left-circle" style={{ fontSize: "2rem", color: "#000" }} />
+              <i
+                className="lni lni-arrow-left-circle"
+                style={{ fontSize: "2rem", color: "#000" }}
+              />
             </Tooltip>
           </Link>
         </div>
@@ -216,6 +213,7 @@ const AddStock = () => {
                 onInputChange={handleInputChange}
                 options={options}
                 onChange={handleServiceChange}
+                value={selectedServices}
                 placeholder="Search and select stocks..."
                 isClearable
                 isMulti
@@ -229,28 +227,10 @@ const AddStock = () => {
           <Formik
             initialValues={formikValues}
             validationSchema={validationSchema}
-            validate={(values) => {
-              let totalWeightage = 0;
-
-              Object.values(values).forEach((stock) => {
-                totalWeightage += Number(stock.percentage || 0);
-              });
-
-              // if (totalWeightage > 100 || totalWeightage < 100) {
-              //   Swal.fire(
-              //     "Error",
-              //     "Total weightage of all stocks cannot exceed 100.",
-              //     "error"
-              //   );
-              //   return { totalWeightageError: "Weightage exceeds 100" };
-              // }
-
-              // return {};
-            }}
+            enableReinitialize
             onSubmit={(values, { setSubmitting }) => {
               setSubmitting(false);
             }}
-            enableReinitialize
           >
             {({ values }) => (
               <Form>

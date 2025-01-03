@@ -1823,9 +1823,7 @@ class List {
       const clientObjectId = new mongoose.Types.ObjectId(clientid);
 
 
-      // Fetch all baskets with their subscription status
       const result = await Basket_Modal.aggregate([
-        // Stage 1: Lookup Subscriptions
         {
             $lookup: {
                 from: 'basketsubscriptions',
@@ -1834,21 +1832,22 @@ class List {
                 as: 'subscription_info'
             }
         },
-    
-        // Stage 2: Unwind and Filter Subscriptions
-        {
-            $addFields: {
-                filteredSubscriptions: {
-                    $filter: {
-                        input: '$subscription_info',
-                        as: 'sub',
-                        cond: { $eq: ['$$sub.client_id', clientObjectId] }
-                    }
-                }
+      {
+    $addFields: {
+      filteredSubscriptions: {
+        $ifNull: [
+          {
+            $filter: {
+              input: '$subscription_info',
+              as: 'sub',
+              cond: { $eq: ['$$sub.client_id', clientObjectId] }
             }
-        },
-    
-        // Stage 3: Sort and Get Latest Subscription
+          },
+          []
+        ]
+      }
+    }
+  },
         {
             $addFields: {
                 latestSubscription: {
@@ -1864,8 +1863,6 @@ class List {
                 }
             }
         },
-    
-        // Stage 4: Determine Subscription Status
         {
             $addFields: {
                 isSubscribed: {
@@ -1889,6 +1886,15 @@ class List {
                 startdate: '$latestSubscription.startdate',
                 enddate: '$latestSubscription.enddate'
             }
+        },
+        {
+          $match: {
+            del: false,
+            $or: [
+              { status: true },
+              { $and: [{ status: false }, { isSubscribed: true }] }
+            ]
+          }
         },
         {
             $project: {
@@ -1918,9 +1924,7 @@ class List {
         }
     ]);
     
-  
-      // Debugging: Log the result to see the subscription info
-    //  console.log(result);
+
   
       res.status(200).json({
         status: true,

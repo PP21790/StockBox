@@ -7,7 +7,11 @@ import { useNavigate, useParams, Link } from "react-router-dom";
 import { Tooltip } from 'antd';
 import { SquarePen } from 'lucide-react';
 
-
+function stripHtml(html) {
+  const div = document.createElement("div");
+  div.innerHTML = html;
+  return div.textContent || div.innerText || "";
+}
 
 
 const fieldConfigurations = [
@@ -190,7 +194,7 @@ const Viewbasketdetail = () => {
         const basketData = response.data;
         setInitialValues({
           title: basketData?.title || "",
-          description: basketData?.description || "",
+          description: stripHtml(basketData?.description) || "",
           basket_price: basketData?.basket_price || "",
           mininvamount: basketData?.mininvamount || "",
           themename: basketData?.themename || "",

@@ -6,7 +6,7 @@ import { Tooltip } from 'antd';
 // import Table from "../../../components/Table";
 import Table from '../../../components/Table1';
 
-import { BasketAllList, deletebasket, Basketstatusofdetail, getstocklistById } from "../../../Services/Admin";
+import { BasketAllList, deletebasket, Basketstatusofdetail, changestatusrebalance, getstocklistById } from "../../../Services/Admin";
 import { fDate } from "../../../Utils/Date_formate";
 
 
@@ -98,6 +98,48 @@ const Basket = () => {
 
 
 
+  const handleSwitchChange1 = async (event, id) => {
+    const originalChecked = event.target.checked;
+    const user_active_status = originalChecked
+    const data = { id: id, status: user_active_status };
+    const result = await Swal.fire({
+      title: "Do you want to save the changes?",
+      showCancelButton: true,
+      confirmButtonText: "Save",
+      cancelButtonText: "Cancel",
+      allowOutsideClick: false,
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const response = await changestatusrebalance(data, token);
+        if (response.status) {
+          Swal.fire({
+            title: "Saved!",
+            icon: "success",
+            timer: 1000,
+            timerProgressBar: true,
+          });
+          setTimeout(() => {
+            Swal.close();
+          }, 1000);
+        }
+        getbasketlist();
+      } catch (error) {
+        Swal.fire(
+          "Error",
+          "There was an error processing your request.",
+          "error"
+        );
+      }
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+      event.target.checked = !originalChecked;
+      getbasketlist();
+    }
+  };
+
+
+
 
   // Delete basket
 
@@ -143,6 +185,13 @@ const Basket = () => {
   };
 
 
+  function stripHtml(html) {
+    const div = document.createElement("div");
+    div.innerHTML = html;
+    return div.textContent || div.innerText || "";
+  }
+
+
 
 
   // Columns for DataTable
@@ -173,7 +222,7 @@ const Basket = () => {
 
     {
       name: "Description",
-      selector: (row) => row.description,
+      selector: (row) => stripHtml(row.description),
       wrap: true,
       width: '200px',
     },
@@ -204,6 +253,28 @@ const Basket = () => {
       ),
       sortable: true,
       width: '175px',
+    },
+    {
+      name: 'Rebalanceing Status',
+      selector: row => (
+
+        <div className="form-check form-switch form-check-info">
+          <input
+            id={`rating_${row._id}`}
+            className="form-check-input toggleswitch"
+            type="checkbox"
+            checked={row.status == true}
+            onChange={(event) => handleSwitchChange1(event, row._id)}
+          />
+          <label
+            htmlFor={`rating_${row._id}`}
+            className="checktoggle checkbox-bg"
+          ></label>
+        </div>
+
+      ),
+      sortable: true,
+      width: '250px',
     },
     {
       name: "Actions",

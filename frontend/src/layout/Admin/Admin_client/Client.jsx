@@ -4,7 +4,7 @@ import { GetClient } from '../../../Services/Admin';
 // import Table from '../../../components/Table';
 import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine, RefreshCcw } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { deleteClient, UpdateClientStatus, PlanSubscription, getplanlist, BasketSubscription, BasketAllList, getcategoryplan, getPlanbyUser, AllclientFilter, getclientExportfile, BasketAllActiveList } from '../../../Services/Admin';
+import { deleteClient, UpdateClientStatus, PlanSubscription, getActivecategoryplan, getplanlist, BasketSubscription, BasketAllList, getcategoryplan, getPlanbyUser, AllclientFilter, getclientExportfile, BasketAllActiveList } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
 import { fDateTime } from '../../../Utils/Date_formate';
 import { image_baseurl } from '../../../Utils/config';
@@ -30,11 +30,7 @@ const Client = () => {
     const clientStatus = location?.state?.clientStatus;
 
 
-    // const path = useParams();
-    // console.log("path", path);
 
-    // const clientValue = path["*"];
-    // console.log("Client Value:", clientValue);
 
 
     const token = localStorage.getItem('token');
@@ -204,7 +200,7 @@ const Client = () => {
 
     const getcategoryplanlist = async () => {
         try {
-            const response = await getcategoryplan(token);
+            const response = await getActivecategoryplan(token);
             if (response.status) {
                 setCategory(response.data);
             }
@@ -242,7 +238,7 @@ const Client = () => {
 
             };
             const response = await AllclientFilter(data, token);
-            console.log("Dtata", response);
+
 
             if (response.status) {
                 setClients(response.data);

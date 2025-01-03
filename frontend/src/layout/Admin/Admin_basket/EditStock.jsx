@@ -128,6 +128,13 @@ const EditStock = () => {
     );
 
     const handleSubmit = async (values, status) => {
+        // Check if there are no selected stocks
+        if (Object.keys(values).length === 0) {
+            Swal.fire("error", "Stock is required for edit", "warning");
+
+            return;
+        }
+
         const totalWeightage = Object.values(values).reduce(
             (sum, stock) => sum + Number(stock.weightage || 0),
             0
@@ -146,16 +153,15 @@ const EditStock = () => {
             ...stock,
             status,
             name: stock.name || stock.symbol,
-            percentage: stock.weightage
+            percentage: stock.weightage,
         }));
 
-        // Add the version value if it exists
         const version = stock && stock[0]?.version ? stock[0].version : '';
 
         const requestData = {
             basket_id: stock[0]?.basket_id || "",
             stocks: stocksWithStatus,
-            version,  // Pass the version value here
+            version,
         };
 
         try {
@@ -174,6 +180,7 @@ const EditStock = () => {
             );
         }
     };
+
 
 
     const handleInputChange = (value) => {
