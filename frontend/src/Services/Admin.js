@@ -3096,3 +3096,21 @@ export async function Basketstatusofdetail(data, token) {
         return err.response?.data || err.message;
     }
 }
+
+
+// re balancing status
+
+export async function changestatusrebalance(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}change-status-rebalance`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        return err.response?.data || err.message;
+    }
+}
