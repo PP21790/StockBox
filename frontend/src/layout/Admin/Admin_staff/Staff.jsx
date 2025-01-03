@@ -8,10 +8,14 @@ import { deleteStaff, updateStaffstatus } from '../../../Services/Admin';
 import Swal from 'sweetalert2';
 import { Tooltip } from 'antd';
 import ExportToExcel from '../../../Utils/ExportCSV';
-import { fDate,fDateTime } from '../../../Utils/Date_formate';
-
+import { fDate, fDateTime } from '../../../Utils/Date_formate';
+import io from 'socket.io-client';
+import { base_url } from '../../../Utils/config';
 
 const Staff = () => {
+
+    const SOCKET_SERVER_URL = base_url
+    const socket = io(SOCKET_SERVER_URL, { transports: ['websocket'] });
 
     const navigate = useNavigate();
 
@@ -19,14 +23,14 @@ const Staff = () => {
     const [ForGetCSV, setForGetCSV] = useState([])
     const [searchInput, setSearchInput] = useState("");
     const [allsearchInput, setAllSearchInput] = useState([]);
-     
+
     const token = localStorage.getItem('token');
-    
+
 
     const getAdminclient = async () => {
         try {
             const response = await GetStaff(token);
-            if (response.status) { 
+            if (response.status) {
                 setClients(response.data);
                 setAllSearchInput(response.data)
             }
@@ -36,7 +40,7 @@ const Staff = () => {
     }
 
 
-    
+
     useEffect(() => {
         const filteredData = allsearchInput?.filter((item) =>
             !searchInput ||
@@ -45,8 +49,8 @@ const Staff = () => {
             item?.Email.toLowerCase().includes(searchInput.toLowerCase()) ||
             item?.PhoneNo.toLowerCase().includes(searchInput.toLowerCase())
         );
-        setClients(filteredData); 
-    }, [searchInput, allsearchInput]); 
+        setClients(filteredData);
+    }, [searchInput, allsearchInput]);
 
 
 
@@ -62,17 +66,17 @@ const Staff = () => {
 
     const forCSVdata = () => {
         if (clients?.length > 0) {
-          const csvArr = clients.map((item) => ({
-            FullName: item?.FullName,
-            UserName: item?.UserName,
-            Email: item?.Email || '',
-            PhoneNo: item?.PhoneNo || '',
-            CreatedAt: fDateTime(item.createdAt) || ""
-    
-          }));
-          setForGetCSV(csvArr);
+            const csvArr = clients.map((item) => ({
+                FullName: item?.FullName,
+                UserName: item?.UserName,
+                Email: item?.Email || '',
+                PhoneNo: item?.PhoneNo || '',
+                CreatedAt: fDateTime(item.createdAt) || ""
+
+            }));
+            setForGetCSV(csvArr);
         }
-      };
+    };
 
 
     // staff delete 
@@ -90,6 +94,7 @@ const Staff = () => {
 
             if (result.isConfirmed) {
                 const response = await deleteStaff(_id, token);
+                socket.emit("deactivestaff", { id: _id, msg: "logout" });
                 if (response.status) {
                     Swal.fire({
                         title: 'Deleted!',
@@ -133,6 +138,8 @@ const Staff = () => {
 
 
 
+
+
     // update status
 
     const handleSwitchChange = async (event, id) => {
@@ -152,13 +159,20 @@ const Staff = () => {
             try {
                 const response = await updateStaffstatus(data, token)
                 if (response.status) {
+
+                    if (!event.target.checked) {
+
+                        socket.emit("deactivestaff", { id: id, msg: "logout" });
+                    }
+
+
                     Swal.fire({
                         title: "Saved!",
                         icon: "success",
                         timer: 1500,
                         timerProgressBar: true,
                     });
-                    
+
                     setTimeout(() => {
                         Swal.close();
                     }, 1500);
@@ -176,7 +190,7 @@ const Staff = () => {
             // Swal.fire("Cancelled","No changes were made.","info")
             getAdminclient();
         }
-        
+
     };
 
 
@@ -310,13 +324,13 @@ const Staff = () => {
                             <div className="card-body">
                                 <div className="d-lg-flex align-items-center mb-4 gap-3">
                                     <div className="position-relative">
-                                    <input
-                                        type="text"
-                                        className="form-control ps-5 radius-10"
-                                        placeholder="Search Staff"
-                                        onChange={(e) => setSearchInput(e.target.value)}
-                                        value={searchInput}
-                                    />
+                                        <input
+                                            type="text"
+                                            className="form-control ps-5 radius-10"
+                                            placeholder="Search Staff"
+                                            onChange={(e) => setSearchInput(e.target.value)}
+                                            value={searchInput}
+                                        />
                                         <span className="position-absolute top-50 product-show translate-middle-y">
                                             <i className="bx bx-search" />
                                         </span>

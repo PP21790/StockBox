@@ -64,8 +64,8 @@ import Planexpirymonth from '../layout/Staff/PlanExpiryMonth/Planexpirymonth';
 function Staffrouting() {
 
     const token = localStorage.getItem('token');
-    console.log("Token:",token);
-    
+
+
     const userid = localStorage.getItem('id');
 
     const [permission, setPermission] = useState([]);
@@ -195,9 +195,9 @@ function Staffrouting() {
 
                     {permission.includes("viewbanner") ? <Route path="/banner" element={<Banner />} /> : ""}
 
-                    {permission.includes("paymenthistory") ? <Route path="/paymenthistory" element={<History/>} /> : ""}
-                    {permission.includes("planexpiry") ? <Route path="/planexpiry" element={<Planexpiry/>} /> : ""}
-                    {permission.includes("perform") ? <Route path="/perform" element={<Perform/>} /> : ""}
+                    {permission.includes("paymenthistory") ? <Route path="/paymenthistory" element={<History />} /> : ""}
+                    {permission.includes("planexpiry") ? <Route path="/planexpiry" element={<Planexpiry />} /> : ""}
+                    {permission.includes("perform") ? <Route path="/perform" element={<Perform />} /> : ""}
 
 
                     <Route path="/paymentrequest" element={<PaymentRequest />} />

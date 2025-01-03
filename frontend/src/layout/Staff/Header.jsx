@@ -1,18 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { getHelpMessagelist, gettradestatus, basicsettinglist, UpdateLogin_status } from '../../Services/Admin';
+import { Link, useNavigate } from 'react-router-dom';
+import { getHelpMessagelist, gettradestatus, basicsettinglist, getstaffperuser, UpdateLogin_status } from '../../Services/Admin';
 import { formatDistanceToNow } from 'date-fns';
 import Swal from 'sweetalert2';
 import $ from "jquery";
 import { image_baseurl } from '../../Utils/config';
-
-
+import io from 'socket.io-client';
+import { base_url } from '../../Utils/config';
 
 
 const Header = () => {
 
+  const navigate = useNavigate()
+
+  const SOCKET_SERVER_URL = base_url
+
+  const socket = io(SOCKET_SERVER_URL, { transports: ['websocket'] });
+
   const token = localStorage.getItem('token');
   const FullName = localStorage.getItem('FullName');
+  const userid = localStorage.getItem('id');
 
 
 
@@ -24,6 +31,7 @@ const Header = () => {
   const [model, setModel] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [getstatus, setGetstatus] = useState([]);
+  const [permission, setPermission] = useState([]);
 
 
   const [statusinfo, setStatusinfo] = useState({
@@ -37,6 +45,7 @@ const Header = () => {
   useEffect(() => {
     getdemoclient();
     gettradedetail();
+
   }, []);
 
 
@@ -193,7 +202,32 @@ const Header = () => {
   };
 
 
+  useEffect(() => {
+    const staffId = localStorage.getItem('id');
 
+    socket.on("forceLogout", (data) => {
+      console.log("logout", data.id == staffId)
+      if (data.id == staffId) {
+        Swal.fire({
+          title: "Admin Deactive you",
+          text: "Admin Deactive you",
+          icon: "error",
+          timer: 1500,
+          timerProgressBar: true,
+        }).then((data) => {
+          localStorage.clear();
+          window.location.href = "/#/login";
+        })
+
+      }
+
+    });
+
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [socket]);
 
   return (
     <div>

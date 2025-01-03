@@ -30,16 +30,25 @@ const io = socketIo(server, {
   }
 });
 
+
+
 io.on("connection", (socket) => {
-  console.log(`Client connected: ${socket.id}`);
+  // console.log(`Client connected: ${socket.id}`);
   socket.on("disconnect", () => {
     console.log(`Client disconnected: ${socket.id}`);
   });
+
+  socket.on("deactivestaff", (staffId) => {
+    console.log("deactivestaff", staffId)
+    io.emit("forceLogout", staffId);
+  });
+
 });
+
 
 // console.log("io ",io)
 require("./App/Utils/ioSocketReturn")(app, io);
-const { sendFCMNotification } = require('./App/Controllers/Pushnotification'); // Adjust if necessary
+const { sendFCMNotification } = require('./App/Controllers/Pushnotification');
 
 require('./App/Controllers/Cron.js');
 require('./App/Utils/Settimeout.js');
@@ -110,7 +119,7 @@ app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 let ws;
 const url = "wss://ws1.aliceblueonline.com/NorenWS/"
 app.get("/test", async (req, res) => {
-   Alice_Socket();
+  Alice_Socket();
 });
 
 

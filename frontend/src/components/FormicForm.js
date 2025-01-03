@@ -507,7 +507,7 @@ const DynamicForm = ({
                                                                                         {...formik.getFieldProps(field.name)}
                                                                                     >
                                                                                         <option value="" selected>
-                                                                                             {field.label}
+                                                                                            {field.label}
                                                                                         </option>
                                                                                         {field.options.map((option) => (
                                                                                             <option
@@ -951,7 +951,7 @@ const DynamicForm = ({
                                                                             <div className={`col-lg-${field.col_size}`}>
                                                                                 <div className="row d-flex">
                                                                                     <div className="col-lg-12 ">
-                                                                                        <div className="form-check custom-checkbox input-block ps-0 mb-3">
+                                                                                        <div className="form-check custom-checkbox input-block ps-0 mb-1">
                                                                                             <label
                                                                                                 className={`col-lg-${field.label}`}
                                                                                                 htmlFor={field.name}

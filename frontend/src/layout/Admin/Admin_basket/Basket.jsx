@@ -39,7 +39,6 @@ const Basket = () => {
       const response = await BasketAllList(data, token);
       if (response.status) {
         setClients(response.data);
-        console.log("response.data", response.data)
         setTotalRows(response.pagination.total);
       }
     } catch (error) {
@@ -281,15 +280,18 @@ const Basket = () => {
       name: "Actions",
       cell: (row) => (
         <div>
-          <Tooltip title="  Add Stock">
-            <Link
-              to={`/admin/addstock/${row._id}`}
-              className="btn px-2"
-            >
-              <Plus />
 
-            </Link>
-          </Tooltip>
+          {row.rebalancestatus === false ?
+            <Tooltip title="  Add Stock">
+              <Link
+                to={`/admin/addstock/${row._id}`}
+                className="btn px-2"
+              >
+                <Plus />
+
+              </Link>
+            </Tooltip> : ""}
+
           <Tooltip title="view">
             <Link
 
