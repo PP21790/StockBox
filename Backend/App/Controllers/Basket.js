@@ -588,6 +588,7 @@ async getBasket(req, res) {
                   frequency: 1,
                   validity: 1,
                   next_rebalance_date: 1,
+                  rebalancestatus: 1,
                   stock_details: {
                       $filter: {
                           input: "$stock_details", // Filter the joined stock details
