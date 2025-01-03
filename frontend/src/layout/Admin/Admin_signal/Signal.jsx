@@ -877,7 +877,7 @@ const Signal = () => {
 
                     </div>
 
-                    {/* <div className="card">
+                    <div className="card">
                         <div className="card-body">
 
                             <div className="d-flex justify-content-between mb-4">
@@ -1001,7 +1001,7 @@ const Signal = () => {
                                 </div>
                             )}
                         </div>
-                    </div> */}
+                    </div>
                 </div>
             </div>
 

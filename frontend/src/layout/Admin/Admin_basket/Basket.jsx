@@ -39,6 +39,7 @@ const Basket = () => {
       const response = await BasketAllList(data, token);
       if (response.status) {
         setClients(response.data);
+        console.log("response.data", response.data)
         setTotalRows(response.pagination.total);
       }
     } catch (error) {
@@ -263,7 +264,7 @@ const Basket = () => {
             id={`rating_${row._id}`}
             className="form-check-input toggleswitch"
             type="checkbox"
-            checked={row.status == true}
+            checked={row.rebalancestatus === true}
             onChange={(event) => handleSwitchChange1(event, row._id)}
           />
           <label
