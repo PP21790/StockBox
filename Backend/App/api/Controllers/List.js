@@ -1897,6 +1897,57 @@ class List {
           }
         },
         {
+          $lookup: {
+            from: "basketstocks",
+            let: { basketId: { $toString: "$_id" } },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ["$basket_id", "$$basketId"] },
+                      { $eq: ["$status", 1] }
+                    ]
+                  }
+                }
+              },
+              {
+                $group: {
+                  _id: "$basket_id",
+                  maxVersion: { $max: "$version" }
+                }
+              },
+              {
+                $lookup: {
+                  from: "basketstocks",
+                  let: { basketId: "$_id", maxVer: "$maxVersion" },
+                  pipeline: [
+                    {
+                      $match: {
+                        $expr: {
+                          $and: [
+                            { $eq: ["$basket_id", "$$basketId"] },
+                            { $eq: ["$version", "$$maxVer"] },
+                            { $eq: ["$status", 1] }
+                          ]
+                        }
+                      }
+                    }
+                  ],
+                  as: "latestStocks"
+                }
+              },
+              {
+                $unwind: "$latestStocks"
+              },
+              {
+                $replaceRoot: { newRoot: "$latestStocks" }
+              }
+            ],
+            as: "stock_details"
+          }
+        },        
+        {
             $project: {
                 basket_id: 1,
                 title: 1,
@@ -1919,7 +1970,14 @@ class List {
                 isSubscribed: 1,
                 isActive: 1,
                 startdate: 1,
-                enddate: 1
+                enddate: 1,
+                stock_details: {
+                  $filter: {
+                      input: "$stock_details", // Filter the joined stock details
+                      as: "stock",
+                      cond: { $eq: ["$$stock.del", false] } // Exclude deleted stocks
+                  }
+              },
             }
         }
     ]);

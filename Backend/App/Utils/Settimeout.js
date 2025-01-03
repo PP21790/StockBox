@@ -55,7 +55,6 @@ async function run() {
 async function ExitplaceOrder(item) {
   if(item.borkerid==1)
     {
-    
       orderexitangle(item)
     }
   else if(item.borkerid==2)
