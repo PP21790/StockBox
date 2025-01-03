@@ -39,7 +39,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("deactivestaff", (staffId) => {
-    console.log("deactivestaff", staffId)
     io.emit("forceLogout", staffId);
   });
 

@@ -31,7 +31,7 @@ const Header = () => {
   const [model, setModel] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [getstatus, setGetstatus] = useState([]);
-  const [permission, setPermission] = useState([]);
+
 
 
   const [statusinfo, setStatusinfo] = useState({
@@ -206,19 +206,11 @@ const Header = () => {
     const staffId = localStorage.getItem('id');
 
     socket.on("forceLogout", (data) => {
-      console.log("logout", data.id == staffId)
-      if (data.id == staffId) {
-        Swal.fire({
-          title: "Admin Deactive you",
-          text: "Admin Deactive you",
-          icon: "error",
-          timer: 1500,
-          timerProgressBar: true,
-        }).then((data) => {
-          localStorage.clear();
-          window.location.href = "/#/login";
-        })
 
+      if (data.id == staffId) {
+
+        localStorage.clear();
+        window.location.href = "/#/login";
       }
 
     });
@@ -228,6 +220,9 @@ const Header = () => {
       socket.disconnect();
     };
   }, [socket]);
+
+
+
 
   return (
     <div>
