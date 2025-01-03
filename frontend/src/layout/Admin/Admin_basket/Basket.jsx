@@ -184,7 +184,7 @@ const Basket = () => {
       width: '200px',
     },
     {
-      name: 'Active Status',
+      name: 'Stock Quantity',
       selector: row => (
         row.stock_details.length > 0 ?
           <div className="form-check form-switch form-check-info">
