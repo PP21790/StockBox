@@ -3107,7 +3107,7 @@ export async function Basketstatusofdetail(data, token) {
 
 export async function changestatusrebalance(data, token) {
     try {
-        const res = await axios.post(`${Config.base_url}change-status-rebalance`, data, {
+        const res = await axios.post(`${Config.base_url}basket/change-status-rebalance`, data, {
             headers: {
                 data: {},
                 'Authorization': `${token}`,

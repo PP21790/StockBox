@@ -82,7 +82,7 @@ const Signal = () => {
     })
 
 
-    console.log("closedata", closedata)
+
 
 
     const [serviceList, setServiceList] = useState([]);

@@ -102,7 +102,6 @@ const Basket = () => {
     const originalChecked = event.target.checked;
     const user_active_status = originalChecked
     const data = { id: id, status: user_active_status };
-
     const result = await Swal.fire({
       title: "Do you want to save the changes?",
       showCancelButton: true,
@@ -264,7 +263,7 @@ const Basket = () => {
             id={`rating_${row._id}`}
             className="form-check-input toggleswitch"
             type="checkbox"
-            checked={row.status === true}
+            checked={row.status == true}
             onChange={(event) => handleSwitchChange1(event, row._id)}
           />
           <label
@@ -275,7 +274,7 @@ const Basket = () => {
 
       ),
       sortable: true,
-      width: '175px',
+      width: '250px',
     },
     {
       name: "Actions",
