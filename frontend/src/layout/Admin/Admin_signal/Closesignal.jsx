@@ -28,6 +28,7 @@ const Closesignal = () => {
     const [updatetitle, setUpdatetitle] = useState({
         report: "",
         id: "",
+        description:"",
 
 
     });
@@ -365,8 +366,9 @@ const Closesignal = () => {
 
     // Update service
     const updateReportpdf = async () => {
+        
         try {
-            const data = { id: serviceid._id, report: updatetitle.report };
+            const data = { id: serviceid._id, report: updatetitle.report,description:updatetitle.description };
 
             const response = await UpdatesignalReport(data, token);
             if (response && response.status) {
@@ -378,7 +380,7 @@ const Closesignal = () => {
                     timer: 2000,
                 });
 
-                setUpdatetitle({ report: "", id: "", });
+                setUpdatetitle({ report: "", id: "",description:"" });
                 setModel1(false);
                 getAllSignal();
             } else {
@@ -589,6 +591,18 @@ const Closesignal = () => {
                                             <div className="col-md-2">
 
 
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-md-12">
+                                                <label htmlFor="description">Description</label>
+                                                <input
+                                                    className="form-control mb-2"
+                                                    type="text"
+                                                    placeholder='Enter Description Title'
+                                                    value={updatetitle.description}
+                                                    onChange={(e) => updateServiceTitle({ description: e.target.value })}
+                                                />
                                             </div>
                                         </div>
 

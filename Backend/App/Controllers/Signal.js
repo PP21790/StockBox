@@ -769,9 +769,9 @@ async updateReport(req, res) {
                 resolve();
             });
         });
-
         const { id,description } = req.body;
-
+        console.log("req",req.body)
+ 
         if (!id) {
             return res.status(400).json({
                 status: false,

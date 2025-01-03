@@ -1423,6 +1423,9 @@ export async function updateCouponbyadmin(data, token) {
     formData.append('mincouponvalue', data.mincouponvalue);
     formData.append('description', data.description);
     formData.append('service', data.service);
+    formData.append('limitation', data.limitation);
+
+
 
     try {
         const res = await axios.put(`${Config.base_url}coupon/update`, formData, {
@@ -3016,6 +3019,8 @@ export async function UpdatesignalReport(data, token) {
     const formData = new FormData();
     formData.append('report', data.report);
     formData.append('id', data.id);
+    formData.append('description', data.description);
+
     try {
         const res = await axios.post(`${Config.base_url}signal/updatereport`, formData, {
             headers: {

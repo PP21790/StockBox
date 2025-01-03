@@ -25,6 +25,7 @@ const Signal = () => {
     const [updatetitle, setUpdatetitle] = useState({
         report: "",
         id: "",
+        description: ""
 
 
     });
@@ -206,6 +207,10 @@ const Signal = () => {
 
             const response = await GetSignallistWithFilter(data, token);
 
+
+
+
+
             if (response && response.status) {
                 setTotalRows(response.pagination.totalRecords);
                 let filterdata = response.data.filter((item) => item.close_status === false);
@@ -223,6 +228,8 @@ const Signal = () => {
     const fetchAdminServices = async () => {
         try {
             const response = await GetService(token);
+
+
             if (response.status) {
                 setServiceList(response.data);
             }
@@ -236,6 +243,7 @@ const Signal = () => {
     const fetchStockList = async () => {
         try {
             const response = await GetStockDetail(token);
+
             if (response.status) {
                 setStockList(response.data);
             }
@@ -632,7 +640,7 @@ const Signal = () => {
                                     onClick={() => {
                                         setModel1(true);
                                         setServiceid(row);
-                                        setUpdatetitle({ report: row.report, id: row._id });
+                                        setUpdatetitle({ report: row.report, id: row._id, description: updatetitle.description });
                                     }}
                                 />
                             </Tooltip>
@@ -676,10 +684,13 @@ const Signal = () => {
 
     // Update service
     const updateReportpdf = async () => {
+
         try {
-            const data = { id: serviceid._id, report: updatetitle.report };
+            const data = { id: serviceid._id, report: updatetitle.report, description: updatetitle.description };
 
             const response = await UpdatesignalReport(data, token);
+            console.log("dtatadta", response);
+
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
@@ -689,7 +700,7 @@ const Signal = () => {
                     timer: 2000,
                 });
 
-                setUpdatetitle({ report: "", id: "", });
+                setUpdatetitle({ report: "", id: "", description: "" });
                 setModel1(false);
                 getAllSignal();
             } else {
@@ -977,15 +988,12 @@ const Signal = () => {
                                     onPageChange={handlePageChange}
                                 />
                             ) : (
-                                <div className="row">
+                                <div className="row mt-3">
                                     {clients.map((client, index) => (
-                                        <div className="col-md-4" key={index}>
+                                        <div className="col-md-12" key={index}>
                                             <div className="card radius-10 mb-3">
                                                 <div className="card-body">
-                                                    <h5 className="card-title">{client.refer_token || "No Name"}</h5>
-                                                    <p className="card-text">{client.details || "No Details Available"}</p>
-                                                    {/* Add more fields if needed */}
-                                                    <p className="card-text">Email: {client.email || "N/A"}</p>
+                                                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Veritatis amet delectus repudiandae! Veniam fugiat harum facere corporis, maxime non incidunt perspiciatis sint deleniti nobis exercitationem illum. Nam modi cumque commodi.</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1399,7 +1407,7 @@ const Signal = () => {
                                     <form>
                                         <div className="row">
                                             <div className="col-md-10">
-                                                <label htmlFor="imageUpload">Upload Report</label>
+                                                <label htmlFor="imageUpload">Upload Report </label>
                                                 <span className="text-danger">*</span>
                                                 <input
                                                     className="form-control mb-3"
@@ -1427,6 +1435,18 @@ const Signal = () => {
                                             <div className="col-md-2">
 
 
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-md-12">
+                                                <label htmlFor="description">Description</label>
+                                                <input
+                                                    className="form-control mb-2"
+                                                    type="text"
+                                                    placeholder='Enter Description Title'
+                                                    value={updatetitle.description}
+                                                    onChange={(e) => updateServiceTitle({ description: e.target.value })}
+                                                />
                                             </div>
                                         </div>
 
