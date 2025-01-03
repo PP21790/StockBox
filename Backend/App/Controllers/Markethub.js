@@ -545,7 +545,7 @@ let data = JSON.stringify({
     }
 
 
-    async orderexitmarkethub() {
+    async orderexitmarkethub(item) {
         
       try {
         const { clientid, signalid, quantity, stockInfo_lp, exitquantity } = item;

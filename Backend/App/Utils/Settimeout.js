@@ -22,6 +22,8 @@ async function run() {
       try {
        
         let openPosition = await open_position_excute.find().toArray();
+
+        
         if (openPosition.length > 0) {
           for (const item of openPosition) {
            await ExitplaceOrder(item)
@@ -53,6 +55,7 @@ async function run() {
 async function ExitplaceOrder(item) {
   if(item.borkerid==1)
     {
+    
       orderexitangle(item)
     }
   else if(item.borkerid==2)

@@ -594,13 +594,12 @@ class Angle {
 
 
 
-    async orderexitangle() {
+    async orderexitangle(item) {
 
         try {
             const { clientid, signalid, quantity, stockInfo_lp, exitquantity } = item;
 
             const price = stockInfo_lp;
-
             const client = await Clients_Modal.findById(clientid);
             if (!client) {
                 return {
