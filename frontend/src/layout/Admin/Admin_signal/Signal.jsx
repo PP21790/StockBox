@@ -877,9 +877,9 @@ const Signal = () => {
 
                     </div>
 
-                    <div className="card">
+                    {/* <div className="card">
                         <div className="card-body">
-                            {/* Tabs for Switching Views */}
+
                             <div className="d-flex justify-content-between mb-4">
                                 <div className="btn-group">
                                     <button
@@ -897,7 +897,7 @@ const Signal = () => {
                                 </div>
                             </div>
 
-                            {/* Search and Filter Section */}
+
                             <div className="d-lg-flex align-items-center mb-4 gap-3">
                                 <div className="position-relative">
                                     <input
@@ -978,7 +978,7 @@ const Signal = () => {
                                 </div>
                             </div>
 
-                            {/* Conditional Rendering of Table or Cards */}
+
                             {viewMode === "table" ? (
                                 <Table
                                     columns={columns}
@@ -1001,7 +1001,7 @@ const Signal = () => {
                                 </div>
                             )}
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
 
