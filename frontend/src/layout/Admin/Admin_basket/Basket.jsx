@@ -223,9 +223,25 @@ const Basket = () => {
     {
       name: "Description",
       selector: (row) => stripHtml(row.description),
+      cell: (row) => (
+        <div style={{
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          display: '-webkit-box',
+          WebkitLineClamp: 3,
+          WebkitBoxOrient: 'vertical',
+          maxWidth: '200px',
+          textAlign:'left',
+          whiteSpace: 'normal', // Ensure multi-line text
+        }}>
+          {stripHtml(row.description)}
+        </div>
+      ),
       wrap: true,
       width: '200px',
     },
+    
+    
     {
       name: "Validity",
       selector: (row) => row.validity,
