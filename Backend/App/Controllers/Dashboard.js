@@ -941,6 +941,40 @@ class Dashboard {
     }
   }
 
+  async allStatusChangeNotifiction(req, res) {
+    try {
+      // Update all documents where status is 0 to set status to 1
+      const result = await Adminnotification_Modal.updateMany(
+        { status: 0 }, // Condition: status is 0
+        { $set: { status: 1 } } // Update: set status to 1
+      );
+  
+      if (result.matchedCount === 0) {
+        return res.json({
+          status: false,
+          message: "No notifications found with status 0"
+        });
+      }
+  
+      return res.json({
+        status: true,
+        message: "All statuses updated successfully",
+        data: result // Return the result of the operation
+      });
+  
+    } catch (error) {
+      // Log and return error response
+      console.error("Error updating all statuses:", error);
+      return res.status(500).json({
+        status: false,
+        message: "Server error",
+        data: []
+      });
+    }
+  }
+  
+
+
   async totalClient(req, res) {
     try {
 
