@@ -991,9 +991,12 @@ const Signal = () => {
                                 <div className="row mt-3">
                                     {clients.map((client, index) => (
                                         <div className="col-md-12" key={index}>
-                                            <div className="card radius-10 mb-3">
+                                            <div className="card radius-10 mb-3 border">
                                                 <div className="card-body">
-                                                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Veritatis amet delectus repudiandae! Veniam fugiat harum facere corporis, maxime non incidunt perspiciatis sint deleniti nobis exercitationem illum. Nam modi cumque commodi.</p>
+                                                   <p className='mb-1'><b>Date:</b></p>
+                                                    <p className='mb-2'><b>Segment:</b></p>
+                                                    <p className='mb-1'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Veritatis amet delectus repudiandae! Veniam fugiat harum facere corporis, maxime non incidunt perspiciatis sint deleniti nobis exercitationem illum. Nam modi cumque commodi.</p>
+                                                    
                                                 </div>
                                             </div>
                                         </div>
