@@ -368,6 +368,29 @@ export async function GetSignallist(data, token) {
 }
 
 
+// get client signal detail
+
+
+
+// getsignal by signal filter
+
+export async function GetClientSignaldetail(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}signal/signalclient`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+
 
 // getsignal by signal filter
 

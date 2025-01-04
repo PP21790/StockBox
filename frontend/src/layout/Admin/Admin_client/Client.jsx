@@ -283,6 +283,10 @@ const Client = () => {
     }
 
 
+    const signaldetail = async (row) => {
+        navigate("/admin/clientsignaldetail/" + row._id, { state: { row } })
+    }
+
 
     const Clientdetail = async (row) => {
         navigate("/admin/client/clientdetail/" + row._id, { state: { row } })
@@ -598,6 +602,24 @@ const Client = () => {
             selector: row => fDateTime(row.createdAt),
             sortable: true,
             width: '200px',
+        },
+        {
+            name: 'Signal Detail',
+            selector: (row) => (
+                <div className='d-flex'>
+
+
+                    <Tooltip placement="top" overlay="Signal Detail">
+                        <span onClick={(e) => { signaldetail(row) }} style={{ cursor: 'pointer' }}>
+                            <Settings2 />
+                        </span>
+                    </Tooltip>
+                </div>
+            ),
+            ignoreRowClick: true,
+            allowOverflow: true,
+            button: true,
+            width: '165px',
         },
         {
             name: 'Actions',
