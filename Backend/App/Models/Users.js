@@ -13,14 +13,12 @@ const userModel = Schema({
         type: String,
         required: true,
         trim: true,
-        unique: true,
         default: null
     },
     Email: {
         type: String,
         required: true,
         trim: true,
-        unique: true,
         default: null
     },
     PhoneNo: {
@@ -29,7 +27,6 @@ const userModel = Schema({
         trim: true,
         min: 10,
         max: 10,
-        unique: true,
         default: null
     },
     password:{
@@ -83,6 +80,14 @@ const userModel = Schema({
 
 )
 const User_model = model('USERS', userModel);
+// User_model.syncIndexes()
+//   .then(() => {
+//     console.log('Indexes have been successfully synchronized.');
+//   })
+//   .catch((error) => {
+//     console.error('Error syncing indexes:', error);
+//   });
+
 
 
 
