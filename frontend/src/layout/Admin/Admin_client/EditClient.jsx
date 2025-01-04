@@ -31,6 +31,13 @@ const EditClient = () => {
   // Regex to check for special characters
   const specialCharRegex = /[^a-zA-Z\s]/;
 
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+
+  const onlyNumbersRegex = /^[0-9]+$/;
+
+  // Regex to check phone number (10 digits)
+  const phoneRegex = /^[0-9]{10}$/;  // This will match only 10 digits
+
   if (!values.FullName) {
     errors.FullName = "Please Enter Full Name";
   } else if (numberRegex.test(values.FullName)) {
@@ -38,14 +45,25 @@ const EditClient = () => {
   } else if (specialCharRegex.test(values.FullName)) {
     errors.FullName = "Full Name should not contain special characters";
   }
-    if (!values.Email) {
-      errors.Email = "Please Enter Email";
-    }
+   // Email Validation
+   if (!values.Email) {
+    errors.Email = "Please Enter Email";
+} else if (onlyNumbersRegex.test(values.Email)) {
+    // If the email contains only numbers
+    errors.Email = "Email should not contain only numbers";
+} else if (!emailRegex.test(values.Email)) {
+    // If email format is invalid
+    errors.Email = "Please Enter a valid Email";
+}
+
     // if (!values.UserName) {
     //   errors.UserName = "Please enter Username";
     // }
     if (!values.PhoneNo) {
       errors.PhoneNo = "Please Enter Phone Number";
+    } else if (!phoneRegex.test(values.PhoneNo)) {
+      // Check if phone number is not exactly 10 digits
+      errors.PhoneNo = "Phone Number should be exactly 10 digits";
     }
     // if (!values.password) {
     //   errors.password = "Please Enter Password";
@@ -65,7 +83,7 @@ const EditClient = () => {
 
   try {
     const response = await UpdateClient(req, token);
-    console.log("checking email and mobile number:",response);
+    // console.log("checking email and mobile number:",response);
     
 
     if (response.status) {

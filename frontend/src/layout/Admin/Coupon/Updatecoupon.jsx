@@ -185,7 +185,7 @@ const Updatecoupon = () => {
       type: "text",
       label_size: 6,
       col_size: 6,
-      disable: false,
+      disable: true,
       star: true
     },
     {
@@ -194,7 +194,7 @@ const Updatecoupon = () => {
       type: "text",
       label_size: 12,
       col_size: 6,
-      disable: false,
+      disable: true,
       star: true
     },
     {
@@ -203,7 +203,7 @@ const Updatecoupon = () => {
       type: "select",
       label_size: 12,
       col_size: 6,
-      disable: false,
+      disable: true,
       star: true,
       options: [
         { value: "percentage", label: "Percentage" },
@@ -218,7 +218,7 @@ const Updatecoupon = () => {
       type: "number",
       label_size: 12,
       col_size: 6,
-      disable: false,
+      disable: true,
       showWhen: (values) => values.type === "fixed",
       star: true
     },
@@ -228,7 +228,7 @@ const Updatecoupon = () => {
       type: "text4",
       label_size: 12,
       col_size: 6,
-      disable: false,
+      disable: true,
       showWhen: (values) => values.type === "percentage",
       star: true
     },
@@ -285,7 +285,7 @@ const Updatecoupon = () => {
       type: "select",
       label_size: 12,
       col_size: 6,
-      disable: false,
+      disable: true,
       options: [
         { label: "All", value: "0" },
         ...servicedata?.map((item) => ({

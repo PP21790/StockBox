@@ -5,7 +5,7 @@ import { getcouponlist } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import { Eye, Pencil, Trash2, IndianRupee } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { DeleteCoupon, UpdateClientStatus, CouponStatus, CouponShowstatus } from '../../../Services/Admin';
+import { DeleteCoupon, UpdateClientStatus, CouponStatus, CouponShowstatus,GetService } from '../../../Services/Admin';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
 import { fDate, fDateTime } from '../../../Utils/Date_formate';
@@ -21,6 +21,10 @@ const Coupon = () => {
     const [searchInput, setSearchInput] = useState("");
     const [viewpage, setViewpage] = useState({});
     const [datewise, setDatewise] = useState("")
+
+    const [service,setService] = useState([])
+    console.log("Service",service);
+    
 
     const token = localStorage.getItem('token');
 
@@ -47,11 +51,27 @@ const Coupon = () => {
         }
     }
 
+    const getService = async () => {
+        try {
+            const response = await GetService(token);
+            // console.log("response",response);
+
+            if (response.status) {
+                setService(response.data)
+                console.log("chaking",response.data);
+                
+            }
+        } catch (error) {
+            console.log("error");
+        }
+    }
+
 
 
 
     useEffect(() => {
         getcoupon();
+        getService();
     }, [searchInput]);
 
 
@@ -226,12 +246,18 @@ const Coupon = () => {
             sortable: true,
             width: '300px',
         },
-        // {
-        //     name: 'Services',
-        //     selector: row => row.type === "service" ? row.service : `${row.service}%`,
-        //     sortable: true,
-        //     width: '300px',
-        // },
+        {
+            name: 'Services',
+            selector: row => {
+                // Service data ko check karte hain aur relevant data dikhate hain
+                const serviceItem = service.find(item => item._id === row.service); // Assumed that coupon has serviceId
+                return (
+                    <div>{serviceItem ? serviceItem.title : 'All'}</div> // Show service name if found
+                );
+            },
+            sortable: true,
+            width: '300px',
+        },
         // {
         //     name: 'Image',
         //     cell: row => <img src={`${image_baseurl}/uploads/coupon/${row.image}`} alt="Image" width="50" height="50" />,
