@@ -51,7 +51,7 @@ const Addplan = () => {
             errors.price = "Please Enter Price Greater Than 0";
         }
         if (!values.validity) {
-            errors.validity = "Please Enter Validity";
+            errors.validity = "Please Select Validity";
         }
         if (!values.category) {
             errors.category = "Please Select Category";
