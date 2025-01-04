@@ -13,7 +13,7 @@ router.post('/dashboard/planexiprelistwithfilter', PlanExipreListWithFilter);
 
 router.post('/dashboard/companystatus', CompanyStatus);
 router.get('/dashboard/notification', Notification);
-router.get('/dashboard/notificationlist/:page', NotificationList);
+router.post('/dashboard/notificationlist', NotificationList);
 
 router.post('/dashboard/statuschangenotifiction', statusChangeNotifiction);
 router.get('/dashboard/totalclientmonth', totalClient);

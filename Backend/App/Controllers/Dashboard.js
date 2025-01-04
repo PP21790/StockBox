@@ -849,8 +849,7 @@ async Notification(req, res) {
 async NotificationList(req, res) {
   try {
 
-    const { page } = req.params;
-
+    const { page } = req.body;
     const limit = 10; // Default to 10 items per page
     const skip = (page - 1) * limit; // Calculate the number of documents to skip
 
