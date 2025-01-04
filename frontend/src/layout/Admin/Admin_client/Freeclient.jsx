@@ -82,12 +82,8 @@ const Freeclient = () => {
     const getdemoclient = async () => {
         try {
             const data = { page: currentPage, search: searchInput, freestatus: clientStatus || "" }
-            console.log("data", data)
             const response = await FreeClientListWithFilter(data, token);
-            console.log("response", response)
             if (response.status) {
-                console.log("response", response)
-
                 setTotalRows(response.pagination.total)
                 setClients(response.data);
 
