@@ -76,8 +76,8 @@ const ClientSignaldetail = () => {
             const data = {
                 page: currentPage,
                 client_id: id,
-                from: "",
-                to: "",
+                from: filters.from,
+                to: filters.to,
                 service_id: filters.service,
                 stock: searchstock,
                 type: "",
@@ -87,7 +87,7 @@ const ClientSignaldetail = () => {
             const response = await GetClientSignaldetail(data, token);
 
             if (response && response.status) {
-                setTotalRows(response.pagination.totalRecords);
+                setTotalRows(response.pagination.total);
                 setClients(response.data);
             }
         } catch (error) {
@@ -161,20 +161,6 @@ const ClientSignaldetail = () => {
 
 
 
-    const handleDownload = (row) => {
-        const url = `${image_baseurl}uploads/report/${row.report}`;
-        const link = document.createElement('a');
-        link.href = url;
-        link.target = '_blank';
-
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    };
-
-
-
-
     // colums
     let columns = [
         {
@@ -217,7 +203,7 @@ const ClientSignaldetail = () => {
 
         {
             name: 'Exit Price',
-            selector: row => row.Ttype == 1 ? row.closeprice : '-',
+            selector: row => row.closeprice ? row.closeprice : '-',
             sortable: true,
             width: '132px',
 
@@ -230,9 +216,9 @@ const ClientSignaldetail = () => {
         },
         {
             name: 'Exit Date',
-            selector: row => row.Ttype == 1 ? fDateTimeSuffix(row.closedate) : "-",
+            selector: row => row.closeprice ? fDateTimeSuffix(row.closedate) : "-",
             sortable: true,
-            width: '160px',
+            width: '200px',
         },
 
 
@@ -265,18 +251,30 @@ const ClientSignaldetail = () => {
         <div>
             <div>
                 <div className="page-content">
-                    <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                        <div className="breadcrumb-title pe-3">Signal Details</div>
-                        <div className="ps-3">
-                            <nav aria-label="breadcrumb">
-                                <ol className="breadcrumb mb-0 p-0">
-                                    <li className="breadcrumb-item">
-                                        <Link to="/admin/dashboard">
-                                            <i className="bx bx-home-alt" />
-                                        </Link>
-                                    </li>
-                                </ol>
-                            </nav>
+
+                    <div className="row">
+                        <div className="col-md-6">
+                            <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+                                <div className="breadcrumb-title pe-3">Signal Details</div>
+                                <div className="ps-3">
+                                    <nav aria-label="breadcrumb">
+                                        <ol className="breadcrumb mb-0 p-0">
+                                            <li className="breadcrumb-item">
+                                                <Link to="/admin/dashboard">
+                                                    <i className="bx bx-home-alt" />
+                                                </Link>
+                                            </li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-md-6 d-flex justify-content-end">
+                            <Link to="/admin/client">
+                                <Tooltip title="Back">
+                                    <i className="lni lni-arrow-left-circle" style={{ fontSize: "2rem", color: "#000" }} />
+                                </Tooltip>
+                            </Link>
                         </div>
                     </div>
                     <hr />
