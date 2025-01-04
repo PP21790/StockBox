@@ -4,6 +4,7 @@ const Signal_Modal = db.Signal;
 const Stock_Modal = db.Stock;
 const Notification_Modal = db.Notification;
 const Planmanage = db.Planmanage;
+const Order_Modal = db.Order;
 
 mongoose  = require('mongoose');
 const Clients_Modal = db.Clients;
@@ -821,6 +822,197 @@ async updateReport(req, res) {
     }
 }
 
+/*
+async showSignalsToClients(req, res) {
+  try {
+    const { service_id, client_id, search, type, page = 1 } = req.body;
+    const limit = 10;
+    const skip = (parseInt(page) - 1) * parseInt(limit); // Calculate how many items to skip
+    const limitValue = parseInt(limit); // Items per page
+
+    const plans = await Planmanage.find({ serviceid: service_id, clientid: client_id });
+    if (plans.length === 0) {
+      return res.json({
+        status: false,
+        message: "No plans found for the given service and client IDs",
+        data: []
+      });
+    }
+
+    const startDates = plans.map(plan => new Date(plan.startdate));
+    const endDates = plans.map(plan => new Date(plan.enddate));
+
+    const query = {
+      service: service_id,
+      close_status: type === 1,
+      created_at: {
+        $gte: startDates[0], // Assuming all plans have the same startdate
+        $lte: endDates[0] // Assuming all plans have the same enddate
+      }
+    };
+
+    const protocol = req.protocol; // Will be 'http' or 'https'
+
+    const baseUrl = `${protocol}://${req.headers.host}`; // Construct the base URL
+
+
+
+    if (search && search.trim() !== '') {
+      query.$or = [
+        { tradesymbol: { $regex: search, $options: 'i' } },
+        { calltype: { $regex: search, $options: 'i' } },
+        { price: { $regex: search, $options: 'i' } },
+        { closeprice: { $regex: search, $options: 'i' } }
+      ];
+    }
+
+    const signals = await Signal_Modal.find(query)
+      .sort({ created_at: -1 })
+      .skip(skip)
+      .limit(limitValue)
+      .lean();
+   
+
+    const totalSignals = await Signal_Modal.countDocuments(query);
+
+    const signalsWithReportUrls = await Promise.all(signals.map(async (signal) => {
+      // Check if the signal was bought by the client
+      const order = await Order_Modal.findOne({
+        clientid: client_id,
+        signalid: signal._id
+      }).lean();
+
+
+      return {
+        ...signal,
+        report_full_path: signal.report ? `${baseUrl}/uploads/report/${signal.report}` : null, // Append full report URL
+        purchased: order ? true : false,
+        order_quantity: order ? order.quantity : 0
+      };
+    }));
+
+
+    return res.json({
+      status: true,
+      message: "Signals retrieved successfully",
+      data: signalsWithReportUrls,
+      pagination: {
+        total: totalSignals,
+        page: parseInt(page), // Current page
+        limit: parseInt(limit), // Items per page
+        totalPages: Math.ceil(totalSignals / limit), // Total number of pages
+      }
+    });
+
+  } catch (error) {
+    console.error("Error fetching signals:", error);
+    return res.json({ status: false, message: "Server error", data: [] });
+  }
+}
+
+*/
+
+
+async showSignalsToClients(req, res) {
+  try {
+    const { service_id, client_id, search, type, page = 1 } = req.body;
+
+
+    const limit = 10;
+    const skip = (parseInt(page) - 1) * parseInt(limit); // Calculate how many items to skip
+    const limitValue = parseInt(limit); // Items per page
+
+    const service_ids = service_id
+    ? [service_id] // If service_id is provided, use it as an array
+    : ["66d2c3bebf7e6dc53ed07626", "66dfede64a88602fbbca9b72", "66dfeef84a88602fbbca9b79"];
+
+
+    // Ensure service_ids is an array
+    if (!Array.isArray(service_ids) || service_ids.length === 0) {
+      return res.json({
+        status: false,
+        message: "Invalid or missing service IDs",
+        data: []
+      });
+    }
+
+    // Fetch plans for all services and the given client
+    const plans = await Planmanage.find({ serviceid: { $in: service_ids }, clientid: client_id });
+    if (plans.length === 0) {
+      return res.json({
+        status: false,
+        message: "No plans found for the given services and client ID",
+        data: []
+      });
+    }
+
+    const startDates = plans.map(plan => new Date(plan.startdate));
+    const endDates = plans.map(plan => new Date(plan.enddate));
+
+    const minStartDate = new Date(Math.min(...startDates)); // Earliest start date
+    const maxEndDate = new Date(Math.max(...endDates)); // Latest end date
+
+    const query = {
+      service: { $in: service_ids }, // Match any of the service IDs
+      close_status: type === 1,
+      created_at: {
+        $gte: minStartDate, // Earliest start date
+        $lte: maxEndDate    // Latest end date
+      }
+    };
+
+    const protocol = req.protocol; // Will be 'http' or 'https'
+    const baseUrl = `${protocol}://${req.headers.host}`; // Construct the base URL
+
+    if (search && search.trim() !== '') {
+      query.$or = [
+        { tradesymbol: { $regex: search, $options: 'i' } },
+        { calltype: { $regex: search, $options: 'i' } },
+        { price: { $regex: search, $options: 'i' } },
+        { closeprice: { $regex: search, $options: 'i' } }
+      ];
+    }
+
+    const signals = await Signal_Modal.find(query)
+      .sort({ created_at: -1 })
+      .skip(skip)
+      .limit(limitValue)
+      .lean();
+
+    const totalSignals = await Signal_Modal.countDocuments(query);
+
+    const signalsWithReportUrls = await Promise.all(signals.map(async (signal) => {
+      // Check if the signal was bought by the client
+      const order = await Order_Modal.findOne({
+        clientid: client_id,
+        signalid: signal._id
+      }).lean();
+
+      return {
+        ...signal,
+        report_full_path: signal.report ? `${baseUrl}/uploads/report/${signal.report}` : null, // Append full report URL
+        purchased: order ? true : false,
+        order_quantity: order ? order.quantity : 0
+      };
+    }));
+
+    return res.json({
+      status: true,
+      message: "Signals retrieved successfully",
+      data: signalsWithReportUrls,
+      pagination: {
+        total: totalSignals,
+        page: parseInt(page), // Current page
+        limit: parseInt(limit), // Items per page
+        totalPages: Math.ceil(totalSignals / limit), // Total number of pages
+      }
+    });
+
+  } catch (error) {
+    console.error("Error fetching signals:", error);
+    return res.json({ status: false, message: "Server error", data: [] });
+  }
+}
 
 
 

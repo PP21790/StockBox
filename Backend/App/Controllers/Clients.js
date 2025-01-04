@@ -123,6 +123,8 @@ class Clients {
 
       if(freetrial)
       {
+
+
         const freetrialDays = parseInt(settings.freetrial, 10); // or you can use +settings.freetrial
         const start = new Date();
         const end = new Date(start);
@@ -143,6 +145,15 @@ class Clients {
       return newPlanManage.save();
 
       })
+
+      const newSubscription = new Freetrial_Modal({
+        clientid: result._id,
+        startdate: start,
+        enddate: end,
+      });
+
+      const savedSubscription = await newSubscription.save();
+
     }
 
       const mailtemplate = await Mailtemplate_Modal.findOne({ mail_type: 'welcome_mail' }); // Use findOne if you expect a single document
