@@ -2391,6 +2391,22 @@ export async function getDashboardNotification(token) {
 }
 
 
+
+// get all notification 
+
+export async function GetAllNotificationRead(token) {
+    try {
+        const res = await axios.get(`${Config.base_url}dashboard/allstatuschangenotifiction`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}
+
 // // add freetrial client 
 
 // export async function addfreeClient(data, token) {

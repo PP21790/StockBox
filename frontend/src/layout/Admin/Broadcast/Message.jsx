@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import { Tooltip } from 'antd';
-import { fDateTime} from '../../../Utils/Date_formate';
+import { fDateTime } from '../../../Utils/Date_formate';
 
 
 
@@ -150,7 +150,7 @@ const Message = () => {
                                                                             {service.segment === "F" && <span>FUTURE </span>}
                                                                         </span>
                                                                     ))
-                                                                   
+
                                                                 ) : ""}
                                                             </span>({item.type})
                                                         </h4>
@@ -160,11 +160,16 @@ const Message = () => {
                                                         <p className="card-text">
                                                             <strong>Message:</strong>
                                                             <span
-                                                                dangerouslySetInnerHTML={{ __html: item.message }}
+                                                                dangerouslySetInnerHTML={{
+                                                                    __html: item.message.replace(
+                                                                        /<img /g,
+                                                                        '<img style="width: 300px; height: 150px; object-fit: cover;" '
+                                                                    )
+                                                                }}
                                                                 style={{ display: 'block', marginTop: '0.5rem' }}
                                                             />
-                                                           
                                                         </p>
+
                                                         <p><strong>Created At:</strong> {fDateTime(item.created_at)}</p>
                                                         <p><strong>Updated At:</strong> {fDateTime(item.updated_at)}</p>
                                                     </div>
