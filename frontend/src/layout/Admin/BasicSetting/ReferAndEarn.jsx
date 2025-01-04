@@ -157,10 +157,7 @@ const ReferAndEarn = () => {
                             type="text"
                             className="form-control"
                             placeholder="Sender"
-                            // onChange={(e) => {
-                            //     handleFieldChange();
-                            //     setFieldValue('sender_earn', e.target.value);
-                            // }}
+
                             onChange={(e) => {
                               handleFieldChange(
                                 "sender_earn",

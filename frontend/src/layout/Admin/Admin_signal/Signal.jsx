@@ -15,7 +15,7 @@ import { image_baseurl } from '../../../Utils/config';
 
 
 const Signal = () => {
-    const [viewMode, setViewMode] = useState("table");
+    const [viewMode, setViewMode] = useState("table"); // "table" or "card"
     const token = localStorage.getItem('token');
     const [searchInput, setSearchInput] = useState("");
 
@@ -25,7 +25,7 @@ const Signal = () => {
     const [updatetitle, setUpdatetitle] = useState({
         report: "",
         id: "",
-        description: ""
+        description:""
 
 
     });
@@ -206,10 +206,10 @@ const Signal = () => {
             };
 
             const response = await GetSignallistWithFilter(data, token);
-
-
-
-
+            
+            
+            
+            
 
             if (response && response.status) {
                 setTotalRows(response.pagination.totalRecords);
@@ -228,8 +228,8 @@ const Signal = () => {
     const fetchAdminServices = async () => {
         try {
             const response = await GetService(token);
-
-
+            
+            
             if (response.status) {
                 setServiceList(response.data);
             }
@@ -243,7 +243,7 @@ const Signal = () => {
     const fetchStockList = async () => {
         try {
             const response = await GetStockDetail(token);
-
+            
             if (response.status) {
                 setStockList(response.data);
             }
@@ -335,19 +335,16 @@ const Signal = () => {
         setModel(true);
         setServiceid({
             ...row,
-            "targetprice1": row?.targetprice1,
-            "targetprice2": row?.targetprice2,
-            "targetprice3": row?.targetprice3,
+            "targetprice1": row.targetprice1,
+            "targetprice2": row.targetprice2,
+            "targetprice3": row.targetprice3,
         });
         setClosedata({
             ...row,
-            "targetprice1": row?.targetprice1,
-            "targetprice2": row?.targetprice2,
-            "targetprice3": row?.targetprice3,
-            "slprice": row?.stoploss,
-            "calltype": row?.calltype,
-
-
+            "targetprice1": row.targetprice1,
+            "targetprice2": row.targetprice2,
+            "targetprice3": row.targetprice3,
+            "slprice": row.stoploss
         })
     }
 
@@ -383,78 +380,41 @@ const Signal = () => {
 
 
             if (index === 1) {
-                console.log("closedata?.calltype", closedata?.calltype);
-
-                if (closedata?.calltype == "BUY") {
-
-                    if (closedata.targetprice2 && !closedata.targetprice1) {
-                        showValidationError("Target 1 must be provided if Target 2 is entered.");
-                        return;
-                    }
-                    if (closedata.targetprice3 && (!closedata.targetprice1 || !closedata.targetprice2)) {
-                        showValidationError("Target 1 and Target 2 must be provided if Target 3 is entered.");
-                        return;
-                    }
-                    if (closedata.targetprice1 && closedata.targetprice2 && parseFloat(closedata.targetprice1) >= parseFloat(closedata.targetprice2)) {
-                        showValidationError("Target 2 must be greater than Target 1.");
-                        return;
-                    }
-                    if (closedata.targetprice3 && parseFloat(closedata.targetprice2) >= parseFloat(closedata.targetprice3)) {
-                        showValidationError("Target 3 must be greater than Target 2.");
-                        return;
-                    }
-                    if (checkedTargets1.target1 && !closedata.targetprice1) {
-                        showValidationError("Please fill in Target 1 or uncheck it.");
-                        return;
-                    }
-                    if (checkedTargets1.target2 && !closedata.targetprice2) {
-                        showValidationError("Please fill in Target 2 or uncheck it.");
-                        return;
-                    }
-                    if (checkedTargets1.target3 && !closedata.targetprice3) {
-                        showValidationError("Please fill in Target 3 or uncheck it.");
-                        return;
-                    }
-                } else if (closedata?.calltype == "SELL") {
-
-                    if (closedata.targetprice2 && !closedata.targetprice1) {
-                        showValidationError("Target 1 must be provided if Target 2 is entered.");
-                        return;
-                    }
-                    if (closedata.targetprice3 && (!closedata.targetprice1 || !closedata.targetprice2)) {
-                        showValidationError("Target 1 and Target 2 must be provided if Target 3 is entered.");
-                        return;
-                    }
-                    if (closedata.targetprice1 && closedata.targetprice2 && parseFloat(closedata.targetprice1) <= parseFloat(closedata.targetprice2)) {
-                        showValidationError("Target 2 must be less than Target 1.");
-                        return;
-                    }
-                    if (closedata.targetprice3 && parseFloat(closedata.targetprice2) <= parseFloat(closedata.targetprice3)) {
-                        showValidationError("Target 3 must be less than Target 2.");
-                        return;
-                    }
-                    if (checkedTargets1.target1 && !closedata.targetprice1) {
-                        showValidationError("Please fill in Target 1 or uncheck it.");
-                        return;
-                    }
-                    if (checkedTargets1.target2 && !closedata.targetprice2) {
-                        showValidationError("Please fill in Target 2 or uncheck it.");
-                        return;
-                    }
-                    if (checkedTargets1.target3 && !closedata.targetprice3) {
-                        showValidationError("Please fill in Target 3 or uncheck it.");
-                        return;
-                    }
+                if (closedata.targetprice2 && !closedata.targetprice1) {
+                    showValidationError('Target 1 must be provided if Target 2 is entered.');
+                    return;
                 }
-            }
-
-            if (index === 4) {
-                if (!closedata.close_description) {
-                    showValidationError("Please fill in the description.");
+                if (closedata.targetprice3 && (!closedata.targetprice1 || !closedata.targetprice2)) {
+                    showValidationError('Target 1 and Target 2 must be provided if Target 3 is entered.');
+                    return;
+                }
+                if (closedata.targetprice1 && closedata.targetprice2 && closedata.targetprice1 >= closedata.targetprice2) {
+                    showValidationError('Target 2 must be greater than Target 1.');
+                    return;
+                }
+                if (closedata.targetprice3 && closedata.targetprice2 >= closedata.targetprice3) {
+                    showValidationError('Target 3 must be greater than Target 2.');
+                    return;
+                }
+                if (checkedTargets1.target1 && !closedata.targetprice1) {
+                    showValidationError('Please fill in Target 1 or uncheck it.');
+                    return;
+                }
+                if (checkedTargets1.target2 && !closedata.targetprice2) {
+                    showValidationError('Please fill in Target 2 or uncheck it.');
+                    return;
+                }
+                if (checkedTargets1.target3 && !closedata.targetprice3) {
+                    showValidationError('Please fill in Target 3 or uncheck it.');
                     return;
                 }
             }
-
+            if (index === 4) {
+                if (!closedata.close_description) {
+                    showValidationError('Please Fill in The Description');
+                    return;
+                }
+            }
 
             const data = {
                 id: serviceid._id,
@@ -509,6 +469,7 @@ const Signal = () => {
             });
         }
     };
+
 
 
     const handleDownload = (row) => {
@@ -640,7 +601,7 @@ const Signal = () => {
                                     onClick={() => {
                                         setModel1(true);
                                         setServiceid(row);
-                                        setUpdatetitle({ report: row.report, id: row._id, description: updatetitle.description });
+                                        setUpdatetitle({ report: row.report, id: row._id ,description:updatetitle.description});
                                     }}
                                 />
                             </Tooltip>
@@ -684,13 +645,13 @@ const Signal = () => {
 
     // Update service
     const updateReportpdf = async () => {
-
+        
         try {
-            const data = { id: serviceid._id, report: updatetitle.report, description: updatetitle.description };
+            const data = { id: serviceid._id, report: updatetitle.report, description:updatetitle.description };
 
             const response = await UpdatesignalReport(data, token);
-            console.log("dtatadta", response);
-
+            console.log("dtatadta",response);
+            
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
@@ -700,7 +661,7 @@ const Signal = () => {
                     timer: 2000,
                 });
 
-                setUpdatetitle({ report: "", id: "", description: "" });
+                setUpdatetitle({ report: "", id: "",description:"" });
                 setModel1(false);
                 getAllSignal();
             } else {
@@ -993,9 +954,11 @@ const Signal = () => {
                                         <div className="col-md-12" key={index}>
                                             <div className="card radius-10 mb-3">
                                                 <div className="card-body">
-                                                    <h4>Segment:</h4>
-                                                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Veritatis amet delectus repudiandae! Veniam fugiat harum facere corporis, maxime non incidunt perspiciatis sint deleniti nobis exercitationem illum. Nam modi cumque commodi.</p>
-                                                    <h4>Date:</h4>
+                                                    
+                                                    <p className="mb-1"><b>Segment :</b>{client.segment || "No Details Available"}</p>
+                                                    {/* Add more fields if needed */}
+                                                    <p className="mb-1"><b>Email :</b> {client.email || "N/A"}</p>
+                                                    <p className='mb-1'>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nobis laborum architecto rem iure atque, reprehenderit enim at illum recusandae neque maiores nihil eligendi aspernatur! Soluta nam voluptatem nisi alias harum!</p>
                                                 </div>
                                             </div>
                                         </div>
