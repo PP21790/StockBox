@@ -184,7 +184,11 @@ const BasketStockPublish = () => {
   };
 
 
-
+  function stripHtml(html) {
+    const div = document.createElement("div");
+    div.innerHTML = html;
+    return div.textContent || div.innerText || "";
+  }
 
   // Columns for DataTable
   const columns = [
@@ -206,9 +210,29 @@ const BasketStockPublish = () => {
       width: '200px',
     },
 
+    // {
+    //   name: "Description",
+    //   selector: (row) => row.description,
+    //   wrap: true,
+    //   width: '200px',
+    // },
     {
       name: "Description",
-      selector: (row) => row.description,
+      selector: (row) => stripHtml(row.description),
+      cell: (row) => (
+        <div style={{
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          display: '-webkit-box',
+          WebkitLineClamp: 3,
+          WebkitBoxOrient: 'vertical',
+          maxWidth: '200px',
+          textAlign:'left',
+          whiteSpace: 'normal', // Ensure multi-line text
+        }}>
+          {stripHtml(row.description)}
+        </div>
+      ),
       wrap: true,
       width: '200px',
     },
