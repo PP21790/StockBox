@@ -34,7 +34,7 @@ const Notificationlist = () => {
             const response = await getAllNotificationlist(data, token);
 
             if (response?.status) {
-                setTotalRows(response.pagination.total);
+                setTotalRows(response.pagination.totalItems);
                 setClients(response.data);
             }
         } catch (error) {
