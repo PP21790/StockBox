@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { GetClient } from '../../../Services/Admin';
 // import Table from '../../../components/Table';
-import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine, RefreshCcw } from 'lucide-react';
+import { Settings2, Eye, SquarePen, RadioTower, Trash2, Download, ArrowDownToLine, RefreshCcw } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { deleteClient, UpdateClientStatus, PlanSubscription, getActivecategoryplan, getplanlist, BasketSubscription, BasketAllList, getcategoryplan, getPlanbyUser, AllclientFilter, getclientExportfile, BasketAllActiveList } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
@@ -611,7 +611,7 @@ const Client = () => {
 
                     <Tooltip placement="top" overlay="Signal Detail">
                         <span onClick={(e) => { signaldetail(row) }} style={{ cursor: 'pointer' }}>
-                            <Settings2 />
+                            <RadioTower />
                         </span>
                     </Tooltip>
                 </div>

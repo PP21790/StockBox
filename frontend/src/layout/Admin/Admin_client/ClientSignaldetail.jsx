@@ -4,7 +4,7 @@ import axios from 'axios';
 import Table from '../../../components/Table1';
 import { RefreshCcw, IndianRupee } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { GetSignallist, GetSignallistWithFilter, GetService, GetStockDetail, GetClientSignaldetail } from '../../../Services/Admin';
+import { GetSignallist, GetSignallistWithFilter, GetService, GetStockDetail, GetClientSignaldetail, Getclientsignaltoexport } from '../../../Services/Admin';
 import { fDateTimeH, fDateTimeSuffix } from '../../../Utils/Date_formate'
 import { exportToCSV } from '../../../Utils/ExportData';
 import Select from 'react-select';
@@ -49,18 +49,20 @@ const ClientSignaldetail = () => {
 
     const getexportfile = async () => {
         try {
-            const response = await GetSignallist(token);
+            const data = { client_id: id }
+            const response = await Getclientsignaltoexport(data, token);
             if (response.status) {
                 if (response.data?.length > 0) {
-                    let filterdata = response.data.filter((item) => item.close_status === false);
-                    const csvArr = filterdata.map((item) => ({
-                        Symbol: item.tradesymbol || "",
-                        segment: item?.segment || '',
-                        EntryType: item?.calltype || '',
-                        EntryPrice: item?.price || '',
-                        EntryDate: fDateTimeH(item?.created_at) || '',
+                    const csvArr = response.data?.map((item) => ({
+                        Symbol: item?.tradesymbol || "-",
+                        segment: item?.segment || "-",
+                        EntryType: item?.calltype || "-",
+                        EntryPrice: item?.price || "-",
+                        ExitPrice: item?.closeprice || "-",
+                        EntryDate: fDateTimeH(item?.created_at) || "-",
+                        ExitDate: fDateTimeH(item?.closedate) || "-",
                     }));
-                    exportToCSV(csvArr, 'Open Signal');
+                    exportToCSV(csvArr, 'Signal Details');
                 }
             }
         } catch (error) {

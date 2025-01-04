@@ -390,6 +390,24 @@ export async function GetClientSignaldetail(data, token) {
 
 
 
+// get client signal 
+
+
+export async function Getclientsignaltoexport(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}signal/allsignalclient`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err.response?.data || err.message;
+    }
+}
+
+
 
 
 // getsignal by signal filter
@@ -2769,6 +2787,11 @@ export async function getclientExportfile(data, token) {
         return err.response?.data || err.message;
     }
 }
+
+
+
+// get client signal by id 
+
 
 
 
