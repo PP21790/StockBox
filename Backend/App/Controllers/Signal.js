@@ -1042,19 +1042,14 @@ async showSignalsToClients(req, res) {
 
 async allShowSignalsToClients(req, res) {
   try {
-    const { service_id, client_id, search, type, stock, from, to, page = 1 } = req.body;
+    const { service_id, client_id} = req.body;
 
-
-    // const limit = 10;
-    // const skip = (parseInt(page) - 1) * parseInt(limit); 
-    // const limitValue = parseInt(limit); // Items per page
 
     const service_ids = service_id
     ? [service_id] // If service_id is provided, use it as an array
     : ["66d2c3bebf7e6dc53ed07626", "66dfede64a88602fbbca9b72", "66dfeef84a88602fbbca9b79"];
 
 
-    // Ensure service_ids is an array
     if (!Array.isArray(service_ids) || service_ids.length === 0) {
       return res.json({
         status: false,
@@ -1063,7 +1058,6 @@ async allShowSignalsToClients(req, res) {
       });
     }
 
-    // Fetch plans for all services and the given client
     const plans = await Planmanage.find({ serviceid: { $in: service_ids }, clientid: client_id });
     if (plans.length === 0) {
       return res.json({
@@ -1087,77 +1081,16 @@ async allShowSignalsToClients(req, res) {
       }
     };
 
-    if (type === true || type === false) {
-      query.close_status = type; 
-    }
-    const protocol = req.protocol; // Will be 'http' or 'https'
-    const baseUrl = `${protocol}://${req.headers.host}`; // Construct the base URL
-
-    if (search && search.trim() !== '') {
-      query.$or = [
-        { tradesymbol: { $regex: search, $options: 'i' } },
-        { calltype: { $regex: search, $options: 'i' } },
-        { price: { $regex: search, $options: 'i' } },
-        { closeprice: { $regex: search, $options: 'i' } }
-      ];
-    }
-
-
-    if (stock) {
-      query.stock = stock; 
-    }
-
-   
-    
-    if (from || to) {
-      query.created_at = {};
-    
-      if (from) {
-        const fromDate = new Date(from);
-        fromDate.setHours(0, 0, 0, 0); // Set time to 00:00:00
-        query.created_at.$gte = fromDate;
-      }
-    
-      if (to) {
-        const toDate = new Date(to);
-        toDate.setHours(23, 59, 59, 999); // Set time to 23:59:59
-        query.created_at.$lte = toDate;
-      }
-    }
    
     const signals = await Signal_Modal.find(query)
       .sort({ created_at: -1 })
-      // .skip(skip)
-      // .limit(limitValue)
       .lean();
 
-    // const totalSignals = await Signal_Modal.countDocuments(query);
-
-    const signalsWithReportUrls = await Promise.all(signals.map(async (signal) => {
-      // Check if the signal was bought by the client
-      const order = await Order_Modal.findOne({
-        clientid: client_id,
-        signalid: signal._id
-      }).lean();
-
-      return {
-        ...signal,
-        report_full_path: signal.report ? `${baseUrl}/uploads/report/${signal.report}` : null, // Append full report URL
-        purchased: order ? true : false,
-        order_quantity: order ? order.quantity : 0
-      };
-    }));
-
+    
     return res.json({
       status: true,
       message: "Signals retrieved successfully",
-      data: signalsWithReportUrls,
-      // pagination: {
-      //   total: totalSignals,
-      //   page: parseInt(page), // Current page
-      //   limit: parseInt(limit), // Items per page
-      //   totalPages: Math.ceil(totalSignals / limit), // Total number of pages
-      // }
+      data: signals,
     });
 
   } catch (error) {
