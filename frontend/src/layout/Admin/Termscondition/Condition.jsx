@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getconsitionlist, UpdateCondition } from '../../../Services/Admin';
 import Swal from 'sweetalert2';
 import { SquarePen, } from 'lucide-react';
+import Loader from '../../../Utils/Loader';
 
 
 const Condition = () => {
@@ -17,6 +18,9 @@ const Condition = () => {
     const userid = localStorage.getItem('id');
 
     const [templateid, setTemplateid] = useState({})
+
+    //state for Loading
+    const [isLoading, setIsLoading] = useState(true)
 
     const [updatetitle, setUpdatetitle] = useState({
         title: "",
@@ -39,6 +43,9 @@ const Condition = () => {
         } catch (error) {
             console.log("Error fetching services:", error);
         }
+        setTimeout(()=>{
+            setIsLoading(false)
+        })
     };
 
     useEffect(() => {
@@ -137,6 +144,11 @@ const Condition = () => {
                 </div>
                 <hr />
                 <div className="row">
+                {isLoading ? (
+                                                <Loader />
+                                            ):(
+                                                <>
+                                               
                     {clients.map((client, index) => (
                         <div className="col-md-6 col-lg-12" key={index}>
                             <div className="mb-4 card radius-15">
@@ -159,6 +171,7 @@ const Condition = () => {
                                         <hr />
 
                                         <form className="row g-3">
+                                            
 
 
                                             <div className="col-md-12">
@@ -177,6 +190,8 @@ const Condition = () => {
                             </div>
                         </div>
                     ))}
+                 </>
+                )}
                 </div>
             </div>
 

@@ -6,6 +6,7 @@ import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import { Tooltip } from 'antd';
 import { fDateTime } from '../../../Utils/Date_formate';
+import Loader from '../../../Utils/Loader';
 
 
 
@@ -23,6 +24,9 @@ const Message = () => {
     const [servicedata, setServicedata] = useState({});
     const [chatMessages, setChatMessages] = useState([]);
 
+    //state for loading
+    const [isLoading, setIsLoading] = useState(true)
+
 
     const getservice = async () => {
         try {
@@ -33,6 +37,9 @@ const Message = () => {
         } catch (error) {
             console.log("Error fetching services:", error);
         }
+        setTimeout(() => {
+            setIsLoading(false)
+        })
     };
 
 
@@ -106,84 +113,94 @@ const Message = () => {
                     </div>
                 </div>
                 <hr />
-                <div className="card">
-                    <div className="card-body">
-                        <div className="d-flex justify-content-end">
-                            <div className='me-2 mb-3'>
-                                <Link to="/admin/addbroadcast" className="btn btn-primary">
-                                    <i className="bx bxs-plus-square" />
-                                    Add Broadcast
-                                </Link>
-                            </div>
-                        </div>
-                        <div className="page-content">
-                            <div className="container py-2">
-                                {chatMessages.map((item, index) => {
-                                    const serviceIds = item.service?.split(',');
+                {isLoading ? (
+                    <Loader />
+                ) : (
+                    <>
+                        <div className="card">
+                            <div className="card-body">
+                                <div className="d-flex justify-content-end">
+                                    <div className='me-2 mb-3'>
+                                        <Link to="/admin/addbroadcast" className="btn btn-primary">
+                                            <i className="bx bxs-plus-square" />
+                                            Add Broadcast
+                                        </Link>
+                                    </div>
+                                </div>
 
-                                    const matchedServices = serviceIds?.map(serviceId =>
-                                        (Array.isArray(servicedata) ? servicedata : []).find(service => service?._id === serviceId)
-                                    ).filter(Boolean);
 
-                                    return (
-                                        <div className="row" key={index}>
-                                            <div className="col py-2">
-                                                <div className="card" style={{ borderRadius: "10px" }}>
-                                                    <div className="card-body">
-                                                        <div className="float-end text-muted">
-                                                            <Tooltip placement="top" overlay="Update">
-                                                                <SquarePen
-                                                                    onClick={() => navigate("/admin/updatebroadcast", { state: { item } })}
-                                                                />
-                                                            </Tooltip>
-                                                            <Tooltip placement="top" overlay="Delete">
-                                                                <Trash2 onClick={() => DeleteMessage(item._id)} />
-                                                            </Tooltip>
+                                <div className="page-content">
+                                    <div className="container py-2">
+                                        {chatMessages.map((item, index) => {
+                                            const serviceIds = item.service?.split(',');
+
+                                            const matchedServices = serviceIds?.map(serviceId =>
+                                                (Array.isArray(servicedata) ? servicedata : []).find(service => service?._id === serviceId)
+                                            ).filter(Boolean);
+
+                                            return (
+                                                <div className="row" key={index}>
+                                                    <div className="col py-2">
+                                                        <div className="card" style={{ borderRadius: "10px" }}>
+                                                            <div className="card-body">
+                                                                <div className="float-end text-muted">
+                                                                    <Tooltip placement="top" overlay="Update">
+                                                                        <SquarePen
+                                                                            onClick={() => navigate("/admin/updatebroadcast", { state: { item } })}
+                                                                        />
+                                                                    </Tooltip>
+                                                                    <Tooltip placement="top" overlay="Delete">
+                                                                        <Trash2 onClick={() => DeleteMessage(item._id)} />
+                                                                    </Tooltip>
+                                                                </div>
+                                                                <h4 className="card-title text-muted">
+                                                                    <span>
+                                                                        {matchedServices.length > 0 ? (
+                                                                            matchedServices.map((service, idx) => (
+                                                                                <span key={idx}>
+                                                                                    {service.segment === "C" && <span>CASH </span>}
+                                                                                    {service.segment === "O" && <span>OPTION </span>}
+                                                                                    {service.segment === "F" && <span>FUTURE </span>}
+                                                                                </span>
+                                                                            ))
+
+                                                                        ) : ""}
+                                                                    </span>({item.type})
+                                                                </h4>
+                                                                <hr />
+                                                                <p><strong>Subject:</strong> {item.subject}</p>
+                                                                {/* <p><strong>Type:</strong> {item.type}</p> */}
+                                                                <p className="card-text">
+                                                                    <strong>Message:</strong>
+                                                                    <span
+                                                                        dangerouslySetInnerHTML={{
+                                                                            __html: item.message.replace(
+                                                                                /<img /g,
+                                                                                '<img style="width: 300px; height: 150px; object-fit: cover;" '
+                                                                            )
+                                                                        }}
+                                                                        style={{ display: 'block', marginTop: '0.5rem' }}
+                                                                    />
+                                                                </p>
+
+                                                                <p><strong>Created At:</strong> {fDateTime(item.created_at)}</p>
+                                                                <p><strong>Updated At:</strong> {fDateTime(item.updated_at)}</p>
+                                                            </div>
                                                         </div>
-                                                        <h4 className="card-title text-muted">
-                                                            <span>
-                                                                {matchedServices.length > 0 ? (
-                                                                    matchedServices.map((service, idx) => (
-                                                                        <span key={idx}>
-                                                                            {service.segment === "C" && <span>CASH </span>}
-                                                                            {service.segment === "O" && <span>OPTION </span>}
-                                                                            {service.segment === "F" && <span>FUTURE </span>}
-                                                                        </span>
-                                                                    ))
-
-                                                                ) : ""}
-                                                            </span>({item.type})
-                                                        </h4>
-                                                        <hr />
-                                                        <p><strong>Subject:</strong> {item.subject}</p>
-                                                        {/* <p><strong>Type:</strong> {item.type}</p> */}
-                                                        <p className="card-text">
-                                                            <strong>Message:</strong>
-                                                            <span
-                                                                dangerouslySetInnerHTML={{
-                                                                    __html: item.message.replace(
-                                                                        /<img /g,
-                                                                        '<img style="width: 300px; height: 150px; object-fit: cover;" '
-                                                                    )
-                                                                }}
-                                                                style={{ display: 'block', marginTop: '0.5rem' }}
-                                                            />
-                                                        </p>
-
-                                                        <p><strong>Created At:</strong> {fDateTime(item.created_at)}</p>
-                                                        <p><strong>Updated At:</strong> {fDateTime(item.updated_at)}</p>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
+                                            );
+                                        })}
+
+
+                                    </div>
+                                </div>
 
 
                             </div>
                         </div>
-                    </div>
-                </div>
+                    </>
+                )}
             </div>
         </div>
     );

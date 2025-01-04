@@ -9,6 +9,7 @@ import { DeleteCoupon, UpdateClientStatus, CouponStatus, CouponShowstatus,GetSer
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
 import { fDate, fDateTime } from '../../../Utils/Date_formate';
+import Loader from '../../../Utils/Loader';
 
 
 
@@ -24,6 +25,9 @@ const Coupon = () => {
 
     const [service,setService] = useState([])
     console.log("Service",service);
+
+    //state for Loading
+    const [isLoading,setIsLoading] = useState(true)
     
 
     const token = localStorage.getItem('token');
@@ -49,6 +53,9 @@ const Coupon = () => {
         } catch (error) {
             console.log("error");
         }
+        setTimeout(()=>{
+            setIsLoading(false)
+        })
     }
 
     const getService = async () => {
@@ -453,11 +460,18 @@ const Coupon = () => {
                                     </Link>
                                 </div>
                             </div>
+                            {isLoading ? (
+                            <Loader />
+
+                        ) : (
+                            <>
 
                             <Table
                                 columns={columns}
                                 data={clients}
                             />
+                            </>
+                        )}
                         </div>
                     </div>
                 </div>

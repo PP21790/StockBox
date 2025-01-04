@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
 import { fDateTime } from '../../../Utils/Date_formate';
+import Loader from '../../../Utils/Loader'
 
 
 
@@ -16,6 +17,10 @@ const Blogs = () => {
     const navigate = useNavigate();
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
+
+    //set state for loding
+    const [isLoading, setIsLoading] = useState(true)
+
     const [serviceid, setServiceid] = useState({});
     const [searchInput, setSearchInput] = useState("");
     const [updatetitle, setUpdatetitle] = useState({
@@ -57,6 +62,9 @@ const Blogs = () => {
         } catch (error) {
             console.log("Error fetching blogs:", error);
         }
+        setTimeout(()=>{
+            setIsLoading(false)
+        })
     };
 
     useEffect(() => {
@@ -366,6 +374,7 @@ const Blogs = () => {
 
 
     return (
+
         <div>
             <div className="page-content">
 
@@ -387,7 +396,6 @@ const Blogs = () => {
 
                 <div className="card">
                     <div className="card-body">
-
                         <div className="d-lg-flex align-items-center mb-4 gap-3">
                             <div className="position-relative">
                                 <input
@@ -405,7 +413,6 @@ const Blogs = () => {
                                 <Link
                                     to="/admin/addblogs"
                                     className="btn btn-primary"
-
                                 >
                                     <i className="bx bxs-plus-square" />
                                     Add Blog
@@ -439,7 +446,7 @@ const Blogs = () => {
                                                             <input
                                                                 className="form-control mb-3"
                                                                 type="text"
-                                                                placeholder='Enter blogs Title'
+                                                                placeholder="Enter blogs Title"
                                                                 value={title.title}
                                                                 onChange={(e) => setTitle({ ...title, title: e.target.value })}
                                                             />
@@ -460,11 +467,11 @@ const Blogs = () => {
 
                                                     <div className="row">
                                                         <div className="col-md-12">
-                                                            <label htmlFor="">description</label>
+                                                            <label htmlFor="">Description</label>
                                                             <textarea
                                                                 className="form-control mb-3"
                                                                 type="text"
-                                                                placeholder='Enter description'
+                                                                placeholder="Enter description"
                                                                 value={title.description}
                                                                 onChange={(e) => setTitle({ ...title, description: e.target.value })}
                                                             />
@@ -491,7 +498,6 @@ const Blogs = () => {
                                         </div>
                                     </div>
                                 </div>
-
 
                                 {model && (
                                     <>
@@ -523,9 +529,11 @@ const Blogs = () => {
                                                                     <input
                                                                         className="form-control mb-2"
                                                                         type="text"
-                                                                        placeholder='Enter blogs Title'
+                                                                        placeholder="Enter blogs Title"
                                                                         value={updatetitle.title}
-                                                                        onChange={(e) => updateServiceTitle({ title: e.target.value })}
+                                                                        onChange={(e) =>
+                                                                            updateServiceTitle({ title: e.target.value })
+                                                                        }
                                                                     />
                                                                 </div>
                                                             </div>
@@ -554,14 +562,15 @@ const Blogs = () => {
                                                                     <textarea
                                                                         className="form-control mb-2"
                                                                         type="text"
-                                                                        placeholder='Enter  Description'
+                                                                        placeholder="Enter Description"
                                                                         value={updatetitle.description}
-                                                                        onChange={(e) => updateServiceTitle({ description: e.target.value })}
+                                                                        onChange={(e) =>
+                                                                            updateServiceTitle({ description: e.target.value })
+                                                                        }
                                                                     />
                                                                 </div>
                                                             </div>
                                                         </form>
-
                                                     </div>
                                                     <div className="modal-footer">
                                                         <button
@@ -584,24 +593,34 @@ const Blogs = () => {
                                         </div>
                                     </>
                                 )}
-
                             </div>
                         </div>
-                        <div className="table-responsive">
-                            <Table
-                                columns={columns}
-                                data={clients}
-                                pagination
-                                striped
-                                highlightOnHover
-                                dense
-                            />
-                        </div>
+
+                        {isLoading ? (
+                            <Loader />
+
+                        ) : (
+                            <>
+
+                                <div className="table-responsive">
+                                    <Table
+                                        columns={columns}
+                                        data={clients}
+                                        pagination
+                                        striped
+                                        highlightOnHover
+                                        dense
+                                    />
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
+
             </div>
         </div>
     );
+
 };
 
 export default Blogs;

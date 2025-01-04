@@ -4,22 +4,23 @@ import { RefreshCcw } from 'lucide-react';
 import Table from '../../../components/Table1';
 import { exportToCSV } from '../../../Utils/ExportData';
 import { getclientPlanexpiry, getclientPlanexpirywithfilter, GetService } from '../../../Services/Admin';
-import { fDateTime} from '../../../Utils/Date_formate';
+import { fDateTime } from '../../../Utils/Date_formate';
+import Loader from '../../../Utils/Loader';
 
 
 
 const Planexpiry = () => {
-    
+
 
 
     useEffect(() => {
         fetchAdminServices();
     }, []);
-    
+
 
 
     const token = localStorage.getItem('token');
-    
+
     const [searchInput, setSearchInput] = useState('');
     const [searchStock, setSearchStock] = useState('');
     const [clients, setClients] = useState([]);
@@ -29,6 +30,9 @@ const Planexpiry = () => {
     const [totalRows, setTotalRows] = useState(0);
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
+
+    //state for loading
+    const [isLoading, setIsLoading] = useState(true)
 
 
 
@@ -67,6 +71,9 @@ const Planexpiry = () => {
         } catch (error) {
             console.error('Error fetching client data:', error);
         }
+        setTimeout(() => {
+            setIsLoading(false)
+        })
     };
 
 
@@ -86,7 +93,7 @@ const Planexpiry = () => {
                         startdate: fDateTime(item.startdate) || '',
                         enddate: fDateTime(item.enddate) || '',
                     }));
-        
+
                     exportToCSV(csvArr, 'Client Plan Expiry')
                 } else {
                     console.log("No data available.");
@@ -160,7 +167,7 @@ const Planexpiry = () => {
         },
     ];
 
-    
+
 
     return (
         <div className="page-content">
@@ -249,13 +256,21 @@ const Planexpiry = () => {
                             <RefreshCcw className="refresh-icon" onClick={resetFilters} />
                         </div>
                     </div>
-                    <Table
-                        columns={columns}
-                        data={clients}
-                        totalRows={totalRows}
-                        currentPage={currentPage}
-                        onPageChange={handlePageChange}
-                    />
+
+                    {isLoading ? (
+                        <Loader />
+                    ) : (
+                        <>
+                            <Table
+                                columns={columns}
+                                data={clients}
+                                totalRows={totalRows}
+                                currentPage={currentPage}
+                                onPageChange={handlePageChange}
+                            />
+                        </>
+                    )}
+
                 </div>
             </div>
         </div>
