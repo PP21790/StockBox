@@ -72,20 +72,21 @@ const AddStock = () => {
     setFormikValues(updatedValues);
   };
 
-  // Handle removal of a selected stock
   const handleRemoveService = (serviceValue) => {
     setSelectedServices((prev) =>
       prev.filter((service) => service.value !== serviceValue)
     );
 
-    const updatedValues = { ...formikValues };
-    delete updatedValues[serviceValue];
-    setFormikValues(updatedValues);
-
+    setFormikValues((prevValues) => {
+      const updatedValues = { ...prevValues };
+      delete updatedValues[serviceValue];
+      return updatedValues;
+    });
     setOptions((prevOptions) =>
       prevOptions.filter((option) => option.value !== serviceValue)
     );
   };
+
 
   // Validation Schema for Formik
   const validationSchema = Yup.object().shape(

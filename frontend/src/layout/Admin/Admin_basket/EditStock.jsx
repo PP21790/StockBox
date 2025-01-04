@@ -91,11 +91,30 @@ const EditStock = () => {
     };
 
 
+    // const handleRemoveService = (serviceValue) => {
+    //     setSelectedServices((prev) =>
+    //         prev.filter((service) => service.value !== serviceValue)
+    //     );
+    // };
+
+
+
     const handleRemoveService = (serviceValue) => {
         setSelectedServices((prev) =>
             prev.filter((service) => service.value !== serviceValue)
         );
-    };
+
+        setFormikValues((prevValues) => {
+            const updatedValues = { ...prevValues };
+            delete updatedValues[serviceValue];
+            return updatedValues;
+        });
+        setOptions((prevOptions) =>
+            prevOptions.filter((option) => option.value !== serviceValue)
+        );
+    }
+
+
 
     useEffect(() => {
         const initialValues = selectedServices.reduce((acc, service) => {

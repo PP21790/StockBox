@@ -71,15 +71,12 @@ const Freeclient = () => {
 
 
     useEffect(() => {
-        getdemoclient();
+        // getdemoclient();
         getcategoryplanlist()
         getActiveBasketdetail()
     }, []);
 
 
-    useEffect(() => {
-        getdemoclient();
-    }, [client, currentPage, searchInput]);
 
 
     const getdemoclient = async () => {
@@ -97,6 +94,12 @@ const Freeclient = () => {
     }
 
 
+    useEffect(() => {
+        getdemoclient();
+    }, [client, currentPage, searchInput]);
+
+
+
 
     const getActiveBasketdetail = async () => {
         try {
@@ -109,6 +112,8 @@ const Freeclient = () => {
             console.log("error");
         }
     };
+
+
 
 
     const getexportfile = async () => {
