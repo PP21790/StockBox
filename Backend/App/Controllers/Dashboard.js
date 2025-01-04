@@ -55,6 +55,7 @@ class Dashboard {
         .sort({ _id: -1 })
         .limit(10);
 
+
       const activefreetrial = await Freetrial_Modal.aggregate([
         {
           $match: {
@@ -64,6 +65,20 @@ class Dashboard {
         {
           $addFields: {
             clientid: { $toObjectId: "$clientid" } // Convert clientid to ObjectId for matching
+          }
+        },
+        {
+          $lookup: {
+            from: "clients", // Assuming the collection for clients is named 'clients'
+            localField: "clientid",
+            foreignField: "_id",
+            as: "clientInfo"
+          }
+        },
+        {
+          $match: {
+            "clientInfo.ActiveStatus": 1, // Only clients with ActiveStatus = 1
+            "clientInfo.del": 0          // Only clients with del = 0
           }
         },
         {
@@ -102,6 +117,20 @@ class Dashboard {
         {
           $addFields: {
             clientid: { $toObjectId: "$clientid" } // Convert clientid to ObjectId for matching
+          }
+        },
+        {
+          $lookup: {
+            from: "clients", // Assuming the collection for clients is named 'clients'
+            localField: "clientid",
+            foreignField: "_id",
+            as: "clientInfo"
+          }
+        },
+        {
+          $match: {
+            "clientInfo.ActiveStatus": 1, // Only clients with ActiveStatus = 1
+            "clientInfo.del": 0          // Only clients with del = 0
           }
         },
         {

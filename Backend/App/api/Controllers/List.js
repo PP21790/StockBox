@@ -1301,6 +1301,7 @@ class List {
     }
   }
 
+  
   async showSignalsToClients(req, res) {
     try {
       const { service_id, client_id, search, page = 1 } = req.body;
