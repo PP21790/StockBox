@@ -31,17 +31,11 @@ const Notificationlist = () => {
             const data = {
                 page: currentPage
             };
-            const response = await getAllNotificationlist(token, data);
-            console.log("Get all notification:", response.data);
+            const response = await getAllNotificationlist(data, token);
 
             if (response?.status) {
                 setTotalRows(response.pagination.total);
-                const filterdata = response.data.filter((item) =>
-                    searchInput === "" ||
-                    item.title.toLowerCase().includes(searchInput.toLowerCase()) ||
-                    item.message.toLowerCase().includes(searchInput.toLowerCase())
-                );
-                setClients(searchInput ? filterdata : response.data);
+                setClients(response.data);
             }
         } catch (error) {
             console.error('Error fetching client data:', error);
@@ -52,7 +46,7 @@ const Notificationlist = () => {
 
     useEffect(() => {
         getClientData();
-    }, [searchInput, currentPage]);
+    }, [currentPage]);
 
 
 
