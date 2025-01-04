@@ -1531,31 +1531,37 @@ class Clients {
 
 
       if (!FullName) {
-        return res.json({ status: false, message: "Fullname is Required" });
+        return res.status(400).json({ status: false, message: "fullname is required" });
       }
 
       if (!Email) {
-        return res.json({ status: false, message: "Email is Required" });
+        return res.status(400).json({ status: false, message: "email is required" });
       } else if (!/^\S+@\S+\.\S+$/.test(Email)) {
-        return res.json({ status: false, message: "Invalid Email Format" });
+        return res.status(400).json({ status: false, message: "Invalid email format" });
       }
 
       if (!PhoneNo) {
-        return res.json({ status: false, message: "Phone number is Required" });
+        return res.status(400).json({ status: false, message: "phone number is required" });
       } else if (!/^\d{10}$/.test(PhoneNo)) {
-        return res.json({ status: false, message: "Invalid Phone number Format" });
+        return res.status(400).json({ status: false, message: "Invalid phone number format" });
       }
-      // if (!id) {
-      //       return res.status(400).json({
-      //           status: false,
-      //           message: "Id not found",
-      //       });
-      //   }
+      // if (!password || password.length < 8 || 
+      //     !/[A-Z]/.test(password) || 
+      //     !/[a-z]/.test(password) || 
+      //     !/\d/.test(password) || 
+      //     !/[@$!%*?&#]/.test(password)) {
+      //   return res.status(400).json({ 
+      //     status: false, 
+      //     message: "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&#)" 
+      //   });
+      // }
+
+
 
 
 
       if (!id) {
-        return res.json({
+        return res.status(400).json({
           status: false,
           message: "Client ID is required",
         });
@@ -1575,7 +1581,7 @@ class Clients {
 
       // If the client is not found
       if (!updatedClient) {
-        return res.json({
+        return res.status(404).json({
           status: false,
           message: "Client not found",
         });
@@ -1590,7 +1596,7 @@ class Clients {
 
     } catch (error) {
       // console.log("Error updating client:", error);
-      return res.json({
+      return res.status(500).json({
         status: false,
         message: "Server error",
         error: error.message,
@@ -1893,6 +1899,14 @@ class Clients {
       const skip = (parseInt(page) - 1) * parseInt(limit); // Calculate the number of items to skip based on page and limit
       const today = new Date(); // Get today's date
 
+
+      const searchMatch = search && search.trim() !== "" ? {
+        $or: [
+          { "clientDetails.FullName": { $regex: search, $options: "i" } },
+          { "clientDetails.Email": { $regex: search, $options: "i" } },
+          { "clientDetails.PhoneNo": { $regex: search, $options: "i" } }
+        ]
+      } : {};
 
 
       const statussMatch = {
