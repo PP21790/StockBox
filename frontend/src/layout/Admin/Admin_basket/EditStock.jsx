@@ -75,7 +75,11 @@ const EditStock = () => {
                 !selectedServices.some((service) => service.value === newOption.value)
         );
 
-        setSelectedServices([...selectedServices, ...uniqueServices]);
+
+        // Add new services at the top
+        const updatedServices = [...uniqueServices, ...selectedServices];
+
+        setSelectedServices(updatedServices);
 
         const newFormikValues = { ...formikValues };
         uniqueServices.forEach((service) => {
