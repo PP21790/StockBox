@@ -845,12 +845,11 @@ class Dashboard {
     }
   }
 
+
   async NotificationList(req, res) {
     try {
 
-      const { page } = req.params;
-
-      console.log("req.params", req.params)
+      const { page } = req.body;
       const limit = 10; // Default to 10 items per page
       const skip = (page - 1) * limit; // Calculate the number of documents to skip
 
@@ -879,7 +878,6 @@ class Dashboard {
       return res.json({ status: false, message: "Server error", data: [] });
     }
   }
-
 
   async statusChangeNotifiction(req, res) {
     try {
