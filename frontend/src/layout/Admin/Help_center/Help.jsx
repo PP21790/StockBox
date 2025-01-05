@@ -5,7 +5,7 @@ import Table from '../../../components/Table';
 import { Tooltip } from 'antd';
 import { Eye } from 'lucide-react';
 import { fDate , fDateTime} from '../../../Utils/Date_formate';
-
+import Loader from '../../../Utils/Loader';
 
 
 const Help = () => {
@@ -14,6 +14,9 @@ const Help = () => {
 
     const [clients, setClients] = useState([]);
     const [searchInput, setSearchInput] = useState("");
+
+    //state for Loading
+    const [isLoading, setIsLoading] = useState(true)
 
 
     const getdemoclient = async () => {
@@ -33,6 +36,9 @@ const Help = () => {
         } catch (error) {
             console.log("error", error);
         }
+        setTimeout(()=>{
+            setIsLoading(false)
+        })
     }
 
 
@@ -80,7 +86,12 @@ const Help = () => {
                                             </span>
                                         </div>
                                     </div>
-                                    <div className="container py-2">
+
+                                    {isLoading ? (
+                                        <Loader/>
+                                    ):(
+                                        <>
+                                        <div className="container py-2">
                                         <div className="row">
                                             <div className="col py-2">
                                                 {clients.length > 0 ? (
@@ -115,6 +126,9 @@ const Help = () => {
                                             </div>
                                         </div>
                                     </div>
+                                        </>
+                                    )}
+                                    
                                 </div>
                             </div>
                         </div>

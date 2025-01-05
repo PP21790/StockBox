@@ -5780,3 +5780,63 @@ div.rdt_TableCell svg {
 	width: 18px;
 	
 	}
+
+
+/* css for loader */
+
+/* Loader container styling */
+.loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full height of the screen */
+    background-color: rgba(255, 255, 255, 0.8); /* Optional background overlay */
+}
+
+/* Main loader container with multiple bars */
+.loader {
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100px;
+    height: 30px;
+}
+
+/* Individual loader bars */
+.loader__bar {
+    width: 10px;
+    height: 100%;
+    background-color: #3498db;
+    animation: scale 1s infinite ease-in-out;
+}
+
+/* Ball animation inside the loader */
+.loader__ball {
+    position: absolute;
+    bottom: 0;
+    width: 20px;
+    height: 20px;
+    background-color: #e74c3c;
+    border-radius: 50%;
+    animation: bounce 2s infinite ease-in-out;
+}
+
+/* Keyframe Animations for bars and ball */
+@keyframes scale {
+    0%, 40%, 100% {
+        transform: scaleY(1);
+    }
+    20% {
+        transform: scaleY(2.5);
+    }
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-30px);
+    }
+}

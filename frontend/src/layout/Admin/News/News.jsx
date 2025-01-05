@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
 import { fDate , fDateTime} from '../../../Utils/Date_formate';
+import Loader from '../../../Utils/Loader';
 
 
 
@@ -18,6 +19,9 @@ const News = () => {
     
     const token = localStorage.getItem('token');
     const userid = localStorage.getItem('id');
+
+    //state for Loading
+    const [isLoading,setIsLoading] = useState(true)
 
 
     const [clients, setClients] = useState([]);
@@ -61,6 +65,9 @@ const News = () => {
         } catch (error) {
             console.log("Error fetching services:", error);
         }
+        setTimeout(()=>{
+            setIsLoading(false)
+        })
     };
 
 
@@ -309,6 +316,11 @@ const News = () => {
                             </div>
                         </div>
                         <div className="container py-2">
+                        {isLoading ? (
+                            <Loader />
+
+                        ) : (
+                            <>
 
                             {clients.map((client, index) => (
                                 <div className="row g-0" key={index}>
@@ -394,6 +406,8 @@ const News = () => {
 
                                 </div>
                             ))}
+                            </>
+                            )}
 
 
                         </div>

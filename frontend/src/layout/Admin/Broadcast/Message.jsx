@@ -6,6 +6,7 @@ import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import { Tooltip } from 'antd';
 import { fDateTime} from '../../../Utils/Date_formate';
+import Loader from '../../../Utils/Loader';
 
 
 
@@ -23,6 +24,9 @@ const Message = () => {
     const [servicedata, setServicedata] = useState({});
     const [chatMessages, setChatMessages] = useState([]);
 
+    //state for loading
+    const [isLoading,setIsLoading] = useState(true)
+
 
     const getservice = async () => {
         try {
@@ -33,6 +37,9 @@ const Message = () => {
         } catch (error) {
             console.log("Error fetching services:", error);
         }
+        setTimeout(()=>{
+            setIsLoading(false)
+        })
     };
 
 
@@ -106,6 +113,10 @@ const Message = () => {
                     </div>
                 </div>
                 <hr />
+                {isLoading ? (
+                                        <Loader/>
+                                    ):(
+                                        <>
                 <div className="card">
                     <div className="card-body">
                         <div className="d-flex justify-content-end">
@@ -116,7 +127,9 @@ const Message = () => {
                                 </Link>
                             </div>
                         </div>
-                        <div className="page-content">
+
+                       
+                            <div className="page-content">
                             <div className="container py-2">
                                 {chatMessages.map((item, index) => {
                                     const serviceIds = item.service?.split(',');
@@ -177,8 +190,12 @@ const Message = () => {
 
                             </div>
                         </div>
+                           
+                       
                     </div>
                 </div>
+                </>
+                        )}
             </div>
         </div>
     );

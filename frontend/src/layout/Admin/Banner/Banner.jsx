@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { fDateTime } from '../../../Utils/Date_formate';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
+import Loader from '../../../Utils/Loader';
 
 const Banner = () => {
      
@@ -16,6 +17,9 @@ const Banner = () => {
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
     const [searchInput, setSearchInput] = useState("");
+
+    //state for loading
+    const [isLoading,setIsLoading] = useState(true)
 
 
     const [updatetitle, setUpdatetitle] = useState({
@@ -57,6 +61,9 @@ const Banner = () => {
         } catch (error) {
             console.log("Error fetching services:", error);
         }
+        setTimeout(()=>{
+            setIsLoading(false)
+        })
     };
 
 
@@ -400,7 +407,11 @@ const Banner = () => {
                                     Add Banner
                                 </button>
 
-                                <div
+                                {isLoading ? (
+                                    <Loader/>
+                                ):(
+                                    <>
+                                    <div
                                     className="modal fade"
                                     id="exampleModal"
                                     tabIndex={-1}
@@ -467,6 +478,9 @@ const Banner = () => {
                                         </div>
                                     </div>
                                 </div>
+                                    </>
+                                )}
+                               
 
 
                                 {model && (
