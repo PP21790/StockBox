@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { GetClient } from '../../../Services/Admin';
 // import Table from '../../../components/Table';
-import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine, RefreshCcw } from 'lucide-react';
+import { Settings2, Eye, SquarePen, RadioTower, Trash2, Download, ArrowDownToLine, RefreshCcw } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { deleteClient, UpdateClientStatus, PlanSubscription, getActivecategoryplan, getplanlist, BasketSubscription, BasketAllList, getcategoryplan, getPlanbyUser, AllclientFilter, getclientExportfile, BasketAllActiveList } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
@@ -282,6 +282,10 @@ const Client = () => {
         navigate("/admin/client/updateclient/" + row._id, { state: { row } })
     }
 
+
+    const signaldetail = async (row) => {
+        navigate("/admin/clientsignaldetail/" + row._id, { state: { row } })
+    }
 
 
     const Clientdetail = async (row) => {
@@ -598,6 +602,24 @@ const Client = () => {
             selector: row => fDateTime(row.createdAt),
             sortable: true,
             width: '200px',
+        },
+        {
+            name: 'Signal Detail',
+            selector: (row) => (
+                <div className='d-flex'>
+
+
+                    <Tooltip placement="top" overlay="Signal Detail">
+                        <span onClick={(e) => { signaldetail(row) }} style={{ cursor: 'pointer' }}>
+                            <RadioTower />
+                        </span>
+                    </Tooltip>
+                </div>
+            ),
+            ignoreRowClick: true,
+            allowOverflow: true,
+            button: true,
+            width: '165px',
         },
         {
             name: 'Actions',

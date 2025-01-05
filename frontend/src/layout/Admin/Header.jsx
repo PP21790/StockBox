@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ReadNotificationStatus, getDashboardNotification, gettradestatus, basicsettinglist, UpdateLogin_status } from '../../Services/Admin';
+import { ReadNotificationStatus, getDashboardNotification, GetAllNotificationRead, gettradestatus, basicsettinglist, UpdateLogin_status } from '../../Services/Admin';
 import { formatDistanceToNow } from 'date-fns';
 import Swal from 'sweetalert2';
 import $ from "jquery";
@@ -133,6 +133,7 @@ const Header = () => {
       const response = await getDashboardNotification(token);
       if (response.status) {
         setClients(response.data);
+
       } else {
 
       }
@@ -141,6 +142,20 @@ const Header = () => {
     }
   };
 
+
+  const getAllMessageRead = async () => {
+    try {
+      const response = await GetAllNotificationRead(token);
+      if (response?.status) {
+        navigate("/admin/notificationlist");
+      } else {
+        console.log("Failed to mark notifications as read.");
+      }
+    } catch (error) {
+      console.error("Error while marking notifications as read:", error);
+    }
+  };
+  ;
 
 
 
@@ -353,10 +368,14 @@ const Header = () => {
                     </div>
 
                     <div className="text-center msg-footer">
-                      <Link to="/admin/notificationlist">
-                        <button className="btn btn-primary w-100">View All Notifications </button>
-                      </Link>
+                      <button
+                        className="btn btn-primary w-100"
+                        onClick={() => getAllMessageRead()}
+                      >
+                        View All Notifications
+                      </button>
                     </div>
+
                   </div>
                 </li>
 

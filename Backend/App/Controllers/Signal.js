@@ -915,7 +915,7 @@ async showSignalsToClients(req, res) {
 
 async showSignalsToClients(req, res) {
   try {
-    const { service_id, client_id, search, type, page = 1 } = req.body;
+    const { service_id, client_id, search, type, stock, from, to, page = 1 } = req.body;
 
 
     const limit = 10;
@@ -954,13 +954,15 @@ async showSignalsToClients(req, res) {
 
     const query = {
       service: { $in: service_ids }, // Match any of the service IDs
-      close_status: type === 1,
       created_at: {
         $gte: minStartDate, // Earliest start date
         $lte: maxEndDate    // Latest end date
       }
     };
 
+    if (type === true || type === false) {
+      query.close_status = type; 
+    }
     const protocol = req.protocol; // Will be 'http' or 'https'
     const baseUrl = `${protocol}://${req.headers.host}`; // Construct the base URL
 
@@ -973,6 +975,29 @@ async showSignalsToClients(req, res) {
       ];
     }
 
+
+    if (stock) {
+      query.stock = stock; 
+    }
+
+   
+    
+    if (from || to) {
+      query.created_at = {};
+    
+      if (from) {
+        const fromDate = new Date(from);
+        fromDate.setHours(0, 0, 0, 0); // Set time to 00:00:00
+        query.created_at.$gte = fromDate;
+      }
+    
+      if (to) {
+        const toDate = new Date(to);
+        toDate.setHours(23, 59, 59, 999); // Set time to 23:59:59
+        query.created_at.$lte = toDate;
+      }
+    }
+   
     const signals = await Signal_Modal.find(query)
       .sort({ created_at: -1 })
       .skip(skip)
@@ -1014,6 +1039,65 @@ async showSignalsToClients(req, res) {
   }
 }
 
+
+async allShowSignalsToClients(req, res) {
+  try {
+    const { service_id, client_id} = req.body;
+
+
+    const service_ids = service_id
+    ? [service_id] // If service_id is provided, use it as an array
+    : ["66d2c3bebf7e6dc53ed07626", "66dfede64a88602fbbca9b72", "66dfeef84a88602fbbca9b79"];
+
+
+    if (!Array.isArray(service_ids) || service_ids.length === 0) {
+      return res.json({
+        status: false,
+        message: "Invalid or missing service IDs",
+        data: []
+      });
+    }
+
+    const plans = await Planmanage.find({ serviceid: { $in: service_ids }, clientid: client_id });
+    if (plans.length === 0) {
+      return res.json({
+        status: false,
+        message: "No plans found for the given services and client ID",
+        data: []
+      });
+    }
+
+    const startDates = plans.map(plan => new Date(plan.startdate));
+    const endDates = plans.map(plan => new Date(plan.enddate));
+
+    const minStartDate = new Date(Math.min(...startDates)); // Earliest start date
+    const maxEndDate = new Date(Math.max(...endDates)); // Latest end date
+
+    const query = {
+      service: { $in: service_ids }, // Match any of the service IDs
+      created_at: {
+        $gte: minStartDate, // Earliest start date
+        $lte: maxEndDate    // Latest end date
+      }
+    };
+
+   
+    const signals = await Signal_Modal.find(query)
+      .sort({ created_at: -1 })
+      .lean();
+
+    
+    return res.json({
+      status: true,
+      message: "Signals retrieved successfully",
+      data: signals,
+    });
+
+  } catch (error) {
+    console.error("Error fetching signals:", error);
+    return res.json({ status: false, message: "Server error", data: [] });
+  }
+}
 
 
 }

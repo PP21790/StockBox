@@ -17,34 +17,34 @@ class Users {
       const { FullName, UserName, Email, PhoneNo, password, add_by } = req.body;
 
       if (!FullName) {
-        return res.status(400).json({ status: false, message: "fullname is required" });
+        return res.json({ status: false, message: "fullname is required" });
       }
       if (!UserName || UserName.length < 3) {
-        return res.status(400).json({ status: false, message: "username must be at least 3 characters long" });
+        return res.json({ status: false, message: "username must be at least 3 characters long" });
       }
       if (!Email) {
-        return res.status(400).json({ status: false, message: "email is required" });
+        return res.json({ status: false, message: "email is required" });
       } else if (!/^\S+@\S+\.\S+$/.test(Email)) {
-        return res.status(400).json({ status: false, message: "Invalid email format" });
+        return res.json({ status: false, message: "Invalid email format" });
       }
 
       if (!PhoneNo) {
-        return res.status(400).json({ status: false, message: "phone number is required" });
+        return res.json({ status: false, message: "phone number is required" });
       } else if (!/^\d{10}$/.test(PhoneNo)) {
-        return res.status(400).json({ status: false, message: "Invalid phone number format" });
+        return res.json({ status: false, message: "Invalid phone number format" });
       }
       if (!password || password.length < 8 ||
         !/[A-Z]/.test(password) ||
         !/[a-z]/.test(password) ||
         !/\d/.test(password) ||
         !/[@$!%*?&#]/.test(password)) {
-        return res.status(400).json({
+        return res.json({
           status: false,
           message: "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&#)"
         });
       }
       if (!add_by) {
-        return res.status(400).json({ status: false, message: "Added by field is required" });
+        return res.json({ status: false, message: "Added by field is required" });
       }
 
 
@@ -55,11 +55,11 @@ class Users {
 
       if (existingUser) {
         if (existingUser.UserName == UserName) {
-          return res.status(400).json({ status: false, message: "Username already exists" });
+          return res.json({ status: false, message: "Username already exists" });
         } else if (existingUser.Email == Email) {
-          return res.status(400).json({ status: false, message: "Email already exists" });
+          return res.json({ status: false, message: "Email already exists" });
         } else if (existingUser.PhoneNo == PhoneNo) {
-          return res.status(400).json({ status: false, message: "Phone number already exists" });
+          return res.json({ status: false, message: "Phone number already exists" });
         }
       }
 
@@ -86,7 +86,7 @@ class Users {
 
     } catch (error) {
       // console.log("Error adding user:", error); // Log the full error
-      return res.status(500).json({ status: false, message: "Server error", error: error.message });
+      return res.json({ status: false, message: "Server error", error: error.message });
     }
   }
 

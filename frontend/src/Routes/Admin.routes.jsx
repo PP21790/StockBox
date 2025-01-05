@@ -82,6 +82,7 @@ import BasketPurchaseHistory from '../layout/Admin/Admin_basket/BasketPurchaseHi
 import ViewBasketStock from '../layout/Admin/Admin_basket/ViewBasketStock';
 import EditStock from '../layout/Admin/Admin_basket/EditStock';
 import AllBasketHistory from '../layout/Admin/Admin_basket/AllBasketHistory';
+import ClientSignaldetail from '../layout/Admin/Admin_client/ClientSignaldetail';
 
 
 
@@ -139,6 +140,8 @@ function MainApp() {
                     <Route path="/client/clientdetail/:id" element={<Viewclientdetail />} />
                     <Route path="/editfreeclient/:id" element={<Editfreeclient />} />
                     <Route path="/clientdeletehistory" element={<ClientDeleteHistory />} />
+                    <Route path="/clientsignaldetail/:id" element={<ClientSignaldetail />} />
+
 
 
                     <Route path="/perfom" element={<Perfom />} />

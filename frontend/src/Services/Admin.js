@@ -368,6 +368,47 @@ export async function GetSignallist(data, token) {
 }
 
 
+// get client signal detail
+
+
+
+// getsignal by signal filter
+
+export async function GetClientSignaldetail(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}signal/signalclient`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err.response?.data || err.message;
+    }
+}
+
+
+
+// get client signal 
+
+
+export async function Getclientsignaltoexport(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}signal/allsignalclient`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err.response?.data || err.message;
+    }
+}
+
+
+
 
 // getsignal by signal filter
 
@@ -2350,6 +2391,22 @@ export async function getDashboardNotification(token) {
 }
 
 
+
+// get all notification 
+
+export async function GetAllNotificationRead(token) {
+    try {
+        const res = await axios.get(`${Config.base_url}dashboard/allstatuschangenotifiction`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}
+
 // // add freetrial client 
 
 // export async function addfreeClient(data, token) {
@@ -2746,6 +2803,11 @@ export async function getclientExportfile(data, token) {
         return err.response?.data || err.message;
     }
 }
+
+
+
+// get client signal by id 
+
 
 
 

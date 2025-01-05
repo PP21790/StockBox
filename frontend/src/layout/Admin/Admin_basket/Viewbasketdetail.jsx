@@ -7,6 +7,8 @@ import { useNavigate, useParams, Link } from "react-router-dom";
 import { Tooltip } from 'antd';
 import { SquarePen } from 'lucide-react';
 
+
+
 function stripHtml(html) {
   const div = document.createElement("div");
   div.innerHTML = html;
@@ -93,7 +95,7 @@ const fieldConfigurations = [
   {
     name: "description",
     label: "Description",
-    type: "text",
+    type: "textarea",
     label_size: 12,
     col_size: 4,
     disable: false,
