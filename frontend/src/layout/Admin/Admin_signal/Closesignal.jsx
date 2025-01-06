@@ -294,7 +294,7 @@ const Closesignal = () => {
     },
     {
       name: "Exit Date",
-      selector: (row) => fDateTimeH(row.closedate),
+      selector: (row) => fDateTimeH(row?.closedate),
       sortable: true,
       width: "200px",
     },
@@ -432,7 +432,7 @@ const Closesignal = () => {
               </nav>
             </div>
           </div>
-          <div className="card">
+          {/* <div className="card">
             <div className="card-body">
               <div className="d-lg-flex align-items-center mb-4 gap-3 justify-content-between">
                 <div className="position-relative">
@@ -533,7 +533,7 @@ const Closesignal = () => {
               currentPage={currentPage}
               onPageChange={handlePageChange}
             />
-          </div>
+          </div> */}
 
           <div className="card">
             <div className="card-body">
@@ -665,18 +665,44 @@ const Closesignal = () => {
                           <div className="d-flex justify-content-between">
                             <div>
                               <p className="mb-1">
-                                <b>Date: 20-10-2021</b>
+                                <b>Date: {fDateTimeH(client?.created_at)}</b>
                               </p>
                               <p className="mb-2">
                                 <b>Segment: {client?.segment == "C" ? "CASH" : client?.segment == "O" ? "OPTION" : "FUTURE"}</b>
                               </p>
                             </div>
                             <div>
-                              <p className="mb-1"><b>P/L : <span className="text-success"> 20% <i className='bx bx-up-arrow-alt'></i></span></b> </p>
+                              {(() => {
+                                let totalPL = 0;
+                                if (client.calltype === "BUY") {
+                                  totalPL = ((client.closeprice - client.price) * client.lotsize).toFixed(2);
+                                } else if (client.calltype === "SELL") {
+                                  totalPL = ((client.price - client.closeprice) * client.lotsize).toFixed(2);
+                                }
+
+                                const style = {
+                                  color: totalPL < 0 ? "red" : "green",
+                                };
+
+
+                                const plPercentage = ((totalPL / (client.price * client.lotsize)) * 100).toFixed(2); // Calculate P/L percentage
+                                return (
+                                  <p className="mb-1">
+                                    <b>
+                                      P/L :
+                                      <span className={plPercentage < 0 ? "text-danger" : "text-success"}>
+                                        {plPercentage}%
+                                        <i className={plPercentage < 0 ? 'bx bx-down-arrow-alt' : 'bx bx-up-arrow-alt'}></i>
+                                      </span>
+                                    </b>
+                                  </p>
+                                );
+                              })()}
                             </div>
+
                           </div>
                           <p className="mb-1">
-                            Symbol : {client?.tradesymbol} , Entry Type : {client?.calltype} , Quantity/Lot : {client?.lot}, Entry Price : {client?.price} , Entry Date : {fDateTimeH(client?.created_at)}
+                            Symbol : {client?.tradesymbol} , Entry Type : {client?.calltype} , Quantity/Lot : {client?.lot}, Entry Price : {client?.price} , Exit Price : {client?.closeprice}, Entry Date : {fDateTimeH(client?.created_at)} , Exit Date : {fDateTimeH(client?.closedate)}
                           </p>
                         </div>
                       </div>

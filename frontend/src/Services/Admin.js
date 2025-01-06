@@ -3149,7 +3149,7 @@ export async function getAllNotificationlist(data, token) {
 
 
 
-export async function Basketstatusofdetail(data, token) {
+export async function Basketstatus(data, token) {
     try {
         const res = await axios.post(`${Config.base_url}basket/change-status`, data, {
             headers: {
@@ -3163,6 +3163,25 @@ export async function Basketstatusofdetail(data, token) {
         return err.response?.data || err.message;
     }
 }
+
+
+// basket stock pblish page stock
+
+export async function Basketstatusofdetail(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}basket/change-status-publish`, data, {
+            headers: {
+                data: {},
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+        return err.response?.data || err.message;
+    }
+}
+
 
 
 // re balancing status

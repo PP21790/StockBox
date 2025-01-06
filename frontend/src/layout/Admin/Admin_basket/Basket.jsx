@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Eye, RefreshCcw, Trash2, SquarePen, IndianRupee, X, Plus } from 'lucide-react';
+import { Eye, RefreshCcw, Trash2, SquarePen, IndianRupee, X, Plus, RotateCcw } from 'lucide-react';
 import Swal from "sweetalert2";
 import { Tooltip } from 'antd';
 // import Table from "../../../components/Table";
 import Table from '../../../components/Table1';
 
-import { BasketAllList, deletebasket, Basketstatusofdetail, changestatusrebalance, getstocklistById } from "../../../Services/Admin";
+import { BasketAllList, deletebasket, Basketstatus, changestatusrebalance, getstocklistById } from "../../../Services/Admin";
 import { fDate } from "../../../Utils/Date_formate";
 
 
@@ -55,7 +55,9 @@ const Basket = () => {
 
 
   const handleSwitchChange = async (event, id) => {
-    const originalChecked = event.target.checked;
+    // const originalChecked = event.target.checked;
+    const originalChecked = true;
+    // console.log("originalChecked", originalChecked)
     const user_active_status = originalChecked
     const data = { id: id, status: user_active_status };
 
@@ -69,7 +71,7 @@ const Basket = () => {
 
     if (result.isConfirmed) {
       try {
-        const response = await Basketstatusofdetail(data, token);
+        const response = await Basketstatus(data, token);
         if (response.status) {
           Swal.fire({
             title: "Saved!",
@@ -304,6 +306,12 @@ const Basket = () => {
       name: "Actions",
       cell: (row) => (
         <div>
+          {row.stock_details.length > 0 ?
+            <Tooltip title="Published Stock">
+              <RotateCcw
+                checked={row.status}
+                onClick={(event) => handleSwitchChange(event, row._id)} />
+            </Tooltip> : ""}
 
 
           <Tooltip title="Add Stock">

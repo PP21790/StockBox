@@ -227,7 +227,7 @@ const BasketStockPublish = () => {
           WebkitLineClamp: 3,
           WebkitBoxOrient: 'vertical',
           maxWidth: '200px',
-          textAlign:'left',
+          textAlign: 'left',
           whiteSpace: 'normal', // Ensure multi-line text
         }}>
           {stripHtml(row.description)}
@@ -247,14 +247,14 @@ const BasketStockPublish = () => {
       selector: row => (
         <div className="form-check form-switch form-check-info">
           <input
-            id={`rating_${row.status}`}
+            id={`rating_${row._id}`}
             className="form-check-input toggleswitch"
             type="checkbox"
-            defaultChecked={row.status == true}
+            defaultChecked={row.publishstatus == true}
             onChange={(event) => handleSwitchChange(event, row._id)}
           />
           <label
-            htmlFor={`rating_${row.status}`}
+            htmlFor={`rating_${row._id}`}
             className="checktoggle checkbox-bg"
           ></label>
         </div>

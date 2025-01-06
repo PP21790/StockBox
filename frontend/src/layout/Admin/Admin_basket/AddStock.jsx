@@ -139,6 +139,7 @@ const AddStock = () => {
     const requestData = {
       basket_id,
       stocks: stocksWithStatus,
+      publishstatus: status == 0 ? false : status == 1 ? true : ""
     };
 
     try {

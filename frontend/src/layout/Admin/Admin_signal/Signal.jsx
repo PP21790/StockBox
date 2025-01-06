@@ -708,7 +708,7 @@ const Signal = () => {
                         </div>
                     </div>
                     <hr />
-                    <div className="card">
+                    {/* <div className="card">
                         <div className="card-body">
                             <div className="d-lg-flex align-items-center mb-4 gap-3">
                                 <div className="position-relative">
@@ -833,7 +833,7 @@ const Signal = () => {
                             onPageChange={handlePageChange}
                         />
 
-                    </div>
+                    </div> */}
 
                     <div className="card">
                         <div className="card-body">
