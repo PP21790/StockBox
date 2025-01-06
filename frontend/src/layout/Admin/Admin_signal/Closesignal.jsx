@@ -133,14 +133,14 @@ const Closesignal = () => {
           clientStatus === "todayclosesignal"
             ? formattedDate
             : filters.from
-            ? filters.from
-            : "",
+              ? filters.from
+              : "",
         to:
           clientStatus === "todayclosesignal"
             ? formattedDate
             : filters.to
-            ? filters.to
-            : "",
+              ? filters.to
+              : "",
         service: filters.service,
         stock: searchstock,
         closestatus: "true",
@@ -541,17 +541,15 @@ const Closesignal = () => {
               <div className="d-flex justify-content-between align-items-center mb-4">
                 <div className="btn-group">
                   <button
-                    className={`btn btn-outline-primary  ${
-                      activeTab === "table" ? "active" : ""
-                    }`}
+                    className={`btn btn-outline-primary  ${activeTab === "table" ? "active" : ""
+                      }`}
                     onClick={() => setActiveTab("table")}
                   >
                     Table View
                   </button>
                   <button
-                    className={`btn btn-outline-primary  ${
-                      activeTab === "card" ? "active" : ""
-                    }`}
+                    className={`btn btn-outline-primary  ${activeTab === "card" ? "active" : ""
+                      }`}
                     onClick={() => setActiveTab("card")}
                   >
                     Card View
@@ -664,25 +662,21 @@ const Closesignal = () => {
                     <div className="col-md-12 mb-3" key={client.id}>
                       <div className="card card radius-10 mb-3 border">
                         <div className="card-body ">
-                            <div className="d-flex justify-content-between">
-                               <div>
-                               <p className="mb-1">
-                            <b>Date: 20-10-2021</b> 
-                          </p>
-                          <p className="mb-2">
-                            <b>Segment: IDEA</b> 
-                          </p>
-                               </div>
-                                <div>
-                                <p className="mb-1"><b>P/L : <span className="text-success"> 20% <i className='bx bx-up-arrow-alt'></i></span></b> </p>
+                          <div className="d-flex justify-content-between">
+                            <div>
+                              <p className="mb-1">
+                                <b>Date: 20-10-2021</b>
+                              </p>
+                              <p className="mb-2">
+                                <b>Segment: {client?.segment == "C" ? "CASH" : client?.segment == "O" ? "OPTION" : "FUTURE"}</b>
+                              </p>
+                            </div>
+                            <div>
+                              <p className="mb-1"><b>P/L : <span className="text-success"> 20% <i className='bx bx-up-arrow-alt'></i></span></b> </p>
                             </div>
                           </div>
                           <p className="mb-1">
-                            Lorem ipsum, dolor sit amet consectetur adipisicing
-                            elit. Veritatis amet delectus repudiandae! Veniam
-                            fugiat harum facere corporis, maxime non incidunt
-                            perspiciatis sint deleniti nobis exercitationem
-                            illum. Nam modi cumque commodi.
+                            Symbol : {client?.tradesymbol} , Entry Type : {client?.calltype} , Quantity/Lot : {client?.lot}, Entry Price : {client?.price} , Entry Date : {fDateTimeH(client?.created_at)}
                           </p>
                         </div>
                       </div>

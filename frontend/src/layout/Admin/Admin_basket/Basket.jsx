@@ -231,8 +231,8 @@ const Basket = () => {
           WebkitLineClamp: 3,
           WebkitBoxOrient: 'vertical',
           maxWidth: '200px',
-          textAlign:'left',
-          whiteSpace: 'normal', // Ensure multi-line text
+          textAlign: 'left',
+          whiteSpace: 'normal',
         }}>
           {stripHtml(row.description)}
         </div>
@@ -240,73 +240,81 @@ const Basket = () => {
       wrap: true,
       width: '200px',
     },
-    
-    
+
+
     {
       name: "Validity",
       selector: (row) => row.validity,
       sortable: true,
       width: '200px',
     },
-    {
-      name: 'Stock Quantity',
-      selector: row => (
-        row.stock_details.length > 0 ?
-          <div className="form-check form-switch form-check-info">
-            <input
-              id={`rating_${row._id}`}
-              className="form-check-input toggleswitch"
-              type="checkbox"
-              checked={row.status === true}
-              onChange={(event) => handleSwitchChange(event, row._id)}
-            />
-            <label
-              htmlFor={`rating_${row._id}`}
-              className="checktoggle checkbox-bg"
-            ></label>
-          </div>
-          : "No Stock Available"
-      ),
-      sortable: true,
-      width: '175px',
-    },
-    {
-      name: 'Rebalanceing Status',
-      selector: row => (
+    // {
+    //   name: 'Stock Quantity',
+    //   selector: row => (
+    //     row.stock_details.length > 0 ?
+    //       <div className="form-check form-switch form-check-info">
+    //         <input
+    //           id={`rating_${row._id}`}
+    //           className="form-check-input toggleswitch"
+    //           type="checkbox"
+    //           checked={row.status === true}
+    //           onChange={(event) => handleSwitchChange(event, row._id)}
+    //         />
+    //         <label
+    //           htmlFor={`rating_${row._id}`}
+    //           className="checktoggle checkbox-bg"
+    //         ></label>
+    //       </div>
+    //       : "No Stock Available"
+    //   ),
+    //   sortable: true,
+    //   width: '175px',
+    // },
 
-        <div className="form-check form-switch form-check-info">
-          <input
-            id={`rating_${row._id}`}
-            className="form-check-input toggleswitch"
-            type="checkbox"
-            checked={row.rebalancestatus === true}
-            onChange={(event) => handleSwitchChange1(event, row._id)}
-          />
-          <label
-            htmlFor={`rating_${row._id}`}
-            className="checktoggle checkbox-bg"
-          ></label>
-        </div>
-
-      ),
+    {
+      name: "Stock Quantity",
+      selector: (row) => row.stock_details?.length || 0,
       sortable: true,
-      width: '250px',
+      width: '200px',
     },
+
+    // {
+    //   name: 'Rebalanceing Status',
+    //   selector: row => (
+
+    //     <div className="form-check form-switch form-check-info">
+    //       <input
+    //         id={`rating_${row._id}`}
+    //         className="form-check-input toggleswitch"
+    //         type="checkbox"
+    //         checked={row.rebalancestatus === true}
+    //         onChange={(event) => handleSwitchChange1(event, row._id)}
+    //       />
+    //       <label
+    //         htmlFor={`rating_${row._id}`}
+    //         className="checktoggle checkbox-bg"
+    //       ></label>
+    //     </div>
+
+    //   ),
+    //   sortable: true,
+    //   width: '250px',
+    // },
     {
       name: "Actions",
       cell: (row) => (
         <div>
 
-          {row.rebalancestatus === false ?
-            <Tooltip title="  Add Stock">
-              <Link
-                to={`/admin/addstock/${row._id}`}
-                className="btn px-2"
-              >
-                <Plus />
 
-              </Link>
-            </Tooltip> : ""}
+          <Tooltip title="Add Stock">
+            <Link
+              to={`/admin/addstock/${row._id}`}
+              className="btn px-2"
+            >
+              <Plus />
+
+            </Link>
+          </Tooltip>
 
           <Tooltip title="view">
             <Link
