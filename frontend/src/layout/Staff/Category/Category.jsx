@@ -97,7 +97,6 @@ const Category = () => {
 
     // Update service
     const Updatecategory = async () => {
-        console.log("dekho data aa rha hai kya");
         
         try {
 
@@ -519,7 +518,26 @@ const Category = () => {
                                     </div>
                                 </div> 
 
-                                {model && (
+                               
+
+
+
+                            </div> : "" }
+                        </div>
+                        <div className="table-responsive">
+                            <Table
+                                columns={columns}
+                                data={clients}
+                                pagination
+                                striped
+                                highlightOnHover
+                                dense
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {model && (
                                     <>
                                         <div className="modal-backdrop fade show"></div>
 
@@ -642,24 +660,6 @@ const Category = () => {
                                     </>
 
                                 )}
-
-
-
-                            </div> : "" }
-                        </div>
-                        <div className="table-responsive">
-                            <Table
-                                columns={columns}
-                                data={clients}
-                                pagination
-                                striped
-                                highlightOnHover
-                                dense
-                            />
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     );
 };

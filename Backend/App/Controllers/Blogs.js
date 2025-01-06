@@ -91,9 +91,6 @@ class BlogController {
         
               }
         
-
-
-    
             return res.json({
                 status: true,
                 message: "Blogs added successfully",
@@ -104,6 +101,9 @@ class BlogController {
             return res.status(500).json({ status: false, message: "Server error", data: [] });
         }
     }
+
+
+
 
     // Get all blog posts
     async getBlogs(req, res) {

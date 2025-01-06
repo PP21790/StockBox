@@ -113,6 +113,7 @@ const PaymentRequest = () => {
             name: 'Email Id',
             selector: row => <div>{row?.client_details?.Email}</div>,
             sortable: true,
+            
         },
         {
             name: 'Available balance',
@@ -161,9 +162,9 @@ const PaymentRequest = () => {
         columns.push({
             name: 'Action',
             selector: row => (
-                <div>
+                <div >
                     <select
-                        className='form-select'
+                        className='form-select' style={{width:"120px",marginRight:"100px"}}
                         onChange={(event) => handleSelectChange(row._id, event)}
                         defaultValue={selectedValues[row._id] || "0"}
                     >

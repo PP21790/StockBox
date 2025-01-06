@@ -479,82 +479,7 @@ const Faq = () => {
                                 </div>
 
 
-                                {model && (
-                                    <>
-                                        <div className="modal-backdrop fade show"></div>
-                                        <div
-                                            className="modal fade show"
-                                            style={{ display: 'block' }}
-                                            tabIndex={-1}
-                                            aria-labelledby="exampleModalLabel"
-                                            aria-hidden="true"
-                                        >
-                                            <div className="modal-dialog">
-                                                <div className="modal-content">
-                                                    <div className="modal-header">
-                                                        <h5 className="modal-title" id="exampleModalLabel">
-                                                            Update FAQ
-                                                        </h5>
-                                                        <button
-                                                            type="button"
-                                                            className="btn-close"
-                                                            onClick={() => setModel(false)}
-                                                        />
-                                                    </div>
-                                                    <div className="modal-body">
-                                                        <form>
-                                                            <div className="row">
-                                                                <div className="col-md-12">
-                                                                    <label htmlFor="">Title</label>
-                                                                    <span className="text-danger">*</span>
-                                                                    <input
-                                                                        className="form-control mb-2"
-                                                                        type="text"
-                                                                        placeholder='Enter Faq Title'
-                                                                        value={updatetitle.title}
-                                                                        onChange={(e) => updateServiceTitle({ title: e.target.value })}
-                                                                    />
-                                                                </div>
-                                                            </div>
-
-
-                                                            <div className="row">
-                                                                <div className="col-md-12">
-                                                                    <label htmlFor="">Description</label>
-                                                                    <span className="text-danger">*</span>
-                                                                    <textarea
-                                                                        className="form-control mb-2"
-                                                                        type="text"
-                                                                        placeholder='Enter  Description'
-                                                                        value={updatetitle.description}
-                                                                        onChange={(e) => updateServiceTitle({ description: e.target.value })}
-                                                                    />
-                                                                </div>
-                                                            </div>
-                                                        </form>
-
-                                                    </div>
-                                                    <div className="modal-footer">
-                                                        <button
-                                                            type="button"
-                                                            className="btn btn-secondary"
-                                                            onClick={() => setModel(false)}
-                                                        >
-                                                            Close
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            className="btn btn-primary"
-                                                            onClick={updateFaqbyadmin}
-                                                        >
-                                                            Update FAQ
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </>
-                                )}
+                               
 
                             </div> : "" }
                         </div>
@@ -648,6 +573,82 @@ const Faq = () => {
                 </div>
 
             </div>
+            {model && (
+                                    <>
+                                        <div className="modal-backdrop fade show"></div>
+                                        <div
+                                            className="modal fade show"
+                                            style={{ display: 'block' }}
+                                            tabIndex={-1}
+                                            aria-labelledby="exampleModalLabel"
+                                            aria-hidden="true"
+                                        >
+                                            <div className="modal-dialog">
+                                                <div className="modal-content">
+                                                    <div className="modal-header">
+                                                        <h5 className="modal-title" id="exampleModalLabel">
+                                                            Update FAQ
+                                                        </h5>
+                                                        <button
+                                                            type="button"
+                                                            className="btn-close"
+                                                            onClick={() => setModel(false)}
+                                                        />
+                                                    </div>
+                                                    <div className="modal-body">
+                                                        <form>
+                                                            <div className="row">
+                                                                <div className="col-md-12">
+                                                                    <label htmlFor="">Title</label>
+                                                                    <span className="text-danger">*</span>
+                                                                    <input
+                                                                        className="form-control mb-2"
+                                                                        type="text"
+                                                                        placeholder='Enter Faq Title'
+                                                                        value={updatetitle.title}
+                                                                        onChange={(e) => updateServiceTitle({ title: e.target.value })}
+                                                                    />
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div className="row">
+                                                                <div className="col-md-12">
+                                                                    <label htmlFor="">Description</label>
+                                                                    <span className="text-danger">*</span>
+                                                                    <textarea
+                                                                        className="form-control mb-2"
+                                                                        type="text"
+                                                                        placeholder='Enter  Description'
+                                                                        value={updatetitle.description}
+                                                                        onChange={(e) => updateServiceTitle({ description: e.target.value })}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        </form>
+
+                                                    </div>
+                                                    <div className="modal-footer">
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-secondary"
+                                                            onClick={() => setModel(false)}
+                                                        >
+                                                            Close
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-primary"
+                                                            onClick={updateFaqbyadmin}
+                                                        >
+                                                            Update FAQ
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
         </div>
     );
 };

@@ -315,12 +315,14 @@ const News = () => {
                                 // data-bs-target="#exampleModal"
                                 >
                                     <i className="bx bxs-plus-square" />
-                                    Add News
+                                    Add News 
                                 </Link>
 
                             </div> :"" }
                         </div>
                         <div className="container py-2">
+
+                            
 
                             {clients.map((client, index) => (
                                 <div className="row g-0" key={index}>

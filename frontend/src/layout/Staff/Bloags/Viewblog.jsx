@@ -95,7 +95,7 @@ const Viewblog = () => {
                                                 <b>Description</b>
                                             </label>
                                             <div className="col-sm-9">
-                                                <div className="input-group">
+                                                <div className="input-group dis_img">
                                                     <div
                                                         className="form-control"
                                                         style={{ width: "100%" }}
@@ -151,6 +151,9 @@ const Viewblog = () => {
                     color: red;
                     font-size: 12px;
                 }
+                    .input-group.dis_img img {
+                        height: 100px;
+}
             `}</style>
         </div>
     );

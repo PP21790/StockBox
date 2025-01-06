@@ -8,8 +8,7 @@ const Payementgateway = () => {
     const user_id = localStorage.getItem('id');
 
     const [clients, setClients] = useState(null);
-
-
+    const [onlinePaymentEnabled, setOnlinePaymentEnabled] = useState(false);
 
     const [initialValues, setInitialValues] = useState({
         razorpay_secret: "",
@@ -20,8 +19,6 @@ const Payementgateway = () => {
 
     const [updateapi, setUpdateapi] = useState(initialValues);
 
-
-
     const getApidetail = async () => {
         try {
             const response = await basicsettinglist(token);
@@ -30,31 +27,23 @@ const Payementgateway = () => {
                 setClients(clientData);
                 setInitialValues(clientData);
                 setUpdateapi(clientData);
+                setOnlinePaymentEnabled(clientData.paymentstatus === 1);
             }
         } catch (error) {
             console.error('Error fetching API details:', error);
         }
     };
 
-
     useEffect(() => {
         getApidetail();
     }, []);
 
-
-
     const hasChanges = () =>
         JSON.stringify(initialValues) !== JSON.stringify(updateapi);
 
-
-
-
-    const handleInputChange = (field, e) => {
-        setUpdateapi((prev) => ({ ...prev, [field]: e.target.value }));
+    const handleInputChange = (field, value) => {
+        setUpdateapi((prev) => ({ ...prev, [field]: value }));
     };
-
-
-
 
     const handleSwitchChange = async (event, type) => {
         const user_active_status = event.target.checked ? 1 : 0;
@@ -81,8 +70,8 @@ const Payementgateway = () => {
                         timer: 1000,
                         timerProgressBar: true,
                     });
-                    getApidetail()
-
+                    setOnlinePaymentEnabled(user_active_status === 1);
+                    getApidetail();
                 }
             } catch (error) {
                 Swal.fire(
@@ -91,7 +80,6 @@ const Payementgateway = () => {
                     "error"
                 );
             }
-            getApidetail()
         }
     };
 
@@ -131,19 +119,6 @@ const Payementgateway = () => {
         }
     };
 
-    const FormField = ({ label, id, value, onChange }) => (
-        <div className="col-md-12 mb-2">
-            <label htmlFor={id} className="form-label">{label}</label>
-            <input
-                type="text"
-                className="form-control"
-                id={id}
-                value={value}
-                onChange={(e) => onChange(e.target.value)}
-            />
-        </div>
-    );
-
     const SwitchField = ({ label, checked, onChange }) => (
         <div className="col-md-6 d-flex justify-content-between align-items-center mb-3">
             <label className="form-label">{label}</label>
@@ -181,7 +156,7 @@ const Payementgateway = () => {
                             <form className="row">
                                 <SwitchField
                                     label="Online Payment Status"
-                                    checked={clients?.paymentstatus === 1}
+                                    checked={onlinePaymentEnabled}
                                     onChange={(e) => handleSwitchChange(e, "paymentstatus")}
                                 />
                                 <SwitchField
@@ -203,7 +178,8 @@ const Payementgateway = () => {
                                     className="form-control"
                                     id="razorpay_key"
                                     value={updateapi.razorpay_key}
-                                    onChange={(value) => handleInputChange("razorpay_key", value)}
+                                    onChange={(e) => handleInputChange("razorpay_key", e.target.value)}
+                                    disabled={onlinePaymentEnabled}
                                 />
 
                                 <label>Razorpay Secret Key</label>
@@ -212,9 +188,9 @@ const Payementgateway = () => {
                                     className="form-control"
                                     id="razorpay_secret"
                                     value={updateapi.razorpay_secret}
-                                    onChange={(value) => handleInputChange("razorpay_secret", value)}
+                                    onChange={(e) => handleInputChange("razorpay_secret", e.target.value)}
+                                    disabled={onlinePaymentEnabled}
                                 />
-
                             </form>
                         </div>
                         <div className="card-footer text-center">

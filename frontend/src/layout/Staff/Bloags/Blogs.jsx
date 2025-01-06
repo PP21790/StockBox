@@ -68,6 +68,8 @@ const Blogs = () => {
     const getpermissioninfo = async () => {
         try {
             const response = await getstaffperuser(userid, token);
+            console.log("response",response);
+            
             if (response.status) {
                 setPermission(response.data.permissions);
             }
@@ -173,7 +175,7 @@ const Blogs = () => {
 
 
 
-    const updateClient = async (row) => {
+    const viewDetails = async (row) => {
         navigate("/staff/viewblog/" , { state: { row } })
     }
 
@@ -328,17 +330,17 @@ const Blogs = () => {
         //     sortable: true,
         // },
 
-        permission.includes("blogsdetail") ||  permission.includes("editblogs") 
+        permission.includes("blogdetail") ||  permission.includes("editblogs") 
         || permission.includes("deleteblogs") ? {
             name: 'Actions',
             cell: row => (
                 <>
-                      {permission.includes("blogsdetail") ? <div>
+                      {permission.includes("blogdetail") ? <div>
                         <Tooltip placement="top" overlay="View">
                           
                             <Eye style={{ marginRight: "10px" }} 
                                 onClick={() => {
-                                    updateClient(row)
+                                    viewDetails(row)
                                 }}/>
                             
                         </Tooltip>
