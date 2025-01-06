@@ -949,7 +949,6 @@ async  clientKycAndAgreement(req, res) {
     );
 
 
-
     const resData = response.data;
 
     if (resData && resData.status === 'requested') {

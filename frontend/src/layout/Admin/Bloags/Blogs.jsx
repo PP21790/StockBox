@@ -52,8 +52,8 @@ const Blogs = () => {
     const getblogs = async () => {
         try {
             const response = await getblogslist(token);
-            console.log("Resposnose",response);
-            
+            console.log("Resposnose", response);
+
             if (response.status) {
                 const filterdata = response.data.filter((item) =>
                     searchInput === "" ||

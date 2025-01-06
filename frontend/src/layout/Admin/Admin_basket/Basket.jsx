@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Eye, RefreshCcw, Trash2, SquarePen, IndianRupee, X, Plus } from 'lucide-react';
+import { Eye, RefreshCcw, Trash2, SquarePen, IndianRupee, X, Plus, RotateCcw } from 'lucide-react';
 import Swal from "sweetalert2";
 import { Tooltip } from 'antd';
 // import Table from "../../../components/Table";
 import Table from '../../../components/Table1';
 
-import { BasketAllList, deletebasket, Basketstatusofdetail, changestatusrebalance, getstocklistById } from "../../../Services/Admin";
+import { BasketAllList, deletebasket, Basketstatus, changestatusrebalance, getstocklistById } from "../../../Services/Admin";
 import { fDate } from "../../../Utils/Date_formate";
 
 
@@ -55,7 +55,9 @@ const Basket = () => {
 
 
   const handleSwitchChange = async (event, id) => {
-    const originalChecked = event.target.checked;
+    // const originalChecked = event.target.checked;
+    const originalChecked = true;
+    // console.log("originalChecked", originalChecked)
     const user_active_status = originalChecked
     const data = { id: id, status: user_active_status };
 
@@ -69,7 +71,7 @@ const Basket = () => {
 
     if (result.isConfirmed) {
       try {
-        const response = await Basketstatusofdetail(data, token);
+        const response = await Basketstatus(data, token);
         if (response.status) {
           Swal.fire({
             title: "Saved!",
@@ -231,8 +233,8 @@ const Basket = () => {
           WebkitLineClamp: 3,
           WebkitBoxOrient: 'vertical',
           maxWidth: '200px',
-          textAlign:'left',
-          whiteSpace: 'normal', // Ensure multi-line text
+          textAlign: 'left',
+          whiteSpace: 'normal',
         }}>
           {stripHtml(row.description)}
         </div>
@@ -240,73 +242,87 @@ const Basket = () => {
       wrap: true,
       width: '200px',
     },
-    
-    
+
+
     {
       name: "Validity",
       selector: (row) => row.validity,
       sortable: true,
       width: '200px',
     },
-    {
-      name: 'Stock Quantity',
-      selector: row => (
-        row.stock_details.length > 0 ?
-          <div className="form-check form-switch form-check-info">
-            <input
-              id={`rating_${row._id}`}
-              className="form-check-input toggleswitch"
-              type="checkbox"
-              checked={row.status === true}
-              onChange={(event) => handleSwitchChange(event, row._id)}
-            />
-            <label
-              htmlFor={`rating_${row._id}`}
-              className="checktoggle checkbox-bg"
-            ></label>
-          </div>
-          : "No Stock Available"
-      ),
-      sortable: true,
-      width: '175px',
-    },
-    {
-      name: 'Rebalanceing Status',
-      selector: row => (
+    // {
+    //   name: 'Stock Quantity',
+    //   selector: row => (
+    //     row.stock_details.length > 0 ?
+    //       <div className="form-check form-switch form-check-info">
+    //         <input
+    //           id={`rating_${row._id}`}
+    //           className="form-check-input toggleswitch"
+    //           type="checkbox"
+    //           checked={row.status === true}
+    //           onChange={(event) => handleSwitchChange(event, row._id)}
+    //         />
+    //         <label
+    //           htmlFor={`rating_${row._id}`}
+    //           className="checktoggle checkbox-bg"
+    //         ></label>
+    //       </div>
+    //       : "No Stock Available"
+    //   ),
+    //   sortable: true,
+    //   width: '175px',
+    // },
 
-        <div className="form-check form-switch form-check-info">
-          <input
-            id={`rating_${row._id}`}
-            className="form-check-input toggleswitch"
-            type="checkbox"
-            checked={row.rebalancestatus === true}
-            onChange={(event) => handleSwitchChange1(event, row._id)}
-          />
-          <label
-            htmlFor={`rating_${row._id}`}
-            className="checktoggle checkbox-bg"
-          ></label>
-        </div>
-
-      ),
+    {
+      name: "Stock Quantity",
+      selector: (row) => row.stock_details?.length || 0,
       sortable: true,
-      width: '250px',
+      width: '200px',
     },
+
+    // {
+    //   name: 'Rebalanceing Status',
+    //   selector: row => (
+
+    //     <div className="form-check form-switch form-check-info">
+    //       <input
+    //         id={`rating_${row._id}`}
+    //         className="form-check-input toggleswitch"
+    //         type="checkbox"
+    //         checked={row.rebalancestatus === true}
+    //         onChange={(event) => handleSwitchChange1(event, row._id)}
+    //       />
+    //       <label
+    //         htmlFor={`rating_${row._id}`}
+    //         className="checktoggle checkbox-bg"
+    //       ></label>
+    //     </div>
+
+    //   ),
+    //   sortable: true,
+    //   width: '250px',
+    // },
     {
       name: "Actions",
       cell: (row) => (
         <div>
-
-          {row.rebalancestatus === false ?
-            <Tooltip title="  Add Stock">
-              <Link
-                to={`/admin/addstock/${row._id}`}
-                className="btn px-2"
-              >
-                <Plus />
-
-              </Link>
+          {row.stock_details.length > 0 ?
+            <Tooltip title="Published Stock">
+              <RotateCcw
+                checked={row.status}
+                onClick={(event) => handleSwitchChange(event, row._id)} />
             </Tooltip> : ""}
+
+
+          <Tooltip title="Add Stock">
+            <Link
+              to={`/admin/addstock/${row._id}`}
+              className="btn px-2"
+            >
+              <Plus />
+
+            </Link>
+          </Tooltip>
 
           <Tooltip title="view">
             <Link

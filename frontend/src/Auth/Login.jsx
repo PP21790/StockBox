@@ -249,7 +249,7 @@ const Login = () => {
                                             <h5 className="">Stock RA</h5>
                                         </div> */}
                                         <div className="form-body">
-                                            <form className="row g-3" onSubmit={loginpageOpen}>
+                                            <form className="row g-3" onSubmit={loginpageOpen} >
                                                 <div className="col-12">
                                                     <label htmlFor="inputEmailAddress" className="form-label">
                                                         Username
@@ -283,7 +283,7 @@ const Login = () => {
                                                             className="input-group-text bg-transparent"
 
                                                         >
-                                                            <i className={`bx ${showPassword ? 'bx-show' :'bx-hide'}`} />
+                                                            <i className={`bx ${showPassword ? 'bx-show' : 'bx-hide'}`} />
                                                         </a>
                                                     </div>
                                                 </div>

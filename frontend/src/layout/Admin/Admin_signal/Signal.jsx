@@ -228,8 +228,6 @@ const Signal = () => {
     const fetchAdminServices = async () => {
         try {
             const response = await GetService(token);
-
-
             if (response.status) {
                 setServiceList(response.data);
             }
@@ -650,7 +648,6 @@ const Signal = () => {
             const data = { id: serviceid._id, report: updatetitle.report, description: updatetitle.description };
 
             const response = await UpdatesignalReport(data, token);
-            console.log("dtatadta", response);
 
             if (response && response.status) {
                 Swal.fire({
@@ -711,7 +708,7 @@ const Signal = () => {
                         </div>
                     </div>
                     <hr />
-                    <div className="card">
+                    {/* <div className="card">
                         <div className="card-body">
                             <div className="d-lg-flex align-items-center mb-4 gap-3">
                                 <div className="position-relative">
@@ -836,7 +833,7 @@ const Signal = () => {
                             onPageChange={handlePageChange}
                         />
 
-                    </div>
+                    </div> */}
 
                     <div className="card">
                         <div className="card-body">
@@ -954,9 +951,9 @@ const Signal = () => {
                                         <div className="col-md-12" key={index}>
                                             <div className="card radius-10 mb-3 border">
                                                 <div className="card-body">
-                                                    <p className='mb-1'><b>Date:</b></p>
-                                                    <p className='mb-2'><b>Segment:</b></p>
-                                                    <p className='mb-1'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Veritatis amet delectus repudiandae! Veniam fugiat harum facere corporis, maxime non incidunt perspiciatis sint deleniti nobis exercitationem illum. Nam modi cumque commodi.</p>
+                                                    <p className='mb-1'><b>Date: {fDateTimeH(client?.created_at)}</b></p>
+                                                    <p className='mb-2'><b>Segment: {client?.segment == "C" ? "CASH" : client?.segment == "O" ? "OPTION" : "FUTURE"}</b></p>
+                                                    <p className='mb-1'> Symbol : {client?.tradesymbol} , Entry Type : {client?.calltype} , Quantity/Lot : {client?.lot}, Entry Price : {client?.price} , Entry Date : {fDateTimeH(client?.created_at)} </p>
 
                                                 </div>
                                             </div>

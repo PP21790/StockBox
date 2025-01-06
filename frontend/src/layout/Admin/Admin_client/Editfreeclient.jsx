@@ -162,7 +162,7 @@ const Editfreeclient = () => {
     <div style={{ marginTop: "100px" }}>
       <DynamicForm
         fields={fields}
-        page_title="Update Client"
+        page_title="Update Free Client"
         btn_name="Update Client"
         btn_name1="Cancel"
         formik={formik}
