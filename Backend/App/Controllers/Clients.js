@@ -184,9 +184,6 @@ class Clients {
           .replace(/{{body}}/g, finalMailBody)
           .replace(/{{logo}}/g, logo);
 
-        console.log(finalHtml);
-
-        // Email options
         const mailOptions = {
           to: result.Email,
           from: `${settings.from_name} <${settings.from_mail}>`, // Include business name
@@ -1531,19 +1528,19 @@ class Clients {
 
 
       if (!FullName) {
-        return res.status(400).json({ status: false, message: "fullname is required" });
+        return res.json({ status: false, message: "Fullname is required" });
       }
 
       if (!Email) {
-        return res.status(400).json({ status: false, message: "email is required" });
+        return res.json({ status: false, message: "Email is required" });
       } else if (!/^\S+@\S+\.\S+$/.test(Email)) {
-        return res.status(400).json({ status: false, message: "Invalid email format" });
+        return res.json({ status: false, message: "Invalid Email format" });
       }
 
       if (!PhoneNo) {
-        return res.status(400).json({ status: false, message: "phone number is required" });
+        return res.json({ status: false, message: "Phone Number is required" });
       } else if (!/^\d{10}$/.test(PhoneNo)) {
-        return res.status(400).json({ status: false, message: "Invalid phone number format" });
+        return res.json({ status: false, message: "Invalid Phone Number format" });
       }
       // if (!password || password.length < 8 || 
       //     !/[A-Z]/.test(password) || 

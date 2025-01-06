@@ -76,6 +76,10 @@ const BasketSchema = new Schema({
         type: Boolean,
         default: false // assuming true means active and false means inactive
     },
+    publishstatus: {
+        type: Boolean,
+        default: false // assuming true means active and false means inactive
+    },
     rebalancestatus: {
         type: Boolean,
         default: false // assuming true means active and false means inactive

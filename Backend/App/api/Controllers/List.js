@@ -29,6 +29,15 @@ const Adminnotification_Modal = db.Adminnotification;
 const Basketstock_Modal = db.Basketstock;
 const Liveprice_Modal = db.Liveprice;
 const Basketorder_Modal = db.Basketorder;
+const Mailtemplate_Modal = db.Mailtemplate;
+
+const { sendEmail } = require('../../Utils/emailService');
+const puppeteer = require('puppeteer');
+const path = require('path');
+const fs = require('fs');
+
+
+
 
 const {orderplace} = require('../../Controllers/Aliceblue');
 const {angleorderplace} = require('../../Controllers/Angle')
@@ -713,6 +722,8 @@ class List {
       // Save the subscription
       const savedSubscription = await newSubscription.save();
 
+     
+
       if (coupon_code) {
         const resultc = await Coupon_Modal.findOne({
           del: false,
@@ -748,7 +759,7 @@ class List {
         await client.save();
       }
 
-
+      const settings = await BasicSetting_Modal.findOne();
 
 
       const refertokens = await Refer_Modal.find({ user_id: client._id, status: 0 });
@@ -757,7 +768,7 @@ class List {
         if (refertokens.length > 0) {
         }
         else {
-          const settings = await BasicSetting_Modal.findOne();
+         
 
           const senderamount = (price * settings.sender_earn) / 100;
           const receiveramount = (price * settings.receiver_earn) / 100;
@@ -837,6 +848,129 @@ class List {
 
 
 
+
+
+      const length = 6;
+      const digits = '0123456789';
+      let orderNumber = '';
+    
+      for (let i = 0; i < length; i++) {
+        orderNumber += digits.charAt(Math.floor(Math.random() * digits.length));
+      }
+
+      
+      let payment_type;
+      if(orderid)
+      {
+        payment_type ="Online";
+      }
+      else
+      {
+        payment_type ="Offline";
+
+      }
+
+      const templatePath = path.join(__dirname, '../../../template', 'invoice.html');
+          let htmlContent = fs.readFileSync(templatePath, 'utf8');
+      
+          htmlContent = htmlContent
+              .replace(/{{orderNumber}}/g, `INV-${orderNumber}`)
+              .replace(/{{created_at}}/g, formatDate(savedSubscription.created_at))
+              .replace(/{{payment_type}}/g, payment_type)
+              .replace(/{{clientname}}/g, client.FullName)
+              .replace(/{{email}}/g, client.Email)
+              .replace(/{{PhoneNo}}/g, client.PhoneNo)
+              .replace(/{{validity}}/g, savedSubscription.validity)
+              .replace(/{{plan_end}}/g, formatDate(savedSubscription.plan_end))
+              .replace(/{{plan_price}}/g, savedSubscription.plan_price)
+              .replace(/{{total}}/g, savedSubscription.total)
+              .replace(/{{discount}}/g, savedSubscription.discount)
+              .replace(/{{orderid}}/g, savedSubscription.orderid)
+              .replace(/{{planname}}/g, plan.category.title)
+              .replace(/{{plantype}}/g, "Plan")
+              .replace(/{{plan_start}}/g, formatDate(savedSubscription.plan_start));
+
+      
+         const browser = await puppeteer.launch({
+          args: ['--no-sandbox', '--disable-setuid-sandbox']
+             });
+          const page = await browser.newPage();
+          await page.setContent(htmlContent);
+      
+          // Define the path to save the PDF
+          const pdfDir = path.join(__dirname, `../../../../${process.env.DOMAIN}/uploads`, 'invoice');
+          const pdfPath = path.join(pdfDir, `INV-${orderNumber}.pdf`);
+          
+          // Generate PDF and save to the specified path
+          await page.pdf({
+              path: pdfPath,
+              format: 'A4',
+              printBackground: true,
+              margin: {
+                  top: '20mm',
+                  right: '10mm',
+                  bottom: '50mm',
+                  left: '10mm',
+              },
+          });
+      
+          await browser.close();
+      
+          savedSubscription.ordernumber = `INV-${orderNumber}`;
+          savedSubscription.invoice = `INV-${orderNumber}.pdf`;
+          const updatedSubscription = await savedSubscription.save();
+
+
+   const mailtemplate = await Mailtemplate_Modal.findOne({ mail_type: 'invoice' }); // Use findOne if you expect a single document
+      if (!mailtemplate || !mailtemplate.mail_body) {
+        throw new Error('Mail template not found');
+      }
+
+
+
+      const templatePaths = path.join(__dirname, '../../../template', 'mailtemplate.html');
+
+      fs.readFile(templatePaths, 'utf8', async (err, htmlTemplate) => {
+        if (err) {
+          console.error('Error reading HTML template:', err);
+          return;
+        }
+
+        let finalMailBody = mailtemplate.mail_body
+          .replace('{clientName}', `${client.FullName}`);
+
+        const logo = `http://${req.headers.host}/uploads/basicsetting/${settings.logo}`;
+
+        // Replace placeholders with actual values
+        const finalHtml = htmlTemplate
+          .replace(/{{company_name}}/g, settings.website_title)
+          .replace(/{{body}}/g, finalMailBody)
+          .replace(/{{logo}}/g, logo);
+
+        const mailOptions = {
+          to: client.Email,
+          from: `${settings.from_name} <${settings.from_mail}>`, 
+          subject: `${mailtemplate.mail_subject}`,
+          html: finalHtml,
+          attachments: [
+            {
+              filename: `INV-${orderNumber}.pdf`, // PDF file name
+              path: pdfPath, // Path to the PDF file
+            }
+          ]
+        };
+
+        // Send email
+        await sendEmail(mailOptions);
+      });
+
+
+
+
+
+
+
+
       // Return success response
       return res.status(201).json({
         status: true,
@@ -860,11 +994,22 @@ class List {
       if (!basket_id || !client_id) {
         return res.status(400).json({ status: false, message: 'Missing required fields' });
       }
+
+
+      const client = await Clients_Modal.findOne({ _id: client_id, del: 0, ActiveStatus: 1 });
+
+
+      if (!client) {
+        return console.log('Client not found or inactive.');
+      }
+
+
       const basket = await Basket_Modal.findOne({
         _id: basket_id,
         del: false
       });
 
+      const settings = await BasicSetting_Modal.findOne();
 
 
       // Map plan validity to months
@@ -910,6 +1055,127 @@ class List {
 
       // Save to the database
       const savedSubscription = await newSubscription.save();
+
+
+
+
+
+
+
+      const length = 6;
+      const digits = '0123456789';
+      let orderNumber = '';
+    
+      for (let i = 0; i < length; i++) {
+        orderNumber += digits.charAt(Math.floor(Math.random() * digits.length));
+      }
+
+      
+      let payment_type;
+      if(orderid)
+      {
+        payment_type ="Online";
+      }
+      else
+      {
+        payment_type ="Offline";
+
+      }
+
+      const templatePath = path.join(__dirname, '../../../template', 'invoice.html');
+          let htmlContent = fs.readFileSync(templatePath, 'utf8');
+      
+          htmlContent = htmlContent
+              .replace(/{{orderNumber}}/g, `INV-${orderNumber}`)
+              .replace(/{{created_at}}/g, formatDate(savedSubscription.created_at))
+              .replace(/{{payment_type}}/g, payment_type)
+              .replace(/{{clientname}}/g, client.FullName)
+              .replace(/{{email}}/g, client.Email)
+              .replace(/{{PhoneNo}}/g, client.PhoneNo)
+              .replace(/{{validity}}/g, savedSubscription.validity)
+              .replace(/{{plan_end}}/g, formatDate(savedSubscription.enddate))
+              .replace(/{{plan_price}}/g, savedSubscription.plan_price)
+              .replace(/{{total}}/g, savedSubscription.total)
+              .replace(/{{discount}}/g, savedSubscription.discount)
+              .replace(/{{orderid}}/g, savedSubscription.orderid)
+              .replace(/{{planname}}/g, basket.title)
+              .replace(/{{plantype}}/g, "Basket")
+              .replace(/{{plan_start}}/g, formatDate(savedSubscription.startdate));
+
+      
+         const browser = await puppeteer.launch({
+          args: ['--no-sandbox', '--disable-setuid-sandbox']
+             });
+          const page = await browser.newPage();
+          await page.setContent(htmlContent);
+      
+          // Define the path to save the PDF
+          const pdfDir = path.join(__dirname, `../../../../${process.env.DOMAIN}/uploads`, 'invoice');
+          const pdfPath = path.join(pdfDir, `INV-${orderNumber}.pdf`);
+          
+          // Generate PDF and save to the specified path
+          await page.pdf({
+              path: pdfPath,
+              format: 'A4',
+              printBackground: true,
+              margin: {
+                  top: '20mm',
+                  right: '10mm',
+                  bottom: '50mm',
+                  left: '10mm',
+              },
+          });
+      
+          await browser.close();
+      
+          savedSubscription.ordernumber = `INV-${orderNumber}`;
+          savedSubscription.invoice = `INV-${orderNumber}.pdf`;
+          const updatedSubscription = await savedSubscription.save();
+
+
+   const mailtemplate = await Mailtemplate_Modal.findOne({ mail_type: 'invoice' }); // Use findOne if you expect a single document
+      if (!mailtemplate || !mailtemplate.mail_body) {
+        throw new Error('Mail template not found');
+      }
+
+
+
+      const templatePaths = path.join(__dirname, '../../../template', 'mailtemplate.html');
+
+      fs.readFile(templatePaths, 'utf8', async (err, htmlTemplate) => {
+        if (err) {
+          console.error('Error reading HTML template:', err);
+          return;
+        }
+
+        let finalMailBody = mailtemplate.mail_body
+          .replace('{clientName}', `${client.FullName}`);
+
+        const logo = `http://${req.headers.host}/uploads/basicsetting/${settings.logo}`;
+
+        // Replace placeholders with actual values
+        const finalHtml = htmlTemplate
+          .replace(/{{company_name}}/g, settings.website_title)
+          .replace(/{{body}}/g, finalMailBody)
+          .replace(/{{logo}}/g, logo);
+
+        const mailOptions = {
+          to: client.Email,
+          from: `${settings.from_name} <${settings.from_mail}>`, 
+          subject: `${mailtemplate.mail_subject}`,
+          html: finalHtml,
+          attachments: [
+            {
+              filename: `INV-${orderNumber}.pdf`, // PDF file name
+              path: pdfPath, // Path to the PDF file
+            }
+          ]
+        };
+
+        // Send email
+        await sendEmail(mailOptions);
+      });
+
 
       // Respond with the created subscription
       return res.status(201).json({
@@ -1891,9 +2157,10 @@ class List {
         {
           $match: {
             del: false,
+            status: true,
             $or: [
-              { status: true },
-              { $and: [{ status: false }, { isSubscribed: true }] }
+              { publishstatus: true },
+              { $and: [{ publishstatus: false }, { isSubscribed: true }] }
             ]
           }
         },
@@ -4184,4 +4451,19 @@ else {
 
 
 }
+
+
+function formatDate(date) {
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+  const year = date.getFullYear();
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+
+  // return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+  return `${day}/${month}/${year}`;
+
+}
+
 module.exports = new List();
