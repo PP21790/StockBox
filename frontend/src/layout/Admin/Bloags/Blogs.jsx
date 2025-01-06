@@ -52,6 +52,8 @@ const Blogs = () => {
     const getblogs = async () => {
         try {
             const response = await getblogslist(token);
+            console.log("Resposnose", response);
+
             if (response.status) {
                 const filterdata = response.data.filter((item) =>
                     searchInput === "" ||
@@ -62,7 +64,6 @@ const Blogs = () => {
         } catch (error) {
             console.log("Error fetching blogs:", error);
         }
-
         setIsLoading(false)
     };
 
@@ -162,7 +163,7 @@ const Blogs = () => {
 
 
 
-    const updateClient = async (row) => {
+    const viewDetails = async (row) => {
         navigate("/admin/viewblog/", { state: { row } })
     }
 
@@ -326,7 +327,7 @@ const Blogs = () => {
 
                             <Eye style={{ marginRight: "10px" }}
                                 onClick={() => {
-                                    updateClient(row)
+                                    viewDetails(row)
                                 }} />
 
                         </Tooltip>

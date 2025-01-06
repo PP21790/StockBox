@@ -594,7 +594,7 @@ const Freeclient = () => {
                         aria-labelledby="exampleModalLabel"
                         aria-hidden="true"
                     >
-                        <div className="modal-dialog modal-lg">
+                        <div className="modal-dialog modal-xl" style={{ width: '850px' }}>
                             <div className="modal-content">
                                 <div className="modal-header">
                                     <h5 className="modal-title" id="exampleModalLabel">Assign Package</h5>
@@ -626,7 +626,7 @@ const Freeclient = () => {
                                     <div className='card'>
                                         {checkedIndex === 0 && (
                                             <>
-                                                <div className='row mt-3'>
+                                                <div className='row mt-3 xl'>
                                                     {category && category
                                                         .filter(cat => planlist.some(plan => plan.category._id === cat._id))
                                                         .map((item, index) => (

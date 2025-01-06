@@ -483,7 +483,24 @@ const Banner = () => {
                                 </div>
 
 
-                                {model && (
+                               
+
+                            </div> : "" }
+                        </div>
+                        <div className="table-responsive">
+                            <Table
+                                columns={columns}
+                                data={clients}
+                                pagination
+                                striped
+                                highlightOnHover
+                                dense
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {model && (
                                     <>
                                         <div className="modal-backdrop fade show"></div>
                                         <div
@@ -580,22 +597,6 @@ const Banner = () => {
                                         </div>
                                     </>
                                 )}
-
-                            </div> : "" }
-                        </div>
-                        <div className="table-responsive">
-                            <Table
-                                columns={columns}
-                                data={clients}
-                                pagination
-                                striped
-                                highlightOnHover
-                                dense
-                            />
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     );
 };
