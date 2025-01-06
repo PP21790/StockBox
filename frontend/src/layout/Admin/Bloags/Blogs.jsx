@@ -62,9 +62,8 @@ const Blogs = () => {
         } catch (error) {
             console.log("Error fetching blogs:", error);
         }
-        setTimeout(()=>{
-            setIsLoading(false)
-        })
+
+        setIsLoading(false)
     };
 
     useEffect(() => {
