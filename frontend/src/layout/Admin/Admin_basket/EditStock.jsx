@@ -185,6 +185,7 @@ const EditStock = () => {
             basket_id: stock[0]?.basket_id || "",
             stocks: stocksWithStatus,
             version,
+            publishstatus: status == 0 ? false : status == 1 ? true : ""
         };
 
         try {
