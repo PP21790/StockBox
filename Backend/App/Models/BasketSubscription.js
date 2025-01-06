@@ -32,6 +32,14 @@ const BasketSubscriptionSchema = new Schema({
         type: String,
         default: null
     },
+    ordernumber: {
+        type: String,
+        default: null
+    },
+    invoice: {
+        type: String,
+        default: null
+    },
     coupon: {
         type: String,
         default: null

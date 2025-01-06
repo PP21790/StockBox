@@ -222,7 +222,7 @@ class Basket {
 
   async AddStockInBasketForm(req, res) {
     try {
-      const { basket_id, stocks } = req.body; // Get basket_id and stocks from the request body
+      const { basket_id, stocks, publishstatus } = req.body; // Get basket_id and stocks from the request body
 
       // Validate basket existence
       const basket = await Basket_Modal.findById(basket_id);
@@ -233,6 +233,18 @@ class Basket {
         });
       }
       const existingStocks = await Basketstock_Modal.find({ basket_id }).sort({ version: -1 });
+
+
+  if(publishstatus==true) {
+      const checkpublishornot = await Basketstock_Modal.find({ basket_id, status: 1 });
+      if (checkpublishornot.length > 0) {
+      } else {
+        basket.status =true;
+        basket.publishstatus =true;
+        await basket.save();
+      }
+    }
+
 
       let totalAmount = 0;
 
@@ -245,6 +257,11 @@ class Basket {
           });
         }
         else {
+            
+
+          // basket.status = true;
+          // await basket.save();
+
 
           let totalSum = 0;
 
@@ -366,7 +383,7 @@ class Basket {
 
   async UpdateStockInBasketForm(req, res) {
     try {
-      const { basket_id, stocks, version } = req.body; // Include version in request body
+      const { basket_id, stocks, version, publishstatus } = req.body; // Include version in request body
 
       // Validate basket existence
       const basket = await Basket_Modal.findById(basket_id);
@@ -376,6 +393,19 @@ class Basket {
           message: "Basket not found.",
         });
       }
+
+
+      
+  if(publishstatus==true) {
+    const checkpublishornot = await Basketstock_Modal.find({ basket_id, status: 1 });
+    if (checkpublishornot.length > 0) {
+    } else {
+      basket.status =true;
+      basket.publishstatus =true;
+      await basket.save();
+    }
+  }
+
 
       const totalAmount = basket.mininvamount; // Total amount to invest
       let remainingAmount = totalAmount; // Keep track of remaining amount
@@ -865,7 +895,7 @@ class Basket {
       // Find and update the Basket
       const result = await Basket_Modal.findByIdAndUpdate(
         id,
-        { status: status },
+        { status: status,publishstatus:status },
         { new: true } // Return the updated document
       );
 
@@ -892,7 +922,48 @@ class Basket {
     }
   }
 
+  async statusPublishChange(req, res) {
+    try {
+      const { id, status } = req.body;
 
+      // Validate status
+      const validStatuses = [true, false];
+      if (!validStatuses.includes(status)) {
+        return res.status(400).json({
+          status: false,
+          message: "Invalid status value"
+        });
+      }
+
+      // Find and update the Basket
+      const result = await Basket_Modal.findByIdAndUpdate(
+        id,
+        { publishstatus:status },
+        { new: true } // Return the updated document
+      );
+
+      if (!result) {
+        return res.status(404).json({
+          status: false,
+          message: "Basket not found"
+        });
+      }
+
+      return res.json({
+        status: true,
+        message: "Status updated successfully",
+        data: result
+      });
+
+    } catch (error) {
+      // console.log("Error updating status:", error);
+      return res.status(500).json({
+        status: false,
+        message: "Server error",
+        data: []
+      });
+    }
+  }
 
 
   async statusRebanceChange(req, res) {
