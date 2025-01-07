@@ -111,6 +111,25 @@ export async function deleteStaff(_id, token) {
 
 
 
+
+// client request delete api 
+
+
+export async function DeleteClientRequest(_id, token) {
+    try {
+        const res = await axios.get(`${Config.base_url}client/deleteclientrequest/${_id}`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return { error: err.response?.data || err.message };
+    }
+}
+
+
+
 // update staff
 
 

@@ -84,6 +84,15 @@ const fieldConfigurations = [
     star: true
   },
   {
+    name: "cagr",
+    label: "CAGR",
+    type: "number",
+    label_size: 12,
+    col_size: 4,
+    disable: false,
+    star: true
+  },
+  {
     name: "next_rebalance_date",
     label: "Rebalance Date",
     type: "date",
@@ -203,6 +212,7 @@ const Viewbasketdetail = () => {
           frequency: basketData?.frequency ? basketData?.frequency : "",
           validity: basketData?.validity ? basketData?.validity : "",
           next_rebalance_date: basketData?.next_rebalance_date ? basketData?.next_rebalance_date : "",
+          cagr: basketData?.cagr || "",
 
         });
       }

@@ -79,8 +79,8 @@ const AddBasket = () => {
       themename: values.themename,
       frequency: values.frequency,
       validity: values.validity,
-      next_rebalance_date: values.next_rebalance_date
-
+      next_rebalance_date: values.next_rebalance_date,
+      cagr: values.cagr
     };
 
 
@@ -128,7 +128,8 @@ const AddBasket = () => {
       themename: "",
       frequency: "",
       validity: "",
-      next_rebalance_date: ""
+      next_rebalance_date: "",
+      cagr: "",
     },
     validate,
     onSubmit,
@@ -206,6 +207,15 @@ const AddBasket = () => {
         { value: "6 months", label: "6 Months" },
         { value: "1 year", label: "1 Year" }
       ],
+      star: true
+    },
+    {
+      name: "cagr",
+      label: "CAGR",
+      type: "number",
+      label_size: 12,
+      col_size: 6,
+      disable: false,
       star: true
     },
     {

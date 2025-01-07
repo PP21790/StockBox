@@ -49,6 +49,7 @@ const Editbasket = () => {
         frequency: data?.frequency || "",
         validity: data?.validity ? data?.validity : "",
         next_rebalance_date: data?.next_rebalance_date ? data?.next_rebalance_date : "",
+        cagr: data?.cagr
       });
     }
   }, [data]);
@@ -101,7 +102,8 @@ const Editbasket = () => {
       themename: values.themename,
       frequency: values.frequency,
       validity: values.validity,
-      next_rebalance_date: values.next_rebalance_date
+      next_rebalance_date: values.next_rebalance_date,
+      cagr: values.cagr
 
     };
 
@@ -151,7 +153,8 @@ const Editbasket = () => {
       themename: "",
       frequency: "",
       validity: "",
-      next_rebalance_date: ""
+      next_rebalance_date: "",
+      cagr: "",
     },
     validate,
     onSubmit,
@@ -231,6 +234,15 @@ const Editbasket = () => {
       star: true
     },
     {
+      name: "cagr",
+      label: "CAGR",
+      type: "number",
+      label_size: 12,
+      col_size: 6,
+      disable: false,
+      star: true
+    },
+    {
       name: "next_rebalance_date",
       label: "Rebalance Date",
       type: "date",
@@ -242,9 +254,9 @@ const Editbasket = () => {
     {
       name: "description",
       label: "Description",
-      type: "text",
+      type: "ckeditor",
       label_size: 12,
-      col_size: 6,
+      col_size: 12,
       disable: false,
       star: true
     },

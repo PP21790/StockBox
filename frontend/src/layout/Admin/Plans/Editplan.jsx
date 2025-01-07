@@ -64,7 +64,9 @@ const Editplan = () => {
             price: values.price,
             validity: values.validity,
             category: values.category,
+            deliverystatus: values.deliverystatus == 1 ? true : false,
             id: id,
+
         };
 
         try {
@@ -103,10 +105,11 @@ const Editplan = () => {
 
     const formik = useFormik({
         initialValues: {
-            description: info.description || "",
-            price: info.price || "",
-            validity: info.validity ? info.validity : "",
-            category: info.category ? info.category._id : "",
+            description: info?.description || "",
+            price: info?.price || "",
+            validity: info?.validity ? info.validity : "",
+            category: info?.category ? info.category._id : "",
+            deliverystatus: info?.deliverystatus ? 1 : 0,
         },
         enableReinitialize: true,
         validate,
@@ -125,16 +128,16 @@ const Editplan = () => {
                 value: item._id,
             })),
             label_size: 12,
-            col_size: 4,
+            col_size: 3,
             disable: true,
-            star:true
+            star: true
         },
         {
             name: "validity",
             label: "Validity",
             type: "select",
             label_size: 12,
-            col_size: 4,
+            col_size: 3,
             disable: true,
             options: [
                 { value: "1 month", label: "1 month" },
@@ -142,16 +145,25 @@ const Editplan = () => {
                 { value: "6 months", label: "6 months" },
                 { value: "1 year", label: "1 year" },
             ],
-            star:true
+            star: true
         },
         {
             name: "price",
             label: "Price",
             type: "number",
             label_size: 12,
-            col_size: 4,
+            col_size: 3,
             disable: false,
-            star:true
+            star: true
+        },
+        {
+            name: "deliverystatus",
+            label: "Plan Delivery status ",
+            type: "togglebtn",
+            label_size: 12,
+            col_size: 3,
+            disable: false,
+            star: true
         },
         {
             name: "description",
@@ -160,7 +172,7 @@ const Editplan = () => {
             label_size: 12,
             col_size: 12,
             disable: false,
-            star:true
+            star: true
         },
     ];
 

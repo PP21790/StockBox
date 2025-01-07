@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getClientRequestforfilter } from '../../../../Services/Admin';
+import { getClientRequestforfilter, DeleteClientRequest } from '../../../../Services/Admin';
 import Table from '../../../../components/Table1';
 import { SquarePen, Trash2, PanelBottomOpen, Eye, RefreshCcw, IndianRupee } from 'lucide-react';
 import Swal from 'sweetalert2';
@@ -53,12 +53,11 @@ const ClientRequest = () => {
         try {
             const data = { page: currentPage, search: searchInput }
             const response = await getClientRequestforfilter(data, token);
-            console.log("response", response)
+
 
             if (response.status) {
-                console.log("response", response.requestclients)
-                setTotalRows(response.pagination.totalItems)
-                // setClients([filteredData?.requestclients?.clientDetails]);
+                setTotalRows(response.pagination.total)
+                setClients(response?.data);
             }
         } catch (error) {
             console.log("Error fetching services:", error);
@@ -70,6 +69,53 @@ const ClientRequest = () => {
     useEffect(() => {
         gethistory();
     }, [searchInput, currentPage]);
+
+
+
+    // staff delete 
+
+    const DeleteClient = async (_id) => {
+        try {
+            const result = await Swal.fire({
+                title: 'Are you sure?',
+                text: 'Do you want to delete this Client? This action cannot be undone.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel',
+            });
+
+            if (result.isConfirmed) {
+                const response = await DeleteClientRequest(_id, token);
+                if (response.status) {
+                    Swal.fire({
+                        title: 'Deleted!',
+                        text: 'The Client has been successfully deleted.',
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                    });
+                    gethistory();
+                }
+            } else {
+
+                Swal.fire({
+                    title: 'Cancelled',
+                    text: 'The Client deletion was cancelled.',
+                    icon: 'info',
+                    confirmButtonText: 'OK',
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'There was an error deleting the Client.',
+                icon: 'error',
+                confirmButtonText: 'Try Again',
+            });
+
+        }
+    };
+
 
 
 
@@ -94,131 +140,35 @@ const ClientRequest = () => {
         },
         {
             name: 'Phone',
-            selector: row => row.clientPhoneNo,
+            selector: row => row?.PhoneNo,
             sortable: true,
             width: '200px',
         },
 
         {
-            name: 'Title',
-            selector: row => row?.planCategoryTitle ? row?.planCategoryTitle : "N/A",
+            name: 'Type',
+            selector: row => row?.type,
             sortable: true,
             width: '200px',
         },
         {
-            name: 'Client Segment',
+            name: 'Actions',
             cell: row => (
                 <>
-                    {Array.isArray(row?.serviceNames) && row.serviceNames.length > 0 ? (
-                        row.serviceNames.map((item, index) => (
-                            <span
-                                key={index}
-                                style={{
+                    <div>
+                        <Tooltip placement="top" overlay="Delete">
+                            <Trash2 onClick={() => DeleteClient(row._id)} />
+                        </Tooltip>
+                    </div>
 
-                                    marginRight: '5px',
-                                }}
-                            >
-                                {item || "N/A"}
-                            </span>
-                        ))
-                    ) : (
-                        <span>N/A</span>
-                    )}
+
                 </>
             ),
-            sortable: true,
-            width: '200px',
-        },
-        {
-            name: 'Order_ID',
-            selector: row => row.orderid ? row.orderid : "Make By Admin",
-            sortable: true,
-            width: '200px',
-        },
-
-        {
-            name: 'Plan Amount',
-            selector: row => <div> <IndianRupee />{row.plan_price}</div>,
-            sortable: true,
-            width: '200px',
-        },
-        {
-            name: 'Plan Discount',
-            selector: row => <div> <IndianRupee />{row.discount}</div>,
-            sortable: true,
-            width: '200px',
-        },
-
-        {
-            name: 'Coupon Id',
-            selector: row => row.coupon ? row.coupon : "N/A",
-            sortable: true,
-            width: '200px',
-        },
-
-
-
-
-        {
-            name: 'Total',
-            selector: row => <div> <IndianRupee />{row.total}</div>,
-            sortable: true,
-            width: '200px',
-        },
-        // {
-        //     name: 'Plan Price',
-        //     selector: row => row.planDetails.plan_price,
-        //     sortable: true,
-        // },
-        {
-            name: 'Validity',
-            selector: row => row.validity,
-            sortable: true,
-            width: '200px',
-        },
-        {
-            name: 'Purchase Date.',
-            selector: row => fDateTime(row?.created_at),
-            sortable: true,
-            width: '200px',
-        },
-        // {
-        //     name: 'Plan End',
-        //     selector: row => new Date(row.planDetails.plan_end).toLocaleDateString(),
-        //     sortable: true,
-        // },
-        // {
-        //     name: 'Date',
-        //     selector: row => fDate(row.planDetails.created_at),
-        //     sortable: true,
-        // },
-        // {
-        //     name: 'Actions',
-        //     cell: row => (
-        //         <>
-        //             <div>
-        //                 <Tooltip placement="top" overlay="View">
-        //                     <Eye
-        //                         data-bs-toggle="modal"
-        //                         data-bs-target="#example"
-        //                         onClick={() => setViewpage(row)}
-        //                     />
-        //                 </Tooltip>
-        //             </div>
-
-
-        //         </>
-        //     ),
-        //     ignoreRowClick: true,
-        //     allowOverflow: true,
-        //     button: true,
-        // }
+            ignoreRowClick: true,
+            allowOverflow: true,
+            button: true,
+        }
     ];
-
-
-
-
-
 
 
 
@@ -249,7 +199,7 @@ const ClientRequest = () => {
                                 <input
                                     type="text"
                                     className="form-control ps-5 radius-10"
-                                    placeholder="Search Payment History"
+                                    placeholder="Search Client Request"
                                     onChange={(e) => setSearchInput(e.target.value)}
                                     value={searchInput}
                                 />

@@ -16,7 +16,7 @@ const Addplan = () => {
     const [clients, setClients] = useState([]);
     const [plan, setPlan] = useState([]);
 
-    
+
 
     const getcategoryplanlist = async () => {
         try {
@@ -61,6 +61,7 @@ const Addplan = () => {
     };
 
     const onSubmit = async (values) => {
+        console.log("values", values.Status)
         const req = {
             title: "",
             description: values.description,
@@ -68,10 +69,13 @@ const Addplan = () => {
             validity: values.validity,
             category: values.category,
             add_by: user_id,
+            deliverystatus: values.Status === 1 ? true : values.Status == 0 ? false : ""
         };
 
         try {
             const response = await Addplanbyadmin(req, token);
+
+
             if (response.status) {
                 Swal.fire({
                     title: "Create Successful!",
@@ -111,6 +115,7 @@ const Addplan = () => {
             validity: "",
             category: "",
             add_by: "",
+            Status: ""
         },
         validate,
         onSubmit,
@@ -131,16 +136,16 @@ const Addplan = () => {
                 value: item._id,
             })),
             label_size: 12,
-            col_size: 4,
+            col_size: 3,
             disable: false,
-            star:true
+            star: true
         },
         {
             name: "validity",
             label: "Validity",
             type: "select",
             label_size: 12,
-            col_size: 4,
+            col_size: 3,
             disable: false,
             options: [
                 { value: "1 month", label: "1 Month" },
@@ -150,20 +155,26 @@ const Addplan = () => {
             ].filter((option) => {
                 return !plan.some((item) => item?.validity === option.value);
             }),
-            star:true
+            star: true
         },
-        
-        
         {
             name: "price",
             label: "Price",
             type: "number",
             label_size: 12,
-            col_size: 4,
+            col_size: 3,
             disable: false,
-            star:true
+            star: true
         },
-
+        {
+            name: "Status",
+            label: "Plan Delivery status ",
+            type: "togglebtn",
+            label_size: 12,
+            col_size: 3,
+            disable: false,
+            star: true
+        },
         {
             name: "description",
             label: "Description",
@@ -171,7 +182,7 @@ const Addplan = () => {
             label_size: 12,
             col_size: 12,
             disable: false,
-            star:true
+            star: true
         },
     ];
 
@@ -190,12 +201,12 @@ const Addplan = () => {
                 console.error("Plan list fetch error:", error);
             }
         };
-    
+
         if (formik.values.category) {
             getplanlistfordetail();
         }
     }, [formik.values.category]);
-    
+
 
 
 
