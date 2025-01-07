@@ -169,6 +169,10 @@ const clientsModel = new Schema({
         trim: true,
         default: null
     },
+    deliverystatus: {
+        type: Boolean,
+        default: false 
+    },
      hserverid: {
         type: String,
         trim: true,

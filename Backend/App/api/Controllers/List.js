@@ -30,6 +30,8 @@ const Basketstock_Modal = db.Basketstock;
 const Liveprice_Modal = db.Liveprice;
 const Basketorder_Modal = db.Basketorder;
 const Mailtemplate_Modal = db.Mailtemplate;
+const Requestclient_Modal = db.Requestclient;
+
 
 const { sendEmail } = require('../../Utils/emailService');
 const puppeteer = require('puppeteer');
@@ -846,7 +848,10 @@ class List {
 
       await resultnm.save();
 
-
+      if (plan.deliverystatus == true) {
+        client.deliverystatus = true;
+        await client.save();
+      }
 
 
 
@@ -1448,8 +1453,11 @@ class List {
           serviceName = "Cash";
         } else if (results.service == "66dfeef84a88602fbbca9b79") {
           serviceName = "Option";
-        } else {
+        } else if (results.service == "66dfede64a88602fbbca9b72"){
           serviceName = "Future";
+        }
+        else{
+          serviceName = "All";
         }
 
         return {
@@ -1584,17 +1592,39 @@ class List {
         });
       }
 
+
+
+      const client = await Clients_Modal.findOne({ _id: client_id, del: 0, ActiveStatus: 1 });
+
       const startDates = plans.map(plan => new Date(plan.startdate));
       const endDates = plans.map(plan => new Date(plan.enddate));
 
-      const query = {
-        service: service_id,
-        close_status: false,
-        created_at: {
-          $gte: startDates[0], // Assuming all plans have the same startdate
-          $lte: endDates[0] // Assuming all plans have the same enddate
-        }
-      };
+      // const query = {
+      //   service: service_id,
+      //   close_status: false,
+      //   created_at: {
+      //     $gte: startDates[0], // Assuming all plans have the same startdate
+      //     $lte: endDates[0] // Assuming all plans have the same enddate
+      //   }
+      // };
+
+
+const query = {
+  service: service_id,
+  close_status: false,
+};
+
+// Check if deliverystatus is true
+if (client.deliverystatus === true) {
+  query.created_at = {
+    $lte: endDates[0], // Only keep the end date condition
+  };
+} else {
+  query.created_at = {
+    $gte: startDates[0], // Include both start and end date conditions
+    $lte: endDates[0],
+  };
+}
 
       // const signals = await Signal_Modal.find(query);
 
@@ -1725,20 +1755,40 @@ class List {
           data: []
         });
       }
+      const client = await Clients_Modal.findOne({ _id: client_id, del: 0, ActiveStatus: 1 });
 
       const startDates = plans.map(plan => new Date(plan.startdate));
       const endDates = plans.map(plan => new Date(plan.enddate));
 
-      const query = {
-        service: service_id,
-        close_status: true,
-        created_at: {
-          $gte: startDates[0], // Assuming all plans have the same startdate
-          $lte: endDates[0] // Assuming all plans have the same enddate
-        }
-      };
+      // const query = {
+      //   service: service_id,
+      //   close_status: true,
+      //   created_at: {
+      //     $gte: startDates[0], // Assuming all plans have the same startdate
+      //     $lte: endDates[0] // Assuming all plans have the same enddate
+      //   }
+      // };
 
-      // const signals = await Signal_Modal.find(query);
+
+
+      
+const query = {
+  service: service_id,
+  close_status: true,
+};
+
+// Check if deliverystatus is true
+if (client.deliverystatus === true) {
+  query.created_at = {
+    $lte: endDates[0], // Only keep the end date condition
+  };
+} else {
+  query.created_at = {
+    $gte: startDates[0], // Include both start and end date conditions
+    $lte: endDates[0],
+  };
+}
+
 
       const protocol = req.protocol; // Will be 'http' or 'https'
 
@@ -1874,19 +1924,40 @@ class List {
           data: []
         });
       }
+      const client = await Clients_Modal.findOne({ _id: client_id, del: 0, ActiveStatus: 1 });
 
       // Get the start and end dates from the plans
       const startDates = plans.map(plan => new Date(plan.startdate));
       const endDates = plans.map(plan => new Date(plan.enddate));
 
+      // const query = {
+      //   service: service_id,
+      //   close_status: true,
+      //   created_at: {
+      //     $gte: startDates[0], // Assuming all plans have the same startdate
+      //     $lte: endDates[0] // Assuming all plans have the same enddate
+      //   }
+      // };
+
+
       const query = {
         service: service_id,
         close_status: true,
-        created_at: {
-          $gte: startDates[0], // Assuming all plans have the same startdate
-          $lte: endDates[0] // Assuming all plans have the same enddate
-        }
       };
+      
+      // Check if deliverystatus is true
+      if (client.deliverystatus === true) {
+        query.created_at = {
+          $lte: endDates[0], // Only keep the end date condition
+        };
+      } else {
+        query.created_at = {
+          $gte: startDates[0], // Include both start and end date conditions
+          $lte: endDates[0],
+        };
+      }
+      
+
 
       // Print the query to the console
 
@@ -4450,6 +4521,31 @@ else {
 }
 
 
+
+async addRequest(req, res) {
+  try {
+    const { clientid, type } = req.body;
+
+
+
+    const result = new Requestclient_Modal({
+      clientid: clientid,
+      type: type
+    });
+
+    const savedSubscription = await result.save();
+
+    return res.status(201).json({
+      status: true,
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ status: false, message: 'Server error', data: [] });
+  }
+}
+
+
 }
 
 
@@ -4465,5 +4561,10 @@ function formatDate(date) {
   return `${day}/${month}/${year}`;
 
 }
+
+
+
+
+
 
 module.exports = new List();

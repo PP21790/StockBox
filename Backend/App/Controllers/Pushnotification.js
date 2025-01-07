@@ -1,5 +1,5 @@
 const admin = require('firebase-admin');
-const serviceAccount = require('../../template/stockbox-15e55-firebase-adminsdk-1zz93-a6b89bf4c1.json');
+const serviceAccount = require('../../template/stockbox-15e55-firebase-adminsdk-1zz93-5e353b0a02.json');
 
 // Initialize Firebase Admin SDK
 if (!admin.apps.length) {
@@ -16,7 +16,12 @@ async function sendFCMNotification(title, body, tokens, type="") {
 
    const tokenss = [...new Set(tokens)];
 
-       const messages = tokenss.map(token => ({
+
+   const uniqueValidTokens = tokenss
+   .filter((token) => token && token.trim() !== '') // Remove empty tokens
+   .filter((token, index, self) => self.indexOf(token) === index); // Remove duplicates
+
+       const messages = uniqueValidTokens.map(token => ({
       token: token,
       notification: {
         title: title,
@@ -33,6 +38,9 @@ async function sendFCMNotification(title, body, tokens, type="") {
       
     }));
 
+
+
+    
     const response = await Promise.all(
       messages.map(message => admin.messaging().send(message))
     );

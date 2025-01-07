@@ -47,6 +47,7 @@ module.exports = {
     Liveprice: require("./Liveprice"),
     Basketstock: require("./Basketstock"),
     Basketorder: require("./Basketorder"),
+    Requestclient: require("./Requestclient"),
 
     open_position:open_position,
     open_position_excute:open_position_excute,
