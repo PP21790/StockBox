@@ -6,6 +6,7 @@ import { basicsettinglist } from "../../Services/Admin";
 const menuItems = [
   { title: "Dashboard", icon: "bx-home-alt", link: "/admin/dashboard" },
   { title: "Client", icon: "bx-user", link: "/admin/client" },
+  { title: "Client Request", icon: "bx-user", link: "/admin/clientrequest" },
   { title: "Free Trial Client", icon: "bx-user", link: "/admin/freeclient" },
   {
     title: "Plan",

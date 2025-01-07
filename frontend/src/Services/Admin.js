@@ -2157,6 +2157,21 @@ export async function getPayementhistorywithfilter(data, token) {
 }
 
 
+//  Client Request 
+
+export async function getClientRequestforfilter(data, token) {
+    try {
+        const res = await axios.post(`${Config.base_url}client/clientrequest`, data, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return res?.data;
+    } catch (err) {
+        return err;
+    }
+}
+
 
 
 // get freelist client 
