@@ -10,6 +10,8 @@ import * as Config from "../../../Utils/config";
 import { Tooltip } from 'antd';
 
 const AddStock = () => {
+
+
   const { id: basket_id } = useParams();
   const [selectedServices, setSelectedServices] = useState([]);
   const [options, setOptions] = useState([]);
@@ -85,7 +87,13 @@ const AddStock = () => {
     setOptions((prevOptions) =>
       prevOptions.filter((option) => option.value !== serviceValue)
     );
+
+
   };
+
+
+
+
 
 
   // Validation Schema for Formik

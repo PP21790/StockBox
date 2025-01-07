@@ -10,6 +10,7 @@ import {
   SquarePen,
   IndianRupee,
   ArrowDownToLine,
+  CircleX
 } from "lucide-react";
 import Swal from "sweetalert2";
 import {
@@ -22,6 +23,7 @@ import {
   UpdatesignalReport,
 } from "../../../Services/Admin";
 import { fDateTimeSuffix, fDateTimeH } from "../../../Utils/Date_formate";
+import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { exportToCSV } from "../../../Utils/ExportData";
 import Select from "react-select";
 import { Tooltip } from "antd";
@@ -218,6 +220,17 @@ const Closesignal = () => {
       selector: (row, index) => (currentPage - 1) * 10 + index + 1,
       sortable: false,
       width: "100px",
+    },
+    {
+      name: "Avoid Signal",
+      selector: (row) =>
+        row.closeprice == 0 ? (
+          <FaTimesCircle color="red" />
+        ) : (
+          <FaCheckCircle color="green" />
+        ),
+      sortable: true,
+      width: "200px",
     },
     {
       name: "Segment",
@@ -685,7 +698,7 @@ const Closesignal = () => {
                                 };
 
 
-                                const plPercentage = ((totalPL / (client.price * client.lotsize)) * 100).toFixed(2); // Calculate P/L percentage
+                                const plPercentage = ((totalPL / (client.price * client.lotsize)) * 100).toFixed(2);
                                 return (
                                   <p className="mb-1">
                                     <b>
@@ -701,8 +714,14 @@ const Closesignal = () => {
                             </div>
 
                           </div>
-                          <p className="mb-1">
-                            Symbol : {client?.tradesymbol} , Entry Type : {client?.calltype} , Quantity/Lot : {client?.lot}, Entry Price : {client?.price} , Exit Price : {client?.closeprice}, Entry Date : {fDateTimeH(client?.created_at)} , Exit Date : {fDateTimeH(client?.closedate)}
+                          <p className='mb-1'> {client?.calltype}  POSITION CLOSED IN {client?.stock}  {client?.expirydate && `${client.expirydate}`} {client?.optiontype && `${client.optiontype}`} {client?.stoploss && `SL ${client.stoploss}`}  {(() => {
+                            const count = [client?.tag1, client?.tag2, client?.tag3].filter(Boolean).length;
+                            if (count === 1) return "1st";
+                            if (count === 2) return "2nd";
+                            if (count === 3) return "3rd";
+                            return "";
+                          })()}   Target  Achived  Exit Price {client?.closeprice}
+
                           </p>
                         </div>
                       </div>

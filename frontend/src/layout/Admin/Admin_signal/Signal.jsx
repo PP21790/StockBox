@@ -15,7 +15,7 @@ import { image_baseurl } from '../../../Utils/config';
 
 
 const Signal = () => {
-    const [viewMode, setViewMode] = useState("table"); // "table" or "card"
+    const [viewMode, setViewMode] = useState("table");
     const token = localStorage.getItem('token');
     const [searchInput, setSearchInput] = useState("");
 
@@ -327,8 +327,6 @@ const Signal = () => {
 
     const checkstatus = closedata.closestatus == true ? "true" : "false"
 
-
-
     const UpdateData = (row) => {
         setModel(true);
         setServiceid({
@@ -378,34 +376,76 @@ const Signal = () => {
 
 
             if (index === 1) {
-                if (closedata.targetprice2 && !closedata.targetprice1) {
-                    showValidationError('Target 1 must be provided if Target 2 is entered.');
-                    return;
+                if (closedata.calltype === "BUY") {
+                    const target1 = parseFloat(closedata.targetprice1) || null;
+                    const target2 = parseFloat(closedata.targetprice2) || null;
+                    const target3 = parseFloat(closedata.targetprice3) || null;
+
+                    if (target2 && !target1) {
+                        showValidationError('Target 1 must be provided if Target 2 is entered.');
+                        return;
+                    }
+                    if (target3 && (!target1 || !target2)) {
+                        showValidationError('Target 1 and Target 2 must be provided if Target 3 is entered.');
+                        return;
+                    }
+                    if (target1 && target2 && target1 >= target2) {
+                        showValidationError('Target 2 must be greater than Target 1.');
+                        return;
+                    }
+                    if (target3 && target2 >= target3) {
+                        showValidationError('Target 3 must be greater than Target 2.');
+                        return;
+                    }
+                    if (checkedTargets1.target1 && !target1) {
+                        showValidationError('Please fill in Target 1 or uncheck it.');
+                        return;
+                    }
+                    if (checkedTargets1.target2 && !target2) {
+                        showValidationError('Please fill in Target 2 or uncheck it.');
+                        return;
+                    }
+                    if (checkedTargets1.target3 && !target3) {
+                        showValidationError('Please fill in Target 3 or uncheck it.');
+                        return;
+                    }
+                } else if (closedata.calltype === "SELL") {
+                    console.log("SELL", closedata.calltype);
+
+                    const target1 = parseFloat(closedata.targetprice1) || null;
+                    const target2 = parseFloat(closedata.targetprice2) || null;
+                    const target3 = parseFloat(closedata.targetprice3) || null;
+
+                    if (target2 && !target1) {
+                        showValidationError('Target 1 must be provided if Target 2 is Entered.');
+                        return;
+                    }
+                    if (target3 && (!target1 || !target2)) {
+                        showValidationError('Target 1 and Target 2 must be provided if Target 3 is Entered.');
+                        return;
+                    }
+                    if (target1 && target2 && target1 <= target2) {
+                        showValidationError('Target 2 must be Less than Target 1.');
+                        return;
+                    }
+                    if (target3 && target2 <= target3) {
+                        showValidationError('Target 3 must be Less than Target 2.');
+                        return;
+                    }
+                    if (checkedTargets1.target1 && !target1) {
+                        showValidationError('Please fill in Target 1 or uncheck it.');
+                        return;
+                    }
+                    if (checkedTargets1.target2 && !target2) {
+                        showValidationError('Please fill in Target 2 or uncheck it.');
+                        return;
+                    }
+                    if (checkedTargets1.target3 && !target3) {
+                        showValidationError('Please fill in Target 3 or uncheck it.');
+                        return;
+                    }
                 }
-                if (closedata.targetprice3 && (!closedata.targetprice1 || !closedata.targetprice2)) {
-                    showValidationError('Target 1 and Target 2 must be provided if Target 3 is entered.');
-                    return;
-                }
-                if (closedata.targetprice1 && closedata.targetprice2 && closedata.targetprice1 >= closedata.targetprice2) {
-                    showValidationError('Target 2 must be greater than Target 1.');
-                    return;
-                }
-                if (closedata.targetprice3 && closedata.targetprice2 >= closedata.targetprice3) {
-                    showValidationError('Target 3 must be greater than Target 2.');
-                    return;
-                }
-                if (checkedTargets1.target1 && !closedata.targetprice1) {
-                    showValidationError('Please fill in Target 1 or uncheck it.');
-                    return;
-                }
-                if (checkedTargets1.target2 && !closedata.targetprice2) {
-                    showValidationError('Please fill in Target 2 or uncheck it.');
-                    return;
-                }
-                if (checkedTargets1.target3 && !closedata.targetprice3) {
-                    showValidationError('Please fill in Target 3 or uncheck it.');
-                    return;
-                }
+
             }
             if (index === 4) {
                 if (!closedata.close_description) {
@@ -953,7 +993,10 @@ const Signal = () => {
                                                 <div className="card-body">
                                                     <p className='mb-1'><b>Date: {fDateTimeH(client?.created_at)}</b></p>
                                                     <p className='mb-2'><b>Segment: {client?.segment == "C" ? "CASH" : client?.segment == "O" ? "OPTION" : "FUTURE"}</b></p>
-                                                    <p className='mb-1'> Symbol : {client?.tradesymbol} , Entry Type : {client?.calltype} , Quantity/Lot : {client?.lot}, Entry Price : {client?.price} , Entry Date : {fDateTimeH(client?.created_at)} </p>
+                                                    <p className='mb-1'> {client?.calltype} {client?.stock}  {client?.expirydate && `${client.expirydate}`} {client?.optiontype && `${client.optiontype}`} {client?.calltype} {client?.entrytype} {client?.price}  Target  {client?.tag1}{client?.tag2 && `/${client.tag2}`}
+                                                        {client?.tag3 && `/${client.tag3}`}  {client?.stoploss && `SL ${client.stoploss}`}
+
+                                                    </p>
 
                                                 </div>
                                             </div>

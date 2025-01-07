@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { Addbasketplan } from '../../../Services/Admin';
 
 
-const AddBasket = () => { 
+const AddBasket = () => {
 
 
   const navigate = useNavigate();
@@ -89,7 +89,7 @@ const AddBasket = () => {
 
       if (response.status) {
         Swal.fire({
-          title: "Client Create Successfull !",
+          title: "Basket Create Successfull !",
           text: response.message,
           icon: "success",
           timer: 1500,
@@ -220,12 +220,12 @@ const AddBasket = () => {
     {
       name: "description",
       label: "Description",
-      type: "ckeditor", 
+      type: "ckeditor",
       label_size: 12,
       col_size: 12,
       disable: false,
-      star:true
-  },
+      star: true
+    },
   ];
 
 

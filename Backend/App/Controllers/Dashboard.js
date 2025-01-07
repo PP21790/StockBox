@@ -860,7 +860,6 @@ class Dashboard {
 
       const result = await Adminnotification_Modal.find({})
         .sort({ createdAt: -1 })
-        .limit(20)
         .lean();
 
       return res.json({
@@ -948,20 +947,20 @@ class Dashboard {
         { status: 0 }, // Condition: status is 0
         { $set: { status: 1 } } // Update: set status to 1
       );
-  
+
       if (result.matchedCount === 0) {
         return res.json({
           status: false,
           message: "No notifications found with status 0"
         });
       }
-  
+
       return res.json({
         status: true,
         message: "All statuses updated successfully",
         data: result // Return the result of the operation
       });
-  
+
     } catch (error) {
       // Log and return error response
       console.error("Error updating all statuses:", error);
@@ -972,7 +971,7 @@ class Dashboard {
       });
     }
   }
-  
+
 
 
   async totalClient(req, res) {

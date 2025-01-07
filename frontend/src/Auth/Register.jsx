@@ -1,25 +1,25 @@
-import React, { useState , useEffect } from 'react';
-import { Link} from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { basicsettinglist } from '../Services/Admin';
 
 const Register = () => {
 
-   
 
-  
+
+
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [clients, setClients] = useState([]);
     const token = localStorage.getItem('token');
-    
-    
+
+
     const togglePasswordVisibility = (e) => {
         e.preventDefault();
         setShowPassword(!showPassword);
     };
 
     const toggleConfirmPasswordVisibility = (e) => {
-        e.preventDefault(); 
+        e.preventDefault();
         setShowConfirmPassword(!showConfirmPassword);
     };
 
@@ -34,12 +34,12 @@ const Register = () => {
             console.log('error', error);
         }
     };
-    
+
     useEffect(() => {
         getsettinglist();
     }, []);
 
-   
+
 
     return (
         <div>
@@ -114,7 +114,7 @@ const Register = () => {
                                                             />
                                                             <a
                                                                 href="#"
-                                                                onClick={toggleConfirmPasswordVisibility} 
+                                                                onClick={toggleConfirmPasswordVisibility}
                                                                 className="input-group-text bg-transparent"
                                                             >
                                                                 <i className={`bx ${showConfirmPassword ? 'bx-show' : 'bx-hide'}`} />

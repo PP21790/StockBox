@@ -308,7 +308,12 @@ const Header = () => {
                   <div className="dropdown-menu dropdown-menu-end">
                     <div className="msg-header">
                       <p className="msg-header-title">Notifications</p>
-                      <p className="msg-header-badge">{clients.filter(notification => notification.status === 0).length} New</p>
+                      <p className="msg-header-badge">
+                        {clients.filter(notification => notification.status === 0).length > 100
+                          ? '99+ New'
+                          : `${clients.filter(notification => notification.status === 0).length} New`}
+                      </p>
+
                     </div>
                     <div className="header-notifications-list" style={{ overflowY: "scroll", maxHeight: "300px" }}>
                       {clients.length > 0 ? (

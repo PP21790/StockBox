@@ -115,7 +115,7 @@ const AddSignal = () => {
           errors.stoploss = "Please Enter Greater Than Entry Price";
         }
       }
-
+      if (!values.stoploss) errors.stoploss = 'Please Enter Stoploss';
       if (!values.callduration) errors.callduration = 'Please Select Trade Duration';
       if (!values.calltype) errors.calltype = 'Please select call type';
       if (!values.description) errors.description = 'Please Enter Description';
