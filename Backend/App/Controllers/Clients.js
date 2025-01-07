@@ -2309,11 +2309,9 @@ class Clients {
                 del: 1,
                 created_at: 1,
                 updated_at: 1,
-                clientDetails: {
-                  FullName: 1,
-                    Email: 1,
-                    PhoneNo: 1
-                }
+                FullName: "$clientDetails.FullName", // clientDetails ke andar se FullName le kar root pe
+                Email: "$clientDetails.Email",       // clientDetails ke andar se Email le kar root pe
+                PhoneNo: "$clientDetails.PhoneNo" 
             }
         }
     ]);
@@ -2352,15 +2350,21 @@ class Clients {
     const totalPages = Math.ceil(totalItems / limit);
 
     // Return paginated result
+
     return res.json({
-        requestclients,
-        pagination: {
-            currentPage: parseInt(page),
-            totalItems,
-            totalPages,
-            perPage: parseInt(limit)
-        }
+      status: true,
+      message: "retrieved successfully",
+      data: requestclients,
+      pagination: {
+        total: totalItems,
+        page: parseInt(page), // Current page
+        limit: parseInt(limit), // Items per page
+        totalPages // Total number of pages
+      }
     });
+
+
+
 } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Error retrieving Requestclient data', error });
