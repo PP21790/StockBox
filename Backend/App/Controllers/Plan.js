@@ -8,12 +8,11 @@ const Clients_Modal = db.Clients;
 const License_Modal = db.License;
 const Adminnotification_Modal = db.Adminnotification;
 
-
 class Plan {
 
     async AddPlan(req, res) {
         try {
-            const { title, description, price, validity, category, add_by } = req.body;
+            const { title, description, price, validity, category, add_by, deliverystatus } = req.body;
     
             // Debugging: Log the incoming request body to ensure the data is correct
     
@@ -24,6 +23,7 @@ class Plan {
                 validity,
                 category,
                 add_by,
+                deliverystatus,
             });
     
             await result.save();
@@ -272,7 +272,7 @@ class Plan {
 
   async updatePlan(req, res) {
     try {
-        const { id, title, description, price, validity, category,accuracy } = req.body;
+        const { id, title, description, price, validity, category, accuracy, deliverystatus } = req.body;
 
       if (!id) {
         return res.status(400).json({
@@ -290,6 +290,7 @@ class Plan {
             validity,
             category,
             accuracy,
+            deliverystatus,
         },
         { plan: true, runValidators: true } 
       );
@@ -662,11 +663,11 @@ try {
       // Save the subscription
       const savedSubscription = await newSubscription.save();
 
+      if (plan.deliverystatus == true) {
+        client.deliverystatus = true;
+        await client.save();
+      }
 
-
-
-
-     
       if(client.freetrial==0) 
       {
       client.freetrial  = 1; 

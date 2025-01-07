@@ -14,6 +14,8 @@ const Helpdesk_Modal = db.Helpdesk;
 const PlanSubscription_Modal = db.PlanSubscription;
 const Planmanage = db.Planmanage;
 const Service_Modal = db.Service;
+const Requestclient_Modal = db.Requestclient;
+
 
 
 const Notification_Modal = db.Notification;
@@ -2257,6 +2259,155 @@ class Clients {
     }
   }
 
+
+  async clientRequest(req, res) {
+  try {
+    // Destructure query params
+    const { page = 1, search } = req.body;
+    const limit = 10;
+    const skip = (page - 1) * limit;
+    const clientSearchQuery = new RegExp(search, 'i'); 
+    const requestclients = await Requestclient_Modal.aggregate([
+      {
+        $match: {
+          del: false, // Filter out deleted records
+        },
+       },
+        {
+            $lookup: {
+                from: 'clients',  
+                localField: 'clientid',
+                foreignField: '_id', 
+                as: 'clientDetails'
+            }
+        },
+        {
+            $unwind: {
+                path: '$clientDetails',
+                preserveNullAndEmptyArrays: true  
+            }
+        },
+        {
+            $match: {
+                $or: [
+                    { 'clientDetails.FullName': clientSearchQuery },
+                    { 'clientDetails.Email': clientSearchQuery },
+                    { 'clientDetails.PhoneNo': clientSearchQuery }
+                ]
+            }
+        },
+        // Pagination
+        { $skip: skip },
+        { $limit: parseInt(limit) },
+        // Optionally, you can project specific fields to return only what you need
+        {
+            $project: {
+                _id: 1,
+                clientid: 1,
+                type: 1,
+                status: 1,
+                del: 1,
+                created_at: 1,
+                updated_at: 1,
+                clientDetails: {
+                  FullName: 1,
+                    Email: 1,
+                    PhoneNo: 1
+                }
+            }
+        }
+    ]);
+
+    // Get the total count of matching records for pagination
+    const totalCount = await Requestclient_Modal.aggregate([
+      {
+        $match: {
+          del: false, // Filter out deleted records
+        },
+       },
+      {
+            $lookup: {
+                from: 'clients',
+                localField: 'clientid',
+                foreignField: '_id',
+                as: 'clientDetails'
+            }
+        },
+        {
+            $unwind: { path: '$clientDetails', preserveNullAndEmptyArrays: true }
+        },
+        {
+            $match: {
+                $or: [
+                    { 'clientDetails.name': clientSearchQuery },
+                    { 'clientDetails.email': clientSearchQuery },
+                    { 'clientDetails.phone': clientSearchQuery }
+                ]
+            }
+        },
+        { $count: 'totalCount' }
+    ]);
+
+    const totalItems = totalCount.length ? totalCount[0].totalCount : 0;
+    const totalPages = Math.ceil(totalItems / limit);
+
+    // Return paginated result
+    return res.json({
+        requestclients,
+        pagination: {
+            currentPage: parseInt(page),
+            totalItems,
+            totalPages,
+            perPage: parseInt(limit)
+        }
+    });
+} catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Error retrieving Requestclient data', error });
+}
+
+  }
+
+
+  async deleteClientrequest(req, res) {
+    try {
+      const { id } = req.params; // Extract ID from URL params
+
+      if (!id) {
+        return res.status(400).json({
+          status: false,
+          message: "ID is required",
+        });
+      }
+
+      //  const deletedClient = await Clients_Modal.findByIdAndDelete(id);
+      const deletedClientrequest = await Requestclient_Modal.findByIdAndUpdate(
+        id,
+        { del: true }, // Set del to true
+        { new: true }  // Return the updated document
+      );
+      if (!deletedClientrequest) {
+        return res.status(404).json({
+          status: false,
+          message: "Client not found",
+        });
+      }
+
+      // console.log("Deleted Client:", deletedClient);
+      return res.json({
+        status: true,
+        message: "deleted successfully",
+        data: deletedClientrequest,
+      });
+    } catch (error) {
+      // console.log("Error deleting client:", error);
+      return res.status(500).json({
+        status: false,
+        message: "Server error",
+        error: error.message,
+      });
+    }
+  }
 
 
 }

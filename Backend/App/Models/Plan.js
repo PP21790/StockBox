@@ -43,6 +43,10 @@ const PlanSchema = new Schema({
         trim: true,
         default: null
     },
+    deliverystatus: {
+        type: Boolean,
+        default: false // Indicates whether the plan is marked as deleted
+    },
     del: {
         type: Boolean,
         default: false // Indicates whether the plan is marked as deleted
