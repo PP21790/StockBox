@@ -289,7 +289,7 @@ const Plan = () => {
                                                                 aria-labelledby={`modalLabel-${client._id}`}
                                                                 aria-hidden="true"
                                                             >
-                                                                <div className="modal-dialog">
+                                                                <div className="modal-dialog modal-xl">
                                                                     <div className="modal-content">
                                                                         <div className="modal-header">
                                                                             <h5 className="modal-title" id={`modalLabel-${client._id}`}>
@@ -316,20 +316,20 @@ const Plan = () => {
                                                                                 </li> */}
                                                                                 <li>
                                                                                     <div className="row justify-content-between">
-                                                                                        <div className="col-md-6">
+                                                                                        <div className="col-md-3">
                                                                                             <b>Price</b>
                                                                                         </div>
-                                                                                        <div className="col-md-6">
+                                                                                        <div className="col-md-9">
                                                                                             {client.price}
                                                                                         </div>
                                                                                     </div>
                                                                                 </li>
                                                                                 <li>
                                                                                     <div className="row justify-content-between">
-                                                                                        <div className="col-md-6">
+                                                                                        <div className="col-md-3">
                                                                                             <b>Validity</b>
                                                                                         </div>
-                                                                                        <div className="col-md-6">
+                                                                                        <div className="col-md-9">
                                                                                             {client.validity}
                                                                                         </div>
                                                                                     </div>
@@ -337,30 +337,30 @@ const Plan = () => {
                                                                                
                                                                                 <li>
                                                                                     <div className="row justify-content-between">
-                                                                                        <div className="col-md-6">
+                                                                                        <div className="col-md-3">
                                                                                             <b>Created At</b>
                                                                                         </div>
-                                                                                        <div className="col-md-6">
+                                                                                        <div className="col-md-9">
                                                                                             {fDateTime(client.created_at)}
                                                                                         </div>
                                                                                     </div>
                                                                                 </li>
                                                                                 <li>
                                                                                     <div className="row justify-content-between">
-                                                                                        <div className="col-md-6">
+                                                                                        <div className="col-md-3">
                                                                                             <b>Updated At</b>
                                                                                         </div>
-                                                                                        <div className="col-md-6">
+                                                                                        <div className="col-md-9">
                                                                                             {fDateTime(client.updated_at)}
                                                                                         </div>
                                                                                     </div>
                                                                                 </li>
                                                                                 <li>
                                                                                     <div className="row justify-content-between">
-                                                                                        <div className="col-md-6">
+                                                                                        <div className="col-md-3">
                                                                                             <b>Description</b>
                                                                                         </div>
-                                                                                        <div className="col-md-6">
+                                                                                        <div className="col-md-9">
                                                                                             {client.description}
                                                                                         </div>
                                                                                     </div>

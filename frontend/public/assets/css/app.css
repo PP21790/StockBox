@@ -5782,18 +5782,15 @@ div.rdt_TableCell svg {
 	}
 
 
+/* css for loader */
+
 /* Loader container styling */
 .loader-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    position: fixed; /* Ensures it stays in the center even on scroll */
-    top: 0;
-    left: 0;
-    width: 100vw; /* Full width of the screen */
     height: 100vh; /* Full height of the screen */
     background-color: rgba(255, 255, 255, 0.8); /* Optional background overlay */
-    z-index: 9999; /* Ensures it's above all other elements */
 }
 
 /* Main loader container with multiple bars */

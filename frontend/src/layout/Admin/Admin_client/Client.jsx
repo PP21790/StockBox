@@ -603,24 +603,24 @@ const Client = () => {
             sortable: true,
             width: '200px',
         },
-        {
-            name: 'Signal Detail',
-            selector: (row) => (
-                <div className='d-flex'>
+        // {
+        //     name: 'Signal Detail',
+        //     selector: (row) => (
+        //         <div className='d-flex'>
 
 
-                    <Tooltip placement="top" overlay="Signal Detail">
-                        <span onClick={(e) => { signaldetail(row) }} style={{ cursor: 'pointer' }}>
-                            <RadioTower />
-                        </span>
-                    </Tooltip>
-                </div>
-            ),
-            ignoreRowClick: true,
-            allowOverflow: true,
-            button: true,
-            width: '165px',
-        },
+        //             <Tooltip placement="top" overlay="Signal Detail">
+        //                 <span onClick={(e) => { signaldetail(row) }} style={{ cursor: 'pointer' }}>
+        //                     <RadioTower />
+        //                 </span>
+        //             </Tooltip>
+        //         </div>
+        //     ),
+        //     ignoreRowClick: true,
+        //     allowOverflow: true,
+        //     button: true,
+        //     width: '165px',
+        // },
         {
             name: 'Actions',
             selector: (row) => (

@@ -16,11 +16,15 @@ const AddStaff = () => {
 
     if (!values.FullName) {
       errors.FullName = "Please Enter Full Name";
-    }else if(!/^[a-zA-Z\s]+$/.test(values.FullName)){
-      errors.FullName = "Special Character Are Not Allowed In the Full Name"
-    }else if (/\d/.test(values.FullName)) {
+    } else if (/\d/.test(values.FullName)) {
+      // Agar Full Name mein koi number hai
       errors.FullName = "Numbers Are Not Allowed In the Full Name";
+    } else if (/[^a-zA-Z\s]/.test(values.FullName)) {
+      // Agar Full Name mein koi special character hai
+      errors.FullName = "Special Characters Are Not Allowed In the Full Name";
     }
+    
+
     if (!values.Email) {
       errors.Email = "Please Enter Email";
     }
