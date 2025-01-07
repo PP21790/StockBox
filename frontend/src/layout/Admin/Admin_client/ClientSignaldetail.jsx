@@ -242,9 +242,6 @@ const ClientSignaldetail = () => {
         fetchAdminServices()
         fetchStockList()
         getAllSignal();
-
-
-
     }
 
 

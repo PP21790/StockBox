@@ -113,28 +113,32 @@ const PaymentRequest = () => {
             name: 'Email Id',
             selector: row => <div>{row?.client_details?.Email}</div>,
             sortable: true,
+            width: '300px',
             
         },
         {
             name: 'Available balance',
             selector: row => <div> <IndianRupee />{row.amount}</div>,
             sortable: true,
-            width: '250px',
+            width: '200px',
         },
         {
             name: 'Amount',
             selector: row => <div> <IndianRupee />{row.amount}</div>,
             sortable: true,
+            width: '120px',
         },
         {
             name: 'Requested Date',
             selector: row => fDateTime(row.created_at),
             sortable: true,
+            width: '180px',
         },
         {
             name: 'Updated At',
             selector: row => fDateTime(row.updated_at),
             sortable: true,
+            width: '150px',
         },
         {
             name: 'Status',

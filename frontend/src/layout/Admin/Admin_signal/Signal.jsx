@@ -1035,7 +1035,7 @@ const Signal = () => {
                                 <div className="modal-body">
                                     <div className='card '>
                                         <div className='d-flex justify-content-between align-items-center card-body'>
-                                            {['Fully Closed', 'Partially Closed', 'SL Hit', 'Closed Signal', "Avoid Signal Signal"].map((tab, index) => (
+                                            {['Fully Closed', 'Partially Closed', 'SL Hit', 'Closed Signal', "Avoid Signal"].map((tab, index) => (
                                                 <label key={index} className='labelfont'>
                                                     <input
                                                         type="radio"
