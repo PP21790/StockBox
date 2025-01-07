@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Table from '../../../components/Table';
+import Table1 from '../../../components/Table1';
 import { Tooltip } from 'antd';
 import { clientdetailbyid, clientplandatabyid, getcategoryplan, getclientsubscription, GetClientSignaldetail, Getclientsignaltoexport, GetStockDetail, GetService } from '../../../Services/Admin';
 import { fDate, fDateTime, fDateTimeH, fDateTimeSuffix } from '../../../Utils/Date_formate';
@@ -24,7 +25,7 @@ const Viewclientdetail = () => {
     const [clients, setClients] = useState([]);
 
 
-    const [viewMode, setViewMode] = useState("plan"); // "plan" or "signal"
+    const [viewMode, setViewMode] = useState("plan");
 
 
     const [serviceList, setServiceList] = useState([]);
@@ -37,7 +38,6 @@ const Viewclientdetail = () => {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
-    const [pageSize] = useState(10); // Number of items per page
     const [filters, setFilters] = useState({
         from: '',
         to: '',
@@ -46,6 +46,9 @@ const Viewclientdetail = () => {
     });
 
 
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
 
 
 
@@ -53,7 +56,7 @@ const Viewclientdetail = () => {
         getPlanDetail();
         getClientDetail();
         getclientservice()
-        getAllSignal()
+        fetchAdminServices()
     }, []);
 
 
@@ -61,9 +64,6 @@ const Viewclientdetail = () => {
     const getCategoryTitle = async (categoryId) => {
         try {
             const response = await getcategoryplan(token);
-
-
-
             if (response.status) {
                 const category = response.data.find(item => item._id === categoryId);
                 return category ? category.title : '-';
@@ -80,8 +80,6 @@ const Viewclientdetail = () => {
     const getPlanDetail = async () => {
         try {
             const response = await clientplandatabyid(id, token);
-            // console.log("Dtata C", response);
-
             if (response.status) {
                 const plansWithTitles = await Promise.all(
 
@@ -94,7 +92,7 @@ const Viewclientdetail = () => {
                         return plan;
                     })
                 );
-                // console.log("response plansWithTitles", plansWithTitles)
+
                 setData(plansWithTitles);
             }
         } catch (error) {
@@ -108,7 +106,6 @@ const Viewclientdetail = () => {
     const getClientDetail = async () => {
         try {
             const response = await clientdetailbyid(id, token);
-            // console.log("Dtata B", response);
 
             if (response.status) {
                 setClient([response.data])
@@ -123,7 +120,6 @@ const Viewclientdetail = () => {
     const getclientservice = async () => {
         try {
             const response = await getclientsubscription(id, token);
-            // console.log("Dtata A", response);
 
             if (response.status) {
                 setService(response.data);
@@ -133,14 +129,22 @@ const Viewclientdetail = () => {
         }
     };
 
-
+    const fetchAdminServices = async () => {
+        try {
+            const response = await GetService(token);
+            if (response.status) {
+                setServiceList(response.data);
+            }
+        } catch (error) {
+            console.log('Error fetching services:', error);
+        }
+    };
 
 
     const getAllSignal = async () => {
         try {
             const data = {
                 page: currentPage,
-                limit: pageSize,  // Pass the limit per page
                 client_id: id,
                 from: filters.from,
                 to: filters.to,
@@ -151,19 +155,17 @@ const Viewclientdetail = () => {
             };
 
             const response = await GetClientSignaldetail(data, token);
-            // console.log("GetClientSignaldetail", response);
-
-
             if (response && response.status) {
-                // console.log("res", response.data)
                 setTotalRows(response.pagination.total);
                 setClients(response.data);
-                setTotalRows(response.pagination.total); // Assuming response contains pagination info
+
             }
         } catch (error) {
             console.log("Error:", error);
         }
     };
+
+
 
     const getexportfile = async () => {
         try {
@@ -205,18 +207,7 @@ const Viewclientdetail = () => {
 
 
 
-    const fetchAdminServices = async () => {
-        try {
-            const response = await GetService(token);
 
-
-            if (response.status) {
-                setServiceList(response.data);
-            }
-        } catch (error) {
-            console.log('Error fetching services:', error);
-        }
-    };
 
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
@@ -232,11 +223,7 @@ const Viewclientdetail = () => {
         setSearchstock(selectedOption ? selectedOption.value : "");
     };
 
-    // for pagination
-    const handlePageChange = (page) => {
-        setCurrentPage(page); // Update the current page
-        getAllSignal(); // Fetch new data for the selected page
-    };
+
 
 
     const resethandle = () => {
@@ -248,13 +235,15 @@ const Viewclientdetail = () => {
         });
         setSearchstock("")
         setSearchInput("")
-        fetchAdminServices()
+        fetchAdminServices("")
         fetchStockList()
         getAllSignal();
     }
 
 
-
+    useEffect(() => {
+        getAllSignal();
+    }, [filters, searchInput, searchstock, currentPage]);
 
 
     const columns = [
@@ -468,7 +457,7 @@ const Viewclientdetail = () => {
                         ) : (
 
                             <>
-                            <div className="d-lg-flex align-items-center mb-4 gap-3">
+                                <div className="d-lg-flex align-items-center mb-4 gap-3">
                                     <div className="position-relative">
                                         <input
                                             type="text"
@@ -502,72 +491,72 @@ const Viewclientdetail = () => {
                                         </button>
                                     </div>
                                 </div>
-                                
-                                    
-                                    <div className="row g-3 mb-4">
 
-                                        <div className="col-md-3">
-                                            <label>From date</label>
-                                            <input
-                                                type="date"
-                                                name="from"
+
+                                <div className="row g-3 mb-4">
+
+                                    <div className="col-md-3">
+                                        <label>From date</label>
+                                        <input
+                                            type="date"
+                                            name="from"
+                                            className="form-control radius-10"
+                                            placeholder="From"
+                                            value={filters.from}
+                                            onChange={handleFilterChange}
+
+                                        />
+                                    </div>
+                                    <div className="col-md-3">
+                                        <label>To Date</label>
+                                        <input
+                                            type="date"
+                                            name="to"
+                                            className="form-control radius-10"
+                                            placeholder="To"
+                                            value={filters.to}
+                                            onChange={handleFilterChange}
+                                            min={filters.from}
+                                        />
+                                    </div>
+                                    <div className="col-md-3">
+                                        <label>Select Service</label>
+                                        <select
+                                            name="service"
+                                            className="form-control radius-10"
+                                            value={filters.service}
+                                            onChange={handleFilterChange}
+                                        >
+                                            <option value="">Select Service</option>
+                                            {serviceList.map((service) => (
+                                                <option key={service._id} value={service._id}>
+                                                    {service.title}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    <div className="col-md-3 d-flex">
+                                        <div>
+                                            <label>Select Stock</label>
+                                            <Select
+                                                options={options}
+                                                value={options.find((option) => option.value === searchstock) || null}
+                                                onChange={handleChange1}
                                                 className="form-control radius-10"
-                                                placeholder="From"
-                                                value={filters.from}
-                                                onChange={handleFilterChange}
-
+                                                isClearable
+                                                placeholder="Select Stock"
                                             />
                                         </div>
-                                        <div className="col-md-3">
-                                            <label>To Date</label>
-                                            <input
-                                                type="date"
-                                                name="to"
-                                                className="form-control radius-10"
-                                                placeholder="To"
-                                                value={filters.to}
-                                                onChange={handleFilterChange}
-                                                min={filters.from}
-                                            />
+                                        <div className='rfreshicon'>
+                                            <RefreshCcw onClick={resethandle} />
                                         </div>
-                                        <div className="col-md-3">
-                                            <label>Select Service</label>
-                                            <select
-                                                name="service"
-                                                className="form-control radius-10"
-                                                value={filters.service}
-                                                onChange={handleFilterChange}
-                                            >
-                                                <option value="">Select Service</option>
-                                                {serviceList.map((service) => (
-                                                    <option key={service._id} value={service._id}>
-                                                        {service.title}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </div>
-
-                                        <div className="col-md-3 d-flex">
-                                            <div>
-                                                <label>Select Stock</label>
-                                                <Select
-                                                    options={options}
-                                                    value={options.find((option) => option.value === searchstock) || null}
-                                                    onChange={handleChange1}
-                                                    className="form-control radius-10"
-                                                    isClearable
-                                                    placeholder="Select Stock"
-                                                />
-                                            </div>
-                                            <div className='rfreshicon'>
-                                                <RefreshCcw onClick={resethandle} />
-                                            </div>
-
-                                        </div>
-
 
                                     </div>
-                                <Table
+
+
+                                </div>
+                                <Table1
                                     columns={columns1}
                                     data={clients}
                                     pagination
