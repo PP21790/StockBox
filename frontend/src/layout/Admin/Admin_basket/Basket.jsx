@@ -267,7 +267,6 @@ const Basket = () => {
                 checked={row.status}
                 onClick={(event) => handleSwitchChange(event, row._id)} />
             </Tooltip> : ""}
-
           <Tooltip title="Add Stock">
             <Link
               to={`/admin/addstock/${row._id}`}
@@ -278,7 +277,6 @@ const Basket = () => {
           </Tooltip>
           <Tooltip title="view">
             <Link
-
               to={`/admin/viewdetail/${row._id}`}
               className="btn px-2"
             >

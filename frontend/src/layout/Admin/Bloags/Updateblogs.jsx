@@ -16,7 +16,22 @@ const Updateblogs = () => {
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
 
-   
+    const validate = (values) => {
+        // console.log("values blogs",values);
+        
+        let errors = {};
+    
+        if (!values.title) {
+          errors.title = "Please Enter Title";
+        }
+        if (!values.description || values.description ==="<p><br></p>") {
+            errors.description = "Please Enter Description";
+        }
+        if (!values.image) {
+            errors.image = "Please Enter image url";
+        }
+        return errors;
+    }    
     
     const formik = useFormik({
         initialValues: {
@@ -24,7 +39,8 @@ const Updateblogs = () => {
             description: row?.description || "",
             image: row?.image || "",
             id: "" 
-        },  
+        },
+        validate,
        
         onSubmit: async (values) => {
             const req = {
@@ -36,6 +52,7 @@ const Updateblogs = () => {
 
             try {
                 const response = await Updateblogsbyadmin(req, token);
+                // return
                  
                 if (response.status) {
                     Swal.fire({

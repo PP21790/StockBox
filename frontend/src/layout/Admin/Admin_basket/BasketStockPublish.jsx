@@ -36,6 +36,8 @@ const BasketStockPublish = () => {
     try {
       const data = { page: currentPage, search: searchInput || "" }
       const response = await BasketAllActiveListbyfilter(data, token);
+      // console.log("BasketAllActiveListbyfilter",response);
+      
       if (response.status) {
         setTotalRows(response.pagination.total);
         setClients(response.data);
@@ -263,7 +265,7 @@ const BasketStockPublish = () => {
       width: '165px',
     },
     {
-      name: 'Rebalanceing Status',
+      name: 'Rebalancing',
       selector: row => (
 
         <div className="form-check form-switch form-check-info">

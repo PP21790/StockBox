@@ -50,7 +50,7 @@ const fieldConfigurations = [
 
   {
     name: "mininvamount",
-    label: "Minimum Amount",
+    label: "Minimum Investment Amount",
     type: "number",
     label_size: 12,
     col_size: 4,
@@ -60,7 +60,7 @@ const fieldConfigurations = [
 
   {
     name: "frequency",
-    label: "Frequency",
+    label: "Rebalance Frequency",
     type: "select",
     label_size: 12,
     col_size: 4,
@@ -95,7 +95,7 @@ const fieldConfigurations = [
   {
     name: "next_rebalance_date",
     label: "Rebalance Date",
-    type: "date",
+    type:"text",
     label_size: 12,
     col_size: 4,
     disable: false,
@@ -201,6 +201,8 @@ const Viewbasketdetail = () => {
   const getbasketdetail = async () => {
     try {
       const response = await Viewbasket(id, token);
+      // console.log("Viewbasket",response);
+      
       if (response.status) {
         const basketData = response.data;
         setInitialValues({
@@ -252,12 +254,33 @@ const Viewbasketdetail = () => {
                     field.type !== "Stock" ? (
                       <div key={field.name} className={`col-md-${field.col_size}`}>
                         <label>{field.label}</label>
-                        <input
+
+                        {/* old code */}
+                        {/* <input
                           type={field.type}
                           className="form-control"
                           value={values[field.name] || ""}
                           disabled
                         />
+                      </div> */}
+
+
+                      {/* this code is for view full discription */}
+                      {field.name === "description" ? ( // Special case for description
+                          <textarea
+                            className="form-control"
+                            value={values[field.name] || ""}
+                            disabled
+                            rows="4" // Adjust rows for multiline display
+                          />
+                        ) : (
+                          <input
+                            type={field.type}
+                            className="form-control"
+                            value={values[field.name] || ""}
+                            disabled
+                          />
+                        )}
                       </div>
                     ) : (
                       <div key={field.name} className="col-md-12">

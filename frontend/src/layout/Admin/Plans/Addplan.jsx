@@ -41,7 +41,7 @@ const Addplan = () => {
         let errors = {};
 
 
-        if (!values.description) {
+        if (!values.description || values.description ==="<p><br></p>") {
             errors.description = "Please Enter Description";
         }
         if (!values.price) {
@@ -178,7 +178,7 @@ const Addplan = () => {
         {
             name: "description",
             label: "Description",
-            type: "text5",
+            type: "ckeditor",
             label_size: 12,
             col_size: 12,
             disable: false,

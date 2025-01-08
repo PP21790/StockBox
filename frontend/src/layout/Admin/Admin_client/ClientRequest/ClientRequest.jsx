@@ -155,7 +155,7 @@ const ClientRequest = () => {
             name: 'Actions',
             cell: row => (
                 <>
-                    <div>
+                    <div >
                         <Tooltip placement="top" overlay="Delete">
                             <Trash2 onClick={() => DeleteClient(row._id)} />
                         </Tooltip>
@@ -167,6 +167,7 @@ const ClientRequest = () => {
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
+            width: '230px',
         }
     ];
 

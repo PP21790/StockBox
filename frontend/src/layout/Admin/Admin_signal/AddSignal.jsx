@@ -135,9 +135,9 @@ const AddSignal = () => {
         errors.entrytype = 'Please Select Entry Type';
       }
 
-      if (!values.lot) {
-        errors.lot = 'Please Enter Lot';
-      }
+      // if (!values.lot) {
+      //   errors.lot = 'Please Enter Lot';
+      // }
       if (values.lot && values.lot <= 0) {
         errors.lot = 'Please Enter Greater Than Zero';
       }
@@ -427,7 +427,7 @@ const AddSignal = () => {
       type: 'number',
       label_size: 12,
       col_size: 6,
-      star: true
+      star: false
     },
 
 

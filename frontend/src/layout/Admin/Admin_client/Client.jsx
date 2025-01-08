@@ -820,7 +820,7 @@ const Client = () => {
                         aria-labelledby="exampleModalLabel"
                         aria-hidden="true"
                     >
-                        <div className="modal-dialog modal-xl">
+                        <div className="modal-dialog modal-xl" style={{width:"900px"}}>
                             <div className="modal-content">
                                 <div className="modal-header">
                                     <h5 className="modal-title" id="exampleModalLabel">Assign Package</h5>

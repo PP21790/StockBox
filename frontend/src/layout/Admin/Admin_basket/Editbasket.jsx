@@ -56,6 +56,8 @@ const Editbasket = () => {
 
 
   const validate = (values) => {
+    // console.log("values",values);
+    
     let errors = {};
 
     if (!values.title) {
@@ -84,8 +86,11 @@ const Editbasket = () => {
       errors.next_rebalance_date = "Please Select Rebalance Date";
     }
 
-    if (!values.description) {
+    if (values.description ==="<p><br></p>") {
       errors.description = "Please Enter Description";
+  }
+    if (!values.cagr) {
+      errors.cagr = "Please Enter CAGR";
     }
 
     return errors;
@@ -110,6 +115,8 @@ const Editbasket = () => {
 
     try {
       const response = await Updatebasket(req, token);
+
+      // return
 
       if (response.status) {
         Swal.fire({
@@ -195,7 +202,7 @@ const Editbasket = () => {
     },
     {
       name: "mininvamount",
-      label: "MinimumAmount",
+      label: "Minimum Investment Amount",
       type: "number",
       label_size: 12,
       col_size: 6,
@@ -245,7 +252,7 @@ const Editbasket = () => {
     {
       name: "next_rebalance_date",
       label: "Rebalance Date",
-      type: "date",
+      type: "text",
       label_size: 12,
       col_size: 6,
       disable: false,
@@ -254,12 +261,13 @@ const Editbasket = () => {
     {
       name: "description",
       label: "Description",
-      type: "ckeditor",
+      type: "ckeditor", 
       label_size: 12,
       col_size: 12,
       disable: false,
-      star: true
-    },
+      star:true
+  },
+    
   ];
 
 
