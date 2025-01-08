@@ -37,7 +37,7 @@ const Coupon = () => {
     const getcoupon = async () => {
         try {
             const response = await getcouponlist(token);
-            // console.log("response",response);
+            console.log("getcouponlist",response);
 
             if (response.status) {
                 const filterdata = response.data.filter((item) =>
@@ -243,13 +243,13 @@ const Coupon = () => {
         },
         {
             name: 'Fixed/Percent Value',
-            selector: row => row.type === "fixed" ? row.value : `${row.value}%`,
+            selector: row => row.type === "fixed" ? row.value : `${row.value}`,
             sortable: true,
             width: '300px',
         },
         {
             name: 'Used Limit/Total Limit',
-            selector: row => row.type === "limit" ? row.value : `${row.value}%`,
+            selector: row => row.type === "limit" ? row.value : `${row.value}`,
             sortable: true,
             width: '300px',
         },
