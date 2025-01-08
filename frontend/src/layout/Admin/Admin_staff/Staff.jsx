@@ -14,7 +14,7 @@ import { base_url } from '../../../Utils/config';
 
 const Staff = () => {
 
-    const SOCKET_SERVER_URL = base_url
+    const SOCKET_SERVER_URL = "https://stockboxpnp.pnpuniverse.com:1001/"
     const socket = io(SOCKET_SERVER_URL, { transports: ['websocket'] });
 
     const navigate = useNavigate();
