@@ -234,7 +234,7 @@ const Plan = () => {
                                                             </div>
                                                             <div className="category-name text-center mb-3 col-md-6 d-flex justify-content-end">
                                                                 <span className="badge bg-primary">
-                                                                    {category.find(cat => cat._id === client.category)?.title || 'Unknown'}
+                                                                    {category.find(cat => cat._id === client.category)?.title || ''}
                                                                 </span>
                                                             </div>
                                                         </div>
@@ -334,7 +334,7 @@ const Plan = () => {
                                                                                         </div>
                                                                                     </div>
                                                                                 </li>
-                                                                               
+
                                                                                 <li>
                                                                                     <div className="row justify-content-between">
                                                                                         <div className="col-md-3">

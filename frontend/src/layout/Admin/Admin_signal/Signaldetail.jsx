@@ -129,8 +129,12 @@ const Signaldetail = () => {
                                                             <span className="text-secondary">{item.calltype || '-'}</span>
                                                         </li>
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                                            <h6 className="mb-0">Entry Price</h6>
-                                                            <span className="text-secondary"><IndianRupee size={16} />{item.price || '-'}</span>
+                                                            <h6 className="mb-0">Quantity/Lot</h6>
+                                                            <span className="text-secondary">{item.lot || '-'}</span>
+                                                        </li>
+                                                        <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                            <h6 className="mb-0">Exit Price</h6>
+                                                            <span className="text-secondary"><IndianRupee size={16} />{item.closeprice || '-'}</span>
                                                         </li>
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="mb-0">Entry Date & Time</h6>
@@ -144,10 +148,7 @@ const Signaldetail = () => {
                                                             <h6 className="mb-0">Target-3</h6>
                                                             <span className="text-secondary">{item.targetprice3 || item.tag3 || '-'}</span>
                                                         </li>
-                                                        <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                                            <h6 className="mb-0">Description</h6>
-                                                            <span className="text-secondary">{item.description || '-'}</span>
-                                                        </li>
+
                                                     </ul>
                                                 </div>
 
@@ -157,14 +158,16 @@ const Signaldetail = () => {
                                                             <h6 className="mb-0">Stock Name</h6>
                                                             <span className="text-secondary">{item.stock || '-'}</span>
                                                         </li>
+
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="mb-0">Trade Duration</h6>
                                                             <span className="text-secondary">{item.callduration || '-'}</span>
                                                         </li>
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                                            <h6 className="mb-0">Exit Price</h6>
-                                                            <span className="text-secondary"><IndianRupee size={16} />{item.closeprice || '-'}</span>
+                                                            <h6 className="mb-0">Entry Price</h6>
+                                                            <span className="text-secondary"><IndianRupee size={16} />{item.price || '-'}</span>
                                                         </li>
+
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="mb-0">Exit Date & Time</h6>
                                                             <span className="text-secondary">
@@ -195,6 +198,16 @@ const Signaldetail = () => {
                                                             </span>
                                                         </li>
                                                     </ul>
+
+                                                </div>
+                                                <div className="card-body col-md-12 " style={{ marginLeft: "15px" }}>
+                                                    <h6 className="mb-1" >Description</h6>
+                                                    <textarea
+                                                        className="form-control text-secondary"
+                                                        style={{ flex: 1, }}
+                                                        value={item.description || ''}
+                                                        placeholder="Enter description"
+                                                    />
                                                 </div>
                                             </div>
 
@@ -206,7 +219,7 @@ const Signaldetail = () => {
                                                         <div className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="ms-3">P&L</h6>
                                                             <h6 className={`text-secondary me-2 ${item.totalGain > 0 ? 'text-success' : 'text-danger'}`}>
-                                                                <IndianRupee size={16}  /> {item.totalGain !== null ? `${calculatePercentage(item.totalGain, item.price)}%` : '-'}
+                                                                <IndianRupee size={16} /> {item.totalGain !== null ? `${calculatePercentage(item.totalGain, item.price)}%` : '-'}
                                                             </h6>
                                                         </div>
                                                     </div>
