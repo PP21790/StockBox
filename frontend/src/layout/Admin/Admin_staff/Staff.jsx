@@ -10,11 +10,12 @@ import { Tooltip } from 'antd';
 import ExportToExcel from '../../../Utils/ExportCSV';
 import { fDate, fDateTime } from '../../../Utils/Date_formate';
 import io from 'socket.io-client';
-import { base_url } from '../../../Utils/config';
+import { soket_url } from '../../../Utils/config';
 
 const Staff = () => {
 
-    const SOCKET_SERVER_URL = "https://stockboxpnp.pnpuniverse.com:1001/"
+    const SOCKET_SERVER_URL = soket_url
+
     const socket = io(SOCKET_SERVER_URL, { transports: ['websocket'] });
 
     const navigate = useNavigate();
