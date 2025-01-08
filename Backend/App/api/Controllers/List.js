@@ -534,7 +534,7 @@ class List {
       });
     }
   }
-  
+
   // Controller function to add a new plan subscription
   async addPlanSubscription(req, res) {
     try {
@@ -929,7 +929,7 @@ class List {
         let finalMailBody = mailtemplate.mail_body
           .replace('{clientName}', `${client.FullName}`);
 
-        const logo = `http://${req.headers.host}/uploads/basicsetting/${settings.logo}`;
+        const logo = `${req.protocol}://${req.headers.host}/uploads/basicsetting/${settings.logo}`;
 
         // Replace placeholders with actual values
         const finalHtml = htmlTemplate
@@ -1121,7 +1121,7 @@ class List {
         let finalMailBody = mailtemplate.mail_body
           .replace('{clientName}', `${client.FullName}`);
 
-        const logo = `http://${req.headers.host}/uploads/basicsetting/${settings.logo}`;
+        const logo = `${req.protocol}://${req.headers.host}/uploads/basicsetting/${settings.logo}`;
 
         // Replace placeholders with actual values
         const finalHtml = htmlTemplate
@@ -3703,7 +3703,8 @@ async Notification(req, res) {
 
       const banks = await Bank_Modal.find({ del: false, status: true, type: 2 });
 
-      const protocol = req.protocol; // 'http' or 'https'
+      const protocol = req.protocol; 
+
       const baseUrl = `${protocol}://${req.headers.host}`; // Construct base URL dynamically
 
       const bankWithImageUrls = banks.map(bank => {
@@ -3862,7 +3863,7 @@ if(version==1)  {
         const userId = client.alice_userid;
 
           const config = {
-            method: 'get', // HTTP method
+            method: 'get', 
             url: `https://ant.aliceblueonline.com/rest/AliceBlueAPIService/api/limits/getRmsLimits`, // Construct the full URL
             headers: {
               'Authorization': 'Bearer ' + userId + ' ' + authToken,

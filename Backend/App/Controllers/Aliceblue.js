@@ -653,7 +653,7 @@ class Aliceblue {
                         );
 
                         Alice_Socket();
-                        const dynamicUrl = `http://${req.headers.host}`;
+                        const dynamicUrl = `${req.protocol}://${req.headers.host}`;
                         return res.redirect(dynamicUrl);
                         // return res.json({
                         //     status: true,

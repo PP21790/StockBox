@@ -175,7 +175,7 @@ class Clients {
           .replace('{password}', password)
           .replace(/{company_name}/g, settings.website_title);
 
-        const logo = `http://${req.headers.host}/uploads/basicsetting/${settings.logo}`;
+        const logo = `${req.protocol}://${req.headers.host}/uploads/basicsetting/${settings.logo}`;
 
         // Replace placeholders with actual values
         const finalHtml = htmlTemplate
