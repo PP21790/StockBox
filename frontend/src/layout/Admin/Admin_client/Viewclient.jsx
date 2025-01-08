@@ -537,13 +537,13 @@ const Viewclientdetail = () => {
                                     </div>
 
                                     <div className="col-md-3 d-flex">
-                                        <div>
+                                        <div className='w-100'>
                                             <label>Select Stock</label>
                                             <Select
                                                 options={options}
                                                 value={options.find((option) => option.value === searchstock) || null}
                                                 onChange={handleChange1}
-                                                className="form-control radius-10"
+                                                className=" radius-10"
                                                 isClearable
                                                 placeholder="Select Stock"
                                             />
