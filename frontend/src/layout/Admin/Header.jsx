@@ -135,9 +135,6 @@ const Header = () => {
       if (response.status) {
         setBadgecount(response?.unreadCount)
         setClients(response?.data);
-
-      } else {
-
       }
     } catch (error) {
       console.log("error", error);
@@ -148,13 +145,8 @@ const Header = () => {
   const getAllMessageRead = async () => {
     try {
       const response = await GetAllNotificationRead(token);
-      if (response?.status) {
-        getdemoclient()
-        navigate("/admin/notificationlist");
-
-      } else {
-        console.log("Failed to mark notifications as read.");
-      }
+      navigate("/admin/notificationlist");
+      getdemoclient()
     } catch (error) {
       console.error("Error while marking notifications as read:", error);
     }
