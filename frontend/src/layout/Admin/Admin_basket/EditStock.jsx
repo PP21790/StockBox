@@ -9,6 +9,9 @@ import * as Yup from "yup";
 import * as Config from "../../../Utils/config";
 
 const EditStock = () => {
+
+
+
     const location = useLocation();
     const { stock } = location.state || {};
 
@@ -18,6 +21,10 @@ const EditStock = () => {
     const [inputValue, setInputValue] = useState("");
     const [formikValues, setFormikValues] = useState({});
     const navigate = useNavigate();
+
+
+
+
 
     useEffect(() => {
         if (stock && Array.isArray(stock)) {
@@ -75,9 +82,11 @@ const EditStock = () => {
                 !selectedServices.some((service) => service.value === newOption.value)
         );
 
-
-        // Add new services at the top
-        const updatedServices = [...uniqueServices, ...selectedServices];
+        const updatedServices = [...uniqueServices, ...selectedServices].filter(
+            (service) =>
+                service?.weightage ||
+                selectedOption.some((option) => option.label === service.label)
+        );
 
         setSelectedServices(updatedServices);
 
@@ -93,6 +102,7 @@ const EditStock = () => {
         });
         setFormikValues(newFormikValues);
     };
+
 
 
     // const handleRemoveService = (serviceValue) => {
@@ -113,10 +123,8 @@ const EditStock = () => {
             delete updatedValues[serviceValue];
             return updatedValues;
         });
-        setOptions((prevOptions) =>
-            prevOptions.filter((option) => option.value !== serviceValue)
-        );
-    }
+    };
+
 
 
 
@@ -133,7 +141,6 @@ const EditStock = () => {
         }, {});
         setFormikValues(initialValues);
     }, [selectedServices]);
-
 
 
     const validationSchema = Yup.object(
@@ -214,6 +221,7 @@ const EditStock = () => {
         fetchOptions(value);
     };
 
+
     return (
         <div className="page-content">
             <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
@@ -238,6 +246,7 @@ const EditStock = () => {
                                 onInputChange={handleInputChange}
                                 options={options}
                                 onChange={handleServiceChange}
+                                value={selectedServices}
                                 placeholder="Search and select stocks..."
                                 isClearable
                                 isMulti
