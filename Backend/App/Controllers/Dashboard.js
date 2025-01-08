@@ -860,9 +860,10 @@ class Dashboard {
 
       const result = await Adminnotification_Modal.find({})
         .sort({ createdAt: -1 })
+        .limit(20)
         .lean();
 
-        const unreadCount = await Adminnotification_Modal.countDocuments({ status: 0 });
+      const unreadCount = await Adminnotification_Modal.countDocuments({ status: 0 });
 
       return res.json({
         status: true,

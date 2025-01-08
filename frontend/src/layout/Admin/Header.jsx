@@ -26,6 +26,7 @@ const Header = () => {
   const [model, setModel] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [getstatus, setGetstatus] = useState([]);
+  const [badgecount, setBadgecount] = useState([]);
 
 
   const [statusinfo, setStatusinfo] = useState({
@@ -132,7 +133,8 @@ const Header = () => {
     try {
       const response = await getDashboardNotification(token);
       if (response.status) {
-        setClients(response.data);
+        setBadgecount(response?.unreadCount)
+        setClients(response?.data);
 
       } else {
 
@@ -147,7 +149,9 @@ const Header = () => {
     try {
       const response = await GetAllNotificationRead(token);
       if (response?.status) {
+        getdemoclient()
         navigate("/admin/notificationlist");
+
       } else {
         console.log("Failed to mark notifications as read.");
       }
@@ -298,9 +302,9 @@ const Header = () => {
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
                   >
-                    {clients.filter(notification => notification.status === 0).length ? (
-                      <span className="alert-count">
-                        {clients.filter(notification => notification.status === 0).length}
+                    {badgecount ? (
+                      <span className="alert-count w-20">
+                        {badgecount > 100 ? "99+" : badgecount}
                       </span>
                     ) : ""}
                     <i className="bx bx-bell" />
@@ -308,10 +312,8 @@ const Header = () => {
                   <div className="dropdown-menu dropdown-menu-end">
                     <div className="msg-header">
                       <p className="msg-header-title">Notifications</p>
-                      <p className="msg-header-badge">
-                        {clients.filter(notification => notification.status === 0).length > 100
-                          ? '99+ New'
-                          : `${clients.filter(notification => notification.status === 0).length} New`}
+                      <p className="msg-header-badge ">
+                        {badgecount > 100 ? "99+" : badgecount}
                       </p>
 
                     </div>
