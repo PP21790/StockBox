@@ -1775,7 +1775,10 @@ if (client.deliverystatus === true) {
 const query = {
   service: service_id,
   close_status: true,
-};
+  closedate: {
+          $gte: startDates[0], 
+      }
+   };
 
 // Check if deliverystatus is true
 if (client.deliverystatus === true) {
@@ -1943,6 +1946,9 @@ if (client.deliverystatus === true) {
       const query = {
         service: service_id,
         close_status: true,
+        closedate: {
+         $gte: startDates[0], 
+        }
       };
       
       // Check if deliverystatus is true
@@ -2297,6 +2303,7 @@ if (client.deliverystatus === true) {
                 accuracy: 1,
                 portfolioweightage: 1,
                 cagr: 1,
+                cagr_live: 1,
                 frequency: 1,
                 validity: 1,
                 next_rebalance_date: 1,

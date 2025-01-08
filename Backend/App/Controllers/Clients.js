@@ -162,10 +162,7 @@ class Clients {
         throw new Error('Mail template not found');
       }
 
-
-
       const templatePath = path.join(__dirname, '../../template', 'mailtemplate.html');
-
 
       fs.readFile(templatePath, 'utf8', async (err, htmlTemplate) => {
         if (err) {
@@ -197,10 +194,6 @@ class Clients {
         await sendEmail(mailOptions);
       });
 
-
-
-
-
       // console.log("result", result)
       return res.json({
         status: true,
@@ -211,9 +204,6 @@ class Clients {
       return res.json({ status: false, message: "Server error", data: [] });
     }
   }
-
-
-
 
   async getClient(req, res) {
     try {
@@ -1404,11 +1394,6 @@ class Clients {
         }
       ]);
 
-
-
-
-
-
       return res.json({
         status: true,
         message: "Clients with their plan statuses fetched",
@@ -1419,22 +1404,6 @@ class Clients {
       return res.json({ status: false, message: "Server error", data: [] });
     }
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   async activeClient(req, res) {

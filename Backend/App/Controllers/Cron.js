@@ -16,6 +16,8 @@ const Signal_Modal = db.Signal;
 const BasicSetting_Modal = db.BasicSetting;
 const Notification_Modal = db.Notification;
 const Planmanage = db.Planmanage;
+const Basket_Modal = db.Basket;
+
 //const JsonFile = require("../../uploads/json/config.json");
 const { sendFCMNotification } = require('./Pushnotification'); 
 const Adminnotification_Modal = db.Adminnotification;
@@ -48,6 +50,14 @@ cron.schedule('0 6 * * *', async () => {
 
 cron.schedule('0 4 * * *', async () => {
     await TradingStatusOff();
+}, {
+    scheduled: true,
+    timezone: "Asia/Kolkata"
+});
+
+
+cron.schedule('0 17 * * *', async () => {
+    await calculateCAGRForBaskets();
 }, {
     scheduled: true,
     timezone: "Asia/Kolkata"
@@ -837,4 +847,153 @@ async function downloadKotakNeotoken(req, res) {
 }
 
 
-  module.exports = { AddBulkStockCron,DeleteTokenAliceToken,TradingStatusOff,CheckExpireSignalCash,CheckExpireSignalFutureOption,PlanExpire,downloadKotakNeotoken };
+async function calculateCAGRForBaskets() {
+    const result = await Basket_Modal.aggregate([
+        {
+            $match: {
+                del: false,
+            }
+        },
+        {
+            $lookup: {
+                from: "basketstocks",
+                let: { basketId: { $toString: "$_id" } },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $and: [
+                                    { $eq: ["$basket_id", "$$basketId"] },
+                                    { $eq: ["$status", 1] }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: "$basket_id",
+                            maxVersion: { $max: "$version" }
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: "basketstocks",
+                            let: { basketId: "$_id", maxVer: "$maxVersion" },
+                            pipeline: [
+                                {
+                                    $match: {
+                                        $expr: {
+                                            $and: [
+                                                { $eq: ["$basket_id", "$$basketId"] },
+                                                { $eq: ["$version", "$$maxVer"] },
+                                                { $eq: ["$status", 1] }
+                                            ]
+                                        }
+                                    }
+                                }
+                            ],
+                            as: "latestStocks"
+                        }
+                    },
+                    {
+                        $unwind: "$latestStocks"
+                    },
+                    {
+                        $replaceRoot: { newRoot: "$latestStocks" }
+                    },
+                    {
+                        $lookup: {
+                            from: "stocks",
+                            localField: "tradesymbol",
+                            foreignField: "tradesymbol",
+                            as: "stock_info"
+                        }
+                    },
+                    {
+                        $unwind: {
+                            path: "$stock_info",
+                            preserveNullAndEmptyArrays: true
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: "stockliveprices",
+                            localField: "stock_info.instrument_token",
+                            foreignField: "token",
+                            as: "live_price_info"
+                        }
+                    },
+                    {
+                        $unwind: {
+                            path: "$live_price_info",
+                            preserveNullAndEmptyArrays: true
+                        }
+                    },
+                    {
+                        $addFields: {
+                            livePrice: {
+                                $ifNull: ["$live_price_info.lp", "$price"] // Use live price if available, fallback to original price
+                            }
+                        }
+                    }
+                ],
+                as: "stock_details"
+            }
+        },
+        {
+            $project: {
+                basket_id: "$_id",
+                title: 1,
+                created_at: 1,
+                stock_details: {
+                    $filter: {
+                        input: "$stock_details",
+                        as: "stock",
+                        cond: { $eq: ["$$stock.del", false] }
+                    }
+                },
+            }
+        }
+    ]);
+
+    const currentDate = new Date();
+
+    for (const basket of result) {
+        const { stock_details, created_at, _id } = basket;
+
+        // Calculate starting price
+        const startingPrice = stock_details.reduce((sum, stock) => {
+            return sum + (stock.price * stock.quantity);
+        }, 0);
+
+        // Calculate current price
+        const currentPrice = stock_details.reduce((sum, stock) => {
+            return sum + (stock.livePrice * stock.quantity);
+        }, 0);
+
+        // Calculate years difference
+        const createdAt = new Date(created_at);
+        const years = (currentDate - createdAt) / (1000 * 60 * 60 * 24 * 365.25); // Approximate years
+
+        // Calculate CAGR
+        let cagr = null;
+        if (years >= 1 && startingPrice > 0) {
+            cagr = ((Math.pow(currentPrice / startingPrice, 1 / years) - 1) * 100).toFixed(2);
+        }
+
+        // Update the basket with the calculated CAGR
+        await Basket_Modal.updateOne(
+            { _id },
+            { $set: { cagr_live: cagr ? parseFloat(cagr) : null } }
+        );
+    }
+    
+    return;
+
+}
+
+
+
+
+
+  module.exports = { AddBulkStockCron,DeleteTokenAliceToken,TradingStatusOff,CheckExpireSignalCash,CheckExpireSignalFutureOption,PlanExpire,downloadKotakNeotoken,calculateCAGRForBaskets };
