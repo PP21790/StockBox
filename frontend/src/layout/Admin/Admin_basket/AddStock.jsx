@@ -58,21 +58,20 @@ const AddStock = () => {
   const handleServiceChange = (selectedOption) => {
     setSelectedServices(selectedOption || []);
 
-    const updatedValues = { ...formikValues };
+    const updatedValues = {};
     (selectedOption || []).forEach((service) => {
-      if (!updatedValues[service.value]) {
-        updatedValues[service.value] = {
-          tradesymbol: service.tradesymbol,
-          name: service.label,
-          percentage: "",
-          price: "",
-          type: "",
-        };
-      }
+      updatedValues[service.value] = formikValues[service.value] || {
+        tradesymbol: service.tradesymbol,
+        name: service.label,
+        percentage: "",
+        price: "",
+        type: "",
+      };
     });
 
     setFormikValues(updatedValues);
   };
+
 
   const handleRemoveService = (serviceValue) => {
     setSelectedServices((prev) =>

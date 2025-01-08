@@ -134,6 +134,8 @@ const EditStock = () => {
         setFormikValues(initialValues);
     }, [selectedServices]);
 
+
+
     const validationSchema = Yup.object(
         selectedServices.reduce((acc, service) => {
             acc[service.value] = Yup.object({
