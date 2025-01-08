@@ -1492,7 +1492,7 @@ class Clients {
     }
   }
 
-
+/*
   async updateClient(req, res) {
     try {
       const { id, FullName, Email, PhoneNo } = req.body;
@@ -1525,6 +1525,25 @@ class Clients {
       // }
 
 
+
+
+      const existingEmail = await Clients_Modal.findOne({ 
+        Email, 
+        _id: { $ne: id }, 
+        del: 0 // Only check active records
+      });
+      if (existingEmail) {
+        return res.status(400).json({ status: false, message: "Email is already in use" });
+      }
+      
+      const existingPhoneNo = await Clients_Modal.findOne({ 
+        PhoneNo, 
+        _id: { $ne: id }, 
+        del: 0 // Only check active records
+      });
+      if (existingPhoneNo) {
+        return res.status(400).json({ status: false, message: "Phone Number is already in use" });
+      }
 
 
 
@@ -1571,6 +1590,91 @@ class Clients {
       });
     }
   }
+*/
+
+
+async updateClient(req, res) {
+  try {
+    const { id, FullName, Email, PhoneNo } = req.body;
+
+    // Check if the required fields are provided
+    if (!FullName) {
+      return res.json({ status: false, message: "Fullname is required" });
+    }
+
+    if (!Email) {
+      return res.json({ status: false, message: "Email is required" });
+    } else if (!/^\S+@\S+\.\S+$/.test(Email)) {
+      return res.json({ status: false, message: "Invalid Email format" });
+    }
+
+    if (!PhoneNo) {
+      return res.json({ status: false, message: "Phone Number is required" });
+    } else if (!/^\d{10}$/.test(PhoneNo)) {
+      return res.json({ status: false, message: "Invalid Phone Number format" });
+    }
+
+    if (!id) {
+      return res.status(400).json({
+        status: false,
+        message: "Client ID is required",
+      });
+    }
+
+    // Check if the email is already in use by any other client (excluding the current client)
+    const existingEmail = await Clients_Modal.findOne({ 
+      Email, 
+      _id: { $ne: id }, // Exclude the current client
+      del: 0 // Assuming 'del' marks deleted clients
+    });
+    if (existingEmail) {
+      return res.status(400).json({ status: false, message: "Email is already Exist" });
+    }
+
+    // Check if the phone number is already in use by any other client (excluding the current client)
+    const existingPhoneNo = await Clients_Modal.findOne({
+      PhoneNo,
+      _id: { $ne: id }, // Exclude the current client
+      del: 0 // Assuming 'del' marks deleted clients
+    });
+    if (existingPhoneNo) {
+      return res.status(400).json({ status: false, message: "Phone Number is already Exist" });
+    }
+
+console.log('aaaa');
+    
+    // Proceed with the update
+    const updatedClient = await Clients_Modal.findByIdAndUpdate(
+      id,
+      {
+        FullName,
+        Email,
+        PhoneNo,
+      },
+      { new: true, runValidators: true } // Options: return the updated document and run validators
+    );
+
+    // If the client is not found
+    if (!updatedClient) {
+      return res.status(404).json({
+        status: false,
+        message: "Client not found",
+      });
+    }
+
+    return res.json({
+      status: true,
+      message: "Client updated successfully",
+      data: updatedClient,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: false,
+      message: "Server error",
+      error: error.message,
+    });
+  }
+}
 
 
   async deleteClient(req, res) {
@@ -1612,6 +1716,7 @@ class Clients {
       });
     }
   }
+    
   async statusChange(req, res) {
     try {
       const { id, status } = req.body;
