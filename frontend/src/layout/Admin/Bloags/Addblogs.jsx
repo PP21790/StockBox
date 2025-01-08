@@ -21,6 +21,8 @@ const Addblogs = () => {
      
 
     const validate = (values) => {
+        console.log("blogs",values);
+        
         let errors = {};
 
         if (!values.title) {

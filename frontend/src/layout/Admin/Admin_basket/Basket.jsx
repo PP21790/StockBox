@@ -279,7 +279,6 @@ const Basket = () => {
 
           <Tooltip title="view">
             <Link
-
               to={`/admin/viewdetail/${row._id}`}
               className="btn px-2"
             >

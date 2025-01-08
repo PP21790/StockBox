@@ -451,7 +451,7 @@ const Banner = () => {
                                                                 className="form-control mb-2"
                                                                 type="text"
                                                                 id="hyperlink"
-                                                                placeholder="Enter link title"
+                                                                placeholder="Enter link"
                                                                 value={title.hyperlink}
                                                                 onChange={(e) => setTitle({ ...title, hyperlink: e.target.value })}
                                                             />
