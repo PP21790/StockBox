@@ -946,23 +946,58 @@ async showSignalsToClients(req, res) {
       });
     }
 
+
+    const client = await Clients_Modal.findOne({ _id: client_id, del: 0, ActiveStatus: 1 });
+
+
     const startDates = plans.map(plan => new Date(plan.startdate));
     const endDates = plans.map(plan => new Date(plan.enddate));
 
     const minStartDate = new Date(Math.min(...startDates)); // Earliest start date
     const maxEndDate = new Date(Math.max(...endDates)); // Latest end date
 
+    // const query = {
+    //   service: { $in: service_ids }, // Match any of the service IDs
+    //   created_at: {
+    //     $gte: minStartDate, // Earliest start date
+    //     $lte: maxEndDate    // Latest end date
+    //   }
+    // };
+
+
+
+
+
     const query = {
-      service: { $in: service_ids }, // Match any of the service IDs
-      created_at: {
-        $gte: minStartDate, // Earliest start date
-        $lte: maxEndDate    // Latest end date
-      }
+      service: { $in: service_ids }
     };
+    
+    if (client.deliverystatus === true) {
+      query.created_at = {
+        $lte: maxEndDate, // Only keep the end date condition
+      };
+
+      if(type === true)
+        {
+        query.closedate= {
+          $gte: minStartDate, 
+         }
+        }
+
+
+    } else {
+      query.created_at = {
+        $gte: minStartDate, // Include both start and end date conditions
+        $lte: maxEndDate,
+      };
+    }
 
     if (type === true || type === false) {
       query.close_status = type; 
     }
+
+
+
     const protocol = req.protocol; // Will be 'http' or 'https'
     const baseUrl = `${protocol}://${req.headers.host}`; // Construct the base URL
 
