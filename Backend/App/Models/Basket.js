@@ -52,6 +52,11 @@ const BasketSchema = new Schema({
         trim: true,
         default: null
     },
+    cagr_live: {
+        type: String,
+        trim: true,
+        default: null
+    },
     frequency: {
         type: String,
         trim: true,

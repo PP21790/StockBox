@@ -6,14 +6,14 @@ import Swal from 'sweetalert2';
 import $ from "jquery";
 import { image_baseurl } from '../../Utils/config';
 import io from 'socket.io-client';
-import { base_url } from '../../Utils/config';
+import { soket_url } from '../../Utils/config';
 
 
 const Header = () => {
 
   const navigate = useNavigate()
 
-  const SOCKET_SERVER_URL = base_url
+  const SOCKET_SERVER_URL = soket_url
 
   const socket = io(SOCKET_SERVER_URL, { transports: ['websocket'] });
 

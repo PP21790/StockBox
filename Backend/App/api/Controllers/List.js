@@ -535,7 +535,6 @@ class List {
     }
   }
 
-
   // Controller function to add a new plan subscription
   async addPlanSubscription(req, res) {
     try {
@@ -657,11 +656,7 @@ class List {
             }
           }
 
-
-
-
           ////////////////// 17/10/2024 ////////////////////////
-
 
           const newPlanManage = new Planmanage({
             clientid: client_id,
@@ -763,7 +758,6 @@ class List {
 
       const settings = await BasicSetting_Modal.findOne();
 
-
       const refertokens = await Refer_Modal.find({ user_id: client._id, status: 0 });
 
       if (client.refer_status && client.token) {
@@ -771,11 +765,8 @@ class List {
         }
         else {
          
-
           const senderamount = (price * settings.sender_earn) / 100;
           const receiveramount = (price * settings.receiver_earn) / 100;
-
-
 
           const results = new Refer_Modal({
             token: client.token,
@@ -801,9 +792,7 @@ class List {
 
         }
 
-
       }
-
 
       if (refertokens.length > 0) {
         for (const refertoken of refertokens) {
@@ -834,7 +823,6 @@ class List {
         console.log('No referral tokens found.');
       }
 
-
       const adminnotificationTitle = "Important Update";
       const adminnotificationBody = `Congratulations! ${client.FullName} successfully purchased the ${plan.category.title} Plan`;
       const resultnm = new Adminnotification_Modal({
@@ -852,7 +840,6 @@ class List {
         client.deliverystatus = true;
         await client.save();
       }
-
 
 
       const length = 6;
@@ -931,8 +918,6 @@ class List {
         throw new Error('Mail template not found');
       }
 
-
-
       const templatePaths = path.join(__dirname, '../../../template', 'mailtemplate.html');
 
       fs.readFile(templatePaths, 'utf8', async (err, htmlTemplate) => {
@@ -944,7 +929,7 @@ class List {
         let finalMailBody = mailtemplate.mail_body
           .replace('{clientName}', `${client.FullName}`);
 
-        const logo = `http://${req.headers.host}/uploads/basicsetting/${settings.logo}`;
+        const logo = `${req.protocol}://${req.headers.host}/uploads/basicsetting/${settings.logo}`;
 
         // Replace placeholders with actual values
         const finalHtml = htmlTemplate
@@ -969,13 +954,6 @@ class List {
         await sendEmail(mailOptions);
       });
 
-
-
-
-
-
-
-
       // Return success response
       return res.status(201).json({
         status: true,
@@ -989,7 +967,6 @@ class List {
     }
   }
 
-
   // Controller function to add a new plan subscription
   async addBasketSubscription(req, res) {
     try {
@@ -1000,9 +977,7 @@ class List {
         return res.status(400).json({ status: false, message: 'Missing required fields' });
       }
 
-
       const client = await Clients_Modal.findOne({ _id: client_id, del: 0, ActiveStatus: 1 });
-
 
       if (!client) {
         return console.log('Client not found or inactive.');
@@ -1015,7 +990,6 @@ class List {
       });
 
       const settings = await BasicSetting_Modal.findOne();
-
 
       // Map plan validity to months
       const validityMapping = {
@@ -1040,8 +1014,6 @@ class List {
       end.setHours(23, 59, 59, 999);  // Set end date to the end of the day
       end.setMonth(start.getMonth() + monthsToAdd);  // Add the plan validity duration
 
-
-
       // Create a new subscription
       const newSubscription = new BasketSubscription_Modal({
         basket_id,
@@ -1056,15 +1028,8 @@ class List {
         orderid: orderid
       });
 
-
-
       // Save to the database
       const savedSubscription = await newSubscription.save();
-
-
-
-
-
 
 
       const length = 6;
@@ -1156,7 +1121,7 @@ class List {
         let finalMailBody = mailtemplate.mail_body
           .replace('{clientName}', `${client.FullName}`);
 
-        const logo = `http://${req.headers.host}/uploads/basicsetting/${settings.logo}`;
+        const logo = `${req.protocol}://${req.headers.host}/uploads/basicsetting/${settings.logo}`;
 
         // Replace placeholders with actual values
         const finalHtml = htmlTemplate
@@ -1194,10 +1159,6 @@ class List {
       return res.status(500).json({ status: false, message: 'Server error', data: [] });
     }
   }
-
-
-
-
 
   async myBasketPlan(req, res) {
     try {
@@ -1257,9 +1218,6 @@ class List {
       return res.status(500).json({ status: false, message: 'Server error', data: [] });
     }
   }
-
-
-
 
 
   async myPlan(req, res) {
@@ -1383,29 +1341,6 @@ class List {
 
 
 
-      // Fetch subscriptions based on client_id and del status
-      //     const result = await PlanSubscription_Modal.aggregate([
-      //   {
-      //     $match: {
-      //       del: false,
-      //       client_id: new mongoose.Types.ObjectId(id) // Convert id to ObjectId if necessary
-      //     }
-      //   },
-      //   {
-      //     $lookup: {
-      //       from: 'plans', // The name of the plans collection
-      //       localField: 'plan_id', // The field in PlanSubscription_Modal that references the plans
-      //       foreignField: '_id', // The field in the plans collection that is referenced
-      //       as: 'planDetails' // The name of the field in the result that will hold the joined data
-      //     }
-      //   },
-      //   {
-      //     $unwind: '$planDetails' // Optional: Unwind the result if you expect only one matching plan per subscription
-      //   }
-      // ]);
-
-
-      // Respond with the retrieved subscriptions
       return res.json({
         status: true,
         message: "Subscriptions retrieved successfully",
@@ -1775,7 +1710,10 @@ if (client.deliverystatus === true) {
 const query = {
   service: service_id,
   close_status: true,
-};
+  closedate: {
+          $gte: startDates[0], 
+      }
+   };
 
 // Check if deliverystatus is true
 if (client.deliverystatus === true) {
@@ -1943,6 +1881,9 @@ if (client.deliverystatus === true) {
       const query = {
         service: service_id,
         close_status: true,
+        closedate: {
+         $gte: startDates[0], 
+        }
       };
       
       // Check if deliverystatus is true
@@ -2297,6 +2238,7 @@ if (client.deliverystatus === true) {
                 accuracy: 1,
                 portfolioweightage: 1,
                 cagr: 1,
+                cagr_live: 1,
                 frequency: 1,
                 validity: 1,
                 next_rebalance_date: 1,
@@ -3761,7 +3703,8 @@ async Notification(req, res) {
 
       const banks = await Bank_Modal.find({ del: false, status: true, type: 2 });
 
-      const protocol = req.protocol; // 'http' or 'https'
+      const protocol = req.protocol; 
+
       const baseUrl = `${protocol}://${req.headers.host}`; // Construct base URL dynamically
 
       const bankWithImageUrls = banks.map(bank => {
@@ -3920,7 +3863,7 @@ if(version==1)  {
         const userId = client.alice_userid;
 
           const config = {
-            method: 'get', // HTTP method
+            method: 'get', 
             url: `https://ant.aliceblueonline.com/rest/AliceBlueAPIService/api/limits/getRmsLimits`, // Construct the full URL
             headers: {
               'Authorization': 'Bearer ' + userId + ' ' + authToken,

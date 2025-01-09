@@ -55,9 +55,7 @@ const Basket = () => {
 
 
   const handleSwitchChange = async (event, id) => {
-    // const originalChecked = event.target.checked;
     const originalChecked = true;
-    // console.log("originalChecked", originalChecked)
     const user_active_status = originalChecked
     const data = { id: id, status: user_active_status };
 
@@ -96,6 +94,8 @@ const Basket = () => {
       getbasketlist();
     }
   };
+
+
 
 
 
@@ -267,14 +267,16 @@ const Basket = () => {
                 checked={row.status}
                 onClick={(event) => handleSwitchChange(event, row._id)} />
             </Tooltip> : ""}
-          <Tooltip title="Add Stock">
-            <Link
-              to={`/admin/addstock/${row._id}`}
-              className="btn px-2"
-            >
-              <Plus />
-            </Link>
-          </Tooltip>
+          {row.stock_details?.length <= 0 ?
+            <Tooltip title="Add Stock">
+              <Link
+                to={`/admin/addstock/${row._id}`}
+                className="btn px-2"
+              >
+                <Plus />
+              </Link>
+            </Tooltip> : ""}
+
           <Tooltip title="view">
             <Link
               to={`/admin/viewdetail/${row._id}`}

@@ -9,6 +9,9 @@ import * as Yup from "yup";
 import * as Config from "../../../Utils/config";
 
 const EditStock = () => {
+
+
+
     const location = useLocation();
     const { stock } = location.state || {};
 
@@ -18,6 +21,10 @@ const EditStock = () => {
     const [inputValue, setInputValue] = useState("");
     const [formikValues, setFormikValues] = useState({});
     const navigate = useNavigate();
+
+
+
+
 
     useEffect(() => {
         if (stock && Array.isArray(stock)) {
@@ -51,11 +58,14 @@ const EditStock = () => {
 
             if (response.data?.data) {
                 setOptions(
-                    response.data.data.map((item) => ({
+                    response.data.data.filter((item) =>
+                        !selectedServices.some(service => service.label === item._id)
+                    ).map((item) => ({
                         label: String(item._id),
                         value: String(item._id),
                         tradesymbol: item.data[0]?.tradesymbol,
                     }))
+
                 );
             } else {
                 setOptions([]);
@@ -75,9 +85,11 @@ const EditStock = () => {
                 !selectedServices.some((service) => service.value === newOption.value)
         );
 
-
-        // Add new services at the top
-        const updatedServices = [...uniqueServices, ...selectedServices];
+        const updatedServices = [...uniqueServices, ...selectedServices].filter(
+            (service) =>
+                service?.weightage ||
+                selectedOption.some((option) => option.label === service.label)
+        );
 
         setSelectedServices(updatedServices);
 
@@ -95,12 +107,6 @@ const EditStock = () => {
     };
 
 
-    // const handleRemoveService = (serviceValue) => {
-    //     setSelectedServices((prev) =>
-    //         prev.filter((service) => service.value !== serviceValue)
-    //     );
-    // };
-
 
 
     const handleRemoveService = (serviceValue) => {
@@ -113,10 +119,15 @@ const EditStock = () => {
             delete updatedValues[serviceValue];
             return updatedValues;
         });
+
+        // Remove the deleted service from the options
         setOptions((prevOptions) =>
             prevOptions.filter((option) => option.value !== serviceValue)
         );
-    }
+    };
+
+
+
 
 
 
@@ -133,7 +144,6 @@ const EditStock = () => {
         }, {});
         setFormikValues(initialValues);
     }, [selectedServices]);
-
 
 
     const validationSchema = Yup.object(
@@ -214,6 +224,8 @@ const EditStock = () => {
         fetchOptions(value);
     };
 
+    console.log("selectedServices", selectedServices)
+
     return (
         <div className="page-content">
             <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
@@ -240,6 +252,10 @@ const EditStock = () => {
                                 onInputChange={handleInputChange}
                                 options={options}
                                 onChange={handleServiceChange}
+                                value={selectedServices.filter(
+                                    (service) => !service.weightage
+                                )}
+
                                 placeholder="Search and select stocks..."
                                 isClearable
                                 isMulti
@@ -247,6 +263,9 @@ const EditStock = () => {
                                 noOptionsMessage={() =>
                                     loading ? "Loading..." : "No options found"
                                 }
+
+
+
                             />
                         </div>
                     </div>

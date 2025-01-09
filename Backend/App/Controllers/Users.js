@@ -498,9 +498,9 @@ class Users {
           // console.error('Error reading HTML template:', err);
           return;
         }
-        const url = `http://${req.headers.host}/#/resetpassword/${resetToken}`;
+        const url = `${req.protocol}://${req.headers.host}/#/resetpassword/${resetToken}`;
 
-        const logo = `http://${req.headers.host}/uploads/basicsetting/${settings.logo}`;
+        const logo = `${req.protocol}://${req.headers.host}/uploads/basicsetting/${settings.logo}`;
 
 
         const finalMailBody = mailtemplate.mail_body.replace('{url}', url);
