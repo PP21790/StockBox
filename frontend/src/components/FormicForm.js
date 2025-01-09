@@ -7,7 +7,7 @@ import { MoveLeft, Plus, Eye, EyeOff } from "lucide-react";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
-
+import Swal from 'sweetalert2';
 
 const DynamicForm = ({
     fields,
@@ -360,18 +360,51 @@ const DynamicForm = ({
                                                                             {field.star ? <span className="text-danger">*</span> : ""}
                                                                         </label>
 
-                                                                        <input
-                                                                            type="file"
-                                                                            id={field.name}
-                                                                            placeholder="No File Choosen"
-                                                                            className={`form-control ${formik.touched[field.name] && formik.errors[field.name] ? "is-invalid" : ""
-                                                                                }`}
-                                                                            onChange={(e) => {
-                                                                                handleFileChange2(e, index, field.name);
-                                                                                formik.setFieldValue(field.name, e.target.files[0]);
-                                                                            }}
-                                                                            name={field.name}
-                                                                        />
+                                                                        {field.image ?
+                                                                            <input
+                                                                                type="file"
+                                                                                id={field.name}
+                                                                                accept="image/*"
+                                                                                placeholder="No File Chosen"
+                                                                                className={`form-control ${formik.touched[field.name] && formik.errors[field.name] ? "is-invalid" : ""
+                                                                                    }`}
+                                                                                onChange={(e) => {
+                                                                                    const file = e.target.files[0];
+                                                                                    if (file) {
+
+                                                                                        const validImageTypes = ["image/jpeg", "image/png", "image/gif"];
+                                                                                        if (validImageTypes.includes(file.type)) {
+                                                                                            handleFileChange2(e, index, field.name);
+                                                                                            formik.setFieldValue(field.name, file);
+                                                                                        } else {
+                                                                                            //   alert("Please select a valid image file (JPEG, PNG, GIF).");
+                                                                                            Swal.fire({
+                                                                                                title: "warning",
+                                                                                                text: "Please select a valid image file (JPEG, PNG, GIF)",
+                                                                                                icon: "alert",
+                                                                                                timer: 1500,
+                                                                                                timerProgressBar: true,
+                                                                                            })
+                                                                                                e.target.value = "";
+                                                                                            
+                                                                                            
+                                                                                        }
+                                                                                    }
+                                                                                }}
+                                                                                name={field.name}
+                                                                            /> : <input
+                                                                                type="file"
+                                                                                id={field.name}
+                                                                                // Accept only image files
+                                                                                placeholder="No File Choosen"
+                                                                                className={`form-control ${formik.touched[field.name] && formik.errors[field.name] ? "is-invalid" : ""
+                                                                                    }`}
+                                                                                onChange={(e) => {
+                                                                                    handleFileChange2(e, index, field.name);
+                                                                                    formik.setFieldValue(field.name, e.target.files[0]);
+                                                                                }}
+                                                                                name={field.name}
+                                                                            />}
                                                                         {formik.touched[field.name] && formik.errors[field.name] && (
                                                                             <div style={{ color: "red" }}>{formik.errors[field.name]}</div>
                                                                         )}

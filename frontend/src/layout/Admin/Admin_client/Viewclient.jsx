@@ -281,7 +281,7 @@ const Viewclientdetail = () => {
         {
             name: 'Expiry Date',
             selector: row => row?.plan_end ? fDateTime(row?.plan_end) : "",
-            width: '180px'
+            width: '195px'
         },
     ];
 

@@ -114,7 +114,7 @@ const Addbroadcast = () => {
             col_size: 4,
             disable: false,
             options: [
-                { value: "all", label: "All" },
+                // { value: "all", label: "All" },
                 { value: "active", label: "Active" },
                 { value: "expired", label: "Expired" },
                 { value: "nonsubscribe", label: "Non Subscribe" },
