@@ -1,42 +1,33 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { getstaffperuser } from '../../Services/Admin';
 import { basicsettinglist } from '../../Services/Admin';
 import { image_baseurl } from '../../Utils/config';
 
-
 const Sidebar = ({ onToggleClick }) => {
-
+  const location = useLocation(); // React Router's hook for current pathname
   const token = localStorage.getItem('token');
   const userid = localStorage.getItem('id');
 
   const [permission, setPermission] = useState([]);
   const [activeDropdown, setActiveDropdown] = useState(null);
-  
-
   const [clients, setClients] = useState([]);
-  
-  
-  
-      useEffect(() => {
-        getpermissioninfo();
-        getsettinglist()
-      }, []);
 
+  useEffect(() => {
+    getpermissioninfo();
+    getsettinglist();
+  }, []);
 
   const getsettinglist = async () => {
     try {
-        const response = await basicsettinglist(token);
-        if (response.status) {
-            setClients(response.data);
-        }
+      const response = await basicsettinglist(token);
+      if (response.status) {
+        setClients(response.data);
+      }
     } catch (error) {
-        console.log('error', error);
+      console.log('error', error);
     }
-};
-
-
-
+  };
 
   const getpermissioninfo = async () => {
     try {
@@ -45,25 +36,23 @@ const Sidebar = ({ onToggleClick }) => {
         setPermission(response.data.permissions);
       }
     } catch (error) {
-      console.log("error", error);
+      console.log('error', error);
     }
   };
-
-
 
   const toggleDropdown = (dropdownName) => (e) => {
     e.preventDefault();
     setActiveDropdown(activeDropdown === dropdownName ? null : dropdownName);
   };
 
-
-
-
   const menuItems = [
     { title: 'Dashboard', icon: 'bx bx-home-alt', link: '/staff/dashboard' },
     permission.includes('viewclient') && { title: 'Client', icon: 'bx bx-user', link: '/staff/client' },
-    permission.includes('viewfreeclient') &&
-    { title: 'Free Trial Client', icon: 'bx bx-user', link: '/staff/freeclient' },
+    permission.includes('viewfreeclient') && {
+      title: 'Free Trial Client',
+      icon: 'bx bx-user',
+      link: '/staff/freeclient',
+    },
     (permission.includes('viewplan') || permission.includes('viewcategory')) && {
       title: 'Plan',
       icon: 'bx bxl-redux',
@@ -74,9 +63,7 @@ const Sidebar = ({ onToggleClick }) => {
         ...(permission.includes('viewcategory') ? [{ title: 'Category', link: '/staff/category' }] : []),
       ].filter(Boolean),
     },
-    // permission.includes('viewstaff') && { title: 'Staff', icon: 'bx bx-user-plus', link: '/staff/staff' },
-    permission.includes('viewsignal') &&
-    {
+    permission.includes('viewsignal') && {
       title: 'Signal',
       icon: 'bx bx-wifi-2 fs-3 text-white',
       isDropdown: true,
@@ -84,12 +71,13 @@ const Sidebar = ({ onToggleClick }) => {
       subItems: [
         { title: 'Open Signal', icon: 'bx-radio-circle', link: '/staff/signal' },
         { title: 'Close Signal', icon: 'bx-radio-circle', link: '/staff/closesignal' },
-
-      ]
+      ],
     },
-
-
-    permission.includes('paymenthistory') && { title: 'Payment History', icon: 'bx bx-credit-card', link: '/staff/paymenthistory' },
+    permission.includes('paymenthistory') && {
+      title: 'Payment History',
+      icon: 'bx bx-credit-card',
+      link: '/staff/paymenthistory',
+    },
     permission.includes('planexpiry') && { title: 'Plan Expiry', icon: 'bx bx-credit-card', link: '/staff/planexpiry' },
     permission.includes('perform') && { title: 'Performance', icon: 'bx bx-credit-card', link: '/staff/perform' },
     permission.includes('viewblogs') && { title: 'Blogs', icon: 'bx bx-comment-detail', link: '/staff/blogs' },
@@ -97,7 +85,6 @@ const Sidebar = ({ onToggleClick }) => {
     permission.includes('viewcoupon') && { title: 'Coupon', icon: 'bx bx-edit-alt', link: '/staff/coupon' },
     permission.includes('viewbanner') && { title: 'Banner', icon: 'bx bx-news', link: '/staff/banner' },
     permission.includes('viewfaq') && { title: 'Faq', icon: 'bx bx-news', link: '/staff/faq' },
-    // permission.includes('viewfaq') && { title: 'Payment Request', icon: 'bx bx-news', link: '/staff/paymentrequest' },
   ].filter(Boolean);
 
   return (
@@ -105,7 +92,7 @@ const Sidebar = ({ onToggleClick }) => {
       <div data-simplebar="init">
         <div className="sidebar-header">
           <div>
-            {/* <img  src={`${image_baseurl}uploads/basicsetting/${clients[0]?.favicon}`} /> */}
+            {/* Logo or Favicon */}
           </div>
           <div>
             <h4 className="logo-text">{clients[0]?.from_name}</h4>
@@ -117,18 +104,41 @@ const Sidebar = ({ onToggleClick }) => {
 
         <ul className="metismenu mm-show" id="menu">
           {menuItems.map((item, index) => (
-            <li key={index} className={activeDropdown === item.dropdownName ? 'mm-active' : ''}>
+            <li
+              key={index}
+              className={`${
+                item.isDropdown
+                  ? activeDropdown === item.dropdownName
+                    ? ''
+                    : ''
+                  : location.pathname === item.link
+                  ? ''
+                  : ''
+              }`}
+            >
               {item.isDropdown ? (
                 <>
-                  <a href="#" onClick={toggleDropdown(item.dropdownName)} className="has-arrow" aria-expanded={activeDropdown === item.dropdownName}>
-                    <div className="parent-icon"><i className={item.icon} /></div>
+                  <a
+                    href="#"
+                    onClick={toggleDropdown(item.dropdownName)}
+                    className="has-arrow"
+                    aria-expanded={activeDropdown === item.dropdownName}
+                  >
+                    <div className="parent-icon">
+                      <i className={item.icon} />
+                    </div>
                     <div className="menu-title">{item.title}</div>
                   </a>
                   <ul className={`mm-collapse ${activeDropdown === item.dropdownName ? 'mm-show' : ''}`}>
                     {item.subItems.map((subItem, subIndex) => (
-                      <li key={subIndex}>
+                      <li
+                        key={subIndex}
+                        className={location.pathname === subItem.link ? ' ' : ''}
+                      >
                         <Link to={subItem.link}>
-                          <div className="parent-icon"><i className="bx bx-radio-circle" /></div>
+                          <div className="parent-icon">
+                            <i className="bx bx-radio-circle" />
+                          </div>
                           <div className="menu-title">{subItem.title}</div>
                         </Link>
                       </li>
@@ -137,7 +147,9 @@ const Sidebar = ({ onToggleClick }) => {
                 </>
               ) : (
                 <Link to={item.link}>
-                  <div className="parent-icon"><i className={item.icon} /></div>
+                  <div className="parent-icon">
+                    <i className={item.icon} />
+                  </div>
                   <div className="menu-title">{item.title}</div>
                 </Link>
               )}
