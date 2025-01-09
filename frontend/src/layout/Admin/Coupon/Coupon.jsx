@@ -37,7 +37,7 @@ const Coupon = () => {
     const getcoupon = async () => {
         try {
             const response = await getcouponlist(token);
-            console.log("getcouponlist",response);
+            // console.log("getcouponlist",response);
 
             if (response.status) {
                 const filterdata = response.data.filter((item) =>
@@ -65,7 +65,7 @@ const Coupon = () => {
 
             if (response.status) {
                 setService(response.data)
-                console.log("chaking",response.data);
+                // console.log("chaking",response.data);
                 
             }
         } catch (error) {
@@ -306,22 +306,8 @@ const Coupon = () => {
                 if (currentDate > endDate) {
                     return <span className="text-danger" style={{ color: "red" }}>Expired</span>;
                 } else {
-                    return (
-                        <div className="form-check form-switch form-check-info">
-                            <input
-                                id={`rating_${row._id}`}
-                                className="form-check-input toggleswitch"
-                                type="checkbox"
-                                defaultChecked={row.status === true}
-                                onChange={(event) => handleSwitchChange(event, row._id)}
-                            />
-                            <label
-                                htmlFor={`rating_${row._id}`}
-                                className="checktoggle checkbox-bg"
-                            ></label>
-                        </div>
-                    );
-                }
+                    return <span className="text-success" style={{ color: "green" }}>Active</span>;
+                  }
             },
             sortable: true,
             width: '156px',

@@ -626,34 +626,50 @@ const Client = () => {
         {
             name: 'Actions',
             selector: (row) => (
-                <div className='d-flex'>
-
-
-                    <Tooltip placement="top" overlay="Package Assign">
-                        <span onClick={(e) => { showModal(true); setClientid(row); getplanlistassinstatus(row._id) }} style={{ cursor: 'pointer' }}>
-                            <Settings2 />
-                        </span>
-                    </Tooltip>
-
-                    <Tooltip title="view">
-                        <Eye
-
-                            onClick={() => Clientdetail(row)} />
-                    </Tooltip>
-
-                    <Tooltip title="Update">
-                        <SquarePen className='ms-3' onClick={() => updateClient(row)} />
-                    </Tooltip>
-                    {/* <Tooltip title="delete">
-                        <Trash2 onClick={() => DeleteClient(row._id)} />
-                    </Tooltip> */}
-                </div>
+              <div className='d-flex'>
+                <Tooltip placement="top" overlay="Package Assign">
+                  <span
+                    onClick={(e) => {
+                      // Check if ActiveStatus is 1
+                      if (row.ActiveStatus === 1) {
+                        // If active, proceed with the package assignment
+                        showModal(true);
+                        setClientid(row);
+                        getplanlistassinstatus(row._id);
+                      } else {
+                        // If not active, show the SweetAlert message
+                        Swal.fire({
+                          title: 'Reminder',
+                          text: 'Activate the client first Then assign the package.',
+                          icon: 'warning',
+                          confirmButtonText: 'OK',
+                        });
+                      }
+                    }}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <Settings2 />
+                  </span>
+                </Tooltip>
+          
+                <Tooltip title="view">
+                  <Eye onClick={() => Clientdetail(row)} />
+                </Tooltip>
+          
+                <Tooltip title="Update">
+                  <SquarePen className='ms-3' onClick={() => updateClient(row)} />
+                </Tooltip>
+                {/* <Tooltip title="delete">
+                  <Trash2 onClick={() => DeleteClient(row._id)} />
+                </Tooltip> */}
+              </div>
             ),
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
             width: '165px',
-        }
+          }
+          
     ];
 
     return (
