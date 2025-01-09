@@ -378,7 +378,6 @@ class Clients {
   async getClientWithFilter(req, res) {
     try {
       const { status, kyc_verification, createdby, planStatus, search, add_by, page = 1 } = req.body;
-
       const limit = 10;
       const skip = (parseInt(page) - 1) * parseInt(limit); // Calculate how many items to skip
       const limitValue = parseInt(limit);
@@ -403,6 +402,7 @@ class Clients {
       }
 
 
+      console.log("matchConditions",matchConditions);
 
 
       if (search && search.trim() !== "") {
