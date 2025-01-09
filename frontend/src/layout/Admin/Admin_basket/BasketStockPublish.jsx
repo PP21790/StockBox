@@ -242,7 +242,7 @@ const BasketStockPublish = () => {
       name: "Validity",
       selector: (row) => row.validity,
       sortable: true,
-      width: '200px',
+     
     },
     {
       name: 'Active Status',
@@ -284,12 +284,12 @@ const BasketStockPublish = () => {
 
       ),
       sortable: true,
-      width: '250px',
+     
     },
     {
       name: "Actions",
       cell: (row) => (
-        <div>
+        <div className="w-100">
           {row.rebalancestatus === false ?
             <Tooltip title="Rebalance">
               <Link

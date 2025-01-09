@@ -248,19 +248,19 @@ const Basket = () => {
       name: "Validity",
       selector: (row) => row.validity,
       sortable: true,
-      width: '200px',
+   
     },
     {
       name: "Stock Quantity",
       selector: (row) => row.stock_details?.length || 0,
       sortable: true,
-      width: '200px',
+   
     },
 
     {
       name: "Actions",
       cell: (row) => (
-        <div>
+        <div className="w-100">
           {row.stock_details.length > 0 ?
             <Tooltip title="Published Stock">
               <RotateCcw

@@ -95,7 +95,7 @@ const Sidebar = ({ onToggleClick }) => {
     <div>
       <div data-simplebar="init">
         <div className="simplebar-wrapper" style={{ margin: 0 }}>
-          <div className="simplebar-content mm-active" style={{ padding: 0 }}>
+          <div className="simplebar-content" style={{ padding: 0 }}>
             <div className="sidebar-header">
               <div>
                 <img
@@ -114,7 +114,7 @@ const Sidebar = ({ onToggleClick }) => {
 
             <ul className="metismenu mm-show" id="menu">
               {menuItems.map((item, index) => (
-                <li key={index} className={activeDropdown === item.title ? "mm-active" : ""}>
+                <li key={index} className={activeDropdown === item.title ? "" : ""}>
                   {item.subMenu ? (
                     <>
                       <a
@@ -144,6 +144,7 @@ const Sidebar = ({ onToggleClick }) => {
                         ))}
                       </ul>
                     </>
+                    
                   ) : (
                     <NavLink
                       to={item.link}
