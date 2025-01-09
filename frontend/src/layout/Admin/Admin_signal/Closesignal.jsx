@@ -222,22 +222,20 @@ const Closesignal = () => {
       width: "100px",
     },
     {
-      name: "Avoid Signal",
-      selector: (row) =>
-        row.closeprice == 0 ? (
-          <FaTimesCircle color="red" />
-        ) : (
-          <FaCheckCircle color="green" />
-        ),
+      name: "Segment",
+      selector: (row) => {
+        const segmentLabel =
+          row.segment === "C"
+            ? "CASH"
+            : row.segment === "O"
+              ? "OPTION"
+              : "FUTURE";
+        return row.closeprice == 0
+          ? <div>{segmentLabel}<span style={{ color: "red" }}> (Avoid)</span></div>
+          : segmentLabel;
+      },
       sortable: true,
       width: "200px",
-    },
-    {
-      name: "Segment",
-      selector: (row) =>
-        row.segment == "C" ? "CASH" : row.segment == "O" ? "OPTION" : "FUTURE",
-      sortable: true,
-      width: "132px",
     },
     {
       name: "Symbol",
@@ -681,7 +679,7 @@ const Closesignal = () => {
                                 <b>Date: {fDateTimeH(client?.created_at)}</b>
                               </p>
                               <p className="mb-2">
-                                <b>Segment: {client?.segment == "C" ? "CASH" : client?.segment == "O" ? "OPTION" : "FUTURE"}</b>
+                                <b>Segment: {client?.segment == "C" ? "CASH" : client?.segment == "O" ? "OPTION" : "FUTURE"}, {client?.closeprice == 0 ? <span style={{ color: "red" }}> (Avoid)</span> : ""} </b>
                               </p>
                             </div>
                             <div>

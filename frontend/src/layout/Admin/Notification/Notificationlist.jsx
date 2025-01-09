@@ -63,14 +63,14 @@ const Notificationlist = () => {
             name: 'Title',
             selector: (row) => row.title,
             sortable: true,
-
+            width: '300px',
 
         },
         {
             name: 'Message',
             selector: (row) => row.message,
             sortable: true,
-            width: '700px',
+            width: '600px',
 
         },
         {
