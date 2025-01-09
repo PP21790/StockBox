@@ -18,7 +18,7 @@ const menuItems = [
       { title: "Free Trial Status", icon: "bx-radio-circle", link: "/admin/freetrialstatus" },
     ],
   },
-  // { title: "Staff", icon: "bx-user-plus", link: "/admin/staff" },
+  { title: "Staff", icon: "bx-user-plus", link: "/admin/staff" },
   {
     title: "Basket",
     icon: "bx-basket",
