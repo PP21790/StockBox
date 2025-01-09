@@ -399,7 +399,7 @@ class Clients {
 
 
       if (add_by !== "") {
-        matchConditions.add_by = parseInt(add_by);
+        matchConditions.add_by = add_by;
       }
 
 
