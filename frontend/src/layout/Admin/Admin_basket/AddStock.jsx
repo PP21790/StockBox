@@ -93,8 +93,6 @@ const AddStock = () => {
 
 
 
-
-
   // Validation Schema for Formik
   const validationSchema = Yup.object().shape(
     selectedServices.reduce((acc, service) => {
@@ -166,13 +164,13 @@ const AddStock = () => {
     }
   };
 
-  // Handle input change for stock symbol search
+
   const handleInputChange = (value) => {
     setInputValue(value);
     fetchOptions(value);
   };
 
-  // Sync options with selected services
+
   useEffect(() => {
     setOptions((prevOptions) =>
       prevOptions.filter((option) =>

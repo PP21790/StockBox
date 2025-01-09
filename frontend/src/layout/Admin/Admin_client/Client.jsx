@@ -820,7 +820,7 @@ const Client = () => {
                         aria-labelledby="exampleModalLabel"
                         aria-hidden="true"
                     >
-                        <div className="modal-dialog modal-xl" style={{width:"900px"}}>
+                        <div className="modal-dialog modal-xl" style={{ width: "900px" }}>
                             <div className="modal-content">
                                 <div className="modal-header">
                                     <h5 className="modal-title" id="exampleModalLabel">Assign Package</h5>
@@ -1011,6 +1011,7 @@ const Client = () => {
                                                                                     aria-labelledby={`heading-${item._id}`}
                                                                                     data-bs-parent={`#accordion-basket`}
                                                                                 >
+                                                                                    {console.log("item", item)}
                                                                                     <div className="accordion-body">
                                                                                         <div className="d-flex justify-content-between">
                                                                                             <strong>Price:</strong>
@@ -1021,13 +1022,10 @@ const Client = () => {
                                                                                             <span>{item.validity}</span>
                                                                                         </div>
                                                                                         <div className="d-flex justify-content-between">
-                                                                                            <strong>Created At:</strong>
-                                                                                            <span>{fDateTime(item?.created_at)}</span>
+                                                                                            <strong>Miniumum Investment Amount:</strong>
+                                                                                            <span><IndianRupee />{item?.mininvamount}</span>
                                                                                         </div>
-                                                                                        <div className="d-flex justify-content-between">
-                                                                                            <strong>Updated At:</strong>
-                                                                                            <span>{fDateTime(item?.updated_at)}</span>
-                                                                                        </div>
+
                                                                                     </div>
                                                                                 </div>
                                                                             </div>

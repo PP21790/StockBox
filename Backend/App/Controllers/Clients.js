@@ -399,7 +399,7 @@ class Clients {
 
 
       if (add_by !== "") {
-        matchConditions.add_by = parseInt(add_by);
+        matchConditions.add_by = add_by;
       }
 
 
@@ -1492,12 +1492,112 @@ class Clients {
     }
   }
 
-/*
+  /*
+    async updateClient(req, res) {
+      try {
+        const { id, FullName, Email, PhoneNo } = req.body;
+  
+  
+        if (!FullName) {
+          return res.json({ status: false, message: "Fullname is required" });
+        }
+  
+        if (!Email) {
+          return res.json({ status: false, message: "Email is required" });
+        } else if (!/^\S+@\S+\.\S+$/.test(Email)) {
+          return res.json({ status: false, message: "Invalid Email format" });
+        }
+  
+        if (!PhoneNo) {
+          return res.json({ status: false, message: "Phone Number is required" });
+        } else if (!/^\d{10}$/.test(PhoneNo)) {
+          return res.json({ status: false, message: "Invalid Phone Number format" });
+        }
+        // if (!password || password.length < 8 || 
+        //     !/[A-Z]/.test(password) || 
+        //     !/[a-z]/.test(password) || 
+        //     !/\d/.test(password) || 
+        //     !/[@$!%*?&#]/.test(password)) {
+        //   return res.status(400).json({ 
+        //     status: false, 
+        //     message: "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&#)" 
+        //   });
+        // }
+  
+  
+  
+  
+        const existingEmail = await Clients_Modal.findOne({ 
+          Email, 
+          _id: { $ne: id }, 
+          del: 0 // Only check active records
+        });
+        if (existingEmail) {
+          return res.status(400).json({ status: false, message: "Email is already in use" });
+        }
+        
+        const existingPhoneNo = await Clients_Modal.findOne({ 
+          PhoneNo, 
+          _id: { $ne: id }, 
+          del: 0 // Only check active records
+        });
+        if (existingPhoneNo) {
+          return res.status(400).json({ status: false, message: "Phone Number is already in use" });
+        }
+  
+  
+  
+        if (!id) {
+          return res.status(400).json({
+            status: false,
+            message: "Client ID is required",
+          });
+        }
+  
+        // Find the client by ID and update their details
+        const updatedClient = await Clients_Modal.findByIdAndUpdate(
+          id,
+          {
+            FullName,
+            Email,
+            PhoneNo,
+  
+          },
+          { new: true, runValidators: true } // Options: return the updated document and run validators
+        );
+  
+        // If the client is not found
+        if (!updatedClient) {
+          return res.status(404).json({
+            status: false,
+            message: "Client not found",
+          });
+        }
+  
+        // console.log("Updated Client:", updatedClient);
+        return res.json({
+          status: true,
+          message: "Client updated successfully",
+          data: updatedClient,
+        });
+  
+      } catch (error) {
+        // console.log("Error updating client:", error);
+        return res.status(500).json({
+          status: false,
+          message: "Server error",
+          error: error.message,
+        });
+      }
+    }
+  */
+
+
   async updateClient(req, res) {
     try {
       const { id, FullName, Email, PhoneNo } = req.body;
 
-
+      // Check if the required fields are provided
       if (!FullName) {
         return res.json({ status: false, message: "Fullname is required" });
       }
@@ -1513,39 +1613,6 @@ class Clients {
       } else if (!/^\d{10}$/.test(PhoneNo)) {
         return res.json({ status: false, message: "Invalid Phone Number format" });
       }
-      // if (!password || password.length < 8 || 
-      //     !/[A-Z]/.test(password) || 
-      //     !/[a-z]/.test(password) || 
-      //     !/\d/.test(password) || 
-      //     !/[@$!%*?&#]/.test(password)) {
-      //   return res.status(400).json({ 
-      //     status: false, 
-      //     message: "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&#)" 
-      //   });
-      // }
-
-
-
-
-      const existingEmail = await Clients_Modal.findOne({ 
-        Email, 
-        _id: { $ne: id }, 
-        del: 0 // Only check active records
-      });
-      if (existingEmail) {
-        return res.status(400).json({ status: false, message: "Email is already in use" });
-      }
-      
-      const existingPhoneNo = await Clients_Modal.findOne({ 
-        PhoneNo, 
-        _id: { $ne: id }, 
-        del: 0 // Only check active records
-      });
-      if (existingPhoneNo) {
-        return res.status(400).json({ status: false, message: "Phone Number is already in use" });
-      }
-
-
 
       if (!id) {
         return res.status(400).json({
@@ -1554,14 +1621,35 @@ class Clients {
         });
       }
 
-      // Find the client by ID and update their details
+      // Check if the email is already in use by any other client (excluding the current client)
+      const existingEmail = await Clients_Modal.findOne({
+        Email,
+        _id: { $ne: id }, // Exclude the current client
+        del: 0 // Assuming 'del' marks deleted clients
+      });
+      if (existingEmail) {
+        return res.status(400).json({ status: false, message: "Email is already Exist" });
+      }
+
+      // Check if the phone number is already in use by any other client (excluding the current client)
+      const existingPhoneNo = await Clients_Modal.findOne({
+        PhoneNo,
+        _id: { $ne: id }, // Exclude the current client
+        del: 0 // Assuming 'del' marks deleted clients
+      });
+      if (existingPhoneNo) {
+        return res.status(400).json({ status: false, message: "Phone Number is already Exist" });
+      }
+
+      console.log('aaaa');
+
+      // Proceed with the update
       const updatedClient = await Clients_Modal.findByIdAndUpdate(
         id,
         {
           FullName,
           Email,
           PhoneNo,
-
         },
         { new: true, runValidators: true } // Options: return the updated document and run validators
       );
@@ -1574,15 +1662,12 @@ class Clients {
         });
       }
 
-      // console.log("Updated Client:", updatedClient);
       return res.json({
         status: true,
         message: "Client updated successfully",
         data: updatedClient,
       });
-
     } catch (error) {
-      // console.log("Error updating client:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -1590,91 +1675,6 @@ class Clients {
       });
     }
   }
-*/
-
-
-async updateClient(req, res) {
-  try {
-    const { id, FullName, Email, PhoneNo } = req.body;
-
-    // Check if the required fields are provided
-    if (!FullName) {
-      return res.json({ status: false, message: "Fullname is required" });
-    }
-
-    if (!Email) {
-      return res.json({ status: false, message: "Email is required" });
-    } else if (!/^\S+@\S+\.\S+$/.test(Email)) {
-      return res.json({ status: false, message: "Invalid Email format" });
-    }
-
-    if (!PhoneNo) {
-      return res.json({ status: false, message: "Phone Number is required" });
-    } else if (!/^\d{10}$/.test(PhoneNo)) {
-      return res.json({ status: false, message: "Invalid Phone Number format" });
-    }
-
-    if (!id) {
-      return res.status(400).json({
-        status: false,
-        message: "Client ID is required",
-      });
-    }
-
-    // Check if the email is already in use by any other client (excluding the current client)
-    const existingEmail = await Clients_Modal.findOne({ 
-      Email, 
-      _id: { $ne: id }, // Exclude the current client
-      del: 0 // Assuming 'del' marks deleted clients
-    });
-    if (existingEmail) {
-      return res.status(400).json({ status: false, message: "Email is already Exist" });
-    }
-
-    // Check if the phone number is already in use by any other client (excluding the current client)
-    const existingPhoneNo = await Clients_Modal.findOne({
-      PhoneNo,
-      _id: { $ne: id }, // Exclude the current client
-      del: 0 // Assuming 'del' marks deleted clients
-    });
-    if (existingPhoneNo) {
-      return res.status(400).json({ status: false, message: "Phone Number is already Exist" });
-    }
-
-console.log('aaaa');
-    
-    // Proceed with the update
-    const updatedClient = await Clients_Modal.findByIdAndUpdate(
-      id,
-      {
-        FullName,
-        Email,
-        PhoneNo,
-      },
-      { new: true, runValidators: true } // Options: return the updated document and run validators
-    );
-
-    // If the client is not found
-    if (!updatedClient) {
-      return res.status(404).json({
-        status: false,
-        message: "Client not found",
-      });
-    }
-
-    return res.json({
-      status: true,
-      message: "Client updated successfully",
-      data: updatedClient,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      status: false,
-      message: "Server error",
-      error: error.message,
-    });
-  }
-}
 
 
   async deleteClient(req, res) {
@@ -1716,7 +1716,7 @@ console.log('aaaa');
       });
     }
   }
-    
+
   async statusChange(req, res) {
     try {
       const { id, status } = req.body;
@@ -2335,114 +2335,114 @@ console.log('aaaa');
 
 
   async clientRequest(req, res) {
-  try {
-    // Destructure query params
-    const { page = 1, search } = req.body;
-    const limit = 10;
-    const skip = (page - 1) * limit;
-    const clientSearchQuery = new RegExp(search, 'i'); 
-    const requestclients = await Requestclient_Modal.aggregate([
-      {
-        $match: {
-          del: false, // Filter out deleted records
-        },
-       },
+    try {
+      // Destructure query params
+      const { page = 1, search } = req.body;
+      const limit = 10;
+      const skip = (page - 1) * limit;
+      const clientSearchQuery = new RegExp(search, 'i');
+      const requestclients = await Requestclient_Modal.aggregate([
         {
-            $lookup: {
-                from: 'clients',  
-                localField: 'clientid',
-                foreignField: '_id', 
-                as: 'clientDetails'
-            }
+          $match: {
+            del: false, // Filter out deleted records
+          },
         },
         {
-            $unwind: {
-                path: '$clientDetails',
-                preserveNullAndEmptyArrays: true  
-            }
+          $lookup: {
+            from: 'clients',
+            localField: 'clientid',
+            foreignField: '_id',
+            as: 'clientDetails'
+          }
         },
         {
-            $match: {
-                $or: [
-                    { 'clientDetails.FullName': clientSearchQuery },
-                    { 'clientDetails.Email': clientSearchQuery },
-                    { 'clientDetails.PhoneNo': clientSearchQuery }
-                ]
-            }
+          $unwind: {
+            path: '$clientDetails',
+            preserveNullAndEmptyArrays: true
+          }
+        },
+        {
+          $match: {
+            $or: [
+              { 'clientDetails.FullName': clientSearchQuery },
+              { 'clientDetails.Email': clientSearchQuery },
+              { 'clientDetails.PhoneNo': clientSearchQuery }
+            ]
+          }
         },
         // Pagination
         { $skip: skip },
         { $limit: parseInt(limit) },
         // Optionally, you can project specific fields to return only what you need
         {
-            $project: {
-                _id: 1,
-                clientid: 1,
-                type: 1,
-                status: 1,
-                del: 1,
-                created_at: 1,
-                updated_at: 1,
-                FullName: "$clientDetails.FullName", // clientDetails ke andar se FullName le kar root pe
-                Email: "$clientDetails.Email",       // clientDetails ke andar se Email le kar root pe
-                PhoneNo: "$clientDetails.PhoneNo" 
-            }
+          $project: {
+            _id: 1,
+            clientid: 1,
+            type: 1,
+            status: 1,
+            del: 1,
+            created_at: 1,
+            updated_at: 1,
+            FullName: "$clientDetails.FullName", // clientDetails ke andar se FullName le kar root pe
+            Email: "$clientDetails.Email",       // clientDetails ke andar se Email le kar root pe
+            PhoneNo: "$clientDetails.PhoneNo"
+          }
         }
-    ]);
+      ]);
 
-    // Get the total count of matching records for pagination
-    const totalCount = await Requestclient_Modal.aggregate([
-      {
-        $match: {
-          del: false, // Filter out deleted records
-        },
-       },
-      {
-            $lookup: {
-                from: 'clients',
-                localField: 'clientid',
-                foreignField: '_id',
-                as: 'clientDetails'
-            }
+      // Get the total count of matching records for pagination
+      const totalCount = await Requestclient_Modal.aggregate([
+        {
+          $match: {
+            del: false, // Filter out deleted records
+          },
         },
         {
-            $unwind: { path: '$clientDetails', preserveNullAndEmptyArrays: true }
+          $lookup: {
+            from: 'clients',
+            localField: 'clientid',
+            foreignField: '_id',
+            as: 'clientDetails'
+          }
         },
         {
-            $match: {
-                $or: [
-                    { 'clientDetails.name': clientSearchQuery },
-                    { 'clientDetails.email': clientSearchQuery },
-                    { 'clientDetails.phone': clientSearchQuery }
-                ]
-            }
+          $unwind: { path: '$clientDetails', preserveNullAndEmptyArrays: true }
+        },
+        {
+          $match: {
+            $or: [
+              { 'clientDetails.name': clientSearchQuery },
+              { 'clientDetails.email': clientSearchQuery },
+              { 'clientDetails.phone': clientSearchQuery }
+            ]
+          }
         },
         { $count: 'totalCount' }
-    ]);
+      ]);
 
-    const totalItems = totalCount.length ? totalCount[0].totalCount : 0;
-    const totalPages = Math.ceil(totalItems / limit);
+      const totalItems = totalCount.length ? totalCount[0].totalCount : 0;
+      const totalPages = Math.ceil(totalItems / limit);
 
-    // Return paginated result
+      // Return paginated result
 
-    return res.json({
-      status: true,
-      message: "retrieved successfully",
-      data: requestclients,
-      pagination: {
-        total: totalItems,
-        page: parseInt(page), // Current page
-        limit: parseInt(limit), // Items per page
-        totalPages // Total number of pages
-      }
-    });
+      return res.json({
+        status: true,
+        message: "retrieved successfully",
+        data: requestclients,
+        pagination: {
+          total: totalItems,
+          page: parseInt(page), // Current page
+          limit: parseInt(limit), // Items per page
+          totalPages // Total number of pages
+        }
+      });
 
 
 
-} catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: 'Error retrieving Requestclient data', error });
-}
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Error retrieving Requestclient data', error });
+    }
 
   }
 
