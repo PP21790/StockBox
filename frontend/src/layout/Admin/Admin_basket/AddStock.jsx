@@ -91,6 +91,10 @@ const AddStock = () => {
   };
 
 
+
+
+
+
   // Validation Schema for Formik
   const validationSchema = Yup.object().shape(
     selectedServices.reduce((acc, service) => {
@@ -106,8 +110,6 @@ const AddStock = () => {
       return acc;
     }, {})
   );
-  // console.log("abc",selectedServices);
-  
 
   // Handle form submission
   const handleSubmit = async (values, status) => {
@@ -146,7 +148,6 @@ const AddStock = () => {
       stocks: stocksWithStatus,
       publishstatus: status == 0 ? false : status == 1 ? true : ""
     };
-    
 
     try {
       const response = await Addstockbasketform(requestData);
