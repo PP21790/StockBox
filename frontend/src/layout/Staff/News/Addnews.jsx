@@ -101,7 +101,7 @@ const Addnews = () => {
         {
             name: "image",
             label: "Upload Image",
-            type: "file2",
+            type: "file2", 
             label_size: 12,
             col_size: 6,
             disable: false,

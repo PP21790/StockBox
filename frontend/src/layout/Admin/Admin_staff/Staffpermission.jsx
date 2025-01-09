@@ -85,7 +85,7 @@ const Staffpermission = () => {
             userPermissions: false,
             addclient: false,
             viewclient: false,
-            Ownclient: false,
+            Ownclient: false, 
             viewdetail: false,
             editclient: false,
             // deleteclient: false,
@@ -182,7 +182,7 @@ const Staffpermission = () => {
 
         },
         onSubmit,
-    });
+    }); 
 
     useEffect(() => {
         if (clients.length > 0) {

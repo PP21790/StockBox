@@ -110,6 +110,7 @@ const Addblogs = () => {
             name: "image",
             label: "Upload Image",
             type: "file2",
+            image: true,
             label_size: 12,
             col_size: 6,
             disable: false,

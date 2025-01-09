@@ -238,6 +238,8 @@ const Client = () => {
 
             };
             const response = await AllclientFilter(data, token);
+            console.log("Admin client", response.data);
+            
 
 
             if (response.status) {

@@ -148,6 +148,12 @@ const Plan = () => {
         : clients.filter(client => client.category === selectedCategoryId);
 
 
+    const stripHtmlTags = (input) => {
+        if (!input) return '';
+        return input.replace(/<\/?[^>]+(>|$)/g, ''); // Regex to strip HTML tags
+    }
+
+
 
 
     return (
@@ -270,7 +276,7 @@ const Plan = () => {
                                                         <hr />
                                                         <ul className='p-0'>
                                                             <li><b>Validity</b>: {client.validity}</li>
-                                                            <li><b className='mb-1'>Description</b>:<textarea className='form-control' >{client.description}</textarea></li>
+                                                            <li><b className='mb-1'>Description</b>:<textarea className='form-control' value={stripHtmlTags(client.description || '')} >{client.description}</textarea></li>
                                                             <li><b>Created At</b>: {fDateTime(client.created_at)}</li>
                                                         </ul>
                                                         <div className="button-group">
@@ -361,7 +367,7 @@ const Plan = () => {
                                                                                             <b>Description</b>
                                                                                         </div>
                                                                                         <div className="col-md-9">
-                                                                                            {client.description}
+                                                                                            {stripHtmlTags(client.description || '')}
                                                                                         </div>
                                                                                     </div>
                                                                                 </li>
