@@ -1,17 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import { useNavigate, Link, useParams } from "react-router-dom";
-import { Addstockbasketform } from "../../../Services/Admin";
-import Swal from "sweetalert2";
 import axios from "axios";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
 import * as Config from "../../../Utils/config";
 import { Tooltip } from 'antd';
+import Swal from "sweetalert2";
+import { Addstockbasketform } from "../../../Services/Admin";
 
 const AddStock = () => {
-
-
   const { id: basket_id } = useParams();
   const [selectedServices, setSelectedServices] = useState([]);
   const [options, setOptions] = useState([]);
@@ -20,7 +16,6 @@ const AddStock = () => {
   const [formikValues, setFormikValues] = useState({});
   const navigate = useNavigate();
 
-  // Fetch options based on user input
   const fetchOptions = async (inputValue) => {
     if (!inputValue) {
       setOptions([]);
@@ -54,7 +49,6 @@ const AddStock = () => {
     }
   };
 
-  // Handle changes when a stock is selected
   const handleServiceChange = (selectedOption) => {
     setSelectedServices(selectedOption || []);
 
@@ -68,10 +62,8 @@ const AddStock = () => {
         type: "",
       };
     });
-
     setFormikValues(updatedValues);
   };
-
 
   const handleRemoveService = (serviceValue) => {
     setSelectedServices((prev) =>
@@ -83,44 +75,50 @@ const AddStock = () => {
       delete updatedValues[serviceValue];
       return updatedValues;
     });
+
     setOptions((prevOptions) =>
       prevOptions.filter((option) => option.value !== serviceValue)
     );
+  };
 
+  const handleInputChange = (value) => {
+    setInputValue(value);
+    fetchOptions(value);
+  };
+
+  const handleInputFieldChange = (serviceId, fieldKey, value) => {
+    setFormikValues((prevValues) => {
+      const updatedValues = { ...prevValues };
+      if (!updatedValues[serviceId]) {
+        updatedValues[serviceId] = {};
+      }
+      updatedValues[serviceId][fieldKey] = value;
+      return updatedValues;
+    });
 
   };
 
+  const handleSubmit = async (status) => {
+    if (Object.keys(formikValues).length === 0) {
+      Swal.fire("Warning", "Please add stock", "warning");
+      return;
+    }
 
+    const invalidStocks = Object.values(formikValues).filter(
+      (stock) => Number(stock.weightage || 0) <= 0
+    );
 
-
-
-
-  // Validation Schema for Formik
-  const validationSchema = Yup.object().shape(
-    selectedServices.reduce((acc, service) => {
-      acc[service.value] = Yup.object({
-        percentage: Yup.number()
-          .min(0, "Percentage should be between 0 and 100")
-          .max(100, "Percentage should be between 0 and 100")
-          .required("This field is required"),
-        price: Yup.number()
-          .min(0, "Price should be greater than 0")
-          .required("This field is required"),
-      });
-      return acc;
-    }, {})
-  );
-
-  // Handle form submission
-  const handleSubmit = async (values, status) => {
-    if (Object.keys(values).length === 0) {
-      Swal.fire("warning", "Please add stock ", "warning");
-
+    if (invalidStocks.length > 0) {
+      Swal.fire(
+        "Error",
+        "Each stock's weightage should be greater than zero.",
+        "error"
+      );
       return;
     }
 
     let totalWeightage = 0;
-    Object.values(values).forEach((stock) => {
+    Object.values(formikValues).forEach((stock) => {
       totalWeightage += Number(stock.percentage || 0);
     });
 
@@ -138,7 +136,7 @@ const AddStock = () => {
       return;
     }
 
-    const stocksWithStatus = Object.values(values).map((stock) => ({
+    const stocksWithStatus = Object.values(formikValues).map((stock) => ({
       ...stock,
       status,
     }));
@@ -146,8 +144,9 @@ const AddStock = () => {
     const requestData = {
       basket_id,
       stocks: stocksWithStatus,
-      publishstatus: status == 0 ? false : status == 1 ? true : ""
+      publishstatus: status === 1,
     };
+
 
     try {
       const response = await Addstockbasketform(requestData);
@@ -164,15 +163,9 @@ const AddStock = () => {
         "error"
       );
     }
+
   };
 
-  // Handle input change for stock symbol search
-  const handleInputChange = (value) => {
-    setInputValue(value);
-    fetchOptions(value);
-  };
-
-  // Sync options with selected services
   useEffect(() => {
     setOptions((prevOptions) =>
       prevOptions.filter((option) =>
@@ -233,95 +226,89 @@ const AddStock = () => {
               />
             </div>
           </div>
-          <Formik
-            initialValues={formikValues}
-            validationSchema={validationSchema}
-            enableReinitialize
-            onSubmit={(values, { setSubmitting }) => {
-              setSubmitting(false);
-            }}
-          >
-            {({ values }) => (
-              <Form>
-                {selectedServices.map((service) => (
-                  <div key={service.value} className="mt-4">
-                    <h5>
-                      {service.label}
-                      <button
-                        type="button"
-                        className="btn btn-danger btn-sm float-end"
-                        onClick={() => handleRemoveService(service.value)}
-                      >
-                        <i className="bx bx-trash" />
-                      </button>
-                    </h5>
-                    <div className="row">
-                      {Object.keys(values[service.value] || {}).map(
-                        (fieldKey) =>
-                          fieldKey !== "tradesymbol" && (
-                            <div key={fieldKey} className="col-md-3">
-                              <label>
-                                {fieldKey === "percentage"
-                                  ? "Weightage"
-                                  : fieldKey.charAt(0).toUpperCase() +
-                                  fieldKey.slice(1)}
-                              </label>
-                              {fieldKey === "type" ? (
-                                <Field
-                                  as="select"
-                                  name={`${service.value}.${fieldKey}`}
-                                  className="form-control"
-                                >
-                                  <option value="">Select an option</option>
-                                  <option value="Large Cap">Large Cap</option>
-                                  <option value="Mid Cap">Mid Cap</option>
-                                  <option value="Small Cap">Small Cap</option>
-                                </Field>
-                              ) : (
-                                <Field
-                                  name={`${service.value}.${fieldKey}`}
-                                  type={
-                                    fieldKey === "percentage" ||
-                                      fieldKey === "price"
-                                      ? "number"
-                                      : "text"
-                                  }
-                                  className="form-control"
-                                  placeholder={`Enter ${fieldKey === "percentage"
-                                    ? "Weightage"
-                                    : fieldKey
-                                    }`}
-                                  readOnly={fieldKey === "name"}
-                                />
-                              )}
-                              <ErrorMessage
-                                name={`${service.value}.${fieldKey}`}
-                                component="p"
-                                className="text-danger"
-                              />
-                            </div>
-                          )
-                      )}
-                    </div>
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  className="btn btn-primary mt-4"
-                  onClick={() => handleSubmit(values, 0)}
-                >
-                  Submit
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-primary mt-4 ms-2"
-                  onClick={() => handleSubmit(values, 1)}
-                >
-                  Submit & Publish
-                </button>
-              </Form>
-            )}
-          </Formik>
+          <form>
+            {selectedServices.map((service) => (
+              <div key={service.value} className="mt-4">
+                <h5>
+                  {service.label}
+                  <button
+                    type="button"
+                    className="btn btn-danger btn-sm float-end"
+                    onClick={() => handleRemoveService(service.value)}
+                  >
+                    <i className="bx bx-trash" />
+                  </button>
+                </h5>
+                <div className="row">
+                  {Object.keys(formikValues[service.value] || {}).map(
+                    (fieldKey) =>
+                      fieldKey !== "tradesymbol" && (
+                        <div key={fieldKey} className="col-md-3">
+                          <label>
+                            {fieldKey === "percentage"
+                              ? "Weightage"
+                              : fieldKey.charAt(0).toUpperCase() +
+                              fieldKey.slice(1)}
+                          </label>
+                          {fieldKey === "type" ? (
+                            <select
+                              className="form-control"
+                              value={formikValues[service.value]?.[fieldKey] || ""}
+                              onChange={(e) =>
+                                handleInputFieldChange(
+                                  service.value,
+                                  fieldKey,
+                                  e.target.value
+                                )
+                              }
+                            >
+                              <option value="">Select an option</option>
+                              <option value="Large Cap">Large Cap</option>
+                              <option value="Mid Cap">Mid Cap</option>
+                              <option value="Small Cap">Small Cap</option>
+                            </select>
+                          ) : (
+                            <input
+                              type={
+                                fieldKey === "percentage" ||
+                                  fieldKey === "price"
+                                  ? "number"
+                                  : "text"
+                              }
+                              className="form-control"
+                              placeholder={`Enter ${fieldKey}`}
+                              value={formikValues[service.value]?.[fieldKey] || ""}
+                              onChange={(e) =>
+                                handleInputFieldChange(
+                                  service.value,
+                                  fieldKey,
+                                  e.target.value
+                                )
+                              }
+                              readOnly={fieldKey === "name"}
+                            />
+                          )}
+                        </div>
+                      )
+                  )}
+                </div>
+              </div>
+            ))}
+            <button
+              type="button"
+              className="btn btn-primary mt-4"
+              onClick={() => handleSubmit(0)}
+            >
+              Submit
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary mt-4 ms-2"
+              onClick={() => handleSubmit(1)}
+            >
+              Submit & Publish
+            </button>
+          </form>
         </div>
       </div>
     </div>
