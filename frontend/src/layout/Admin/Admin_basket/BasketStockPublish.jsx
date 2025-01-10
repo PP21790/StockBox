@@ -142,6 +142,12 @@ const BasketStockPublish = () => {
 
 
 
+  const rebalancePubliceStock = async (row) => {
+    navigate("/admin/addstock/" + row._id, { state: { row } })
+}
+
+
+
   // Delete basket
 
 
@@ -298,12 +304,8 @@ const BasketStockPublish = () => {
         <div className="w-100">
           {row.rebalancestatus === false ?
             <Tooltip title="Rebalance">
-              <Link
-                to={`/admin/addstock/${row._id}`}
-                className="btn px-2"
-              >
-                <RotateCcw />
-              </Link>
+
+                <RotateCcw onClick={() => rebalancePubliceStock(row)}/>
             </Tooltip> : ""}
           <Tooltip title="view">
             <Link
@@ -338,6 +340,7 @@ const BasketStockPublish = () => {
           </button> */}
         </div>
       ),
+      width: '150px',
     },
   ];
 

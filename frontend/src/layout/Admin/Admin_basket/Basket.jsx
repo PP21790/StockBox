@@ -301,6 +301,7 @@ const Basket = () => {
           </button>
         </div>
       ),
+      width:"220px"
     },
   ];
 
