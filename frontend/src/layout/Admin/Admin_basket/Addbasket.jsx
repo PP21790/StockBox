@@ -80,7 +80,8 @@ const AddBasket = () => {
       frequency: values.frequency,
       validity: values.validity,
       next_rebalance_date: values.next_rebalance_date,
-      cagr: values.cagr
+      cagr: values.cagr,
+      offer_price:values.offer_price,
     };
 
 
@@ -130,6 +131,8 @@ const AddBasket = () => {
       validity: "",
       next_rebalance_date: "",
       cagr: "",
+      offer_price:"",
+
     },
     validate,
     onSubmit,
@@ -221,6 +224,15 @@ const AddBasket = () => {
     {
       name: "next_rebalance_date",
       label: "Rebalance Date",
+      type: "text",
+      label_size: 12,
+      col_size: 6,
+      disable: false,
+      star: true
+    },
+    {
+      name: "offer_price",
+      label: "Offer Price",
       type: "text",
       label_size: 12,
       col_size: 6,
