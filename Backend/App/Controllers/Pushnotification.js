@@ -1,6 +1,6 @@
 const admin = require('firebase-admin');
-const serviceAccount = require('../../template/stockbox-15e55-firebase-adminsdk-1zz93-5e353b0a02.json');
-
+// const serviceAccount = require('../../template/stockbox-15e55-firebase-adminsdk-1zz93-5e353b0a02.json');
+const serviceAccount = require(process.env.SERVICE_ACCOUNT_PATH);
 // Initialize Firebase Admin SDK
 if (!admin.apps.length) {
   console.log('Initializing Firebase Admin SDK...');

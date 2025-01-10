@@ -67,6 +67,10 @@ const CouponSchema = new Schema({
         type: Number,
         default: 0
     },
+    totallimitation: {
+        type: Number,
+        default: 0
+    },
     service: {
         type: String,
         default: null

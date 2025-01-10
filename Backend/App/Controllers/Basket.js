@@ -793,6 +793,17 @@ class Basket {
         });
       }
 
+
+    // if(full_price){
+    // const basket_prices = full_price;
+    // const full_prices = basket_price;
+    // }
+    // else
+    // {
+    //   const basket_prices = basket_price;
+    //   const full_prices = full_price;
+    // }
+
       const updatedBasket = await Basket_Modal.findByIdAndUpdate(
         id,
         {
