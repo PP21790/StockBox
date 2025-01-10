@@ -50,7 +50,7 @@ class BasicSetting {
 
                 } = req.body;
 
-
+                console.log("req.body", invoicestatus)
 
                 const existingSetting = await BasicSetting_Modal.findOne({});
 

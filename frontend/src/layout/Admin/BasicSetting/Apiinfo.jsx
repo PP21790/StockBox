@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { basicsettinglist, updateApiinfo, UpdateKycstatus } from '../../../Services/Admin';
+import { basicsettinglist, updateApiinfo, UpdateKycstatus, Invoicestatus } from '../../../Services/Admin';
 import Swal from 'sweetalert2';
 
 const Apiinfo = () => {
@@ -29,6 +29,7 @@ const Apiinfo = () => {
                 const clientData = response.data[0];
                 setClients(clientData);
                 setKycstatus(clientData);
+
                 setUpdateapi({
                     digio_client_id: clientData.digio_client_id || "",
                     digio_client_secret: clientData.digio_client_secret || "",
@@ -142,6 +143,53 @@ const Apiinfo = () => {
         }
     };
 
+
+    const handleSwitchChange1 = async (event) => {
+        const originalChecked = event.target.checked;
+        const user_active_status = originalChecked ? 1 : 0;
+        const data = { invoicestatus: user_active_status };
+
+        const result = await Swal.fire({
+            title: "Do you want to change the status?",
+            showCancelButton: true,
+            confirmButtonText: "Save",
+            cancelButtonText: "Cancel",
+            allowOutsideClick: false,
+        });
+
+        if (result.isConfirmed) {
+            try {
+                const response = await Invoicestatus(data, token);
+                if (response.status) {
+                    Swal.fire({
+                        title: "Success!",
+                        text: "Status changed successfully!",
+                        icon: "success",
+                        timer: 1000,
+                        timerProgressBar: true,
+                    });
+                    setTimeout(() => {
+                        Swal.close();
+                    }, 1000);
+                    getApidetail();
+                }
+            } catch (error) {
+                Swal.fire(
+                    "Error",
+                    "There was an error processing your request.",
+                    "error"
+                );
+            }
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            event.target.checked = !originalChecked;
+            getApidetail();
+        }
+    };
+
+
+
+
+
     return (
         <div>
             <div className="page-content">
@@ -166,21 +214,41 @@ const Apiinfo = () => {
                         <div className="card">
                             <div className="card-header mt-2">
                                 <div className="row justify-content-end mb-3">
-                                    <div className="col-md-6">
+                                    <div className="col-md-5">
                                         <h5>Kyc Status</h5>
                                     </div>
 
-                                    <div className="col-md-6 d-flex justify-content-end">
+                                    <div className="col-md-1 d-flex justify-content-end">
                                         <div className="form-check form-switch form-check-info">
                                             <input
-                                                id={`rating_${kycstatus?.kyc}`}
+                                                id={`rating_${kycstatus?._id}`}
                                                 className="form-check-input toggleswitch"
                                                 type="checkbox"
                                                 checked={kycstatus?.kyc === 1}
                                                 onChange={handleSwitchChange}
                                             />
                                             <label
-                                                htmlFor={`rating_${kycstatus?.kyc}`}
+                                                htmlFor={`rating_${kycstatus?._id}`}
+                                                className="checktoggle checkbox-bg"
+                                            ></label>
+                                        </div>
+                                    </div>
+
+                                    <div className="col-md-5">
+                                        <h5>Invoice Status</h5>
+                                    </div>
+
+                                    <div className="col-md-1 d-flex justify-content-end">
+                                        <div className="form-check form-switch form-check-info">
+                                            <input
+                                                id={`rating_${kycstatus?._id}`}
+                                                className="form-check-input toggleswitch"
+                                                type="checkbox"
+                                                checked={kycstatus?.invoicestatus == 1}
+                                                onChange={handleSwitchChange1}
+                                            />
+                                            <label
+                                                htmlFor={`rating_${kycstatus?._id}`}
                                                 className="checktoggle checkbox-bg"
                                             ></label>
                                         </div>

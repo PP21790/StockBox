@@ -1881,6 +1881,30 @@ export async function UpdateKycstatus(data, token) {
 }
 
 
+// invoice status
+
+export async function Invoicestatus(data, token) {
+    const formData = new FormData();
+    formData.append('invoicestatus', data.invoicestatus);
+
+
+    try {
+        const res = await axios.post(`${Config.base_url}basicsetting/add`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `${token}`,
+            },
+        });
+
+        return res?.data;
+    } catch (err) {
+
+        return err.response?.data || err.message;
+    }
+}
+
+
+
 // update email setting
 
 
