@@ -81,7 +81,7 @@ const AddBasket = () => {
       validity: values.validity,
       next_rebalance_date: values.next_rebalance_date,
       cagr: values.cagr,
-      full_price: values.full_price
+      full_price: values.full_price || 0
     };
 
 
