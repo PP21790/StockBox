@@ -66,6 +66,8 @@ const AddUser = () => {
       add_by: user_id,
       freetrial: values.freetrial
     };
+    console.log("req",req.freetrial);
+    
 
 
     try {

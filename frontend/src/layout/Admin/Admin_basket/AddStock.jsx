@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
-import { useNavigate, Link, useParams } from "react-router-dom";
+import { useNavigate, Link, useParams, useLocation } from "react-router-dom";
 import { Addstockbasketform } from "../../../Services/Admin";
 import Swal from "sweetalert2";
 import axios from "axios";
@@ -18,8 +18,26 @@ const AddStock = () => {
   const [loading, setLoading] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [formikValues, setFormikValues] = useState({});
+  const [currentlocation,setCurrentlocation] = useState({})
+  const [header,setHeader] = useState("Add Stock")
   const navigate = useNavigate();
 
+
+  const location = useLocation();
+  console.log("location",location?.state);
+  useEffect(() => {
+    if (location?.state) {
+      setCurrentlocation(location?.state?.state);  
+    }
+    if(location?.state?.state == "publish"){
+      setHeader("Rebalance Stock")
+    }
+  }, [location]);
+
+  console.log("currentlocation",currentlocation);
+   
+  const redirectTo = (currentlocation === "publish") ? "/admin/basket/basketstockpublish" : "/admin/basket";
+     
   // Fetch options based on user input
   const fetchOptions = async (inputValue) => {
     if (!inputValue) {
@@ -96,20 +114,28 @@ const AddStock = () => {
 
 
   // Validation Schema for Formik
-  const validationSchema = Yup.object().shape(
-    selectedServices.reduce((acc, service) => {
-      acc[service.value] = Yup.object({
-        percentage: Yup.number()
-          .min(0, "Percentage should be between 0 and 100")
-          .max(100, "Percentage should be between 0 and 100")
-          .required("This field is required"),
-        price: Yup.number()
-          .min(0, "Price should be greater than 0")
-          .required("This field is required"),
-      });
-      return acc;
-    }, {})
-  );
+const validationSchema = Yup.object().shape(
+  selectedServices.reduce((acc, service) => {
+    acc[service.value] = Yup.object({
+      percentage: Yup.number()
+        .min(0, "Percentage should be between 0 and 100")
+        .max(100, "Percentage should be between 0 and 100")
+        .required("This field is required"),
+      price: Yup.number()
+        .min(0, "Price should be greater than 0")
+        .required("This field is required"),
+      // New Fields
+      type: Yup.string()
+        .oneOf(["Large Cap", "Mid Cap", "Small Cap"], "Invalid type selected")
+        .required("This field is required"), // Type is mandatory
+      name: Yup.string()
+        .min(3, "Name must be at least 3 characters long")
+        .required("Name is required"), // Name is mandatory
+    });
+    return acc;
+  }, {})
+);
+
 
   // Handle form submission
   const handleSubmit = async (values, status) => {
@@ -153,7 +179,7 @@ const AddStock = () => {
       const response = await Addstockbasketform(requestData);
       if (response?.status) {
         Swal.fire("Success", response.message, "success");
-        setTimeout(() => navigate("/admin/basket"), 1500);
+        setTimeout(() => navigate(redirectTo), 1500);
       } else {
         Swal.fire("Error", response.message, "error");
       }
@@ -186,7 +212,7 @@ const AddStock = () => {
       <div className="row">
         <div className="col-md-6">
           <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-            <div className="breadcrumb-title pe-3">Add Stock</div>
+            <div className="breadcrumb-title pe-3">{header}</div>
             <div className="ps-3">
               <nav aria-label="breadcrumb">
                 <ol className="breadcrumb mb-0 p-0">
@@ -201,7 +227,7 @@ const AddStock = () => {
           </div>
         </div>
         <div className="col-md-6 d-flex justify-content-end">
-          <Link to="/admin/basket">
+          <Link to={redirectTo}>
             <Tooltip title="Back">
               <i
                 className="lni lni-arrow-left-circle"

@@ -143,7 +143,7 @@ const BasketStockPublish = () => {
 
 
   const rebalancePubliceStock = async (row) => {
-    navigate("/admin/addstock/" + row._id, { state: { row } })
+    navigate("/admin/addstock/" + row._id, { state: { state : "publish" } });
 }
 
 
