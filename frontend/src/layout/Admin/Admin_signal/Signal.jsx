@@ -626,14 +626,14 @@ const Signal = () => {
             cell: row => (
                 <>
 
-                    <div className='d-flex'>
+                    <div className='d-flex '>
                         {row.report ?
-                            <div style={{ color: "green", cursor: "pointer" }} onClick={() => handleDownload(row)}>
+                            <Link className="btn px-2" onClick={() => handleDownload(row)}>
                                 <Tooltip placement="top" overlay="Download">
                                     <ArrowDownToLine />
                                 </Tooltip>
-                            </div> : ""}
-                        <div className='mx-4'>
+                            </Link> : ""}
+                        <Link className="btn px-2">
                             <Tooltip placement="top" overlay="Update">
                                 <SquarePen
                                     onClick={() => {
@@ -643,7 +643,7 @@ const Signal = () => {
                                     }}
                                 />
                             </Tooltip>
-                        </div>
+                        </Link>
                     </div>
 
                 </>
