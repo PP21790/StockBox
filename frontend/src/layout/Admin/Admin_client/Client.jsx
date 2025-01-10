@@ -240,6 +240,8 @@ const Client = () => {
             const response = await AllclientFilter(data, token);
 
 
+
+
             if (response.status) {
                 setClients(response.data);
                 setTotalRows(response.pagination.total);
@@ -625,26 +627,41 @@ const Client = () => {
             name: 'Actions',
             selector: (row) => (
                 <div className='d-flex'>
-
-
                     <Tooltip placement="top" overlay="Package Assign">
-                        <span onClick={(e) => { showModal(true); setClientid(row); getplanlistassinstatus(row._id) }} style={{ cursor: 'pointer' }}>
+                        <span
+                            onClick={(e) => {
+                                // Check if ActiveStatus is 1
+                                if (row.ActiveStatus === 1) {
+                                    // If active, proceed with the package assignment
+                                    showModal(true);
+                                    setClientid(row);
+                                    getplanlistassinstatus(row._id);
+                                } else {
+                                    // If not active, show the SweetAlert message
+                                    Swal.fire({
+                                        title: 'Reminder',
+                                        text: 'Activate the client first Then assign the package.',
+                                        icon: 'warning',
+                                        confirmButtonText: 'OK',
+                                    });
+                                }
+                            }}
+                            style={{ cursor: 'pointer' }}
+                        >
                             <Settings2 />
                         </span>
                     </Tooltip>
 
                     <Tooltip title="view">
-                        <Eye
-
-                            onClick={() => Clientdetail(row)} />
+                        <Eye onClick={() => Clientdetail(row)} />
                     </Tooltip>
 
                     <Tooltip title="Update">
                         <SquarePen className='ms-3' onClick={() => updateClient(row)} />
                     </Tooltip>
                     {/* <Tooltip title="delete">
-                        <Trash2 onClick={() => DeleteClient(row._id)} />
-                    </Tooltip> */}
+                  <Trash2 onClick={() => DeleteClient(row._id)} />
+                </Tooltip> */}
                 </div>
             ),
             ignoreRowClick: true,
@@ -652,6 +669,7 @@ const Client = () => {
             button: true,
             width: '165px',
         }
+
     ];
 
     return (
@@ -820,7 +838,7 @@ const Client = () => {
                         aria-labelledby="exampleModalLabel"
                         aria-hidden="true"
                     >
-                        <div className="modal-dialog modal-xl" style={{width:"900px"}}>
+                        <div className="modal-dialog modal-xl" style={{ width: "900px" }}>
                             <div className="modal-content">
                                 <div className="modal-header">
                                     <h5 className="modal-title" id="exampleModalLabel">Assign Package</h5>
@@ -1011,6 +1029,7 @@ const Client = () => {
                                                                                     aria-labelledby={`heading-${item._id}`}
                                                                                     data-bs-parent={`#accordion-basket`}
                                                                                 >
+                                                                                    {console.log("item", item)}
                                                                                     <div className="accordion-body">
                                                                                         <div className="d-flex justify-content-between">
                                                                                             <strong>Price:</strong>
@@ -1021,13 +1040,10 @@ const Client = () => {
                                                                                             <span>{item.validity}</span>
                                                                                         </div>
                                                                                         <div className="d-flex justify-content-between">
-                                                                                            <strong>Created At:</strong>
-                                                                                            <span>{fDateTime(item?.created_at)}</span>
+                                                                                            <strong>Miniumum Investment Amount:</strong>
+                                                                                            <span><IndianRupee />{item?.mininvamount}</span>
                                                                                         </div>
-                                                                                        <div className="d-flex justify-content-between">
-                                                                                            <strong>Updated At:</strong>
-                                                                                            <span>{fDateTime(item?.updated_at)}</span>
-                                                                                        </div>
+
                                                                                     </div>
                                                                                 </div>
                                                                             </div>

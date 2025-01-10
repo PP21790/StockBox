@@ -447,7 +447,7 @@ const Freeclient = () => {
             width: '200px',
         },
         {
-            name: 'End Start',
+            name: 'End Date',
             selector: row => fDateTime(row.enddate),
             sortable: true,
             width: '200px',

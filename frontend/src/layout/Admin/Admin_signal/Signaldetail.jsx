@@ -204,7 +204,7 @@ const Signaldetail = () => {
                                                     <h6 className="mb-1" >Description</h6>
                                                     <textarea
                                                         className="form-control text-secondary"
-                                                        style={{ flex: 1, }}
+                                                        style={{ flex: 1, height:"150px"}}
                                                         value={item.description || ''}
                                                         placeholder="Enter description"
                                                     />

@@ -61,7 +61,7 @@ const Client = () => {
         } else if (clientStatus == 0) {
             setheader("Deactive Client")
         } else if (clientStatus === "active") {
-            setheader("Total Plan Active Client") 
+            setheader("Total Plan Active Client")
 
         } else if (clientStatus === "expired") {
             setheader("Total Plan Expired Client")
@@ -72,16 +72,6 @@ const Client = () => {
 
 
 
-    const getpermissioninfo = async () => {
-        try {
-            const response = await getstaffperuser(userid, token);
-            if (response.status) {
-                setPermission(response.data.permissions);
-            }
-        } catch (error) {
-            console.log("error", error);
-        }
-    }
 
 
 
@@ -152,6 +142,8 @@ const Client = () => {
 
     }
 
+
+
     useEffect(() => {
         getpermissioninfo()
 
@@ -161,13 +153,11 @@ const Client = () => {
     }, []);
 
 
-
-
     useEffect(() => {
-        getAdminclient();
-    }, [searchInput, searchkyc, statuscreatedby, currentPage, expired, permission]);
-
-
+        if (permission.length > 0) {
+            getAdminclient();
+        }
+    }, [permission, searchInput, searchkyc, statuscreatedby, currentPage, expired]);
 
 
 
@@ -231,7 +221,7 @@ const Client = () => {
 
 
 
-    
+
 
 
     const getAdminclient = async () => {
@@ -248,6 +238,8 @@ const Client = () => {
             };
 
             const response = await AllclientFilter(data, token);
+
+
             if (response.status) {
                 setClients(response.data);
                 setTotalRows(response.pagination.total);
@@ -258,6 +250,16 @@ const Client = () => {
     };
 
 
+    const getpermissioninfo = async () => {
+        try {
+            const response = await getstaffperuser(userid, token);
+            if (response.status) {
+                setPermission(response.data.permissions);
+            }
+        } catch (error) {
+            console.log("error", error);
+        }
+    }
 
 
 
@@ -923,7 +925,7 @@ const Client = () => {
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Validity:</strong>
                                                                                                     <span>{item.validity}</span>
-                                                                                                   
+
                                                                                                 </div>
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Created At:</strong>
