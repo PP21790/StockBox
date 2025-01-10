@@ -254,7 +254,7 @@ const Basket = () => {
       name: "Stock Quantity",
       selector: (row) => row.stock_details?.length || 0,
       sortable: true,
-   
+      width:"180px",
     },
 
     {
@@ -301,6 +301,7 @@ const Basket = () => {
           </button>
         </div>
       ),
+      width:"220px"
     },
   ];
 

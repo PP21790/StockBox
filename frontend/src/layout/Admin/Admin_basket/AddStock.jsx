@@ -116,8 +116,9 @@ const AddStock = () => {
     }
 
     const invalidStocks = Object.values(formikValues).filter(
-      (stock) => Number(stock.weightage || 0) <= 0
+      (stock) => Number(stock.percentage || 0) <= 0
     );
+
 
     if (invalidStocks.length > 0) {
       Swal.fire(
@@ -127,6 +128,7 @@ const AddStock = () => {
       );
       return;
     }
+
 
     let totalWeightage = 0;
     Object.values(formikValues).forEach((stock) => {

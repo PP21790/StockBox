@@ -9,11 +9,32 @@ import { SquarePen } from 'lucide-react';
 
 
 
-function stripHtml(html) {
+function cleanHtmlContent(html) {
   const div = document.createElement("div");
   div.innerHTML = html;
-  return div.textContent || div.innerText || "";
+
+  // Remove unwanted tags (e.g., <script>, <style>) ko remove karte hain
+  const scripts = div.getElementsByTagName("script");
+  const styles = div.getElementsByTagName("style");
+
+  Array.from(scripts).forEach((script) => script.remove());
+  Array.from(styles).forEach((style) => style.remove());
+
+  // Lists ko properly render karne ke liye ensure karna
+  const unorderedLists = div.querySelectorAll("ul");  // ul ko target karna
+  unorderedLists.forEach((list) => {
+    list.style.listStyleType = "disc";  // Bullets style
+  });
+
+  const orderedLists = div.querySelectorAll("ol");  // ol ko target karna
+  orderedLists.forEach((list) => {
+    list.style.listStyleType = "decimal";  // Numbers style
+  });
+
+  return div.innerHTML;  // Cleaned HTML with proper lists
 }
+
+
 
 
 const fieldConfigurations = [
@@ -95,7 +116,7 @@ const fieldConfigurations = [
   {
     name: "next_rebalance_date",
     label: "Rebalance Date",
-    type:"text",
+    type: "text",
     label_size: 12,
     col_size: 4,
     disable: false,
@@ -104,9 +125,9 @@ const fieldConfigurations = [
   {
     name: "description",
     label: "Description",
-    type: "textarea",
+    type: "ckeditor",
     label_size: 12,
-    col_size: 4,
+    col_size: 12,
     disable: false,
     star: true
   },
@@ -201,13 +222,16 @@ const Viewbasketdetail = () => {
   const getbasketdetail = async () => {
     try {
       const response = await Viewbasket(id, token);
-      // console.log("Viewbasket",response);
-      
+      console.log("Viewbasket", response);
+
       if (response.status) {
         const basketData = response.data;
+        console.log("basketdata", basketData);
+
         setInitialValues({
           title: basketData?.title || "",
-          description: stripHtml(basketData?.description) || "",
+          description: cleanHtmlContent(basketData?.description) || "",
+          // description: basketData?.description || "",
           basket_price: basketData?.basket_price || "",
           mininvamount: basketData?.mininvamount || "",
           themename: basketData?.themename || "",
@@ -255,23 +279,13 @@ const Viewbasketdetail = () => {
                       <div key={field.name} className={`col-md-${field.col_size}`}>
                         <label>{field.label}</label>
 
-                        {/* old code */}
-                        {/* <input
-                          type={field.type}
-                          className="form-control"
-                          value={values[field.name] || ""}
-                          disabled
-                        />
-                      </div> */}
-
-
-                      {/* this code is for view full discription */}
-                      {field.name === "description" ? ( // Special case for description
-                          <textarea
+                        {/* Special case for description */}
+                        {field.name === "description" ? (
+                          <div
                             className="form-control"
-                            value={values[field.name] || ""}
-                            disabled
-                            rows="4" // Adjust rows for multiline display
+                            dangerouslySetInnerHTML={{
+                              __html: values[field.name] || "",
+                            }}
                           />
                         ) : (
                           <input
@@ -283,9 +297,9 @@ const Viewbasketdetail = () => {
                         )}
                       </div>
                     ) : (
+                      // Stock section ka code waise ka waise hi rahega
                       <div key={field.name} className="col-md-12">
-
-
+                        {/* Stock data render kar rahe ho */}
                         {Object.keys(
                           (Array.isArray(stockdata) ? stockdata : Object.values(stockdata)).reduce((acc, stock) => {
                             if (!acc[stock.version]) {
@@ -300,42 +314,34 @@ const Viewbasketdetail = () => {
                           );
 
                           return (
-                            <>
+                            <div key={version}>
                               <h5 className="mt-4 mb-3">Stock Details</h5>
-                              <div key={version}>
-                                <div className="d-flex justify-content-between align-items-center">
-                                  <h6>Version {version}</h6>
-
-                                  {versionStocks[0].status == 0 ?
-                                    <Tooltip title="Update All">
-                                      <SquarePen className="cursor-pointer" onClick={() => updateStock(versionStocks)} />
-                                    </Tooltip> : ""}
-                                </div>
-                                <table className="table table-bordered">
-                                  <thead>
-                                    <tr>
-                                      <th>Stock Name</th>
-                                      <th>Weightage</th>
-                                      <th>Price</th>
-                                      <th>Type</th>
-                                      <th>Quantity</th>
-
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    {versionStocks.map((stock, index) => (
-                                      <tr key={index}>
-                                        <td>{stock?.name}</td>
-                                        <td>{stock?.weightage}</td>
-                                        <td>{stock?.price}</td>
-                                        <td>{stock?.type}</td>
-                                        <td>{stock?.quantity}</td>
-                                      </tr>
-                                    ))}
-                                  </tbody>
-                                </table>
+                              <div className="d-flex justify-content-between align-items-center">
+                                <h6>Version {version}</h6>
                               </div>
-                            </>
+                              <table className="table table-bordered">
+                                <thead>
+                                  <tr>
+                                    <th>Stock Name</th>
+                                    <th>Weightage</th>
+                                    <th>Price</th>
+                                    <th>Type</th>
+                                    <th>Quantity</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {versionStocks.map((stock, index) => (
+                                    <tr key={index}>
+                                      <td>{stock?.name}</td>
+                                      <td>{stock?.weightage}</td>
+                                      <td>{stock?.price}</td>
+                                      <td>{stock?.type}</td>
+                                      <td>{stock?.quantity}</td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
                           );
                         })}
                       </div>
@@ -348,9 +354,9 @@ const Viewbasketdetail = () => {
                   </Link>
                 </div>
               </div>
-
             )}
           </Formik>
+
         </div>
       </div>
 
