@@ -26,7 +26,6 @@ const BasketSchema = new Schema({
     },
     full_price: {
         type: Number,
-        required: true,
         default: 0
     },
     basket_price: {

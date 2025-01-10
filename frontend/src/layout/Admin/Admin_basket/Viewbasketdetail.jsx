@@ -222,11 +222,10 @@ const Viewbasketdetail = () => {
   const getbasketdetail = async () => {
     try {
       const response = await Viewbasket(id, token);
-      console.log("Viewbasket", response);
 
       if (response.status) {
         const basketData = response.data;
-        console.log("basketdata", basketData);
+
 
         setInitialValues({
           title: basketData?.title || "",
@@ -297,9 +296,9 @@ const Viewbasketdetail = () => {
                         )}
                       </div>
                     ) : (
-                      // Stock section ka code waise ka waise hi rahega
+
                       <div key={field.name} className="col-md-12">
-                        {/* Stock data render kar rahe ho */}
+
                         {Object.keys(
                           (Array.isArray(stockdata) ? stockdata : Object.values(stockdata)).reduce((acc, stock) => {
                             if (!acc[stock.version]) {
@@ -318,6 +317,10 @@ const Viewbasketdetail = () => {
                               <h5 className="mt-4 mb-3">Stock Details</h5>
                               <div className="d-flex justify-content-between align-items-center">
                                 <h6>Version {version}</h6>
+                                {versionStocks[0].status == 0 ?
+                                  <Tooltip title="Update All">
+                                    <SquarePen className="cursor-pointer" onClick={() => updateStock(versionStocks)} />
+                                  </Tooltip> : ""}
                               </div>
                               <table className="table table-bordered">
                                 <thead>

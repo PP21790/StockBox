@@ -841,7 +841,7 @@ class List {
         await client.save();
       }
 
-
+if(settings.invoicestatus==1) {
       const length = 6;
       const digits = '0123456789';
       let orderNumber = '';
@@ -954,6 +954,7 @@ class List {
         await sendEmail(mailOptions);
       });
 
+    }
       // Return success response
       return res.status(201).json({
         status: true,
@@ -1031,6 +1032,7 @@ class List {
       // Save to the database
       const savedSubscription = await newSubscription.save();
 
+      if(settings.invoicestatus==1) {
 
       const length = 6;
       const digits = '0123456789';
@@ -1146,7 +1148,7 @@ class List {
         await sendEmail(mailOptions);
       });
 
-
+    }
       // Respond with the created subscription
       return res.status(201).json({
         status: true,

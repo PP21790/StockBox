@@ -25,9 +25,9 @@ const AddBasket = () => {
       errors.themename = "Please Enter Theme Name";
     }
 
-    // if (!values.full_price) {
-    //   errors.full_price = "Please Enter Full Price";
-    // }
+    if (values.full_price && values.full_price <= values.basket_price) {
+      errors.full_price = "Please Enter Greater Basket Price";
+    }
 
     if (!values.basket_price) {
       errors.basket_price = "Please Enter Basket Price";
@@ -80,8 +80,7 @@ const AddBasket = () => {
       frequency: values.frequency,
       validity: values.validity,
       next_rebalance_date: values.next_rebalance_date,
-      cagr: values.cagr,
-      offer_price:values.offer_price,
+      cagr: values.cagr
     };
 
 
@@ -131,8 +130,6 @@ const AddBasket = () => {
       validity: "",
       next_rebalance_date: "",
       cagr: "",
-      offer_price:"",
-
     },
     validate,
     onSubmit,
@@ -159,6 +156,15 @@ const AddBasket = () => {
       col_size: 6,
       disable: false,
       star: true
+    },
+    {
+      name: "full_price",
+      label: "Price",
+      type: "number",
+      label_size: 12,
+      col_size: 6,
+      disable: false,
+
     },
 
     {

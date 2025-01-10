@@ -86,7 +86,8 @@ class Coupon {
                 image,
                 description,
                 limitation,
-                service
+                service,
+                totallimitation:limitation
             });
     
             await result.save();
@@ -305,7 +306,8 @@ class Coupon {
         mincouponvalue,
         description,
         limitation,
-        service
+        service,
+        totallimitation:limitation
       };
 
 

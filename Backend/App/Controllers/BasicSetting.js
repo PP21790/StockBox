@@ -45,7 +45,8 @@ class BasicSetting {
                     kyc,
                     paymentstatus,
                     officepaymenystatus,
-                    refer_status
+                    refer_status,
+                    invoicestatus
 
                 } = req.body;
 
@@ -91,7 +92,8 @@ class BasicSetting {
                     kyc,
                     paymentstatus,
                     officepaymenystatus,
-                    refer_status
+                    refer_status,
+                    invoicestatus
                 };
 
                 const options = {
