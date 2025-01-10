@@ -3,8 +3,12 @@ import Select from "react-select";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { updateStockList } from "../../../Services/Admin";
 import Swal from "sweetalert2";
+import { Tooltip } from 'antd';
 import axios from "axios";
 import * as Config from "../../../Utils/config";
+
+
+
 
 const EditStock = () => {
     const location = useLocation();
@@ -14,7 +18,12 @@ const EditStock = () => {
     const [loading, setLoading] = useState(false);
     const [inputValue, setInputValue] = useState("");
     const [formValues, setFormValues] = useState({});
+    const [weightagecounting, setWeightagecounting] = useState(0);
+
     const navigate = useNavigate();
+
+
+
 
     useEffect(() => {
         if (stock && Array.isArray(stock)) {
@@ -42,6 +51,9 @@ const EditStock = () => {
             setFormValues(initialFormValues);
         }
     }, [stock]);
+
+
+
 
     const fetchOptions = async (inputValue) => {
         if (!inputValue) {
@@ -216,12 +228,56 @@ const EditStock = () => {
         }
     };
 
+    useEffect(() => {
+        console.log("formValues", formValues)
+        if (formValues) {
+            const newWeightage = Object.values(formValues).reduce((sum, stock) => sum + Number(stock.weightage || 0), 0);
+            setWeightagecounting(newWeightage);
+        }
+
+    }, [formValues])
+
+
+
     return (
+
         <div className="page-content">
-            {/* Page Header */}
-            {/* Form */}
+            <div className="row">
+                <div className="col-md-6">
+                    <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+                        <div className="breadcrumb-title pe-3">Edit Stock</div>
+                        <div className="ps-3">
+                            <nav aria-label="breadcrumb">
+                                <ol className="breadcrumb mb-0 p-0">
+                                    <li className="breadcrumb-item">
+                                        <Link to="/admin/dashboard">
+                                            <i className="bx bx-home-alt" />
+                                        </Link>
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div className="col-md-6 d-flex justify-content-end">
+                    <Link to="/admin/basket">
+                        <Tooltip title="Back">
+                            <i
+                                className="lni lni-arrow-left-circle"
+                                style={{ fontSize: "2rem", color: "#000" }}
+                            />
+                        </Tooltip>
+                    </Link>
+                </div>
+            </div>
+            <hr />
+
             <div className="card">
+
                 <div className="card-body">
+
                     <Select
                         inputValue={inputValue}
                         onInputChange={setInputValue}
@@ -239,6 +295,14 @@ const EditStock = () => {
                             loading ? "Loading..." : "No options found"
                         }
                     />
+                    <div className="row">
+                        <div className="col-md-6"></div>
+                        <div className="col-md-6 text-end">
+                            <h6 className="mt-3">Total Weightage : {weightagecounting}</h6>
+                        </div>
+
+                    </div>
+                    <hr />
                     {selectedServices.map((service) => (
                         <div key={service.value} className="mt-4">
                             <h5>

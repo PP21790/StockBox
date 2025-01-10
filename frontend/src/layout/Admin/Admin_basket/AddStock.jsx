@@ -14,6 +14,7 @@ const AddStock = () => {
   const [loading, setLoading] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [formikValues, setFormikValues] = useState({});
+  const [weightagecounting, setWeightagecounting] = useState(0);
   const navigate = useNavigate();
 
   const fetchOptions = async (inputValue) => {
@@ -63,7 +64,12 @@ const AddStock = () => {
       };
     });
     setFormikValues(updatedValues);
+
+
   };
+
+
+
 
   const handleRemoveService = (serviceValue) => {
     setSelectedServices((prev) =>
@@ -79,6 +85,9 @@ const AddStock = () => {
     setOptions((prevOptions) =>
       prevOptions.filter((option) => option.value !== serviceValue)
     );
+
+
+
   };
 
   const handleInputChange = (value) => {
@@ -93,6 +102,8 @@ const AddStock = () => {
         updatedValues[serviceId] = {};
       }
       updatedValues[serviceId][fieldKey] = value;
+
+
       return updatedValues;
     });
 
@@ -174,6 +185,17 @@ const AddStock = () => {
     );
   }, [selectedServices]);
 
+  useEffect(() => {
+
+    if (formikValues) {
+      const newWeightage = Object.values(formikValues).reduce((sum, stock) => sum + Number(stock.percentage || 0), 0);
+      setWeightagecounting(newWeightage);
+    }
+
+
+  }, [formikValues])
+
+
   return (
     <div className="page-content">
       <div className="row">
@@ -192,7 +214,9 @@ const AddStock = () => {
               </nav>
             </div>
           </div>
+
         </div>
+
         <div className="col-md-6 d-flex justify-content-end">
           <Link to="/admin/basket">
             <Tooltip title="Back">
@@ -224,10 +248,18 @@ const AddStock = () => {
                   loading ? "Loading..." : "No options found"
                 }
               />
+              <div className="row">
+                <div className="col-md-6"></div>
+                <div className="col-md-6 text-end">
+                  <h6 className="mt-3">Total Weightage : {weightagecounting}  </h6>
+                </div>
+
+              </div>
+              <hr />
             </div>
           </div>
           <form>
-            {selectedServices.map((service) => (
+            {selectedServices.slice().reverse().map((service => (
               <div key={service.value} className="mt-4">
                 <h5>
                   {service.label}
@@ -293,7 +325,7 @@ const AddStock = () => {
                   )}
                 </div>
               </div>
-            ))}
+            )))}
             <button
               type="button"
               className="btn btn-primary mt-4"
