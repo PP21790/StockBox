@@ -31,6 +31,8 @@ const Coupon = () => {
     const getcoupon = async () => {
         try {
             const response = await getcouponlist(token);
+            // console.log("response",response.data);
+            
             if (response.status) {
                 const filterdata = response.data.filter((item) =>
                     searchInput === "" ||
@@ -202,6 +204,16 @@ const Coupon = () => {
             selector: row => row.type === "fixed" ? row.value : `${row.value}%`,
             sortable: true,
             width: '300px',
+        },
+        {
+            name: 'Used Limit/Total Limit',
+            selector: row => {
+                const usedLimit = row.totallimitation - row.limitation;
+                return `${usedLimit} / ${row.totallimitation}`;
+            },
+            sortable: true,
+            width: '250px',
+
         },
         // {
         //     name: 'Image',

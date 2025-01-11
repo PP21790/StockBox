@@ -13,7 +13,7 @@ import Loader from '../../../Utils/Loader';
 
 
 
-const Coupon = () => {
+const Coupon = () => { 
 
 
     const navigate = useNavigate();
@@ -254,7 +254,7 @@ const Coupon = () => {
                 return `${usedLimit} / ${row.totallimitation}`;
             },
             sortable: true,
-            width: '300px',
+            width: '250px',
 
         },
         {
