@@ -4,6 +4,7 @@ import DynamicForm from '../../../components/FormicForm';
 import Swal from 'sweetalert2';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { addStaffpermission, getstaffperuser } from '../../../Services/Admin';
+import { Subscript } from 'lucide-react';
 
 const Staffpermission = () => {
     const navigate = useNavigate();
@@ -85,7 +86,7 @@ const Staffpermission = () => {
             userPermissions: false,
             addclient: false,
             viewclient: false,
-            Ownclient: false, 
+            Ownclient: false,
             viewdetail: false,
             editclient: false,
             // deleteclient: false,
@@ -98,6 +99,7 @@ const Staffpermission = () => {
             viewplan: false,
             deleteplan: false,
             planstatus: false,
+
 
             signalstatus: false,
             ownsignal: false,
@@ -179,10 +181,23 @@ const Staffpermission = () => {
 
 
 
+            basketpermission: false,
+            addbasket: false,
+            editbasket: false,
+            deletebasket: false,
+            basketActivestatus: false,
+            Rebalancestatus: false,
+            publishstock: false,
+            Rebalancebutton: false,
+            Subscriptionhistory: false,
+            vewbasket: false
+
+
+
 
         },
         onSubmit,
-    }); 
+    });
 
     useEffect(() => {
         if (clients.length > 0) {
@@ -289,6 +304,18 @@ const Staffpermission = () => {
             formik.setFieldValue('paymenthistory', clients.includes('paymenthistory'));
             formik.setFieldValue('planexpiry', clients.includes('planexpiry'));
             formik.setFieldValue('perform', clients.includes('perform'));
+
+
+            formik.setFieldValue('basketpermission', clients.includes('basketpermission'));
+            formik.setFieldValue('addbasket', clients.includes('addbasket'));
+            formik.setFieldValue('editbasket', clients.includes('editbasket'));
+            formik.setFieldValue('deletebasket', clients.includes('deletebasket'));
+            formik.setFieldValue('basketActivestatus', clients.includes('basketActivestatus'));
+            formik.setFieldValue('Rebalancestatus', clients.includes('Rebalancestatus'));
+            formik.setFieldValue('publishstock', clients.includes('publishstock'));
+            formik.setFieldValue('Rebalancebutton', clients.includes('Rebalancebutton'));
+            formik.setFieldValue('Subscriptionhistory', clients.includes('Subscriptionhistory'));
+            formik.setFieldValue('vewbasket', clients.includes('vewbasket'));
 
 
         }
@@ -475,6 +502,8 @@ const Staffpermission = () => {
 
     }, [formik.values.bannerpermission])
 
+
+
     useEffect(() => {
         if (formik.values.addbanner || formik.values.editbanner || formik.values.bannerstatus || formik.values.deletebanner) {
             formik.setFieldValue('viewbanner', true);
@@ -567,6 +596,8 @@ const Staffpermission = () => {
         }
 
     }, [formik.values.faqpermission])
+
+
 
     useEffect(() => {
         if (formik.values.addfaq || formik.values.editfaq || formik.values.faqstatus || formik.values.deletefaq) {
@@ -661,6 +692,50 @@ const Staffpermission = () => {
     //         formik.setFieldValue('otherpermission', true);
     //     }
     // }, [formik.values.paymenthistory ,formik.values.planexpiry ,formik.values.perform ]);
+
+
+
+    useEffect(() => {
+        if (formik.values.basketpermission == true) {
+            formik.setFieldValue('addbasket', true);
+            formik.setFieldValue('editbasket', true);
+            formik.setFieldValue('deletebasket', true);
+            formik.setFieldValue('basketActivestatus', true);
+            formik.setFieldValue('Rebalancestatus', true);
+            formik.setFieldValue('Rebalancebutton', true);
+            formik.setFieldValue('Subscriptionhistory', true);
+            formik.setFieldValue('publishstock', true);
+            formik.setFieldValue('vewbasket', true);
+
+
+
+        }
+        else {
+            formik.setFieldValue('addbasket', false);
+            formik.setFieldValue('editbasket', false);
+            formik.setFieldValue('deletebasket', false);
+            formik.setFieldValue('basketActivestatus', false);
+            formik.setFieldValue('Rebalancestatus', false);
+            formik.setFieldValue('Rebalancebutton', false);
+            formik.setFieldValue('Subscriptionhistory', false);
+            formik.setFieldValue('publishstock', false);
+            formik.setFieldValue('vewbasket', false);
+
+
+        }
+
+    }, [formik.values.basketpermission])
+
+
+    useEffect(() => {
+        if (formik.values.addbasket || formik.values.editbasket || formik.values.deletebasket || formik.values.basketActivestatus || formik.values.Rebalancestatus
+            || formik.values.Rebalancebutton || formik.values.Subscriptionhistory || formik.values.publishstock
+        ) {
+            formik.setFieldValue('vewbasket', true);
+        }
+    }, [formik.values.addbasket, formik.values.editbasket, formik.values.deletebasket, formik.values.basketActivestatus, formik.values.Rebalancestatus
+        , formik.values.Rebalancebutton, formik.values.Subscriptionhistory, formik.values.publishstock]);
+
 
 
 
@@ -896,6 +971,100 @@ const Staffpermission = () => {
             col_size: 2,
             // check_box_true: formik.values.deleteservice,
             check_box_true: formik.values.Signalpermission || formik.values.signalstatus ? true : false,
+        },
+
+        {
+            name: 'basketpermission',
+            label: 'All Basket Permissions',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            check_box_true: formik.values.basketpermission,
+            bold: true
+        },
+        {
+            name: 'vewbasket',
+            label: 'View Basket',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.viewservice,
+            check_box_true: formik.values.basketpermission || formik.values.addbasket || formik.values.editbasket || formik.values.deletebasket || formik.values.basketActivestatus || formik.values.Rebalancestatus || formik.values.Rebalancebutton || formik.values.Subscriptionhistory || formik.values.vewbasket ? true : false,
+        },
+        {
+            name: 'addbasket',
+            label: 'Add Basket',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.viewservice,
+            check_box_true: formik.values.basketpermission || formik.values.addbasket ? true : false,
+        },
+        {
+            name: 'editbasket',
+            label: 'Edit Basket',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.addservice,
+            check_box_true: formik.values.basketpermission || formik.values.editbasket ? true : false,
+
+        },
+        {
+            name: 'deletebasket',
+            label: 'Delete Basket',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.addservice,
+            check_box_true: formik.values.basketpermission || formik.values.deletebasket ? true : false,
+
+        },
+        {
+            name: 'basketActivestatus',
+            label: 'Basket Status',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.viewservice,
+            check_box_true: formik.values.basketpermission || formik.values.basketActivestatus ? true : false,
+        },
+        {
+            name: 'publishstock',
+            label: 'Publish Stock',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.viewservice,
+            check_box_true: formik.values.basketpermission || formik.values.publishstock ? true : false,
+        },
+        {
+            name: 'Rebalancestatus',
+            label: 'Rebalance Status',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.editservice,
+            check_box_true: formik.values.basketpermission || formik.values.Rebalancestatus ? true : false,
+        },
+        {
+            name: 'Rebalancebutton',
+            label: 'Rebalance Stock',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.editservice,
+            check_box_true: formik.values.basketpermission || formik.values.Rebalancebutton ? true : false,
+        },
+
+        {
+            name: 'Subscriptionhistory',
+            label: 'Subscription History',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.deleteservice,
+            check_box_true: formik.values.basketpermission || formik.values.Subscriptionhistory ? true : false,
         },
 
 

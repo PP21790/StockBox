@@ -77,9 +77,7 @@ import Planexpirymonth from '../layout/Admin/PlanExpiryMonth/Planexpirymonth';
 import Notificationlist from '../layout/Admin/Notification/Notificationlist';
 import AddStock from '../layout/Admin/Admin_basket/AddStock';
 import BasketStockPublish from '../layout/Admin/Admin_basket/BasketStockPublish';
-import Rebalncing from '../layout/Admin/Admin_basket/Rebalncing';
 import BasketPurchaseHistory from '../layout/Admin/Admin_basket/BasketPurchaseHistory';
-import ViewBasketStock from '../layout/Admin/Admin_basket/ViewBasketStock';
 import EditStock from '../layout/Admin/Admin_basket/EditStock';
 import AllBasketHistory from '../layout/Admin/Admin_basket/AllBasketHistory';
 import ClientSignaldetail from '../layout/Admin/Admin_client/ClientSignaldetail';
@@ -87,9 +85,9 @@ import ClientRequest from '../layout/Admin/Admin_client/ClientRequest/ClientRequ
 
 
 
-
-
 function MainApp() {
+
+
     const [isToggled, setIsToggled] = useState(false);
     const [isSidebarHovered, setIsSidebarHovered] = useState(false);
 
@@ -174,9 +172,8 @@ function MainApp() {
                     <Route path="/basket/editbasket/:id" element={<Editbasket />} />
                     <Route path="/addstock/:id" element={<AddStock />} />
                     <Route path="/basket/basketstockpublish" element={<BasketStockPublish />} />
-                    <Route path="/basket/rebalancing" element={<Rebalncing />} />
                     <Route path="/basket-purchase-history/:id" element={<BasketPurchaseHistory />} />
-                    <Route path="/basket/view-basket-stock" element={<ViewBasketStock />} />
+
                     <Route path="/purchasebaskethistory" element={<AllBasketHistory />} />
 
 

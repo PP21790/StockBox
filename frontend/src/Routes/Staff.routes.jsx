@@ -22,7 +22,6 @@ import Signal from '../layout/Staff/Signal/Signal';
 
 
 import Faq from '../layout/Staff/Faq/Faq';
-import Basket from '../layout/Staff/Basket/Basket';
 import Sidebar from '../layout/Staff/Sidebar';
 import Header from '../layout/Staff/Header';
 import Footer from '../layout/Staff/Footer';
@@ -57,6 +56,14 @@ import Planexpiry from '../layout/Staff/PlanExpiry/Planexpiry';
 import Perform from '../layout/Staff/Perform/Perfom';
 import History from '../layout/Staff/Payment_history/Paymenthistory';
 import Planexpirymonth from '../layout/Staff/PlanExpiryMonth/Planexpirymonth';
+import Basket from '../layout/Staff/Basket/Basket';
+import AddBasket from '../layout/Staff/Basket/Addbasket';
+import Viewbasketdetail from '../layout/Staff/Basket/Viewbasketdetail';
+import Editbasket from '../layout/Staff/Basket/Editbasket';
+import AddStock from '../layout/Staff/Basket/AddStock';
+import BasketStockPublish from '../layout/Staff/Basket/BasketStockPublish';
+import BasketPurchaseHistory from '../layout/Staff/Basket/BasketPurchaseHistory';
+import AllBasketHistory from '../layout/Staff/Basket/AllBasketHistory';
 
 
 
@@ -204,6 +211,17 @@ function Staffrouting() {
                     <Route path="/changepass" element={<Changepass />} />
                     <Route path="/planexpirymonth" element={<Planexpirymonth />} />
 
+
+
+                    <Route path="/basket" element={<Basket />} />
+                    <Route path="/addbasket" element={<AddBasket />} />
+                    <Route path="/viewdetail/:id" element={<Viewbasketdetail />} />
+                    <Route path="/basket/editbasket/:id" element={<Editbasket />} />
+                    <Route path="/addstock/:id" element={<AddStock />} />
+                    <Route path="/basket/basketstockpublish" element={<BasketStockPublish />} />
+                    <Route path="/basket-purchase-history/:id" element={<BasketPurchaseHistory />} />
+
+                    <Route path="/purchasebaskethistory" element={<AllBasketHistory />} />
 
 
 

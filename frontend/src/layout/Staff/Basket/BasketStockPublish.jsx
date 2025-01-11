@@ -1,29 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Eye, RefreshCcw, Trash2, SquarePen, IndianRupee, X, Plus, RotateCcw } from 'lucide-react';
+import { Eye, RefreshCcw, Trash2, RotateCcw, IndianRupee, X, Plus, History } from 'lucide-react';
 import Swal from "sweetalert2";
 import { Tooltip } from 'antd';
 // import Table from "../../../components/Table";
 import Table from '../../../components/Table1';
 
-import { BasketAllList, deletebasket, Basketstatus, changestatusrebalance, getstocklistById } from "../../../Services/Admin";
+import { BasketAllActiveList, BasketAllActiveListbyfilter, changestatusrebalance, deletebasket, Basketstatusofdetail } from "../../../Services/Admin";
 import { fDate } from "../../../Utils/Date_formate";
 
 
 
-const Basket = () => {
+const BasketStockPublish = () => {
 
 
   const navigate = useNavigate();
   const [clients, setClients] = useState([]);
   const token = localStorage.getItem("token");
-  const [stockdata, setStockdata] = useState({})
+
 
   const [searchInput, setSearchInput] = useState("");
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalRows, setTotalRows] = useState(0);
-
 
 
   const handlePageChange = (page) => {
@@ -36,26 +35,30 @@ const Basket = () => {
   const getbasketlist = async () => {
     try {
       const data = { page: currentPage, search: searchInput || "" }
-      const response = await BasketAllList(data, token);
+      const response = await BasketAllActiveListbyfilter(data, token);
+      // console.log("BasketAllActiveListbyfilter",response);
+
       if (response.status) {
-        setClients(response.data);
         setTotalRows(response.pagination.total);
+        setClients(response.data);
       }
     } catch (error) {
-      console.log("error");
+      console.log("error", JSON.stringify(error));
+
     }
   };
 
 
 
+
   useEffect(() => {
-    getbasketlist()
-  }, [searchInput, currentPage])
+    getbasketlist();
+  }, [searchInput, currentPage]);
 
 
 
   const handleSwitchChange = async (event, id) => {
-    const originalChecked = true;
+    const originalChecked = event.target.checked;
     const user_active_status = originalChecked
     const data = { id: id, status: user_active_status };
 
@@ -69,7 +72,7 @@ const Basket = () => {
 
     if (result.isConfirmed) {
       try {
-        const response = await Basketstatus(data, token);
+        const response = await Basketstatusofdetail(data, token);
         if (response.status) {
           Swal.fire({
             title: "Saved!",
@@ -94,10 +97,6 @@ const Basket = () => {
       getbasketlist();
     }
   };
-
-
-
-
 
 
   const handleSwitchChange1 = async (event, id) => {
@@ -142,6 +141,16 @@ const Basket = () => {
 
 
 
+
+  const rebalancePubliceStock = async (row) => {
+    navigate("/admin/addstock/" + row._id, { state: { state: "publish" } });
+  }
+
+
+
+  const viewdetailpage = async (row) => {
+    navigate("/admin/viewdetail/" + row._id, { state: { state: "viewdetail" } });
+  }
 
   // Delete basket
 
@@ -193,9 +202,6 @@ const Basket = () => {
     return div.textContent || div.innerText || "";
   }
 
-
-
-
   // Columns for DataTable
   const columns = [
     {
@@ -222,6 +228,12 @@ const Basket = () => {
       width: '200px',
     },
 
+    // {
+    //   name: "Description",
+    //   selector: (row) => row.description,
+    //   wrap: true,
+    //   width: '200px',
+    // },
     {
       name: "Description",
       selector: (row) => stripHtml(row.description),
@@ -234,7 +246,7 @@ const Basket = () => {
           WebkitBoxOrient: 'vertical',
           maxWidth: '200px',
           textAlign: 'left',
-          whiteSpace: 'normal',
+          whiteSpace: 'normal', // Ensure multi-line text
         }}>
           {stripHtml(row.description)}
         </div>
@@ -242,8 +254,6 @@ const Basket = () => {
       wrap: true,
       width: '200px',
     },
-
-
     {
       name: "Validity",
       selector: (row) => row.validity,
@@ -251,57 +261,84 @@ const Basket = () => {
 
     },
     {
-      name: "Stock Quantity",
-      selector: (row) => row.stock_details?.length || 0,
+      name: 'Active Status',
+      selector: row => (
+        <div className="form-check form-switch form-check-info">
+          <input
+            id={`rating_${row._id}`}
+            className="form-check-input toggleswitch"
+            type="checkbox"
+            defaultChecked={row.publishstatus == true}
+            onChange={(event) => handleSwitchChange(event, row._id)}
+          />
+          <label
+            htmlFor={`rating_${row._id}`}
+            className="checktoggle checkbox-bg"
+          ></label>
+        </div>
+      ),
       sortable: true,
-      width: "180px",
+      width: '165px',
     },
+    {
+      name: 'Rebalancing',
+      selector: row => (
 
+        <div className="form-check form-switch form-check-info">
+          <input
+            id={`rating_${row._id}`}
+            className="form-check-input toggleswitch"
+            type="checkbox"
+            checked={row.rebalancestatus === true}
+            onChange={(event) => handleSwitchChange1(event, row._id)}
+          />
+          <label
+            htmlFor={`rating_${row._id}`}
+            className="checktoggle checkbox-bg"
+          ></label>
+        </div>
+
+      ),
+      sortable: true,
+
+    },
     {
       name: "Actions",
       cell: (row) => (
         <div className="w-100">
-          {row.stock_details.length > 0 ?
-            <Tooltip title="Published Stock">
-              <RotateCcw
-                checked={row.status}
-                onClick={(event) => handleSwitchChange(event, row._id)} />
-            </Tooltip> : ""}
-          {row.stock_details?.length <= 0 ?
-            <Tooltip title="Add Stock">
-              <Link
-                to={`/admin/addstock/${row._id}`}
-                className="btn px-2"
-              >
-                <Plus />
-              </Link>
-            </Tooltip> : ""}
+          {row.rebalancestatus === false ?
+            <Tooltip title="Rebalance">
 
+              <RotateCcw onClick={() => rebalancePubliceStock(row)} />
+            </Tooltip> : ""}
           <Tooltip title="view">
-            <Link
-              to={`/admin/viewdetail/${row._id}`}
-              className="btn px-2"
-            >
-              <Eye />
-            </Link>
+            <Eye onClick={() => viewdetailpage(row)} />
           </Tooltip>
-          <Tooltip title="Edit">
+          {/* <Tooltip title="Edit">
             <Link
               to={`editbasket/${row._id}`}
               className="btn px-2"
             >
               <SquarePen />
             </Link>
+          </Tooltip> */}
+          <Tooltip title="History ">
+            <Link
+              to={`/admin/basket-purchase-history/${row._id}`}
+              className="btn px-2"
+            >
+              <History />
+            </Link>
           </Tooltip>
-          <button
+          {/* <button
             className="btn px-2"
             onClick={() => Deletebasket(row._id)}
           >
             <Trash2 />
-          </button>
+          </button> */}
         </div>
       ),
-      width: "220px"
+      width: '150px',
     },
   ];
 
@@ -312,7 +349,7 @@ const Basket = () => {
   return (
     <div className="page-content">
       <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-        <div className="breadcrumb-title pe-3"> Basket List</div>
+        <div className="breadcrumb-title pe-3">Basket-Stock Published List </div>
         <div className="ps-3">
           <nav aria-label="breadcrumb">
             <ol className="breadcrumb mb-0 p-0">
@@ -333,7 +370,7 @@ const Basket = () => {
               <input
                 type="text"
                 className="form-control ps-5 radius-10"
-                placeholder="Search Basket"
+                placeholder="Search Publish Basket"
                 onChange={(e) => setSearchInput(e.target.value)}
                 value={searchInput}
               />
@@ -341,12 +378,12 @@ const Basket = () => {
                 <i className="bx bx-search" />
               </span>
             </div>
-            <div className="ms-auto">
+            {/* <div className="ms-auto">
               <Link to="/admin/addbasket" className="btn btn-primary">
                 <i className="bx bxs-plus-square" aria-hidden="true" />
                 Add Basket
               </Link>
-            </div>
+            </div> */}
             {/* <div className="ms-2">
               <Link to="/admin/basket/rebalancing" className="btn btn-primary">
                 <i className="bx bxs-plus-square" aria-hidden="true" />
@@ -367,4 +404,4 @@ const Basket = () => {
   );
 };
 
-export default Basket;
+export default BasketStockPublish;

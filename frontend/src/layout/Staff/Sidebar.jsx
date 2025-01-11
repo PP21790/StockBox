@@ -63,6 +63,15 @@ const Sidebar = ({ onToggleClick }) => {
         ...(permission.includes('viewcategory') ? [{ title: 'Category', link: '/staff/category' }] : []),
       ].filter(Boolean),
     },
+    {
+      title: "Basket",
+      icon: "bx-basket",
+      subMenu: [
+        { title: "Basket Detail", icon: "bx-basket", link: "/staff/basket" },
+        { title: "Basket Stock Published", icon: "bx-radio-circle", link: "/staff/basket/basketstockpublish" },
+        { title: "Subscription History", icon: "bx-radio-circle", link: "/staff/purchasebaskethistory" },
+      ],
+    },
     permission.includes('viewsignal') && {
       title: 'Signal',
       icon: 'bx bx-wifi-2 fs-3 text-white',
@@ -106,15 +115,14 @@ const Sidebar = ({ onToggleClick }) => {
           {menuItems.map((item, index) => (
             <li
               key={index}
-              className={`${
-                item.isDropdown
-                  ? activeDropdown === item.dropdownName
-                    ? ''
-                    : ''
-                  : location.pathname === item.link
+              className={`${item.isDropdown
+                ? activeDropdown === item.dropdownName
                   ? ''
                   : ''
-              }`}
+                : location.pathname === item.link
+                  ? ''
+                  : ''
+                }`}
             >
               {item.isDropdown ? (
                 <>
