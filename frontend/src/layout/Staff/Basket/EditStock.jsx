@@ -215,7 +215,7 @@ const EditStock = () => {
             const response = await updateStockList(requestData);
             if (response?.status) {
                 Swal.fire("Success", response.message, "success");
-                setTimeout(() => navigate("/admin/basket"), 1500);
+                setTimeout(() => navigate("/staff/basket"), 1500);
             } else {
                 Swal.fire("Error", response.message, "error");
             }
@@ -250,7 +250,7 @@ const EditStock = () => {
                             <nav aria-label="breadcrumb">
                                 <ol className="breadcrumb mb-0 p-0">
                                     <li className="breadcrumb-item">
-                                        <Link to="/admin/dashboard">
+                                        <Link to="/staff/dashboard">
                                             <i className="bx bx-home-alt" />
                                         </Link>
                                     </li>
@@ -262,7 +262,7 @@ const EditStock = () => {
                 </div>
 
                 <div className="col-md-6 d-flex justify-content-end">
-                    <Link to="/admin/basket">
+                    <Link to="/staff/basket">
                         <Tooltip title="Back">
                             <i
                                 className="lni lni-arrow-left-circle"

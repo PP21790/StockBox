@@ -160,7 +160,7 @@ const BasketPurchaseHistory = () => {
                 <nav aria-label="breadcrumb">
                   <ol className="breadcrumb mb-0 p-0">
                     <li className="breadcrumb-item">
-                      <Link to="/admin/dashboard">
+                      <Link to="/staff/dashboard">
                         <i className="bx bx-home-alt" />
                       </Link>
                     </li>
@@ -170,7 +170,7 @@ const BasketPurchaseHistory = () => {
             </div>
           </div>
           <div className="col-md-6 d-flex justify-content-end">
-            <Link to="/admin/basket/basketstockpublish">
+            <Link to="/staff/basket/basketstockpublish">
               <Tooltip title="Back">
                 <i className="lni lni-arrow-left-circle" style={{ fontSize: "2rem", color: "#000" }} />
               </Tooltip>

@@ -65,8 +65,10 @@ const Sidebar = ({ onToggleClick }) => {
     },
     {
       title: "Basket",
-      icon: "bx-basket",
-      subMenu: [
+      icon: "bx-basket fs-3 text-white",
+      isDropdown: true,
+      dropdownName: 'Basket',
+      subItems: [
         { title: "Basket Detail", icon: "bx-basket", link: "/staff/basket" },
         { title: "Basket Stock Published", icon: "bx-radio-circle", link: "/staff/basket/basketstockpublish" },
         { title: "Subscription History", icon: "bx-radio-circle", link: "/staff/purchasebaskethistory" },

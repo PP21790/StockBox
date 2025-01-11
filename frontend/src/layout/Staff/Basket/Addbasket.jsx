@@ -97,7 +97,7 @@ const AddBasket = () => {
           timerProgressBar: true,
         });
         setTimeout(() => {
-          navigate("/admin/basket");
+          navigate("/staff/basket");
         }, 1500);
       } else {
         Swal.fire({
@@ -261,7 +261,7 @@ const AddBasket = () => {
         btn_name="Add Basket"
         btn_name1="Cancel"
         sumit_btn={true}
-        btn_name1_route={"/admin/basket"}
+        btn_name1_route={"/staff/basket"}
         additional_field={<></>}
 
       />

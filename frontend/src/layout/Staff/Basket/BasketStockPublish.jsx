@@ -143,13 +143,13 @@ const BasketStockPublish = () => {
 
 
   const rebalancePubliceStock = async (row) => {
-    navigate("/admin/addstock/" + row._id, { state: { state: "publish" } });
+    navigate("/staff/addstock/" + row._id, { state: { state: "publish" } });
   }
 
 
 
   const viewdetailpage = async (row) => {
-    navigate("/admin/viewdetail/" + row._id, { state: { state: "viewdetail" } });
+    navigate("/staff/viewdetail/" + row._id, { state: { state: "viewdetail" } });
   }
 
   // Delete basket
@@ -324,7 +324,7 @@ const BasketStockPublish = () => {
           </Tooltip> */}
           <Tooltip title="History ">
             <Link
-              to={`/admin/basket-purchase-history/${row._id}`}
+              to={`/staff/basket-purchase-history/${row._id}`}
               className="btn px-2"
             >
               <History />
@@ -354,7 +354,7 @@ const BasketStockPublish = () => {
           <nav aria-label="breadcrumb">
             <ol className="breadcrumb mb-0 p-0">
               <li className="breadcrumb-item">
-                <Link to="/admin/dashboard">
+                <Link to="/staff/dashboard">
                   <i className="bx bx-home-alt" />
                 </Link>
               </li>
@@ -379,13 +379,13 @@ const BasketStockPublish = () => {
               </span>
             </div>
             {/* <div className="ms-auto">
-              <Link to="/admin/addbasket" className="btn btn-primary">
+              <Link to="/staff/addbasket" className="btn btn-primary">
                 <i className="bx bxs-plus-square" aria-hidden="true" />
                 Add Basket
               </Link>
             </div> */}
             {/* <div className="ms-2">
-              <Link to="/admin/basket/rebalancing" className="btn btn-primary">
+              <Link to="/staff/basket/rebalancing" className="btn btn-primary">
                 <i className="bx bxs-plus-square" aria-hidden="true" />
                 RebBalancing
               </Link>

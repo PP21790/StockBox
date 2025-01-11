@@ -36,7 +36,7 @@ const AddStock = () => {
     }
   }, [location]);
 
-  const redirectTo = (currentlocation === "publish") ? "/admin/basket/basketstockpublish" : "/admin/basket";
+  const redirectTo = (currentlocation === "publish") ? "/staff/basket/basketstockpublish" : "/staff/basket";
 
   const fetchOptions = async (inputValue) => {
     if (!inputValue) {
@@ -229,7 +229,7 @@ const AddStock = () => {
               <nav aria-label="breadcrumb">
                 <ol className="breadcrumb mb-0 p-0">
                   <li className="breadcrumb-item">
-                    <Link to="/admin/dashboard">
+                    <Link to="/staff/dashboard">
                       <i className="bx bx-home-alt" />
                     </Link>
                   </li>
