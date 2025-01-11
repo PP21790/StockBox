@@ -64,6 +64,7 @@ import AddStock from '../layout/Staff/Basket/AddStock';
 import BasketStockPublish from '../layout/Staff/Basket/BasketStockPublish';
 import BasketPurchaseHistory from '../layout/Staff/Basket/BasketPurchaseHistory';
 import AllBasketHistory from '../layout/Staff/Basket/AllBasketHistory';
+import EditStock from '../layout/Staff/Basket/EditStock';
 
 
 
@@ -212,16 +213,27 @@ function Staffrouting() {
                     <Route path="/planexpirymonth" element={<Planexpirymonth />} />
 
 
+                    {permission.includes("vewbasket") ? <Route path="/basket" element={<Basket />} /> : ""}
+                    {permission.includes("addbasket") ? <Route path="/addbasket" element={<AddBasket />} /> : ""}
+                    {permission.includes("basketdetail") ? <Route path="/viewdetail/:id" element={<Viewbasketdetail />} /> : ""}
+                    {permission.includes("editbasket") ? <Route path="/basket/editbasket/:id" element={<Editbasket />} /> : ""}
+                    {permission.includes("vewbasket") ? <Route path="/basket/basketstockpublish" element={<BasketStockPublish />} /> : ""}
+                    {permission.includes("Subscriptionhistory") ? <Route path="/basket-purchase-history/:id" element={<BasketPurchaseHistory />} /> : ""}
+                    {permission.includes("allbaskethistory") ? <Route path="/purchasebaskethistory" element={<AllBasketHistory />} /> : ""}
+                    {permission.includes("addstock") ? <Route path="/addstock/:id" element={<AddStock />} /> : ""}
+                    {permission.includes("editstock") ? <Route path="/editstock/:id" element={<EditStock />} /> : ""}
 
-                    <Route path="/basket" element={<Basket />} />
+
+
+
+                    {/* <Route path="/basket" element={<Basket />} />
                     <Route path="/addbasket" element={<AddBasket />} />
                     <Route path="/viewdetail/:id" element={<Viewbasketdetail />} />
                     <Route path="/basket/editbasket/:id" element={<Editbasket />} />
                     <Route path="/addstock/:id" element={<AddStock />} />
                     <Route path="/basket/basketstockpublish" element={<BasketStockPublish />} />
                     <Route path="/basket-purchase-history/:id" element={<BasketPurchaseHistory />} />
-
-                    <Route path="/purchasebaskethistory" element={<AllBasketHistory />} />
+                    <Route path="/purchasebaskethistory" element={<AllBasketHistory />} /> */}
 
 
 

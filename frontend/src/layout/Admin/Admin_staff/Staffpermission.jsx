@@ -190,7 +190,12 @@ const Staffpermission = () => {
             publishstock: false,
             Rebalancebutton: false,
             Subscriptionhistory: false,
-            vewbasket: false
+            vewbasket: false,
+            basketdetail: false,
+            addstock: false,
+            editstock: false,
+            allbaskethistory: false,
+
 
 
 
@@ -316,6 +321,10 @@ const Staffpermission = () => {
             formik.setFieldValue('Rebalancebutton', clients.includes('Rebalancebutton'));
             formik.setFieldValue('Subscriptionhistory', clients.includes('Subscriptionhistory'));
             formik.setFieldValue('vewbasket', clients.includes('vewbasket'));
+            formik.setFieldValue('basketdetail', clients.includes('basketdetail'));
+            formik.setFieldValue('editstock', clients.includes('editstock'));
+            formik.setFieldValue('addstock', clients.includes('addstock'));
+            formik.setFieldValue('allbaskethistory', clients.includes('allbaskethistory'));
 
 
         }
@@ -706,6 +715,10 @@ const Staffpermission = () => {
             formik.setFieldValue('Subscriptionhistory', true);
             formik.setFieldValue('publishstock', true);
             formik.setFieldValue('vewbasket', true);
+            formik.setFieldValue('basketdetail', true);
+            formik.setFieldValue('addstock', true);
+            formik.setFieldValue('editstock', true);
+            formik.setFieldValue('allbaskethistory', true);
 
 
 
@@ -720,6 +733,10 @@ const Staffpermission = () => {
             formik.setFieldValue('Subscriptionhistory', false);
             formik.setFieldValue('publishstock', false);
             formik.setFieldValue('vewbasket', false);
+            formik.setFieldValue('basketdetail', false);
+            formik.setFieldValue('addstock', false);
+            formik.setFieldValue('editstock', false);
+            formik.setFieldValue('allbaskethistory', false);
 
 
         }
@@ -728,13 +745,13 @@ const Staffpermission = () => {
 
 
     useEffect(() => {
-        if (formik.values.addbasket || formik.values.editbasket || formik.values.deletebasket || formik.values.basketActivestatus || formik.values.Rebalancestatus
+        if (formik.values.addbasket || formik.values.allbaskethistory || formik.values.editstock || formik.values.addstock || formik.values.basketdetail || formik.values.editbasket || formik.values.deletebasket || formik.values.basketActivestatus || formik.values.Rebalancestatus
             || formik.values.Rebalancebutton || formik.values.Subscriptionhistory || formik.values.publishstock
         ) {
             formik.setFieldValue('vewbasket', true);
         }
     }, [formik.values.addbasket, formik.values.editbasket, formik.values.deletebasket, formik.values.basketActivestatus, formik.values.Rebalancestatus
-        , formik.values.Rebalancebutton, formik.values.Subscriptionhistory, formik.values.publishstock]);
+        , formik.values.Rebalancebutton, formik.values.allbaskethistory, formik.values.editstock, formik.values.addstock, formik.values.basketdetail, formik.values.Subscriptionhistory, formik.values.publishstock]);
 
 
 
@@ -1030,6 +1047,15 @@ const Staffpermission = () => {
             check_box_true: formik.values.basketpermission || formik.values.basketActivestatus ? true : false,
         },
         {
+            name: 'basketdetail',
+            label: 'Basket Detail',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.viewservice,
+            check_box_true: formik.values.basketpermission || formik.values.basketdetail ? true : false,
+        },
+        {
             name: 'publishstock',
             label: 'Publish Stock',
             type: 'checkbox',
@@ -1056,7 +1082,24 @@ const Staffpermission = () => {
             // check_box_true: formik.values.editservice,
             check_box_true: formik.values.basketpermission || formik.values.Rebalancebutton ? true : false,
         },
-
+        {
+            name: 'addstock',
+            label: 'Add Stock',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.editservice,
+            check_box_true: formik.values.basketpermission || formik.values.addstock ? true : false,
+        },
+        {
+            name: 'editstock',
+            label: 'Edit Stock',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.editservice,
+            check_box_true: formik.values.basketpermission || formik.values.editstock ? true : false,
+        },
         {
             name: 'Subscriptionhistory',
             label: 'Subscription History',
@@ -1065,6 +1108,15 @@ const Staffpermission = () => {
             col_size: 2,
             // check_box_true: formik.values.deleteservice,
             check_box_true: formik.values.basketpermission || formik.values.Subscriptionhistory ? true : false,
+        },
+        {
+            name: 'allbaskethistory',
+            label: 'All Basket History',
+            type: 'checkbox',
+            label_size: 12,
+            col_size: 2,
+            // check_box_true: formik.values.deleteservice,
+            check_box_true: formik.values.basketpermission || formik.values.allbaskethistory ? true : false,
         },
 
 

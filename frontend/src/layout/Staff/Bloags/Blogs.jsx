@@ -6,7 +6,7 @@ import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
-import { fDateTime} from '../../../Utils/Date_formate';
+import { fDateTime } from '../../../Utils/Date_formate';
 import { getstaffperuser } from '../../../Services/Admin';
 
 const Blogs = () => {
@@ -14,10 +14,10 @@ const Blogs = () => {
 
 
     const navigate = useNavigate();
-    
+
     const token = localStorage.getItem('token');
     const userid = localStorage.getItem('id');
-   
+
 
 
     const [permission, setPermission] = useState([]);
@@ -68,8 +68,8 @@ const Blogs = () => {
     const getpermissioninfo = async () => {
         try {
             const response = await getstaffperuser(userid, token);
-            console.log("response",response);
-            
+
+
             if (response.status) {
                 setPermission(response.data.permissions);
             }
@@ -124,7 +124,7 @@ const Blogs = () => {
     // };
 
     const updateblogs = async (row) => {
-        navigate("/staff/updatebolgs" ,{ state: { row } })
+        navigate("/staff/updatebolgs", { state: { row } })
     }
 
     const viewblog = async (row) => {
@@ -176,7 +176,7 @@ const Blogs = () => {
 
 
     const viewDetails = async (row) => {
-        navigate("/staff/viewblog/" , { state: { row } })
+        navigate("/staff/viewblog/", { state: { row } })
     }
 
 
@@ -225,7 +225,7 @@ const Blogs = () => {
 
 
     // delete blogs
- 
+
     const DeleteBlogs = async (_id) => {
         try {
             const result = await Swal.fire({
@@ -239,7 +239,7 @@ const Blogs = () => {
 
             if (result.isConfirmed) {
                 const response = await DeleteBlog(_id, token);
-             
+
                 if (response.status) {
                     Swal.fire({
                         title: 'Deleted!',
@@ -285,7 +285,7 @@ const Blogs = () => {
             sortable: true,
             width: '300px',
         },
-        permission.includes("blogsstatus")?  {
+        permission.includes("blogsstatus") ? {
             name: 'Active Status',
             selector: row => (
                 <div className="form-check form-switch form-check-info">
@@ -330,22 +330,22 @@ const Blogs = () => {
         //     sortable: true,
         // },
 
-        permission.includes("blogdetail") ||  permission.includes("editblogs") 
-        || permission.includes("deleteblogs") ? {
+        permission.includes("blogdetail") || permission.includes("editblogs")
+            || permission.includes("deleteblogs") ? {
             name: 'Actions',
             cell: row => (
                 <>
-                      {permission.includes("blogdetail") ? <div>
+                    {permission.includes("blogdetail") ? <div>
                         <Tooltip placement="top" overlay="View">
-                          
-                            <Eye style={{ marginRight: "10px" }} 
+
+                            <Eye style={{ marginRight: "10px" }}
                                 onClick={() => {
                                     viewDetails(row)
-                                }}/>
-                            
+                                }} />
+
                         </Tooltip>
-                    </div> : "" }
-                    {permission.includes("editblogs")? <div>
+                    </div> : ""}
+                    {permission.includes("editblogs") ? <div>
                         <Tooltip placement="top" overlay="Update">
                             <SquarePen
                                 onClick={() => {
@@ -353,12 +353,12 @@ const Blogs = () => {
                                 }}
                             />
                         </Tooltip>
-                    </div> : "" }
-                    {permission.includes("deleteblogs")?  <div>
+                    </div> : ""}
+                    {permission.includes("deleteblogs") ? <div>
                         <Tooltip placement="top" overlay="Delete">
                             <Trash2 onClick={() => DeleteBlogs(row._id)} />
                         </Tooltip>
-                    </div>  : "" }
+                    </div> : ""}
                 </>
             ),
             ignoreRowClick: true,
@@ -367,15 +367,15 @@ const Blogs = () => {
         } : ""
     ];
 
-   
+
     function stripHtml(html) {
         const div = document.createElement("div");
         div.innerHTML = html;
         return div.textContent || div.innerText || "";
     }
 
-  
-   
+
+
     const updateServiceTitle = (updatedField) => {
         setUpdatetitle(prev => ({
             ...prev,
@@ -421,7 +421,7 @@ const Blogs = () => {
                                     <i className="bx bx-search" />
                                 </span>
                             </div>
-                            {permission.includes("addblogs")?  <div className="ms-auto">
+                            {permission.includes("addblogs") ? <div className="ms-auto">
                                 <Link
                                     to="/staff/addblogs"
                                     className="btn btn-primary"
@@ -605,7 +605,7 @@ const Blogs = () => {
                                     </>
                                 )}
 
-                            </div> : "" }
+                            </div> : ""}
                         </div>
                         <div className="table-responsive">
                             <Table

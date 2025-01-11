@@ -176,6 +176,7 @@ function MainApp() {
 
                     <Route path="/purchasebaskethistory" element={<AllBasketHistory />} />
 
+                    <Route path="/editstock/:id" element={<EditStock />} />
 
 
 
@@ -253,7 +254,6 @@ function MainApp() {
                     <Route path="/notificationlist" element={<Notificationlist />} />
 
 
-                    <Route path="/editstock/:id" element={<EditStock />} />
 
 
 

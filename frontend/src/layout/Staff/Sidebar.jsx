@@ -63,7 +63,7 @@ const Sidebar = ({ onToggleClick }) => {
         ...(permission.includes('viewcategory') ? [{ title: 'Category', link: '/staff/category' }] : []),
       ].filter(Boolean),
     },
-    {
+    permission.includes('vewbasket') && {
       title: "Basket",
       icon: "bx-basket fs-3 text-white",
       isDropdown: true,

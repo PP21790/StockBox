@@ -6,7 +6,7 @@ import { Tooltip } from 'antd';
 // import Table from "../../../components/Table";
 import Table from '../../../components/Table1';
 
-import { BasketAllActiveList, BasketAllActiveListbyfilter, changestatusrebalance, deletebasket, Basketstatusofdetail } from "../../../Services/Admin";
+import { BasketAllActiveList, BasketAllActiveListbyfilter, changestatusrebalance, deletebasket, getstaffperuser, Basketstatusofdetail } from "../../../Services/Admin";
 import { fDate } from "../../../Utils/Date_formate";
 
 
@@ -14,13 +14,19 @@ import { fDate } from "../../../Utils/Date_formate";
 const BasketStockPublish = () => {
 
 
+  useEffect(() => {
+    getpermissioninfo()
+  }, [])
+
+  const userid = localStorage.getItem('id');
+
   const navigate = useNavigate();
   const [clients, setClients] = useState([]);
   const token = localStorage.getItem("token");
 
 
   const [searchInput, setSearchInput] = useState("");
-
+  const [permission, setPermission] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalRows, setTotalRows] = useState(0);
 
@@ -28,6 +34,21 @@ const BasketStockPublish = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+
+
+
+  const getpermissioninfo = async () => {
+    try {
+      const response = await getstaffperuser(userid, token);
+
+
+      if (response.status) {
+        setPermission(response.data.permissions);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
 
 
 
@@ -260,7 +281,7 @@ const BasketStockPublish = () => {
       sortable: true,
 
     },
-    {
+    permission.includes("basketActivestatus") && {
       name: 'Active Status',
       selector: row => (
         <div className="form-check form-switch form-check-info">
@@ -280,7 +301,7 @@ const BasketStockPublish = () => {
       sortable: true,
       width: '165px',
     },
-    {
+    permission.includes("Rebalancestatus") && {
       name: 'Rebalancing',
       selector: row => (
 
@@ -302,19 +323,25 @@ const BasketStockPublish = () => {
       sortable: true,
 
     },
-    {
-      name: "Actions",
-      cell: (row) => (
-        <div className="w-100">
-          {row.rebalancestatus === false ?
-            <Tooltip title="Rebalance">
-
-              <RotateCcw onClick={() => rebalancePubliceStock(row)} />
-            </Tooltip> : ""}
-          <Tooltip title="view">
-            <Eye onClick={() => viewdetailpage(row)} />
-          </Tooltip>
-          {/* <Tooltip title="Edit">
+    permission.includes("Rebalancebutton") ||
+      permission.includes("basketdetail") ||
+      permission.includes("Subscriptionhistory") ?
+      {
+        name: "Actions",
+        cell: (row) => (
+          <div className="w-100">
+            {permission.includes("Rebalancebutton") && (
+              row.rebalancestatus === false ? (
+                <Tooltip title="Rebalance">
+                  <RotateCcw onClick={() => rebalancePubliceStock(row)} />
+                </Tooltip>
+              ) : null
+            )}
+            {permission.includes("basketdetail") &&
+              <Tooltip title="view">
+                <Eye onClick={() => viewdetailpage(row)} />
+              </Tooltip>}
+            {/* <Tooltip title="Edit">
             <Link
               to={`editbasket/${row._id}`}
               className="btn px-2"
@@ -322,24 +349,25 @@ const BasketStockPublish = () => {
               <SquarePen />
             </Link>
           </Tooltip> */}
-          <Tooltip title="History ">
-            <Link
-              to={`/staff/basket-purchase-history/${row._id}`}
-              className="btn px-2"
-            >
-              <History />
-            </Link>
-          </Tooltip>
-          {/* <button
+            {permission.includes("Subscriptionhistory") &&
+              <Tooltip title="History ">
+                <Link
+                  to={`/staff/basket-purchase-history/${row._id}`}
+                  className="btn px-2"
+                >
+                  <History />
+                </Link>
+              </Tooltip>}
+            {/* <button
             className="btn px-2"
             onClick={() => Deletebasket(row._id)}
           >
             <Trash2 />
           </button> */}
-        </div>
-      ),
-      width: '150px',
-    },
+          </div>
+        ),
+        width: '150px',
+      } : "",
   ];
 
 

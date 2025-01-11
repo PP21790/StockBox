@@ -6,13 +6,18 @@ import { Tooltip } from 'antd';
 // import Table from "../../../components/Table";
 import Table from '../../../components/Table1';
 
-import { BasketAllList, deletebasket, Basketstatus, changestatusrebalance, getstocklistById } from "../../../Services/Admin";
+import { BasketAllList, deletebasket, Basketstatus, changestatusrebalance, getstocklistById, getstaffperuser } from "../../../Services/Admin";
 import { fDate } from "../../../Utils/Date_formate";
 
 
 
 const Basket = () => {
 
+  useEffect(() => {
+    getpermissioninfo()
+  }, [])
+
+  const userid = localStorage.getItem('id');
 
   const navigate = useNavigate();
   const [clients, setClients] = useState([]);
@@ -23,12 +28,28 @@ const Basket = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalRows, setTotalRows] = useState(0);
-
+  const [permission, setPermission] = useState([]);
 
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+
+
+
+  const getpermissioninfo = async () => {
+    try {
+      const response = await getstaffperuser(userid, token);
+
+
+      if (response.status) {
+        setPermission(response.data.permissions);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
 
 
 
@@ -256,53 +277,68 @@ const Basket = () => {
       sortable: true,
       width: "180px",
     },
+    permission.includes("publishstock") ||
+      permission.includes("addstock") ||
+      permission.includes("basketdetail") ||
+      permission.includes("editstock") ||
+      permission.includes("deletebasket") ?
+      {
+        name: "Actions",
+        cell: (row) => (
+          <div className="w-100">
+            {permission.includes("publishstock") && (
+              row.stock_details.length > 0 ? (
+                <Tooltip title="Published Stock">
+                  <RotateCcw
+                    checked={row.status}
+                    onClick={(event) => handleSwitchChange(event, row._id)}
+                  />
+                </Tooltip>
+              ) : ""
+            )}
 
-    {
-      name: "Actions",
-      cell: (row) => (
-        <div className="w-100">
-          {row.stock_details.length > 0 ?
-            <Tooltip title="Published Stock">
-              <RotateCcw
-                checked={row.status}
-                onClick={(event) => handleSwitchChange(event, row._id)} />
-            </Tooltip> : ""}
-          {row.stock_details?.length <= 0 ?
-            <Tooltip title="Add Stock">
+            {permission.includes("addstock") && (
+              row.stock_details?.length <= 0 ? (
+                <Tooltip title="Add Stock">
+                  <Link
+                    to={`/staff/addstock/${row._id}`}
+                    className="btn px-2"
+                  >
+                    <Plus />
+                  </Link>
+                </Tooltip>
+              ) : null
+            )}
+
+            {permission.includes("basketdetail") &&
+              <Tooltip title="view">
+                <Link
+                  to={`/staff/viewdetail/${row._id}`}
+                  className="btn px-2"
+                >
+                  <Eye />
+                </Link>
+              </Tooltip>}
+
+            {permission.includes("editstock") && <Tooltip title="Edit">
               <Link
-                to={`/staff/addstock/${row._id}`}
+                to={`editbasket/${row._id}`}
                 className="btn px-2"
               >
-                <Plus />
+                <SquarePen />
               </Link>
-            </Tooltip> : ""}
+            </Tooltip>}
 
-          <Tooltip title="view">
-            <Link
-              to={`/staff/viewdetail/${row._id}`}
+            {permission.includes("deletebasket") && <button
               className="btn px-2"
+              onClick={() => Deletebasket(row._id)}
             >
-              <Eye />
-            </Link>
-          </Tooltip>
-          <Tooltip title="Edit">
-            <Link
-              to={`editbasket/${row._id}`}
-              className="btn px-2"
-            >
-              <SquarePen />
-            </Link>
-          </Tooltip>
-          <button
-            className="btn px-2"
-            onClick={() => Deletebasket(row._id)}
-          >
-            <Trash2 />
-          </button>
-        </div>
-      ),
-      width: "220px"
-    },
+              <Trash2 />
+            </button>}
+          </div>
+        ),
+        width: "220px"
+      } : "",
   ];
 
 
@@ -341,12 +377,12 @@ const Basket = () => {
                 <i className="bx bx-search" />
               </span>
             </div>
-            <div className="ms-auto">
+            {permission.includes("addbasket") && <div className="ms-auto">
               <Link to="/staff/addbasket" className="btn btn-primary">
                 <i className="bx bxs-plus-square" aria-hidden="true" />
                 Add Basket
               </Link>
-            </div>
+            </div>}
             {/* <div className="ms-2">
               <Link to="/staff/basket/rebalancing" className="btn btn-primary">
                 <i className="bx bxs-plus-square" aria-hidden="true" />
