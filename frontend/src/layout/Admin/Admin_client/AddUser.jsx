@@ -17,19 +17,6 @@ const AddUser = () => {
   const validate = (values) => {
     let errors = {};
 
-
-    // if (!values.FullName) {
-    //   errors.FullName = "Please Enter Full Name";
-    // }
-
-    // if (/\d/.test(values.FullName)) {
-    //   errors.FullName = "Numbers are not allowed in the Full Name";
-    // }
-    // //updated code 
-    // if (/\W/.test(values.FullName)) {
-    //   errors.FullName = "Special character are not allowed"
-    // }
-
      // Full Name validation: Only alphabets and one space between two words allowed
      const fullNameRegex = /^[a-zA-Z]+(?: [a-zA-Z]+)?$/;
 
@@ -66,8 +53,6 @@ const AddUser = () => {
       add_by: user_id,
       freetrial: values.freetrial
     };
-    console.log("req",req.freetrial);
-    
 
 
     try {
