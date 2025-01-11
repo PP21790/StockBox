@@ -26,11 +26,11 @@ const AddBasket = () => {
     }
 
     if (values.full_price && values.full_price <= values.basket_price) {
-      errors.full_price = "Please Enter Greater Basket Price";
+      errors.full_price = "Please Enter Greater Discounted/Net Basket Price";
     }
 
     if (!values.basket_price) {
-      errors.basket_price = "Please Enter Basket Price";
+      errors.basket_price = "Please Enter Discounted/Net Basket Price";
     }
 
     // if (!values.accuracy) {
@@ -131,7 +131,6 @@ const AddBasket = () => {
       validity: "",
       next_rebalance_date: "",
       cagr: "",
-      full_price: ""
     },
     validate,
     onSubmit,
@@ -161,7 +160,7 @@ const AddBasket = () => {
     },
     {
       name: "full_price",
-      label: "Price",
+      label: "Actual Basket Price",
       type: "number",
       label_size: 12,
       col_size: 6,
@@ -171,7 +170,7 @@ const AddBasket = () => {
 
     {
       name: "basket_price",
-      label: "Basket Price",
+      label: "Discounted/Net Basket Price",
       type: "number",
       label_size: 12,
       col_size: 6,
@@ -232,6 +231,15 @@ const AddBasket = () => {
     {
       name: "next_rebalance_date",
       label: "Rebalance Date",
+      type: "text",
+      label_size: 12,
+      col_size: 6,
+      disable: false,
+      star: true
+    },
+    {
+      name: "offer_price",
+      label: "Offer Price",
       type: "text",
       label_size: 12,
       col_size: 6,
