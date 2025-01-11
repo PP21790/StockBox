@@ -311,9 +311,9 @@ const Perform = () => {
                                             <div className="row">
                                                 <div>
 
-                                                    <div className="card radius-10 w-100" style={{ border: "1px solid grey" }}>
+                                                    <div className="card radius-10 w-100" >
                                                         {clients && clients.map((item) => (
-                                                            <div className="card-body p-0">
+                                                            <div className="card-body p-0" style={{ border: "1px solid grey" }}>
                                                                 <div className="row g-0 row-group text-center" style={{ borderBottom: "1px solid grey" }}>
                                                                     <div className="col-lg-6">
 

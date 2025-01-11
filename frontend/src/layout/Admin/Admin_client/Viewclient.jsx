@@ -14,7 +14,7 @@ import Select from 'react-select';
 
 
 
-const Viewclientdetail = () => {
+const Viewclientdetail = () => { 
 
     const { id } = useParams();
     const token = localStorage?.getItem('token');
