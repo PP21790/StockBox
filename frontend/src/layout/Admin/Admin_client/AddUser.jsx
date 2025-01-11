@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useFormik } from 'formik';
 import DynamicForm from '../../../components/FormicForm';
 import Swal from 'sweetalert2';
@@ -17,14 +17,14 @@ const AddUser = () => {
   const validate = (values) => {
     let errors = {};
 
-     // Full Name validation: Only alphabets and one space between two words allowed
-     const fullNameRegex = /^[a-zA-Z]+(?: [a-zA-Z]+)?$/;
+    // Full Name validation: Only alphabets and one space between two words allowed
+    const fullNameRegex = /^[a-zA-Z]+(?: [a-zA-Z]+)?$/;
 
-     if (!values.FullName) {
-       errors.FullName = "Please Enter Full Name";
-     } else if (!fullNameRegex.test(values.FullName)) {
-       errors.FullName = "Full Name should only contain alphabets and one space between first and last name";
-     }
+    if (!values.FullName) {
+      errors.FullName = "Please Enter Full Name";
+    } else if (!fullNameRegex.test(values.FullName)) {
+      errors.FullName = "Full Name should only contain alphabets and one space between first and last name";
+    }
     if (!values.Email) {
       errors.Email = "Please Enter Email";
     }
@@ -104,7 +104,12 @@ const AddUser = () => {
   });
 
 
+  const traialStatus = formik.values.freetrial;
+  // console.log("traialStatus",traialStatus);
 
+  const handleToggleChange = () => {
+    console.log("Custom Clicked", traialStatus);
+  }
 
   const fields = [
     {
@@ -153,18 +158,43 @@ const AddUser = () => {
       disable: false,
       star: true
     },
-    {
-      name: "freetrial",
-      label: "Free trial status",
-      type: "togglebtn",
-      label_size: 6,
-      col_size: 4,
-      disable: false,
-      star: true
-    },
+    // {
+    //   name: "freetrial",
+    //   label: "Free trial status",
+    //   type: "togglebtn",
+    //   label_size: 6,
+    //   col_size: 4,
+    //   disable: false,
+    //   star: true,
+    // },
   ];
 
 
+
+  const handlefreeTrialChange = (e) => {
+    const currentValue = formik.values.freetrial; // Store current value
+  
+    console.log("Current toggle value:", e.target.checked);
+  
+    Swal.fire({
+      title: currentValue ? "Are you sure you want to disable the free trial?" : "Are you sure you want to enable the free trial?",
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: "Yes",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // If toggle is currently true (checked), and user clicks "Yes", set it to false
+        // If toggle is false (unchecked), and user clicks "Yes", set it to true
+        formik.setFieldValue("freetrial", !currentValue);
+        console.log("Updated toggle value:", !currentValue); // Log the updated value
+      } else if (result.isDenied) {
+        // If "No" (Deny) clicked, revert the value to its original state
+        formik.setFieldValue("freetrial", currentValue);
+        console.log("Value reverted to:", currentValue); // Log reverted value
+      }
+    });
+  };
+  
 
 
   return (
@@ -177,7 +207,32 @@ const AddUser = () => {
         btn_name1="Cancel"
         sumit_btn={true}
         btn_name1_route={"/admin/client"}
-        additional_field={<></>}
+        additional_field={<>
+
+
+          <div className={`col-lg-6`}>
+            <div className="input-block row">
+
+              <label htmlFor="freetrial" className={`col-lg-12 col-form-label`}>
+                Free trial status
+              </label>
+
+              <div className="col-lg-8">
+                <div className="form-switch">
+                  <input
+                    className="form-check-input"
+                    style={{
+                      height: "22px",
+                      width: "45px"
+                    }}
+                    type="checkbox"
+                    checked={formik.values["freetrial"] == 1}
+                    onChange={(e) =>handlefreeTrialChange(e)   }
+                  />
+                </div>
+              </div>
+            </div>
+          </div></>}
 
       />
     </div>

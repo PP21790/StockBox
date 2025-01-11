@@ -5,7 +5,7 @@ import { getcouponlist } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import { Eye, Pencil, Trash2, IndianRupee } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { DeleteCoupon, UpdateClientStatus, CouponStatus, CouponShowstatus,GetService } from '../../../Services/Admin';
+import { DeleteCoupon, UpdateClientStatus, CouponStatus, CouponShowstatus, GetService } from '../../../Services/Admin';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
 import { fDate, fDateTime } from '../../../Utils/Date_formate';
@@ -23,12 +23,12 @@ const Coupon = () => {
     const [viewpage, setViewpage] = useState({});
     const [datewise, setDatewise] = useState("")
 
-    const [service,setService] = useState([])
-    console.log("Service",service);
+    const [service, setService] = useState([])
+    // console.log("Service",service);
 
     //state for Loading
-    const [isLoading,setIsLoading] = useState(true)
-    
+    const [isLoading, setIsLoading] = useState(true)
+
 
     const token = localStorage.getItem('token');
 
@@ -37,7 +37,7 @@ const Coupon = () => {
     const getcoupon = async () => {
         try {
             const response = await getcouponlist(token);
-            // console.log("getcouponlist",response);
+            console.log("getcouponlist", response);
 
             if (response.status) {
                 const filterdata = response.data.filter((item) =>
@@ -53,7 +53,7 @@ const Coupon = () => {
         } catch (error) {
             console.log("error");
         }
-        setTimeout(()=>{
+        setTimeout(() => {
             setIsLoading(false)
         })
     }
@@ -66,7 +66,7 @@ const Coupon = () => {
             if (response.status) {
                 setService(response.data)
                 // console.log("chaking",response.data);
-                
+
             }
         } catch (error) {
             console.log("error");
@@ -249,9 +249,13 @@ const Coupon = () => {
         },
         {
             name: 'Used Limit/Total Limit',
-            selector: row => row.type === "limit" ? row.value : `${row.value}`,
+            selector: row => {
+                const usedLimit = row.totallimitation - row.limitation;
+                return `${usedLimit} / ${row.totallimitation}`;
+            },
             sortable: true,
             width: '300px',
+
         },
         {
             name: 'Services',
@@ -307,7 +311,7 @@ const Coupon = () => {
                     return <span className="text-danger" style={{ color: "red" }}>Expired</span>;
                 } else {
                     return <span className="text-success" style={{ color: "green" }}>Active</span>;
-                  }
+                }
             },
             sortable: true,
             width: '156px',
@@ -447,17 +451,17 @@ const Coupon = () => {
                                 </div>
                             </div>
                             {isLoading ? (
-                            <Loader />
+                                <Loader />
 
-                        ) : (
-                            <>
+                            ) : (
+                                <>
 
-                            <Table
-                                columns={columns}
-                                data={clients}
-                            />
-                            </>
-                        )}
+                                    <Table
+                                        columns={columns}
+                                        data={clients}
+                                    />
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>

@@ -26,11 +26,11 @@ const AddBasket = () => {
     }
 
     if (values.full_price && values.full_price <= values.basket_price) {
-      errors.full_price = "Please Enter Greater Basket Price";
+      errors.full_price = "Please Enter Greater Discounted/Net Basket Price";
     }
 
     if (!values.basket_price) {
-      errors.basket_price = "Please Enter Basket Price";
+      errors.basket_price = "Please Enter Discounted/Net Basket Price";
     }
 
     // if (!values.accuracy) {
@@ -160,7 +160,7 @@ const AddBasket = () => {
     },
     {
       name: "full_price",
-      label: "Price",
+      label: "Actual Basket Price",
       type: "number",
       label_size: 12,
       col_size: 6,
@@ -170,7 +170,7 @@ const AddBasket = () => {
 
     {
       name: "basket_price",
-      label: "Basket Price",
+      label: "Discounted/Net Basket Price",
       type: "number",
       label_size: 12,
       col_size: 6,
