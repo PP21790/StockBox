@@ -80,7 +80,8 @@ const AddBasket = () => {
       frequency: values.frequency,
       validity: values.validity,
       next_rebalance_date: values.next_rebalance_date,
-      cagr: values.cagr
+      cagr: values.cagr,
+      full_price: values.full_price || 0
     };
 
 

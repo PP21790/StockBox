@@ -49,7 +49,8 @@ const Editbasket = () => {
         frequency: data?.frequency || "",
         validity: data?.validity ? data?.validity : "",
         next_rebalance_date: data?.next_rebalance_date ? data?.next_rebalance_date : "",
-        cagr: data?.cagr
+        cagr: data?.cagr,
+        full_price: data?.full_price
       });
     }
   }, [data]);
@@ -57,7 +58,7 @@ const Editbasket = () => {
 
   const validate = (values) => {
     // console.log("values",values);
-    
+
     let errors = {};
 
     if (!values.title) {
@@ -66,6 +67,9 @@ const Editbasket = () => {
 
     if (!values.themename) {
       errors.themename = "Please Enter Theme Name";
+    }
+    if (values.full_price && values.full_price <= values.basket_price) {
+      errors.full_price = "Please Enter Greater Basket Price";
     }
 
     if (!values.basket_price) {
@@ -86,9 +90,9 @@ const Editbasket = () => {
       errors.next_rebalance_date = "Please Select Rebalance Date";
     }
 
-    if (values.description ==="<p><br></p>") {
+    if (values.description === "<p><br></p>") {
       errors.description = "Please Enter Description";
-  }
+    }
     if (!values.cagr) {
       errors.cagr = "Please Enter CAGR";
     }
@@ -108,8 +112,8 @@ const Editbasket = () => {
       frequency: values.frequency,
       validity: values.validity,
       next_rebalance_date: values.next_rebalance_date,
-      cagr: values.cagr
-
+      cagr: values.cagr,
+      full_price: values.full_price || 0
     };
 
 
@@ -162,6 +166,7 @@ const Editbasket = () => {
       validity: "",
       next_rebalance_date: "",
       cagr: "",
+      full_price: ""
     },
     validate,
     onSubmit,
@@ -188,6 +193,15 @@ const Editbasket = () => {
       col_size: 6,
       disable: true,
       star: true
+    },
+    {
+      name: "full_price",
+      label: "Price",
+      type: "number",
+      label_size: 12,
+      col_size: 6,
+      disable: false,
+
     },
 
     {
@@ -261,13 +275,13 @@ const Editbasket = () => {
     {
       name: "description",
       label: "Description",
-      type: "ckeditor", 
+      type: "ckeditor",
       label_size: 12,
       col_size: 12,
       disable: false,
-      star:true
-  },
-    
+      star: true
+    },
+
   ];
 
 
