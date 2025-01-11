@@ -3,36 +3,40 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { Viewbasket, getstocklistById } from "../../../Services/Admin";
 import Swal from "sweetalert2";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useNavigate, useParams, Link, useLocation } from "react-router-dom";
 import { Tooltip } from 'antd';
 import { SquarePen } from 'lucide-react';
 
 
 
 function cleanHtmlContent(html) {
+
+
+
+
   const div = document.createElement("div");
   div.innerHTML = html;
 
-  // Remove unwanted tags (e.g., <script>, <style>) ko remove karte hain
   const scripts = div.getElementsByTagName("script");
   const styles = div.getElementsByTagName("style");
 
   Array.from(scripts).forEach((script) => script.remove());
   Array.from(styles).forEach((style) => style.remove());
 
-  // Lists ko properly render karne ke liye ensure karna
-  const unorderedLists = div.querySelectorAll("ul");  // ul ko target karna
+
+  const unorderedLists = div.querySelectorAll("ul");
   unorderedLists.forEach((list) => {
-    list.style.listStyleType = "disc";  // Bullets style
+    list.style.listStyleType = "disc";
   });
 
-  const orderedLists = div.querySelectorAll("ol");  // ol ko target karna
+  const orderedLists = div.querySelectorAll("ol");
   orderedLists.forEach((list) => {
-    list.style.listStyleType = "decimal";  // Numbers style
+    list.style.listStyleType = "decimal";
   });
 
-  return div.innerHTML;  // Cleaned HTML with proper lists
+  return div.innerHTML;
 }
+
 
 
 
@@ -175,7 +179,18 @@ const Viewbasketdetail = () => {
   const token = localStorage.getItem("token");
   const [stockdata, setStockdata] = useState({})
 
+  const [currentlocation, setCurrentlocation] = useState({})
 
+  const location = useLocation()
+  console.log("location", location)
+
+  useEffect(() => {
+    if (location?.state) {
+      setCurrentlocation(location?.state?.state);
+    }
+  }, [location]);
+
+  const redirectTo = (currentlocation === "viewdetail") ? "/admin/basket/basketstockpublish" : "/admin/basket";
 
   const [initialValues, setInitialValues] = useState({
     title: "",
@@ -352,7 +367,7 @@ const Viewbasketdetail = () => {
                   )}
                 </div>
                 <div className="mt-3">
-                  <Link to="/admin/basket" className="btn btn-secondary">
+                  <Link to={redirectTo} className="btn btn-secondary">
                     Back
                   </Link>
                 </div>

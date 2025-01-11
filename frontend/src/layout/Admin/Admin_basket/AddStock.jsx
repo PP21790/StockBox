@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
-import { useNavigate, Link, useParams } from "react-router-dom";
+import { useNavigate, Link, useParams, useLocation } from "react-router-dom";
 import axios from "axios";
 import * as Config from "../../../Utils/config";
 import { Tooltip } from 'antd';
 import Swal from "sweetalert2";
 import { Addstockbasketform } from "../../../Services/Admin";
 
+
+
 const AddStock = () => {
+
+
   const { id: basket_id } = useParams();
   const [selectedServices, setSelectedServices] = useState([]);
   const [options, setOptions] = useState([]);
@@ -15,7 +19,24 @@ const AddStock = () => {
   const [inputValue, setInputValue] = useState("");
   const [formikValues, setFormikValues] = useState({});
   const [weightagecounting, setWeightagecounting] = useState(0);
+  const [currentlocation, setCurrentlocation] = useState({})
+  const [header, setHeader] = useState("Add Stock")
+
+
+
   const navigate = useNavigate();
+
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location?.state) {
+      setCurrentlocation(location?.state?.state);
+    } if (location?.state?.state == "publish") {
+      setHeader("Rebalance Stock")
+    }
+  }, [location]);
+
+  const redirectTo = (currentlocation === "publish") ? "/admin/basket/basketstockpublish" : "/admin/basket";
 
   const fetchOptions = async (inputValue) => {
     if (!inputValue) {
@@ -165,7 +186,7 @@ const AddStock = () => {
       const response = await Addstockbasketform(requestData);
       if (response?.status) {
         Swal.fire("Success", response.message, "success");
-        setTimeout(() => navigate("/admin/basket"), 1500);
+        setTimeout(() => navigate(redirectTo), 1500);
       } else {
         Swal.fire("Error", response.message, "error");
       }
@@ -203,7 +224,7 @@ const AddStock = () => {
       <div className="row">
         <div className="col-md-6">
           <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-            <div className="breadcrumb-title pe-3">Add Stock</div>
+            <div className="breadcrumb-title pe-3">{header}</div>
             <div className="ps-3">
               <nav aria-label="breadcrumb">
                 <ol className="breadcrumb mb-0 p-0">
@@ -220,7 +241,7 @@ const AddStock = () => {
         </div>
 
         <div className="col-md-6 d-flex justify-content-end">
-          <Link to="/admin/basket">
+          <Link to={redirectTo}>
             <Tooltip title="Back">
               <i
                 className="lni lni-arrow-left-circle"

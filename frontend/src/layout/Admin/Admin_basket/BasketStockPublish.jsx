@@ -37,7 +37,7 @@ const BasketStockPublish = () => {
       const data = { page: currentPage, search: searchInput || "" }
       const response = await BasketAllActiveListbyfilter(data, token);
       // console.log("BasketAllActiveListbyfilter",response);
-      
+
       if (response.status) {
         setTotalRows(response.pagination.total);
         setClients(response.data);
@@ -143,10 +143,14 @@ const BasketStockPublish = () => {
 
 
   const rebalancePubliceStock = async (row) => {
-    navigate("/admin/addstock/" + row._id, { state: { state : "publish" } });
-}
+    navigate("/admin/addstock/" + row._id, { state: { state: "publish" } });
+  }
 
 
+
+  const viewdetailpage = async (row) => {
+    navigate("/admin/viewdetail/" + row._id, { state: { state: "viewdetail" } });
+  }
 
   // Delete basket
 
@@ -254,7 +258,7 @@ const BasketStockPublish = () => {
       name: "Validity",
       selector: (row) => row.validity,
       sortable: true,
-     
+
     },
     {
       name: 'Active Status',
@@ -296,7 +300,7 @@ const BasketStockPublish = () => {
 
       ),
       sortable: true,
-     
+
     },
     {
       name: "Actions",
@@ -305,16 +309,10 @@ const BasketStockPublish = () => {
           {row.rebalancestatus === false ?
             <Tooltip title="Rebalance">
 
-                <RotateCcw onClick={() => rebalancePubliceStock(row)}/>
+              <RotateCcw onClick={() => rebalancePubliceStock(row)} />
             </Tooltip> : ""}
           <Tooltip title="view">
-            <Link
-
-              to={`/admin/viewdetail/${row._id}`}
-              className="btn px-2"
-            >
-              <Eye />
-            </Link>
+            <Eye onClick={() => viewdetailpage(row)} />
           </Tooltip>
           {/* <Tooltip title="Edit">
             <Link
