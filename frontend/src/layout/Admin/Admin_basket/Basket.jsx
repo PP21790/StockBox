@@ -263,9 +263,13 @@ const Basket = () => {
         <div className="w-100">
           {row.stock_details.length > 0 ?
             <Tooltip title="Published Stock">
+               <Link
+               className="btn px-2"
+               >
               <RotateCcw
                 checked={row.status}
                 onClick={(event) => handleSwitchChange(event, row._id)} />
+                </Link>
             </Tooltip> : ""}
           {row.stock_details?.length <= 0 ?
             <Tooltip title="Add Stock">
