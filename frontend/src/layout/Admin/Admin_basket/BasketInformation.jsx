@@ -11,6 +11,8 @@ const BasketInformation = () => {
   const [clients, setClients] = useState([]);
   const token = localStorage.getItem("token");
 
+
+
   // Fetch basket list
   const getbasketlist = async () => {
     try {
@@ -26,6 +28,10 @@ const BasketInformation = () => {
   useEffect(() => {
     getbasketlist();
   }, []);
+
+
+
+
 
   // Delete basket
   const Deletebasket = async (_id) => {
@@ -67,6 +73,9 @@ const BasketInformation = () => {
       });
     }
   };
+
+
+
 
   // Columns for DataTable
   const columns = [
@@ -130,6 +139,9 @@ const BasketInformation = () => {
       ),
     },
   ];
+
+
+
 
   return (
     <div className="page-content">

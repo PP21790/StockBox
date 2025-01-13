@@ -182,7 +182,7 @@ const Viewbasketdetail = () => {
   const [currentlocation, setCurrentlocation] = useState({})
 
   const location = useLocation()
-  console.log("location", location)
+
 
   useEffect(() => {
     if (location?.state) {

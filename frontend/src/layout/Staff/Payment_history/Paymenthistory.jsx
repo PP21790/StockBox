@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getPayementhistory, getPayementhistorywithfilter } from '../../../Services/Admin';
 // import Table from '../../../components/Table';
 import Table from '../../../components/Table1';
-import { SquarePen, Trash2, PanelBottomOpen, Eye, RefreshCcw , IndianRupee } from 'lucide-react';
+import { SquarePen, Trash2, PanelBottomOpen, Eye, RefreshCcw, IndianRupee, ArrowDownToLine } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
@@ -76,7 +76,7 @@ const History = () => {
                         Phone: item.clientPhoneNo || "-",
                         Title: item?.planCategoryTitle || '-',
                         ClientSegment: item?.serviceNames.map(statusItem => statusItem || 'N/A')
-                        .join(', ') || 'N/A',
+                            .join(', ') || 'N/A',
                         OerderId: item.orderid ? item.orderid : "Make By Admin",
                         PlanDiscount: item.discount || 0,
                         CouponID: item.coupon || "N/A",
@@ -99,7 +99,19 @@ const History = () => {
 
 
 
-   
+    const handleDownload = (row) => {
+        const url = `${image_baseurl}uploads/invoice/${row.invoice}`;
+        const link = document.createElement('a');
+        link.href = url;
+        link.target = '_blank';
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+
+
 
 
 
@@ -153,7 +165,7 @@ const History = () => {
 
         {
             name: 'Title',
-            selector: row => row?.planCategoryTitle ?  row?.planCategoryTitle : "N/A",
+            selector: row => row?.planCategoryTitle ? row?.planCategoryTitle : "N/A",
             sortable: true,
             width: '200px',
         },
@@ -166,7 +178,7 @@ const History = () => {
                             <span
                                 key={index}
                                 style={{
-    
+
                                     marginRight: '5px',
                                 }}
                             >
@@ -206,11 +218,11 @@ const History = () => {
             sortable: true,
             width: '200px',
         },
-        
+
 
         {
             name: 'Total',
-            selector: row =><div> <IndianRupee />{row.total}</div>,
+            selector: row => <div> <IndianRupee />{row.total}</div>,
             sortable: true,
             width: '200px',
         },
@@ -230,6 +242,28 @@ const History = () => {
             selector: row => fDateTime(row?.created_at),
             sortable: true,
             width: '200px',
+        },
+        {
+            name: 'Invoice',
+            cell: row => (
+                <>
+
+                    <div className='d-flex '>
+                        {row.invoice ?
+                            <Link className="btn px-2" onClick={() => handleDownload(row)}>
+                                <Tooltip placement="top" overlay="Download">
+                                    <ArrowDownToLine />
+                                </Tooltip>
+                            </Link> : "-"}
+                    </div>
+
+                </>
+            ),
+            ignoreRowClick: true,
+            allowOverflow: true,
+            button: true,
+            width: '200px',
+
         },
         // {
         //     name: 'Plan End',

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import Table from '../../../components/Table';
 import { Signalperdetail } from '../../../Services/Admin';
 import { image_baseurl } from '../../../Utils/config';
@@ -14,8 +14,17 @@ const Signaldetail = () => {
     const { id } = useParams();
     const token = localStorage?.getItem('token');
     const [data, setData] = useState([]);
+    const [currentlocation, setCurrentlocation] = useState({})
 
+    const location = useLocation()
 
+    useEffect(() => {
+        if (location?.state) {
+            setCurrentlocation(location?.state?.state);
+        }
+    }, [location]);
+
+    const redirectTo = (currentlocation === "closesignalpage") ? "/admin/closesignal" : "/admin/signal";
 
     useEffect(() => {
         getsignaldetail();
@@ -41,7 +50,7 @@ const Signaldetail = () => {
         const url = item.report;
         const link = document.createElement('a');
         link.href = url;
-        link.target = '_blank'; // Opens the link in a new tab
+        link.target = '_blank';
 
         document.body.appendChild(link);
         link.click();
@@ -76,6 +85,9 @@ const Signaldetail = () => {
         return ((absGain / entryPrice) * 100).toFixed(2);
     };
 
+
+
+
     return (
         <div>
             <div className="page-content">
@@ -97,7 +109,7 @@ const Signaldetail = () => {
                         </div>
                     </div>
                     <div className="col-md-6 d-flex justify-content-end">
-                        <Link to="/admin/signal">
+                        <Link to={redirectTo}>
                             <Tooltip title="Back">
                                 <i className="lni lni-arrow-left-circle" style={{ fontSize: "2rem", color: "#000" }} />
                             </Tooltip>
@@ -204,7 +216,7 @@ const Signaldetail = () => {
                                                     <h6 className="mb-1" >Description</h6>
                                                     <textarea
                                                         className="form-control text-secondary"
-                                                        style={{ flex: 1, height:"150px"}}
+                                                        style={{ flex: 1, height: "150px" }}
                                                         value={item.description || ''}
                                                         placeholder="Enter description"
                                                     />

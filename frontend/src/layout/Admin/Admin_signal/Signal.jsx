@@ -207,10 +207,6 @@ const Signal = () => {
 
             const response = await GetSignallistWithFilter(data, token);
 
-
-
-
-
             if (response && response.status) {
                 setTotalRows(response.pagination.totalRecords);
                 let filterdata = response.data.filter((item) => item.close_status === false);
@@ -654,7 +650,6 @@ const Signal = () => {
             width: '200px',
 
         },
-
 
 
     ];

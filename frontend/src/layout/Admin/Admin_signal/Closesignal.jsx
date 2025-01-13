@@ -30,7 +30,7 @@ import { Tooltip } from "antd";
 import { image_baseurl } from "../../../Utils/config";
 
 const Closesignal = () => {
-  const [activeTab, setActiveTab] = useState("table"); // State to manage active tab
+  const [activeTab, setActiveTab] = useState("table");
 
   const token = localStorage.getItem("token");
   const [searchInput, setSearchInput] = useState("");
@@ -47,11 +47,15 @@ const Closesignal = () => {
   const location = useLocation();
   const clientStatus = location?.state?.clientStatus;
 
+
+
   useEffect(() => {
     if (clientStatus == "todayclosesignal") {
       setheader("Todays Close Signal");
     }
   }, [clientStatus]);
+
+
 
   const today = new Date();
   const formattedDate = today.toISOString().slice(0, 10);
@@ -63,6 +67,8 @@ const Closesignal = () => {
     stock: "",
   });
 
+
+
   const [serviceList, setServiceList] = useState([]);
   const [stockList, setStockList] = useState([]);
   const [searchstock, setSearchstock] = useState("");
@@ -73,9 +79,13 @@ const Closesignal = () => {
   const navigate = useNavigate();
   const [clients, setClients] = useState([]);
 
+
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+
+
 
   const options = clients.map((item) => ({
     value: item.stock,
@@ -85,6 +95,8 @@ const Closesignal = () => {
   const handleChange = (selectedOption) => {
     setSearchstock(selectedOption ? selectedOption.value : "");
   };
+
+
 
   const getexportfile = async () => {
     try {
@@ -126,6 +138,8 @@ const Closesignal = () => {
       console.log("Error:", error);
     }
   };
+
+
 
   const getAllSignal = async () => {
     try {
@@ -190,18 +204,26 @@ const Closesignal = () => {
     fetchStockList();
   }, [filters]);
 
+
+
   useEffect(() => {
     getAllSignal();
   }, [filters, searchInput, searchstock, currentPage]);
+
+
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
+
+
   const Signaldetail = async (_id) => {
-    navigate(`/admin/signaldetaile/${_id}`);
+    navigate(`/admin/signaldetaile/${_id}`, { state: { state: "closesignalpage" } });
   };
+
+
 
   const handleDownload = (row) => {
     const url = `${image_baseurl}uploads/report/${row.report}`;
