@@ -11,6 +11,7 @@ import { image_baseurl } from '../../../Utils/config';
 import { IndianRupee } from 'lucide-react';
 import { exportToCSV } from '../../../Utils/ExportData';
 import Table from '../../../components/Table1';
+import Loader from '../../../Utils/Loader';
 
 
 
@@ -56,6 +57,9 @@ const Client = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
     const [getBasket, setGetBasket] = useState({});
+
+    //state for loading
+    const [isLoading, setIsLoading] = useState(true)
 
 
 
@@ -198,6 +202,8 @@ const Client = () => {
     const getcategoryplanlist = async () => {
         try {
             const response = await getActivecategoryplan(token);
+            console.log("getActivecategoryplan",response);
+            
             if (response.status) {
                 setCategory(response.data);
             }
