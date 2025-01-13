@@ -794,6 +794,8 @@ class List {
 
       }
 
+
+      if(settings.refer_status==1) {
       if (refertokens.length > 0) {
         for (const refertoken of refertokens) {
           const senderamount = (price * refertoken.senderearn) / 100;
@@ -822,6 +824,7 @@ class List {
       } else {
         console.log('No referral tokens found.');
       }
+    }
 
       const adminnotificationTitle = "Important Update";
       const adminnotificationBody = `Congratulations! ${client.FullName} successfully purchased the ${plan.category.title} Plan`;
