@@ -6,7 +6,7 @@ import { image_baseurl } from '../../../Utils/config';
 import { fDateTime, fDateTimeH } from '../../../Utils/Date_formate';
 import { Tooltip } from 'antd';
 import { ArrowDownToLine, } from 'lucide-react';
-import {  IndianRupee } from 'lucide-react';
+import { IndianRupee } from 'lucide-react';
 
 
 const Signaldetail = () => {
@@ -21,7 +21,7 @@ const Signaldetail = () => {
     useEffect(() => {
         getsignaldetail();
     }, []);
-   
+
 
 
 
@@ -30,13 +30,13 @@ const Signaldetail = () => {
         const url = item.report;
         const link = document.createElement('a');
         link.href = url;
-        link.target = '_blank'; 
-    
+        link.target = '_blank';
+
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
     };
-    
+
 
 
     const getsignaldetail = async () => {
@@ -118,8 +118,12 @@ const Signaldetail = () => {
                                                             <span className="text-secondary">{item.calltype || '-'}</span>
                                                         </li>
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                                            <h6 className="mb-0">Entry Price</h6>
-                                                            <span className="text-secondary"><IndianRupee/>{item.price || '-'}</span>
+                                                            <h6 className="mb-0">Quantity/Lot</h6>
+                                                            <span className="text-secondary">{item.lot || '-'}</span>
+                                                        </li>
+                                                        <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                            <h6 className="mb-0">Exit Price</h6>
+                                                            <span className="text-secondary"><IndianRupee size={16} />{item.closeprice || '-'}</span>
                                                         </li>
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="mb-0">Entry Date & Time</h6>
@@ -133,10 +137,7 @@ const Signaldetail = () => {
                                                             <h6 className="mb-0">Target-3</h6>
                                                             <span className="text-secondary">{item.targetprice3 || item.tag3 || '-'}</span>
                                                         </li>
-                                                        <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                                            <h6 className="mb-0">Remark</h6>
-                                                            <span className="text-secondary">{item.description || '-'}</span>
-                                                        </li>
+
                                                     </ul>
                                                 </div>
 
@@ -146,14 +147,16 @@ const Signaldetail = () => {
                                                             <h6 className="mb-0">Stock Name</h6>
                                                             <span className="text-secondary">{item.stock || '-'}</span>
                                                         </li>
+
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="mb-0">Trade Duration</h6>
                                                             <span className="text-secondary">{item.callduration || '-'}</span>
                                                         </li>
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                                            <h6 className="mb-0">Exit Price</h6>
-                                                            <span className="text-secondary"><IndianRupee/>{item.closeprice || '-'}</span>
+                                                            <h6 className="mb-0">Entry Price</h6>
+                                                            <span className="text-secondary"><IndianRupee size={16} />{item.price || '-'}</span>
                                                         </li>
+
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="mb-0">Exit Date & Time</h6>
                                                             <span className="text-secondary">
@@ -174,16 +177,26 @@ const Signaldetail = () => {
                                                                 {item.report ? (
                                                                     //   <img src={`${image_baseurl}uploads/report/${item.image}`} alt={item.report} width="50" height="50" />
                                                                     <div style={{ color: "green", cursor: "pointer" }} onClick={() => handleDownload(item)}>
-                                                                    <Tooltip placement="top" overlay="Download">
-                                                                         <ArrowDownToLine />
-                                                                    </Tooltip>
-                                                                </div>
+                                                                        <Tooltip placement="top" overlay="Download">
+                                                                            <ArrowDownToLine />
+                                                                        </Tooltip>
+                                                                    </div>
                                                                 ) : (
                                                                     "-"
                                                                 )}
                                                             </span>
                                                         </li>
                                                     </ul>
+
+                                                </div>
+                                                <div className="card-body col-md-12 " style={{ marginLeft: "15px" }}>
+                                                    <h6 className="mb-1" >Description</h6>
+                                                    <textarea
+                                                        className="form-control text-secondary"
+                                                        style={{ flex: 1, height: "150px" }}
+                                                        value={item.description || ''}
+                                                        placeholder="Enter description"
+                                                    />
                                                 </div>
                                             </div>
 
@@ -195,7 +208,8 @@ const Signaldetail = () => {
                                                         <div className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="ms-3">P&L</h6>
                                                             <h6 className={`text-secondary me-2 ${item.totalGain > 0 ? 'text-success' : 'text-danger'}`}>
-                                                            <IndianRupee/> {item.totalGain !== null ? `${calculatePercentage(item.totalGain, item.price)}%` : '-'}
+                                                                {/* <IndianRupee size={16} />  */}
+                                                                {item.totalGain !== null ? `${calculatePercentage(item.totalGain, item.price)}%` : '-'}
                                                             </h6>
                                                         </div>
                                                     </div>

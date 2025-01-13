@@ -181,18 +181,20 @@ const Viewbasketdetail = () => {
 
   const [currentlocation, setCurrentlocation] = useState({})
 
+ 
   const location = useLocation()
-  console.log("location", location)
+    
+  
+    useEffect(() => {
+      if (location?.state) {
+        setCurrentlocation(location?.state?.state);
+      }
+    }, [location]);
 
-  useEffect(() => {
-    if (location?.state) {
-      setCurrentlocation(location?.state?.state);
-    }
-  }, [location]);
+  const redirectTo = (currentlocation === "viewdetail") ? "/staff/basket/basketstockpublish" : "/staff/basket";
+  
 
-  const redirectTo = (currentlocation === "viewdetail") ? "/satff/basket/basketstockpublish" : "/staff/basket";
-
-  const [initialValues, setInitialValues] = useState({
+  const [initialValues, setInitialValues] = useState({ 
     title: "",
     description: "",
     accuracy: "",
