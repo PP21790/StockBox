@@ -357,8 +357,10 @@ const DeleteTokenAliceToken = async (req, res) => {
         return {
             symbol: element.name,
             expiry: expiry,
-            expiry_month_year: expiry.slice(2),
-            expiry_date: expiry.slice(0, -6),
+            // expiry_month_year: expiry.slice(2),
+            // expiry_date: expiry.slice(0, -6),
+            expiry: segment === "C" ? null : expiry,
+            expiry_month_year: segment === "C" ? null : expiry.slice(2),
             expiry_str: element.expiry,
             strike: strike,
             option_type: option_type,
