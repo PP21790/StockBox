@@ -385,9 +385,9 @@ const DynamicForm = ({
                                                                                                 timer: 1500,
                                                                                                 timerProgressBar: true,
                                                                                             })
-                                                                                                e.target.value = "";
-                                                                                            
-                                                                                            
+                                                                                            e.target.value = "";
+
+
                                                                                         }
                                                                                     }
                                                                                 }}

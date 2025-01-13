@@ -24,7 +24,7 @@ const Updatenews = () => {
         initialValues: {
             title: client?.title || "",
             description: client?.description || "",
-            image: client?.image || "",
+            image: client?.image ? client?.image : "",
             id: "",
         },
 
@@ -80,7 +80,7 @@ const Updatenews = () => {
             label_size: 6,
             col_size: 6,
             disable: false,
-            star:true
+            star: true
 
         },
         {
@@ -94,7 +94,7 @@ const Updatenews = () => {
             imageWidth: "60px",
             imageHeight: "auto",
             src: `${image_baseurl}/uploads/news/${client.image}`,
-            star:true
+            star: true
         },
         {
             name: "description",
@@ -103,7 +103,7 @@ const Updatenews = () => {
             label_size: 12,
             col_size: 12,
             disable: false,
-            star:true
+            star: true
         },
     ];
 

@@ -10,38 +10,38 @@ import { image_baseurl } from '../../../Utils/config';
 const Updateblogs = () => {
     const location = useLocation();
     const { row } = location.state;
-   
-    
+
+
 
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
 
     const validate = (values) => {
         // console.log("values blogs",values);
-        
+
         let errors = {};
-    
+
         if (!values.title) {
-          errors.title = "Please Enter Title";
+            errors.title = "Please Enter Title";
         }
-        if (!values.description || values.description ==="<p><br></p>") {
+        if (!values.description || values.description === "<p><br></p>") {
             errors.description = "Please Enter Description";
         }
         if (!values.image) {
             errors.image = "Please Enter image url";
         }
         return errors;
-    }    
-    
+    }
+
     const formik = useFormik({
         initialValues: {
             title: row?.title || "",
             description: row?.description || "",
-            image: row?.image || "",
-            id: "" 
+            image: row?.image ? row?.image : "",
+            id: ""
         },
         validate,
-       
+
         onSubmit: async (values) => {
             const req = {
                 title: values.title,
@@ -53,7 +53,7 @@ const Updateblogs = () => {
             try {
                 const response = await Updateblogsbyadmin(req, token);
                 // return
-                 
+
                 if (response.status) {
                     Swal.fire({
                         title: "Update Successful!",
@@ -87,7 +87,7 @@ const Updateblogs = () => {
     });
 
 
-    
+
     const fields = [
         {
             name: "title",
@@ -96,21 +96,21 @@ const Updateblogs = () => {
             label_size: 6,
             col_size: 6,
             disable: false,
-            star:true
-            
+            star: true
+
         },
         {
             name: "image",
             label: "Image",
-            type: "file3", 
+            type: "file3",
             label_size: 12,
             col_size: 6,
-            disable: false, 
+            disable: false,
             image: true,
             imageWidth: "60px",
-            imageHeight: "auto",  
+            imageHeight: "auto",
             src: `${image_baseurl}/uploads/blogs/${row.image}`,
-            star:true
+            star: true
         },
         {
             name: "description",
@@ -119,7 +119,7 @@ const Updateblogs = () => {
             label_size: 12,
             col_size: 12,
             disable: false,
-            star:true
+            star: true
         },
     ];
 
@@ -134,7 +134,7 @@ const Updateblogs = () => {
                 sumit_btn={true}
                 btn_name1_route={"/admin/blogs"}
                 additional_field={<>
-                  
+
                 </>}
             />
         </div>
