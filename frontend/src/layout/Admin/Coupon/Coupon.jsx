@@ -13,7 +13,7 @@ import Loader from '../../../Utils/Loader';
 
 
 
-const Coupon = () => { 
+const Coupon = () => {
 
 
     const navigate = useNavigate();
@@ -53,9 +53,9 @@ const Coupon = () => {
         } catch (error) {
             console.log("error");
         }
-        setTimeout(() => {
-            setIsLoading(false)
-        })
+
+        setIsLoading(false)
+
     }
 
     const getService = async () => {
@@ -309,23 +309,23 @@ const Coupon = () => {
                 endDate.setHours(23, 59, 59, 999);
                 if (currentDate > endDate) {
                     return <span className="text-danger" style={{ color: "red" }}>Expired</span>;
-                // } else {
-                //     return (
-                //         <div className="form-check form-switch form-check-info">
-                //             <input
-                //                 id={`rating_${row.status}`}
-                //                 className="form-check-input toggleswitch"
-                //                 type="checkbox"
-                //                 defaultChecked={row.status === true}
-                //                 onChange={(event) => handleSwitchChange(event, row._id)}
-                //             />
-                //             <label
-                //                 htmlFor={`rating_${row.status}`}
-                //                 className="checktoggle checkbox-bg"
-                //             ></label>
-                //         </div>
-                //     );
-                // }
+                    // } else {
+                    //     return (
+                    //         <div className="form-check form-switch form-check-info">
+                    //             <input
+                    //                 id={`rating_${row.status}`}
+                    //                 className="form-check-input toggleswitch"
+                    //                 type="checkbox"
+                    //                 defaultChecked={row.status === true}
+                    //                 onChange={(event) => handleSwitchChange(event, row._id)}
+                    //             />
+                    //             <label
+                    //                 htmlFor={`rating_${row.status}`}
+                    //                 className="checktoggle checkbox-bg"
+                    //             ></label>
+                    //         </div>
+                    //     );
+                    // }
                 } else {
                     return <span className="text-success" style={{ color: "green" }}>Active</span>;
                 }
@@ -467,21 +467,22 @@ const Coupon = () => {
                                     </Link>
                                 </div>
                             </div>
-                            {isLoading ? (
-                                <Loader />
 
-                            ) : (
-                                <>
-
-                                    <Table
-                                        columns={columns}
-                                        data={clients}
-                                    />
-                                </>
-                            )}
                         </div>
                     </div>
                 </div>
+
+                {isLoading ? (
+                    <Loader />
+                ) : (
+                    <>
+
+                        <Table
+                            columns={columns}
+                            data={clients}
+                        />
+                    </>
+                )}
                 <div className="button-group">
 
                     <div

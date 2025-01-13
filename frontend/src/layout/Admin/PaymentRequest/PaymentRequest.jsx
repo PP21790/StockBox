@@ -147,9 +147,9 @@ const PaymentRequest = () => {
                     case 0:
                         return "Pending";
                     case 1:
-                        return "Complete";
+                        return "Completed";
                     case 2:
-                        return "Reject";
+                        return "Rejectd";
                     default:
                         return "Unknown";
                 }

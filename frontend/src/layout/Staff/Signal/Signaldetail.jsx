@@ -141,7 +141,7 @@ const Signaldetail = () => {
                                                             <span className="text-secondary">{item.calltype || '-'}</span>
                                                         </li>
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                                            <h6 className="mb-0">Quantity/Lot</h6>
+                                                            <h6 className="mb-0">Suggested Quantity/Lot</h6>
                                                             <span className="text-secondary">{item.lot || '-'}</span>
                                                         </li>
                                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">

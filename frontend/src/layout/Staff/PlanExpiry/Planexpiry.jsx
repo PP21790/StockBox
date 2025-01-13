@@ -4,7 +4,9 @@ import { RefreshCcw } from 'lucide-react';
 import Table from '../../../components/Table1';
 import { exportToCSV } from '../../../Utils/ExportData';
 import { getclientPlanexpiry, getclientPlanexpirywithfilter, GetService } from '../../../Services/Admin';
-import { fDateTime} from '../../../Utils/Date_formate';
+import { fDateTime } from '../../../Utils/Date_formate';
+import Loader from '../../../Utils/Loader';
+
 
 
 
@@ -22,6 +24,9 @@ const Planexpiry = () => {
     const [totalRows, setTotalRows] = useState(0);
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
+
+    //state for loading
+    const [isLoading, setIsLoading] = useState(true)
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
@@ -55,6 +60,7 @@ const Planexpiry = () => {
         } catch (error) {
             console.error('Error fetching client data:', error);
         }
+        setIsLoading(false)
     };
 
 
@@ -236,13 +242,20 @@ const Planexpiry = () => {
                             <RefreshCcw className="refresh-icon" onClick={resetFilters} />
                         </div>
                     </div>
-                    <Table
-                        columns={columns}
-                        data={clients}
-                        totalRows={totalRows}
-                        currentPage={currentPage}
-                        onPageChange={handlePageChange}
-                    />
+
+                    {isLoading ? (
+                        <Loader />
+                    ) : (
+                        <>
+                            <Table
+                                columns={columns}
+                                data={clients}
+                                totalRows={totalRows}
+                                currentPage={currentPage}
+                                onPageChange={handlePageChange}
+                            />
+                        </>
+                    )}
                 </div>
             </div>
         </div>
