@@ -4,21 +4,19 @@ import axios from 'axios';
 import Table from '../../../components/Table1';
 import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { FreeClientList, FreeClientListWithFilter, PlanSubscription, DeleteFreeClient, getcategoryplan, getplanlist } from '../../../Services/Admin';
+import { FreeClientList, FreeClientListWithFilter, getstaffperuser, PlanSubscription, BasketSubscription, DeleteFreeClient, getcategoryplan, getplanlist, getPlanbyUser, BasketAllActiveList } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
 import { image_baseurl } from '../../../Utils/config';
 import { fDate, fDateTime } from '../../../Utils/Date_formate';
 import { IndianRupee } from 'lucide-react';
 import { exportToCSV } from '../../../Utils/ExportData';
-import { getstaffperuser } from '../../../Services/Admin';
+
 
 const Freeclient = () => {
-
 
     const userid = localStorage.getItem('id');
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
-     
 
     const location = useLocation()
     const clientStatus = location?.state?.clientStatus;
@@ -35,10 +33,11 @@ const Freeclient = () => {
     const [ForGetCSV, setForGetCSV] = useState([])
     const [searchInput, setSearchInput] = useState("");
     const [header, setheader] = useState("Free Trial Client");
-    const [permission, setPermission] = useState([]);
 
+    const [getBasket, setGetBasket] = useState({});
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
+    const [permission, setPermission] = useState([]);
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
@@ -49,30 +48,34 @@ const Freeclient = () => {
         client_id: "",
         price: ""
     });
-   
+
+
+    const [basketdetail, setBasketdetail] = useState({
+        basket_id: "",
+        client_id: "",
+        price: "",
+
+    });
+
+
 
     useEffect(() => {
         if (clientStatus == "active") {
             setheader("Free Trial Active Client")
         } else if (clientStatus == "expired") {
             setheader("Free  Trial Deactive Client")
-        } 
+        }
     }, [clientStatus, clients])
 
 
 
     useEffect(() => {
-        getdemoclient();
+        // getdemoclient();
         getcategoryplanlist()
-        getplanlistbyadmin()
+        getActiveBasketdetail()
         getpermissioninfo()
     }, []);
 
-
-    useEffect(() => {
-        getdemoclient();
-    }, [client, currentPage, searchInput]);
-   
 
 
     const getpermissioninfo = async () => {
@@ -90,7 +93,7 @@ const Freeclient = () => {
 
     const getdemoclient = async () => {
         try {
-            const data = { page: currentPage, search: searchInput , freestatus : clientStatus || ""}
+            const data = { page: currentPage, search: searchInput, freestatus: clientStatus || "" }
             const response = await FreeClientListWithFilter(data, token);
             if (response.status) {
                 setTotalRows(response.pagination.total)
@@ -102,27 +105,48 @@ const Freeclient = () => {
         }
     }
 
-   
+
+    useEffect(() => {
+        getdemoclient();
+    }, [client, currentPage, searchInput]);
+
+
+
+
+    const getActiveBasketdetail = async () => {
+        try {
+            const response = await BasketAllActiveList(token);
+            if (response.status) {
+                setGetBasket(response.data);
+
+            }
+        } catch (error) {
+            console.log("error");
+        }
+    };
+
+
+
 
     const getexportfile = async () => {
         try {
-          
+
             const response = await FreeClientList(token);
             if (response.status) {
                 if (response.data?.length > 0) {
                     const csvArr = response.data?.map((item) => ({
-        
+
                         FullName: item.clientDetails?.FullName || '-',
                         Email: item.clientDetails?.Email || '-',
                         PhoneNo: item?.clientDetails?.PhoneNo || '-',
                         Kyc: item?.clientDetails?.kyc_verification == 1 ? "Verified" : "Not Verified",
                         Status: item?.status === "active" ? "Active" : "Expired",
-                        StartDate: item?.startdate || '-',
-                        EndDate: item?.enddate || '-',
-        
+                        StartDate: fDateTime(item?.startdate) || '-',
+                        EndDate: fDateTime(item?.enddate) || '-',
+
                     }));
                     exportToCSV(csvArr, 'All Free Clients')
-                   
+
                 }
             }
         } catch (error) {
@@ -132,9 +156,10 @@ const Freeclient = () => {
 
 
 
-    const getplanlistbyadmin = async () => {
+    const getplanlistassinstatus = async (_id) => {
         try {
-            const response = await getplanlist(token);
+
+            const response = await getPlanbyUser(_id, token);
             if (response.status) {
                 setPlanlist(response.data);
             }
@@ -142,6 +167,9 @@ const Freeclient = () => {
             console.log("error");
         }
     }
+
+
+
 
 
     const getcategoryplanlist = async () => {
@@ -166,7 +194,7 @@ const Freeclient = () => {
         setIsModalVisible(true);
     };
 
-    
+
     const handleCancel = () => {
         setIsModalVisible(false);
         setSelectcategory("")
@@ -333,7 +361,41 @@ const Freeclient = () => {
     };
 
 
+    // assign basket 
+    const UpdateBasketservice = async () => {
 
+        try {
+            const data = { basket_id: basketdetail.basket_id, client_id: client._id, price: basketdetail.price, };
+            const response = await BasketSubscription(data, token);
+            if (response && response.status) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Basket service updated successfully.',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    timer: 2000,
+                });
+
+                setBasketdetail({ basket_id: "", client_id: "", price: "" });
+                getdemoclient();
+                handleCancel()
+            } else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: response.message || 'There was an error updating the Basket.',
+                    icon: 'error',
+                    confirmButtonText: 'Try Again',
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'There was an error updating the Basket.',
+                icon: 'error',
+                confirmButtonText: 'Try Again',
+            });
+        }
+    };
 
 
 
@@ -397,7 +459,7 @@ const Freeclient = () => {
             width: '200px',
         },
         {
-            name: 'End Start',
+            name: 'End Date',
             selector: row => fDateTime(row.enddate),
             sortable: true,
             width: '200px',
@@ -438,15 +500,15 @@ const Freeclient = () => {
                         {row.clientDetails?.kyc_verification === "1" ? <Download onClick={() => handleDownload(row)} /> : ""}
 
                     </Tooltip> */}
-                    <Tooltip placement="top" overlay="Package Assign">
-                        <span onClick={(e) => { showModal(true); setClientid(row); }} style={{ cursor: 'pointer' }}>
+                    {permission.includes("assignPackage") && <Tooltip placement="top" overlay="Package Assign">
+                        <span onClick={(e) => { showModal(true); setClientid(row); getplanlistassinstatus(row._id) }} style={{ cursor: 'pointer' }}>
                             <Settings2 />
                         </span>
-                    </Tooltip>
+                    </Tooltip>}
 
-                    {permission.includes("editfreeclient") && (<Tooltip title="Update">
+                    {permission.includes("editfreeclient") && <Tooltip title="Update">
                         <SquarePen className='ms-2' onClick={() => updateClient(row)} />
-                    </Tooltip> ) }
+                    </Tooltip>}
                     {/* <Tooltip title="delete">
                         <Trash2 onClick={() => DeleteClient(row._id)} />
 
@@ -459,6 +521,9 @@ const Freeclient = () => {
             width: '165px',
         }
     ];
+
+
+
 
     return (
         <div>
@@ -497,23 +562,23 @@ const Freeclient = () => {
                                     </div>
 
                                     <div
-                                    className="ms-2"
-                                    onClick={(e) => getexportfile()}
-                                >
-                                    <button
-                                        type="button"
-                                        className="btn btn-primary float-end"
-                                        data-toggle="tooltip"
-                                        data-placement="top"
-                                        title="Export To Excel"
-                                        delay={{ show: "0", hide: "100" }}
-
+                                        className="ms-2"
+                                        onClick={(e) => getexportfile()}
                                     >
-                                        <i className="bx bxs-download" aria-hidden="true"></i>
+                                        <button
+                                            type="button"
+                                            className="btn btn-primary float-end"
+                                            data-toggle="tooltip"
+                                            data-placement="top"
+                                            title="Export To Excel"
+                                            delay={{ show: "0", hide: "100" }}
 
-                                        Export-Excel
-                                    </button>
-                                  </div>
+                                        >
+                                            <i className="bx bxs-download" aria-hidden="true"></i>
+
+                                            Export-Excel
+                                        </button>
+                                    </div>
 
 
 
@@ -536,12 +601,12 @@ const Freeclient = () => {
                 <>
                     <div className="modal-backdrop fade show"></div>
                     <div
-                        className="modal fade show d-block"
+                        className=" model-xl modal fade show d-block"
                         tabIndex="-1"
                         aria-labelledby="exampleModalLabel"
                         aria-hidden="true"
                     >
-                        <div className="modal-dialog modal-lg">
+                        <div className="modal-dialog modal-xl" style={{ width: '850px' }}>
                             <div className="modal-content">
                                 <div className="modal-header">
                                     <h5 className="modal-title" id="exampleModalLabel">Assign Package</h5>
@@ -555,7 +620,7 @@ const Freeclient = () => {
                                 <div className="modal-body">
                                     <div className='card'>
                                         <div className='d-flex justify-content-center align-items-center card-body'>
-                                            {['Plan'].map((tab, index) => (
+                                            {['Plan', 'Basket'].map((tab, index) => (
                                                 <label key={index} className='labelfont'>
                                                     <input
                                                         className='ms-3'
@@ -573,9 +638,9 @@ const Freeclient = () => {
                                     <div className='card'>
                                         {checkedIndex === 0 && (
                                             <>
-                                                <div className='row mt-3'>
+                                                <div className='row mt-3 xl'>
                                                     {category && category
-                                                        .filter(cat => planlist.some(plan => plan.category === cat._id))
+                                                        .filter(cat => planlist.some(plan => plan.category._id === cat._id))
                                                         .map((item, index) => (
                                                             <div className='col-lg-4' key={index}>
                                                                 <input
@@ -586,8 +651,10 @@ const Freeclient = () => {
                                                                     id={`proplus-${index}`}
                                                                     onClick={() => handleCategoryChange(item._id)}
                                                                 />
-                                                                <label className="form-check-label" htmlFor={`proplus-${index}`}>
-                                                                    {item.title}
+                                                                <label className="form-check-label" htmlFor={`proplus-${index}`} style={{ fontSize: "12px" }}>
+                                                                    {item.title} (
+                                                                    {item.servicesDetails.map((service) => service.title).join(", ")}
+                                                                    )
                                                                 </label>
                                                             </div>
                                                         ))}
@@ -597,7 +664,7 @@ const Freeclient = () => {
                                                     <form className='card-body mt-3' style={{ height: "40vh", overflowY: "scroll" }} >
                                                         <div className="row">
                                                             {planlist
-                                                                .filter(item => item.category === selectcategory)
+                                                                .filter(item => item.category._id === selectcategory)
                                                                 .map((item, index) => (
                                                                     <div className="col-md-6" key={index}>
                                                                         <div className="card mb-0 my-2">
@@ -616,7 +683,8 @@ const Freeclient = () => {
                                                                                         }}
                                                                                     />
                                                                                     <label className="form-check-label mx-1" style={{ fontSize: "13px", fontWeight: "800" }} htmlFor={`input-plan-${index}`}>
-                                                                                        {item.title}
+                                                                                        {item.validity}
+
                                                                                     </label>
                                                                                 </h5>
 
@@ -631,7 +699,12 @@ const Freeclient = () => {
                                                                                                 aria-expanded={selectedPlanId === item._id}
                                                                                                 aria-controls={`collapse-${item._id}`}
                                                                                             >
-                                                                                                <strong className="text-secondary">Validity: {item.validity}</strong>
+                                                                                                <div className='d-flex justify-content-between'>
+                                                                                                    <div>
+                                                                                                        <strong className="text-secondary m-2">Detail</strong>
+                                                                                                        <strong className="text-success m-2 activestrong">{item?.subscription?.status === "active" ? "Active" : ""}</strong>
+                                                                                                    </div>
+                                                                                                </div>
                                                                                             </button>
                                                                                         </h2>
                                                                                         <div
@@ -643,11 +716,14 @@ const Freeclient = () => {
                                                                                             <div className="accordion-body">
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Price:</strong>
-                                                                                                    <span><IndianRupee /> {item.price}</span>
+                                                                                                    <span><IndianRupee /> {item.price && item.price}</span>
+
+
                                                                                                 </div>
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Validity:</strong>
                                                                                                     <span>{item.validity}</span>
+
                                                                                                 </div>
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Created At:</strong>
@@ -670,6 +746,86 @@ const Freeclient = () => {
                                                 )}
                                             </>
                                         )}
+                                        {checkedIndex === 1 && (
+                                            <>
+                                                <form className='card-body my-3' style={{ height: "40vh", overflowY: "scroll" }}>
+                                                    <div className="row">
+                                                        {getBasket.map((item, index) => (
+                                                            <div className="col-md-6" key={index}>
+                                                                <div className="card mb-0 my-2">
+                                                                    <div className="card-body p-1">
+                                                                        <h5 className="card-title">
+                                                                            <input
+                                                                                style={{ height: "13px", width: "13px", marginTop: "0.52rem", border: "1px solid black" }}
+                                                                                className="form-check-input"
+                                                                                type="radio"
+                                                                                name="planSelection"
+                                                                                id={`input-plan-${index}`}
+                                                                                checked={selectedPlanId === item._id}
+                                                                                onClick={() => {
+                                                                                    setSelectedPlanId(item._id);
+                                                                                    setBasketdetail({ basket_id: item._id, price: item.basket_price });
+                                                                                }}
+                                                                            />
+                                                                            <label className="form-check-label mx-1" style={{ fontSize: "13px", fontWeight: "800" }} htmlFor={`input-plan-${index}`}>
+                                                                                {item.validity}
+                                                                            </label>
+                                                                        </h5>
+
+                                                                        <div className="accordion" id={`accordion-basket`}>
+                                                                            <div className="accordion-item">
+                                                                                <h2 className="accordion-header" id={`heading-${item._id}`}>
+                                                                                    <button
+                                                                                        className={`accordion-button ${selectedPlanId === item._id ? '' : 'collapsed'} custom-accordion-button`}
+                                                                                        type="button"
+                                                                                        data-bs-toggle="collapse"
+                                                                                        data-bs-target={`#collapse-${item._id}`}
+                                                                                        aria-expanded={selectedPlanId === item._id}
+                                                                                        aria-controls={`collapse-${item._id}`}
+                                                                                    >
+                                                                                        <div className='d-flex justify-content-between'>
+                                                                                            <div>
+                                                                                                <strong className="text-secondary m-2">Detail</strong>
+                                                                                                <strong className="text-success m-2 activestrong">{item?.subscription?.status === "active" ? "Active" : ""}</strong>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </button>
+                                                                                </h2>
+                                                                                <div
+                                                                                    id={`collapse-${item._id}`}
+                                                                                    className={`accordion-collapse collapse ${selectedPlanId === item._id ? 'show' : ''}`}
+                                                                                    aria-labelledby={`heading-${item._id}`}
+                                                                                    data-bs-parent={`#accordion-basket`}
+                                                                                >
+                                                                                    <div className="accordion-body">
+                                                                                        <div className="d-flex justify-content-between">
+                                                                                            <strong>Price:</strong>
+                                                                                            <span><IndianRupee /> {item.basket_price && item.basket_price}</span>
+                                                                                        </div>
+                                                                                        <div className="d-flex justify-content-between">
+                                                                                            <strong>Validity:</strong>
+                                                                                            <span>{item.validity}</span>
+                                                                                        </div>
+                                                                                        <div className="d-flex justify-content-between">
+                                                                                            <strong>Created At:</strong>
+                                                                                            <span>{fDateTime(item?.created_at)}</span>
+                                                                                        </div>
+                                                                                        <div className="d-flex justify-content-between">
+                                                                                            <strong>Updated At:</strong>
+                                                                                            <span>{fDateTime(item?.updated_at)}</span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </form>
+                                            </>
+                                        )}
 
                                     </div>
                                 </div>
@@ -688,6 +844,15 @@ const Freeclient = () => {
                                             type="button"
                                             className="btn btn-primary"
                                             onClick={() => Updateplansubscription()}
+                                        >
+                                            Save Plan
+                                        </button>
+                                    )}
+                                    {checkedIndex === 1 && (
+                                        <button
+                                            type="button"
+                                            className="btn btn-primary"
+                                            onClick={() => UpdateBasketservice()}
                                         >
                                             Save Plan
                                         </button>

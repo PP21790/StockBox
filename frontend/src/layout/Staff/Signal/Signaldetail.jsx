@@ -8,14 +8,12 @@ import { Tooltip } from 'antd';
 import { ArrowDownToLine, } from 'lucide-react';
 import { IndianRupee } from 'lucide-react';
 
-
 const Signaldetail = () => {
 
 
     const { id } = useParams();
     const token = localStorage?.getItem('token');
     const [data, setData] = useState([]);
-
     const [currentlocation, setCurrentlocation] = useState({})
 
     const location = useLocation()
@@ -26,14 +24,25 @@ const Signaldetail = () => {
         }
     }, [location]);
 
-    const redirectTo = (currentlocation === "closesignalpage") ? "/staff/closesignal" : "/admin/signal";
-
+    const redirectTo = (currentlocation === "closesignalpage") ? "/staff/closesignal" : "/staff/signal";
 
     useEffect(() => {
         getsignaldetail();
     }, []);
 
 
+
+    // const handleDownload = (item) => {
+
+    //     const url = item.report;
+    //     const link = document.createElement('a');
+    //     link.href = url;
+    //     link.download = url;
+
+    //     document.body.appendChild(link);
+    //     link.click();
+    //     document.body.removeChild(link);
+    // };
 
 
 
@@ -75,6 +84,9 @@ const Signaldetail = () => {
         const absGain = Math.abs(gain);
         return ((absGain / entryPrice) * 100).toFixed(2);
     };
+
+
+
 
     return (
         <div>

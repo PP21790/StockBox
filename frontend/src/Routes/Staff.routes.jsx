@@ -146,7 +146,7 @@ function Staffrouting() {
                     {permission.includes("viewclient") ? <Route path="/client" element={<Client />} /> : ""}
                     {permission.includes("addclient") ? <Route path="/addclient" element={<Addclient />} /> : ""}
                     {permission.includes("editclient") ? <Route path="/client/updateclient/:id" element={<EditClient />} /> : ""}
-                    {permission.includes("viewdetail") ? <Route path="/clientdetail/:id" element={<Viewclientdetail />} /> : ""}
+                    {permission.includes("viewdetail") ? <Route path="/client/clientdetail/:id" element={<Viewclientdetail />} /> : ""}
                     {permission.includes("viewfreeclient") ? <Route path="/freeclient" element={<Freeclient />} /> : ""}
                     {permission.includes("editfreeclient") ? <Route path="/editfreeclient/:id" element={<Editfreeclient />} /> : ""}
                     <Route path="/profile" element={<Profile />} />

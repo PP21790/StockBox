@@ -17,7 +17,6 @@ const AddSignal = () => {
 
 
   const [loading, setLoading] = useState(false);
-
   const [serviceList, setServiceList] = useState([]);
   const [stockList, setStockList] = useState([]);
   const [expirydate, setExpirydate] = useState([]);
@@ -34,7 +33,6 @@ const AddSignal = () => {
 
 
 
-
   const fetchAdminServices = async () => {
     try {
       const response = await GetService(token);
@@ -47,7 +45,7 @@ const AddSignal = () => {
   };
 
 
-  // console.log("req",expirydate[0]?.stock?.tradesymbol)
+
 
   const formik = useFormik({
     initialValues: {
@@ -66,6 +64,8 @@ const AddSignal = () => {
       expiry: '',
       optiontype: '',
       strikeprice: '',
+      entrytype: '',
+      lot: '',
       tradesymbol: expirydate[0]?.stock?.tradesymbol || "",
       lotsize: expirydate[0]?.stock?.lotsize || ""
 
@@ -73,12 +73,9 @@ const AddSignal = () => {
     validate: (values) => {
       const errors = {};
       if (!values.segment) errors.segment = 'Please Select a Segment';
-      if (!values.stock ) errors.stock = 'Please Select a Stock';
-      if(values.price <= 0){
+      if (!values.stock) errors.stock = 'Please Select a Stock';
+      if (values.price <= 0) {
         errors.price = 'Price Should Be Grater Than Zero'
-     }
-      if(values.expiry && values.expiry === "Select Expiry Date"){
-        errors.expiry = 'Please Select Expiry Date';
       }
       if (!values.price) errors.price = 'Please Select a Price';
       if (!values.tag1) errors.tag1 = 'Please Enter Target1';
@@ -118,13 +115,13 @@ const AddSignal = () => {
           errors.stoploss = "Please Enter Greater Than Entry Price";
         }
       }
-
-      if (!values.callduration) errors.callduration = 'Select Trade duration';
-      if (!values.calltype) errors.calltype = 'Please Enter Call Calltype';
+      if (!values.stoploss) errors.stoploss = 'Please Enter Stoploss';
+      if (!values.callduration) errors.callduration = 'Please Select Trade Duration';
+      if (!values.calltype) errors.calltype = 'Please select call type';
       if (!values.description) errors.description = 'Please Enter Description';
 
       if (values.segment === "O" && !values.optiontype) {
-        errors.optiontype = 'Please enter option type';
+        errors.optiontype = 'Please Enter Option Type';
       }
 
       if ((values.segment === "O" || values.segment === "F") && !values.expiry) {
@@ -134,10 +131,21 @@ const AddSignal = () => {
       if (values.segment === "O" && !values.strikeprice) {
         errors.strikePrice = 'Please Select Strike Price';
       }
-     
+      if (!values.entrytype) {
+        errors.entrytype = 'Please Select Entry Type';
+      }
+
+      // if (!values.lot) {
+      //   errors.lot = 'Please Enter Lot';
+      // }
+      if (values.lot && values.lot <= 0) {
+        errors.lot = 'Please Enter Greater Than Zero';
+      }
 
       return errors;
     },
+
+
 
     onSubmit: async (values) => {
       setLoading(!loading)
@@ -159,8 +167,10 @@ const AddSignal = () => {
         segment: values.segment,
         optiontype: values.optiontype,
         strikeprice: values.strikeprice,
+        entrytype: values.entrytype,
+        lot: values.lot,
       };
-      
+
       try {
         const response = await AddSignalByAdmin(req, token);
         if (response.status) {
@@ -173,9 +183,9 @@ const AddSignal = () => {
           });
           setTimeout(() => {
             navigate('/staff/signal');
-            
+
           }, 2000);
-       
+
 
         } else {
           Swal.fire({
@@ -185,7 +195,7 @@ const AddSignal = () => {
             timer: 1500,
             timerProgressBar: true,
           });
-           
+
           setLoading(false)
         }
       } catch (error) {
@@ -203,7 +213,7 @@ const AddSignal = () => {
   });
 
 
- 
+
 
   useEffect(() => {
     if (formik.values.segment) {
@@ -224,25 +234,27 @@ const AddSignal = () => {
         optiontype: '',
         strikeprice: '',
         tradesymbol: '',
-        lotsize:''
+        lotsize: '',
+        entrytype: '',
+        lot: ''
       });
-    
+
       setSearchItem("")
     }
   }, [formik.values.segment]);
 
-  
+
 
   useEffect(() => {
     if (!searchItem || searchItem.length === 0) {
       Object.keys(formik.values).forEach(field => {
-        if (field !== "stock" ) {
+        if (field !== "stock") {
           formik.setFieldValue("stock", "");
         }
       });
     }
   }, [formik.values.stock, searchItem]);
-  
+
 
 
 
@@ -260,13 +272,13 @@ const AddSignal = () => {
 
         const expiryResponse = await getexpirydate(data);
         if (expiryResponse.status) {
-             setExpirydate(expiryResponse.data);
+          setExpirydate(expiryResponse.data);
         } else {
           console.log("Failed to fetch expiry date", expiryResponse);
         }
 
 
-        const data1 = { ...data, expiry: formik.values.expiry , optiontype : formik.values.optiontype };
+        const data1 = { ...data, expiry: formik.values.expiry, optiontype: formik.values.optiontype };
         const strikePriceResponse = await getstockStrickprice(data1);
         if (strikePriceResponse.status) {
           setStrikePrice(strikePriceResponse.data);
@@ -287,7 +299,7 @@ const AddSignal = () => {
   const fields = [
     {
       name: 'segment',
-      label: 'Select Segment',
+      label: 'Segment',
       type: 'select2',
       options: [
         { label: 'Cash', value: 'C' },
@@ -295,18 +307,18 @@ const AddSignal = () => {
         { label: 'Option', value: 'O' },
       ],
       label_size: 12,
-      col_size: 8,
-      star:true
+      col_size: 6,
+      star: true
     },
-    
-   
+
+
     {
       name: 'expiry',
       label: 'Expiry Date',
       type: 'select',
       label_size: 12,
       col_size: 6,
-      star:true,
+      star: true,
       options: expirydate.map((item) => ({
         label: item.expiry,
         value: item.expiry,
@@ -323,7 +335,7 @@ const AddSignal = () => {
       ],
       label_size: 12,
       col_size: 6,
-      star:true,
+      star: true,
       showWhen: (values) => values.segment === "O",
     },
     {
@@ -336,7 +348,7 @@ const AddSignal = () => {
       ],
       label_size: 12,
       col_size: 6,
-      star:true
+      star: true
     },
     {
       name: 'strikeprice',
@@ -344,12 +356,25 @@ const AddSignal = () => {
       type: 'select',
       label_size: 12,
       col_size: 6,
-      star:true,
+      star: true,
       options: strikePrice.map((item) => ({
         label: item.stock.strike,
         value: item.stock.strike,
       })),
       showWhen: (values) => values.segment === "O"
+    },
+    {
+      name: 'entrytype',
+      label: 'Entry Type',
+      type: 'select',
+      options: [
+        { label: 'At', value: 'At' },
+        { label: 'Above', value: 'Above' },
+        { label: 'Below', value: 'Below' },
+      ],
+      label_size: 12,
+      col_size: 6,
+      star: true
     },
     {
       name: 'callduration',
@@ -386,7 +411,7 @@ const AddSignal = () => {
       })(),
       label_size: 12,
       col_size: 6,
-      star:true
+      star: true
     },
     {
       name: 'price',
@@ -394,17 +419,26 @@ const AddSignal = () => {
       type: 'number',
       label_size: 12,
       col_size: 6,
-      star:true
+      star: true
     },
-    
-   
+    {
+      name: 'lot',
+      label: 'Quantity/Lot',
+      type: 'number',
+      label_size: 12,
+      col_size: 6,
+      star: false
+    },
+
+
+
     {
       name: 'tag1',
       label: 'Target-1',
       type: 'number',
       label_size: 6,
       col_size: 3,
-      star:true
+      star: true
     },
     {
       name: 'tag2',
@@ -427,6 +461,7 @@ const AddSignal = () => {
       type: 'number',
       label_size: 12,
       col_size: 3,
+      star: true,
     },
     {
       name: 'report',
@@ -441,7 +476,7 @@ const AddSignal = () => {
       type: 'text5',
       label_size: 12,
       col_size: 6,
-      star:true
+      star: true
     },
   ];
 
@@ -484,7 +519,7 @@ const AddSignal = () => {
           <div className="mb-3">
             <div className="position-relative">
               <label className="form-label">Select Stock</label>
-              <span className="text-danger">*</span> 
+              <span className="text-danger">*</span>
               <input
                 type="text"
                 className="form-control"

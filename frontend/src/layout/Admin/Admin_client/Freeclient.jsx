@@ -15,10 +15,8 @@ import { exportToCSV } from '../../../Utils/ExportData';
 const Freeclient = () => {
 
 
-
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
-
 
     const location = useLocation()
     const clientStatus = location?.state?.clientStatus;

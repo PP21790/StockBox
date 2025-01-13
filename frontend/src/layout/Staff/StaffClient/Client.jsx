@@ -1,29 +1,42 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { GetClient } from '../../../Services/Admin';
 // import Table from '../../../components/Table';
-import { Settings2, Eye, SquarePen, Trash2, Download, ArrowDownToLine, RefreshCcw } from 'lucide-react';
+import { Settings2, Eye, SquarePen, RadioTower, Trash2, Download, ArrowDownToLine, RefreshCcw } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { deleteClient, UpdateClientStatus, PlanSubscription, getclientExportfile, getplanlist, BasketSubscription, BasketAllList, getcategoryplan, getPlanbyUser, AllclientFilter } from '../../../Services/Admin';
+import { deleteClient, UpdateClientStatus, PlanSubscription, getstaffperuser, getActivecategoryplan, getplanlist, BasketSubscription, BasketAllList, getcategoryplan, getPlanbyUser, AllclientFilter, getclientExportfile, BasketAllActiveList } from '../../../Services/Admin';
 import { Tooltip } from 'antd';
 import { fDateTime } from '../../../Utils/Date_formate';
 import { image_baseurl } from '../../../Utils/config';
 import { IndianRupee } from 'lucide-react';
 import { exportToCSV } from '../../../Utils/ExportData';
 import Table from '../../../components/Table1';
-import { getstaffperuser } from '../../../Services/Admin';
+
 
 
 const Client = () => {
 
 
-    const userid = localStorage.getItem('id');
-    const token = localStorage.getItem('token');
-    const navigate = useNavigate();
+    useEffect(() => {
+        getbasketlist()
+        getcategoryplanlist()
+        getActiveBasketdetail()
+        getpermissioninfo()
+
+    }, []);
+
+
 
     const location = useLocation();
     const clientStatus = location?.state?.clientStatus;
+
+
+
+    const userid = localStorage.getItem('id');
+
+    const token = localStorage.getItem('token');
+    const navigate = useNavigate();
+
 
 
 
@@ -42,17 +55,15 @@ const Client = () => {
     const [statuscreatedby, setStatuscreatedby] = useState("");
     const [header, setheader] = useState("Client");
     const [expired, setExpired] = useState("");
-
-
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
+    const [getBasket, setGetBasket] = useState({});
     const [permission, setPermission] = useState([]);
+
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };
-
-
 
 
     useEffect(() => {
@@ -70,11 +81,6 @@ const Client = () => {
 
 
 
-
-
-
-
-
     const handleDownload = (row) => {
         const url = `${image_baseurl}uploads/pdf/${row.pdf}`;
         const link = document.createElement('a');
@@ -88,13 +94,11 @@ const Client = () => {
 
 
 
-
-
     const [basketdetail, setBasketdetail] = useState({
-        plan_id: "",
+        basket_id: "",
         client_id: "",
         price: "",
-        discount: ""
+
     });
 
 
@@ -104,8 +108,6 @@ const Client = () => {
         client_id: "",
         price: ""
     });
-
-
 
 
 
@@ -119,10 +121,12 @@ const Client = () => {
     };
 
 
+
     const handleCancel = () => {
         setIsModalVisible(false);
         setSelectcategory("")
     };
+
 
 
     const handleCategoryChange = (categoryId) => {
@@ -144,20 +148,25 @@ const Client = () => {
 
 
 
-    useEffect(() => {
-        getpermissioninfo()
-
-        // getplanlistbyadmin()
-        getbasketlist()
-        getcategoryplanlist()
-    }, []);
 
 
     useEffect(() => {
-        if (permission.length > 0) {
-            getAdminclient();
-        }
+        getAdminclient();
     }, [permission, searchInput, searchkyc, statuscreatedby, currentPage, expired]);
+
+
+
+
+    const getpermissioninfo = async () => {
+        try {
+            const response = await getstaffperuser(userid, token);
+            if (response.status) {
+                setPermission(response.data.permissions);
+            }
+        } catch (error) {
+            console.log("error", error);
+        }
+    }
 
 
 
@@ -206,11 +215,9 @@ const Client = () => {
 
 
 
-
-
     const getcategoryplanlist = async () => {
         try {
-            const response = await getcategoryplan(token);
+            const response = await getActivecategoryplan(token);
             if (response.status) {
                 setCategory(response.data);
             }
@@ -222,11 +229,21 @@ const Client = () => {
 
 
 
+    const getActiveBasketdetail = async () => {
+        try {
+            const response = await BasketAllActiveList(token);
+            if (response.status) {
+                setGetBasket(response.data);
+
+            }
+        } catch (error) {
+            console.log("error");
+        }
+    };
 
 
     const getAdminclient = async () => {
         try {
-
             const data = {
                 page: currentPage,
                 kyc_verification: searchkyc,
@@ -236,9 +253,7 @@ const Client = () => {
                 planStatus: expired === "active" ? "active" : expired === "expired" ? "expired" : clientStatus === "active" ? "active" : clientStatus === "expired" ? "expired" : "",
                 add_by: permission.includes("Ownclient") ? userid : ""
             };
-
             const response = await AllclientFilter(data, token);
-
 
             if (response.status) {
                 setClients(response.data);
@@ -248,18 +263,6 @@ const Client = () => {
             console.error("Error fetching clients:", error);
         }
     };
-
-
-    const getpermissioninfo = async () => {
-        try {
-            const response = await getstaffperuser(userid, token);
-            if (response.status) {
-                setPermission(response.data.permissions);
-            }
-        } catch (error) {
-            console.log("error", error);
-        }
-    }
 
 
 
@@ -289,16 +292,20 @@ const Client = () => {
     }
 
 
+
     const updateClient = async (row) => {
         navigate("/staff/client/updateclient/" + row._id, { state: { row } })
     }
 
 
-    const Clientdetail = async (row) => {
-        navigate("/staff/clientdetail/" + row._id, { state: { row } })
+    const signaldetail = async (row) => {
+        navigate("/staff/clientsignaldetail/" + row._id, { state: { row } })
     }
 
 
+    const Clientdetail = async (row) => {
+        navigate("/staff/client/clientdetail/" + row._id, { state: { row } })
+    }
 
     const DeleteClient = async (_id) => {
         try {
@@ -343,11 +350,17 @@ const Client = () => {
         }
     };
 
-
+    // const handleSwitchChange = (event, id) => {
+    //     const isChecked = event.target.checked;
+    //     setTableData((prevData) =>
+    //         prevData.map((row) =>
+    //             row._id === id ? { ...row, ActiveStatus: isChecked ? 1 : 0 } : row
+    //         )
+    //     );
+    // };
 
 
     // update status 
-
     const handleSwitchChange = async (event, id) => {
         const originalChecked = event.target.checked;
         const user_active_status = originalChecked ? "1" : "0";
@@ -389,7 +402,6 @@ const Client = () => {
             getAdminclient();
         }
     };
-
 
 
 
@@ -439,9 +451,8 @@ const Client = () => {
     const UpdateBasketservice = async () => {
 
         try {
-            const data = { basket_id: basketdetail.basket_id, client_id: client._id, price: basketdetail.price, discount: basketdetail.discount };
+            const data = { basket_id: basketdetail.basket_id, client_id: client._id, price: basketdetail.price, };
             const response = await BasketSubscription(data, token);
-
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
@@ -451,13 +462,13 @@ const Client = () => {
                     timer: 2000,
                 });
 
-                setBasketdetail({ basket_id: "", client_id: "", price: "", discount: "" });
+                setBasketdetail({ basket_id: "", client_id: "", price: "" });
                 getAdminclient();
                 handleCancel()
             } else {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'There was an error updating the Basket.',
+                    text: response.message || 'There was an error updating the Basket.',
                     icon: 'error',
                     confirmButtonText: 'Try Again',
                 });
@@ -471,6 +482,8 @@ const Client = () => {
             });
         }
     };
+
+
 
 
     const columns = [
@@ -560,33 +573,27 @@ const Client = () => {
             width: '165px',
         },
 
-        // {
-        // name: 'Date',
-        // selector: row => row.Status,
-        // sortable: true,
-        // width: '165px',
-        // },
-
-        permission.includes("clientchangestatus") ? {
+        permission.includes("clientchangestatus") && {
             name: 'Active Status',
             selector: row => (
                 <div className="form-check form-switch form-check-info">
                     <input
-                        id={`rating_${row.ActiveStatus}`}
+                        id={`rating_${row._id}`}
                         className="form-check-input toggleswitch"
                         type="checkbox"
-                        defaultChecked={row.ActiveStatus == 1}
+                        checked={row.ActiveStatus == 1}
                         onChange={(event) => handleSwitchChange(event, row._id)}
                     />
                     <label
-                        htmlFor={`rating_${row.ActiveStatus}`}
+                        htmlFor={`rating_${row._id}`}
                         className="checktoggle checkbox-bg"
                     ></label>
                 </div>
             ),
             sortable: true,
             width: '165px',
-        } : "",
+        },
+
         {
             name: 'Kyc',
             selector: row => (
@@ -611,47 +618,71 @@ const Client = () => {
             sortable: true,
             width: '200px',
         },
+        // {
+        //     name: 'Signal Detail',
+        //     selector: (row) => (
+        //         <div className='d-flex'>
+
+
+        //             <Tooltip placement="top" overlay="Signal Detail">
+        //                 <span onClick={(e) => { signaldetail(row) }} style={{ cursor: 'pointer' }}>
+        //                     <RadioTower />
+        //                 </span>
+        //             </Tooltip>
+        //         </div>
+        //     ),
+        //     ignoreRowClick: true,
+        //     allowOverflow: true,
+        //     button: true,
+        //     width: '165px',
+        // },
         permission.includes("assignPackage") ||
             permission.includes("viewdetail") ||
-            permission.includes("editclient") ?
-            {
-                name: 'Actions',
-                selector: (row) => (
-                    <div className='d-flex'>
+            permission.includes("editclient") ? {
+            name: 'Actions',
+            selector: (row) => (
+                <div className='d-flex'>
+                    {permission.includes("assignPackage") && <Tooltip placement="top" overlay="Package Assign">
+                        <span
+                            onClick={(e) => {
+                                if (row.ActiveStatus === 1) {
+                                    showModal(true);
+                                    setClientid(row);
+                                    getplanlistassinstatus(row._id);
+                                } else {
+                                    Swal.fire({
+                                        title: 'Reminder',
+                                        text: 'Activate the client first Then assign the package.',
+                                        icon: 'warning',
+                                        confirmButtonText: 'OK',
+                                    });
+                                }
+                            }}
+                            style={{ cursor: 'pointer' }}
+                        >
+                            <Settings2 />
+                        </span>
+                    </Tooltip>}
 
-                        {permission.includes("assignPackage") ?
-                            <Tooltip placement="top" overlay="Package Assign">
-                                <span onClick={(e) => { showModal(true); setClientid(row); getplanlistassinstatus(row._id) }} style={{ cursor: 'pointer' }}>
-                                    <Settings2 />
-                                </span>
-                            </Tooltip> : ""}
+                    {permission.includes("viewdetail") && <Tooltip title="view">
+                        <Eye onClick={() => Clientdetail(row)} />
+                    </Tooltip>}
 
-                        {permission.includes("viewdetail") ?
-                            <Tooltip title="view">
-                                <Eye
+                    {permission.includes("editclient") && <Tooltip title="Update">
+                        <SquarePen className='ms-3' onClick={() => updateClient(row)} />
+                    </Tooltip>}
+                    {/* <Tooltip title="delete">
+                  <Trash2 onClick={() => DeleteClient(row._id)} />
+                </Tooltip> */}
+                </div>
+            ),
+            ignoreRowClick: true,
+            allowOverflow: true,
+            button: true,
+            width: '165px',
+        } : ""
 
-                                    onClick={() => Clientdetail(row)} />
-                            </Tooltip> : ""}
-
-                        {permission.includes("editclient") ?
-                            <Tooltip title="Update">
-                                <SquarePen className='ms-3' onClick={() => updateClient(row)} />
-                            </Tooltip> : ""}
-                        {/* <Tooltip title="delete">
-                        <Trash2 onClick={() => DeleteClient(row._id)} />
-                    </Tooltip> */}
-                    </div>
-                ),
-                ignoreRowClick: true,
-                allowOverflow: true,
-                button: true,
-                width: '165px',
-            } : ""
     ];
-
-
-
-
 
     return (
         <div>
@@ -690,7 +721,7 @@ const Client = () => {
                                     </span>
                                 </div>
 
-                                {permission.includes("addclient") ? <div className="ms-auto">
+                                {permission.includes("addclient") && <div className="ms-auto">
                                     <Link
                                         to="/staff/addclient"
                                         className="btn btn-primary"
@@ -701,7 +732,8 @@ const Client = () => {
                                         />
                                         Add Client
                                     </Link>
-                                </div> : ""}
+                                </div>}
+
                                 <div
                                     className="ms-2"
                                     onClick={(e) => getexportfile()}
@@ -719,13 +751,23 @@ const Client = () => {
 
                                         Export-Excel
                                     </button>
-
-
-
                                 </div>
+                                {/* <div className="">
+                                    <Link
+                                        to="/staff/clientdeletehistory"
+                                        className="btn btn-primary"
+                                    >
+                                        <i
+                                            className="bx bxs-trash"
+                                            aria-hidden="true"
+                                        />
+                                        Deleted Client
+                                    </Link>
+                                </div> */}
+
 
                             </div>
-                            <div className="row">
+                            <div className="row mb-4">
                                 <div className="col-md-4 ">
                                     <div>
                                         <label htmlFor="kycSelect">Select Kyc</label>
@@ -767,7 +809,8 @@ const Client = () => {
                                         >
                                             <option value="">Select Client</option>
                                             <option value="active">Active</option>
-                                            <option value="expired">Expired Or N/A</option>
+                                            <option value="expired">Expired </option>
+                                            0
                                         </select>
                                     </div>
 
@@ -798,7 +841,6 @@ const Client = () => {
             </div>
 
 
-
             {isModalVisible && (
                 <>
                     <div className="modal-backdrop fade show"></div>
@@ -808,7 +850,7 @@ const Client = () => {
                         aria-labelledby="exampleModalLabel"
                         aria-hidden="true"
                     >
-                        <div className="modal-dialog modal-lg">
+                        <div className="modal-dialog modal-xl" style={{ width: "900px" }}>
                             <div className="modal-content">
                                 <div className="modal-header">
                                     <h5 className="modal-title" id="exampleModalLabel">Assign Package</h5>
@@ -822,7 +864,7 @@ const Client = () => {
                                 <div className="modal-body">
                                     <div className='card'>
                                         <div className='d-flex justify-content-center align-items-center card-body'>
-                                            {['Plan'].map((tab, index) => (
+                                            {['Plan', 'Basket'].map((tab, index) => (
                                                 <label key={index} className='labelfont'>
                                                     <input
                                                         className='ms-3'
@@ -948,6 +990,84 @@ const Client = () => {
                                                 )}
                                             </>
                                         )}
+                                        {checkedIndex === 1 && (
+                                            <>
+                                                <form className='card-body my-3' style={{ height: "40vh", overflowY: "scroll" }}>
+                                                    <div className="row">
+                                                        {getBasket.map((item, index) => (
+                                                            <div className="col-md-6" key={index}>
+                                                                <div className="card mb-0 my-2">
+                                                                    <div className="card-body p-1">
+                                                                        <h5 className="card-title">
+                                                                            <input
+                                                                                style={{ height: "13px", width: "13px", marginTop: "0.52rem", border: "1px solid black" }}
+                                                                                className="form-check-input"
+                                                                                type="radio"
+                                                                                name="planSelection"
+                                                                                id={`input-plan-${index}`}
+                                                                                checked={selectedPlanId === item._id}
+                                                                                onClick={() => {
+                                                                                    setSelectedPlanId(item._id);
+                                                                                    setBasketdetail({ basket_id: item._id, price: item.basket_price });
+                                                                                }}
+                                                                            />
+                                                                            <label className="form-check-label mx-1" style={{ fontSize: "13px", fontWeight: "800" }} htmlFor={`input-plan-${index}`}>
+                                                                                {item.validity}
+                                                                            </label>
+                                                                        </h5>
+
+                                                                        <div className="accordion" id={`accordion-basket`}>
+                                                                            <div className="accordion-item">
+                                                                                <h2 className="accordion-header" id={`heading-${item._id}`}>
+                                                                                    <button
+                                                                                        className={`accordion-button ${selectedPlanId === item._id ? '' : 'collapsed'} custom-accordion-button`}
+                                                                                        type="button"
+                                                                                        data-bs-toggle="collapse"
+                                                                                        data-bs-target={`#collapse-${item._id}`}
+                                                                                        aria-expanded={selectedPlanId === item._id}
+                                                                                        aria-controls={`collapse-${item._id}`}
+                                                                                    >
+                                                                                        <div className='d-flex justify-content-between'>
+                                                                                            <div>
+                                                                                                <strong className="text-secondary m-2">Detail</strong>
+                                                                                                <strong className="text-success m-2 activestrong">{item?.subscription?.status === "active" ? "Active" : ""}</strong>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </button>
+                                                                                </h2>
+                                                                                <div
+                                                                                    id={`collapse-${item._id}`}
+                                                                                    className={`accordion-collapse collapse ${selectedPlanId === item._id ? 'show' : ''}`}
+                                                                                    aria-labelledby={`heading-${item._id}`}
+                                                                                    data-bs-parent={`#accordion-basket`}
+                                                                                >
+                                                                                    {console.log("item", item)}
+                                                                                    <div className="accordion-body">
+                                                                                        <div className="d-flex justify-content-between">
+                                                                                            <strong>Price:</strong>
+                                                                                            <span><IndianRupee /> {item.basket_price && item.basket_price}</span>
+                                                                                        </div>
+                                                                                        <div className="d-flex justify-content-between">
+                                                                                            <strong>Validity:</strong>
+                                                                                            <span>{item.validity}</span>
+                                                                                        </div>
+                                                                                        <div className="d-flex justify-content-between">
+                                                                                            <strong>Miniumum Investment Amount:</strong>
+                                                                                            <span><IndianRupee />{item?.mininvamount}</span>
+                                                                                        </div>
+
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </form>
+                                            </>
+                                        )}
 
                                     </div>
                                 </div>
@@ -966,6 +1086,15 @@ const Client = () => {
                                             type="button"
                                             className="btn btn-primary"
                                             onClick={() => Updateplansubscription()}
+                                        >
+                                            Save Plan
+                                        </button>
+                                    )}
+                                    {checkedIndex === 1 && (
+                                        <button
+                                            type="button"
+                                            className="btn btn-primary"
+                                            onClick={() => UpdateBasketservice()}
                                         >
                                             Save Plan
                                         </button>

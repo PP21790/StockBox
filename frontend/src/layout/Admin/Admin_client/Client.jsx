@@ -25,7 +25,6 @@ const Client = () => {
 
 
 
-
     const location = useLocation();
     const clientStatus = location?.state?.clientStatus;
 
@@ -144,8 +143,6 @@ const Client = () => {
 
 
     }
-
-
 
 
 
