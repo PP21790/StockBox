@@ -170,7 +170,7 @@ const ClientRequest = () => {
                     
                     // Convert month number to name
                     const monthNames = [
-                        "January", "February", "March", "April", "May", "June",
+                        "Jan", "Feb", "March", "April", "May", "June",
                         "July", "August", "September", "October", "November", "December"
                     ];
                     const monthName = monthNames[parseInt(month, 10) - 1]; // Get month name
