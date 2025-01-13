@@ -750,7 +750,6 @@ class List {
         return console.log('Client not found or inactive.');
       }
 
-
       if (client.freetrial == 0) {
         client.freetrial = 1;
         await client.save();
@@ -764,10 +763,10 @@ class List {
         if (refertokens.length > 0) {
         }
         else {
-         
+          if(settings.refer_status==1) {
+
           const senderamount = (price * settings.sender_earn) / 100;
           const receiveramount = (price * settings.receiver_earn) / 100;
-
           const results = new Refer_Modal({
             token: client.token,
             user_id: client._id,
@@ -787,15 +786,15 @@ class List {
             sender.wamount += senderamount;
             await sender.save();
           } else {
-            console.error(`Sender not found or inactive for user_id: ${refertoken.user_id}`);
+            console.error(`Sender not found or inactive`);
           }
+        }
 
         }
 
       }
 
 
-      if(settings.refer_status==1) {
       if (refertokens.length > 0) {
         for (const refertoken of refertokens) {
           const senderamount = (price * refertoken.senderearn) / 100;
@@ -824,7 +823,7 @@ class List {
       } else {
         console.log('No referral tokens found.');
       }
-    }
+   
 
       const adminnotificationTitle = "Important Update";
       const adminnotificationBody = `Congratulations! ${client.FullName} successfully purchased the ${plan.category.title} Plan`;
