@@ -7,6 +7,8 @@ import { Link } from 'react-router-dom';
 import { Settings2, Eye, IndianRupee } from 'lucide-react';
 import { Tooltip } from 'antd';
 import { exportToCSV } from '../../../Utils/ExportData';
+import Loader from '../../../Utils/Loader';
+
 
 
 
@@ -22,6 +24,9 @@ const Perform = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
     const [service, setserviceid] = useState("66d2c3bebf7e6dc53ed07626");
+
+    //state for loading
+    const [isLoading, setIsLoading] = useState(true)
 
 
 
@@ -99,6 +104,7 @@ const Perform = () => {
         } catch (error) {
             console.log("Error fetching services:", error);
         }
+        
     };
 
 
@@ -114,6 +120,7 @@ const Perform = () => {
         } catch (error) {
             console.log("Error fetching performance data:", error);
         }
+        setIsLoading(false)
     };
 
 
@@ -286,6 +293,11 @@ const Perform = () => {
                 </div>
                 <hr />
 
+
+                {isLoading ? (
+                    <Loader />
+                ) : (
+                    <>
                 <div className='card'>
                     <div className='card-body'>
                         <div className="tab-content" id="myTabContent3">
@@ -392,6 +404,8 @@ const Perform = () => {
                         </div>
                     </div>
                 </div>
+                </>
+                )}
 
                 <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div className="modal-dialog">

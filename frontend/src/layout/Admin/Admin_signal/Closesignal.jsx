@@ -803,7 +803,7 @@ const Closesignal = () => {
                         <input
                           className="form-control mb-2"
                           type="text"
-                          placeholder="Enter Description Title"
+                          placeholder="Enter Description"
                           value={updatetitle.description}
                           onChange={(e) =>
                             updateServiceTitle({ description: e.target.value })

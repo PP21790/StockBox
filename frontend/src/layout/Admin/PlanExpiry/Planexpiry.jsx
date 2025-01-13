@@ -71,9 +71,9 @@ const Planexpiry = () => {
         } catch (error) {
             console.error('Error fetching client data:', error);
         }
-        setTimeout(() => {
-            setIsLoading(false)
-        })
+        
+        setIsLoading(false)
+        
     };
 
 

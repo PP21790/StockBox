@@ -296,10 +296,10 @@ const Closesignal = () => {
             width: "200px",
         },
         {
-            name: "Quantity/Lot",
+            name: "Suggested Quantity/Lot",
             selector: (row) => row.lot,
             sortable: true,
-            width: "200px",
+            width: "250px",
         },
         {
             name: "Entry Price",
@@ -827,7 +827,7 @@ const Closesignal = () => {
                                                 <input
                                                     className="form-control mb-2"
                                                     type="text"
-                                                    placeholder="Enter Description Title"
+                                                    placeholder="Enter Description"
                                                     value={updatetitle.description}
                                                     onChange={(e) =>
                                                         updateServiceTitle({ description: e.target.value })

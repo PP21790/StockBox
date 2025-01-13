@@ -3,13 +3,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getcouponlist } from '../../../Services/Admin';
 import Table from '../../../components/Table';
-import { Eye, Pencil, Trash2 , IndianRupee} from 'lucide-react';
+import { Eye, Pencil, Trash2, IndianRupee } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { DeleteCoupon, UpdateClientStatus, CouponStatus,CouponShowstatus,GetService } from '../../../Services/Admin';
+import { DeleteCoupon, UpdateClientStatus, CouponStatus, CouponShowstatus, GetService } from '../../../Services/Admin';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
 import { fDate, fDateTime } from '../../../Utils/Date_formate';
 import { getstaffperuser } from '../../../Services/Admin';
+import Loader from '../../../Utils/Loader';
+
 
 
 const Coupon = () => {
@@ -27,17 +29,17 @@ const Coupon = () => {
     const [permission, setPermission] = useState([]);
 
     const [service, setService] = useState([])
-    console.log();
-    
-    
 
+
+    //state for loading
+    const [isLoading, setIsLoading] = useState(true)
 
 
     const getcoupon = async () => {
         try {
             const response = await getcouponlist(token);
             // console.log("response",response.data);
-            
+
             if (response.status) {
                 const filterdata = response.data.filter((item) =>
                     searchInput === "" ||
@@ -52,22 +54,23 @@ const Coupon = () => {
         } catch (error) {
             console.log("error");
         }
+        setIsLoading(false)
     }
-   
-        const getService = async () => {
-            try {
-                const response = await GetService(token);
-                // console.log("response",response);
-    
-                if (response.status) {
-                    setService(response.data)
-                    // console.log("chaking",response.data);
-    
-                }
-            } catch (error) {
-                console.log("error");
+
+    const getService = async () => {
+        try {
+            const response = await GetService(token);
+            // console.log("response",response);
+
+            if (response.status) {
+                setService(response.data)
+                // console.log("chaking",response.data);
+
             }
+        } catch (error) {
+            console.log("error");
         }
+    }
 
 
     const getpermissioninfo = async () => {
@@ -187,49 +190,49 @@ const Coupon = () => {
             getcoupon();
         }
     };
-    
+
 
 
     const handleSwitchChange1 = async (event, id) => {
-    
-            const user_active_status = event.target.checked === true ? "1" : "0"
-            const data = { id: id, status: user_active_status }
-    
-    
-            const result = await Swal.fire({
-                title: "Do you want to save the changes?",
-                showCancelButton: true,
-                confirmButtonText: "Save",
-                cancelButtonText: "Cancel",
-                allowOutsideClick: false,
-            });
-    
-            if (result.isConfirmed) {
-                try {
-                    const response = await CouponShowstatus(data, token)
-                    if (response.status) {
-                        Swal.fire({
-                            title: "Saved!",
-                            icon: "success",
-                            timer: 1000,
-                            timerProgressBar: true,
-                        });
-                        setTimeout(() => {
-                            Swal.close();
-                        }, 1000);
-                    }
-                    getcoupon();
-                } catch (error) {
-                    Swal.fire(
-                        "Error",
-                        "There was an error processing your request.",
-                        "error"
-                    );
+
+        const user_active_status = event.target.checked === true ? "1" : "0"
+        const data = { id: id, status: user_active_status }
+
+
+        const result = await Swal.fire({
+            title: "Do you want to save the changes?",
+            showCancelButton: true,
+            confirmButtonText: "Save",
+            cancelButtonText: "Cancel",
+            allowOutsideClick: false,
+        });
+
+        if (result.isConfirmed) {
+            try {
+                const response = await CouponShowstatus(data, token)
+                if (response.status) {
+                    Swal.fire({
+                        title: "Saved!",
+                        icon: "success",
+                        timer: 1000,
+                        timerProgressBar: true,
+                    });
+                    setTimeout(() => {
+                        Swal.close();
+                    }, 1000);
                 }
-            } else if (result.dismiss === Swal.DismissReason.cancel) {
                 getcoupon();
+            } catch (error) {
+                Swal.fire(
+                    "Error",
+                    "There was an error processing your request.",
+                    "error"
+                );
             }
-        };
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            getcoupon();
+        }
+    };
 
 
 
@@ -298,7 +301,7 @@ const Coupon = () => {
         // },
         {
             name: 'Min Purchase Value',
-            selector: row =>  <div> <IndianRupee />{row.minpurchasevalue}</div>,
+            selector: row => <div> <IndianRupee />{row.minpurchasevalue}</div>,
             sortable: true,
             width: '210px',
         },
@@ -326,29 +329,29 @@ const Coupon = () => {
             name: 'Active Status',
             selector: row => {
                 const currentDate = new Date();
-                const endDate = new Date(row.enddate );
+                const endDate = new Date(row.enddate);
                 endDate.setHours(23, 59, 59, 999);
                 if (currentDate > endDate) {
                     return <span className="text-danger" style={{ color: "red" }}>Expired</span>;
-                // } else {
-                //     return (
-                //         <div className="form-check form-switch form-check-info">
-                //             <input
-                //                 id={`rating_${row.status}`}
-                //                 className="form-check-input toggleswitch"
-                //                 type="checkbox"
-                //                 defaultChecked={row.status === true}
-                //                 onChange={(event) => handleSwitchChange(event, row._id)}
-                //             />
-                //             <label
-                //                 htmlFor={`rating_${row.status}`}
-                //                 className="checktoggle checkbox-bg"
-                //             ></label>
-                //         </div>
-                //     );
-                // }
+                    // } else {
+                    //     return (
+                    //         <div className="form-check form-switch form-check-info">
+                    //             <input
+                    //                 id={`rating_${row.status}`}
+                    //                 className="form-check-input toggleswitch"
+                    //                 type="checkbox"
+                    //                 defaultChecked={row.status === true}
+                    //                 onChange={(event) => handleSwitchChange(event, row._id)}
+                    //             />
+                    //             <label
+                    //                 htmlFor={`rating_${row.status}`}
+                    //                 className="checktoggle checkbox-bg"
+                    //             ></label>
+                    //         </div>
+                    //     );
+                    // }
                 } else {
-                    return <span className='text-success' style={{color:"green"}}>Active</span>
+                    return <span className='text-success' style={{ color: "green" }}>Active</span>
                 }
             },
             sortable: true,
@@ -397,8 +400,8 @@ const Coupon = () => {
             width: '200px',
         },
 
-        permission.includes("editcoupon") || permission.includes("coupondetail") 
-        || permission.includes("deletecoupon") ? {
+        permission.includes("editcoupon") || permission.includes("coupondetail")
+            || permission.includes("deletecoupon") ? {
             name: 'Actions',
             cell: row => {
                 const currentDate = new Date();
@@ -409,8 +412,8 @@ const Coupon = () => {
                         {currentDate > endDate ? (
                             <span className="text-danger" >-</span>
                         ) : (
-                             <div className='d-flex' >
-                                 {permission.includes("coupondetail") ?<div >
+                            <div className='d-flex' >
+                                {permission.includes("coupondetail") ? <div >
                                     <Tooltip placement="top" overlay="View">
                                         <Eye
                                             style={{ marginRight: "10px" }}
@@ -419,17 +422,17 @@ const Coupon = () => {
                                             onClick={() => setViewpage(row)}
                                         />
                                     </Tooltip>
-                                </div> : "" }
+                                </div> : ""}
                                 {permission.includes("editcoupon") ? <div>
                                     <Tooltip placement="top" overlay="Edit">
                                         <Pencil onClick={() => updatecoupon(row)} />
                                     </Tooltip>
-                                </div> : "" }
+                                </div> : ""}
                                 {permission.includes("deletecoupon") ? <div>
                                     <Tooltip placement="top" overlay="Delete">
                                         <Trash2 onClick={() => DeleteCouponbyadmin(row._id)} />
                                     </Tooltip>
-                                </div> : "" }
+                                </div> : ""}
                             </div>
                         )}
                     </>
@@ -438,7 +441,7 @@ const Coupon = () => {
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
-        } : "" 
+        } : ""
 
     ];
 
@@ -487,16 +490,25 @@ const Coupon = () => {
                                         />
                                         Add Coupon
                                     </Link>
-                                </div> : "" }
+                                </div> : ""}
                             </div>
 
-                            <Table
-                                columns={columns}
-                                data={clients}
-                            />
+
                         </div>
                     </div>
                 </div>
+
+                {isLoading ? (
+                    <Loader />
+                ) : (
+                    <>
+
+                        <Table
+                            columns={columns}
+                            data={clients}
+                        />
+                    </>
+                )}
                 <div className="button-group">
 
                     <div
