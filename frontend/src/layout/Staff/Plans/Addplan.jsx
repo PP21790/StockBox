@@ -17,6 +17,7 @@ const Addplan = () => {
     const [plan, setPlan] = useState([]);
 
 
+
     const getcategoryplanlist = async () => {
         try {
             const response = await getActivecategoryplan(token);
@@ -40,26 +41,27 @@ const Addplan = () => {
         let errors = {};
 
 
-        if (!values.description) {
-            errors.description = "Please enter Description";
+        if (!values.description || values.description ==="<p><br></p>") {
+            errors.description = "Please Enter Description";
         }
         if (!values.price) {
-            errors.price = "Please enter Price";
+            errors.price = "Please Enter Price";
         }
         if (values.price && values.price < 0) {
-            errors.price = "Please Enter Price greater Than 0";
+            errors.price = "Please Enter Price Greater Than 0";
         }
         if (!values.validity) {
-            errors.validity = "Please enter Validity";
+            errors.validity = "Please Select Validity";
         }
         if (!values.category) {
-            errors.category = "Please enter Category";
+            errors.category = "Please Select Category";
         }
 
         return errors;
     };
 
     const onSubmit = async (values) => {
+        console.log("values", values.Status)
         const req = {
             title: "",
             description: values.description,
@@ -67,10 +69,13 @@ const Addplan = () => {
             validity: values.validity,
             category: values.category,
             add_by: user_id,
+            deliverystatus: values.Status === 1 ? true : values.Status == 0 ? false : ""
         };
 
         try {
             const response = await Addplanbyadmin(req, token);
+
+
             if (response.status) {
                 Swal.fire({
                     title: "Create Successful!",
@@ -110,6 +115,7 @@ const Addplan = () => {
             validity: "",
             category: "",
             add_by: "",
+            Status: ""
         },
         validate,
         onSubmit,
@@ -130,15 +136,16 @@ const Addplan = () => {
                 value: item._id,
             })),
             label_size: 12,
-            col_size: 4,
+            col_size: 3,
             disable: false,
+            star: true
         },
         {
             name: "validity",
             label: "Validity",
             type: "select",
             label_size: 12,
-            col_size: 4,
+            col_size: 3,
             disable: false,
             options: [
                 { value: "1 month", label: "1 Month" },
@@ -147,26 +154,35 @@ const Addplan = () => {
                 { value: "1 year", label: "1 Year" }
             ].filter((option) => {
                 return !plan.some((item) => item?.validity === option.value);
-            })
+            }),
+            star: true
         },
-        
-        
         {
             name: "price",
             label: "Price",
             type: "number",
             label_size: 12,
-            col_size: 4,
+            col_size: 3,
             disable: false,
+            star: true
         },
-
+        {
+            name: "Status",
+            label: "Plan Delivery status ",
+            type: "togglebtn",
+            label_size: 12,
+            col_size: 3,
+            disable: false,
+            star: true
+        },
         {
             name: "description",
             label: "Description",
-            type: "ckeditor",
+            type: "ckeditor", 
             label_size: 12,
             col_size: 12,
             disable: false,
+            star: true
         },
     ];
 
@@ -185,12 +201,12 @@ const Addplan = () => {
                 console.error("Plan list fetch error:", error);
             }
         };
-    
+
         if (formik.values.category) {
             getplanlistfordetail();
         }
     }, [formik.values.category]);
-    
+
 
 
 
@@ -200,8 +216,8 @@ const Addplan = () => {
             <DynamicForm
                 fields={fields}
                 formik={formik}
-                page_title="Add New Plan"
-                btn_name="Add Plan"
+                page_title="Add New Package"
+                btn_name="Add Package"
                 btn_name1="Cancel"
                 sumit_btn={true}
                 btn_name1_route={"/staff/plan"}

@@ -4,6 +4,8 @@ import { getplanlist, getcategoryplan, Deleteplan, changeplanstatus, getActiveca
 import { fDateTime, fDate } from '../../../Utils/Date_formate';
 import Swal from 'sweetalert2';
 import { getstaffperuser } from '../../../Services/Admin';
+import Loader from '../../../Utils/Loader'
+
 
 
 
@@ -15,6 +17,10 @@ const Plan = () => {
     const [selectedCategoryId, setSelectedCategoryId] = useState(null);
     const token = localStorage.getItem('token');
     const userid = localStorage.getItem('id');
+
+    //set state for loding
+    const [isLoading, setIsLoading] = useState(true)
+
 
     const [permission, setPermission] = useState([]);
 
@@ -56,6 +62,7 @@ const Plan = () => {
         } catch (error) {
             console.log("error");
         }
+        setIsLoading(false)
     };
 
 
@@ -226,181 +233,186 @@ const Plan = () => {
                     </ul>
                     <hr />
 
-                    <div className="tab-content">
-                        <div className="tab-pane fade active show">
-                            <div className="pricing-section mt-5">
-                                {filteredClients.length > 0 ? (
-                                    <div className="card-container">
-                                        <div className="row">
-                                            {filteredClients.map((client) => (
-                                                category.find(cat => cat._id === client.category) ?
-                                                    <div className="col-md-6 mb-3" key={client._id}>
-                                                        <div className="pricing-card">
-                                                            <div className="row ">
-                                                                <div className="category-name text-center mb-3 col-md-6 d-flex justify-content-start">
-                                                                    <span className="badge bg-primary">
-                                                                        {category.find(cat => cat._id === client.category)?.servicesDetails.map((item, index) => (
-                                                                            <span key={item._id}>
-                                                                                {item.title}{index < category.find(cat => cat._id === client.category)?.servicesDetails.length - 1 && ', '}
-                                                                            </span>
-                                                                        ))}
-                                                                    </span>
-                                                                </div>
-                                                                <div className="category-name text-center mb-3 col-md-6 d-flex justify-content-end">
-                                                                    <span className="badge bg-primary">
-                                                                        {category.find(cat => cat._id === client.category)?.title || 'Unknown'}
-                                                                    </span>
-                                                                </div>
-                                                            </div>
+                    {isLoading ? (
+                        <Loader />
 
-                                                            {permission.includes("planstatus") ? <div className="row justify-content-end mb-3">
-                                                                <div className="col-md-6 d-flex justify-content-start">
-                                                                    <div className="form-check form-switch form-check-info">
-                                                                        <input
-                                                                            id={`rating_${client.status}`}
-                                                                            className="form-check-input toggleswitch"
-                                                                            type="checkbox"
-                                                                            defaultChecked={client.status === "active"}
-                                                                            onChange={(event) => handleSwitchChange(event, client._id)}
-                                                                        />
-                                                                        <label
-                                                                            htmlFor={`rating_${client.ActiveStatus}`}
-                                                                            className="checktoggle checkbox-bg"
-                                                                        ></label>
+                    ) : (
+                        <div className="tab-content">
+                            <div className="tab-pane fade active show">
+                                <div className="pricing-section mt-5">
+                                    {filteredClients.length > 0 ? (
+                                        <div className="card-container">
+                                            <div className="row">
+                                                {filteredClients.map((client) => (
+                                                    category.find(cat => cat._id === client.category) ?
+                                                        <div className="col-md-6 mb-3" key={client._id}>
+                                                            <div className="pricing-card">
+                                                                <div className="row ">
+                                                                    <div className="category-name text-center mb-3 col-md-6 d-flex justify-content-start">
+                                                                        <span className="badge bg-primary">
+                                                                            {category.find(cat => cat._id === client.category)?.servicesDetails.map((item, index) => (
+                                                                                <span key={item._id}>
+                                                                                    {item.title}{index < category.find(cat => cat._id === client.category)?.servicesDetails.length - 1 && ', '}
+                                                                                </span>
+                                                                            ))}
+                                                                        </span>
+                                                                    </div>
+                                                                    <div className="category-name text-center mb-3 col-md-6 d-flex justify-content-end">
+                                                                        <span className="badge bg-primary">
+                                                                            {category.find(cat => cat._id === client.category)?.title || 'Unknown'}
+                                                                        </span>
                                                                     </div>
                                                                 </div>
-                                                            </div> : ""}
 
-                                                            <div className="row justify-content-between align-items-center">
-                                                                <div className="col-md-6">
-                                                                    {/* <h3 className="fonth3">{client.title}</h3> */}
-                                                                    <h2 className="fonth2">{client.planType}</h2>
+                                                                {permission.includes("planstatus") ? <div className="row justify-content-end mb-3">
+                                                                    <div className="col-md-6 d-flex justify-content-start">
+                                                                        <div className="form-check form-switch form-check-info">
+                                                                            <input
+                                                                                id={`rating_${client.status}`}
+                                                                                className="form-check-input toggleswitch"
+                                                                                type="checkbox"
+                                                                                defaultChecked={client.status === "active"}
+                                                                                onChange={(event) => handleSwitchChange(event, client._id)}
+                                                                            />
+                                                                            <label
+                                                                                htmlFor={`rating_${client.ActiveStatus}`}
+                                                                                className="checktoggle checkbox-bg"
+                                                                            ></label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div> : ""}
+
+                                                                <div className="row justify-content-between align-items-center">
+                                                                    <div className="col-md-6">
+                                                                        {/* <h3 className="fonth3">{client.title}</h3> */}
+                                                                        <h2 className="fonth2">{client.planType}</h2>
+                                                                    </div>
+                                                                    <div className="price-section col-md-6">
+                                                                        <span className="discount">{client.discount}</span>
+                                                                        <h3 className="ms-4 fnt">INR {client.price}</h3>
+                                                                    </div>
                                                                 </div>
-                                                                <div className="price-section col-md-6">
-                                                                    <span className="discount">{client.discount}</span>
-                                                                    <h3 className="ms-4 fnt">INR {client.price}</h3>
-                                                                </div>
-                                                            </div>
-                                                            <hr />
-                                                            <ul>
-                                                                <li><b>Validity</b>: {client.validity}</li>
-                                                                <li><b className='mb-1'>Description</b>:<textarea className='form-control' value={stripHtmlTags(client.description || '')} >{client.description}</textarea></li>
-                                                                <li><b>Created At</b>: {fDateTime(client.created_at)}</li>
-                                                            </ul>
-                                                            <div className="button-group">
-                                                                <button
-                                                                    type="button"
-                                                                    className="btnsecond"
-                                                                    data-bs-toggle="modal"
-                                                                    data-bs-target={`#modal-${client._id}`}
-                                                                >
-                                                                    View More
-                                                                </button>
-                                                                <div
-                                                                    className="modal fade"
-                                                                    id={`modal-${client._id}`}
-                                                                    tabIndex={-1}
-                                                                    aria-labelledby={`modalLabel-${client._id}`}
-                                                                    aria-hidden="true"
-                                                                >
-                                                                    <div className="modal-dialog">
-                                                                        <div className="modal-content">
-                                                                            <div className="modal-header">
-                                                                                <h5 className="modal-title" id={`modalLabel-${client._id}`}>
-                                                                                    {client.title}
-                                                                                </h5>
-                                                                                <button
-                                                                                    type="button"
-                                                                                    className="btn-close"
-                                                                                    data-bs-dismiss="modal"
-                                                                                    aria-label="Close"
-                                                                                />
-                                                                            </div>
-                                                                            <div className="modal-body">
-                                                                                <ul>
-                                                                                    <li>
-                                                                                        <div className="row justify-content-between">
-                                                                                            <div className="col-md-6">
-                                                                                                <b>Title</b>
+                                                                <hr />
+                                                                <ul>
+                                                                    <li><b>Validity</b>: {client.validity}</li>
+                                                                    <li><b className='mb-1'>Description</b>:<textarea className='form-control' value={stripHtmlTags(client.description || '')} >{client.description}</textarea></li>
+                                                                    <li><b>Created At</b>: {fDateTime(client.created_at)}</li>
+                                                                </ul>
+                                                                <div className="button-group">
+                                                                    <button
+                                                                        type="button"
+                                                                        className="btnsecond"
+                                                                        data-bs-toggle="modal"
+                                                                        data-bs-target={`#modal-${client._id}`}
+                                                                    >
+                                                                        View More
+                                                                    </button>
+                                                                    <div
+                                                                        className="modal fade"
+                                                                        id={`modal-${client._id}`}
+                                                                        tabIndex={-1}
+                                                                        aria-labelledby={`modalLabel-${client._id}`}
+                                                                        aria-hidden="true"
+                                                                    >
+                                                                        <div className="modal-dialog">
+                                                                            <div className="modal-content">
+                                                                                <div className="modal-header">
+                                                                                    <h5 className="modal-title" id={`modalLabel-${client._id}`}>
+                                                                                        {client.title}
+                                                                                    </h5>
+                                                                                    <button
+                                                                                        type="button"
+                                                                                        className="btn-close"
+                                                                                        data-bs-dismiss="modal"
+                                                                                        aria-label="Close"
+                                                                                    />
+                                                                                </div>
+                                                                                <div className="modal-body">
+                                                                                    <ul>
+                                                                                        <li>
+                                                                                            <div className="row justify-content-between">
+                                                                                                <div className="col-md-6">
+                                                                                                    <b>Title</b>
+                                                                                                </div>
+                                                                                                <div className="col-md-6">
+                                                                                                    {client.title}
+                                                                                                </div>
                                                                                             </div>
-                                                                                            <div className="col-md-6">
-                                                                                                {client.title}
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            <div className="row justify-content-between">
+                                                                                                <div className="col-md-6">
+                                                                                                    <b>Price</b>
+                                                                                                </div>
+                                                                                                <div className="col-md-6">
+                                                                                                    {client.price}
+                                                                                                </div>
                                                                                             </div>
-                                                                                        </div>
-                                                                                    </li>
-                                                                                    <li>
-                                                                                        <div className="row justify-content-between">
-                                                                                            <div className="col-md-6">
-                                                                                                <b>Price</b>
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            <div className="row justify-content-between">
+                                                                                                <div className="col-md-6">
+                                                                                                    <b>Validity</b>
+                                                                                                </div>
+                                                                                                <div className="col-md-6">
+                                                                                                    {client.validity}
+                                                                                                </div>
                                                                                             </div>
-                                                                                            <div className="col-md-6">
-                                                                                                {client.price}
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            <div className="row justify-content-between">
+                                                                                                <div className="col-md-3">
+                                                                                                    <b>Description</b>
+                                                                                                </div>
+                                                                                                <div className="col-md-9">
+                                                                                                    {stripHtmlTags(client.description || '')}
+                                                                                                </div>
                                                                                             </div>
-                                                                                        </div>
-                                                                                    </li>
-                                                                                    <li>
-                                                                                        <div className="row justify-content-between">
-                                                                                            <div className="col-md-6">
-                                                                                                <b>Validity</b>
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            <div className="row justify-content-between">
+                                                                                                <div className="col-md-6">
+                                                                                                    <b>Created At</b>
+                                                                                                </div>
+                                                                                                <div className="col-md-6">
+                                                                                                    {fDateTime(client.created_at)}
+                                                                                                </div>
                                                                                             </div>
-                                                                                            <div className="col-md-6">
-                                                                                                {client.validity}
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            <div className="row justify-content-between">
+                                                                                                <div className="col-md-6">
+                                                                                                    <b>Updated At</b>
+                                                                                                </div>
+                                                                                                <div className="col-md-6">
+                                                                                                    {fDateTime(client.updated_at)}
+                                                                                                </div>
                                                                                             </div>
-                                                                                        </div>
-                                                                                    </li>
-                                                                                    <li>
-                                                                                        <div className="row justify-content-between">
-                                                                                            <div className="col-md-3">
-                                                                                                <b>Description</b>
-                                                                                            </div>
-                                                                                            <div className="col-md-9">
-                                                                                                {stripHtmlTags(client.description || '')}
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </li>
-                                                                                    <li>
-                                                                                        <div className="row justify-content-between">
-                                                                                            <div className="col-md-6">
-                                                                                                <b>Created At</b>
-                                                                                            </div>
-                                                                                            <div className="col-md-6">
-                                                                                                {fDateTime(client.created_at)}
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </li>
-                                                                                    <li>
-                                                                                        <div className="row justify-content-between">
-                                                                                            <div className="col-md-6">
-                                                                                                <b>Updated At</b>
-                                                                                            </div>
-                                                                                            <div className="col-md-6">
-                                                                                                {fDateTime(client.updated_at)}
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </li>
-                                                                                </ul>
+                                                                                        </li>
+                                                                                    </ul>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
+                                                                    {permission.includes("editplan") ? <Link to={`editplan/${client._id}`} className="btnprime" style={{ color: 'inherit', textDecoration: 'none' }}>
+                                                                        Edit
+                                                                    </Link> : ""}
                                                                 </div>
-                                                                {permission.includes("editplan") ? <Link to={`editplan/${client._id}`} className="btnprime" style={{ color: 'inherit', textDecoration: 'none' }}>
-                                                                    Edit
-                                                                </Link> : ""}
                                                             </div>
-                                                        </div>
-                                                    </div> : ""
-                                            ))}
+                                                        </div> : ""
+                                                ))}
+                                            </div>
                                         </div>
-                                    </div>
-                                ) : (
-                                    <div>
-                                        <h5>No Plans Available</h5>
-                                        <div className="text-muted">Please select a category to view details.</div>
-                                    </div>
-                                )}
+                                    ) : (
+                                        <div>
+                                            <h5>No Plans Available</h5>
+                                            <div className="text-muted">Please select a category to view details.</div>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </div>
         </div>

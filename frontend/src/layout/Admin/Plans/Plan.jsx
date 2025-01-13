@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getplanlist, getcategoryplan, Deleteplan, changeplanstatus, getActivecategoryplan } from '../../../Services/Admin';
 import { fDateTime } from '../../../Utils/Date_formate';
 import Swal from 'sweetalert2';
+import Loader from '../../../Utils/Loader'
 
 
 
@@ -13,6 +14,9 @@ const Plan = () => {
     const [category, setCategory] = useState([]);
     const [selectedCategoryId, setSelectedCategoryId] = useState(null);
     const token = localStorage.getItem('token');
+
+    //set state for loding
+    const [isLoading, setIsLoading] = useState(true)
 
 
 
@@ -37,6 +41,7 @@ const Plan = () => {
         } catch (error) {
             console.log("error");
         }
+        setIsLoading(false)
     };
 
 
@@ -222,6 +227,11 @@ const Plan = () => {
                     </ul>
                     <hr />
 
+                    {isLoading ? (
+                            <Loader />
+
+                        ) : ( 
+
                     <div className="tab-content">
                         <div className="tab-pane fade active show">
                             <div className="pricing-section mt-5">
@@ -400,6 +410,7 @@ const Plan = () => {
                             </div>
                         </div>
                     </div>
+                    )}
                 </div>
             </div>
         </div>

@@ -599,7 +599,7 @@ const Blogs = () => {
                         {isLoading ? (
                             <Loader />
 
-                        ) : (
+                        ) : ( 
                             <>
 
                                 <div className="table-responsive">

@@ -168,7 +168,7 @@ const Editplan = () => {
         {
             name: "description",
             label: "Description",
-            type: "text5",
+            type: "ckeditor",
             label_size: 12,
             col_size: 12,
             disable: false,

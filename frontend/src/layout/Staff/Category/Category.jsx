@@ -9,6 +9,8 @@ import { Tooltip } from 'antd';
 import styled from 'styled-components';
 import { fDateTime } from '../../../Utils/Date_formate';
 import { getstaffperuser } from '../../../Services/Admin';
+import Loader from '../../../Utils/Loader'
+
 
 
 
@@ -21,6 +23,9 @@ const Category = () => {
     const [searchInput, setSearchInput] = useState("");
     const [selectedServices, setSelectedServices] = useState([]);
     const [permission, setPermission] = useState([]);
+
+    //set state for loding
+    const [isLoading, setIsLoading] = useState(true)
 
     const [updatetitle, setUpdatetitle] = useState({
         title: "",
@@ -57,8 +62,9 @@ const Category = () => {
         } catch (error) {
             console.log("Error fetching services:", error);
         }
+        setIsLoading(false)
     };
-  
+
 
     const getpermissioninfo = async () => {
         try {
@@ -97,7 +103,7 @@ const Category = () => {
 
     // Update service
     const Updatecategory = async () => {
-        
+
         try {
 
             const data = { title: updatetitle.title, id: serviceid._id, service: updatetitle.service };
@@ -280,8 +286,8 @@ const Category = () => {
             }
         });
     };
-  
-   
+
+
 
     const columns = [
         // {
@@ -297,12 +303,11 @@ const Category = () => {
         },
         {
             name: 'Segment',
-
             selector: row => row.servicesDetails.map(item => item.title).join(', '),
             width: '200px',
             sortable: true,
         },
-         permission.includes("categorystatus") ? {
+        permission.includes("categorystatus") ? {
             name: 'Active Status',
             selector: row => (
                 <div className="form-check form-switch form-check-info">
@@ -321,7 +326,7 @@ const Category = () => {
             ),
             sortable: true,
             width: '200px',
-        } : "" ,
+        } : "",
         {
             name: 'Created At',
             selector: row => fDateTime(row.created_at),
@@ -340,7 +345,7 @@ const Category = () => {
             cell: row => (
                 <>
                     <div>
-                    { permission.includes("editcategory") ? <Tooltip placement="top" overlay="Update">
+                        {permission.includes("editcategory") ? <Tooltip placement="top" overlay="Update">
                             <SquarePen
                                 onClick={() => {
                                     setModel(true);
@@ -352,7 +357,7 @@ const Category = () => {
                                     });
                                 }}
                             />
-                        </Tooltip> : "" }
+                        </Tooltip> : ""}
                     </div>
                     <div>
                         {/* <Tooltip placement="top" overlay="Delete">
@@ -432,7 +437,7 @@ const Category = () => {
                                     <i className="bx bx-search" />
                                 </span>
                             </div>
-                            { permission.includes("addcategory") ?  <div className="ms-auto">
+                            {permission.includes("addcategory") ? <div className="ms-auto">
                                 <button
                                     type="button"
                                     className="btn btn-primary"
@@ -464,17 +469,19 @@ const Category = () => {
                                                 />
                                             </div>
                                             <div className="modal-body">
-                                                <form>
+                                               
                                                     <div className="row">
                                                         <div className="col-md-12">
                                                             <label htmlFor="service">Segment</label>
+                                                            <span className="text-danger">*</span>
                                                             {servicedata.length > 0 && (
                                                                 <DropdownMultiselect
+                                                                    name="Service"
                                                                     options={servicedata.map((item) => ({
                                                                         key: item._id,
                                                                         label: item.title
                                                                     }))}
-                                                                    name="Service"
+                                                                    placeholder="Select Segment"
                                                                     handleOnChange={(selected) => {
                                                                         const selectedService = selected;
                                                                         setTitle({ ...title, service: selectedService });
@@ -486,6 +493,7 @@ const Category = () => {
                                                         </div>
                                                         <div className="col-md-12">
                                                             <label htmlFor="categoryTitle">Category</label>
+                                                            <span className="text-danger">*</span>
                                                             <input
                                                                 id="categoryTitle"
                                                                 className="form-control mb-3"
@@ -496,7 +504,7 @@ const Category = () => {
                                                             />
                                                         </div>
                                                     </div>
-                                                </form>
+                                                
                                             </div>
                                             <div className="modal-footer">
                                                 <button
@@ -516,14 +524,18 @@ const Category = () => {
                                             </div>
                                         </div>
                                     </div>
-                                </div> 
-
-                               
+                                </div>
 
 
 
-                            </div> : "" }
+
+
+                            </div> : ""}
                         </div>
+                        {isLoading ? (
+                            <Loader />
+
+                        ) : ( 
                         <div className="table-responsive">
                             <Table
                                 columns={columns}
@@ -534,56 +546,57 @@ const Category = () => {
                                 dense
                             />
                         </div>
+                        )}
                     </div>
                 </div>
             </div>
             {model && (
-                                    <>
-                                        <div className="modal-backdrop fade show"></div>
+                <>
+                    <div className="modal-backdrop fade show"></div>
 
-                                        <div
-                                            className="modal fade show"
-                                            style={{ display: 'block' }}
-                                            tabIndex={-1}
-                                            aria-labelledby="updateServiceModalLabel"
-                                            aria-hidden="true"
-                                            role="dialog"
-                                        >
-                                            <div className="modal-dialog">
-                                                <div className="modal-content">
-                                                    <div className="modal-header">
-                                                        <h5 className="modal-title" id="updateServiceModalLabel">
-                                                            Update Category
-                                                        </h5>
-                                                        <button
-                                                            type="button"
-                                                            className="btn-close"
-                                                            aria-label="Close"
-                                                            onClick={() => setModel(false)}
-                                                        />
-                                                    </div>
-                                                    <div className="modal-body">
-                                                        <form>
-                                                            <div className="row">
-                                                                <div className="col-md-12">
-                                                                    <label htmlFor="category">Category</label>
-                                                                    <input
-                                                                        className="form-control mb-2"
-                                                                        type="text"
-                                                                        placeholder="Enter Category Title"
-                                                                        id="category"
-                                                                        value={updatetitle.title}
-                                                                        onChange={(e) =>
-                                                                            updateServiceTitle('title', e.target.value)
-                                                                        }
-                                                                        required
-                                                                    />
-                                                                </div>
-                                                            </div>
+                    <div
+                        className="modal fade show"
+                        style={{ display: 'block' }}
+                        tabIndex={-1}
+                        aria-labelledby="updateServiceModalLabel"
+                        aria-hidden="true"
+                        role="dialog"
+                    >
+                        <div className="modal-dialog">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="updateServiceModalLabel">
+                                        Update Category
+                                    </h5>
+                                    <button
+                                        type="button"
+                                        className="btn-close"
+                                        aria-label="Close"
+                                        onClick={() => setModel(false)}
+                                    />
+                                </div>
+                                <div className="modal-body">
+                                    <form>
+                                        <div className="row">
+                                            <div className="col-md-12">
+                                                <label htmlFor="category">Category</label>
+                                                <input
+                                                    className="form-control mb-2"
+                                                    type="text"
+                                                    placeholder="Enter Category Title"
+                                                    id="category"
+                                                    value={updatetitle.title}
+                                                    onChange={(e) =>
+                                                        updateServiceTitle('title', e.target.value)
+                                                    }
+                                                    required
+                                                />
+                                            </div>
+                                        </div>
 
 
 
-                                                            {/* <div className="row">
+                                        {/* <div className="row">
                                                                 <div className="col-md-12">
                                                                     <label htmlFor="service">Service</label>
                                                                     {servicedata.length > 0 && (
@@ -603,63 +616,63 @@ const Category = () => {
                                                                 </div>
                                                             </div> */}
 
-                                                            <div className="row">
-                                                                <div className="col-md-12">
-                                                                    <label htmlFor="service">Segment</label>
-                                                                    {servicedata.length > 0 && (
-                                                                        <div className="form-group">
-                                                                            {servicedata.map((item) => (
-                                                                                <div key={item._id} className="form-check">
-                                                                                    <input
-                                                                                        className="form-check-input"
-                                                                                        type="checkbox"
-                                                                                        id={`service_${item._id}`}
-                                                                                        value={item._id}
-                                                                                        checked={updatetitle.service.includes(item._id)}
-                                                                                        onChange={(e) => handleServiceChange(item._id, e.target.checked)}
-                                                                                    />
-                                                                                    <label className="form-check-label" htmlFor={`service_${item._id}`}>
-                                                                                        {item.title}
-                                                                                    </label>
-                                                                                </div>
-                                                                            ))}
-                                                                        </div>
-                                                                    )}
-                                                                </div>
+                                        <div className="row">
+                                            <div className="col-md-12">
+                                                <label htmlFor="service">Segment</label>
+                                                {servicedata.length > 0 && (
+                                                    <div className="form-group">
+                                                        {servicedata.map((item) => (
+                                                            <div key={item._id} className="form-check">
+                                                                <input
+                                                                    className="form-check-input"
+                                                                    type="checkbox"
+                                                                    id={`service_${item._id}`}
+                                                                    value={item._id}
+                                                                    checked={updatetitle.service.includes(item._id)}
+                                                                    onChange={(e) => handleServiceChange(item._id, e.target.checked)}
+                                                                />
+                                                                <label className="form-check-label" htmlFor={`service_${item._id}`}>
+                                                                    {item.title}
+                                                                </label>
                                                             </div>
-
-
-
-
-
-
-
-
-                                                        </form>
+                                                        ))}
                                                     </div>
-                                                    <div className="modal-footer">
-                                                        <button
-                                                            type="button"
-                                                            className="btn btn-secondary"
-                                                            onClick={() => setModel(false)}
-                                                        >
-                                                            Close
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            className="btn btn-primary"
-                                                            onClick={Updatecategory}
-                                                            disabled={!updatetitle.title || !updatetitle.service}
-                                                        >
-                                                            Update Service
-                                                        </button>
-                                                    </div>
-                                                </div>
+                                                )}
                                             </div>
                                         </div>
-                                    </>
 
-                                )}
+
+
+
+
+
+
+
+                                    </form>
+                                </div>
+                                <div className="modal-footer">
+                                    <button
+                                        type="button"
+                                        className="btn btn-secondary"
+                                        onClick={() => setModel(false)}
+                                    >
+                                        Close
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary"
+                                        onClick={Updatecategory}
+                                        disabled={!updatetitle.title || !updatetitle.service}
+                                    >
+                                        Update Service
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </>
+
+            )}
         </div>
     );
 };

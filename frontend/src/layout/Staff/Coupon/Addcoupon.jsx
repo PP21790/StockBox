@@ -238,7 +238,7 @@ const Addcoupon = () => {
         },
         {
             name:"limitation",
-            label:"Set limitation",
+            label:"Set Limit",
             type:"number",
             label_size:12,
             col_size:6,

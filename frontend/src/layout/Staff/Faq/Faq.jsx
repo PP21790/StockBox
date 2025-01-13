@@ -41,6 +41,7 @@ const Faq = () => {
     const getpermissioninfo = async () => {
         try {
             const response = await getstaffperuser(userid, token);
+            
             if (response.status) {
                 setPermission(response.data.permissions);
             }
@@ -122,6 +123,7 @@ const Faq = () => {
         try {
             const data = { title: title.title, description: title.description, add_by: userid };
             const response = await AddFaq(data, token);
+            
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
@@ -309,7 +311,7 @@ const Faq = () => {
             name: 'Actions',
             cell: row => (
                 <>
-                    {permission.includes("faqsdetail") ? <div>
+                    {permission.includes("viewfaq") ? <div>
                         <Tooltip placement="top" overlay="View">
                             <Eye style={{ marginRight: "10px" }} data-bs-toggle="modal"
                                 data-bs-target="#example1" 

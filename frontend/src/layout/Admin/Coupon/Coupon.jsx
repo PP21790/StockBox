@@ -245,7 +245,7 @@ const Coupon = () => {
             name: 'Fixed/Percent Value',
             selector: row => row.type === "fixed" ? row.value : `${row.value}`,
             sortable: true,
-            width: '300px',
+            width: '220px',
         },
         {
             name: 'Used Limit/Total Limit',
@@ -267,7 +267,7 @@ const Coupon = () => {
                 );
             },
             sortable: true,
-            width: '300px',
+            width: '150px',
         },
         // {
         //     name: 'Image',
@@ -309,6 +309,23 @@ const Coupon = () => {
                 endDate.setHours(23, 59, 59, 999);
                 if (currentDate > endDate) {
                     return <span className="text-danger" style={{ color: "red" }}>Expired</span>;
+                // } else {
+                //     return (
+                //         <div className="form-check form-switch form-check-info">
+                //             <input
+                //                 id={`rating_${row.status}`}
+                //                 className="form-check-input toggleswitch"
+                //                 type="checkbox"
+                //                 defaultChecked={row.status === true}
+                //                 onChange={(event) => handleSwitchChange(event, row._id)}
+                //             />
+                //             <label
+                //                 htmlFor={`rating_${row.status}`}
+                //                 className="checktoggle checkbox-bg"
+                //             ></label>
+                //         </div>
+                //     );
+                // }
                 } else {
                     return <span className="text-success" style={{ color: "green" }}>Active</span>;
                 }

@@ -423,7 +423,7 @@ const AddSignal = () => {
     },
     {
       name: 'lot',
-      label: 'Quantity/Lot',
+      label: 'Suggested Quantity/Lot',
       type: 'number',
       label_size: 12,
       col_size: 6,

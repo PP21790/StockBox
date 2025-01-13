@@ -272,10 +272,10 @@ const Closesignal = () => {
       width: "200px",
     },
     {
-      name: "Quantity/Lot",
+      name: "Suggested Quantity/Lot",
       selector: (row) => row.lot,
       sortable: true,
-      width: "200px",
+      width: "250px",
     },
     {
       name: "Entry Price",
