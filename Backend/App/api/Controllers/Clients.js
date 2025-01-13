@@ -295,8 +295,8 @@ async loginClient(req, res) {
 
      
 
-    const token = crypto.randomBytes(10).toString('hex'); // 10 bytes = 20 hex characters
-    client.token = token;
+    // const token = crypto.randomBytes(10).toString('hex'); // 10 bytes = 20 hex characters
+    // client.token = token;
     client.devicetoken = devicetoken;
     await client.save();
 
@@ -308,7 +308,7 @@ async loginClient(req, res) {
         Email: client.Email,
         PhoneNo: client.PhoneNo,
         id: client.id,
-        token: token,
+       // token: token,
         angleredirecturl: `${req.protocol}://${req.headers.host}/backend/angle/getaccesstoken?key=${client._id}`,
         aliceredirecturl: `${req.protocol}://${req.headers.host}/backend/aliceblue/getaccesstoken?key=${client._id}` },
     });
