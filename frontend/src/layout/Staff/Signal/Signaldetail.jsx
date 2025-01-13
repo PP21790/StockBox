@@ -26,7 +26,7 @@ const Signaldetail = () => {
         }
     }, [location]);
 
-    const redirectTo = (currentlocation === "closesignalpage") ? "/admin/closesignal" : "/admin/signal";
+    const redirectTo = (currentlocation === "closesignalpage") ? "/staff/closesignal" : "/admin/signal";
 
 
     useEffect(() => {
