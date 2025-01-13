@@ -4,6 +4,8 @@ import { getplanlist, getcategoryplan, Deleteplan, changeplanstatus, getActiveca
 import { fDateTime, fDate } from '../../../Utils/Date_formate';
 import Swal from 'sweetalert2';
 import { getstaffperuser } from '../../../Services/Admin';
+import Loader from '../../../Utils/Loader'
+
 
 
 
@@ -15,7 +17,11 @@ const Plan = () => {
     const [selectedCategoryId, setSelectedCategoryId] = useState(null);
     const token = localStorage.getItem('token');
     const userid = localStorage.getItem('id');
+
+    //set state for loding
+    const [isLoading, setIsLoading] = useState(true)
     
+
     const [permission, setPermission] = useState([]);
 
 
@@ -56,6 +62,7 @@ const Plan = () => {
         } catch (error) {
             console.log("error");
         }
+        setIsLoading(false)
     };
 
 
@@ -168,18 +175,24 @@ const Plan = () => {
 
 
 
+        const stripHtmlTags = (input) => {
+            if (!input) return '';
+            return input.replace(/<\/?[^>]+(>|$)/g, '');
+        }
+
+
 
     return (
         <div className="page-content">
             <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
                 <div className="breadcrumb-title pe-3">Plan</div>
                 <div className="ms-auto">
-                  {permission.includes("addplan") ?<div className="btn-group">
+                    {permission.includes("addplan") ? <div className="btn-group">
                         <Link to="/staff/addplan" className="btn btn-primary">
                             Add Plan
                         </Link>
-                    </div> : "" }
-                </div> 
+                    </div> : ""}
+                </div>
             </div>
             <hr />
 
@@ -218,6 +231,10 @@ const Plan = () => {
                     </ul>
                     <hr />
 
+                    {isLoading ? (
+                            <Loader />
+
+                        ) : ( 
                     <div className="tab-content">
                         <div className="tab-pane fade active show">
                             <div className="pricing-section mt-5">
@@ -244,7 +261,7 @@ const Plan = () => {
                                                             </div>
                                                         </div>
 
-                                                      { permission.includes("planstatus") ? <div className="row justify-content-end mb-3">
+                                                        {permission.includes("planstatus") ? <div className="row justify-content-end mb-3">
                                                             <div className="col-md-6 d-flex justify-content-start">
                                                                 <div className="form-check form-switch form-check-info">
                                                                     <input
@@ -260,7 +277,7 @@ const Plan = () => {
                                                                     ></label>
                                                                 </div>
                                                             </div>
-                                                        </div> : "" }
+                                                        </div> : ""}
 
                                                         <div className="row justify-content-between align-items-center">
                                                             <div className="col-md-6">
@@ -275,7 +292,7 @@ const Plan = () => {
                                                         <hr />
                                                         <ul>
                                                             <li><b>Validity</b>: {client.validity}</li>
-                                                            <li><b className='mb-1'>Description</b>:<textarea className='form-control' >{client.description}</textarea></li>
+                                                            <li><b className='mb-1'>Description</b>:<textarea className='form-control' value={stripHtmlTags(client.description || '')} >{client.description}</textarea></li>
                                                             <li><b>Created At</b>: {fDateTime(client.created_at)}</li>
                                                         </ul>
                                                         <div className="button-group">
@@ -294,11 +311,11 @@ const Plan = () => {
                                                                 aria-labelledby={`modalLabel-${client._id}`}
                                                                 aria-hidden="true"
                                                             >
-                                                                <div className="modal-dialog">
+                                                                <div className="modal-dialog modal-xl">
                                                                     <div className="modal-content">
                                                                         <div className="modal-header">
                                                                             <h5 className="modal-title" id={`modalLabel-${client._id}`}>
-                                                                                {client.title}
+                                                                                Plan Detail
                                                                             </h5>
                                                                             <button
                                                                                 type="button"
@@ -309,63 +326,64 @@ const Plan = () => {
                                                                         </div>
                                                                         <div className="modal-body">
                                                                             <ul>
+                                                                                {/* <li>
+                                                                                                                                                    <div className="row justify-content-between">
+                                                                                                                                                        <div className="col-md-6">
+                                                                                                                                                            <b>Title</b>
+                                                                                                                                                        </div>
+                                                                                                                                                        <div className="col-md-6">
+                                                                                                                                                            {client.title}
+                                                                                                                                                        </div>
+                                                                                                                                                    </div>
+                                                                                                                                                </li> */}
                                                                                 <li>
                                                                                     <div className="row justify-content-between">
-                                                                                        <div className="col-md-6">
-                                                                                            <b>Title</b>
-                                                                                        </div>
-                                                                                        <div className="col-md-6">
-                                                                                            {client.title}
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </li>
-                                                                                <li>
-                                                                                    <div className="row justify-content-between">
-                                                                                        <div className="col-md-6">
+                                                                                        <div className="col-md-3">
                                                                                             <b>Price</b>
                                                                                         </div>
-                                                                                        <div className="col-md-6">
+                                                                                        <div className="col-md-9">
                                                                                             {client.price}
                                                                                         </div>
                                                                                     </div>
                                                                                 </li>
                                                                                 <li>
                                                                                     <div className="row justify-content-between">
-                                                                                        <div className="col-md-6">
+                                                                                        <div className="col-md-3">
                                                                                             <b>Validity</b>
                                                                                         </div>
-                                                                                        <div className="col-md-6">
+                                                                                        <div className="col-md-9">
                                                                                             {client.validity}
                                                                                         </div>
                                                                                     </div>
                                                                                 </li>
+
                                                                                 <li>
                                                                                     <div className="row justify-content-between">
-                                                                                        <div className="col-md-6">
-                                                                                            <b>Description</b>
-                                                                                        </div>
-                                                                                        <div className="col-md-6">
-                                                                                            {client.description}
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </li>
-                                                                                <li>
-                                                                                    <div className="row justify-content-between">
-                                                                                        <div className="col-md-6">
+                                                                                        <div className="col-md-3">
                                                                                             <b>Created At</b>
                                                                                         </div>
-                                                                                        <div className="col-md-6">
+                                                                                        <div className="col-md-9">
                                                                                             {fDateTime(client.created_at)}
                                                                                         </div>
                                                                                     </div>
                                                                                 </li>
                                                                                 <li>
                                                                                     <div className="row justify-content-between">
-                                                                                        <div className="col-md-6">
+                                                                                        <div className="col-md-3">
                                                                                             <b>Updated At</b>
                                                                                         </div>
-                                                                                        <div className="col-md-6">
+                                                                                        <div className="col-md-9">
                                                                                             {fDateTime(client.updated_at)}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <div className="row justify-content-between">
+                                                                                        <div className="col-md-3">
+                                                                                            <b>Description</b>
+                                                                                        </div>
+                                                                                        <div className="col-md-9">
+                                                                                            {stripHtmlTags(client.description || '')}
                                                                                         </div>
                                                                                     </div>
                                                                                 </li>
@@ -374,9 +392,9 @@ const Plan = () => {
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                          {permission.includes("editplan") ?<Link to={`editplan/${client._id}`} className="btnprime" style={{ color: 'inherit', textDecoration: 'none' }}>
+                                                            {permission.includes("editplan") ? <Link to={`editplan/${client._id}`} className="btnprime" style={{ color: 'inherit', textDecoration: 'none' }}>
                                                                 Edit
-                                                            </Link> : "" }
+                                                            </Link> : ""}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -392,6 +410,7 @@ const Plan = () => {
                             </div>
                         </div>
                     </div>
+                    )}
                 </div>
             </div>
         </div>

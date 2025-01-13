@@ -8,6 +8,8 @@ import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 import { Tooltip } from 'antd';
 import styled from 'styled-components';
 import { fDateTime } from '../../../Utils/Date_formate';
+import Loader from '../../../Utils/Loader'
+
 
 const Category = () => {
     const navigate = useNavigate();
@@ -17,6 +19,9 @@ const Category = () => {
     const [servicedata, setServicedata] = useState([]);
     const [searchInput, setSearchInput] = useState("");
     const [selectedServices, setSelectedServices] = useState([]);
+
+    //set state for loding
+    const [isLoading, setIsLoading] = useState(true)
 
 
     const [updatetitle, setUpdatetitle] = useState({
@@ -51,6 +56,7 @@ const Category = () => {
         } catch (error) {
             console.log("Error fetching services:", error);
         }
+        setIsLoading(false)
     };
 
 
@@ -260,7 +266,6 @@ const Category = () => {
         },
         {
             name: 'Segment',
-
             selector: row => row.servicesDetails.map(item => item.title).join(', '),
             width: '200px',
             sortable: true,
@@ -605,6 +610,11 @@ const Category = () => {
 
                             </div>
                         </div>
+
+                        {isLoading ? (
+                            <Loader />
+
+                        ) : ( 
                         <div className="table-responsive">
                             <Table
                                 columns={columns}
@@ -615,6 +625,7 @@ const Category = () => {
                                 dense
                             />
                         </div>
+                        )}
                     </div>
                 </div>
             </div>

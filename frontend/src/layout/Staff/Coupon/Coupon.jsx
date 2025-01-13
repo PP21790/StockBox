@@ -5,7 +5,7 @@ import { getcouponlist } from '../../../Services/Admin';
 import Table from '../../../components/Table';
 import { Eye, Pencil, Trash2 , IndianRupee} from 'lucide-react';
 import Swal from 'sweetalert2';
-import { DeleteCoupon, UpdateClientStatus, CouponStatus } from '../../../Services/Admin';
+import { DeleteCoupon, UpdateClientStatus, CouponStatus,CouponShowstatus,GetService } from '../../../Services/Admin';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
 import { fDate, fDateTime } from '../../../Utils/Date_formate';
@@ -25,6 +25,11 @@ const Coupon = () => {
     const [viewpage, setViewpage] = useState({});
     const [datewise, setDatewise] = useState("")
     const [permission, setPermission] = useState([]);
+
+    const [service, setService] = useState([])
+    console.log();
+    
+    
 
 
 
@@ -49,6 +54,20 @@ const Coupon = () => {
         }
     }
    
+        const getService = async () => {
+            try {
+                const response = await GetService(token);
+                // console.log("response",response);
+    
+                if (response.status) {
+                    setService(response.data)
+                    // console.log("chaking",response.data);
+    
+                }
+            } catch (error) {
+                console.log("error");
+            }
+        }
 
 
     const getpermissioninfo = async () => {
@@ -64,6 +83,7 @@ const Coupon = () => {
 
     useEffect(() => {
         getpermissioninfo();
+        getService();
     }, []);
 
 
@@ -167,6 +187,49 @@ const Coupon = () => {
             getcoupon();
         }
     };
+    
+
+
+    const handleSwitchChange1 = async (event, id) => {
+    
+            const user_active_status = event.target.checked === true ? "1" : "0"
+            const data = { id: id, status: user_active_status }
+    
+    
+            const result = await Swal.fire({
+                title: "Do you want to save the changes?",
+                showCancelButton: true,
+                confirmButtonText: "Save",
+                cancelButtonText: "Cancel",
+                allowOutsideClick: false,
+            });
+    
+            if (result.isConfirmed) {
+                try {
+                    const response = await CouponShowstatus(data, token)
+                    if (response.status) {
+                        Swal.fire({
+                            title: "Saved!",
+                            icon: "success",
+                            timer: 1000,
+                            timerProgressBar: true,
+                        });
+                        setTimeout(() => {
+                            Swal.close();
+                        }, 1000);
+                    }
+                    getcoupon();
+                } catch (error) {
+                    Swal.fire(
+                        "Error",
+                        "There was an error processing your request.",
+                        "error"
+                    );
+                }
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                getcoupon();
+            }
+        };
 
 
 
@@ -203,7 +266,7 @@ const Coupon = () => {
             name: 'Fixed/Percent Value',
             selector: row => row.type === "fixed" ? row.value : `${row.value}%`,
             sortable: true,
-            width: '300px',
+            width: '220px',
         },
         {
             name: 'Used Limit/Total Limit',
@@ -214,6 +277,18 @@ const Coupon = () => {
             sortable: true,
             width: '250px',
 
+        },
+        {
+            name: 'Services',
+            selector: row => {
+                // Service data ko check karte hain aur relevant data dikhate hain
+                const serviceItem = service.find(item => item._id === row.service); // Assumed that coupon has serviceId
+                return (
+                    <div>{serviceItem ? serviceItem.title : 'All'}</div> // Show service name if found
+                );
+            },
+            sortable: true,
+            width: '150px',
         },
         // {
         //     name: 'Image',
@@ -229,7 +304,7 @@ const Coupon = () => {
         },
         {
             name: 'Max Discount Value',
-            selector: row => row.mincouponvalue ? row.mincouponvalue : "-",
+            selector: row => <div> <IndianRupee />{row.mincouponvalue ? row.mincouponvalue : "-"}</div>,
             sortable: true,
             width: '210px',
         },
@@ -255,35 +330,68 @@ const Coupon = () => {
                 endDate.setHours(23, 59, 59, 999);
                 if (currentDate > endDate) {
                     return <span className="text-danger" style={{ color: "red" }}>Expired</span>;
+                // } else {
+                //     return (
+                //         <div className="form-check form-switch form-check-info">
+                //             <input
+                //                 id={`rating_${row.status}`}
+                //                 className="form-check-input toggleswitch"
+                //                 type="checkbox"
+                //                 defaultChecked={row.status === true}
+                //                 onChange={(event) => handleSwitchChange(event, row._id)}
+                //             />
+                //             <label
+                //                 htmlFor={`rating_${row.status}`}
+                //                 className="checktoggle checkbox-bg"
+                //             ></label>
+                //         </div>
+                //     );
+                // }
                 } else {
-                    return (
-                        <div className="form-check form-switch form-check-info">
-                            <input
-                                id={`rating_${row.status}`}
-                                className="form-check-input toggleswitch"
-                                type="checkbox"
-                                defaultChecked={row.status === true}
-                                onChange={(event) => handleSwitchChange(event, row._id)}
-                            />
-                            <label
-                                htmlFor={`rating_${row.status}`}
-                                className="checktoggle checkbox-bg"
-                            ></label>
-                        </div>
-                    );
+                    return <span className='text-success' style={{color:"green"}}>Active</span>
                 }
             },
             sortable: true,
             width: '156px',
         } : "",
         {
-            name: 'Startdate',
+            name: 'Show Status',
+            selector: row => {
+                const currentDate = new Date();
+                const endDate = new Date(row.enddate);
+                endDate.setHours(23, 59, 59, 999);
+                if (currentDate > endDate) {
+                    return <span className="text-danger" style={{ color: "red" }}>Expired</span>;
+                } else {
+                    return (
+                        <div className="form-check form-switch form-check-info">
+                            <input
+                                id={`rating_${row._id}`}
+                                className="form-check-input toggleswitch"
+                                type="checkbox"
+                                checked={row.showstatus === 1}
+                                onChange={(event) => handleSwitchChange1(event, row._id)}
+                            />
+                            <label
+                                htmlFor={`rating_${row._id}`}
+                                className="checktoggle checkbox-bg"
+                            ></label>
+                        </div>
+                    );
+                }
+            },
+
+            sortable: true,
+            width: '156px',
+        },
+        {
+            name: 'Start date',
             selector: row => fDateTime(row.startdate),
             sortable: true,
             width: '200px',
         },
         {
-            name: 'Enddate',
+            name: 'End date',
             selector: row => fDateTime(row.enddate),
             sortable: true,
             width: '200px',
