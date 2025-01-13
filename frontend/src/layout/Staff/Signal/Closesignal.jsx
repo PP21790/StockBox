@@ -574,6 +574,18 @@ const Closesignal = () => {
 
 
                                             </div>
+                                            <div className="row">
+                                                <div className="col-md-12">
+                                                    <label htmlFor="description">Description</label>
+                                                    <input
+                                                        className="form-control mb-2"
+                                                        type="text"
+                                                        placeholder='Enter Description Title'
+                                                        value={updatetitle.description}
+                                                        onChange={(e) => updateServiceTitle({ description: e.target.value })}
+                                                    />
+                                                </div>
+                                            </div>
                                         </div>
 
                                     </form>

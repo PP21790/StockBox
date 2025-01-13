@@ -231,7 +231,8 @@ const Signaldetail = () => {
                                                         <div className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                             <h6 className="ms-3">P&L</h6>
                                                             <h6 className={`text-secondary me-2 ${item.totalGain > 0 ? 'text-success' : 'text-danger'}`}>
-                                                                <IndianRupee size={16} /> {item.totalGain !== null ? `${calculatePercentage(item.totalGain, item.price)}%` : '-'}
+                                                                {/* <IndianRupee size={16} />  */}
+                                                                {item.totalGain !== null ? `${calculatePercentage(item.totalGain, item.price)}%` : '-'}
                                                             </h6>
                                                         </div>
                                                     </div>

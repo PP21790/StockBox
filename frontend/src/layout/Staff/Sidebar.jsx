@@ -65,7 +65,7 @@ const Sidebar = ({ onToggleClick }) => {
     },
     permission.includes('vewbasket') && {
       title: "Basket",
-      icon: "bx-basket fs-3 text-white",
+      icon: "bx bx-basket",
       isDropdown: true,
       dropdownName: 'Basket',
       subItems: [
@@ -89,13 +89,13 @@ const Sidebar = ({ onToggleClick }) => {
       icon: 'bx bx-credit-card',
       link: '/staff/paymenthistory',
     },
-    permission.includes('planexpiry') && { title: 'Plan Expiry', icon: 'bx bx-credit-card', link: '/staff/planexpiry' },
+    permission.includes('planexpiry') && { title: 'Plan Expiry', icon: 'bx lni-dropbox', link: '/staff/planexpiry' },
     permission.includes('perform') && { title: 'Performance', icon: 'bx bx-credit-card', link: '/staff/perform' },
     permission.includes('viewblogs') && { title: 'Blogs', icon: 'bx bx-comment-detail', link: '/staff/blogs' },
     permission.includes('viewnews') && { title: 'News', icon: 'bx bx-news', link: '/staff/news' },
     permission.includes('viewcoupon') && { title: 'Coupon', icon: 'bx bx-edit-alt', link: '/staff/coupon' },
     permission.includes('viewbanner') && { title: 'Banner', icon: 'bx bx-news', link: '/staff/banner' },
-    permission.includes('viewfaq') && { title: 'Faq', icon: 'bx bx-news', link: '/staff/faq' },
+    permission.includes('viewfaq') && { title: 'Faq', icon: 'bx bx-help-circle', link: '/staff/faq' },
   ].filter(Boolean);
 
   return (
@@ -147,7 +147,7 @@ const Sidebar = ({ onToggleClick }) => {
                       >
                         <Link to={subItem.link}>
                           <div className="parent-icon">
-                            <i className="bx bx-radio-circle" />
+                            <i className={`bx ${subItem.icon}`} />
                           </div>
                           <div className="menu-title">{subItem.title}</div>
                         </Link>
