@@ -398,80 +398,75 @@ const Banner = () => {
                                     Add Banner
                                 </button>
 
-                                {isLoading ? (
-                                    <Loader />
-                                ) : (
-                                    <>
-                                        <div
-                                            className="modal fade"
-                                            id="exampleModal"
-                                            tabIndex={-1}
-                                            aria-labelledby="exampleModalLabel"
-                                            aria-hidden="true"
-                                        >
-                                            <div className="modal-dialog">
-                                                <div className="modal-content">
-                                                    <div className="modal-header">
-                                                        <h5 className="modal-title" id="exampleModalLabel">
-                                                            Add Banner
-                                                        </h5>
-                                                        <button
-                                                            type="button"
-                                                            className="btn-close"
-                                                            data-bs-dismiss="modal"
-                                                            aria-label="Close"
-                                                        />
+
+                                <div
+                                    className="modal fade"
+                                    id="exampleModal"
+                                    tabIndex={-1}
+                                    aria-labelledby="exampleModalLabel"
+                                    aria-hidden="true"
+                                >
+                                    <div className="modal-dialog">
+                                        <div className="modal-content">
+                                            <div className="modal-header">
+                                                <h5 className="modal-title" id="exampleModalLabel">
+                                                    Add Banner
+                                                </h5>
+                                                <button
+                                                    type="button"
+                                                    className="btn-close"
+                                                    data-bs-dismiss="modal"
+                                                    aria-label="Close"
+                                                />
+                                            </div>
+                                            <div className="modal-body">
+                                                <form>
+                                                    <div className="row">
+                                                        <div className="col-md-12">
+                                                            <label htmlFor="imageUpload">Upload Image</label>
+                                                            <span className="text-danger">*</span>
+                                                            <input
+                                                                ref={fileInputRef}
+                                                                className="form-control mb-3"
+                                                                type="file"
+                                                                accept="image/*"
+                                                                id="imageUpload"
+                                                                onChange={(e) => setTitle({ ...title, image: e.target.files[0] })}
+                                                            />
+                                                        </div>
+                                                        <div className="col-md-12">
+                                                            <label htmlFor="hyperlink">HyperLink</label>
+                                                            <input
+                                                                className="form-control mb-2"
+                                                                type="text"
+                                                                id="hyperlink"
+                                                                placeholder="Enter link"
+                                                                value={title.hyperlink}
+                                                                onChange={(e) => setTitle({ ...title, hyperlink: e.target.value })}
+                                                            />
+                                                        </div>
                                                     </div>
-                                                    <div className="modal-body">
-                                                        <form>
-                                                            <div className="row">
-                                                                <div className="col-md-12">
-                                                                    <label htmlFor="imageUpload">Upload Image</label>
-                                                                    <span className="text-danger">*</span>
-                                                                    <input
-                                                                        ref={fileInputRef}
-                                                                        className="form-control mb-3"
-                                                                        type="file"
-                                                                        accept="image/*"
-                                                                        id="imageUpload"
-                                                                        onChange={(e) => setTitle({ ...title, image: e.target.files[0] })}
-                                                                    />
-                                                                </div>
-                                                                <div className="col-md-12">
-                                                                    <label htmlFor="hyperlink">HyperLink</label>
-                                                                    <input
-                                                                        className="form-control mb-2"
-                                                                        type="text"
-                                                                        id="hyperlink"
-                                                                        placeholder="Enter link"
-                                                                        value={title.hyperlink}
-                                                                        onChange={(e) => setTitle({ ...title, hyperlink: e.target.value })}
-                                                                    />
-                                                                </div>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                    <div className="modal-footer">
-                                                        <button
-                                                            type="button"
-                                                            className="btn btn-secondary"
-                                                            data-bs-dismiss="modal"
-                                                        >
-                                                            Close
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            className="btn btn-primary"
-                                                            onClick={AddBanner}
-                                                        >
-                                                            Save
-                                                        </button>
-                                                    </div>
-                                                </div>
+                                                </form>
+                                            </div>
+                                            <div className="modal-footer">
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-secondary"
+                                                    data-bs-dismiss="modal"
+                                                >
+                                                    Close
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-primary"
+                                                    onClick={AddBanner}
+                                                >
+                                                    Save
+                                                </button>
                                             </div>
                                         </div>
-                                    </>
-                                )}
+                                    </div>
+                                </div>
 
 
 
@@ -575,16 +570,23 @@ const Banner = () => {
 
                             </div>
                         </div>
-                        <div className="table-responsive">
-                            <Table
-                                columns={columns}
-                                data={clients}
-                                pagination
-                                striped
-                                highlightOnHover
-                                dense
-                            />
-                        </div>
+                        {isLoading ? (
+                            <Loader />
+                        ) : (
+                            <>
+                                <div className="table-responsive">
+                                    <Table
+                                        columns={columns}
+                                        data={clients}
+                                        pagination
+                                        striped
+                                        highlightOnHover
+                                        dense
+                                    />
+                                </div>
+                            </>
+                        )}
+
                     </div>
                 </div>
             </div>

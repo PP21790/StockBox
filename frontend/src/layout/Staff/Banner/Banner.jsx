@@ -8,6 +8,8 @@ import { fDateTime } from '../../../Utils/Date_formate';
 import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
 import { getstaffperuser } from '../../../Services/Admin';
+import Loader from '../../../Utils/Loader';
+
 
 const Banner = () => {
 
@@ -20,6 +22,9 @@ const Banner = () => {
     const [serviceid, setServiceid] = useState({});
     const [searchInput, setSearchInput] = useState("");
     const [permission, setPermission] = useState([]);
+
+    //state for loading
+    const [isLoading, setIsLoading] = useState(true)
 
     const fileInputRef = useRef(null);
 
@@ -61,6 +66,7 @@ const Banner = () => {
         } catch (error) {
             console.log("Error fetching services:", error);
         }
+        setIsLoading(false)
     };
 
     const getpermissioninfo = async () => {
@@ -491,16 +497,23 @@ const Banner = () => {
 
                             </div> : ""}
                         </div>
-                        <div className="table-responsive">
-                            <Table
-                                columns={columns}
-                                data={clients}
-                                pagination
-                                striped
-                                highlightOnHover
-                                dense
-                            />
-                        </div>
+
+                        {isLoading ? (
+                            <Loader />
+                        ) : (
+                            <>
+                                <div className="table-responsive">
+                                    <Table
+                                        columns={columns}
+                                        data={clients}
+                                        pagination
+                                        striped
+                                        highlightOnHover
+                                        dense
+                                    />
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>

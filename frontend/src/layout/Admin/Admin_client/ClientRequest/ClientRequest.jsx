@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { image_baseurl } from '../../../../Utils/config';
 import { Tooltip } from 'antd';
 import { fDateTime } from '../../../../Utils/Date_formate';
+import Loader from '../../../../Utils/Loader'
 
 
 
@@ -27,6 +28,9 @@ const ClientRequest = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
 
+    //state for loading
+    const [isLoading, setIsLoading] = useState(true)
+
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };
@@ -41,8 +45,6 @@ const ClientRequest = () => {
         setSearchInput("")
         setStartDate("")
         setEndDate("")
-
-
     }
 
 
@@ -53,6 +55,8 @@ const ClientRequest = () => {
         try {
             const data = { page: currentPage, search: searchInput }
             const response = await getClientRequestforfilter(data, token);
+            console.log("getClientRequestforfilter",response);
+            
 
 
             if (response.status) {
@@ -62,6 +66,7 @@ const ClientRequest = () => {
         } catch (error) {
             console.log("Error fetching services:", error);
         }
+        setIsLoading(false)
     };
 
 
@@ -152,6 +157,37 @@ const ClientRequest = () => {
             width: '200px',
         },
         {
+            name: 'Entry time',
+            selector: row => {
+                const createdAt = row?.created_at;
+                if (createdAt) {
+                    // Extract date and time
+                    const [datePart, timePart] = createdAt.split('T');
+                    const [year, month, date] = datePart.split('-'); // Split year, month, and date
+                    const time = timePart.replace('Z', ''); // Remove 'Z' from time
+                    let [hours, minutes, seconds] = time.split(':'); // Split hours, minutes, seconds
+                    seconds = seconds.split('.')[0]; // Remove milliseconds
+                    
+                    // Convert month number to name
+                    const monthNames = [
+                        "January", "February", "March", "April", "May", "June",
+                        "July", "August", "September", "October", "November", "December"
+                    ];
+                    const monthName = monthNames[parseInt(month, 10) - 1]; // Get month name
+                    
+                  
+                    
+                    // Return formatted date and time
+                    return `${date} ${monthName}, ${year} ${hours}:${minutes}:${seconds}`;
+                }
+                return 'N/A';
+            },
+            sortable: true,
+            width: '250px',
+        },
+        
+        
+        {
             name: 'Actions',
             cell: row => (
                 <>
@@ -234,15 +270,21 @@ const ClientRequest = () => {
                             </div> */}
                         </div>
 
-                        <div className="table-responsive">
-                            <Table
-                                columns={columns}
-                                data={clients}
-                                totalRows={totalRows}
-                                currentPage={currentPage}
-                                onPageChange={handlePageChange}
-                            />
-                        </div>
+                        {isLoading ? (
+                            <Loader />
+                        ) : (
+                            <>
+                                <div className="table-responsive">
+                                    <Table
+                                        columns={columns}
+                                        data={clients}
+                                        totalRows={totalRows}
+                                        currentPage={currentPage}
+                                        onPageChange={handlePageChange}
+                                    />
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>
