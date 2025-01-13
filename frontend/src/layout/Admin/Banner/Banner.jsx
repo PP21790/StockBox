@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getbannerlist, Addbanner, UpdateBanner, changeBannerStatus, DeleteBanner } from '../../../Services/Admin';
 import Table from '../../../components/Table';
@@ -10,16 +10,17 @@ import { Tooltip } from 'antd';
 import Loader from '../../../Utils/Loader';
 
 const Banner = () => {
-     
- 
+
+
     const navigate = useNavigate();
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
     const [searchInput, setSearchInput] = useState("");
+    const fileInputRef = useRef(null);
 
     //state for loading
-    const [isLoading,setIsLoading] = useState(true)
+    const [isLoading, setIsLoading] = useState(true)
 
 
     const [updatetitle, setUpdatetitle] = useState({
@@ -61,7 +62,7 @@ const Banner = () => {
         } catch (error) {
             console.log("Error fetching services:", error);
         }
-        setTimeout(()=>{
+        setTimeout(() => {
             setIsLoading(false)
         })
     };
@@ -74,7 +75,7 @@ const Banner = () => {
     }, [searchInput]);
 
 
-   
+
 
     // Update service
     const updatebanner = async () => {
@@ -92,7 +93,7 @@ const Banner = () => {
                     timer: 2000,
                 });
 
-                setUpdatetitle({ title: "", id: "", hyperlink: "" });
+                setUpdatetitle({ title: "", id: "", hyperlink: "", image: "" });
                 getBanner();
                 setModel(false);
             } else {
@@ -133,7 +134,8 @@ const Banner = () => {
                     timer: 2000,
                 });
 
-                setTitle({ title: "", add_by: "", hyperlink: "" });
+                setTitle({ title: "", add_by: "", hyperlink: "", image: "" });
+                fileInputRef.current.value = ""
                 getBanner();
 
                 const modal = document.getElementById('exampleModal');
@@ -268,7 +270,7 @@ const Banner = () => {
             name: 'Image',
             cell: row => <img src={`${image_baseurl}uploads/banner/${row.image}`} alt={row.image} title={row.image} width="50" height="50" />,
             sortable: true,
-           
+
 
         },
         {
@@ -289,14 +291,14 @@ const Banner = () => {
                 </div>
             ),
             sortable: true,
-            
+
 
         },
         {
             name: 'Created At',
             selector: row => fDateTime(row.created_at),
             sortable: true,
-           
+
 
         },
         // {
@@ -356,7 +358,7 @@ const Banner = () => {
 
 
 
- 
+
 
 
 
@@ -384,18 +386,7 @@ const Banner = () => {
                 <div className="card">
                     <div className="card-body">
                         <div className="d-lg-flex align-items-center mb-4 gap-3">
-                            {/* <div className="position-relative">
-                                <input
-                                    type="text"
-                                    className="form-control ps-5 radius-10"
-                                    placeholder="Search Banner"
-                                    onChange={(e) => setSearchInput(e.target.value)}
-                                    value={searchInput}
-                                />
-                                <span className="position-absolute top-50 product-show translate-middle-y">
-                                    <i className="bx bx-search" />
-                                </span>
-                            </div> */}
+
                             <div className="ms-auto">
                                 <button
                                     type="button"
@@ -408,79 +399,80 @@ const Banner = () => {
                                 </button>
 
                                 {isLoading ? (
-                                    <Loader/>
-                                ):(
+                                    <Loader />
+                                ) : (
                                     <>
-                                    <div
-                                    className="modal fade"
-                                    id="exampleModal"
-                                    tabIndex={-1}
-                                    aria-labelledby="exampleModalLabel"
-                                    aria-hidden="true"
-                                >
-                                    <div className="modal-dialog">
-                                        <div className="modal-content">
-                                            <div className="modal-header">
-                                                <h5 className="modal-title" id="exampleModalLabel">
-                                                    Add Banner
-                                                </h5>
-                                                <button
-                                                    type="button"
-                                                    className="btn-close"
-                                                    data-bs-dismiss="modal"
-                                                    aria-label="Close"
-                                                />
-                                            </div>
-                                            <div className="modal-body">
-                                                <form>
-                                                    <div className="row">
-                                                        <div className="col-md-12">
-                                                            <label htmlFor="imageUpload">Upload Image</label>
-                                                            <span className="text-danger">*</span>
-                                                            <input
-                                                                className="form-control mb-3"
-                                                                type="file"
-                                                                accept="image/*"
-                                                                id="imageUpload"
-                                                                onChange={(e) => setTitle({ ...title, image: e.target.files[0] })}
-                                                            />
-                                                        </div>
-                                                        <div className="col-md-12">
-                                                            <label htmlFor="hyperlink">HyperLink</label>
-                                                            <input
-                                                                className="form-control mb-2"
-                                                                type="text"
-                                                                id="hyperlink"
-                                                                placeholder="Enter link"
-                                                                value={title.hyperlink}
-                                                                onChange={(e) => setTitle({ ...title, hyperlink: e.target.value })}
-                                                            />
-                                                        </div>
+                                        <div
+                                            className="modal fade"
+                                            id="exampleModal"
+                                            tabIndex={-1}
+                                            aria-labelledby="exampleModalLabel"
+                                            aria-hidden="true"
+                                        >
+                                            <div className="modal-dialog">
+                                                <div className="modal-content">
+                                                    <div className="modal-header">
+                                                        <h5 className="modal-title" id="exampleModalLabel">
+                                                            Add Banner
+                                                        </h5>
+                                                        <button
+                                                            type="button"
+                                                            className="btn-close"
+                                                            data-bs-dismiss="modal"
+                                                            aria-label="Close"
+                                                        />
                                                     </div>
-                                                </form>
-                                            </div>
-                                            <div className="modal-footer">
-                                                <button
-                                                    type="button"
-                                                    className="btn btn-secondary"
-                                                    data-bs-dismiss="modal"
-                                                >
-                                                    Close
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    className="btn btn-primary"
-                                                    onClick={AddBanner}
-                                                >
-                                                    Save
-                                                </button>
+                                                    <div className="modal-body">
+                                                        <form>
+                                                            <div className="row">
+                                                                <div className="col-md-12">
+                                                                    <label htmlFor="imageUpload">Upload Image</label>
+                                                                    <span className="text-danger">*</span>
+                                                                    <input
+                                                                        ref={fileInputRef}
+                                                                        className="form-control mb-3"
+                                                                        type="file"
+                                                                        accept="image/*"
+                                                                        id="imageUpload"
+                                                                        onChange={(e) => setTitle({ ...title, image: e.target.files[0] })}
+                                                                    />
+                                                                </div>
+                                                                <div className="col-md-12">
+                                                                    <label htmlFor="hyperlink">HyperLink</label>
+                                                                    <input
+                                                                        className="form-control mb-2"
+                                                                        type="text"
+                                                                        id="hyperlink"
+                                                                        placeholder="Enter link"
+                                                                        value={title.hyperlink}
+                                                                        onChange={(e) => setTitle({ ...title, hyperlink: e.target.value })}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div className="modal-footer">
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-secondary"
+                                                            data-bs-dismiss="modal"
+                                                        >
+                                                            Close
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-primary"
+                                                            onClick={AddBanner}
+                                                        >
+                                                            Save
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
                                     </>
                                 )}
-                               
+
 
 
                                 {model && (
@@ -521,19 +513,19 @@ const Banner = () => {
                                                                             if (file) {
                                                                                 updateServiceTitle({ image: file });
                                                                             }
-                                                                            
+
                                                                         }}
                                                                     />
                                                                 </div>
                                                                 <div className="col-md-2">
-                            
+
                                                                     {updatetitle.image && (
                                                                         <div className="file-preview">
                                                                             <img
                                                                                 src={
                                                                                     typeof updatetitle.image === 'string'
-                                                                                        ? `${image_baseurl}uploads/banner/${updatetitle.image}` 
-                                                                                        : URL.createObjectURL(updatetitle.image) 
+                                                                                        ? `${image_baseurl}uploads/banner/${updatetitle.image}`
+                                                                                        : URL.createObjectURL(updatetitle.image)
                                                                                 }
                                                                                 alt="Image Preview"
                                                                                 className="image-preview mt-4"

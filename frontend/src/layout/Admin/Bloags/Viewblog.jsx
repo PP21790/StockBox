@@ -68,6 +68,8 @@ const Viewblog = () => {
                                                         type="text"
                                                         className="form-control"
                                                         placeholder="Blog Title"
+                                                        disabled
+
                                                     />
                                                 </div>
                                             </div>
@@ -117,7 +119,7 @@ const Viewblog = () => {
                                                     {row.image && (
                                                         <div className="file-preview">
                                                             <img
-                                                            
+
                                                                 src={`${image_baseurl}uploads/blogs/${row.image}`}
                                                                 alt="Image Preview"
                                                                 className="image-preview"
