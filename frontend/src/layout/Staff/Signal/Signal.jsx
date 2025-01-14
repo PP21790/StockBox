@@ -11,6 +11,7 @@ import { exportToCSV } from '../../../Utils/ExportData';
 import Select from 'react-select';
 import { Tooltip } from 'antd';
 import { image_baseurl } from '../../../Utils/config';
+import Loader from '../../../Utils/Loader';
 
 
 
@@ -65,6 +66,10 @@ const Signal = () => {
     const [model, setModel] = useState(false);
     const [model1, setModel1] = useState(false);
     const [serviceid, setServiceid] = useState({});
+
+    //state for loading
+    const [isLoading, setIsLoading] = useState(true)
+
 
 
     const handlePageChange = (page) => {
@@ -223,6 +228,8 @@ const Signal = () => {
         } catch (error) {
             console.log("Error:", error);
         }
+        setIsLoading(false)
+
     };
 
 
@@ -994,13 +1001,18 @@ const Signal = () => {
 
 
                             {viewMode === "table" ? (
-                                <Table
-                                    columns={columns}
-                                    data={clients}
-                                    totalRows={totalRows}
-                                    currentPage={currentPage}
-                                    onPageChange={handlePageChange}
-                                />
+                                isLoading ? (
+                                    <Loader />) : (
+                                    <>
+                                        <Table
+                                            columns={columns}
+                                            data={clients}
+                                            totalRows={totalRows}
+                                            currentPage={currentPage}
+                                            onPageChange={handlePageChange}
+                                        />
+                                    </>
+                                )
                             ) : (
                                 <div className="row mt-3">
                                     {clients.map((client, index) => (

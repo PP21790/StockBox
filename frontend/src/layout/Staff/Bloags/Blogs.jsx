@@ -8,6 +8,7 @@ import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
 import { fDateTime } from '../../../Utils/Date_formate';
 import { getstaffperuser } from '../../../Services/Admin';
+import Loader from '../../../Utils/Loader';
 
 const Blogs = () => {
 
@@ -32,6 +33,8 @@ const Blogs = () => {
         image: "",
 
     });
+
+    const [isLoading, setIsLoading] = useState(true)
 
 
 
@@ -62,6 +65,7 @@ const Blogs = () => {
         } catch (error) {
             console.log("Error fetching blogs:", error);
         }
+        setIsLoading(false)
     };
 
 
@@ -607,16 +611,22 @@ const Blogs = () => {
 
                             </div> : ""}
                         </div>
-                        <div className="table-responsive">
-                            <Table
-                                columns={columns}
-                                data={clients}
-                                pagination
-                                striped
-                                highlightOnHover
-                                dense
-                            />
-                        </div>
+                        {isLoading ? (
+                            <Loader />
+                        ) : (
+                            <>
+                                <div className="table-responsive">
+                                    <Table
+                                        columns={columns}
+                                        data={clients}
+                                        pagination
+                                        striped
+                                        highlightOnHover
+                                        dense
+                                    />
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>

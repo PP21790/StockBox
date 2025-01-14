@@ -8,6 +8,8 @@ import Table from '../../../components/Table1';
 
 import { BasketAllList, deletebasket, Basketstatus, changestatusrebalance, getstocklistById } from "../../../Services/Admin";
 import { fDate } from "../../../Utils/Date_formate";
+import Loader from '../../../Utils/Loader';
+
 
 
 
@@ -23,6 +25,10 @@ const Basket = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalRows, setTotalRows] = useState(0);
+
+  //state for loading
+  const [isLoading, setIsLoading] = useState(true)
+
 
 
 
@@ -44,6 +50,7 @@ const Basket = () => {
     } catch (error) {
       console.log("error");
     }
+    setIsLoading(false)
   };
 
 
@@ -248,13 +255,13 @@ const Basket = () => {
       name: "Validity",
       selector: (row) => row.validity,
       sortable: true,
-   
+
     },
     {
       name: "Stock Quantity",
       selector: (row) => row.stock_details?.length || 0,
       sortable: true,
-      width:"180px",
+      width: "180px",
     },
 
     {
@@ -263,13 +270,13 @@ const Basket = () => {
         <div className="w-100">
           {row.stock_details.length > 0 ?
             <Tooltip title="Published Stock">
-               <Link
-               className="btn px-2"
-               >
-              <RotateCcw
-                checked={row.status}
-                onClick={(event) => handleSwitchChange(event, row._id)} />
-                </Link>
+              <Link
+                className="btn px-2"
+              >
+                <RotateCcw
+                  checked={row.status}
+                  onClick={(event) => handleSwitchChange(event, row._id)} />
+              </Link>
             </Tooltip> : ""}
           {row.stock_details?.length <= 0 ?
             <Tooltip title="Add Stock">
@@ -305,7 +312,7 @@ const Basket = () => {
           </button>
         </div>
       ),
-      width:"220px"
+      width: "220px"
     },
   ];
 
@@ -358,13 +365,19 @@ const Basket = () => {
               </Link>
             </div> */}
           </div>
-          <Table
-            columns={columns}
-            data={clients}
-            totalRows={totalRows}
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
-          />
+          {isLoading ? (
+            <Loader />
+          ) : (
+            <>
+              <Table
+                columns={columns}
+                data={clients}
+                totalRows={totalRows}
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+              />
+            </>
+          )}
         </div>
       </div>
     </div>

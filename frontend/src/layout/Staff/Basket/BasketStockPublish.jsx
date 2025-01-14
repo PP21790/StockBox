@@ -8,6 +8,7 @@ import Table from '../../../components/Table1';
 
 import { BasketAllActiveList, BasketAllActiveListbyfilter, changestatusrebalance, deletebasket, getstaffperuser, Basketstatusofdetail } from "../../../Services/Admin";
 import { fDate } from "../../../Utils/Date_formate";
+import Loader from "../../../Utils/Loader";
 
 
 
@@ -29,6 +30,10 @@ const BasketStockPublish = () => {
   const [permission, setPermission] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalRows, setTotalRows] = useState(0);
+
+   //state for loading
+   const [isLoading, setIsLoading] = useState(true)
+
 
 
   const handlePageChange = (page) => {
@@ -67,6 +72,8 @@ const BasketStockPublish = () => {
       console.log("error", JSON.stringify(error));
 
     }
+    setIsLoading(false)
+
   };
 
 
@@ -419,13 +426,19 @@ const BasketStockPublish = () => {
               </Link>
             </div> */}
           </div>
-          <Table
-            columns={columns}
-            data={clients}
-            totalRows={totalRows}
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
-          />
+          {isLoading ? (
+            <Loader />
+          ) : (
+            <>
+              <Table
+                columns={columns}
+                data={clients}
+                totalRows={totalRows}
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+              />
+            </>
+          )}
         </div>
       </div>
     </div>

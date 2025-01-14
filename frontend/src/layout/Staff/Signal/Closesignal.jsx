@@ -29,6 +29,7 @@ import { exportToCSV } from "../../../Utils/ExportData";
 import Select from "react-select";
 import { Tooltip } from "antd";
 import { image_baseurl } from "../../../Utils/config";
+import Loader from "../../../Utils/Loader";
 
 const Closesignal = () => {
 
@@ -43,6 +44,11 @@ const Closesignal = () => {
     const [totalRows, setTotalRows] = useState(0);
     const [header, setheader] = useState("Close Signal");
     const [permission, setPermission] = useState([]);
+
+    //state for loading
+    const [isLoading, setIsLoading] = useState(true)
+
+
 
     const [updatetitle, setUpdatetitle] = useState({
         report: "",
@@ -204,6 +210,7 @@ const Closesignal = () => {
         } catch (error) {
             console.log("Error fetching stock list:", error);
         }
+        setIsLoading(false)
     };
 
 
@@ -704,13 +711,20 @@ const Closesignal = () => {
 
                             {/* Tab Content */}
                             {activeTab === "table" && (
-                                <Table
-                                    columns={columns}
-                                    data={clients}
-                                    totalRows={totalRows}
-                                    currentPage={currentPage}
-                                    onPageChange={handlePageChange}
-                                />
+                                isLoading ? (
+                                    <Loader />
+                                ) : (
+                                    <>
+                                        <Table
+                                            columns={columns}
+                                            data={clients}
+                                            totalRows={totalRows}
+                                            currentPage={currentPage}
+                                            onPageChange={handlePageChange}
+                                        />
+                                    </>
+                                )
+
                             )}
 
                             {activeTab === "card" && (

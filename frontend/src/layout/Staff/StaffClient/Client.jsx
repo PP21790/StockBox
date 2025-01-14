@@ -11,6 +11,8 @@ import { image_baseurl } from '../../../Utils/config';
 import { IndianRupee } from 'lucide-react';
 import { exportToCSV } from '../../../Utils/ExportData';
 import Table from '../../../components/Table1';
+import Loader from '../../../Utils/Loader';
+
 
 
 
@@ -59,6 +61,11 @@ const Client = () => {
     const [totalRows, setTotalRows] = useState(0);
     const [getBasket, setGetBasket] = useState({});
     const [permission, setPermission] = useState([]);
+
+
+    //state for loading
+    const [isLoading, setIsLoading] = useState(true)
+    
 
 
     const handlePageChange = (page) => {
@@ -262,6 +269,7 @@ const Client = () => {
         } catch (error) {
             console.error("Error fetching clients:", error);
         }
+        setIsLoading(false)
     };
 
 
@@ -828,13 +836,19 @@ const Client = () => {
                                 columns={columns}
                                 data={clients}
                             /> */}
-                            <Table
-                                columns={columns}
-                                data={clients}
-                                totalRows={totalRows}
-                                currentPage={currentPage}
-                                onPageChange={handlePageChange}
-                            />
+                           {isLoading ? (
+                                <Loader />
+                            ) : (
+                                <>
+                                    <Table
+                                        columns={columns}
+                                        data={clients}
+                                        totalRows={totalRows}
+                                        currentPage={currentPage}
+                                        onPageChange={handlePageChange}
+                                    />
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>

@@ -172,6 +172,9 @@ const EditStock = () => {
             (stock) => Number(stock.weightage || 0) <= 0
         );
 
+       
+            
+
         if (invalidStocks.length > 0) {
             Swal.fire(
                 "Error",
@@ -195,6 +198,20 @@ const EditStock = () => {
             );
             return;
         }
+        
+        const emptyType = Object.values(formValues).filter(
+            (stock) => stock.type === ""
+            );
+
+            if(emptyType.length>0){
+                Swal.fire(
+                    "Warning",
+                    "Please select type.",
+                    "warning"
+                );
+                return;
+            }
+
 
         const stocksWithStatus = Object.values(formValues).map((stock) => ({
             ...stock,
@@ -229,7 +246,7 @@ const EditStock = () => {
     };
 
     useEffect(() => {
-        console.log("formValues", formValues)
+        // console.log("formValues", formValues)
         if (formValues) {
             const newWeightage = Object.values(formValues).reduce((sum, stock) => sum + Number(stock.weightage || 0), 0);
             setWeightagecounting(newWeightage);
@@ -349,6 +366,7 @@ const EditStock = () => {
                                         className="form-control"
                                         value={formValues[service.value]?.type || ""}
                                         onChange={(e) => handleInputChange(e, service.value, "type")}
+                                        
                                     >
                                         <option value="">Select Type</option>
                                         <option value="Large Cap">Large Cap</option>

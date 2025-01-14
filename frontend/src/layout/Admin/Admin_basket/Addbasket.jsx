@@ -237,15 +237,15 @@ const AddBasket = () => {
       disable: false,
       star: true
     },
-    {
-      name: "offer_price",
-      label: "Offer Price",
-      type: "text",
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-      star: true
-    },
+    // {
+    //   name: "offer_price",
+    //   label: "Offer Price",
+    //   type: "text",
+    //   label_size: 12,
+    //   col_size: 6,
+    //   disable: false,
+    //   star: true
+    // },
     {
       name: "description",
       label: "Description",

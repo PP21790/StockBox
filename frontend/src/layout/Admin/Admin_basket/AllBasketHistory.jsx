@@ -9,6 +9,7 @@ import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
 import { fDateTime } from '../../../Utils/Date_formate';
 import { exportToCSV } from '../../../Utils/ExportData';
+import Loader from '../../../Utils/Loader';
 
 
 
@@ -28,6 +29,10 @@ const AllBasketHistory = () => {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
+
+    //state for loading
+    const [isLoading, setIsLoading] = useState(true)
+
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
@@ -115,6 +120,7 @@ const AllBasketHistory = () => {
         } catch (error) {
             console.log("Error fetching services:", error);
         }
+        setIsLoading(false)
     };
 
 
@@ -328,15 +334,23 @@ const AllBasketHistory = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="table-responsive">
-                            <Table
-                                columns={columns}
-                                data={clients}
-                                totalRows={totalRows}
-                                currentPage={currentPage}
-                                onPageChange={handlePageChange}
-                            />
-                        </div>
+
+                        {isLoading ? (
+                            <Loader />
+                        ) : (
+                            <>
+
+                                <div className="table-responsive">
+                                    <Table
+                                        columns={columns}
+                                        data={clients}
+                                        totalRows={totalRows}
+                                        currentPage={currentPage}
+                                        onPageChange={handlePageChange}
+                                    />
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>

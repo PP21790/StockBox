@@ -5,30 +5,31 @@ import Table from '../../../components/Table';
 import { SquarePen, Trash2, PanelBottomOpen, Eye } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { Tooltip } from 'antd';
-import { fDate ,fDateTime } from '../../../Utils/Date_formate';
+import { fDate, fDateTime } from '../../../Utils/Date_formate';
 import { getstaffperuser } from '../../../Services/Admin';
+import Loader from '../../../Utils/Loader';
 
 const Faq = () => {
-    
+
     const navigate = useNavigate();
-    
+
     const token = localStorage.getItem('token');
     const userid = localStorage.getItem('id');
 
-    
+
     const [clients, setClients] = useState([]);
     const [model, setModel] = useState(false);
     const [serviceid, setServiceid] = useState({});
     const [searchInput, setSearchInput] = useState("");
-     const [viewdetail,setviewdetail] = useState([])
-     const [permission, setPermission] = useState([]);
+    const [viewdetail, setviewdetail] = useState([])
+    const [permission, setPermission] = useState([]);
     const [updatetitle, setUpdatetitle] = useState({
         title: "",
         id: "",
         description: "",
-
-
     });
+
+    const [isLoading, setIsLoading] = useState(true)
 
 
     const [title, setTitle] = useState({
@@ -37,11 +38,11 @@ const Faq = () => {
         add_by: "",
     });
 
- 
+
     const getpermissioninfo = async () => {
         try {
             const response = await getstaffperuser(userid, token);
-            
+
             if (response.status) {
                 setPermission(response.data.permissions);
             }
@@ -50,7 +51,7 @@ const Faq = () => {
         }
     }
 
-   
+
 
 
     // Getting faq
@@ -67,6 +68,7 @@ const Faq = () => {
         } catch (error) {
             console.log("Error fetching Faq:", error);
         }
+        setIsLoading(false)
     };
 
     useEffect(() => {
@@ -123,7 +125,7 @@ const Faq = () => {
         try {
             const data = { title: title.title, description: title.description, add_by: userid };
             const response = await AddFaq(data, token);
-            
+
             if (response && response.status) {
                 Swal.fire({
                     title: 'Success!',
@@ -266,7 +268,7 @@ const Faq = () => {
             width: '200px',
 
         },
-        permission.includes("faqstatus")  ? {
+        permission.includes("faqstatus") ? {
             name: 'Active Status',
             selector: row => (
                 <div className="form-check form-switch form-check-info">
@@ -307,18 +309,18 @@ const Faq = () => {
         // },
 
         permission.includes("faqsdetail") || permission.includes("editfaq")
-        || permission.includes("deletefaq") ?   {
+            || permission.includes("deletefaq") ? {
             name: 'Actions',
             cell: row => (
                 <>
                     {permission.includes("viewfaq") ? <div>
                         <Tooltip placement="top" overlay="View">
                             <Eye style={{ marginRight: "10px" }} data-bs-toggle="modal"
-                                data-bs-target="#example1" 
-                                 onClick={()=>setviewdetail([row])}
-                                />
+                                data-bs-target="#example1"
+                                onClick={() => setviewdetail([row])}
+                            />
                         </Tooltip>
-                    </div> : "" }
+                    </div> : ""}
                     {permission.includes("editfaq") ? <div>
                         <Tooltip placement="top" overlay="Update">
                             <SquarePen
@@ -329,18 +331,18 @@ const Faq = () => {
                                 }}
                             />
                         </Tooltip>
-                    </div> : "" }
+                    </div> : ""}
                     {permission.includes("deletefaq") ? <div>
                         <Tooltip placement="top" overlay="Delete">
                             <Trash2 onClick={() => DeleteFaq(row._id)} />
                         </Tooltip>
-                    </div> :"" }
+                    </div> : ""}
                 </>
             ),
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
-        } :""
+        } : ""
     ];
 
 
@@ -398,7 +400,7 @@ const Faq = () => {
                                     <i className="bx bx-search" />
                                 </span>
                             </div>
-                            {permission.includes("addfaq") ?  <div className="ms-auto">
+                            {permission.includes("addfaq") ? <div className="ms-auto">
                                 <button
                                     type="button"
                                     className="btn btn-primary"
@@ -481,20 +483,26 @@ const Faq = () => {
                                 </div>
 
 
-                               
 
-                            </div> : "" }
+
+                            </div> : ""}
                         </div>
-                        <div className="table-responsive">
-                            <Table
-                                columns={columns}
-                                data={clients}
-                                pagination
-                                striped
-                                highlightOnHover
-                                dense
-                            />
-                        </div>
+                        {isLoading ? (
+                            <Loader />
+                        ) : (
+                            <>
+                                <div className="table-responsive">
+                                    <Table
+                                        columns={columns}
+                                        data={clients}
+                                        pagination
+                                        striped
+                                        highlightOnHover
+                                        dense
+                                    />
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>
@@ -522,52 +530,52 @@ const Faq = () => {
                             </div>
                             <div className="modal-body">
                                 <ul>
-                                    {viewdetail && viewdetail.map((item)=>(
+                                    {viewdetail && viewdetail.map((item) => (
                                         <Fragment>
-                                              <li>
-                                        <div className="row justify-content-between">
-                                            <div className="col-md-6">
-                                                <b>Title : {item.title}</b>
-                                            </div>
-                                            <div className="col-md-6">
+                                            <li>
+                                                <div className="row justify-content-between">
+                                                    <div className="col-md-6">
+                                                        <b>Title : {item.title}</b>
+                                                    </div>
+                                                    <div className="col-md-6">
 
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div className="row justify-content-between">
-                                            <div className="">
-                                                <b>Discription : {item.description}</b>
-                                            </div>
-                                            <div className="col-md-6">
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div className="row justify-content-between">
+                                                    <div className="">
+                                                        <b>Discription : {item.description}</b>
+                                                    </div>
+                                                    <div className="col-md-6">
 
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div className="row justify-content-between">
-                                            <div className="col-md-6">
-                                                <b>Created At : {fDateTime(item.created_at)} </b>
-                                            </div>
-                                            <div className="col-md-6">
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div className="row justify-content-between">
+                                                    <div className="col-md-6">
+                                                        <b>Created At : {fDateTime(item.created_at)} </b>
+                                                    </div>
+                                                    <div className="col-md-6">
 
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div className="row justify-content-between">
-                                            <div className="col-md-6">
-                                                <b>Updated At : {fDateTime(item.updated_at)}</b>
-                                            </div>
-                                            <div className="col-md-6">
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div className="row justify-content-between">
+                                                    <div className="col-md-6">
+                                                        <b>Updated At : {fDateTime(item.updated_at)}</b>
+                                                    </div>
+                                                    <div className="col-md-6">
 
-                                            </div>
-                                        </div>
-                                    </li>
-                                 
+                                                    </div>
+                                                </div>
+                                            </li>
+
                                         </Fragment>
                                     ))}
-                                    
+
                                 </ul>
                             </div>
                         </div>
@@ -576,81 +584,81 @@ const Faq = () => {
 
             </div>
             {model && (
-                                    <>
-                                        <div className="modal-backdrop fade show"></div>
-                                        <div
-                                            className="modal fade show"
-                                            style={{ display: 'block' }}
-                                            tabIndex={-1}
-                                            aria-labelledby="exampleModalLabel"
-                                            aria-hidden="true"
-                                        >
-                                            <div className="modal-dialog">
-                                                <div className="modal-content">
-                                                    <div className="modal-header">
-                                                        <h5 className="modal-title" id="exampleModalLabel">
-                                                            Update FAQ
-                                                        </h5>
-                                                        <button
-                                                            type="button"
-                                                            className="btn-close"
-                                                            onClick={() => setModel(false)}
-                                                        />
-                                                    </div>
-                                                    <div className="modal-body">
-                                                        <form>
-                                                            <div className="row">
-                                                                <div className="col-md-12">
-                                                                    <label htmlFor="">Title</label>
-                                                                    <span className="text-danger">*</span>
-                                                                    <input
-                                                                        className="form-control mb-2"
-                                                                        type="text"
-                                                                        placeholder='Enter Faq Title'
-                                                                        value={updatetitle.title}
-                                                                        onChange={(e) => updateServiceTitle({ title: e.target.value })}
-                                                                    />
-                                                                </div>
-                                                            </div>
-
-
-                                                            <div className="row">
-                                                                <div className="col-md-12">
-                                                                    <label htmlFor="">Description</label>
-                                                                    <span className="text-danger">*</span>
-                                                                    <textarea
-                                                                        className="form-control mb-2"
-                                                                        type="text"
-                                                                        placeholder='Enter  Description'
-                                                                        value={updatetitle.description}
-                                                                        onChange={(e) => updateServiceTitle({ description: e.target.value })}
-                                                                    />
-                                                                </div>
-                                                            </div>
-                                                        </form>
-
-                                                    </div>
-                                                    <div className="modal-footer">
-                                                        <button
-                                                            type="button"
-                                                            className="btn btn-secondary"
-                                                            onClick={() => setModel(false)}
-                                                        >
-                                                            Close
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            className="btn btn-primary"
-                                                            onClick={updateFaqbyadmin}
-                                                        >
-                                                            Update FAQ
-                                                        </button>
-                                                    </div>
-                                                </div>
+                <>
+                    <div className="modal-backdrop fade show"></div>
+                    <div
+                        className="modal fade show"
+                        style={{ display: 'block' }}
+                        tabIndex={-1}
+                        aria-labelledby="exampleModalLabel"
+                        aria-hidden="true"
+                    >
+                        <div className="modal-dialog">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="exampleModalLabel">
+                                        Update FAQ
+                                    </h5>
+                                    <button
+                                        type="button"
+                                        className="btn-close"
+                                        onClick={() => setModel(false)}
+                                    />
+                                </div>
+                                <div className="modal-body">
+                                    <form>
+                                        <div className="row">
+                                            <div className="col-md-12">
+                                                <label htmlFor="">Title</label>
+                                                <span className="text-danger">*</span>
+                                                <input
+                                                    className="form-control mb-2"
+                                                    type="text"
+                                                    placeholder='Enter Faq Title'
+                                                    value={updatetitle.title}
+                                                    onChange={(e) => updateServiceTitle({ title: e.target.value })}
+                                                />
                                             </div>
                                         </div>
-                                    </>
-                                )}
+
+
+                                        <div className="row">
+                                            <div className="col-md-12">
+                                                <label htmlFor="">Description</label>
+                                                <span className="text-danger">*</span>
+                                                <textarea
+                                                    className="form-control mb-2"
+                                                    type="text"
+                                                    placeholder='Enter  Description'
+                                                    value={updatetitle.description}
+                                                    onChange={(e) => updateServiceTitle({ description: e.target.value })}
+                                                />
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                </div>
+                                <div className="modal-footer">
+                                    <button
+                                        type="button"
+                                        className="btn btn-secondary"
+                                        onClick={() => setModel(false)}
+                                    >
+                                        Close
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary"
+                                        onClick={updateFaqbyadmin}
+                                    >
+                                        Update FAQ
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            )}
         </div>
     );
 };
