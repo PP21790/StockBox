@@ -402,7 +402,7 @@ class Clients {
       }
 
 
-      console.log("matchConditions",matchConditions);
+      console.log("matchConditions", matchConditions);
 
 
       if (search && search.trim() !== "") {
@@ -2390,7 +2390,6 @@ class Clients {
         }
       ]);
 
-      // Get the total count of matching records for pagination
       const totalCount = await Requestclient_Modal.aggregate([
         {
           $match: {
@@ -2411,14 +2410,16 @@ class Clients {
         {
           $match: {
             $or: [
-              { 'clientDetails.name': clientSearchQuery },
-              { 'clientDetails.email': clientSearchQuery },
-              { 'clientDetails.phone': clientSearchQuery }
+              { 'clientDetails.FullName': clientSearchQuery }, // Updated to match the main query
+              { 'clientDetails.Email': clientSearchQuery },
+              { 'clientDetails.PhoneNo': clientSearchQuery }
             ]
           }
         },
         { $count: 'totalCount' }
       ]);
+
+
 
       const totalItems = totalCount.length ? totalCount[0].totalCount : 0;
       const totalPages = Math.ceil(totalItems / limit);
