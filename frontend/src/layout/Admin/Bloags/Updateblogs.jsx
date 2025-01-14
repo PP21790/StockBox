@@ -17,7 +17,7 @@ const Updateblogs = () => {
     const token = localStorage.getItem("token");
 
     const validate = (values) => {
-        // console.log("values blogs",values);
+
 
         let errors = {};
 
@@ -52,7 +52,6 @@ const Updateblogs = () => {
 
             try {
                 const response = await Updateblogsbyadmin(req, token);
-                // return
 
                 if (response.status) {
                     Swal.fire({
