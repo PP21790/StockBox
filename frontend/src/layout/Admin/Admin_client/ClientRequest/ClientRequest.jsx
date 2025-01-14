@@ -55,10 +55,6 @@ const ClientRequest = () => {
         try {
             const data = { page: currentPage, search: searchInput }
             const response = await getClientRequestforfilter(data, token);
-            console.log("getClientRequestforfilter",response);
-            
-
-
             if (response.status) {
                 setTotalRows(response.pagination.total)
                 setClients(response?.data);
@@ -167,16 +163,16 @@ const ClientRequest = () => {
                     const time = timePart.replace('Z', ''); // Remove 'Z' from time
                     let [hours, minutes, seconds] = time.split(':'); // Split hours, minutes, seconds
                     seconds = seconds.split('.')[0]; // Remove milliseconds
-                    
+
                     // Convert month number to name
                     const monthNames = [
                         "Jan", "Feb", "March", "April", "May", "June",
                         "July", "August", "September", "October", "November", "December"
                     ];
                     const monthName = monthNames[parseInt(month, 10) - 1]; // Get month name
-                    
-                  
-                    
+
+
+
                     // Return formatted date and time
                     return `${date} ${monthName}, ${year} ${hours}:${minutes}:${seconds}`;
                 }
@@ -185,8 +181,8 @@ const ClientRequest = () => {
             sortable: true,
             width: '250px',
         },
-        
-        
+
+
         {
             name: 'Actions',
             cell: row => (
