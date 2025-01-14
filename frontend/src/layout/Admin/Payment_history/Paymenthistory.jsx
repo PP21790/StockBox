@@ -9,6 +9,7 @@ import { image_baseurl } from '../../../Utils/config';
 import { Tooltip } from 'antd';
 import { fDateTime } from '../../../Utils/Date_formate';
 import { exportToCSV } from '../../../Utils/ExportData';
+import Loader from '../../../Utils/Loader';
 
 
 
@@ -28,6 +29,9 @@ const History = () => {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
+
+    //state for Loader
+    const [isLoading, setIsLoading] = useState(true);
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
@@ -59,8 +63,6 @@ const History = () => {
         setSearchInput("")
         setStartDate("")
         setEndDate("")
-
-
     }
 
 
@@ -107,6 +109,8 @@ const History = () => {
         try {
             const data = { page: currentPage, fromDate: startDate, toDate: endDate, search: searchInput }
             const response = await getPayementhistorywithfilter(data, token);
+            console.log("getPayementhistorywithfilter", response);
+
             if (response.status) {
                 let filteredData = response.data;
                 setTotalRows(response.pagination.total)
@@ -115,6 +119,7 @@ const History = () => {
         } catch (error) {
             console.log("Error fetching services:", error);
         }
+        setIsLoading(false)
     };
 
 
@@ -394,15 +399,21 @@ const History = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="table-responsive">
-                            <Table
-                                columns={columns}
-                                data={clients}
-                                totalRows={totalRows}
-                                currentPage={currentPage}
-                                onPageChange={handlePageChange}
-                            />
-                        </div>
+                        {isLoading ? (
+                            <Loader />
+                        ) : (
+                            <>
+                                <div className="table-responsive">
+                                    <Table
+                                        columns={columns}
+                                        data={clients}
+                                        totalRows={totalRows}
+                                        currentPage={currentPage}
+                                        onPageChange={handlePageChange}
+                                    />
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>
@@ -443,7 +454,7 @@ const History = () => {
                                     <li>
                                         <div className="row justify-content-between">
                                             <div className="col-md-6">
-                                                <b>Price aaa : {viewpage?.planDetails?.price}</b>
+                                                <b>Price : {viewpage?.planDetails?.price}</b>
                                             </div>
                                             <div className="col-md-6">
 

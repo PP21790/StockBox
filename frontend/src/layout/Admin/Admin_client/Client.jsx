@@ -15,7 +15,7 @@ import Loader from '../../../Utils/Loader';
 
 
 
-const Client = () => {
+const Client = () => { 
 
 
     useEffect(() => {
@@ -202,8 +202,7 @@ const Client = () => {
     const getcategoryplanlist = async () => {
         try {
             const response = await getActivecategoryplan(token);
-            console.log("getActivecategoryplan",response);
-            
+
             if (response.status) {
                 setCategory(response.data);
             }
@@ -252,6 +251,7 @@ const Client = () => {
         } catch (error) {
             console.error("Error fetching clients:", error);
         }
+        setIsLoading(false)
     };
 
 
@@ -819,13 +819,19 @@ const Client = () => {
                                 columns={columns}
                                 data={clients}
                             /> */}
-                            <Table
-                                columns={columns}
-                                data={clients}
-                                totalRows={totalRows}
-                                currentPage={currentPage}
-                                onPageChange={handlePageChange}
-                            />
+                            {isLoading ? (
+                                <Loader />
+                            ) : (
+                                <>
+                                    <Table
+                                        columns={columns}
+                                        data={clients}
+                                        totalRows={totalRows}
+                                        currentPage={currentPage}
+                                        onPageChange={handlePageChange}
+                                    />
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>

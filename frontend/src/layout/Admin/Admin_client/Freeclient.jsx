@@ -10,6 +10,8 @@ import { image_baseurl } from '../../../Utils/config';
 import { fDate, fDateTime } from '../../../Utils/Date_formate';
 import { IndianRupee } from 'lucide-react';
 import { exportToCSV } from '../../../Utils/ExportData';
+import Loader from '../../../Utils/Loader';
+
 
 
 const Freeclient = () => {
@@ -37,6 +39,10 @@ const Freeclient = () => {
     const [getBasket, setGetBasket] = useState({});
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
+
+
+    //state for loading
+    const [isLoading, setIsLoading] = useState(true)
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
@@ -89,6 +95,7 @@ const Freeclient = () => {
         } catch (error) {
             console.log("error")
         }
+        setIsLoading(false)
     }
 
 
@@ -570,13 +577,20 @@ const Freeclient = () => {
 
                                 </div>
 
-                                <Table
-                                    columns={columns}
-                                    data={clients}
-                                    totalRows={totalRows}
-                                    currentPage={currentPage}
-                                    onPageChange={handlePageChange}
-                                />
+                                {isLoading ? (
+                                    <Loader />
+                                ) : (
+                                    <>
+
+                                        <Table
+                                            columns={columns}
+                                            data={clients}
+                                            totalRows={totalRows}
+                                            currentPage={currentPage}
+                                            onPageChange={handlePageChange}
+                                        />
+                                    </>
+                                )}
                             </div>
                         </div>
                     </div>

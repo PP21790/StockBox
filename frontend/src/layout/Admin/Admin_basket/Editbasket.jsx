@@ -69,11 +69,11 @@ const Editbasket = () => {
       errors.themename = "Please Enter Theme Name";
     }
     if (values.full_price && values.full_price <= values.basket_price) {
-      errors.full_price = "Please Enter Greater Basket Price";
+      errors.full_price = "Please Enter Greater Discounted/Net Basket price";
     }
 
     if (!values.basket_price) {
-      errors.basket_price = "Please Enter Basket Price";
+      errors.basket_price = "Please Enter Discounted/Net Basket price";
     }
     if (!values.mininvamount) {
       errors.mininvamount = "Please Enter Minimum Investment Amount";
@@ -196,7 +196,7 @@ const Editbasket = () => {
     },
     {
       name: "full_price",
-      label: "Price",
+      label: "Actual Basket Price",
       type: "number",
       label_size: 12,
       col_size: 6,
@@ -206,7 +206,7 @@ const Editbasket = () => {
 
     {
       name: "basket_price",
-      label: "Basket Price",
+      label: "Discounted/Net Basket price",
       type: "number",
       label_size: 12,
       col_size: 6,

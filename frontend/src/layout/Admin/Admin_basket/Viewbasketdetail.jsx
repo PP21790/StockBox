@@ -61,10 +61,18 @@ const fieldConfigurations = [
     disable: false,
     star: true
   },
+  {
+    name: "full_price",
+    label: "Actual Basket Price",
+    type: "number",
+    label_size: 6,
+    col_size: 4,
+    disable: false,
 
+  },
   {
     name: "basket_price",
-    label: "Basket Price",
+    label: "Discounted/Net Basket price",
     type: "number",
     label_size: 12,
     col_size: 4,
@@ -237,6 +245,8 @@ const Viewbasketdetail = () => {
   const getbasketdetail = async () => {
     try {
       const response = await Viewbasket(id, token);
+      console.log("Viewbasket",response);
+      
 
       if (response.status) {
         const basketData = response.data;
@@ -246,6 +256,7 @@ const Viewbasketdetail = () => {
           title: basketData?.title || "",
           description: cleanHtmlContent(basketData?.description) || "",
           // description: basketData?.description || "",
+          full_price: basketData?.full_price || "",
           basket_price: basketData?.basket_price || "",
           mininvamount: basketData?.mininvamount || "",
           themename: basketData?.themename || "",

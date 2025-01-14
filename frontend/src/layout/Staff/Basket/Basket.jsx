@@ -8,6 +8,7 @@ import Table from '../../../components/Table1';
 
 import { BasketAllList, deletebasket, Basketstatus, changestatusrebalance, getstocklistById, getstaffperuser } from "../../../Services/Admin";
 import { fDate } from "../../../Utils/Date_formate";
+import Loader from "../../../Utils/Loader";
 
 
 
@@ -29,6 +30,10 @@ const Basket = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalRows, setTotalRows] = useState(0);
   const [permission, setPermission] = useState([]);
+
+  //state for loading
+  const [isLoading, setIsLoading] = useState(true)
+
 
 
   const handlePageChange = (page) => {
@@ -65,6 +70,7 @@ const Basket = () => {
     } catch (error) {
       console.log("error");
     }
+    setIsLoading(false)
   };
 
 
@@ -390,13 +396,20 @@ const Basket = () => {
               </Link>
             </div> */}
           </div>
-          <Table
-            columns={columns}
-            data={clients}
-            totalRows={totalRows}
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
-          />
+
+          {isLoading ? (
+            <Loader />
+          ) : (
+            <>
+              <Table
+                columns={columns}
+                data={clients}
+                totalRows={totalRows}
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+              />
+            </>
+          )}
         </div>
       </div>
     </div>
