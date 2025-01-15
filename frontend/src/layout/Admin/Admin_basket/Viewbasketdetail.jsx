@@ -307,7 +307,7 @@ const Viewbasketdetail = () => {
                         {/* Special case for description */}
                         {field.name === "description" ? (
                           <div
-                            className="form-control"
+                            className="form-control basket_img"
                             dangerouslySetInnerHTML={{
                               __html: values[field.name] || "",
                             }}

@@ -26,6 +26,7 @@ const Updatecoupon = () => {
   const getservice = async () => {
     try {
       const response = await GetService(token);
+      
       if (response.status) {
         setServicedata(response.data);
 
@@ -122,7 +123,7 @@ const Updatecoupon = () => {
 
     try {
       const response = await updateCouponbyadmin(req, token);
-      console.log("datata",response);
+      console.log("updateCouponbyadmin",response);
       
       if (response.status) {
         Swal.fire({
@@ -165,7 +166,7 @@ const Updatecoupon = () => {
       enddate: row?.enddate ? new Date(row.enddate).toISOString().split("T")[0] : "",
       minpurchasevalue: row?.minpurchasevalue || "",
       mincouponvalue: row?.mincouponvalue || "",
-      limitation: row?.limitation || "",
+      limitation: row?.limitation || "0",
       service: row?.service ? row?.service : "",
       id: "",
     },

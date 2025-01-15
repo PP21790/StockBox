@@ -1251,9 +1251,9 @@ const DynamicForm = ({
                                                                         ) :
                                                                             field.type === "ckeditor" ? (
                                                                                 <>
-                                                                                    <div
+                                                                                    <div className="edit_basket"
                                                                                         style={{
-                                                                                            maxHeight: '500px', // Ensure parent has a maximum height
+                                                                                            height: '100%', // Ensure parent has a maximum height
                                                                                             overflowY: 'auto', // Enable scrolling only if content exceeds height
                                                                                             marginTop: '20px',
                                                                                             padding: '10px',
@@ -1279,7 +1279,7 @@ const DynamicForm = ({
                                                                                                 'bullet', 'link', 'image', 'clean',
                                                                                             ]}
                                                                                             style={{
-                                                                                                height: '230px',
+                                                                                                height: '100%',
                                                                                                 border: '1px solid #ccc',
                                                                                                 borderRadius: '4px',
                                                                                                 padding: '10px',

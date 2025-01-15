@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import DynamicForm from '../../../../components/FormicForm';
 import Swal from 'sweetalert2';
@@ -12,7 +12,7 @@ const Addbankdetail = () => {
     const user_id = localStorage.getItem("id");
     const token = localStorage.getItem("token");
 
-    
+    const [loading, setLoading] = useState(false);
 
 
     const validate = (values) => {
@@ -51,6 +51,7 @@ const Addbankdetail = () => {
 
 
     const onSubmit = async (values) => {
+      setLoading(!loading)
         const req = {
             name: values.name,
             branch: values.branch,
@@ -82,8 +83,12 @@ const Addbankdetail = () => {
                     timer: 1500,
                     timerProgressBar: true,
                 });
+          setLoading(false)
+
             }
         } catch (error) {
+          setLoading(false)
+
             Swal.fire({
                 title: "Error",
                 text: "An unexpected error occurred. Please try again later.",
@@ -173,6 +178,7 @@ const Addbankdetail = () => {
                 btn_name="Add Bank Account"
                 btn_name1="Cancel"
                 sumit_btn={true}
+                btnstatus={loading}
                 btn_name1_route={"/admin/bankdetail"}
                 additional_field={<></>}
 

@@ -170,6 +170,19 @@ const AddStock = () => {
       return;
     }
 
+    const emptyType = Object.values(formikValues).filter(
+                (stock) => stock.type === ""
+                );
+    
+                if(emptyType.length>0){
+                    Swal.fire(
+                        "Warning",
+                        "Please select type.",
+                        "warning"
+                    );
+                    return;
+                }
+
     const stocksWithStatus = Object.values(formikValues).map((stock) => ({
       ...stock,
       status,
@@ -308,7 +321,9 @@ const AddStock = () => {
                           {fieldKey === "type" ? (
                             <select
                               className="form-control"
-                              value={formikValues[service.value]?.[fieldKey] || ""}
+                              // value={formikValues[service.value]?.[fieldKey] || ""}
+                              value={formikValues[service.value]?.type || ""}
+
                               onChange={(e) =>
                                 handleInputFieldChange(
                                   service.value,
