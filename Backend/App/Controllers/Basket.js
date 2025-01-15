@@ -19,6 +19,8 @@ class Basket {
   async AddBasket(req, res) {
     try {
       const { title, description, full_price, basket_price, mininvamount, themename, accuracy, portfolioweightage, cagr, frequency, validity, next_rebalance_date, type, add_by, short_description, rationale, methodology } = req.body;
+
+      console.log("req.body",req.body)
     
       await new Promise((resolve, reject) => {
         upload('basket').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {

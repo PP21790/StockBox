@@ -64,17 +64,17 @@ const AddBasket = () => {
     if (!values.description) {
       errors.description = "Please Enter Description";
     }
-    if(!values.risk){
-      errors.risk = "Please Enter risk";
+    if(!values.type){
+      errors.type = "Please Enter Type";
     }
     if(!values.image){
       errors.image = "Please Upload image";
     }
-    if(!values.short_discription){
-      errors.short_discription = "Please Enter Short Description";
+    if(!values.short_description){
+      errors.short_description = "Please Enter Short Description";
     }
-    if (!values.rational) {
-      errors.rational = "Please Enter Rational";
+    if (!values.rationale) {
+      errors.rationale = "Please Enter Rationale";
     }
     if (!values.methodology) {
       errors.methodology = "Please Enter Methodology";
@@ -97,10 +97,10 @@ const AddBasket = () => {
       next_rebalance_date: values.next_rebalance_date,
       cagr: values.cagr,
       full_price: values.full_price || 0,
-      risk:values.risk,
+      type:values.type,
       image:values.image,
-      short_discription:values.short_discription,
-      rational:values.rational,
+      short_description:values.short_description,
+      rationale:values.rationale,
       methodology:values.methodology
     };
 
@@ -151,10 +151,10 @@ const AddBasket = () => {
       validity: "",
       next_rebalance_date: "",
       cagr: "",
-      risk:"",
+      type:"",
       image:"",
-      short_discription:"",
-      rational:"",
+      short_description:"",
+      rationale:"",
       methodology:"",
     },
     validate,
@@ -263,16 +263,16 @@ const AddBasket = () => {
       star: true
     },
     {
-      name: "risk",
+      name: "type",
       label: "Risk Type",
       type: "select",
       label_size: 12,
       col_size: 6,
       disable: false,
       options: [
-        { value: "High", label: "High" },
-        { value: "Medium", label: "Medium" },
-        { value: "Low", label: "Low" },
+        { value: "HIGH", label: "High" },
+        { value: "MEDIUM", label: "Medium" },
+        { value: "LOW", label: "Low" },
       ],
       star: true
     },
@@ -287,7 +287,7 @@ const AddBasket = () => {
       star:true
   },
   {
-    name: "short_discription",
+    name: "short_description",
     label: "Short discription",
     type: "text",
     label_size: 12,
@@ -305,7 +305,7 @@ const AddBasket = () => {
       star: true
     },
     {
-      name: "rational",
+      name: "rationale",
       label: "Rational",
       type: "ckeditor",
       label_size: 12,
