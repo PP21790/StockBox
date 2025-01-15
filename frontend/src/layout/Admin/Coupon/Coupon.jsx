@@ -250,7 +250,7 @@ const Coupon = () => {
         {
             name: 'Used Limit/Total Limit',
             selector: row => {
-                const usedLimit = row.totallimitation - row.limitation;
+                const usedLimit = row.totallimitation - row.limitation; 
                 return `${usedLimit} / ${row.totallimitation}`;
             },
             sortable: true,

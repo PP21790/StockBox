@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const csv = require('csv-parser');
 const path = require('path');
 const { Readable } = require('stream');
+const upload = require('../Utils/multerHelper'); 
+
 const Basket_Modal = db.Basket;
 const Basketstock_Modal = db.Basketstock;
 const Stock_Modal = db.Stock;
@@ -16,9 +18,23 @@ class Basket {
 
   async AddBasket(req, res) {
     try {
-      const { title, description, full_price, basket_price, mininvamount, themename, accuracy, portfolioweightage, cagr, frequency, validity, next_rebalance_date, type, add_by } = req.body;
+      const { title, description, full_price, basket_price, mininvamount, themename, accuracy, portfolioweightage, cagr, frequency, validity, next_rebalance_date, type, add_by, short_description, rationale, methodology } = req.body;
+
+      console.log("req.body",req.body)
+    
+      await new Promise((resolve, reject) => {
+        upload('basket').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
+            if (err) {
+                return reject(err);
+            }
+            resolve();
+        });
+    });
 
 
+      const image = req.files['image'] ? req.files['image'][0].filename : null;
+  
+  
       const result = new Basket_Modal({
         title,
         description,
@@ -33,7 +49,11 @@ class Basket {
         validity,
         next_rebalance_date,
         full_price,
-        type
+        type,
+        image,
+        short_description,
+        rationale,
+        methodology
 
       });
 
@@ -917,7 +937,19 @@ class Basket {
 
   async updateBasket(req, res) {
     try {
-      const { id, title, description, full_price, basket_price, mininvamount, themename, accuracy, portfolioweightage, cagr, frequency, validity, next_rebalance_date, type } = req.body;
+      const { id, title, description, full_price, basket_price, mininvamount, themename, accuracy, portfolioweightage, cagr, frequency, validity, next_rebalance_date, type, short_description, rationale, methodology } = req.body;
+
+
+      await new Promise((resolve, reject) => {
+        upload('basket').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
+            if (err) {
+                return reject(err);
+            }
+            resolve();
+        });
+    });
+
+
 
       if (!id) {
         return res.status(400).json({
@@ -936,6 +968,7 @@ class Basket {
     //   const basket_prices = basket_price;
     //   const full_prices = full_price;
     // }
+    const image = req.files && req.files['image'] ? req.files['image'][0].filename : null;
 
       const updatedBasket = await Basket_Modal.findByIdAndUpdate(
         id,
@@ -952,7 +985,11 @@ class Basket {
           validity,
           next_rebalance_date,
           full_price,
-          type
+          type,
+          image,
+          short_description,
+          rationale,
+          methodology
         },
         { Basket: true, runValidators: true } // Options: return the updated document and run validators
       );

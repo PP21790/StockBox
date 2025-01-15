@@ -8,6 +8,7 @@ import { BankDetailListbyadmin, BankStatusdetail, DeleteBankDetail } from '../..
 import { image_baseurl } from '../../../../Utils/config';
 import { Tooltip } from 'antd';
 import { fDateTime } from '../../../../Utils/Date_formate';
+import Loader from '../../../../Utils/Loader';
 
 
 
@@ -22,6 +23,9 @@ const Bankdetail = () => {
     const [datewise, setDatewise] = useState("")
 
     const token = localStorage.getItem('token');
+
+    //state for loader
+    const [isLoader, setIsLoader] = useState(true);
 
 
 
@@ -44,6 +48,7 @@ const Bankdetail = () => {
         } catch (error) {
             console.log("error");
         }
+        setIsLoader(false)
     }
 
 
@@ -167,7 +172,7 @@ const Bankdetail = () => {
             width: '110px',
         },
         {
-            name: 'Name',
+            name: 'Bank Name',
             selector: row => row.name,
             sortable: true,
             width: '200px',
@@ -305,10 +310,19 @@ const Bankdetail = () => {
                                 </div>
                             </div>
 
-                            <Table
-                                columns={columns}
-                                data={clients}
-                            />
+                            {isLoader ? (
+                                <Loader />
+                            ):(
+                                <>
+                                
+                                <Table
+                                    columns={columns}
+                                    data={clients}
+                                />
+                                
+                                </>
+                            )}
+
                         </div>
                     </div>
                 </div>

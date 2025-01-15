@@ -12,6 +12,8 @@ import * as Config from "../../../Utils/config";
 
 const EditStock = () => {
     const location = useLocation();
+    console.log("location",location);
+    
     const { stock } = location.state || {};
     const [selectedServices, setSelectedServices] = useState([]);
     const [options, setOptions] = useState([]);
@@ -19,8 +21,22 @@ const EditStock = () => {
     const [inputValue, setInputValue] = useState("");
     const [formValues, setFormValues] = useState({});
     const [weightagecounting, setWeightagecounting] = useState(0);
+    const [currentlocation, setCurrentlocation] = useState({})
+    console.log("currentlocation",currentlocation);
+    
+    
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (location?.state) {
+          // location.state se 'Key' ko extract karna
+          setCurrentlocation(location?.state?.Key); // Correct key name as per your data
+        }
+      }, [location]);
+    
+      const redirectTo = (currentlocation === "editStock") ? "/admin/basket/basketstockpublish" : "/admin/basket";
+    
 
 
 
@@ -279,14 +295,23 @@ const EditStock = () => {
                 </div>
 
                 <div className="col-md-6 d-flex justify-content-end">
-                    <Link to="/admin/basket">
+                    {/* <Link to={redirectTo}>
                         <Tooltip title="Back">
                             <i
                                 className="lni lni-arrow-left-circle"
                                 style={{ fontSize: "2rem", color: "#000" }}
                             />
                         </Tooltip>
-                    </Link>
+                    </Link> */}
+
+                    <div >
+                        <Tooltip title="Back" onClick={()=>window.history.back()}>
+                            <i
+                                className="lni lni-arrow-left-circle"
+                                style={{ fontSize: "2rem", color: "#000" }}
+                            />
+                        </Tooltip>
+                    </div>
                 </div>
             </div>
             <hr />

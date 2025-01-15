@@ -96,6 +96,22 @@ const Editbasket = () => {
     if (!values.cagr) {
       errors.cagr = "Please Enter CAGR";
     }
+    if(!values.type){
+      errors.type = "Please Enter type";
+    }
+    if(!values.image){
+      errors.image = "Please Upload image";
+    }
+    if(!values.short_description){
+      errors.short_description = "Please Enter Short Description";
+    }
+    if (!values.rationale) {
+      errors.rationale = "Please Enter Rationale";
+    }
+    if (!values.methodology) {
+      errors.methodology = "Please Enter Methodology";
+    }
+
 
     return errors;
   };
@@ -113,7 +129,12 @@ const Editbasket = () => {
       validity: values.validity,
       next_rebalance_date: values.next_rebalance_date,
       cagr: values.cagr,
-      full_price: values.full_price || 0
+      full_price: values.full_price || 0,
+      type:values.type,
+      image:values.image,
+      short_description:values.short_description,
+      rationale:values.rationale,
+      methodology:values.methodology
     };
 
 
@@ -166,7 +187,12 @@ const Editbasket = () => {
       validity: "",
       next_rebalance_date: "",
       cagr: "",
-      full_price: ""
+      full_price: "",
+      type:"",
+      image:"",
+      short_description:"",
+      rationale:"",
+      methodology:"",
     },
     validate,
     onSubmit,
@@ -273,8 +299,59 @@ const Editbasket = () => {
       star: true
     },
     {
+      name: "type",
+      label: "Risk Type",
+      type: "select",
+      label_size: 12,
+      col_size: 6,
+      disable: false,
+      options: [
+        { value: "HIGH", label: "High" },
+        { value: "MEDIUM", label: "Medium" },
+        { value: "LOW", label: "Low" },
+      ],
+      star: true
+    },
+    {
+      name: "image",
+      label: "Upload Image",
+      type: "file2",
+      image: true,
+      label_size: 12,
+      col_size: 6,
+      disable: false,
+      star:true
+  },
+  {
+    name: "short_description",
+    label: "Short Discription",
+    type: "text",
+    label_size: 12,
+    col_size: 6,
+    disable: false,
+    star: true
+  },
+    {
       name: "description",
       label: "Description",
+      type: "ckeditor",
+      label_size: 12,
+      col_size: 12,
+      disable: false,
+      star: true
+    },
+    {
+      name: "rationale",
+      label: "Rationale",
+      type: "ckeditor",
+      label_size: 12,
+      col_size: 12,
+      disable: false,
+      star: true
+    },
+    {
+      name: "methodology",
+      label: "Methodology",
       type: "ckeditor",
       label_size: 12,
       col_size: 12,

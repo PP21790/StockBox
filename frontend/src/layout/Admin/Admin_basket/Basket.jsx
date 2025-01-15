@@ -276,7 +276,7 @@ const Basket = () => {
                 <RotateCcw
                   checked={row.status}
                   onClick={(event) => handleSwitchChange(event, row._id)} />
-              </Link>
+              </Link> 
             </Tooltip> : ""}
           {row.stock_details?.length <= 0 ?
             <Tooltip title="Add Stock">
