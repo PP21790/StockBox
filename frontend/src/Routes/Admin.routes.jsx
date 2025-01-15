@@ -173,10 +173,9 @@ function MainApp() {
                     <Route path="/addstock/:id" element={<AddStock />} />
                     <Route path="/basket/basketstockpublish" element={<BasketStockPublish />} />
                     <Route path="/basket-purchase-history/:id" element={<BasketPurchaseHistory />} />
-
                     <Route path="/purchasebaskethistory" element={<AllBasketHistory />} />
-
                     <Route path="/editstock/:id" element={<EditStock />} />
+                    <Route path="/stock" element={<Stock />} />
 
 
 
@@ -187,7 +186,6 @@ function MainApp() {
 
 
                     <Route path="/category" element={<Category />} />
-                    <Route path="/stock" element={<Stock />} />
 
 
                     <Route path="/blogs" element={<Blogs />} />
@@ -196,9 +194,6 @@ function MainApp() {
                     <Route path="/viewblog" element={<Viewblog />} />
 
 
-                    <Route path="/news" element={<News />} />
-                    <Route path="/addnews" element={<Addnews />} />
-                    <Route path="/updatenews" element={<Updatenews />} />
 
 
 
@@ -231,12 +226,15 @@ function MainApp() {
 
 
 
-                    <Route path="/message" element={<Message />} />
                     <Route path="/changepass" element={<Changepass />} />
 
 
+                    <Route path="/news" element={<News />} />
+                    <Route path="/addnews" element={<Addnews />} />
+                    <Route path="/updatenews" element={<Updatenews />} />
 
 
+                    <Route path="/message" element={<Message />} />
                     {/* <Route path="/changepass" element={<Changepass />} /> */}
                     <Route path="/help" element={<Help />} />
                     <Route path="/paymentrequest" element={<PaymentRequest />} />
