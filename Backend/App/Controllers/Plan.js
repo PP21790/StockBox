@@ -542,7 +542,9 @@ async  addPlanSubscription(req, res) {
                 { _id: existingPlan._id },  // Filter: find the document by its ID
                 { $set: { 
                     enddate: existingPlan.enddate,  // Set the new end date
-                    startdate: existingPlan.startdate // Set the new start date
+                    startdate: existingPlan.startdate,
+                    deliverystatus: (existingPlan.deliverystatus === false && plan.deliverystatus === true) ? true : existingPlan.deliverystatus // Conditionally update deliverystatus
+
                 } }  // Update fields
             );
               //  const savedPlan = await existingPlan.save();  
@@ -607,6 +609,7 @@ monthsToAdd = Math.floor(differenceInMonths); // Round down to the nearest whole
                 serviceid: serviceId,
                 startdate: start,
                 enddate: end,
+                deliverystatus: plan.deliverystatus === true ? true : false,
             });
         
             try {

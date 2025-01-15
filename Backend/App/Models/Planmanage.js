@@ -21,7 +21,11 @@ const PlanmanageSchema = new Schema({
     enddate: {
         type: Date,
         required: true
-    }
+    },
+    deliverystatus: {
+        type: Boolean,
+        default: false 
+    },
 }, {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
 });
