@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const csv = require('csv-parser');
 const path = require('path');
 const { Readable } = require('stream');
-const upload = require('../Utils/multerHelper'); 
+const upload = require('../Utils/multerHelper');
 
 const Basket_Modal = db.Basket;
 const Basketstock_Modal = db.Basketstock;
@@ -20,21 +20,23 @@ class Basket {
     try {
       const { title, description, full_price, basket_price, mininvamount, themename, accuracy, portfolioweightage, cagr, frequency, validity, next_rebalance_date, type, add_by, short_description, rationale, methodology } = req.body;
 
-      console.log("req.body",req.body)
-    
-      await new Promise((resolve, reject) => {
-        upload('basket').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
-            if (err) {
-                return reject(err);
-            }
-            resolve();
-        });
-    });
+      console.log("req.file", req.image)
+      console.log("req.body", req.body)
 
 
-      const image = req.files['image'] ? req.files['image'][0].filename : null;
-  
-  
+      //   await new Promise((resolve, reject) => {
+      //     upload('basket').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
+      //         if (err) {
+      //             return reject(err);
+      //         }
+      //         resolve();
+      //     });
+      // });
+
+
+      //   const image = req.files['image'] ? req.files['image'][0].filename : null;
+
+
       const result = new Basket_Modal({
         title,
         description,
@@ -50,7 +52,7 @@ class Basket {
         next_rebalance_date,
         full_price,
         type,
-        image,
+        //image,
         short_description,
         rationale,
         methodology
@@ -252,21 +254,21 @@ class Basket {
           message: "Basket not found.",
         });
       }
-   // const existingStocks = await Basketstock_Modal.find({ basket_id }).sort({ version: -1 });
+      // const existingStocks = await Basketstock_Modal.find({ basket_id }).sort({ version: -1 });
 
 
-    const latestVersion = await Basketstock_Modal.aggregate([
-      { $match: { basket_id, status: 1 } }, // Filter by basket_id and status
-      { $group: { _id: null, maxVersion: { $max: "$version" } } }
-    ]);
-     
-     
-    let existingStocks = []; // Initialize as an empty array
+      const latestVersion = await Basketstock_Modal.aggregate([
+        { $match: { basket_id, status: 1 } }, // Filter by basket_id and status
+        { $group: { _id: null, maxVersion: { $max: "$version" } } }
+      ]);
+
+
+      let existingStocks = []; // Initialize as an empty array
       if (latestVersion.length > 0) {
         const maxVersion = latestVersion[0].maxVersion;
-      
+
         // Fetch stocks with the latest version and status 1
-         existingStocks = await Basketstock_Modal.find({
+        existingStocks = await Basketstock_Modal.find({
           basket_id,
           status: 1,
           version: maxVersion
@@ -274,15 +276,15 @@ class Basket {
       }
 
 
-  if(publishstatus==true) {
-      const checkpublishornot = await Basketstock_Modal.find({ basket_id, status: 1 });
-      if (checkpublishornot.length > 0) {
-      } else {
-        basket.status =true;
-        basket.publishstatus =true;
-        await basket.save();
+      if (publishstatus == true) {
+        const checkpublishornot = await Basketstock_Modal.find({ basket_id, status: 1 });
+        if (checkpublishornot.length > 0) {
+        } else {
+          basket.status = true;
+          basket.publishstatus = true;
+          await basket.save();
+        }
       }
-    }
 
       let totalAmount = 0;
 
@@ -295,7 +297,7 @@ class Basket {
           });
         }
         else {
-            
+
 
           // basket.status = true;
           // await basket.save();
@@ -305,21 +307,21 @@ class Basket {
           for (const stock of existingStocks) {
             const tradeSymbol = stock.tradesymbol;
             const quantity = stock.quantity;
-      
+
             // Fetch the instrument token from the Stocks table
             const stockData = await Stock_Modal.findOne({ tradesymbol: tradeSymbol });
-           
+
             if (stockData) {
               const instrumentToken = stockData.instrument_token;
-             
+
               // Fetch the live price using the instrument token from StockLivePrices
               const livePrice = await Liveprice_Modal.findOne({ token: instrumentToken });
 
-            
+
 
               if (livePrice) {
                 const lpPrice = livePrice.lp;
-               
+
                 // Multiply lp_price by quantity and add to the total sum
                 totalSum += lpPrice * quantity;
               } else {
@@ -337,7 +339,7 @@ class Basket {
         totalAmount = basket.mininvamount;
       }
 
-     
+
       let remainingAmount = totalAmount; // Keep track of remaining amount
 
       if (!Array.isArray(stocks) || stocks.length === 0) {
@@ -362,22 +364,22 @@ class Basket {
 
 
         const stockDatas = await Stock_Modal.findOne({ tradesymbol: tradesymbol });
-           
-          const instrumentTokens = stockDatas.instrument_token;
+
+        const instrumentTokens = stockDatas.instrument_token;
 
         const existingDocument = await Liveprice_Modal.findOne({ token: instrumentTokens });
 
         if (existingDocument) {
         } else {
-            await Liveprice_Modal.create({
-                token: instrumentTokens,
-                lp: currentPrice,
-                exc: "NSE",
-                curtime: `${new Date().getHours().toString().padStart(2, '0')}${new Date().getMinutes().toString().padStart(2, '0')}`,
-                ft: "1234566"
-            });
+          await Liveprice_Modal.create({
+            token: instrumentTokens,
+            lp: currentPrice,
+            exc: "NSE",
+            curtime: `${new Date().getHours().toString().padStart(2, '0')}${new Date().getMinutes().toString().padStart(2, '0')}`,
+            ft: "1234566"
+          });
         }
-        
+
         const allocatedAmount = (percentage / 100) * totalAmount;
         if (allocatedAmount > remainingAmount) {
           return res.status(400).json({
@@ -456,172 +458,172 @@ class Basket {
         { $match: { basket_id, status: 1 } }, // Filter by basket_id and status
         { $group: { _id: null, maxVersion: { $max: "$version" } } }
       ]);
-       
-       
+
+
       let existingStocks = []; // Initialize as an empty array
-        if (latestVersion.length > 0) {
-          const maxVersion = latestVersion[0].maxVersion;
-        
-          // Fetch stocks with the latest version and status 1
-           existingStocks = await Basketstock_Modal.find({
-            basket_id,
-            status: 1,
-            version: maxVersion
-          });
-        }
-  
+      if (latestVersion.length > 0) {
+        const maxVersion = latestVersion[0].maxVersion;
+
+        // Fetch stocks with the latest version and status 1
+        existingStocks = await Basketstock_Modal.find({
+          basket_id,
+          status: 1,
+          version: maxVersion
+        });
+      }
 
 
-      
-  if(publishstatus==true) {
-    const checkpublishornot = await Basketstock_Modal.find({ basket_id, status: 1 });
-    if (checkpublishornot.length > 0) {
-    } else {
-      basket.status =true;
-      basket.publishstatus =true;
-      await basket.save();
-    }
-  }
 
 
-  await Basketstock_Modal.deleteMany({ basket_id, version });
-
-
-  let totalAmount = 0;
-
-  if (existingStocks && existingStocks.length > 0) {
-
-    if (existingStocks[0].status == 0) {
-      return res.status(500).json({
-        status: false,
-        message: "Please Public Old Stock First Than New Create",
-      });
-    }
-    else {
-        
-
-      // basket.status = true;
-      // await basket.save();
-
-      let totalSum = 0;
-
-      for (const stock of existingStocks) {
-        const tradeSymbol = stock.tradesymbol;
-        const quantity = stock.quantity;
-  
-        // Fetch the instrument token from the Stocks table
-        const stockData = await Stock_Modal.findOne({ tradesymbol: tradeSymbol });
-       
-        if (stockData) {
-          const instrumentToken = stockData.instrument_token;
-         
-          // Fetch the live price using the instrument token from StockLivePrices
-          const livePrice = await Liveprice_Modal.findOne({ token: instrumentToken });
-
-        
-
-          if (livePrice) {
-            const lpPrice = livePrice.lp;
-           
-            // Multiply lp_price by quantity and add to the total sum
-            totalSum += lpPrice * quantity;
-          } else {
-            console.log(`Live price not found for instrument token: ${instrumentToken}`);
-          }
+      if (publishstatus == true) {
+        const checkpublishornot = await Basketstock_Modal.find({ basket_id, status: 1 });
+        if (checkpublishornot.length > 0) {
         } else {
-          console.log(`Stock data not found for trade symbol: ${tradeSymbol}`);
+          basket.status = true;
+          basket.publishstatus = true;
+          await basket.save();
         }
       }
 
-      totalAmount = totalSum;
-    }
-  } else {
-    // Set the total amount to the basket's minimum investment amount if no stocks exist
-    totalAmount = basket.mininvamount;
-  }
 
- 
-  let remainingAmount = totalAmount; // Keep track of remaining amount
-
-  if (!Array.isArray(stocks) || stocks.length === 0) {
-    return res.status(400).json({
-      status: false,
-      message: "Stocks data is required and should be an array.",
-    });
-  }
+      await Basketstock_Modal.deleteMany({ basket_id, version });
 
 
-  const bulkOps = [];
+      let totalAmount = 0;
 
-  for (const stock of stocks) {
-    const { name, tradesymbol, percentage, price, comment, type, status } = stock;
+      if (existingStocks && existingStocks.length > 0) {
 
-    const currentPrice = price;
-    if (!currentPrice) {
-      return res.status(400).json({
-        status: false,
-        message: `No market price found for ${tradesymbol}`,
-      });
-    }
-
-    const stockDatas = await Stock_Modal.findOne({ tradesymbol: tradesymbol });
-           
-    const instrumentTokens = stockDatas.instrument_token;
-
-  const existingDocument = await Liveprice_Modal.findOne({ token: instrumentTokens });
-
-  if (existingDocument) {
-  } else {
-      await Liveprice_Modal.create({
-          token: instrumentTokens,
-          lp: currentPrice,
-          exc: "NSE",
-          curtime: `${new Date().getHours().toString().padStart(2, '0')}${new Date().getMinutes().toString().padStart(2, '0')}`,
-          ft: "1234566"
-      });
-  }
+        if (existingStocks[0].status == 0) {
+          return res.status(500).json({
+            status: false,
+            message: "Please Public Old Stock First Than New Create",
+          });
+        }
+        else {
 
 
-    // Calculate allocation
-    const allocatedAmount = (percentage / 100) * totalAmount;
-    if (allocatedAmount > remainingAmount) {
-      return res.status(400).json({
-        status: false,
-        message: `Insufficient funds to allocate ${allocatedAmount} for ${tradesymbol}`,
-      });
-    }
+          // basket.status = true;
+          // await basket.save();
 
-    // Calculate quantity and total value
-    const quantity = Math.floor(allocatedAmount / currentPrice);
-    const total_value = quantity * currentPrice;
+          let totalSum = 0;
 
-    // Deduct from remaining amount
-    remainingAmount -= total_value;
+          for (const stock of existingStocks) {
+            const tradeSymbol = stock.tradesymbol;
+            const quantity = stock.quantity;
 
-    // Find the latest version of the stock in the basket
+            // Fetch the instrument token from the Stocks table
+            const stockData = await Stock_Modal.findOne({ tradesymbol: tradeSymbol });
 
-    const version = existingStocks.length > 0 ? existingStocks[0].version + 1 : 1;
+            if (stockData) {
+              const instrumentToken = stockData.instrument_token;
+
+              // Fetch the live price using the instrument token from StockLivePrices
+              const livePrice = await Liveprice_Modal.findOne({ token: instrumentToken });
 
 
-    bulkOps.push({
-      insertOne: {
-        document: {
-          basket_id,
-          name,
-          tradesymbol,
-          price: currentPrice,
-          total_value,
-          quantity,
-          type,
-          comment: comment || '',
-          version,
-          weightage: percentage,
-          status: status,
-        },
-      },
-    });
-  }
-    
+
+              if (livePrice) {
+                const lpPrice = livePrice.lp;
+
+                // Multiply lp_price by quantity and add to the total sum
+                totalSum += lpPrice * quantity;
+              } else {
+                console.log(`Live price not found for instrument token: ${instrumentToken}`);
+              }
+            } else {
+              console.log(`Stock data not found for trade symbol: ${tradeSymbol}`);
+            }
+          }
+
+          totalAmount = totalSum;
+        }
+      } else {
+        // Set the total amount to the basket's minimum investment amount if no stocks exist
+        totalAmount = basket.mininvamount;
+      }
+
+
+      let remainingAmount = totalAmount; // Keep track of remaining amount
+
+      if (!Array.isArray(stocks) || stocks.length === 0) {
+        return res.status(400).json({
+          status: false,
+          message: "Stocks data is required and should be an array.",
+        });
+      }
+
+
+      const bulkOps = [];
+
+      for (const stock of stocks) {
+        const { name, tradesymbol, percentage, price, comment, type, status } = stock;
+
+        const currentPrice = price;
+        if (!currentPrice) {
+          return res.status(400).json({
+            status: false,
+            message: `No market price found for ${tradesymbol}`,
+          });
+        }
+
+        const stockDatas = await Stock_Modal.findOne({ tradesymbol: tradesymbol });
+
+        const instrumentTokens = stockDatas.instrument_token;
+
+        const existingDocument = await Liveprice_Modal.findOne({ token: instrumentTokens });
+
+        if (existingDocument) {
+        } else {
+          await Liveprice_Modal.create({
+            token: instrumentTokens,
+            lp: currentPrice,
+            exc: "NSE",
+            curtime: `${new Date().getHours().toString().padStart(2, '0')}${new Date().getMinutes().toString().padStart(2, '0')}`,
+            ft: "1234566"
+          });
+        }
+
+
+        // Calculate allocation
+        const allocatedAmount = (percentage / 100) * totalAmount;
+        if (allocatedAmount > remainingAmount) {
+          return res.status(400).json({
+            status: false,
+            message: `Insufficient funds to allocate ${allocatedAmount} for ${tradesymbol}`,
+          });
+        }
+
+        // Calculate quantity and total value
+        const quantity = Math.floor(allocatedAmount / currentPrice);
+        const total_value = quantity * currentPrice;
+
+        // Deduct from remaining amount
+        remainingAmount -= total_value;
+
+        // Find the latest version of the stock in the basket
+
+        const version = existingStocks.length > 0 ? existingStocks[0].version + 1 : 1;
+
+
+        bulkOps.push({
+          insertOne: {
+            document: {
+              basket_id,
+              name,
+              tradesymbol,
+              price: currentPrice,
+              total_value,
+              quantity,
+              type,
+              comment: comment || '',
+              version,
+              weightage: percentage,
+              status: status,
+            },
+          },
+        });
+      }
+
 
       // Execute the bulk upsert
       const result = await Basketstock_Modal.bulkWrite(bulkOps);
@@ -942,12 +944,12 @@ class Basket {
 
       await new Promise((resolve, reject) => {
         upload('basket').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
-            if (err) {
-                return reject(err);
-            }
-            resolve();
+          if (err) {
+            return reject(err);
+          }
+          resolve();
         });
-    });
+      });
 
 
 
@@ -959,16 +961,16 @@ class Basket {
       }
 
 
-    // if(full_price){
-    // const basket_prices = full_price;
-    // const full_prices = basket_price;
-    // }
-    // else
-    // {
-    //   const basket_prices = basket_price;
-    //   const full_prices = full_price;
-    // }
-    const image = req.files && req.files['image'] ? req.files['image'][0].filename : null;
+      // if(full_price){
+      // const basket_prices = full_price;
+      // const full_prices = basket_price;
+      // }
+      // else
+      // {
+      //   const basket_prices = basket_price;
+      //   const full_prices = full_price;
+      // }
+      const image = req.files && req.files['image'] ? req.files['image'][0].filename : null;
 
       const updatedBasket = await Basket_Modal.findByIdAndUpdate(
         id,
@@ -1076,7 +1078,7 @@ class Basket {
       // Find and update the Basket
       const result = await Basket_Modal.findByIdAndUpdate(
         id,
-        { status: status,publishstatus:status },
+        { status: status, publishstatus: status },
         { new: true } // Return the updated document
       );
 
@@ -1127,7 +1129,7 @@ class Basket {
       // Find and update the Basket
       const result = await Basket_Modal.findByIdAndUpdate(
         id,
-        { publishstatus:status },
+        { publishstatus: status },
         { new: true } // Return the updated document
       );
 
