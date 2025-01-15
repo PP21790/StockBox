@@ -600,7 +600,8 @@ class List {
               {
                 $set: {
                   enddate: existingPlan.enddate,  // Set the new end date
-                  startdate: existingPlan.startdate // Set the new start date
+                  startdate: existingPlan.startdate,
+                  deliverystatus: (existingPlan.deliverystatus === false && plan.deliverystatus === true) ? true : existingPlan.deliverystatus // Conditionally update deliverystatus
                 }
               }  // Update fields
             );
@@ -617,7 +618,7 @@ class List {
           const existingPlans = await Planmanage.find({
             clientid: client_id,
             serviceid: serviceId,
-            enddate: { $gt: today } // End date must be greater than today's date
+            enddate: { $gt: today } 
           })
             .sort({ enddate: -1 }) // Sort by `enddate` in descending order
             .limit(1) // Get the top result
@@ -663,6 +664,7 @@ class List {
             serviceid: serviceId,
             startdate: start,
             enddate: end,
+            deliverystatus: plan.deliverystatus === true ? true : false,
           });
 
           try {
@@ -1554,7 +1556,7 @@ const query = {
 };
 
 // Check if deliverystatus is true
-if (client.deliverystatus === true) {
+if (plans.deliverystatus === true) {
   query.created_at = {
     $lte: endDates[0], // Only keep the end date condition
   };
@@ -1720,7 +1722,7 @@ const query = {
    };
 
 // Check if deliverystatus is true
-if (client.deliverystatus === true) {
+if (plans.deliverystatus === true) {
   query.created_at = {
     $lte: endDates[0], // Only keep the end date condition
   };
@@ -1891,7 +1893,7 @@ if (client.deliverystatus === true) {
       };
       
       // Check if deliverystatus is true
-      if (client.deliverystatus === true) {
+      if (plans.deliverystatus === true) {
         query.created_at = {
           $lte: endDates[0], // Only keep the end date condition
         };
