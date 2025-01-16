@@ -283,7 +283,18 @@ class Coupon {
       }
 
      
-  
+
+
+
+      const Coupon = await Coupon_Modal.findById(id);
+
+
+      if (Coupon.totallimitation && Coupon.limitation > limitation) {
+        return res.status(400).json({
+          status: false,
+          message: "Limit cannot be less than the coupon's remaining limitation.",
+        });
+      }
 
       if (!id) {
         return res.status(400).json({
@@ -293,6 +304,14 @@ class Coupon {
       }
   
       const image = req.files && req.files['image'] ? req.files['image'][0].filename : null;
+
+
+      let adjustedLimitation=0;
+    if (Coupon.totallimitation < limitation) {
+      adjustedLimitation = Coupon.limitation + (limitation - Coupon.totallimitation);
+    } else if (Coupon.totallimitation < limitation) {
+      adjustedLimitation = Coupon.limitation; // Set to remaining limitation
+    }
     
       // Prepare the update object with the fields to update
       const updateFields = {
@@ -305,7 +324,7 @@ class Coupon {
         minpurchasevalue,
         mincouponvalue,
         description,
-        limitation,
+        limitation:adjustedLimitation,
         service,
         totallimitation:limitation
       };

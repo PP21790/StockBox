@@ -4,6 +4,7 @@ const csv = require('csv-parser');
 const path = require('path');
 const { Readable } = require('stream');
 const upload = require('../Utils/multerHelper'); 
+const multer = require('multer');
 
 const Basket_Modal = db.Basket;
 const Basketstock_Modal = db.Basketstock;
@@ -18,23 +19,24 @@ class Basket {
 
   async AddBasket(req, res) {
     try {
-      const { title, description, full_price, basket_price, mininvamount, themename, accuracy, portfolioweightage, cagr, frequency, validity, next_rebalance_date, type, add_by, short_description, rationale, methodology } = req.body;
 
-      console.log("req.body",req.body)
-    
+
       await new Promise((resolve, reject) => {
         upload('basket').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
             if (err) {
                 return reject(err);
             }
+
             resolve();
         });
     });
-
-
+     
+     
       const image = req.files['image'] ? req.files['image'][0].filename : null;
-  
-  
+
+      const { title, description, full_price, basket_price, mininvamount, themename, accuracy, portfolioweightage, cagr, frequency, validity, next_rebalance_date, type, add_by, short_description, rationale, methodology } = req.body;
+
+
       const result = new Basket_Modal({
         title,
         description,
@@ -937,7 +939,6 @@ class Basket {
 
   async updateBasket(req, res) {
     try {
-      const { id, title, description, full_price, basket_price, mininvamount, themename, accuracy, portfolioweightage, cagr, frequency, validity, next_rebalance_date, type, short_description, rationale, methodology } = req.body;
 
 
       await new Promise((resolve, reject) => {
@@ -949,6 +950,7 @@ class Basket {
         });
     });
 
+    const { id, title, description, full_price, basket_price, mininvamount, themename, accuracy, portfolioweightage, cagr, frequency, validity, next_rebalance_date, type, short_description, rationale, methodology } = req.body;
 
 
       if (!id) {

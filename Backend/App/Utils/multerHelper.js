@@ -4,6 +4,8 @@ const path = require('path');
 
 // Function to create a dynamic storage engine
 const getMulterStorage = (folderName) => {
+
+
     return multer.diskStorage({
         destination: function (req, file, cb) {
             cb(null, path.join(__dirname, `../../../${process.env.DOMAIN}/uploads`, folderName)); // Dynamic folder based on controller
