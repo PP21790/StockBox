@@ -2254,6 +2254,10 @@ if (plans.deliverystatus === true) {
                 updated_at: 1,
                 type: 1,
                 themename: 1,
+                image: 1,
+                short_description: 1,
+                rationale: 1,
+                methodology: 1,
                 isSubscribed: 1,
                 isActive: 1,
                 startdate: 1,
@@ -2285,6 +2289,179 @@ if (plans.deliverystatus === true) {
     }
   }
   
+
+
+  async PurchasedBasketList(req, res) {
+    try {
+      const { clientid } = req.body; // assuming clientid is passed in the request
+  
+      // Convert clientid to ObjectId
+      const clientObjectId = new mongoose.Types.ObjectId(clientid);
+  
+      const currentDate = new Date();
+  
+      const result = await Basket_Modal.aggregate([
+        {
+          $lookup: {
+            from: 'basketsubscriptions',
+            localField: '_id',
+            foreignField: 'basket_id',
+            as: 'subscription_info',
+          },
+        },
+        {
+          $addFields: {
+            filteredSubscriptions: {
+              $filter: {
+                input: '$subscription_info',
+                as: 'sub',
+                cond: { $eq: ['$$sub.client_id', clientObjectId] },
+              },
+            },
+          },
+        },
+        {
+          $addFields: {
+            latestSubscription: {
+              $arrayElemAt: [
+                {
+                  $sortArray: {
+                    input: '$filteredSubscriptions',
+                    sortBy: { enddate: -1 },
+                  },
+                },
+                0,
+              ],
+            },
+          },
+        },
+        {
+          $addFields: {
+            isActive: {
+              $cond: {
+                if: {
+                  $and: [
+                    { $gt: [{ $size: '$filteredSubscriptions' }, 0] },
+                    { $gte: [currentDate, '$latestSubscription.startdate'] },
+                    { $lte: [currentDate, '$latestSubscription.enddate'] },
+                  ],
+                },
+                then: true,
+                else: false,
+              },
+            },
+          },
+        },
+        {
+          $match: {
+            'filteredSubscriptions.0': { $exists: true }, // Only include baskets with subscriptions
+            del: false,
+            status: true,
+          },
+        },
+        {
+          $lookup: {
+            from: 'basketstocks',
+            let: { basketId: { $toString: '$_id' } },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ['$basket_id', '$$basketId'] },
+                      { $eq: ['$status', 1] },
+                    ],
+                  },
+                },
+              },
+              {
+                $group: {
+                  _id: '$basket_id',
+                  maxVersion: { $max: '$version' },
+                },
+              },
+              {
+                $lookup: {
+                  from: 'basketstocks',
+                  let: { basketId: '$_id', maxVer: '$maxVersion' },
+                  pipeline: [
+                    {
+                      $match: {
+                        $expr: {
+                          $and: [
+                            { $eq: ['$basket_id', '$$basketId'] },
+                            { $eq: ['$version', '$$maxVer'] },
+                            { $eq: ['$status', 1] },
+                          ],
+                        },
+                      },
+                    },
+                  ],
+                  as: 'latestStocks',
+                },
+              },
+              { $unwind: '$latestStocks' },
+              { $replaceRoot: { newRoot: '$latestStocks' } },
+            ],
+            as: 'stock_details',
+          },
+        },
+        {
+          $project: {
+            basket_id: 1,
+            title: 1,
+            description: 1,
+            full_price: 1,
+            basket_price: 1,
+            mininvamount: 1,
+            accuracy: 1,
+            portfolioweightage: 1,
+            cagr: 1,
+            cagr_live: 1,
+            frequency: 1,
+            validity: 1,
+            next_rebalance_date: 1,
+            status: 1,
+            del: 1,
+            created_at: 1,
+            updated_at: 1,
+            type: 1,
+            themename: 1,
+            image: 1,
+            short_description: 1,
+            rationale: 1,
+            methodology: 1,
+            isActive: 1,
+            startdate: '$latestSubscription.startdate',
+            enddate: '$latestSubscription.enddate',
+            stock_details: {
+              $filter: {
+                input: '$stock_details',
+                as: 'stock',
+                cond: { $eq: ['$$stock.del', false] },
+              },
+            },
+          },
+        },
+      ]);
+  
+      res.status(200).json({
+        status: true,
+        message: 'Purchased baskets retrieved successfully.',
+        data: result,
+      });
+    } catch (error) {
+      console.error('Error retrieving purchased baskets:', error);
+      res.status(500).json({
+        status: false,
+        message: 'An error occurred while retrieving purchased baskets.',
+      });
+    }
+  }
+  
+
+
+
 
   async BasketstockList(req, res) {
     try {

@@ -30,20 +30,28 @@ const Addbankdetail = () => {
         if (/\d/.test(values.branch)) {
             errors.branch = "Numbers are not allowed in the Branch Name";
           }
+        if (!values.accountno) {
+            errors.accountno = "Please Enter Account Number";
+        } else {
+            const accountnoStr = values.accountno.toString(); // Ensure it's a string
+            if (accountnoStr.length < 9) {
+                errors.accountno = "Account Number must be at least 9 digits";
+            } else if (accountnoStr.length > 16) {
+                errors.accountno = "Account Number must not exceed 16 digits";
+            }
+        }
+
         if (!values.Confirmnumber) {
             errors.Confirmnumber = "Please Confirm Your Account Number";
           } else if (values.accountno !== values.Confirmnumber) {
-            errors.Confirmnumber = "Accout Number Must Match";
+            errors.Confirmnumber = "Account Number Must Match";
           }
     
-        if (!values.accountno) {
-            errors.accountno = "Please Account Number Type";
-        }
         if (!values.ifsc) {
             errors.ifsc = "Please Enter IFSC Code";
         }
         if (!values.image) {
-            errors.image = "Please Enter Image";
+            errors.image = "Please Select Image";
         }
 
         return errors;

@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import Table from '../../../components/Table';
 import { fDateTime } from '../../../Utils/Date_formate';
 import ExportToExcel from '../../../Utils/ExportCSV';
+import Loader from '../../../Utils/Loader';
 
 const FreetrialStatus = () => {
   const token = localStorage.getItem('token');
@@ -17,6 +18,8 @@ const FreetrialStatus = () => {
   });
   const [initialFreeTrial, setInitialFreeTrial] = useState('1'); // Track the initial free trial status
   const [disableUpdate, setDisableUpdate] = useState(true); // Control the "Update" button
+
+  const [isLoader,setIsLoader] = useState(true);
 
   useEffect(() => {
     getApidetail();
@@ -42,7 +45,10 @@ const FreetrialStatus = () => {
     try {
       const response = await basicsettinglist(token);
       if (response?.status && response?.data) {
+        
         const defaultTrial = response.data.length > 0 ? response.data[0].freetrial : '1';
+        // console.log("defaultTrial",defaultTrial);
+
         setAddStatus((prevState) => ({ ...prevState, freetrial: defaultTrial }));
         setInitialFreeTrial(defaultTrial);
         setDisableUpdate(true); // Disable the button initially
@@ -55,6 +61,7 @@ const FreetrialStatus = () => {
   const getApidetail = async () => {
     try {
       const response = await getfreetrialstatus(token);
+      
       if (response?.status && response?.data) {
         setData(response.data);
         const defaultTrial = response.data.length > 0 ? response.data[0].freetrial : '1';
@@ -65,6 +72,7 @@ const FreetrialStatus = () => {
     } catch (error) {
       console.error('Error fetching free trial status:', error);
     }
+    setIsLoader(false)
   };
 
   const UpdateClientstatus = async () => {
@@ -156,6 +164,12 @@ const FreetrialStatus = () => {
         </div>
         <hr />
 
+        {isLoader ? (
+          <Loader/>
+        ):(
+
+          <>
+          
         <div className="card">
           <div className="card-body">
             <label htmlFor="" className="mb-1">Select Free Days Trial</label>
@@ -201,6 +215,10 @@ const FreetrialStatus = () => {
             </div>
           </div>
         </div>
+          
+          </>
+        )}
+
       </div>
     </div>
   );
