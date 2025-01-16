@@ -2337,6 +2337,7 @@ if (plans.deliverystatus === true) {
         },
         {
           $addFields: {
+            isSubscribed: true,
             isActive: {
               $cond: {
                 if: {
@@ -2432,6 +2433,7 @@ if (plans.deliverystatus === true) {
             rationale: 1,
             methodology: 1,
             isActive: 1,
+            isSubscribed:1,
             startdate: '$latestSubscription.startdate',
             enddate: '$latestSubscription.enddate',
             stock_details: {
