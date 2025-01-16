@@ -7,6 +7,8 @@ import { basicsettinglist } from '../Services/Admin';
 import { image_baseurl } from '../Utils/config';
 import $ from "jquery";
 
+
+
 const Login = () => {
 
 
@@ -245,9 +247,7 @@ const Login = () => {
                                         <div className="mb-5 text-center">
                                             <img style={{ width: "241px" }} src={`${image_baseurl}uploads/basicsetting/${clients[0]?.logo}`} />
                                         </div>
-                                        {/* <div className="text-center mb-4">
-                                            <h5 className="">Stock RA</h5>
-                                        </div> */}
+
                                         <div className="form-body">
                                             <form className="row g-3" onSubmit={loginpageOpen} >
                                                 <div className="col-12">
@@ -287,25 +287,9 @@ const Login = () => {
                                                         </a>
                                                     </div>
                                                 </div>
-                                                {/* <div className="col-md-6">
-                                                    <div className="form-check form-switch">
-                                                        <input
-                                                            className="form-check-input"
-                                                            type="checkbox"
-                                                            id="flexSwitchCheckChecked"
-                                                        />
-                                                        <label
-                                                            className="form-check-label"
-                                                            htmlFor="flexSwitchCheckChecked"
-                                                        >
-                                                            Remember Me
-                                                        </label>
-                                                    </div>
-                                                </div> */}
+
                                                 <div className="col-md-6 ">
-                                                    {/* <p onClick={() => navigate("/forgetpass")}>
-                                                        Forgot Password?
-                                                    </p> */}
+
                                                     <p className="mb-0">
 
                                                         <Link to="/forget">Forgot Password?</Link>
@@ -319,20 +303,12 @@ const Login = () => {
                                                         </button>
                                                     </div>
                                                 </div>
-                                                {/* <div className="col-12">
-                                                    <div className="text-center ">
-                                                        <p className="mb-0">
-                                                            Don't have an account yet?{" "}
-                                                            <Link to="/register">Sign up here</Link>
-                                                        </p>
-                                                    </div>
-                                                </div> */}
+
                                             </form>
                                             {error && <div className="alert alert-danger mt-3">{error}</div>}
                                         </div>
                                         <div className="login-separater text-center mb-5">
-                                            {/* <span>OR SIGN IN WITH</span> */}
-                                            {/* <hr /> */}
+
                                         </div>
 
                                     </div>
