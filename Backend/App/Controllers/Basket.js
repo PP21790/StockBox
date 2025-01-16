@@ -35,8 +35,7 @@ class Basket {
       const image = req.files['image'] ? req.files['image'][0].filename : null;
 
       const { title, description, full_price, basket_price, mininvamount, themename, accuracy, portfolioweightage, cagr, frequency, validity, next_rebalance_date, type, add_by, short_description, rationale, methodology } = req.body;
-
-
+     
       const result = new Basket_Modal({
         title,
         description,
