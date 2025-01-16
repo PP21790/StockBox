@@ -50,7 +50,12 @@ const Editbasket = () => {
         validity: data?.validity ? data?.validity : "",
         next_rebalance_date: data?.next_rebalance_date ? data?.next_rebalance_date : "",
         cagr: data?.cagr,
-        full_price: data?.full_price
+        full_price: data?.full_price,
+        type:data?.type,
+        image:data?.image,
+        short_description:data?.short_description,
+        rationale:data?.rationale,
+        methodology:data?.methodology,
       });
     }
   }, [data]);

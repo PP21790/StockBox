@@ -7,7 +7,7 @@ import { Eye, Trash2, RefreshCcw, SquarePen, IndianRupee, ArrowDownToLine } from
 import Swal from 'sweetalert2';
 import { GetSignallist, GetSignallistWithFilter, DeleteSignal, SignalCloseApi, GetService, GetStockDetail, UpdatesignalReport } from '../../../Services/Admin';
 import { fDateTimeH } from '../../../Utils/Date_formate'
-import { exportToCSV } from '../../../Utils/ExportData';
+import { exportToCSV,exportToWord } from '../../../Utils/ExportData';
 import Select from 'react-select';
 import { Tooltip } from 'antd';
 import { image_baseurl } from '../../../Utils/config';
@@ -33,8 +33,9 @@ const Signal = () => {
     const location = useLocation();
     const clientStatus = location?.state?.clientStatus;
 
-     //state for loading
-     const [isLoading, setIsLoading] = useState(true)
+    //state for loading
+    const [isLoading, setIsLoading] = useState(true)
+
 
 
 
@@ -176,6 +177,8 @@ const Signal = () => {
     const getexportfile = async () => {
         try {
             const response = await GetSignallist(token);
+            console.log("GetSignallist",response);
+            
             if (response.status) {
                 if (response.data?.length > 0) {
                     let filterdata = response.data.filter((item) => item.close_status === false);
@@ -187,6 +190,30 @@ const Signal = () => {
                         EntryDate: fDateTimeH(item?.created_at) || '',
                     }));
                     exportToCSV(csvArr, 'Open Signal');
+                }
+            }
+        } catch (error) {
+            console.log("Error:", error);
+        }
+    }
+
+    const getexportwordfile = async () => {
+        try {
+            const response = await GetSignallist(token);
+            console.log("GetSignallist",response);
+            
+            if (response.status) {
+                if (response.data?.length > 0) {
+                    let filterdata = response.data.filter((item) => item.close_status === false);
+                    const wordData = filterdata.map((item) => ({
+                        Symbol: item.tradesymbol || "",
+                        segment: item?.segment || '',
+                        EntryType: item?.calltype || '',
+                        EntryPrice: item?.price || '',
+                        EntryDate: fDateTimeH(item?.created_at) || '',
+                        expirydate:item?.expirydate || '',
+                    }));
+                    exportToWord(wordData, 'Open_Signal_Word_File');
                 }
             }
         } catch (error) {
@@ -210,6 +237,8 @@ const Signal = () => {
             };
 
             const response = await GetSignallistWithFilter(data, token);
+            console.log("GetSignallistWithFilter",response);
+            
 
             if (response && response.status) {
                 setTotalRows(response.pagination.totalRecords);
@@ -734,7 +763,7 @@ const Signal = () => {
             <div>
                 <div className="page-content">
                     <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                        <div className="breadcrumb-title pe-3">{header}</div> 
+                        <div className="breadcrumb-title pe-3">{header}</div>
                         <div className="ps-3">
                             <nav aria-label="breadcrumb">
                                 <ol className="breadcrumb mb-0 p-0">
@@ -914,10 +943,32 @@ const Signal = () => {
                                         <i className="bx bxs-plus-square" aria-hidden="true" /> Add Signal
                                     </Link>
                                 </div>
-                                <div className="ms-2" onClick={getexportfile}>
+                                {/* <div className="ms-2" onClick={getexportfile}>
                                     <button type="button" className="btn btn-primary float-end" title="Export To Excel">
                                         <i className="bx bxs-download" aria-hidden="true" /> Export-Excel
                                     </button>
+                                </div> */}
+
+                                <div className="ms-2">
+                                    {viewMode === "table" ? (
+                                        <button
+                                            type="button"
+                                            className="btn btn-primary float-end"
+                                            title="Export To Excel"
+                                            onClick={getexportfile}
+                                        >
+                                            <i className="bx bxs-download" aria-hidden="true" /> Export-Excel
+                                        </button>
+                                    ) : (
+                                        <button
+                                            type="button"
+                                            className="btn btn-primary float-end"
+                                            title="Export Card data"
+                                            onClick={getexportwordfile}
+                                        >
+                                            <i className="bx bxs-download" aria-hidden="true" /> Export-Card
+                                        </button>
+                                    )}
                                 </div>
                             </div>
 
@@ -977,39 +1028,39 @@ const Signal = () => {
                             </div>
 
 
-                            {viewMode === "table" ? 
-                            isLoading ? (
-                                <Loader />
-                              ) : (
-                                <>
-                                <Table
-                                    columns={columns}
-                                    data={clients}
-                                    totalRows={totalRows}
-                                    currentPage={currentPage}
-                                    onPageChange={handlePageChange}
-                                />
-                                </>
-                              
-                            ) : (
-                                <div className="row mt-3">
-                                    {clients.map((client, index) => (
-                                        <div className="col-md-12" key={index}>
-                                            <div className="card radius-10 mb-3 border">
-                                                <div className="card-body">
-                                                    <p className='mb-1'><b>Date: {fDateTimeH(client?.created_at)}</b></p>
-                                                    <p className='mb-2'><b>Segment: {client?.segment == "C" ? "CASH" : client?.segment == "O" ? "OPTION" : "FUTURE"}</b></p>
-                                                    <p className='mb-1'> {client?.calltype} {client?.stock}  {client?.expirydate && `${client.expirydate}`} {client?.optiontype && `${client.optiontype}`} {client?.calltype} {client?.entrytype} {client?.price}  Target  {client?.tag1}{client?.tag2 && `/${client.tag2}`}
-                                                        {client?.tag3 && `/${client.tag3}`}  {client?.stoploss && `SL ${client.stoploss}`}
+                            {viewMode === "table" ?
+                                isLoading ? (
+                                    <Loader />
+                                ) : (
+                                    <>
+                                        <Table
+                                            columns={columns}
+                                            data={clients}
+                                            totalRows={totalRows}
+                                            currentPage={currentPage}
+                                            onPageChange={handlePageChange}
+                                        />
+                                    </>
 
-                                                    </p>
+                                ) : (
+                                    <div className="row mt-3">
+                                        {clients.map((client, index) => (
+                                            <div className="col-md-12" key={index}>
+                                                <div className="card radius-10 mb-3 border">
+                                                    <div className="card-body">
+                                                        <p className='mb-1'><b>Date: {fDateTimeH(client?.created_at)}</b></p>
+                                                        <p className='mb-2'><b>Segment: {client?.segment == "C" ? "CASH" : client?.segment == "O" ? "OPTION" : "FUTURE"}</b></p>
+                                                        <p className='mb-1'> {client?.calltype} {client?.stock}  {client?.expirydate && `${client.expirydate}`} {client?.optiontype && `${client.optiontype}`} {client?.calltype} {client?.entrytype} {client?.price}  Target  {client?.tag1}{client?.tag2 && `/${client.tag2}`}
+                                                            {client?.tag3 && `/${client.tag3}`}  {client?.stoploss && `SL ${client.stoploss}`}
 
+                                                        </p>
+
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
+                                        ))}
+                                    </div>
+                                )}
                         </div>
                     </div>
                 </div>
@@ -1457,7 +1508,7 @@ const Signal = () => {
                                                     value={updatetitle.description}
                                                     onChange={(e) => updateServiceTitle({ description: e.target.value })}
                                                 />
-                                            </div> 
+                                            </div>
                                         </div>
 
                                     </form>

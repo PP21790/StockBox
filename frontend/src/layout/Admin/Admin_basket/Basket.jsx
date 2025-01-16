@@ -43,6 +43,8 @@ const Basket = () => {
     try {
       const data = { page: currentPage, search: searchInput || "" }
       const response = await BasketAllList(data, token);
+      console.log("BasketAllList",response);
+      
       if (response.status) {
         setClients(response.data);
         setTotalRows(response.pagination.total);
@@ -262,6 +264,18 @@ const Basket = () => {
       selector: (row) => row.stock_details?.length || 0,
       sortable: true,
       width: "180px",
+    },
+    {
+      name: "Type",
+      selector: (row) => row.type,
+      sortable: true,
+      width: '150px',
+    },
+    {
+      name: "Sort Discription",
+      selector: (row) => row.short_description,
+      sortable: true,
+      width: '250px',
     },
 
     {

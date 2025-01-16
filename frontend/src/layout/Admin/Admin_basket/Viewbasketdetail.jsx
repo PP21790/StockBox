@@ -372,7 +372,7 @@ const Viewbasketdetail = () => {
                         <label>{field.label}</label>
 
                         {/* Special case for description */}
-                        {field.name === "description" ? (
+                        {field.name === "description" || field.name === "rationale" || field.name === "methodology" ?(
                           <div
                             className="form-control basket_img"
                             dangerouslySetInnerHTML={{

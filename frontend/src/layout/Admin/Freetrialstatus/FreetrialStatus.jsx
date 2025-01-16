@@ -45,7 +45,10 @@ const FreetrialStatus = () => {
     try {
       const response = await basicsettinglist(token);
       if (response?.status && response?.data) {
+        
         const defaultTrial = response.data.length > 0 ? response.data[0].freetrial : '1';
+        // console.log("defaultTrial",defaultTrial);
+
         setAddStatus((prevState) => ({ ...prevState, freetrial: defaultTrial }));
         setInitialFreeTrial(defaultTrial);
         setDisableUpdate(true); // Disable the button initially
