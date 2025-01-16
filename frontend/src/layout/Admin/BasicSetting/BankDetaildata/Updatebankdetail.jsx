@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import DynamicForm from "../../../../components/FormicForm";
 import Swal from "sweetalert2";
@@ -13,6 +13,8 @@ const Updatebankdetail = () => {
   const location = useLocation();
   const { row } = location.state;
 
+  const [loading, setLoading] = useState(false);
+
 
   const token = localStorage.getItem("token");
   
@@ -20,16 +22,48 @@ const Updatebankdetail = () => {
   const validate = (values) => {
     let errors = {};
 
+    if (!values.name) {
+        errors.name = "Please Enter Bank Name";
+    }
+    if (/\d/.test(values.name)) {
+        errors.name = "Numbers are not allowed in the Bank Name";
+      }
+    if (!values.branch) {
+        errors.branch = "Please Enter Branch Name";
+    }
+    if (/\d/.test(values.branch)) {
+        errors.branch = "Numbers are not allowed in the Branch Name";
+      }
+      if (!values.accountno) {
+        errors.accountno = "Please Enter Account Number";
+    } else {
+        const accountnoStr = values.accountno.toString(); // Ensure it's a string
+        if (accountnoStr.length < 9) {
+            errors.accountno = "Account Number must be at least 9 digits";
+        } else if (accountnoStr.length > 16) {
+            errors.accountno = "Account Number must not exceed 16 digits";
+        }
+    }
+    
     if (!values.Confirmnumber) {
         errors.Confirmnumber = "Please Confirm Your Account Number";
       } else if (values.accountno !== values.Confirmnumber) {
-        errors.Confirmnumber = "Accout Number Must Match";
+        errors.Confirmnumber = "Account Number Must Match";
       }
+
+    
+    if (!values.ifsc) {
+        errors.ifsc = "Please Enter IFSC Code";
+    }
+    if (!values.image) {
+        errors.image = "Please Select Image";
+    }
 
     return errors;
 };
 
   const onSubmit = async (values) => {
+    setLoading(!loading)
     const req = {
              name: values.name,
             branch: values.branch,
@@ -60,8 +94,10 @@ const Updatebankdetail = () => {
           timer: 1500,
           timerProgressBar: true,
         });
+        setLoading(false)
       }
     } catch (error) {
+      setLoading(false)
       Swal.fire({
         title: "Error",
         text: "An unexpected error occurred. Please try again later.",
@@ -153,6 +189,7 @@ const Updatebankdetail = () => {
         btn_name1="Cancel"
         formik={formik}
         sumit_btn={true}
+        btnstatus={loading}
         btn_name1_route={"/admin/bankdetail"}
         additional_field={<></>}
       />
