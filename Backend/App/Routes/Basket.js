@@ -16,7 +16,7 @@ const PERMISSIONS = {
 };
 
 
-router.post('/basket/add', upload.single('image'), AddBasket);
+router.post('/basket/add', AddBasket);
 router.post('/basket/list', getBasket);
 router.put('/basket/update', updateBasket);
 router.get('/basket/delete/:id', deleteBasket);

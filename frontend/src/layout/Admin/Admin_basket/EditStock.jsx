@@ -12,7 +12,7 @@ import * as Config from "../../../Utils/config";
 
 const EditStock = () => {
     const location = useLocation();
-    console.log("location", location);
+
 
     const { stock } = location.state || {};
     const [selectedServices, setSelectedServices] = useState([]);
@@ -22,7 +22,7 @@ const EditStock = () => {
     const [formValues, setFormValues] = useState({});
     const [weightagecounting, setWeightagecounting] = useState(0);
     const [currentlocation, setCurrentlocation] = useState({})
-    console.log("currentlocation", currentlocation);
+
 
 
 
@@ -31,8 +31,7 @@ const EditStock = () => {
 
     useEffect(() => {
         if (location?.state) {
-            // location.state se 'Key' ko extract karna
-            setCurrentlocation(location?.state?.Key); // Correct key name as per your data
+            setCurrentlocation(location?.state?.Key);
         }
     }, [location]);
 
@@ -252,13 +251,12 @@ const EditStock = () => {
                 "error"
             );
         } finally {
-            setLoading(false); // Ensure loading is stopped
+            setLoading(false);
         }
     };
 
 
     useEffect(() => {
-        // console.log("formValues", formValues)
         if (formValues) {
             const newWeightage = Object.values(formValues).reduce((sum, stock) => sum + Number(stock.weightage || 0), 0);
             setWeightagecounting(newWeightage);
@@ -325,7 +323,7 @@ const EditStock = () => {
                         placeholder="Search and select stocks..."
                         isClearable
                         isMulti
-                        isLoading={loading} // Show loader while loading
+                        isLoading={loading}
                         noOptionsMessage={() => (loading ? "Loading..." : "No options found")}
                     />
 
@@ -398,7 +396,7 @@ const EditStock = () => {
                         type="button"
                         className="btn btn-primary mt-4"
                         onClick={() => handleSubmit(0)}
-                        disabled={loading} // Disable button if loading is true
+                        disabled={loading}
                     >
                         {loading ? "Submitting..." : "Submit"}
                     </button>
@@ -406,7 +404,7 @@ const EditStock = () => {
                         type="button"
                         className="btn btn-primary mt-4 ms-2"
                         onClick={() => handleSubmit(1)}
-                        disabled={loading} // Disable button if loading is true
+                        disabled={loading}
                     >
                         {loading ? "Publishing..." : "Submit & Publish"}
                     </button>

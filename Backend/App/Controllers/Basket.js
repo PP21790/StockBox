@@ -21,6 +21,7 @@ class Basket {
     try {
 
 
+
       await new Promise((resolve, reject) => {
         upload('basket').fields([{ name: 'image', maxCount: 1 }])(req, res, (err) => {
           if (err) {
@@ -33,6 +34,8 @@ class Basket {
 
 
       const image = req.files['image'] ? req.files['image'][0].filename : null;
+      console.log("image", image)
+
 
       const { title, description, full_price, basket_price, mininvamount, themename, accuracy, portfolioweightage, cagr, frequency, validity, next_rebalance_date, type, add_by, short_description, rationale, methodology } = req.body;
 
@@ -51,13 +54,12 @@ class Basket {
         next_rebalance_date,
         full_price,
         type,
-        //image,
+        image,
         short_description,
         rationale,
         methodology
 
       });
-
 
       await result.save();
 
@@ -67,7 +69,7 @@ class Basket {
         data: result,
       });
     } catch (error) {
-      // console.log("Error adding Basket:", error);
+      console.log("Error adding Basket:", error);
 
       return res.status(500).json({
         status: false,
