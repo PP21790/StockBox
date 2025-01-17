@@ -24,12 +24,15 @@ import {
 } from "../../../Services/Admin";
 import { fDateTimeSuffix, fDateTimeH } from "../../../Utils/Date_formate";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
-import { exportToCSV, exportToWord,exportToSingleLineCSV } from "../../../Utils/ExportData";
+import { exportToCSV, exportToCSV1 } from "../../../Utils/ExportData";
 import Select from "react-select";
 import { Tooltip } from "antd";
 import { image_baseurl } from "../../../Utils/config";
 
 const Closesignal = () => {
+
+
+
   const [activeTab, setActiveTab] = useState("table");
 
   const token = localStorage.getItem("token");
@@ -139,48 +142,9 @@ const Closesignal = () => {
     }
   };
 
-  // const getexportwordfile = async () => {
-  //   try {
-  //     const response = await GetSignallist(token);
-  //     if (response.status) {
-  //       if (response.data?.length > 0) {
-  //         let filterdata = response.data.filter(
-  //           (item) => item.close_status === true
-  //         );
-  //         const wordData = filterdata.map((item) => {
-  //           let profitAndLoss = 0;
-  //           if (item.calltype === "BUY") {
-  //             profitAndLoss = (
-  //               (item.closeprice - item.price) *
-  //               item.lotsize
-  //             ).toFixed(2);
-  //           } else if (item.calltype === "SELL") {
-  //             profitAndLoss = (
-  //               (item.price - item.closeprice) *
-  //               item.lotsize
-  //             ).toFixed(2);
-  //           }
 
-  //           return {
-  //             Symbol: item.tradesymbol || "",
-  //             segment: item?.segment || "",
-  //             EntryType: item?.calltype || "",
-  //             EntryPrice: item?.price || "",
-  //             ExitPrice: item?.closeprice || "",
-  //             ProfitAndLoss: profitAndLoss || "",
-  //             EntryDate: fDateTimeH(item?.created_at) || "",
-  //             ExitDate: fDateTimeH(item?.closedate) || "",
-  //           };
-  //         });
-  //         exportToWord(wordData, "Close_Signal");
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.log("Error:", error);
-  //   }
-  // };
 
-  const getexportwordfile = async () => {
+  const getexportfile1 = async () => {
     try {
       const response = await GetSignallist(token);
       if (response.status) {
@@ -188,38 +152,56 @@ const Closesignal = () => {
           let filterdata = response.data.filter(
             (item) => item.close_status === true
           );
-          const csvArr1 = filterdata.map((item) => {
-            let profitAndLoss = 0;
+          const csvArr = filterdata.map((item) => {
+            let profitAndLossPercentage = 0;
             if (item.calltype === "BUY") {
-              profitAndLoss = (
-                (item.closeprice - item.price) *
-                item.lotsize
+              profitAndLossPercentage = (
+                ((item.closeprice - item.price) / item.price) *
+                100
               ).toFixed(2);
             } else if (item.calltype === "SELL") {
-              profitAndLoss = (
-                (item.price - item.closeprice) *
-                item.lotsize
+              profitAndLossPercentage = (
+                ((item.price - item.closeprice) / item.price) *
+                100
               ).toFixed(2);
             }
 
+            const entryType = `BUY POSITION CLOSED IN ${item.tradesymbol || ""} ${item.expirydate || ""
+              } ${item.optiontype || ""} SL ${item.stoploss || ""}, ${(() => {
+                const count = [item.tag1, item.tag2, item.tag3].filter(Boolean).length;
+                return count === 1
+                  ? "1st"
+                  : count === 2
+                    ? "2nd"
+                    : count === 3
+                      ? "3rd"
+                      : "";
+              })()
+              } Target Achieved Exit Price ${item?.closeprice}`;
+
             return {
-              Symbol: item.tradesymbol || "",
-              segment: item?.segment || "",
-              EntryType: item?.calltype || "",
-              EntryPrice: item?.price || "",
-              ExitPrice: item?.closeprice || "",
-              ProfitAndLoss: profitAndLoss || "",
-              EntryDate: fDateTimeH(item?.created_at) || "",
-              ExitDate: fDateTimeH(item?.closedate) || "",
-            };
+              CloseSignal: `${fDateTimeH(item?.created_at)}\n\nSegment: ${item.segment === "C"
+                ? "CASH"
+                : item.segment === "O"
+                  ? "OPTION"
+                  : item.segment === "F"
+                    ? "FUTURE"
+                    : ""
+                } \n\nP/L: ${profitAndLossPercentage}% \n\nEntry Type: ${entryType}`,
+            }
           });
-          exportToSingleLineCSV(csvArr1, "Close_Signal");
+          exportToCSV1(csvArr, "Close Signal");
         }
       }
     } catch (error) {
       console.log("Error:", error);
     }
   };
+
+
+
+
+
 
   const getAllSignal = async () => {
     try {
@@ -710,9 +692,10 @@ const Closesignal = () => {
                       type="button"
                       className="btn btn-primary float-end"
                       title="Export Card data"
-                      onClick={getexportwordfile}
+                      onClick={getexportfile1}
+
                     >
-                      <i className="bx bxs-download" aria-hidden="true" /> Export-Card
+                      <i className="bx bxs-download" aria-hidden="true" /> Export-Excel
                     </button>
                   )}
                 </div>

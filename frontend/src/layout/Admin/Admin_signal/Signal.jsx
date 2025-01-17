@@ -7,7 +7,7 @@ import { Eye, Trash2, RefreshCcw, SquarePen, IndianRupee, ArrowDownToLine } from
 import Swal from 'sweetalert2';
 import { GetSignallist, GetSignallistWithFilter, DeleteSignal, SignalCloseApi, GetService, GetStockDetail, UpdatesignalReport } from '../../../Services/Admin';
 import { fDateTimeH } from '../../../Utils/Date_formate'
-import { exportToCSV,exportToWord } from '../../../Utils/ExportData';
+import { exportToCSV, exportToCSV1 } from '../../../Utils/ExportData';
 import Select from 'react-select';
 import { Tooltip } from 'antd';
 import { image_baseurl } from '../../../Utils/config';
@@ -177,8 +177,8 @@ const Signal = () => {
     const getexportfile = async () => {
         try {
             const response = await GetSignallist(token);
-            console.log("GetSignallist",response);
-            
+            console.log("GetSignallist", response);
+
             if (response.status) {
                 if (response.data?.length > 0) {
                     let filterdata = response.data.filter((item) => item.close_status === false);
@@ -197,29 +197,39 @@ const Signal = () => {
         }
     }
 
-    const getexportwordfile = async () => {
+
+    const getexportfile1 = async () => {
         try {
             const response = await GetSignallist(token);
-            console.log("GetSignallist",response);
-            
             if (response.status) {
                 if (response.data?.length > 0) {
-                    let filterdata = response.data.filter((item) => item.close_status === false);
-                    const wordData = filterdata.map((item) => ({
-                        Symbol: item.tradesymbol || "",
-                        segment: item?.segment || '',
-                        EntryType: item?.calltype || '',
-                        EntryPrice: item?.price || '',
-                        EntryDate: fDateTimeH(item?.created_at) || '',
-                        expirydate:item?.expirydate || '',
-                    }));
-                    exportToWord(wordData, 'Open_Signal_Word_File');
+                    let filterdata = response.data.filter(
+                        (item) => item.close_status === false
+                    );
+                    const csvArr = filterdata.map((item) => {
+
+                        const entryType = `${item?.calltype} ${item?.stock} ${item?.expirydate ? `Expiry: ${item.expirydate}` : ""} ${item?.optiontype ? `Option: ${item.optiontype}` : ""} Entry Type: ${item?.entrytype} Price: ${item?.price} Target: ${item?.tag1} ${item?.tag2 ? `/${item.tag2}` : ""} ${item?.tag3 ? `/${item.tag3}` : ""} Stop Loss: ${item?.stoploss}`;
+
+                        return {
+                            OpenSignal: `${fDateTimeH(item?.created_at)}\n\nSegment: ${item.segment === "C"
+                                ? "CASH"
+                                : item.segment === "O"
+                                    ? "OPTION"
+                                    : item.segment === "F"
+                                        ? "FUTURE"
+                                        : ""
+                                } \n\nEntry Type: ${entryType}`
+                        };
+                    });
+                    exportToCSV1(csvArr, "Open Signal");
                 }
             }
         } catch (error) {
             console.log("Error:", error);
         }
-    }
+    };
+
+
 
 
 
@@ -237,8 +247,8 @@ const Signal = () => {
             };
 
             const response = await GetSignallistWithFilter(data, token);
-            console.log("GetSignallistWithFilter",response);
-            
+            console.log("GetSignallistWithFilter", response);
+
 
             if (response && response.status) {
                 setTotalRows(response.pagination.totalRecords);
@@ -964,9 +974,9 @@ const Signal = () => {
                                             type="button"
                                             className="btn btn-primary float-end"
                                             title="Export Card data"
-                                            onClick={getexportwordfile}
+                                            onClick={getexportfile1}
                                         >
-                                            <i className="bx bxs-download" aria-hidden="true" /> Export-Card
+                                            <i className="bx bxs-download" aria-hidden="true" /> Export-Excel
                                         </button>
                                     )}
                                 </div>
