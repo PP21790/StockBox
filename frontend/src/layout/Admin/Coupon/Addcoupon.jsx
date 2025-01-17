@@ -68,9 +68,27 @@ const Addcoupon = () => {
         if (!values.type) {
             errors.type = "Please Enter Type";
         }
+        // Check if type is selected
+    if (!values.type) {
+        errors.type = "Please select a type"; // Adding validation for type
+    }
+
+    // If the type is "fixed", check if value is provided for fixed discount
+    if (values.type === "fixed") {
         if (!values.value) {
-            errors.value = "Please Enter Value";
+            errors.value = "Please Enter Value for Fixed Discount";
         }
+    }
+
+    // If the type is "percentage", check if value is provided for percentage discount
+    if (values.type === "percentage") {
+        if (!values.value) {
+            errors.value = "Please Enter Value for Percentage Discount";
+        } else if (isNaN(values.value) || values.value <= 0 || values.value > 100) {
+            errors.value = "Percentage Discount must be between 1 and 100";
+        }
+    }
+        
         if (!values.startdate) {
             errors.startdate = "Please Enter Start Date";
         }
@@ -201,7 +219,7 @@ const Addcoupon = () => {
 
         {
             name: "value",
-            label: "Percent/Fixed Discount",
+            label: "Fixed Discount",
             type: "number",
             label_size: 12,
             col_size: 6,
@@ -211,7 +229,7 @@ const Addcoupon = () => {
         },
         {
             name: "value",
-            label: "Percentage/Fixed Discount",
+            label: "Percentage Discount",
             type: "text4",
             label_size: 12,
             col_size: 6,
