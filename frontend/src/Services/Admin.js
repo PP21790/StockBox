@@ -677,28 +677,9 @@ export async function getstaffperuser(_id, token) {
 }
 
 
-// basket
-// add basket 
-
-// export async function Addbasketplan(data, token) {
-//     try {
-//         const res = await axios.post(`${Config.base_url}basket/add`, data, {
-//             headers: {
-//                 data: {},
-//                 'Authorization': `${token}`,
-//             },
-//         });
-
-//         return res?.data;
-//     } catch (err) {
-//         return err.response?.data || err.message;
-//     }
-// }
-
-
+// basket  
 
 export async function Addbasketplan(data, token) {
-    console.log("data", data)
     const formData = new FormData();
     formData.append('title', data.title);
     formData.append('description', data.description);

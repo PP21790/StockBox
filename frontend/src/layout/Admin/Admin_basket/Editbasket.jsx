@@ -4,6 +4,7 @@ import DynamicForm from '../../../components/FormicForm';
 import Swal from 'sweetalert2';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Updatebasket, Viewbasket } from '../../../Services/Admin';
+import { image_baseurl } from '../../../Utils/config';
 
 
 const Editbasket = () => {
@@ -51,11 +52,11 @@ const Editbasket = () => {
         next_rebalance_date: data?.next_rebalance_date ? data?.next_rebalance_date : "",
         cagr: data?.cagr,
         full_price: data?.full_price,
-        type:data?.type,
-        image:data?.image,
-        short_description:data?.short_description,
-        rationale:data?.rationale,
-        methodology:data?.methodology,
+        type: data?.type,
+        image: data?.image,
+        short_description: data?.short_description,
+        rationale: data?.rationale,
+        methodology: data?.methodology,
       });
     }
   }, [data]);
@@ -101,13 +102,13 @@ const Editbasket = () => {
     if (!values.cagr) {
       errors.cagr = "Please Enter CAGR";
     }
-    if(!values.type){
+    if (!values.type) {
       errors.type = "Please Enter type";
     }
-    if(!values.image){
+    if (!values.image) {
       errors.image = "Please Upload image";
     }
-    if(!values.short_description){
+    if (!values.short_description) {
       errors.short_description = "Please Enter Short Description";
     }
     if (!values.rationale) {
@@ -135,11 +136,11 @@ const Editbasket = () => {
       next_rebalance_date: values.next_rebalance_date,
       cagr: values.cagr,
       full_price: values.full_price || 0,
-      type:values.type,
-      image:values.image,
-      short_description:values.short_description,
-      rationale:values.rationale,
-      methodology:values.methodology
+      type: values.type,
+      image: values.image,
+      short_description: values.short_description,
+      rationale: values.rationale,
+      methodology: values.methodology
     };
 
 
@@ -193,11 +194,11 @@ const Editbasket = () => {
       next_rebalance_date: "",
       cagr: "",
       full_price: "",
-      type:"",
-      image:"",
-      short_description:"",
-      rationale:"",
-      methodology:"",
+      type: "",
+      image: "",
+      short_description: "",
+      rationale: "",
+      methodology: "",
     },
     validate,
     onSubmit,
@@ -317,26 +318,29 @@ const Editbasket = () => {
       ],
       star: true
     },
-    
-  {
-    name: "short_description",
-    label: "Short Discription",
-    type: "text",
-    label_size: 12,
-    col_size: 6,
-    disable: false,
-    star: true
-  },
-  {
-    name: "image",
-    label: "Upload Image",
-    type: "file3", 
-    image: true,
-    label_size: 12,
-    col_size: 6,
-    disable: false,
-    star:true
-},
+
+    {
+      name: "short_description",
+      label: "Short Discription",
+      type: "text",
+      label_size: 12,
+      col_size: 6,
+      disable: false,
+      star: true
+    },
+    {
+      name: "image",
+      label: "Upload Image",
+      type: "file3",
+      label_size: 12,
+      col_size: 6,
+      disable: false,
+      image: true,
+      imageWidth: "60px",
+      imageHeight: "auto",
+      src: `${image_baseurl}/uploads/basket/${data.image}`,
+      star: true
+    },
     {
       name: "description",
       label: "Description",

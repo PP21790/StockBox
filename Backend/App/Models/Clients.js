@@ -20,8 +20,8 @@ const clientsModel = new Schema({
         required: true,
         trim: true,
         validate: {
-            validator: function(v) {
-                return /\d{10}/.test(v); // ensures exactly 10 digits
+            validator: function (v) {
+                return /\d{10}/.test(v);
             },
             message: props => `${props.value} is not a valid phone number!`
         },
@@ -93,7 +93,7 @@ const clientsModel = new Schema({
         default: 0
     },
     tradingstatus: {
-        type: Number, 
+        type: Number,
         enum: [1, 0],
         default: 0
     },
@@ -103,22 +103,22 @@ const clientsModel = new Schema({
         min: 0
     },
     del: {
-        type: Number, 
+        type: Number,
         enum: [1, 0],
         default: 0
     },
     clientcome: {
-        type: Number, 
+        type: Number,
         enum: [1, 0],
         default: 0
     },
     ActiveStatus: {
-        type: Number, 
+        type: Number,
         enum: [1, 0],
         default: 0
     },
     freetrial: {
-        type: Number, 
+        type: Number,
         enum: [1, 0],
         default: 0
     },
@@ -171,9 +171,9 @@ const clientsModel = new Schema({
     },
     deliverystatus: {
         type: Boolean,
-        default: false 
+        default: false
     },
-     hserverid: {
+    hserverid: {
         type: String,
         trim: true,
         default: null
