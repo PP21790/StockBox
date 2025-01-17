@@ -12,8 +12,8 @@ import * as Config from "../../../Utils/config";
 
 const EditStock = () => {
     const location = useLocation();
-    console.log("location",location);
-    
+    console.log("location", location);
+
     const { stock } = location.state || {};
     const [selectedServices, setSelectedServices] = useState([]);
     const [options, setOptions] = useState([]);
@@ -22,21 +22,22 @@ const EditStock = () => {
     const [formValues, setFormValues] = useState({});
     const [weightagecounting, setWeightagecounting] = useState(0);
     const [currentlocation, setCurrentlocation] = useState({})
-    console.log("currentlocation",currentlocation);
-    
-    
+    console.log("currentlocation", currentlocation);
+
+
+
 
     const navigate = useNavigate();
 
     useEffect(() => {
         if (location?.state) {
-          // location.state se 'Key' ko extract karna
-          setCurrentlocation(location?.state?.Key); // Correct key name as per your data
+            // location.state se 'Key' ko extract karna
+            setCurrentlocation(location?.state?.Key); // Correct key name as per your data
         }
-      }, [location]);
-    
-      const redirectTo = (currentlocation === "editStock") ? "/admin/basket/basketstockpublish" : "/admin/basket";
-    
+    }, [location]);
+
+    const redirectTo = (currentlocation === "editStock") ? "/admin/basket/basketstockpublish" : "/admin/basket";
+
 
 
 
@@ -179,72 +180,64 @@ const EditStock = () => {
 
 
     const handleSubmit = async (status) => {
-        if (Object.keys(formValues).length === 0) {
-            Swal.fire("Error", "Stock is required for edit", "warning");
-            return;
-        }
+        setLoading(true);
+        try {
+            if (Object.keys(formValues).length === 0) {
+                Swal.fire("Error", "Stock is required for edit", "warning");
+                return;
+            }
 
-        const invalidStocks = Object.values(formValues).filter(
-            (stock) => Number(stock.weightage || 0) <= 0
-        );
-
-       
-            
-
-        if (invalidStocks.length > 0) {
-            Swal.fire(
-                "Error",
-                "Each stock's weightage should be greater than zero.",
-                "error"
-            );
-            return;
-        }
-
-
-        const totalWeightage = Object.values(formValues).reduce(
-            (sum, stock) => sum + Number(stock.weightage || 0),
-            0
-        );
-
-        if (totalWeightage !== 100) {
-            Swal.fire(
-                "Error",
-                "Total weightage of all stocks must be exactly 100.",
-                "error"
-            );
-            return;
-        }
-        
-        const emptyType = Object.values(formValues).filter(
-            (stock) => stock.type === ""
+            const invalidStocks = Object.values(formValues).filter(
+                (stock) => Number(stock.weightage || 0) <= 0
             );
 
-            if(emptyType.length>0){
+            if (invalidStocks.length > 0) {
                 Swal.fire(
-                    "Warning",
-                    "Please select type.",
-                    "warning"
+                    "Error",
+                    "Each stock's weightage should be greater than zero.",
+                    "error"
                 );
                 return;
             }
 
+            const totalWeightage = Object.values(formValues).reduce(
+                (sum, stock) => sum + Number(stock.weightage || 0),
+                0
+            );
 
-        const stocksWithStatus = Object.values(formValues).map((stock) => ({
-            ...stock,
-            status,
-            percentage: stock.weightage,
-        }));
+            if (totalWeightage !== 100) {
+                Swal.fire(
+                    "Error",
+                    "Total weightage of all stocks must be exactly 100.",
+                    "error"
+                );
+                return;
+            }
 
-        const version = stock && stock[0]?.version ? stock[0].version : "";
+            const emptyType = Object.values(formValues).filter(
+                (stock) => stock.type === ""
+            );
 
-        const requestData = {
-            basket_id: stock[0]?.basket_id || "",
-            stocks: stocksWithStatus,
-            version,
-            publishstatus: status === 0 ? false : status === 1 ? true : "",
-        };
+            if (emptyType.length > 0) {
+                Swal.fire("Warning", "Please select type.", "warning");
+                return;
+            }
 
-        try {
+            const stocksWithStatus = Object.values(formValues).map((stock) => ({
+                ...stock,
+                status,
+                percentage: stock.weightage,
+            }));
+
+            const version = stock && stock[0]?.version ? stock[0].version : "";
+
+            const requestData = {
+                basket_id: stock[0]?.basket_id || "",
+                stocks: stocksWithStatus,
+                version,
+                publishstatus: status === 0 ? false : status === 1 ? true : "",
+            };
+
             const response = await updateStockList(requestData);
             if (response?.status) {
                 Swal.fire("Success", response.message, "success");
@@ -258,8 +251,11 @@ const EditStock = () => {
                 "An unexpected error occurred. Please try again.",
                 "error"
             );
+        } finally {
+            setLoading(false); // Ensure loading is stopped
         }
     };
+
 
     useEffect(() => {
         // console.log("formValues", formValues)
@@ -305,7 +301,7 @@ const EditStock = () => {
                     </Link> */}
 
                     <div >
-                        <Tooltip title="Back" onClick={()=>window.history.back()}>
+                        <Tooltip title="Back" onClick={() => window.history.back()}>
                             <i
                                 className="lni lni-arrow-left-circle"
                                 style={{ fontSize: "2rem", color: "#000" }}
@@ -325,18 +321,14 @@ const EditStock = () => {
                         onInputChange={setInputValue}
                         options={options}
                         onChange={handleServiceChange}
-                        // defaultValue={selectedServices}
-                        value={selectedServices.filter(
-                            (service) => !service.weightage
-                        )}
+                        value={selectedServices.filter((service) => !service.weightage)}
                         placeholder="Search and select stocks..."
                         isClearable
                         isMulti
-                        isLoading={loading}
-                        noOptionsMessage={() =>
-                            loading ? "Loading..." : "No options found"
-                        }
+                        isLoading={loading} // Show loader while loading
+                        noOptionsMessage={() => (loading ? "Loading..." : "No options found")}
                     />
+
                     <div className="row">
                         <div className="col-md-6"></div>
                         <div className="col-md-6 text-end">
@@ -391,7 +383,7 @@ const EditStock = () => {
                                         className="form-control"
                                         value={formValues[service.value]?.type || ""}
                                         onChange={(e) => handleInputChange(e, service.value, "type")}
-                                        
+
                                     >
                                         <option value="">Select Type</option>
                                         <option value="Large Cap">Large Cap</option>
@@ -406,16 +398,19 @@ const EditStock = () => {
                         type="button"
                         className="btn btn-primary mt-4"
                         onClick={() => handleSubmit(0)}
+                        disabled={loading} // Disable button if loading is true
                     >
-                        Submit
+                        {loading ? "Submitting..." : "Submit"}
                     </button>
                     <button
                         type="button"
                         className="btn btn-primary mt-4 ms-2"
                         onClick={() => handleSubmit(1)}
+                        disabled={loading} // Disable button if loading is true
                     >
-                        Submit & Publish
+                        {loading ? "Publishing..." : "Submit & Publish"}
                     </button>
+
                 </div>
             </div>
         </div>
