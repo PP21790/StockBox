@@ -180,14 +180,14 @@ const Closesignal = () => {
               } Target Achieved Exit Price ${item?.closeprice}`;
 
             return {
-              CloseSignal: `${fDateTimeH(item?.created_at)}\n\nSegment: ${item.segment === "C"
+              CloseSignal: `${fDateTimeH(item?.created_at)}\nSegment: ${item.segment === "C"
                 ? "CASH"
                 : item.segment === "O"
                   ? "OPTION"
                   : item.segment === "F"
                     ? "FUTURE"
                     : ""
-                } \n\nP/L: ${profitAndLossPercentage}% \n\nEntry Type: ${entryType}`,
+                } \nP/L: ${profitAndLossPercentage}% \n\nEntry Type: ${entryType}`,
             }
           });
           exportToCSV1(csvArr, "Close Signal");

@@ -317,16 +317,7 @@ const Editbasket = () => {
       ],
       star: true
     },
-    {
-      name: "image",
-      label: "Upload Image",
-      type: "file2",
-      image: true,
-      label_size: 12,
-      col_size: 6,
-      disable: false,
-      star:true
-  },
+    
   {
     name: "short_description",
     label: "Short Discription",
@@ -336,6 +327,16 @@ const Editbasket = () => {
     disable: false,
     star: true
   },
+  {
+    name: "image",
+    label: "Upload Image",
+    type: "file3", 
+    image: true,
+    label_size: 12,
+    col_size: 6,
+    disable: false,
+    star:true
+},
     {
       name: "description",
       label: "Description",
