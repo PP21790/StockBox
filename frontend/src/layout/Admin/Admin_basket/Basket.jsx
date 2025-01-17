@@ -5,7 +5,6 @@ import Swal from "sweetalert2";
 import { Tooltip } from 'antd';
 // import Table from "../../../components/Table";
 import Table from '../../../components/Table1';
-
 import { BasketAllList, deletebasket, Basketstatus, changestatusrebalance, getstocklistById } from "../../../Services/Admin";
 import { fDate } from "../../../Utils/Date_formate";
 import Loader from '../../../Utils/Loader';
@@ -43,8 +42,8 @@ const Basket = () => {
     try {
       const data = { page: currentPage, search: searchInput || "" }
       const response = await BasketAllList(data, token);
-      console.log("BasketAllList",response);
-      
+      console.log("BasketAllList", response);
+
       if (response.status) {
         setClients(response.data);
         setTotalRows(response.pagination.total);
@@ -290,7 +289,7 @@ const Basket = () => {
                 <RotateCcw
                   checked={row.status}
                   onClick={(event) => handleSwitchChange(event, row._id)} />
-              </Link> 
+              </Link>
             </Tooltip> : ""}
           {row.stock_details?.length <= 0 ?
             <Tooltip title="Add Stock">

@@ -778,8 +778,6 @@ export async function Updatebasket(data, token) {
     formData.append('basket_price', data.basket_price);
     formData.append('mininvamount', data.mininvamount);
     formData.append('themename', data.themename);
-    formData.append('accuracy', data.accuracy);
-    formData.append('portfolioweightage', data.portfolioweightage);
     formData.append('cagr', data.cagr);
     formData.append('frequency', data.frequency);
     formData.append('validity', data.validity);
@@ -788,7 +786,6 @@ export async function Updatebasket(data, token) {
     formData.append('id', data.id);
     formData.append('short_description', data.short_description);
     formData.append('image', data.image);
-
     formData.append('rationale', data.rationale);
     formData.append('methodology', data.methodology);
 
