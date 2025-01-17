@@ -7,7 +7,7 @@ import { Eye, Trash2, RefreshCcw, SquarePen, IndianRupee, ArrowDownToLine } from
 import Swal from 'sweetalert2';
 import { GetSignallist, GetSignallistWithFilter, DeleteSignal, SignalCloseApi, GetService, GetStockDetail, UpdatesignalReport } from '../../../Services/Admin';
 import { fDateTimeH } from '../../../Utils/Date_formate'
-import { exportToCSV,exportToWord } from '../../../Utils/ExportData';
+import { exportToCSV,exportToWord,exportToSingleLineCSV } from '../../../Utils/ExportData';
 import Select from 'react-select';
 import { Tooltip } from 'antd';
 import { image_baseurl } from '../../../Utils/config';
@@ -213,7 +213,7 @@ const Signal = () => {
                         EntryDate: fDateTimeH(item?.created_at) || '',
                         expirydate:item?.expirydate || '',
                     }));
-                    exportToWord(wordData, 'Open_Signal_Word_File');
+                    exportToSingleLineCSV(wordData, 'Open_Signal_Word_File');
                 }
             }
         } catch (error) {

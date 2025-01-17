@@ -265,18 +265,18 @@ const Basket = () => {
       sortable: true,
       width: "180px",
     },
-    {
-      name: "Type",
-      selector: (row) => row.type,
-      sortable: true,
-      width: '150px',
-    },
-    {
-      name: "Sort Discription",
-      selector: (row) => row.short_description,
-      sortable: true,
-      width: '250px',
-    },
+    // {
+    //   name: "Type",
+    //   selector: (row) => row.type,
+    //   sortable: true,
+    //   width: '150px',
+    // },
+    // {
+    //   name: "Sort Discription",
+    //   selector: (row) => row.short_description,
+    //   sortable: true,
+    //   width: '250px',
+    // },
 
     {
       name: "Actions",

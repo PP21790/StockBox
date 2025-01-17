@@ -37,16 +37,17 @@ export const exportToSingleLineCSV = (apiData, fileName) => {
 
     // Map API data to an array of arrays with line breaks
     const aoa = apiData.map(item => [
-        `Date: ${item.EntryDate || ''}\n` +
-        `Segment: ${item.segment || ''}\n` +
+        `Date: ${item.EntryDate || ''}\n` + // Date ke baad line break
+        `Segment: ${item.segment || ''}\n` + // Segment ko next line mein daalein
         `Stock Name: ${item.Symbol || ''} | Entry Type: ${item.EntryType || ''} | Entry Price: ${item.EntryPrice || ''}`
     ]);
 
     // Dynamically calculate column width based on data
     const wscols = aoa[0] ? aoa[0].map(() => ({ wpx: 1000 })) : [{ wpx: 1000 }];
     
-    // Set row height
-    const rowHeight = 30;
+    // Set row height (adjust this according to the content)
+    const rowHeight = 60;
+    
     const rowConfig = aoa.map(() => ({ hpx: rowHeight }));
 
     // Create worksheet from array of arrays
@@ -75,6 +76,8 @@ export const exportToSingleLineCSV = (apiData, fileName) => {
     const data = new Blob([excelBuffer], { type: fileType1 });
     FileSaver.saveAs(data, fileName + fileExtension1);
 };
+
+
 
 
 
