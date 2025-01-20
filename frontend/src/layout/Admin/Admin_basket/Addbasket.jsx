@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import DynamicForm from '../../../components/FormicForm';
 import Swal from 'sweetalert2';
@@ -13,6 +13,9 @@ const AddBasket = () => {
 
   const user_id = localStorage.getItem("id");
   const token = localStorage.getItem("token");
+
+  const [loading, setLoading] = useState(false); 
+  
 
   const validate = (values) => {
     let errors = {};
@@ -84,7 +87,7 @@ const AddBasket = () => {
   };
 
   const onSubmit = async (values) => {
-
+    setLoading(!loading)
     const req = {
       title: values.title,
       add_by: user_id,
@@ -127,8 +130,10 @@ const AddBasket = () => {
           timer: 1500,
           timerProgressBar: true,
         });
+        setLoading(false)
       }
     } catch (error) {
+      setLoading(false)
       Swal.fire({
         title: "Error",
         text: "An unexpected error occurred. Please try again later.",
@@ -136,6 +141,8 @@ const AddBasket = () => {
         timer: 1500,
         timerProgressBar: true,
       });
+    }finally {
+      setLoading(false);
     }
   };
 
@@ -337,6 +344,7 @@ const AddBasket = () => {
         btn_name="Add Basket"
         btn_name1="Cancel"
         sumit_btn={true}
+        btnstatus={loading}
         btn_name1_route={"/admin/basket"}
         additional_field={<></>}
 
