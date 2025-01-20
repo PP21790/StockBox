@@ -14,7 +14,7 @@ const AddBasket = () => {
   const user_id = localStorage.getItem("id");
   const token = localStorage.getItem("token");
 
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
   
 
   const validate = (values) => {
@@ -141,8 +141,6 @@ const AddBasket = () => {
         timer: 1500,
         timerProgressBar: true,
       });
-    }finally {
-      setLoading(false);
     }
   };
 
