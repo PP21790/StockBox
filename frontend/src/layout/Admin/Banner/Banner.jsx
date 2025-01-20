@@ -22,6 +22,10 @@ const Banner = () => {
     //state for loading
     const [isLoading, setIsLoading] = useState(true)
 
+    const [isSubmitting, setIsButtonDisabled] = useState(false);
+
+    const [isAddSubmittion,setIsAddSubmittion] = useState(false);
+
 
     const [updatetitle, setUpdatetitle] = useState({
         title: "",
@@ -79,6 +83,10 @@ const Banner = () => {
 
     // Update service
     const updatebanner = async () => {
+        if (isSubmitting) return; // Prevent multiple submissions
+        
+
+        setIsButtonDisabled(true); // Set the state to indicate that the process is running
         try {
             const data = { id: serviceid._id, image: updatetitle.image, hyperlink: updatetitle.hyperlink };
 
@@ -112,6 +120,9 @@ const Banner = () => {
                 confirmButtonText: 'Try Again',
             });
         }
+        finally {
+            setIsButtonDisabled(false); // Re-enable the button after the update process is done
+        }
     };
 
 
@@ -120,6 +131,10 @@ const Banner = () => {
 
     // Add service
     const AddBanner = async () => {
+        if (isAddSubmittion) return; // Prevent multiple submissions
+        
+
+        setIsAddSubmittion(true); // Set the state to indicate that the process is running
         try {
             const data = { title: title.title, description: title.description, image: title.image, add_by: userid, hyperlink: title.hyperlink };
 
@@ -158,6 +173,9 @@ const Banner = () => {
                 icon: 'error',
                 confirmButtonText: 'Try Again',
             });
+        }
+        finally {
+            setIsAddSubmittion(false); // Re-enable the button after the update process is done
         }
     };
 
@@ -460,8 +478,9 @@ const Banner = () => {
                                                     type="button"
                                                     className="btn btn-primary"
                                                     onClick={AddBanner}
-                                                >
-                                                    Save
+                                                    disabled={isAddSubmittion} // Disable button during submission
+                                                    >
+                                                        {isAddSubmittion ? "Adding..." : "Add Banner"}
                                                 </button>
                                             </div>
                                         </div>
@@ -558,8 +577,9 @@ const Banner = () => {
                                                             type="button"
                                                             className="btn btn-primary"
                                                             onClick={updatebanner}
+                                                            disabled={isSubmitting} // Disable button during submission
                                                         >
-                                                            Update Banner
+                                                            {isSubmitting ? "Updating..." : "Update Banner"}
                                                         </button>
                                                     </div>
                                                 </div>

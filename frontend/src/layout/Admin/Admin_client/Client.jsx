@@ -273,6 +273,8 @@ const Client = () => {
     const getbasketlist = async () => {
         try {
             const response = await BasketAllList(token);
+            // console.log("BasketAllList",response);
+            
             if (response.status) {
                 setBasketlist(response.data);
             }
@@ -957,7 +959,7 @@ const Client = () => {
                                                                                             <div className="accordion-body">
                                                                                                 <div className="d-flex justify-content-between">
                                                                                                     <strong>Price:</strong>
-                                                                                                    <span><IndianRupee /> {item.price && item.price}</span>
+                                                                                                    <span><IndianRupee  style={{ width: '15px', height: '15px' }}/> {item.price && item.price}</span>
 
 
                                                                                                 </div>
@@ -1009,7 +1011,7 @@ const Client = () => {
                                                                                 }}
                                                                             />
                                                                             <label className="form-check-label mx-1" style={{ fontSize: "13px", fontWeight: "800" }} htmlFor={`input-plan-${index}`}>
-                                                                                {item.validity}
+                                                                                {item.title} ({item.themename})
                                                                             </label>
                                                                         </h5>
 
@@ -1038,11 +1040,11 @@ const Client = () => {
                                                                                     aria-labelledby={`heading-${item._id}`}
                                                                                     data-bs-parent={`#accordion-basket`}
                                                                                 >
-                                                                                    {console.log("item", item)}
+                                                                                    {/* {console.log("item", item)} */}
                                                                                     <div className="accordion-body">
                                                                                         <div className="d-flex justify-content-between">
                                                                                             <strong>Price:</strong>
-                                                                                            <span><IndianRupee /> {item.basket_price && item.basket_price}</span>
+                                                                                            <span><IndianRupee style={{ width: '15px', height: '15px' }} /> {item.basket_price && item.basket_price}</span>
                                                                                         </div>
                                                                                         <div className="d-flex justify-content-between">
                                                                                             <strong>Validity:</strong>
@@ -1050,7 +1052,7 @@ const Client = () => {
                                                                                         </div>
                                                                                         <div className="d-flex justify-content-between">
                                                                                             <strong>Miniumum Investment Amount:</strong>
-                                                                                            <span><IndianRupee />{item?.mininvamount}</span>
+                                                                                            <span><IndianRupee style={{ width: '15px', height: '15px' }} />{item?.mininvamount}</span>
                                                                                         </div>
 
                                                                                     </div>

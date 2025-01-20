@@ -61,6 +61,15 @@ const fieldConfigurations = [
     disable: false,
     star: true
   },
+  {
+    name: "full_price",
+    label: "Actual Basket Price",
+    type: "number",
+    label_size: 6,
+    col_size: 4,
+    disable: false,
+
+  },
 
   {
     name: "basket_price",
@@ -127,8 +136,59 @@ const fieldConfigurations = [
     star: true
   },
   {
+    name: "type",
+    label: "Risk Type",
+    type: "select",
+    label_size: 12,
+    col_size: 4,
+    disable: false,
+    options: [
+      { value: "HIGH", label: "High" },
+      { value: "MEDIUM", label: "Medium" },
+      { value: "LOW", label: "Low" },
+    ],
+    star: true
+  },
+  {
+    name: "image",
+    label: "Upload Image",
+    type: "file2",
+    image: true,
+    label_size: 12,
+    col_size: 4,
+    disable: false,
+    star:true
+},
+{
+  name: "short_description",
+  label: "Short discription",
+  type: "text",
+  label_size: 12,
+  col_size: 4,
+  disable: false,
+  star: true
+},
+  {
     name: "description",
     label: "Description",
+    type: "ckeditor",
+    label_size: 12,
+    col_size: 12,
+    disable: false,
+    star: true
+  },
+  {
+    name: "rationale",
+    label: "Rational",
+    type: "ckeditor",
+    label_size: 12,
+    col_size: 12,
+    disable: false,
+    star: true
+  },
+  {
+    name: "methodology",
+    label: "Methodology",
     type: "ckeditor",
     label_size: 12,
     col_size: 12,
@@ -169,6 +229,11 @@ const validationSchema = Yup.object().shape({
       comment: Yup.string().required("Comment is required"),
     })
   ),
+  type: Yup.string().required("Type is required"),
+    image: Yup.string().required("Image is required"),
+    short_description: Yup.string().required("Short description is required"),
+    rationale: Yup.string().required("Rationale is required"),
+    methodology: Yup.string().required("Methodology is required"),
 });
 
 const Viewbasketdetail = () => {
@@ -209,6 +274,11 @@ const Viewbasketdetail = () => {
     validity: "",
     next_rebalance_date: "",
     Stock: [{ stocks: "", pricerange: "", stockweightage: "", entryprice: "", exitprice: "", exitdate: "", comment: "" }],
+    type:"",
+    image:"",
+    short_description:"",
+    rationale:"",
+    methodology:"",
   });
 
   useEffect(() => {
@@ -248,6 +318,7 @@ const Viewbasketdetail = () => {
           title: basketData?.title || "",
           description: cleanHtmlContent(basketData?.description) || "",
           // description: basketData?.description || "",
+          full_price: basketData?.full_price || "",
           basket_price: basketData?.basket_price || "",
           mininvamount: basketData?.mininvamount || "",
           themename: basketData?.themename || "",
@@ -255,6 +326,11 @@ const Viewbasketdetail = () => {
           validity: basketData?.validity ? basketData?.validity : "",
           next_rebalance_date: basketData?.next_rebalance_date ? basketData?.next_rebalance_date : "",
           cagr: basketData?.cagr || "",
+          type: basketData?.type || "",
+          image: basketData?.image || "",
+          short_description: basketData?.short_description || "",
+          rationale: cleanHtmlContent (basketData?.rationale) || "",
+          methodology: cleanHtmlContent (basketData?.methodology) || "",
 
         });
       }
@@ -296,7 +372,7 @@ const Viewbasketdetail = () => {
                         <label>{field.label}</label>
 
                         {/* Special case for description */}
-                        {field.name === "description" ? (
+                        {field.name === "description" || field.name === "rationale" || field.name === "methodology" ?(
                           <div
                             className="form-control"
                             dangerouslySetInnerHTML={{

@@ -149,7 +149,7 @@ const PaymentRequest = () => {
                     case 1:
                         return "Completed";
                     case 2:
-                        return "Rejectd";
+                        return "Rejected";
                     default:
                         return "Unknown";
                 }

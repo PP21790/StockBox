@@ -308,7 +308,7 @@ const Viewbasketdetail = () => {
   const getbasketdetail = async () => {
     try {
       const response = await Viewbasket(id, token);
-      console.log("Viewbasket",response);
+      // console.log("Viewbasket",response);
       
 
       if (response.status) {

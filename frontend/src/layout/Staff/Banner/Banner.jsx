@@ -22,9 +22,11 @@ const Banner = () => {
     const [serviceid, setServiceid] = useState({});
     const [searchInput, setSearchInput] = useState("");
     const [permission, setPermission] = useState([]);
-
+ 
     //state for loading
     const [isLoading, setIsLoading] = useState(true)
+
+    const [isAddSubmittion,setIsAddSubmittion] = useState(false);
 
     const fileInputRef = useRef(null);
 
@@ -132,6 +134,10 @@ const Banner = () => {
 
     // Add service
     const AddBanner = async () => {
+        if (isAddSubmittion) return; // Prevent multiple submissions
+        
+
+        setIsAddSubmittion(true); // Set the state to indicate that the process is running
         try {
             const data = { title: title.title, description: title.description, image: title.image, add_by: userid, hyperlink: title.hyperlink };
 
@@ -172,6 +178,9 @@ const Banner = () => {
                 icon: 'error',
                 confirmButtonText: 'Try Again',
             });
+        }
+        finally {
+            setIsAddSubmittion(false); // Re-enable the button after the update process is done
         }
     };
 
@@ -484,8 +493,9 @@ const Banner = () => {
                                                     type="button"
                                                     className="btn btn-primary"
                                                     onClick={AddBanner}
-                                                >
-                                                    Save
+                                                    disabled={isAddSubmittion} // Disable button during submission
+                                                    >
+                                                        {isAddSubmittion ? "Adding..." : "Add Banner"}
                                                 </button>
                                             </div>
                                         </div>

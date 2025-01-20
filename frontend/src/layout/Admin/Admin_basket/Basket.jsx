@@ -43,7 +43,7 @@ const Basket = () => {
     try {
       const data = { page: currentPage, search: searchInput || "" }
       const response = await BasketAllList(data, token);
-      console.log("BasketAllList",response);
+      // console.log("BasketAllList",response);
       
       if (response.status) {
         setClients(response.data);

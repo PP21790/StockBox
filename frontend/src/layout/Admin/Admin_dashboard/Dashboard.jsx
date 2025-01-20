@@ -4,6 +4,7 @@ import { GetClient } from '../../../Services/Admin';
 import { fDateTime, fDateMonth } from '../../../Utils/Date_formate';
 import Table from '../../../components/Table';
 import { Link } from 'react-router-dom';
+import Loader from '../../../Utils/Loader';
 
 
 const Dashbord = () => {
@@ -21,6 +22,9 @@ const Dashbord = () => {
     const [clients, setClients] = useState([]);
     const [monthexpiry, setMonthexpiry] = useState([]);
 
+    // state for loader
+    const [isLoader, setIsLoader] = useState(true)
+
     const currentMonthYear = new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' });
 
     const getdetail = async () => {
@@ -33,6 +37,7 @@ const Dashbord = () => {
         } catch (error) {
             console.log("Error fetching services:", error);
         }
+        setIsLoader(false)
     };
 
     const getExpirydata = async () => {
@@ -44,6 +49,7 @@ const Dashbord = () => {
         } catch (error) {
             console.log("Error fetching services:", error);
         }
+        setIsLoader(false)
     };
 
     const getAdminclient = async () => {
@@ -56,6 +62,7 @@ const Dashbord = () => {
         } catch (error) {
             console.log("error");
         }
+        setIsLoader(false)
     }
 
 
@@ -162,498 +169,503 @@ const Dashbord = () => {
 
     return (
         <div>
+            {isLoader ? (
+                <Loader />
+            ) : (<>
 
-            <div className="page-content">
-                <div className="row newbg">
-                    <div className="col-md-3">
-                        <div className="card radius-10 bg-gradient-moonlit">
-                            <Link to="/admin/planexpirymonth">
-                                <div className="card-body">
-                                    <div className="d-flex align-items-center">
-                                        <h5 className="mb-0 text-white">
-                                            {monthexpiry?.length > 0
-                                                ? monthexpiry?.some((item) => fDateMonth(item.month) === currentMonthYear)
-                                                    ? monthexpiry.reduce((acc, item) => {
-                                                        return fDateMonth(item.month) === currentMonthYear
-                                                            ? acc + (item.noofclient || 0)
-                                                            : acc;
-                                                    }, 0)
-                                                    : 0
-                                                : 0}
-                                        </h5>
+                <div className="page-content">
+                    <div className="row newbg">
+                        <div className="col-md-3">
+                            <div className="card radius-10 bg-gradient-moonlit">
+                                <Link to="/admin/planexpirymonth">
+                                    <div className="card-body">
+                                        <div className="d-flex align-items-center">
+                                            <h5 className="mb-0 text-white">
+                                                {monthexpiry?.length > 0
+                                                    ? monthexpiry?.some((item) => fDateMonth(item.month) === currentMonthYear)
+                                                        ? monthexpiry.reduce((acc, item) => {
+                                                            return fDateMonth(item.month) === currentMonthYear
+                                                                ? acc + (item.noofclient || 0)
+                                                                : acc;
+                                                        }, 0)
+                                                        : 0
+                                                    : 0}
+                                            </h5>
 
-                                        <div className="ms-auto">
-                                            <i className="bx bx-user-plus fs-3 text-white" />
+                                            <div className="ms-auto">
+                                                <i className="bx bx-user-plus fs-3 text-white" />
+                                            </div>
+                                        </div>
+                                        <div
+                                            className="progress my-2 bg-opacity-25 bg-white"
+                                            style={{ height: 4 }}
+                                        >
+                                            <div
+                                                className="progress-bar bg-white"
+                                                role="progressbar"
+                                                style={{ width: "55%" }}
+                                                aria-valuenow={25}
+                                                aria-valuemin={0}
+                                                aria-valuemax={100}
+                                            />
+                                        </div>
+                                        <div className="d-flex align-items-center text-white">
+                                            <p className="mb-0">Current Month Active License</p>
+                                            <p className="mb-0 ms-auto">
+                                                <span>
+                                                    <i className="bx bx-up-arrow-alt text-white" />
+                                                </span>
+                                            </p>
                                         </div>
                                     </div>
-                                    <div
-                                        className="progress my-2 bg-opacity-25 bg-white"
-                                        style={{ height: 4 }}
-                                    >
-                                        <div
-                                            className="progress-bar bg-white"
-                                            role="progressbar"
-                                            style={{ width: "55%" }}
-                                            aria-valuenow={25}
-                                            aria-valuemin={0}
-                                            aria-valuemax={100}
-                                        />
-                                    </div>
-                                    <div className="d-flex align-items-center text-white">
-                                        <p className="mb-0">Current Month Active License</p>
-                                        <p className="mb-0 ms-auto">
-                                            <span>
-                                                <i className="bx bx-up-arrow-alt text-white" />
-                                            </span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </Link>
-                        </div>
-
-                    </div>
-                    <div className="col-md-3">
-                        <div className="card radius-10 bg-gradient-deepblue">
-                            <Link to="/admin/client" className="text-decoration-none">
-                                <div className="card-body">
-                                    <div className="d-flex align-items-center">
-                                        <h5 className="mb-0 text-white">
-                                            {data.clientCountTotal && data.clientCountTotal}
-                                        </h5>
-                                        <div className="ms-auto">
-                                            <i className="bx bx-user fs-3 text-white" />
-                                        </div>
-                                    </div>
-                                    <div
-                                        className="progress my-2 bg-opacity-25 bg-white"
-                                        style={{ height: 4 }}
-                                    >
-                                        <div
-                                            className="progress-bar bg-white"
-                                            role="progressbar"
-                                            style={{ width: "55%" }}
-                                            aria-valuenow={25}
-                                            aria-valuemin={0}
-                                            aria-valuemax={100}
-                                        />
-                                    </div>
-                                    <div className="d-flex align-items-center text-white">
-                                        <p className="mb-0">Total Clients</p>
-                                        <p className="mb-0 ms-auto">
-                                            <span>
-                                                <i className="bx bx-up-arrow-alt text-white" />
-                                            </span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </Link>
-
-                        </div>
-                    </div>
-                    <div className="col-md-3">
-                        <div className="card radius-10 bg-gradient-ohhappiness">
-                            <Link to="/admin/client" state={{ clientStatus: 1 }}>
-                                <div className="card-body">
-                                    <div className="d-flex align-items-center">
-                                        <h5 className="mb-0 text-white">{data.clientCountActive && data.clientCountActive}</h5>
-                                        <div className="ms-auto">
-                                            <i className="fadeIn animated bx bx-user-circle fs-3 text-white" />
-                                        </div>
-                                    </div>
-                                    <div
-                                        className="progress my-2 bg-opacity-25 bg-white"
-                                        style={{ height: 4 }}
-                                    >
-                                        <div
-                                            className="progress-bar bg-white"
-                                            role="progressbar"
-                                            style={{ width: "55%" }}
-                                            aria-valuenow={25}
-                                            aria-valuemin={0}
-                                            aria-valuemax={100}
-                                        />
-                                    </div>
-                                    <div className="d-flex align-items-center text-white">
-                                        <p className="mb-0">Total Active Clients</p>
-                                        <p className="mb-0 ms-auto">
-
-                                            <span>
-
-                                                <i className="bx bx-up-arrow-alt text-white" />
-
-
-                                                {/* <i className="bx bx-up-arrow-alt" /> */}
-                                            </span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </Link>
-                        </div>
-                    </div>
-                    <div className="col-md-3">
-                        <div className="card radius-10 bg-gradient-ibiza">
-                            <Link to="/admin/client" state={{ clientStatus: 0 }}>
-                                <div className="card-body">
-                                    <div className="d-flex align-items-center">
-                                        <h5 className="mb-0 text-white">{data.clientCountTotal - data.clientCountActive}</h5>
-                                        <div className="ms-auto">
-                                            <i className="fadeIn animated bx bx-user-x fs-3 text-white" />
-                                        </div>
-                                    </div>
-                                    <div
-                                        className="progress my-2 bg-opacity-25 bg-white"
-                                        style={{ height: 4 }}
-                                    >
-                                        <div
-                                            className="progress-bar bg-white"
-                                            role="progressbar"
-                                            style={{ width: "55%" }}
-                                            aria-valuenow={25}
-                                            aria-valuemin={0}
-                                            aria-valuemax={100}
-                                        />
-                                    </div>
-                                    <div className="d-flex align-items-center text-white">
-                                        <p className="mb-0">Total Deactive Clients</p>
-                                        <p className="mb-0 ms-auto">
-
-                                            <span>
-
-                                                <i className="bx bx-up-arrow-alt text-white" />                                        </span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </Link>
-                        </div>
-                    </div>
-
-                    <div className="col-md-3">
-                        <div className="card radius-10 bg-gradient-moonlit ">
-                            <Link to="/admin/signal" state={{ clientStatus: "todayopensignal" }}>
-                                <div className="card-body">
-                                    <div className="d-flex align-items-center">
-                                        <h5 className="mb-0 text-white">{data.todayOpenSignal && data.todayOpenSignal}</h5>
-                                        <div className="ms-auto">
-                                            <i className="bx bx-wifi-2 fs-3 text-white" />
-                                        </div>
-                                    </div>
-                                    <div
-                                        className="progress my-2 bg-opacity-25 bg-white"
-                                        style={{ height: 4 }}
-                                    >
-                                        <div
-                                            className="progress-bar bg-white"
-                                            role="progressbar"
-                                            style={{ width: "55%" }}
-                                            aria-valuenow={25}
-                                            aria-valuemin={0}
-                                            aria-valuemax={100}
-                                        />
-                                    </div>
-                                    <div className="d-flex align-items-center text-white">
-                                        <p className="mb-0">Today's Open Signal</p>
-                                        <p className="mb-0 ms-auto">
-
-                                            <span>
-
-
-
-                                                <i className="bx bx-up-arrow-alt text-white" />
-
-                                            </span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </Link>
-                        </div>
-                    </div>
-                    <div className="col-md-3">
-                        <div className="card radius-10 bg-gradient-ibiza ">
-                            <Link to="/admin/closesignal" state={{ clientStatus: "todayclosesignal" }}>
-                                <div className="card-body">
-                                    <div className="d-flex align-items-center">
-                                        <h5 className="mb-0 text-white">{data.todayCloseSignal && data.todayCloseSignal}</h5>
-                                        <div className="ms-auto">
-                                            <i className="fadeIn animated bx bx-wifi-off fs-3 text-white" />
-                                        </div>
-                                    </div>
-                                    <div
-                                        className="progress my-2 bg-opacity-25 bg-white"
-                                        style={{ height: 4 }}
-                                    >
-                                        <div
-                                            className="progress-bar bg-white"
-                                            role="progressbar"
-                                            style={{ width: "55%" }}
-                                            aria-valuenow={25}
-                                            aria-valuemin={0}
-                                            aria-valuemax={100}
-                                        />
-                                    </div>
-                                    <div className="d-flex align-items-center text-white">
-                                        <p className="mb-0">Today's Close Signal</p>
-                                        <p className="mb-0 ms-auto">
-
-                                            <span>
-
-
-                                                <i className="bx bx-up-arrow-alt text-white" />
-
-                                            </span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </Link>
-                        </div>
-                    </div>
-
-                    <div className="col-md-3">
-                        <div className="card radius-10 bg-gradient-ohhappiness">
-                            <Link to="/admin/signal">
-                                <div className="card-body">
-                                    <div className="d-flex align-items-center">
-                                        <h5 className="mb-0 text-white">{data.OpensignalCountTotal && data.OpensignalCountTotal}</h5>
-                                        <div className="ms-auto">
-                                            <i className="bx bxl-redux fs-3 text-white" />
-                                        </div>
-                                    </div>
-                                    <div
-                                        className="progress my-2 bg-opacity-25 bg-white"
-                                        style={{ height: 4 }}
-                                    >
-                                        <div
-                                            className="progress-bar bg-white"
-                                            role="progressbar"
-                                            style={{ width: "55%" }}
-                                            aria-valuenow={25}
-                                            aria-valuemin={0}
-                                            aria-valuemax={100}
-                                        />
-                                    </div>
-                                    <div className="d-flex align-items-center text-white">
-                                        <p className="mb-0">Total Open Signals</p>
-                                        <p className="mb-0 ms-auto">
-
-                                            <span>
-                                                <i className="bx bx-up-arrow-alt text-white" />
-                                                {/* <i className="bx bx-up-arrow-alt" /> */}
-                                            </span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </Link>
-                        </div>
-                    </div>
-                    <div className="col-md-3">
-                        <div className="card radius-10 bg-gradient-deepblue">
-                            <Link to="/admin/closesignal">
-                                <div className="card-body">
-                                    <div className="d-flex align-items-center">
-                                        <h5 className="mb-0 text-white">{data.CloseSignalCountTotal && data.CloseSignalCountTotal}</h5>
-                                        <div className="ms-auto">
-                                            <i className="bx bx-wifi-2 fs-3 text-white" />
-                                        </div>
-                                    </div>
-                                    <div
-                                        className="progress my-2 bg-opacity-25 bg-white"
-                                        style={{ height: 4 }}
-                                    >
-                                        <div
-                                            className="progress-bar bg-white"
-                                            role="progressbar"
-                                            style={{ width: "55%" }}
-                                            aria-valuenow={25}
-                                            aria-valuemin={0}
-                                            aria-valuemax={100}
-                                        />
-                                    </div>
-                                    <div className="d-flex align-items-center text-white">
-                                        <p className="mb-0">Total Close Signals </p>
-                                        <p className="mb-0 ms-auto">
-
-                                            <span>
-                                                <i className="bx bx-up-arrow-alt text-white" />
-                                                {/* <i className="bx bx-up-arrow-alt" /> */}
-                                            </span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </Link>
-                        </div>
-                    </div>
-                    <div className="col-md-3">
-                        <div className="card radius-10 bg-gradient-deepblue">
-                            <Link to="/admin/client" state={{ clientStatus: "active" }}>
-                                <div className="card-body">
-                                    <div className="d-flex align-items-center">
-                                        <h5 className="mb-0 text-white">{data.activePlanclient && data.activePlanclient}</h5>
-                                        <div className="ms-auto">
-                                            <i className="bx bx-wifi-2 fs-3 text-white" />
-                                        </div>
-                                    </div>
-                                    <div
-                                        className="progress my-2 bg-opacity-25 bg-white"
-                                        style={{ height: 4 }}
-                                    >
-                                        <div
-                                            className="progress-bar bg-white"
-                                            role="progressbar"
-                                            style={{ width: "55%" }}
-                                            aria-valuenow={25}
-                                            aria-valuemin={0}
-                                            aria-valuemax={100}
-                                        />
-                                    </div>
-                                    <div className="d-flex align-items-center text-white">
-                                        <p className="mb-0">Total Plan Active Clients </p>
-                                        <p className="mb-0 ms-auto">
-
-                                            <span>
-
-                                                <i className="bx bx-up-arrow-alt text-white" />
-
-                                                {/* <i className="bx bx-up-arrow-alt" /> */}
-                                            </span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </Link>
-                        </div>
-                    </div>
-                    <div className="col-md-3">
-                        <div className="card radius-10 bg-gradient-deepblue">
-                            <Link to="/admin/client" state={{ clientStatus: "expired" }}>
-                                <div className="card-body">
-                                    <div className="d-flex align-items-center">
-                                        <h5 className="mb-0 text-white">{data.inActivePlanclient && data.inActivePlanclient}</h5>
-                                        <div className="ms-auto">
-                                            <i className="bx bx-wifi-2 fs-3 text-white" />
-                                        </div>
-                                    </div>
-                                    <div
-                                        className="progress my-2 bg-opacity-25 bg-white"
-                                        style={{ height: 4 }}
-                                    >
-                                        <div
-                                            className="progress-bar bg-white"
-                                            role="progressbar"
-                                            style={{ width: "55%" }}
-                                            aria-valuenow={25}
-                                            aria-valuemin={0}
-                                            aria-valuemax={100}
-                                        />
-                                    </div>
-                                    <div className="d-flex align-items-center text-white">
-                                        <p className="mb-0">Total Plan Expired </p>
-                                        <p className="mb-0 ms-auto">
-
-                                            <span>
-                                                <i className="bx bx-up-arrow-alt text-white" />
-
-                                                {/* <i className="bx bx-up-arrow-alt" /> */}
-                                            </span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </Link>
-                        </div>
-                    </div>
-                    <div className="col-md-3">
-                        <div className="card radius-10 bg-gradient-deepblue">
-                            <Link to="/admin/freeclient" state={{ clientStatus: "active" }}>
-                                <div className="card-body">
-                                    <div className="d-flex align-items-center">
-                                        <h5 className="mb-0 text-white">{data.activeFreetrial && data.activeFreetrial}</h5>
-                                        <div className="ms-auto">
-                                            <i className="bx bx-wifi-2 fs-3 text-white" />
-                                        </div>
-                                    </div>
-                                    <div
-                                        className="progress my-2 bg-opacity-25 bg-white"
-                                        style={{ height: 4 }}
-                                    >
-                                        <div
-                                            className="progress-bar bg-white"
-                                            role="progressbar"
-                                            style={{ width: "55%" }}
-                                            aria-valuenow={25}
-                                            aria-valuemin={0}
-                                            aria-valuemax={100}
-                                        />
-                                    </div>
-                                    <div className="d-flex align-items-center text-white">
-                                        <p className="mb-0">Total Active Free Clients</p>
-                                        <p className="mb-0 ms-auto">
-
-                                            <span>
-                                                <i className="bx bx-up-arrow-alt text-white" />
-                                                {/* <i className="bx bx-up-arrow-alt" /> */}
-                                            </span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </Link>
-                        </div>
-                    </div>
-                    <div className="col-md-3">
-                        <div className="card radius-10 bg-gradient-deepblue">
-                            <Link to="/admin/freeclient" state={{ clientStatus: "expired" }}>
-                                <div className="card-body">
-                                    <div className="d-flex align-items-center">
-                                        <h5 className="mb-0 text-white">{data.inActiveFreetrial && data.inActiveFreetrial}</h5>
-                                        <div className="ms-auto">
-                                            <i className="bx bx-wifi-2 fs-3 text-white" />
-                                        </div>
-                                    </div>
-                                    <div
-                                        className="progress my-2 bg-opacity-25 bg-white"
-                                        style={{ height: 4 }}
-                                    >
-                                        <div
-                                            className="progress-bar bg-white"
-                                            role="progressbar"
-                                            style={{ width: "55%" }}
-                                            aria-valuenow={25}
-                                            aria-valuemin={0}
-                                            aria-valuemax={100}
-                                        />
-                                    </div>
-                                    <div className="d-flex align-items-center text-white">
-                                        <p className="mb-0">Total Inactive Free Clients</p>
-                                        <p className="mb-0 ms-auto">
-
-                                            <span>
-                                                <i className="bx bx-up-arrow-alt text-white" />
-                                                {/* <i className="bx bx-up-arrow-alt" /> */}
-                                            </span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-                <div className="card radius-10">
-                    <div className="card-body">
-                        <div className="d-flex align-items-center">
-                            <div>
-                                <h5 className="mb-0">Recent Clients</h5>
+                                </Link>
                             </div>
 
                         </div>
-                        <hr />
+                        <div className="col-md-3">
+                            <div className="card radius-10 bg-gradient-deepblue">
+                                <Link to="/admin/client" className="text-decoration-none">
+                                    <div className="card-body">
+                                        <div className="d-flex align-items-center">
+                                            <h5 className="mb-0 text-white">
+                                                {data.clientCountTotal && data.clientCountTotal}
+                                            </h5>
+                                            <div className="ms-auto">
+                                                <i className="bx bx-user fs-3 text-white" />
+                                            </div>
+                                        </div>
+                                        <div
+                                            className="progress my-2 bg-opacity-25 bg-white"
+                                            style={{ height: 4 }}
+                                        >
+                                            <div
+                                                className="progress-bar bg-white"
+                                                role="progressbar"
+                                                style={{ width: "55%" }}
+                                                aria-valuenow={25}
+                                                aria-valuemin={0}
+                                                aria-valuemax={100}
+                                            />
+                                        </div>
+                                        <div className="d-flex align-items-center text-white">
+                                            <p className="mb-0">Total Clients</p>
+                                            <p className="mb-0 ms-auto">
+                                                <span>
+                                                    <i className="bx bx-up-arrow-alt text-white" />
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </Link>
 
-                        <div className="table-responsive d-flex justify-content-center">
-                            <Table
+                            </div>
+                        </div>
+                        <div className="col-md-3">
+                            <div className="card radius-10 bg-gradient-ohhappiness">
+                                <Link to="/admin/client" state={{ clientStatus: 1 }}>
+                                    <div className="card-body">
+                                        <div className="d-flex align-items-center">
+                                            <h5 className="mb-0 text-white">{data.clientCountActive && data.clientCountActive}</h5>
+                                            <div className="ms-auto">
+                                                <i className="fadeIn animated bx bx-user-circle fs-3 text-white" />
+                                            </div>
+                                        </div>
+                                        <div
+                                            className="progress my-2 bg-opacity-25 bg-white"
+                                            style={{ height: 4 }}
+                                        >
+                                            <div
+                                                className="progress-bar bg-white"
+                                                role="progressbar"
+                                                style={{ width: "55%" }}
+                                                aria-valuenow={25}
+                                                aria-valuemin={0}
+                                                aria-valuemax={100}
+                                            />
+                                        </div>
+                                        <div className="d-flex align-items-center text-white">
+                                            <p className="mb-0">Total Active Clients</p>
+                                            <p className="mb-0 ms-auto">
 
-                                columns={columns}
-                                data={clients}
-                            />
+                                                <span>
+
+                                                    <i className="bx bx-up-arrow-alt text-white" />
+
+
+                                                    {/* <i className="bx bx-up-arrow-alt" /> */}
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </Link>
+                            </div>
+                        </div>
+                        <div className="col-md-3">
+                            <div className="card radius-10 bg-gradient-ibiza">
+                                <Link to="/admin/client" state={{ clientStatus: 0 }}>
+                                    <div className="card-body">
+                                        <div className="d-flex align-items-center">
+                                            <h5 className="mb-0 text-white">{data.clientCountTotal - data.clientCountActive}</h5>
+                                            <div className="ms-auto">
+                                                <i className="fadeIn animated bx bx-user-x fs-3 text-white" />
+                                            </div>
+                                        </div>
+                                        <div
+                                            className="progress my-2 bg-opacity-25 bg-white"
+                                            style={{ height: 4 }}
+                                        >
+                                            <div
+                                                className="progress-bar bg-white"
+                                                role="progressbar"
+                                                style={{ width: "55%" }}
+                                                aria-valuenow={25}
+                                                aria-valuemin={0}
+                                                aria-valuemax={100}
+                                            />
+                                        </div>
+                                        <div className="d-flex align-items-center text-white">
+                                            <p className="mb-0">Total Deactive Clients</p>
+                                            <p className="mb-0 ms-auto">
+
+                                                <span>
+
+                                                    <i className="bx bx-up-arrow-alt text-white" />                                        </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </Link>
+                            </div>
+                        </div>
+
+                        <div className="col-md-3">
+                            <div className="card radius-10 bg-gradient-moonlit ">
+                                <Link to="/admin/signal" state={{ clientStatus: "todayopensignal" }}>
+                                    <div className="card-body">
+                                        <div className="d-flex align-items-center">
+                                            <h5 className="mb-0 text-white">{data.todayOpenSignal && data.todayOpenSignal}</h5>
+                                            <div className="ms-auto">
+                                                <i className="bx bx-wifi-2 fs-3 text-white" />
+                                            </div>
+                                        </div>
+                                        <div
+                                            className="progress my-2 bg-opacity-25 bg-white"
+                                            style={{ height: 4 }}
+                                        >
+                                            <div
+                                                className="progress-bar bg-white"
+                                                role="progressbar"
+                                                style={{ width: "55%" }}
+                                                aria-valuenow={25}
+                                                aria-valuemin={0}
+                                                aria-valuemax={100}
+                                            />
+                                        </div>
+                                        <div className="d-flex align-items-center text-white">
+                                            <p className="mb-0">Today's Open Signal</p>
+                                            <p className="mb-0 ms-auto">
+
+                                                <span>
+
+
+
+                                                    <i className="bx bx-up-arrow-alt text-white" />
+
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </Link>
+                            </div>
+                        </div>
+                        <div className="col-md-3">
+                            <div className="card radius-10 bg-gradient-ibiza ">
+                                <Link to="/admin/closesignal" state={{ clientStatus: "todayclosesignal" }}>
+                                    <div className="card-body">
+                                        <div className="d-flex align-items-center">
+                                            <h5 className="mb-0 text-white">{data.todayCloseSignal && data.todayCloseSignal}</h5>
+                                            <div className="ms-auto">
+                                                <i className="fadeIn animated bx bx-wifi-off fs-3 text-white" />
+                                            </div>
+                                        </div>
+                                        <div
+                                            className="progress my-2 bg-opacity-25 bg-white"
+                                            style={{ height: 4 }}
+                                        >
+                                            <div
+                                                className="progress-bar bg-white"
+                                                role="progressbar"
+                                                style={{ width: "55%" }}
+                                                aria-valuenow={25}
+                                                aria-valuemin={0}
+                                                aria-valuemax={100}
+                                            />
+                                        </div>
+                                        <div className="d-flex align-items-center text-white">
+                                            <p className="mb-0">Today's Close Signal</p>
+                                            <p className="mb-0 ms-auto">
+
+                                                <span>
+
+
+                                                    <i className="bx bx-up-arrow-alt text-white" />
+
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </Link>
+                            </div>
+                        </div>
+
+                        <div className="col-md-3">
+                            <div className="card radius-10 bg-gradient-ohhappiness">
+                                <Link to="/admin/signal">
+                                    <div className="card-body">
+                                        <div className="d-flex align-items-center">
+                                            <h5 className="mb-0 text-white">{data.OpensignalCountTotal && data.OpensignalCountTotal}</h5>
+                                            <div className="ms-auto">
+                                                <i className="bx bxl-redux fs-3 text-white" />
+                                            </div>
+                                        </div>
+                                        <div
+                                            className="progress my-2 bg-opacity-25 bg-white"
+                                            style={{ height: 4 }}
+                                        >
+                                            <div
+                                                className="progress-bar bg-white"
+                                                role="progressbar"
+                                                style={{ width: "55%" }}
+                                                aria-valuenow={25}
+                                                aria-valuemin={0}
+                                                aria-valuemax={100}
+                                            />
+                                        </div>
+                                        <div className="d-flex align-items-center text-white">
+                                            <p className="mb-0">Total Open Signals</p>
+                                            <p className="mb-0 ms-auto">
+
+                                                <span>
+                                                    <i className="bx bx-up-arrow-alt text-white" />
+                                                    {/* <i className="bx bx-up-arrow-alt" /> */}
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </Link>
+                            </div>
+                        </div>
+                        <div className="col-md-3">
+                            <div className="card radius-10 bg-gradient-deepblue">
+                                <Link to="/admin/closesignal">
+                                    <div className="card-body">
+                                        <div className="d-flex align-items-center">
+                                            <h5 className="mb-0 text-white">{data.CloseSignalCountTotal && data.CloseSignalCountTotal}</h5>
+                                            <div className="ms-auto">
+                                                <i className="bx bx-wifi-2 fs-3 text-white" />
+                                            </div>
+                                        </div>
+                                        <div
+                                            className="progress my-2 bg-opacity-25 bg-white"
+                                            style={{ height: 4 }}
+                                        >
+                                            <div
+                                                className="progress-bar bg-white"
+                                                role="progressbar"
+                                                style={{ width: "55%" }}
+                                                aria-valuenow={25}
+                                                aria-valuemin={0}
+                                                aria-valuemax={100}
+                                            />
+                                        </div>
+                                        <div className="d-flex align-items-center text-white">
+                                            <p className="mb-0">Total Close Signals </p>
+                                            <p className="mb-0 ms-auto">
+
+                                                <span>
+                                                    <i className="bx bx-up-arrow-alt text-white" />
+                                                    {/* <i className="bx bx-up-arrow-alt" /> */}
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </Link>
+                            </div>
+                        </div>
+                        <div className="col-md-3">
+                            <div className="card radius-10 bg-gradient-deepblue">
+                                <Link to="/admin/client" state={{ clientStatus: "active" }}>
+                                    <div className="card-body">
+                                        <div className="d-flex align-items-center">
+                                            <h5 className="mb-0 text-white">{data.activePlanclient && data.activePlanclient}</h5>
+                                            <div className="ms-auto">
+                                                <i className="bx bx-wifi-2 fs-3 text-white" />
+                                            </div>
+                                        </div>
+                                        <div
+                                            className="progress my-2 bg-opacity-25 bg-white"
+                                            style={{ height: 4 }}
+                                        >
+                                            <div
+                                                className="progress-bar bg-white"
+                                                role="progressbar"
+                                                style={{ width: "55%" }}
+                                                aria-valuenow={25}
+                                                aria-valuemin={0}
+                                                aria-valuemax={100}
+                                            />
+                                        </div>
+                                        <div className="d-flex align-items-center text-white">
+                                            <p className="mb-0">Total Plan Active Clients </p>
+                                            <p className="mb-0 ms-auto">
+
+                                                <span>
+
+                                                    <i className="bx bx-up-arrow-alt text-white" />
+
+                                                    {/* <i className="bx bx-up-arrow-alt" /> */}
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </Link>
+                            </div>
+                        </div>
+                        <div className="col-md-3">
+                            <div className="card radius-10 bg-gradient-deepblue">
+                                <Link to="/admin/client" state={{ clientStatus: "expired" }}>
+                                    <div className="card-body">
+                                        <div className="d-flex align-items-center">
+                                            <h5 className="mb-0 text-white">{data.inActivePlanclient && data.inActivePlanclient}</h5>
+                                            <div className="ms-auto">
+                                                <i className="bx bx-wifi-2 fs-3 text-white" />
+                                            </div>
+                                        </div>
+                                        <div
+                                            className="progress my-2 bg-opacity-25 bg-white"
+                                            style={{ height: 4 }}
+                                        >
+                                            <div
+                                                className="progress-bar bg-white"
+                                                role="progressbar"
+                                                style={{ width: "55%" }}
+                                                aria-valuenow={25}
+                                                aria-valuemin={0}
+                                                aria-valuemax={100}
+                                            />
+                                        </div>
+                                        <div className="d-flex align-items-center text-white">
+                                            <p className="mb-0">Total Plan Expired </p>
+                                            <p className="mb-0 ms-auto">
+
+                                                <span>
+                                                    <i className="bx bx-up-arrow-alt text-white" />
+
+                                                    {/* <i className="bx bx-up-arrow-alt" /> */}
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </Link>
+                            </div>
+                        </div>
+                        <div className="col-md-3">
+                            <div className="card radius-10 bg-gradient-deepblue">
+                                <Link to="/admin/freeclient" state={{ clientStatus: "active" }}>
+                                    <div className="card-body">
+                                        <div className="d-flex align-items-center">
+                                            <h5 className="mb-0 text-white">{data.activeFreetrial && data.activeFreetrial}</h5>
+                                            <div className="ms-auto">
+                                                <i className="bx bx-wifi-2 fs-3 text-white" />
+                                            </div>
+                                        </div>
+                                        <div
+                                            className="progress my-2 bg-opacity-25 bg-white"
+                                            style={{ height: 4 }}
+                                        >
+                                            <div
+                                                className="progress-bar bg-white"
+                                                role="progressbar"
+                                                style={{ width: "55%" }}
+                                                aria-valuenow={25}
+                                                aria-valuemin={0}
+                                                aria-valuemax={100}
+                                            />
+                                        </div>
+                                        <div className="d-flex align-items-center text-white">
+                                            <p className="mb-0">Total Active Free Clients</p>
+                                            <p className="mb-0 ms-auto">
+
+                                                <span>
+                                                    <i className="bx bx-up-arrow-alt text-white" />
+                                                    {/* <i className="bx bx-up-arrow-alt" /> */}
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </Link>
+                            </div>
+                        </div>
+                        <div className="col-md-3">
+                            <div className="card radius-10 bg-gradient-deepblue">
+                                <Link to="/admin/freeclient" state={{ clientStatus: "expired" }}>
+                                    <div className="card-body">
+                                        <div className="d-flex align-items-center">
+                                            <h5 className="mb-0 text-white">{data.inActiveFreetrial && data.inActiveFreetrial}</h5>
+                                            <div className="ms-auto">
+                                                <i className="bx bx-wifi-2 fs-3 text-white" />
+                                            </div>
+                                        </div>
+                                        <div
+                                            className="progress my-2 bg-opacity-25 bg-white"
+                                            style={{ height: 4 }}
+                                        >
+                                            <div
+                                                className="progress-bar bg-white"
+                                                role="progressbar"
+                                                style={{ width: "55%" }}
+                                                aria-valuenow={25}
+                                                aria-valuemin={0}
+                                                aria-valuemax={100}
+                                            />
+                                        </div>
+                                        <div className="d-flex align-items-center text-white">
+                                            <p className="mb-0">Total Inactive Free Clients</p>
+                                            <p className="mb-0 ms-auto">
+
+                                                <span>
+                                                    <i className="bx bx-up-arrow-alt text-white" />
+                                                    {/* <i className="bx bx-up-arrow-alt" /> */}
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </Link>
+                            </div>
                         </div>
                     </div>
+                    <div className="card radius-10">
+                        <div className="card-body">
+                            <div className="d-flex align-items-center">
+                                <div>
+                                    <h5 className="mb-0">Recent Clients</h5>
+                                </div>
+
+                            </div>
+                            <hr />
+
+                            <div className="table-responsive d-flex justify-content-center">
+                                <Table
+
+                                    columns={columns}
+                                    data={clients}
+                                />
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
-            </div>
+            </>)}
 
         </div>
     )

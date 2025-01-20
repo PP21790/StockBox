@@ -5,6 +5,7 @@ import { fDateTime, fDateMonth } from '../../../Utils/Date_formate';
 import Table from '../../../components/Table';
 import { getstaffperuser } from '../../../Services/Admin';
 import { Link } from 'react-router-dom';
+import Loader from '../../../Utils/Loader';
 
 
 const Dashbord = () => {
@@ -28,6 +29,9 @@ const Dashbord = () => {
     const [permission, setPermission] = useState([]);
     const [monthexpiry, setMonthexpiry] = useState([]);
 
+    // state for loader
+    const [isLoader, setIsLoader] = useState(true)
+
 
     const getdetail = async () => {
         try {
@@ -39,6 +43,7 @@ const Dashbord = () => {
         } catch (error) {
             console.log("Error fetching services:", error);
         }
+        setIsLoader(false)
     };
 
 
@@ -52,6 +57,7 @@ const Dashbord = () => {
         } catch (error) {
             console.log("Error fetching services:", error);
         }
+        setIsLoader(false)
     };
 
     const getAdminclient = async () => {
@@ -64,6 +70,7 @@ const Dashbord = () => {
         } catch (error) {
             console.log("error");
         }
+        setIsLoader(false)
     }
 
 
@@ -77,6 +84,7 @@ const Dashbord = () => {
         } catch (error) {
             console.log("error", error);
         }
+        setIsLoader(false)
     };
 
 
@@ -184,6 +192,9 @@ const Dashbord = () => {
 
     return (
         <div>
+             {isLoader ? (
+                <Loader />
+            ) : (<>
 
             <div className="page-content">
                 <div className="row newbg">
@@ -676,6 +687,8 @@ const Dashbord = () => {
                 </div>
 
             </div>
+
+            </>)}
 
         </div>
     )

@@ -128,7 +128,7 @@ const ClientRequest = () => {
             width: '100px',
         },
         {
-            name: 'FullName',
+            name: 'Full Name',
             selector: row => row?.FullName,
             sortable: true,
             width: '200px',

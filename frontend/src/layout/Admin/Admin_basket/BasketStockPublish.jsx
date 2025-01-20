@@ -306,6 +306,7 @@ const BasketStockPublish = () => {
 
       ),
       sortable: true,
+      width: '150px',
 
     },
     {
