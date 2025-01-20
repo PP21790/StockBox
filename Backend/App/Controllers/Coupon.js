@@ -289,7 +289,7 @@ class Coupon {
       const Coupon = await Coupon_Modal.findById(id);
 
 
-      if (Coupon.totallimitation && Coupon.limitation > limitation) {
+      if (Coupon.totallimitation && Coupon.limitation < limitation) {
         return res.status(400).json({
           status: false,
           message: "Limit cannot be less than the coupon's remaining limitation.",
