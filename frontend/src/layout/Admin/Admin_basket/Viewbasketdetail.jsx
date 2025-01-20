@@ -5,8 +5,10 @@ import { Viewbasket, getstocklistById } from "../../../Services/Admin";
 import Swal from "sweetalert2";
 import { useNavigate, useParams, Link, useLocation } from "react-router-dom";
 import { Tooltip } from 'antd';
-import { SquarePen } from 'lucide-react';
+import { SquarePen, Eye } from 'lucide-react';
 import { image_baseurl } from "../../../Utils/config";
+import { Modal } from 'react-bootstrap';
+
 
 
 function cleanHtmlContent(html) {
@@ -161,7 +163,7 @@ const fieldConfigurations = [
   },
   {
     name: "image",
-    label: "Image",
+    // label: "Image",
     type: "file2",
     image: true,
     label_size: 12,
@@ -251,6 +253,9 @@ const Viewbasketdetail = () => {
 
   const location = useLocation()
 
+  const [showModal, setShowModal] = useState(false);
+
+
 
   useEffect(() => {
     if (location?.state) {
@@ -336,6 +341,16 @@ const Viewbasketdetail = () => {
     }
   };
 
+
+  const imageViewModel = () => {
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
+
   return (
     <div className="page-content">
       <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
@@ -377,16 +392,39 @@ const Viewbasketdetail = () => {
                         ) : field.name === "image" ? (
                           <div className="mt-2">
                             {values[field.name] ? (
-                              <img
-                                src={`${image_baseurl}/uploads/basket/${values[field.name]}`}
-                                alt="Basket"
-                                className="img-thumbnail"
-                                style={{ width: "100%", maxWidth: "300px", height: "100px" }}
-                              />
+                              <>
+                                {/* <img
+                                  src={`${image_baseurl}/uploads/basket/${values[field.name]}`}
+                                  alt="Basket"
+                                  className="img-thumbnail"
+                                  style={{ width: "100%", maxWidth: "300px", height: "100px" }}
+                                /> */}
+                                <div style={{display:'flex'}}>
+                                  <p>View image</p><Eye onClick={imageViewModel} />
+                                </div>
+                              </>
                             ) : (
                               <div>No Image Available</div>
                             )}
+                            <Modal show={showModal} onHide={closeModal} centered>
+                              <Modal.Header closeButton>
+                                <Modal.Title>Image</Modal.Title>
+                              </Modal.Header>
+                              <Modal.Body>
+                                {values[field.name] ? (
+                                  <img
+                                    src={`${image_baseurl}/uploads/basket/${values[field.name]}`}
+                                    alt="Basket"
+                                    style={{ width: "100%" }}
+                                  />
+                                ) : (
+                                  <div>No Image Available</div>
+                                )}
+                              </Modal.Body>
+                            </Modal>
+
                           </div>
+
                         ) : (
                           <input
                             type={field.type}

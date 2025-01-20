@@ -5,7 +5,9 @@ import { Viewbasket, getstocklistById } from "../../../Services/Admin";
 import Swal from "sweetalert2";
 import { useNavigate, useParams, Link, useLocation } from "react-router-dom";
 import { Tooltip } from 'antd';
-import { SquarePen } from 'lucide-react';
+import { SquarePen, Eye } from 'lucide-react';
+import { image_baseurl } from "../../../Utils/config";
+import { Modal } from 'react-bootstrap';
 
 
 
@@ -28,6 +30,7 @@ function cleanHtmlContent(html) {
   unorderedLists.forEach((list) => {
     list.style.listStyleType = "disc";
   });
+
 
   const orderedLists = div.querySelectorAll("ol");
   orderedLists.forEach((list) => {
@@ -70,10 +73,9 @@ const fieldConfigurations = [
     disable: false,
 
   },
-
   {
     name: "basket_price",
-    label: "Basket Price",
+    label: "Discounted/Net Basket price",
     type: "number",
     label_size: 12,
     col_size: 4,
@@ -149,25 +151,26 @@ const fieldConfigurations = [
     ],
     star: true
   },
+
+  {
+    name: "short_description",
+    label: "Short discription",
+    type: "text",
+    label_size: 12,
+    col_size: 4,
+    disable: false,
+    star: true
+  },
   {
     name: "image",
-    label: "Upload Image",
+    // label: "Image",
     type: "file2",
     image: true,
     label_size: 12,
     col_size: 4,
     disable: false,
-    star:true
-},
-{
-  name: "short_description",
-  label: "Short discription",
-  type: "text",
-  label_size: 12,
-  col_size: 4,
-  disable: false,
-  star: true
-},
+    star: true
+  },
   {
     name: "description",
     label: "Description",
@@ -179,7 +182,7 @@ const fieldConfigurations = [
   },
   {
     name: "rationale",
-    label: "Rational",
+    label: "Rationale",
     type: "ckeditor",
     label_size: 12,
     col_size: 12,
@@ -230,10 +233,12 @@ const validationSchema = Yup.object().shape({
     })
   ),
   type: Yup.string().required("Type is required"),
-    image: Yup.string().required("Image is required"),
-    short_description: Yup.string().required("Short description is required"),
-    rationale: Yup.string().required("Rationale is required"),
-    methodology: Yup.string().required("Methodology is required"),
+  image: Yup.string().required("Image is required"),
+  short_description: Yup.string().required("Short description is required"),
+  rationale: Yup.string().required("Rationale is required"),
+  methodology: Yup.string().required("Methodology is required"),
+
+
 });
 
 const Viewbasketdetail = () => {
@@ -246,20 +251,21 @@ const Viewbasketdetail = () => {
 
   const [currentlocation, setCurrentlocation] = useState({})
 
- 
   const location = useLocation()
-    
-  
-    useEffect(() => {
-      if (location?.state) {
-        setCurrentlocation(location?.state?.state);
-      }
-    }, [location]);
+
+  const [showModal, setShowModal] = useState(false);
+
+
+
+  useEffect(() => {
+    if (location?.state) {
+      setCurrentlocation(location?.state?.state);
+    }
+  }, [location]);
 
   const redirectTo = (currentlocation === "viewdetail") ? "/staff/basket/basketstockpublish" : "/staff/basket";
-  
 
-  const [initialValues, setInitialValues] = useState({ 
+  const [initialValues, setInitialValues] = useState({
     title: "",
     description: "",
     accuracy: "",
@@ -274,11 +280,11 @@ const Viewbasketdetail = () => {
     validity: "",
     next_rebalance_date: "",
     Stock: [{ stocks: "", pricerange: "", stockweightage: "", entryprice: "", exitprice: "", exitdate: "", comment: "" }],
-    type:"",
-    image:"",
-    short_description:"",
-    rationale:"",
-    methodology:"",
+    type: "",
+    image: "",
+    short_description: "",
+    rationale: "",
+    methodology: "",
   });
 
   useEffect(() => {
@@ -309,15 +315,11 @@ const Viewbasketdetail = () => {
   const getbasketdetail = async () => {
     try {
       const response = await Viewbasket(id, token);
-
       if (response.status) {
         const basketData = response.data;
-
-
         setInitialValues({
           title: basketData?.title || "",
           description: cleanHtmlContent(basketData?.description) || "",
-          // description: basketData?.description || "",
           full_price: basketData?.full_price || "",
           basket_price: basketData?.basket_price || "",
           mininvamount: basketData?.mininvamount || "",
@@ -329,9 +331,8 @@ const Viewbasketdetail = () => {
           type: basketData?.type || "",
           image: basketData?.image || "",
           short_description: basketData?.short_description || "",
-          rationale: cleanHtmlContent (basketData?.rationale) || "",
-          methodology: cleanHtmlContent (basketData?.methodology) || "",
-
+          rationale: basketData?.rationale || "",
+          methodology: basketData?.methodology || "",
         });
       }
     } catch (error) {
@@ -339,6 +340,16 @@ const Viewbasketdetail = () => {
       Swal.fire("Error", "Failed to fetch basket details.", "error");
     }
   };
+
+
+  const imageViewModel = () => {
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
 
   return (
     <div className="page-content">
@@ -371,14 +382,49 @@ const Viewbasketdetail = () => {
                       <div key={field.name} className={`col-md-${field.col_size}`}>
                         <label>{field.label}</label>
 
-                        {/* Special case for description */}
-                        {field.name === "description" || field.name === "rationale" || field.name === "methodology" ?(
+                        {field.name === "description" || field.name === "rationale" || field.name === "methodology" ? (
                           <div
-                            className="form-control"
+                            className="form-control basket_img"
                             dangerouslySetInnerHTML={{
                               __html: values[field.name] || "",
                             }}
                           />
+                        ) : field.name === "image" ? (
+                          <div className="mt-2">
+                            {values[field.name] ? (
+                              <>
+                                {/* <img
+                                  src={`${image_baseurl}/uploads/basket/${values[field.name]}`}
+                                  alt="Basket"
+                                  className="img-thumbnail"
+                                  style={{ width: "100%", maxWidth: "300px", height: "100px" }}
+                                /> */}
+                                <div style={{display:'flex'}}>
+                                  <p>View image</p><Eye onClick={imageViewModel} />
+                                </div>
+                              </>
+                            ) : (
+                              <div>No Image Available</div>
+                            )}
+                            <Modal show={showModal} onHide={closeModal} centered>
+                              <Modal.Header closeButton>
+                                <Modal.Title>Image</Modal.Title>
+                              </Modal.Header>
+                              <Modal.Body>
+                                {values[field.name] ? (
+                                  <img
+                                    src={`${image_baseurl}/uploads/basket/${values[field.name]}`}
+                                    alt="Basket"
+                                    style={{ width: "100%" }}
+                                  />
+                                ) : (
+                                  <div>No Image Available</div>
+                                )}
+                              </Modal.Body>
+                            </Modal>
+
+                          </div>
+
                         ) : (
                           <input
                             type={field.type}
@@ -389,9 +435,7 @@ const Viewbasketdetail = () => {
                         )}
                       </div>
                     ) : (
-
                       <div key={field.name} className="col-md-12">
-
                         {Object.keys(
                           (Array.isArray(stockdata) ? stockdata : Object.values(stockdata)).reduce((acc, stock) => {
                             if (!acc[stock.version]) {
@@ -410,10 +454,13 @@ const Viewbasketdetail = () => {
                               <h5 className="mt-4 mb-3">Stock Details</h5>
                               <div className="d-flex justify-content-between align-items-center">
                                 <h6>Version {version}</h6>
-                                {versionStocks[0].status == 0 ?
+                                {versionStocks[0].status === 0 ? (
                                   <Tooltip title="Update All">
                                     <SquarePen className="cursor-pointer" onClick={() => updateStock(versionStocks)} />
-                                  </Tooltip> : ""}
+                                  </Tooltip>
+                                ) : (
+                                  ""
+                                )}
                               </div>
                               <table className="table table-bordered">
                                 <thead>
@@ -443,6 +490,7 @@ const Viewbasketdetail = () => {
                       </div>
                     )
                   )}
+
                 </div>
                 <div className="mt-3">
                   <Link to={redirectTo} className="btn btn-secondary">
