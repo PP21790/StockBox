@@ -14,6 +14,8 @@ const Addcoupon = () => {
 
     const [servicedata, setServicedata] = useState([]);
 
+    const [loading, setLoading] = useState(false);
+
     const today = new Date().toISOString().slice(0, 10);
 
 
@@ -113,6 +115,7 @@ const Addcoupon = () => {
 
 
     const onSubmit = async (values) => {
+        setLoading(!loading)
         const req = {
             name: values.name,
             code: values.code,
@@ -152,8 +155,10 @@ const Addcoupon = () => {
                     timer: 1500,
                     timerProgressBar: true,
                 });
+                setLoading(false)
             }
         } catch (error) {
+            setLoading(false)
             Swal.fire({
                 title: "Error",
                 text: "An unexpected error occurred. Please try again later.",
@@ -332,6 +337,7 @@ const Addcoupon = () => {
                 btn_name="Add Coupon"
                 btn_name1="Cancel"
                 sumit_btn={true}
+                btnstatus={loading}
                 btn_name1_route={"/admin/coupon"}
                 additional_field={<></>}
 

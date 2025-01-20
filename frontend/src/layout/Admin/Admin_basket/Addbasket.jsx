@@ -312,7 +312,7 @@ const AddBasket = () => {
     },
     {
       name: "rationale",
-      label: "Rational",
+      label: "Rationale",
       type: "ckeditor",
       label_size: 12,
       col_size: 12,

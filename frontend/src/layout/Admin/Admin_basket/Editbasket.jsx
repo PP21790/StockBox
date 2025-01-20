@@ -31,6 +31,8 @@ const Editbasket = () => {
   const getbasketdetail = async () => {
     try {
       const response = await Viewbasket(id, token);
+      console.log("Viewbasket",response);
+      
       if (response.status) {
         setData(response.data);
 
@@ -343,7 +345,7 @@ const Editbasket = () => {
       image: true,
       imageWidth: "60px",
       imageHeight: "auto",
-      src: `${image_baseurl}/uploads/basket/${data.image}`,
+      src: `${image_baseurl}/uploads/basket/${data.image}`, 
       star: true
     },
     {

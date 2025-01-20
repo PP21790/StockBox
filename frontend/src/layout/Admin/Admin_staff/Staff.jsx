@@ -11,6 +11,7 @@ import ExportToExcel from '../../../Utils/ExportCSV';
 import { fDate, fDateTime } from '../../../Utils/Date_formate';
 import io from 'socket.io-client';
 import { soket_url } from '../../../Utils/config';
+import Loader from '../../../Utils/Loader';
 
 const Staff = () => {
 
@@ -25,6 +26,8 @@ const Staff = () => {
     const [searchInput, setSearchInput] = useState("");
     const [allsearchInput, setAllSearchInput] = useState([]);
 
+    const [isLoading, setIsLoading] = useState(true)
+
     const token = localStorage.getItem('token');
 
 
@@ -38,6 +41,7 @@ const Staff = () => {
         } catch (error) {
             console.log("error");
         }
+        setIsLoading(false)
     }
 
 
@@ -357,10 +361,17 @@ const Staff = () => {
                                     </div>
                                 </div>
 
-                                <Table
-                                    columns={columns}
-                                    data={clients}
-                                />
+                                {isLoading ? (
+                                    <Loader />
+                                ) : (
+                                    <>
+
+                                        <Table
+                                            columns={columns}
+                                            data={clients}
+                                        />
+                                    </>
+                                )}
                             </div>
                         </div>
                     </div>

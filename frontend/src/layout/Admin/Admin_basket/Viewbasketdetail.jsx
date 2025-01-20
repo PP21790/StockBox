@@ -151,7 +151,7 @@ const fieldConfigurations = [
   {
     name: "image",
     label: "Upload Image",
-    type: "file2",
+    type: "file3",
     image: true,
     label_size: 12,
     col_size: 4,
@@ -178,7 +178,7 @@ const fieldConfigurations = [
   },
   {
     name: "rationale",
-    label: "Rational",
+    label: "Rationale",
     type: "ckeditor",
     label_size: 12,
     col_size: 12,
