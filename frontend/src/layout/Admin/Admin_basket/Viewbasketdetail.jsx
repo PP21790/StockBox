@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import { useNavigate, useParams, Link, useLocation } from "react-router-dom";
 import { Tooltip } from 'antd';
 import { SquarePen } from 'lucide-react';
-
+import { image_baseurl } from "../../../Utils/config";
 
 
 function cleanHtmlContent(html) {
@@ -28,6 +28,7 @@ function cleanHtmlContent(html) {
   unorderedLists.forEach((list) => {
     list.style.listStyleType = "disc";
   });
+
 
   const orderedLists = div.querySelectorAll("ol");
   orderedLists.forEach((list) => {
@@ -148,25 +149,26 @@ const fieldConfigurations = [
     ],
     star: true
   },
+
+  {
+    name: "short_description",
+    label: "Short discription",
+    type: "text",
+    label_size: 12,
+    col_size: 4,
+    disable: false,
+    star: true
+  },
   {
     name: "image",
-    label: "Upload Image",
+    label: "Image",
     type: "file2",
     image: true,
     label_size: 12,
     col_size: 4,
     disable: false,
-    star:true
-},
-{
-  name: "short_description",
-  label: "Short discription",
-  type: "text",
-  label_size: 12,
-  col_size: 4,
-  disable: false,
-  star: true
-},
+    star: true
+  },
   {
     name: "description",
     label: "Description",
@@ -273,11 +275,11 @@ const Viewbasketdetail = () => {
     validity: "",
     next_rebalance_date: "",
     Stock: [{ stocks: "", pricerange: "", stockweightage: "", entryprice: "", exitprice: "", exitdate: "", comment: "" }],
-    type:"",
-    image:"",
-    short_description:"",
-    rationale:"",
-    methodology:"",
+    type: "",
+    image: "",
+    short_description: "",
+    rationale: "",
+    methodology: "",
   });
 
   useEffect(() => {
@@ -308,17 +310,11 @@ const Viewbasketdetail = () => {
   const getbasketdetail = async () => {
     try {
       const response = await Viewbasket(id, token);
-      // console.log("Viewbasket",response);
-      
-
       if (response.status) {
         const basketData = response.data;
-
-
         setInitialValues({
           title: basketData?.title || "",
           description: cleanHtmlContent(basketData?.description) || "",
-          // description: basketData?.description || "",
           full_price: basketData?.full_price || "",
           basket_price: basketData?.basket_price || "",
           mininvamount: basketData?.mininvamount || "",
@@ -371,14 +367,26 @@ const Viewbasketdetail = () => {
                       <div key={field.name} className={`col-md-${field.col_size}`}>
                         <label>{field.label}</label>
 
-                        {/* Special case for description */}
-                        {field.name === "description" || field.name === "rationale" || field.name === "methodology" ?(
+                        {field.name === "description" || field.name === "rationale" || field.name === "methodology" ? (
                           <div
                             className="form-control basket_img"
                             dangerouslySetInnerHTML={{
                               __html: values[field.name] || "",
                             }}
                           />
+                        ) : field.name === "image" ? (
+                          <div className="mt-2">
+                            {values[field.name] ? (
+                              <img
+                                src={`${image_baseurl}/uploads/basket/${values[field.name]}`}
+                                alt="Basket"
+                                className="img-thumbnail"
+                                style={{ width: "100%", maxWidth: "300px", height: "100px" }}
+                              />
+                            ) : (
+                              <div>No Image Available</div>
+                            )}
+                          </div>
                         ) : (
                           <input
                             type={field.type}
@@ -389,9 +397,7 @@ const Viewbasketdetail = () => {
                         )}
                       </div>
                     ) : (
-
                       <div key={field.name} className="col-md-12">
-
                         {Object.keys(
                           (Array.isArray(stockdata) ? stockdata : Object.values(stockdata)).reduce((acc, stock) => {
                             if (!acc[stock.version]) {
@@ -410,10 +416,13 @@ const Viewbasketdetail = () => {
                               <h5 className="mt-4 mb-3">Stock Details</h5>
                               <div className="d-flex justify-content-between align-items-center">
                                 <h6>Version {version}</h6>
-                                {versionStocks[0].status == 0 ?
+                                {versionStocks[0].status === 0 ? (
                                   <Tooltip title="Update All">
                                     <SquarePen className="cursor-pointer" onClick={() => updateStock(versionStocks)} />
-                                  </Tooltip> : ""}
+                                  </Tooltip>
+                                ) : (
+                                  ""
+                                )}
                               </div>
                               <table className="table table-bordered">
                                 <thead>
@@ -443,6 +452,7 @@ const Viewbasketdetail = () => {
                       </div>
                     )
                   )}
+
                 </div>
                 <div className="mt-3">
                   <Link to={redirectTo} className="btn btn-secondary">
