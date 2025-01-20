@@ -1026,7 +1026,7 @@ class Basket {
 
   async deleteBasket(req, res) {
     try {
-      const { id } = req.params; // Extract ID from URL params
+      const { id } = req.params;
 
       if (!id) {
         return res.status(400).json({
@@ -1035,11 +1035,10 @@ class Basket {
         });
       }
 
-      //const deletedBasket = await Basket_Modal.findByIdAndDelete(id);
       const deletedBasket = await Basket_Modal.findByIdAndUpdate(
         id,
-        { del: true }, // Set del to true
-        { Basket: true }  // Return the updated document
+        { del: true },
+        { Basket: true }
       );
 
       if (!deletedBasket) {
@@ -1048,15 +1047,13 @@ class Basket {
           message: "Basket not found",
         });
       }
-
-      // console.log("Deleted Basket:", deletedBasket);
       return res.json({
         status: true,
         message: "Basket deleted successfully",
         data: deletedBasket,
       });
     } catch (error) {
-      // console.log("Error deleting Basket:", error);
+
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -1064,12 +1061,11 @@ class Basket {
       });
     }
   }
-  // Ensure this is at the top level of your file, not inside another function or block
+
   async statusChange(req, res) {
     try {
       const { id, status } = req.body;
 
-      // Validate status
       const validStatuses = [true, false];
       if (!validStatuses.includes(status)) {
         return res.status(400).json({
@@ -1078,11 +1074,10 @@ class Basket {
         });
       }
 
-      // Find and update the Basket
       const result = await Basket_Modal.findByIdAndUpdate(
         id,
         { status: status, publishstatus: status },
-        { new: true } // Return the updated document
+        { new: true }
       );
 
       if (!result) {
@@ -1107,7 +1102,6 @@ class Basket {
       });
 
     } catch (error) {
-      // console.log("Error updating status:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -1120,7 +1114,7 @@ class Basket {
     try {
       const { id, status } = req.body;
 
-      // Validate status
+
       const validStatuses = [true, false];
       if (!validStatuses.includes(status)) {
         return res.status(400).json({
@@ -1129,11 +1123,10 @@ class Basket {
         });
       }
 
-      // Find and update the Basket
       const result = await Basket_Modal.findByIdAndUpdate(
         id,
         { publishstatus: status },
-        { new: true } // Return the updated document
+        { new: true }
       );
 
       if (!result) {
@@ -1150,7 +1143,6 @@ class Basket {
       });
 
     } catch (error) {
-      // console.log("Error updating status:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
@@ -1163,8 +1155,6 @@ class Basket {
   async statusRebanceChange(req, res) {
     try {
       const { id, status } = req.body;
-
-      // Validate status
       const validStatuses = [true, false];
       if (!validStatuses.includes(status)) {
         return res.status(400).json({
@@ -1173,11 +1163,10 @@ class Basket {
         });
       }
 
-      // Find and update the Basket
       const result = await Basket_Modal.findByIdAndUpdate(
         id,
         { rebalancestatus: status },
-        { new: true } // Return the updated document
+        { new: true }
       );
 
       if (!result) {
@@ -1194,7 +1183,6 @@ class Basket {
       });
 
     } catch (error) {
-      // console.log("Error updating status:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
