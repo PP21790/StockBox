@@ -14,8 +14,8 @@ const AddBasket = () => {
   const user_id = localStorage.getItem("id");
   const token = localStorage.getItem("token");
 
-  const [loading, setLoading] = useState(false); 
-  
+  const [loading, setLoading] = useState(false);
+
 
   const validate = (values) => {
     let errors = {};
@@ -141,7 +141,7 @@ const AddBasket = () => {
         timer: 1500,
         timerProgressBar: true,
       });
-    }finally {
+    } finally {
       setLoading(false);
     }
   };
@@ -159,7 +159,7 @@ const AddBasket = () => {
       next_rebalance_date: "",
       cagr: "",
       full_price: "",
-      type: "", 
+      type: "",
       image: "",
       short_description: "",
       rationale: "",
