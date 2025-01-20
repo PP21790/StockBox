@@ -214,6 +214,7 @@ class BlogController {
                 return res.status(400).json({ status: false, message: "Description is required" });
             }
     
+            
             // Get the uploaded image file name if present
             const image = req.files && req.files['image'] ? req.files['image'][0].filename : null;
     
