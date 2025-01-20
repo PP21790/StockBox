@@ -18,6 +18,9 @@ const Editbasket = () => {
 
   const [data, setData] = useState("")
 
+  const [loading, setLoading] = useState(false);
+  
+
 
   useEffect(() => {
     getbasketdetail()
@@ -123,7 +126,7 @@ const Editbasket = () => {
   };
 
   const onSubmit = async (values) => {
-
+    setLoading(!loading)
     const req = {
       title: values.title,
       id: data._id,
@@ -168,8 +171,10 @@ const Editbasket = () => {
           timer: 1500,
           timerProgressBar: true,
         });
+        setLoading(false)
       }
     } catch (error) {
+      setLoading(false)
       Swal.fire({
         title: "Error",
         text: "An unexpected error occurred. Please try again later.",
@@ -383,6 +388,7 @@ const Editbasket = () => {
         btn_name="Edit Basket"
         btn_name1="Cancel"
         sumit_btn={true}
+        btnstatus={loading}
         btn_name1_route={"/admin/basket"}
         additional_field={<></>}
 

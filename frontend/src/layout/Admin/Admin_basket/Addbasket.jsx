@@ -141,8 +141,6 @@ const AddBasket = () => {
         timer: 1500,
         timerProgressBar: true,
       });
-    } finally {
-      setLoading(false);
     }
   };
 
