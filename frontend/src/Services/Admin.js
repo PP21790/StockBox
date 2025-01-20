@@ -768,7 +768,7 @@ export async function getStock(token) {
 // update basket 
 
 export async function Updatebasket(data, token) {
-    console.log("data",data)
+    console.log("data", data)
 
     const formData = new FormData();
     formData.append('title', data.title);

@@ -953,6 +953,7 @@ class Basket {
 
       const { id, title, description, full_price, basket_price, mininvamount, themename, accuracy, portfolioweightage, cagr, frequency, validity, next_rebalance_date, type, short_description, rationale, methodology } = req.body;
 
+      console.log("req.body", req.body)
 
       if (!id) {
         return res.status(400).json({
@@ -972,6 +973,8 @@ class Basket {
       //   const full_prices = full_price;
       // }
       const image = req.files && req.files['image'] ? req.files['image'][0].filename : null;
+
+      console.log("image", image)
 
       const updatedBasket = await Basket_Modal.findByIdAndUpdate(
         id,
