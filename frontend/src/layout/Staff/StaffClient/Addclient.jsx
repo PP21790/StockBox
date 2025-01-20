@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import DynamicForm from '../../../components/FormicForm';
 import Swal from 'sweetalert2';
@@ -11,6 +11,9 @@ const AddUser = () => {
 
   const user_id = localStorage.getItem("id");
   const token = localStorage.getItem("token");
+
+  const [loading, setLoading] = useState(false);
+
 
   const validate = (values) => {
     let errors = {};
@@ -41,6 +44,7 @@ const AddUser = () => {
   };
 
   const onSubmit = async (values) => {
+    setLoading(!loading)
     const req = {
       FullName: values.FullName,
       Email: values.Email,
@@ -70,8 +74,10 @@ const AddUser = () => {
           timer: 1500,
           timerProgressBar: true,
         });
+        setLoading(false)
       }
     } catch (error) {
+      setLoading(false)
       Swal.fire({
         title: "Error",
         text: "An unexpected error occurred. Please try again later.",
@@ -171,6 +177,7 @@ const AddUser = () => {
         btn_name="Add Client"
         btn_name1="Cancel"
         sumit_btn={true}
+        btnstatus={loading}
         btn_name1_route={"/staff/client"}
         additional_field={<>
         

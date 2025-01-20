@@ -328,6 +328,7 @@ const BasketStockPublish = () => {
 
       ),
       sortable: true,
+      width: '165px',
 
     },
     permission.includes("Rebalancebutton") ||

@@ -14,7 +14,8 @@ const Addnews = () => {
 
     const user_id = localStorage.getItem("id");
     const token = localStorage.getItem("token");
-  
+
+    const [loading, setLoading] = useState(false);  
 
     
      
@@ -37,6 +38,7 @@ const Addnews = () => {
     };
 
     const onSubmit = async (values) => {
+        setLoading(!loading)
         const req = {
             title: values.title,
             description: values.description,
@@ -65,8 +67,11 @@ const Addnews = () => {
                     timer: 1500,
                     timerProgressBar: true,
                 });
+                setLoading(false)
+
             }
         } catch (error) {
+            setLoading(false)
             Swal.fire({
                 title: "Error",
                 text: "An unexpected error occurred. Please try again later.",
@@ -127,6 +132,7 @@ const Addnews = () => {
                 btn_name="Add News"
                 btn_name1="Cancel"
                 sumit_btn={true}
+                btnstatus={loading}
                 btn_name1_route={"/staff/news"}
                 additional_field={<></>}
             />
