@@ -433,6 +433,7 @@ const DynamicForm = ({
                                                                                 <input
                                                                                     type="file"
                                                                                     id={field.name}
+                                                                                    accept="image/*"
                                                                                     className="form-control"
                                                                                     onChange={(e) => handleFileChange3(e, index, field.name)}
                                                                                     name={field.name}
@@ -443,6 +444,7 @@ const DynamicForm = ({
                                                                                 <div >
                                                                                     <img
                                                                                         className="mt-3"
+                                                                                        accept="image/*"
                                                                                         src={imagePreview[field.name] || field.src}
                                                                                         alt={`${field.label} Preview`}
                                                                                         style={{

@@ -994,7 +994,7 @@ class Basket {
           rationale,
           methodology
         },
-        { Basket: true, runValidators: true } // Options: return the updated document and run validators
+        { Basket: true, runValidators: true }
       );
 
       if (!updatedBasket) {
@@ -1004,7 +1004,7 @@ class Basket {
         });
       }
 
-      // console.log("Updated Basket:", updatedBasket);
+
       return res.json({
         status: true,
         message: "Basket updated successfully",
@@ -1012,7 +1012,6 @@ class Basket {
       });
 
     } catch (error) {
-      // console.log("Error updating Basket:", error);
       return res.status(500).json({
         status: false,
         message: "Server error",
