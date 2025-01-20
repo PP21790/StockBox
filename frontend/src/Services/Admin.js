@@ -708,10 +708,8 @@ export async function Addbasketplan(data, token) {
                 'Authorization': `${token}`,
             },
         });
-        console.log("Response:", res.data);
         return res?.data;
     } catch (err) {
-        console.log("Error:", err.response?.data || err.message);
         return err.response?.data || err.message;
     }
 }
@@ -770,6 +768,7 @@ export async function getStock(token) {
 // update basket 
 
 export async function Updatebasket(data, token) {
+    console.log("data",data)
 
     const formData = new FormData();
     formData.append('title', data.title);
@@ -790,13 +789,12 @@ export async function Updatebasket(data, token) {
     formData.append('methodology', data.methodology);
 
     try {
-        const res = await axios.put(`${Config.base_url}basket/update`, data, {
+        const res = await axios.put(`${Config.base_url}basket/update`, formData, {
             headers: {
-                data: {},
+                'Content-Type': 'multipart/form-data',
                 'Authorization': `${token}`,
             },
         });
-
         return res?.data;
     } catch (err) {
         return err.response?.data || err.message;
