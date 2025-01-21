@@ -5,7 +5,7 @@ import { basicsettinglist } from '../../Services/Admin';
 import { image_baseurl } from '../../Utils/config';
 
 const Sidebar = ({ onToggleClick }) => {
-  const location = useLocation(); // React Router's hook for current pathname
+  const location = useLocation();
   const token = localStorage.getItem('token');
   const userid = localStorage.getItem('id');
 
