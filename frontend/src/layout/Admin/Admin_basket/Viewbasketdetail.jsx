@@ -41,9 +41,6 @@ function cleanHtmlContent(html) {
 }
 
 
-
-
-
 const fieldConfigurations = [
 
   {

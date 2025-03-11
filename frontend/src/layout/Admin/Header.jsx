@@ -151,7 +151,7 @@ const Header = () => {
       console.error("Error while marking notifications as read:", error);
     }
   };
-  ;
+  
 
 
 
@@ -287,6 +287,8 @@ const Header = () => {
                     </div>
                   </div>
                 </li>
+
+
                 <li className="nav-item dropdown dropdown-large">
                   <a
                     className="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative"

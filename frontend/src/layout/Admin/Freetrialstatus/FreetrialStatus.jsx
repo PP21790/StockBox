@@ -21,6 +21,10 @@ const FreetrialStatus = () => {
 
   const [isLoader,setIsLoader] = useState(true);
 
+
+  console.log("hello");
+  
+
   useEffect(() => {
     getApidetail();
     getstatusdetail();
@@ -109,7 +113,7 @@ const FreetrialStatus = () => {
   const handleSelectChange = (event) => {
     const { value } = event.target;
     setAddStatus((prevState) => ({ ...prevState, freetrial: value }));
-    setDisableUpdate(value === initialFreeTrial); 
+    setDisableUpdate(value === initialFreeTrial);
   };
 
   const columns = [
