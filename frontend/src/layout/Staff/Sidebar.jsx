@@ -5,7 +5,7 @@ import { basicsettinglist } from '../../Services/Admin';
 import { image_baseurl } from '../../Utils/config';
 
 const Sidebar = ({ onToggleClick }) => {
-  const location = useLocation(); // React Router's hook for current pathname
+  const location = useLocation();
   const token = localStorage.getItem('token');
   const userid = localStorage.getItem('id');
 
@@ -59,8 +59,8 @@ const Sidebar = ({ onToggleClick }) => {
       isDropdown: true,
       dropdownName: 'plan',
       subItems: [
-        ...(permission.includes('viewplan') ? [{ title: 'Package',icon: "bx-radio-circle", link: '/staff/plan' }] : []),
-        ...(permission.includes('viewcategory') ? [{ title: 'Category',icon: "bx-radio-circle", link: '/staff/category' }] : []),
+        ...(permission.includes('viewplan') ? [{ title: 'Package', icon: "bx-radio-circle", link: '/staff/plan' }] : []),
+        ...(permission.includes('viewcategory') ? [{ title: 'Category', icon: "bx-radio-circle", link: '/staff/category' }] : []),
       ].filter(Boolean),
     },
     permission.includes('vewbasket') && {
